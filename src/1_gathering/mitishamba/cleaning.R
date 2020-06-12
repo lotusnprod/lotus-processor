@@ -1,4 +1,4 @@
-#title: "MITISHAMBA cleaneR"
+# title: "MITISHAMBA cleaneR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -9,7 +9,7 @@ source("paths.R")
 # loading functions
 source("functions.R")
 
-##files
+## files
 data_original <- read_delim(
   file = gzfile(pathDataExternalDbSourceMitishambaOriginal),
   delim = "\t",
@@ -18,7 +18,7 @@ data_original <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   select(
     smiles,
@@ -27,7 +27,7 @@ data_selected <- data_original %>%
     reference = authors
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -35,7 +35,7 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
   file = gzfile(

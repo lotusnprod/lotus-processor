@@ -1,21 +1,17 @@
-#title: "NANPDB cleaneR"
+# title: "NANPDB cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "NANPDB"
-originalfile <- "0_initial_files/NANPDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceNanpdbOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -23,7 +19,7 @@ data_original <- read_delim(
   mutate_all(as.character) %>%
   mutate(id = row.names(.))
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   mutate(name = NA) %>%
   select(
@@ -44,7 +40,9 @@ data_selected <- data_original %>%
          biologicalsource = biologicalsource_1,
          pubchem,
          reference) %>%
-  mutate(biologicalsource = gsub("Source: ", "", biologicalsource)) %>%
+  mutate(biologicalsource = gsub("Source: ",
+                                 "",
+                                 biologicalsource)) %>%
   mutate_all(as.character) %>%
   cSplit("reference",
          "Title: ",
@@ -58,10 +56,12 @@ data_selected <- data_original %>%
          " Reference: ",
          stripWhite = FALSE,
          fixed = FALSE) %>%
-  mutate(reference = paste(reference_2_1, reference_1_2, sep = ", ")) %>%
+  mutate(reference = paste(reference_2_1,
+                           reference_1_2,
+                           sep = ", ")) %>%
   tibble()
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -69,12 +69,14 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbNanpdb,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

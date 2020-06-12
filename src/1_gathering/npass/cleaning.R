@@ -1,28 +1,17 @@
-#title: "NPASS cleaneR"
+# title: "NPASS cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "NPASS"
-originalfile_1 <-
-  "0_initial_files/NPASSv1.0_download_naturalProducts_generalInfo.txt"
-originalfile_2 <-
-  "0_initial_files/NPASSv1.0_download_naturalProducts_properties.txt"
-originalfile_3 <-
-  "0_initial_files/NPASSv1.0_download_naturalProducts_speciesInfo.txt"
-originalfile_4 <-
-  "0_initial_files/NPASSv1.0_download_naturalProducts_species_pair.txt"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
+## files
 data_original_1 <- read_delim(
-  file = originalfile_1,
+  file = pathDataExternalDbSourceNpassGeneralInfo,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -30,7 +19,7 @@ data_original_1 <- read_delim(
   mutate_all(as.character)
 
 data_original_2 <- read_delim(
-  file = originalfile_2,
+  file = pathDataExternalDbSourceNpassProperties,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -38,7 +27,7 @@ data_original_2 <- read_delim(
   mutate_all(as.character)
 
 data_original_3 <- read_delim(
-  file = originalfile_3,
+  file = pathDataExternalDbSourceNpassSpeciesInfo,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -46,21 +35,21 @@ data_original_3 <- read_delim(
   mutate_all(as.character)
 
 data_original_4 <- read_delim(
-  file = originalfile_4,
+  file = pathDataExternalDbSourceNpassSpeciesPair,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#joining
+# joining
 data_original <- left_join(data_original_1, data_original_2)
 
 data_original <- left_join(data_original, data_original_4)
 
 data_original <- left_join(data_original, data_original_3)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   mutate(reference = paste(ref_id, ref_id_type, sep = "§")) %>%
   select(
@@ -74,7 +63,7 @@ data_selected <- data_original %>%
     reference
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -84,12 +73,14 @@ data_standard <-
 
 data_standard$name <- y_as_na(data_standard$name, "n.a.")
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbNpass,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

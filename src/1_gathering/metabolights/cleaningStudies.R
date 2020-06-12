@@ -1,4 +1,4 @@
-#title: "METABOLIGHTS studies cleaneR"
+# title: "METABOLIGHTS studies cleaneR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -18,7 +18,7 @@ filenames <-
              pattern = "*.json",
              full.names = TRUE)
 
-#just to get problematic entries
+# just to get problematic entries
 
 # for (i in files){
 # i <- stream_in(file(i), verbose = FALSE)}

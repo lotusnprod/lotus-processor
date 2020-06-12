@@ -1,4 +1,4 @@
-#title: "MIBIG scrapeR"
+# title: "MIBIG scrapeR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -92,14 +92,14 @@ data <- tibble(id, smiles, organism, reference) %>%
 
 data$name <- NA
 
-#standardizing
+# standardizing
 data_standard <- standardizing_original(
   data_selected = data,
   db = "mib_1",
   structure_field = c("name", "smiles")
 )
 
-#exporting
+# exporting
 write.table(
   x = data,
   file = gzfile(

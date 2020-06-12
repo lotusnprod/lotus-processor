@@ -1,10 +1,13 @@
-#title: "NANPDB scrapeR"
+# title: "NANPDB scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/NANPDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 url <- 'http://african-compounds.org/nanpdb/get_compound_card/'
 
@@ -25,13 +28,14 @@ getnanp <- function(X)
     
     df2 <- t(df1)
     
-       colnames(df2) <- df2[1,]
+    colnames(df2) <- df2[1, ]
     
     df3 <- data.frame(df2) %>%
       filter(rownames(.) == "X2")
     
-     df3[setdiff(
-      row(df3),c(
+    df3[setdiff(
+      row(df3),
+      c(
         "Image.",
         "SMILES.",
         "PubChem.",
@@ -41,8 +45,8 @@ getnanp <- function(X)
         "Reference.information",
         "Authors.information"
       )
-    )]<- NA
-     
+    )] <- NA
+    
     return(df3)
   },
   error = function(e) {
@@ -57,7 +61,7 @@ NANPDB <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores()-2),
+    mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE
   )
@@ -65,28 +69,45 @@ NANPDB <- invisible(
 
 NANPDB_2 <- bind_rows(NANPDB[!is.na(NANPDB)])
 
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("\r\n", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("\r", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("\n", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("\t", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
-NANPDB_2[] <- lapply(NANPDB_2, function(x) gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("\r\n", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("\r", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("\n", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("\t", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
+NANPDB_2[] <- lapply(NANPDB_2, function(x)
+  gsub("  ", " ", x))
 
-#exporting
+# exporting
 write.table(
   x = NANPDB_2,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceNanpdbOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
