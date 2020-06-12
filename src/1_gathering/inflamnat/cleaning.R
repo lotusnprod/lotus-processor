@@ -38,7 +38,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = outpath,
+    description = pathDataInterimDbInflamnat,
     compression = 9,
     encoding = "UTF-8"
   ),
