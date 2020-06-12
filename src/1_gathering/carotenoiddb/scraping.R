@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 ids <- read_delim(
-  file = pathCarotenoiddbInchiKey,
+  file = pathDataExternalDbSourceCarotenoiddbInchikey,
   delim = "\t",
   escape_double = FALSE,
   col_names = FALSE,
@@ -84,7 +84,7 @@ CAROTENOIDDB_3[] <-
 write.table(
   x = CAROTENOIDDB_3,
   file = gzfile(
-    description = pathCarotenoiddbOriginal,
+    description = pathDataExternalDbSourceCarotenoiddbOriginal,
     compression = 9,
     encoding = "UTF-8"
   ),

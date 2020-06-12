@@ -4,9 +4,12 @@
 # loading packages
 from rdkit import Chem
 from rdkit.Chem import PandasTools
+import zipfile
 
 # file path
-my_sdf_file = '../data/external/dbSource/COCONUT/0_initial_files/COCONUT.sdf'
+my_zip_file = zipfile.ZipFile(file = '../data/external/dbSource/COCONUT/0_initial_files/COCONUT.sdf.zip', mode = 'r')
+my_sdf_file = my_zip_file.open('COCONUT.sdf')
+
 
 # converting
 sdf_frame = PandasTools.LoadSDF(my_sdf_file,
@@ -16,4 +19,4 @@ sdf_frame = PandasTools.LoadSDF(my_sdf_file,
                                 includeFingerprints = False)
 
 #exporting
-sdf_frame.to_csv('../data/external/dbSource/COCONUT/0_initial_files/COCONUT.tsv.zip', compression = 'gzip', sep = '\t')
+sdf_frame.to_csv('../data/external/dbSource/COCONUT/0_initial_files/coconutCompiled.tsv.zip', compression = 'gzip', sep = '\t')

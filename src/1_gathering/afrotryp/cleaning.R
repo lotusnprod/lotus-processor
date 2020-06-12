@@ -11,7 +11,7 @@ source("functions.R")
 
 # files
 data_original <- read_delim(
-  file = pathAfrotrypOriginal,
+  file = pathDataExternalDbSourceAfrotrypOriginal,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -41,7 +41,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathAfrotrypStandard,
+    description = pathDataInterimDbAfrotryp,
     compression = 9,
     encoding = "UTF-8"
   ),

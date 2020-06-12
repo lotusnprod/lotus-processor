@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathCarotenoiddbOriginal),
+  file = gzfile(pathDataExternalDbSourceCarotenoiddbOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -105,7 +105,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathCarotenoiddbStandard,
+    description = pathDataInterimDbCarotenoiddb,
     compression = 9,
     encoding = "UTF-8"
   ),

@@ -11,7 +11,7 @@ source("functions.R")
 
 # files
 compounds_flavors <- read_delim(
-  file = pathFoodbCompoundsFlavors,
+  file = pathDataExternalDbSourceFoodbCompoundsFlavors,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -19,7 +19,7 @@ compounds_flavors <- read_delim(
   mutate_all(as.character)
 
 compounds <- read_delim(
-  file = pathFoodbCompounds,
+  file = pathDataExternalDbSourceFoodbCompounds,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -27,7 +27,7 @@ compounds <- read_delim(
   mutate_all(as.character)
 
 contents <- read_delim(
-  file = pathFoodbContent,
+  file = pathDataExternalDbSourceFoodbContent,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -35,7 +35,7 @@ contents <- read_delim(
   mutate_all(as.character)
 
 flavors <- read_delim(
-  file = pathFoodbFlavor,
+  file = pathDataExternalDbSourceFoodbFlavor,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -43,7 +43,7 @@ flavors <- read_delim(
   mutate_all(as.character)
 
 foods <- read_delim(
-  file = pathFoodbFoods,
+  file = pathDataExternalDbSourceFoodbFood,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -51,7 +51,7 @@ foods <- read_delim(
   mutate_all(as.character)
 
 references <- read_delim(
-  file = pathFoodbRef,
+  file = pathDataExternalDbSourceFoodbReference,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -147,7 +147,7 @@ data_standard <- standardizing_original(
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathFoodbStandard,
+    description = pathDataInterimDbFoodb,
     compression = 9,
     encoding = "UTF-8"
   ),

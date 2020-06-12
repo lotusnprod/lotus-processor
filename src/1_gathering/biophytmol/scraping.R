@@ -76,7 +76,7 @@ BIOPHYTMOL_4 <- BIOPHYTMOL_3 %>%
 write.table(
   x = BIOPHYTMOL_4,
   file = gzfile(
-    description = pathBiophytmolOriginal,
+    description = pathDataExternalDbSourceBiophytmolOriginal,
     compression = 9,
     encoding = "UTF-8"
   ),

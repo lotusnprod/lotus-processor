@@ -24,7 +24,7 @@ pathDataExternalDbSourceAfrotryp <-
 ###### original
 pathDataExternalDbSourceAfrotrypOriginal <-
   file.path(pathDataExternalDbSourceAfrotryp,
-            "0_initial_files/AFROTRYP.tsv.zip")
+            "0_initial_files/afrotryp.tsv.zip")
 
 ##### alkamid
 pathDataExternalDbSourceAlkamid <-
@@ -34,12 +34,12 @@ pathDataExternalDbSourceAlkamid <-
 ###### original
 pathDataExternalDbSourceAlkamidOriginal <-
   file.path(pathDataExternalDbSourceAlkamid,
-            "0_initial_files/ALKAMID_scraped.tsv.zip")
+            "0_initial_files/alkamidScraped.tsv.zip")
 
 ###### ref
 pathDataExternalDbSourceAlkamidRef <-
   file.path(pathDataExternalDbSourceAlkamid,
-            "0_initial_files/ALKAMID_ref_scraped.tsv.zip")
+            "0_initial_files/alkamidRefScraped.tsv.zip")
 
 ##### biofacquim
 pathDataExternalDbSourceBiofacquim <-
@@ -50,7 +50,7 @@ pathDataExternalDbSourceBiofacquim <-
 pathDataExternalDbSourceBiofacquimOriginal <-
   file.path(
     pathDataExternalDbSourceBiofacquim,
-    "0_initial_files/apps_database_csv_BIOFACQUIM.csv.zip"
+    "0_initial_files/apps_database_csv_BIOFACQUIM.csv"
   )
 
 ##### biophytmol
@@ -62,7 +62,7 @@ pathDataExternalDbSourceBiophytmol <-
 pathDataExternalDbSourceBiophytmolOriginal <-
   file.path(
     pathDataExternalDbSourceBiophytmol,
-    "0_initial_files/BIOPHYTMOL_scraped.tsv.zip"
+    "0_initial_files/biophytmolScraped.tsv.zip"
   )
 
 ##### carotenoiddb
@@ -74,14 +74,14 @@ pathDataExternalDbSourceCarotenoiddb <-
 pathDataExternalDbSourceCarotenoiddbOriginal <-
   file.path(
     pathDataExternalDbSourceCarotenoiddb,
-    "0_initial_files/CAROTENOIDDB_scraped.tsv.zip"
+    "0_initial_files/carotenoiddbScraped.tsv.zip"
   )
 
 ###### inchikey
 pathDataExternalDbSourceCarotenoiddbInchikey <-
   file.path(
     pathDataExternalDbSourceCarotenoiddb,
-    "0_initial_files/Carotenoids_InChI_InChIKey.tsv.zip"
+    "0_initial_files/Carotenoids_InChI_InChIKey.tsv"
   )
 
 ##### cmaup
@@ -116,7 +116,7 @@ pathDataExternalDbSourceCoconut <-
 ###### original
 pathDataExternalDbSourceCoconutOriginal <-
   file.path(pathDataExternalDbSourceCoconut,
-            "0_initial_files/COCONUT.tsv.zip")
+            "0_initial_files/coconutCompiled.tsv.zip")
 
 ##### cyanometdb
 pathDataExternalDbSourceCyanometdb <-
@@ -238,10 +238,20 @@ pathDataExternalDbSourceInflamnat <-
   file.path(pathDataExternalDbSource,
             "inflamnat")
 
+###### original
+pathDataExternalDbSourceInflamnatOriginal <-
+  file.path(pathDataExternalDbSourceInflamnat,
+            "0_initial_files/ci8b00560_si_001.xlsx")
+
 ##### knapsack
 pathDataExternalDbSourceKnapsack <-
   file.path(pathDataExternalDbSource,
             "knapsack")
+
+###### original
+pathDataExternalDbSourceKnapsackOriginal <-
+  file.path(pathDataExternalDbSourceKnapsack,
+            "0_initial_files/Knapsack_db.tsv.zip")
 
 ##### metabolights
 pathDataExternalDbSourceMetabolights <-
@@ -444,6 +454,71 @@ pathDataInterimDb <-
   file.path(pathDataInterim,
             "db")
 
+##### afrotryp
+pathDataInterimDbAfrotryp <-
+  file.path(pathDataInterimDb,
+            "afrotryp.tsv.zip")
+
+##### alkamid
+pathDataInterimDbAlkamid <-
+  file.path(pathDataInterimDb,
+            "alkamid.tsv.zip")
+
+##### biofacquim
+pathDataInterimDbBiofacquim <-
+  file.path(pathDataInterimDb,
+            "biofacquim.tsv.zip")
+
+##### biophytmol
+pathDataInterimDbBiophytmol <-
+  file.path(pathDataInterimDb,
+            "biophytmol.tsv.zip")
+
+##### carotenoiddb
+pathDataInterimDbCarotenoiddb <-
+  file.path(pathDataInterimDb,
+            "carotenoiddb.tsv.zip")
+
+##### cmaup
+pathDataInterimDbCmaup <-
+  file.path(pathDataInterimDb,
+            "cmaup.tsv.zip")
+
+##### coconut
+pathDataInterimDbCoconut <-
+  file.path(pathDataInterimDb,
+            "coconut.tsv.zip")
+
+##### cyanometdb
+pathDataInterimDbCyanometdb <-
+  file.path(pathDataInterimDb,
+            "cyanometdb.tsv.zip")
+
+##### dnp
+pathDataInterimDbDnp <-
+  file.path(pathDataInterimDb,
+            "dnp.tsv.zip")
+
+##### drduke
+pathDataInterimDbDrduke <-
+  file.path(pathDataInterimDb,
+            "drduke.tsv.zip")
+
+##### etcm
+pathDataInterimDbEtcm <-
+  file.path(pathDataInterimDb,
+            "etcm.tsv.zip")
+
+##### foodb
+pathDataInterimDbFoodb <-
+  file.path(pathDataInterimDb,
+            "foodb.tsv.zip")
+
+##### inflamnat
+pathDataInterimDbInflamnat <-
+  file.path(pathDataInterimDb,
+            "inflamnat.tsv.zip")
+
 #### dictionaries
 pathDataInterimDictionaries <-
   file.path(pathDataInterim,
@@ -575,51 +650,6 @@ pathDataProcessedFiguresHtml <-
 
 
 
-
-
-
-
-
-
-### standard
-pathAfrotrypStandard <- "../data/interim/db/AFROTRYP_std.tsv.zip"
-
-### standard
-pathAlkamidStandard <- "../data/interim/db/ALKAMID_std.tsv.zip"
-
-### standard
-pathBiofacquimStandard <-
-  "../data/interim/db/BIOFACQUIM_std.tsv.zip"
-
-### standard
-pathBiophytmolStandard <-
-  "../data/interim/db/BIOPHYTMOL_std.tsv.zip"
-
-### standard
-pathCarotenoiddbStandard <-
-  "../data/interim/db/CAROTENOIDDB_std.tsv.zip"
-
-### standard
-pathCmaupStandard <- "../data/interim/db/CMAUP_std.tsv.zip"
-
-### standard
-pathCoconutStandard <- "../data/interim/db/COCONUT_std.tsv.zip"
-
-### standard
-pathCyanometdbStandard <-
-  "../data/interim/db/CYANOMETDB_std.tsv.zip"
-
-### standard
-pathDnpStandard <- "../data/interim/db/DNP_std.tsv.zip"
-
-### standard
-pathDrdukeStandard <- "../data/interim/db/DRDUKE_std.tsv.zip"
-
-### standard
-pathEtcmStandard <- "../data/interim/db/ETCM_std.tsv.zip"
-
-### standard
-pathFoodbStandard <- "../data/interim/db/FOODB_std.tsv.zip"
 
 
 
