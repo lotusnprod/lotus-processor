@@ -24,7 +24,7 @@ pathDataExternalDbSourceAfrotryp <-
 ###### original
 pathDataExternalDbSourceAfrotrypOriginal <-
   file.path(pathDataExternalDbSourceAfrotryp,
-            "0_initial_files/afrotryp.tsv.zip")
+            "afrotryp.tsv.zip")
 
 ##### alkamid
 pathDataExternalDbSourceAlkamid <-
@@ -34,12 +34,12 @@ pathDataExternalDbSourceAlkamid <-
 ###### original
 pathDataExternalDbSourceAlkamidOriginal <-
   file.path(pathDataExternalDbSourceAlkamid,
-            "0_initial_files/alkamidScraped.tsv.zip")
+            "alkamidScraped.tsv.zip")
 
 ###### ref
 pathDataExternalDbSourceAlkamidRef <-
   file.path(pathDataExternalDbSourceAlkamid,
-            "0_initial_files/alkamidRefScraped.tsv.zip")
+            "alkamidRefScraped.tsv.zip")
 
 ##### biofacquim
 pathDataExternalDbSourceBiofacquim <-
@@ -50,7 +50,7 @@ pathDataExternalDbSourceBiofacquim <-
 pathDataExternalDbSourceBiofacquimOriginal <-
   file.path(
     pathDataExternalDbSourceBiofacquim,
-    "0_initial_files/apps_database_csv_BIOFACQUIM.csv"
+    "apps_database_csv_BIOFACQUIM.csv"
   )
 
 ##### biophytmol
@@ -61,7 +61,7 @@ pathDataExternalDbSourceBiophytmol <-
 ###### original
 pathDataExternalDbSourceBiophytmolOriginal <-
   file.path(pathDataExternalDbSourceBiophytmol,
-            "0_initial_files/biophytmolScraped.tsv.zip")
+            "biophytmolScraped.tsv.zip")
 
 ##### carotenoiddb
 pathDataExternalDbSourceCarotenoiddb <-
@@ -72,14 +72,14 @@ pathDataExternalDbSourceCarotenoiddb <-
 pathDataExternalDbSourceCarotenoiddbOriginal <-
   file.path(
     pathDataExternalDbSourceCarotenoiddb,
-    "0_initial_files/carotenoiddbScraped.tsv.zip"
+    "carotenoiddbScraped.tsv.zip"
   )
 
 ###### inchikey
 pathDataExternalDbSourceCarotenoiddbInchikey <-
   file.path(
     pathDataExternalDbSourceCarotenoiddb,
-    "0_initial_files/Carotenoids_InChI_InChIKey.tsv"
+    "Carotenoids_InChI_InChIKey.tsv"
   )
 
 ##### cmaup
@@ -91,19 +91,19 @@ pathDataExternalDbSourceCmaup <-
 pathDataExternalDbSourceCmaupIngredients <-
   file.path(
     pathDataExternalDbSourceCmaup,
-    "0_initial_files/CMAUPv1.0_download_Ingredients_All.txt"
+    "CMAUPv1.0_download_Ingredients_All.txt"
   )
 
 ###### plants
 pathDataExternalDbSourceCmaupPlants <-
   file.path(pathDataExternalDbSourceCmaup,
-            "0_initial_files/CMAUPv1.0_download_Plants.txt")
+            "CMAUPv1.0_download_Plants.txt")
 
 ###### associations
 pathDataExternalDbSourceCmaupAssociations <-
   file.path(
     pathDataExternalDbSourceCmaup,
-    "0_initial_files/CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
+    "CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
   )
 
 ##### coconut
@@ -114,7 +114,7 @@ pathDataExternalDbSourceCoconut <-
 ###### original
 pathDataExternalDbSourceCoconutOriginal <-
   file.path(pathDataExternalDbSourceCoconut,
-            "0_initial_files/coconutCompiled.tsv.zip")
+            "coconutCompiled.tsv.zip")
 
 ##### cyanometdb
 pathDataExternalDbSourceCyanometdb <-
@@ -124,7 +124,7 @@ pathDataExternalDbSourceCyanometdb <-
 ###### original
 pathDataExternalDbSourceCyanometdbOriginal <-
   file.path(pathDataExternalDbSourceCyanometdb,
-            "0_initial_files/media-1.tsv.zip")
+            "media-1.tsv.zip")
 
 ##### dnp
 pathDataExternalDbSourceDnp <-
@@ -137,7 +137,7 @@ pathDataExternalDbSourceDnp <-
 ###### original
 pathDataExternalDbSourceDnpOriginal <-
   file.path(pathDataExternalDbSourceDnp,
-            "0_initial_files/28_2/full_set.csv")
+            "28_2/full_set.csv")
 
 ##### drduke
 pathDataExternalDbSourceDrduke <-
@@ -148,26 +148,26 @@ pathDataExternalDbSourceDrduke <-
 pathDataExternalDbSourceDrdukeCommonNames <-
   file.path(
     pathDataExternalDbSourceDrduke,
-    "0_initial_files/Duke-Source-CSV/COMMON_NAMES.csv"
+    "Duke-Source-CSV/COMMON_NAMES.csv"
   )
 
 ###### farmacy
 pathDataExternalDbSourceDrdukeFarmacy <-
   file.path(
     pathDataExternalDbSourceDrduke,
-    "0_initial_files/Duke-Source-CSV/FARMACY_NEW.csv"
+    "Duke-Source-CSV/FARMACY_NEW.csv"
   )
 
 ###### taxa
 pathDataExternalDbSourceDrdukeTaxa <-
   file.path(pathDataExternalDbSourceDrduke,
-            "0_initial_files/Duke-Source-CSV/FNFTAX.csv")
+            "Duke-Source-CSV/FNFTAX.csv")
 
 ###### references
 pathDataExternalDbSourceDrdukeReferences <-
   file.path(
     pathDataExternalDbSourceDrduke,
-    "0_initial_files/Duke-Source-CSV/REFERENCES.csv"
+    "Duke-Source-CSV/REFERENCES.csv"
   )
 
 ##### etcm
@@ -179,7 +179,7 @@ pathDataExternalDbSourceEtcm <-
 pathDataExternalDbSourceEtcmOriginal <-
   list.files(
     path = file.path(pathDataExternalDbSourceEtcm,
-                     "0_initial_files/data/"),
+                     "data/"),
     pattern = "*.csv",
     full.names = TRUE
   )
@@ -193,42 +193,42 @@ pathDataExternalDbSourceFoodb <-
 pathDataExternalDbSourceFoodbCompoundsFlavors <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/CompoundsFlavor_copy.csv"
+    "foodb_2020_04_07_csv/CompoundsFlavor_copy.csv"
   )
 
 ###### compounds
 pathDataExternalDbSourceFoodbCompounds <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Compound_copy.csv"
+    "foodb_2020_04_07_csv/Compound_copy.csv"
   )
 
 ###### content
 pathDataExternalDbSourceFoodbContent <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Content.csv"
+    "foodb_2020_04_07_csv/Content.csv"
   )
 
 ###### flavor
 pathDataExternalDbSourceFoodbFlavor <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Flavor.csv"
+    "foodb_2020_04_07_csv/Flavor.csv"
   )
 
 ###### food
 pathDataExternalDbSourceFoodbFood <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Food_copy.csv"
+    "foodb_2020_04_07_csv/Food_copy.csv"
   )
 
 ###### reference
 pathDataExternalDbSourceFoodbReference <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Reference.csv"
+    "foodb_2020_04_07_csv/Reference.csv"
   )
 
 ##### inflamnat
@@ -239,7 +239,7 @@ pathDataExternalDbSourceInflamnat <-
 ###### original
 pathDataExternalDbSourceInflamnatOriginal <-
   file.path(pathDataExternalDbSourceInflamnat,
-            "0_initial_files/ci8b00560_si_001.xlsx")
+            "ci8b00560_si_001.xlsx")
 
 ##### knapsack
 pathDataExternalDbSourceKnapsack <-
@@ -249,7 +249,7 @@ pathDataExternalDbSourceKnapsack <-
 ###### original
 pathDataExternalDbSourceKnapsackOriginal <-
   file.path(pathDataExternalDbSourceKnapsack,
-            "0_initial_files/knapsackScraped.tsv.zip")
+            "knapsackScraped.tsv.zip")
 
 ##### metabolights
 pathDataExternalDbSourceMetabolights <-
@@ -262,33 +262,33 @@ pathDataExternalDbSourceMetabolights <-
 pathDataExternalDbSourceMetabolightsComplete <-
   file.path(
     pathDataExternalDbSourceMetabolights,
-    "0_initial_files/eb-eye_metabolights_complete.xml"
+    "eb-eye_metabolights_complete.xml"
   )
 
 ###### studies
 pathDataExternalDbSourceMetabolightsStudies <-
   file.path(
     pathDataExternalDbSourceMetabolights,
-    "0_initial_files/eb-eye_metabolights_studies.xml"
+    "eb-eye_metabolights_studies.xml"
   )
 
 ###### studies scraped directory
 pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
   file.path(pathDataExternalDbSourceMetabolights,
-            "0_initial_files/studiesScraped")
+            "studiesScraped")
 
 ###### precleaned
 pathDataExternalDbSourceMetabolightsPrecleaned <-
   file.path(
     pathDataExternalDbSourceMetabolights,
-    "0_initial_files/metabolightsPrecleaned.tsv.zip"
+    "metabolightsPrecleaned.tsv.zip"
   )
 
 ###### studies scraped
 pathDataExternalDbSourceMetabolightsStudiesScraped <-
   file.path(
     pathDataExternalDbSourceMetabolights,
-    "0_initial_files/metabolightsStudiesScraped.tsv.zip"
+    "metabolightsStudiesScraped.tsv.zip"
   )
 
 ##### mibig
@@ -301,7 +301,7 @@ pathDataExternalDbSourceMibigOriginal <-
   list.files(
     path = file.path(
       pathDataExternalDbSourceMibig,
-      "0_initial_files/mibig_json_2.0/"
+      "mibig_json_2.0/"
     ),
     pattern = "*.json",
     full.names = TRUE
@@ -315,7 +315,7 @@ pathDataExternalDbSourceMitishamba <-
 ###### original
 pathDataExternalDbSourceMitishambaOriginal <-
   file.path(pathDataExternalDbSourceMitishamba,
-            "0_initial_files/mitishambaScraped.tsv.zip")
+            "mitishambaScraped.tsv.zip")
 
 ##### nanpdb
 pathDataExternalDbSourceNanpdb <-
@@ -325,7 +325,7 @@ pathDataExternalDbSourceNanpdb <-
 ###### original
 pathDataExternalDbSourceNanpdbOriginal <-
   file.path(pathDataExternalDbSourceNanpdb,
-            "0_initial_files/nanpdbScraped.tsv.zip")
+            "nanpdbScraped.tsv.zip")
 
 ##### npass
 pathDataExternalDbSourceNpass <-
@@ -336,28 +336,28 @@ pathDataExternalDbSourceNpass <-
 pathDataExternalDbSourceNpassGeneralInfo <-
   file.path(
     pathDataExternalDbSourceNpass,
-    "0_initial_files/NPASSv1.0_download_naturalProducts_generalInfo.txt"
+    "NPASSv1.0_download_naturalProducts_generalInfo.txt"
   )
 
 ###### properties
 pathDataExternalDbSourceNpassProperties <-
   file.path(
     pathDataExternalDbSourceNpass,
-    "0_initial_files/NPASSv1.0_download_naturalProducts_properties.txt"
+    "NPASSv1.0_download_naturalProducts_properties.txt"
   )
 
 ###### species info
 pathDataExternalDbSourceNpassSpeciesInfo <-
   file.path(
     pathDataExternalDbSourceNpass,
-    "0_initial_files/NPASSv1.0_download_naturalProducts_speciesInfo.txt"
+    "NPASSv1.0_download_naturalProducts_speciesInfo.txt"
   )
 
 ###### species pair
 pathDataExternalDbSourceNpassSpeciesPair <-
   file.path(
     pathDataExternalDbSourceNpass,
-    "0_initial_files/NPASSv1.0_download_naturalProducts_species_pair.txt"
+    "NPASSv1.0_download_naturalProducts_species_pair.txt"
   )
 
 ##### npatlas
@@ -368,7 +368,7 @@ pathDataExternalDbSourceNpatlas <-
 ###### original
 pathDataExternalDbSourceNpatlasOriginal <-
   file.path(pathDataExternalDbSourceNpatlas,
-            "0_initial_files/np_atlas_2019_12.tsv")
+            "np_atlas_2019_12.tsv")
 
 ##### npcare
 pathDataExternalDbSourceNpcare <-
@@ -470,13 +470,13 @@ pathDataExternalTranslationSourceCommon <-
 ###### phenolexplorer
 pathDataExternalTranslationSourceCommonPhenolexplorer <-
   file.path(pathDataExternalDbSourcePhenolexplorer,
-            "0_initial_files/foods.csv")
+            "foods.csv")
 
 ###### foodb
 pathDataExternalTranslationSourceCommonFoodb <-
   file.path(
     pathDataExternalDbSourceFoodb,
-    "0_initial_files/foodb_2020_04_07_csv/Food_copy.csv"
+    "foodb_2020_04_07_csv/Food_copy.csv"
   )
 
 ###### drduke
@@ -484,14 +484,14 @@ pathDataExternalTranslationSourceCommonFoodb <-
 pathDataExternalTranslationSourceCommonDrdukeCommon <-
   file.path(
     pathDataExternalDbSourceDrduke,
-    "0_initial_files/Duke-Source-CSV/COMMON_NAMES.csv"
+    "Duke-Source-CSV/COMMON_NAMES.csv"
   )
 
 ####### scientific
 pathDataExternalTranslationSourceCommonDrdukeScientific <-
   file.path(
     pathDataExternalDbSourceDrduke,
-    "DRDUKE/0_initial_files/Duke-Source-CSV/FNFTAX.csv"
+    "DRDUKE/Duke-Source-CSV/FNFTAX.csv"
   )
 
 ###### gbif
@@ -517,7 +517,7 @@ pathDataExternalTranslationSourceTcm <-
 ###### TM-MC
 pathDataExternalTranslationSourceTcmTmmc <-
   file.path(pathDataExternalDbSourceTmmc,
-            "TMMC/0_initial_files/compound.xlsx")
+            "TMMC/compound.xlsx")
 
 ###### TCMID
 pathDataExternalTranslationSourceTcmTcmid <-
