@@ -1,18 +1,15 @@
 #title: "MIBIG scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-path <- "0_initial_files/mibig_json_2.0/"
+# loading paths
+source("paths.R")
 
-outpath <- "MIBIG_std.tsv.zip"
+# loading functions
+source("functions.R")
 
-filenames <- list.files(path = path,
-                        pattern = "*.json",
-                        full.names = TRUE)
-
-df <- rbind(lapply(filenames, fromJSON))
+df <- rbind(lapply(pathDataExternalDbSourceMibigOriginal, fromJSON))
 
 x <- 1:length(df)
 
@@ -105,9 +102,11 @@ data_standard <- standardizing_original(
 #exporting
 write.table(
   x = data,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbMibig,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

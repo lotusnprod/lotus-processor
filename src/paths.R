@@ -291,17 +291,29 @@ pathDataExternalDbSourceMetabolightsStudiesScraped <-
     "0_initial_files/metabolightsStudiesScraped.tsv.zip"
   )
 
-
-
 ##### mibig
 pathDataExternalDbSourceMibig <-
   file.path(pathDataExternalDbSource,
             "mibig")
 
+###### original
+pathDataExternalDbSourceMibigOriginal <-
+  list.files(
+    path = file.path(pathDataExternalDbSourceMibig,
+                     "0_initial_files/mibig_json_2.0/"),
+    pattern = "*.json",
+    full.names = TRUE
+  )
+
 ##### mitishamba
 pathDataExternalDbSourceMitishamba <-
   file.path(pathDataExternalDbSource,
             "mitishamba")
+
+###### original
+pathDataExternalDbSourceMitishambaOriginal <-
+  file.path(pathDataExternalDbSourceMitishamba,
+            "0_initial_files/mitishambaScraped.tsv.zip")
 
 ##### nanpdb
 pathDataExternalDbSourceNanpdb <-
@@ -563,6 +575,16 @@ pathDataInterimDbKnapsack <-
 pathDataInterimDbMetabolights <-
   file.path(pathDataInterimDb,
             "metabolights.tsv.zip")
+
+##### mibig
+pathDataInterimDbMibig <-
+  file.path(pathDataInterimDb,
+            "mibig.tsv.zip")
+
+##### mitishamba
+pathDataInterimDbMitishamba <-
+  file.path(pathDataInterimDb,
+            "mitishamba.tsv.zip")
 
 #### dictionaries
 pathDataInterimDictionaries <-
