@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_original <- do.call("rbind",
-                         lapply(pathEtcmOriginal,
+                         lapply(pathDataExternalDbSourceEtcmOriginal,
                                 function(x) {
                                   dat <- read.csv(x, header = TRUE, sep = ",")
                                   dat$fileName <-
@@ -83,7 +83,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathEtcmStandard,
+    description = pathDataInterimDbEtcm,
     compression = 9,
     encoding = "UTF-8"
   ),

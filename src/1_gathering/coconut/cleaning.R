@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathCoconutOriginal),
+  file = gzfile(pathDataExternalDbSourceCoconutOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -61,7 +61,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathCoconutStandard,
+    description = pathDataInterimDbCoconut,
     compression = 9,
     encoding = "UTF-8"
   ),

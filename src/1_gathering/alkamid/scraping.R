@@ -13,10 +13,6 @@ url <- 'http://alkamid.ugent.be/molecule.php?ID='
 
 X <- (1:439)
 
-outpath <- "0_initial_files/ALKAMID_scraped.tsv.zip"
-
-outpathRef <- "0_initial_files/ALKAMID_ref_scraped.tsv.zip"
-
 getalkamid <- function(X)
 {
   tryCatch({
@@ -87,7 +83,7 @@ ALKAMID_REF_3 <- bind_rows(ALKAMID_REF_2, .id = "entry_id")
 write.table(
   x = ALKAMID,
   file = gzfile(
-    description = pathAlkamidOriginal,
+    description = pathDataExternalDbSourceAlkamidOriginal,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -100,7 +96,7 @@ write.table(
 write.table(
   x = ALKAMID_REF_3,
   file = gzfile(
-    description  = pathAlkamidRef,
+    description  = pathDataExternalDbSourceAlkamidRef,
     compression = 9,
     encoding = "UTF-8"
   ),

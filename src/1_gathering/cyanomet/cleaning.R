@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_original <- read_delim(
-  file = pathCyanometdbOriginal,
+  file = pathDataExternalDbSourceCyanometdb,
   delim = ",",
   escape_double = TRUE,
   trim_ws = FALSE
@@ -50,7 +50,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathCyanometdbStandard,
+    description = pathDataInterimDbCyanometdb,
     compression = 9,
     encoding = "UTF-8"
   ),

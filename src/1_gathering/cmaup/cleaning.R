@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_original_1 <- read_delim(
-  file = pathCmaupOriginal_1,
+  file = pathDataExternalDbSourceCmaupIngredients,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE,
@@ -20,7 +20,7 @@ data_original_1 <- read_delim(
   mutate_all(as.character)
 
 data_original_2 <- read_delim(
-  file = pathCmaupOriginal_2,
+  file = pathDataExternalDbSourceCmaupPlants,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -28,7 +28,7 @@ data_original_2 <- read_delim(
   mutate_all(as.character)
 
 data_original_3 <- read_delim(
-  file = pathCmaupOriginal_3,
+  file = pathDataExternalDbSourceCmaupAssociations,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE,
@@ -99,7 +99,7 @@ data_standard$name <- y_as_na(data_standard$name, "n.a.")
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathCmaupStandard,
+    description = pathDataInterimDbCmaup,
     compression = 9,
     encoding = "UTF-8"
   ),

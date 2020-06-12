@@ -11,7 +11,7 @@ source("functions.R")
 
 ## files
 data_common <- read_delim(
-  file = pathDrdukeCommonNames,
+  file = pathDataExternalDbSourceDrdukeCommonNames,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -20,7 +20,7 @@ data_common <- read_delim(
   select(FNFNUM, CNNAM)
 
 data_farmacy <- read_delim(
-  file = pathDrdukeFarmacy,
+  file = pathDataExternalDbSourceDrdukeFarmacy,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -28,7 +28,7 @@ data_farmacy <- read_delim(
   mutate_all(as.character)
 
 data_fntax <- read_delim(
-  file = pathDrdukeTaxa,
+  file = pathDataExternalDbSourceDrdukeTaxa,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -37,7 +37,7 @@ data_fntax <- read_delim(
   select(FNFNUM, TAXON)
 
 data_reference <- read_delim(
-  file = pathDrdukeRef,
+  file = pathDataExternalDbSourceDrdukeReferences,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -71,7 +71,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathDrdukeStandard,
+    description = pathDataInterimDbDrduke,
     compression = 9,
     encoding = "UTF-8"
   ),

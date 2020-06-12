@@ -1,4 +1,4 @@
-# title: "Biophytmol cleaneR"
+# title: "INFLAMNAT cleaneR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -10,35 +10,27 @@ source("paths.R")
 source("functions.R")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(pathBiophytmolOriginal),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+data_original <-
+  read_excel(pathDataExternalDbSourceInflamnatOriginal,
+             sheet = 1) %>%
   mutate_all(as.character)
 
 # selecting
 data_selected <- data_original %>%
-  select(uniqueid,
-         name,
-         smiles,
-         biologicalsource,
-         reference) %>%
-  cSplit("biologicalsource", "     ") %>%
-  select(uniqueid,
-         name,
-         smiles,
-         biologicalsource = biologicalsource_1,
-         reference) %>%
-  mutate_all(as.character) %>%
-  tibble()
+  select(
+    uniqueid = Index,
+    name = Name,
+    smiles = SMILES,
+    biologicalsource = Origin,
+    pubchem = CID,
+    reference = Reference
+  )
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "bio_2",
+    db = "inf_1",
     structure_field = c("name", "smiles")
   )
 
@@ -46,7 +38,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathBiophytmolStandard,
+    description = outpath,
     compression = 9,
     encoding = "UTF-8"
   ),

@@ -11,7 +11,7 @@ source("functions.R")
 
 ## db
 data_original <- read_delim(
-  file = gzfile(pathAlkamidOriginal),
+  file = gzfile(pathDataExternalDbSourceAlkamidOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -21,7 +21,7 @@ data_original <- read_delim(
 
 ## ref
 ref_original <- read_delim(
-  file = gzfile(pathAlkamidRef),
+  file = gzfile(pathDataExternalDbSourceAlkamidRef),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -163,7 +163,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathAlkamidStandard,
+    description = pathDataInterimDbAlkamid,
     compression = 9,
     encoding = "UTF-8"
   ),
