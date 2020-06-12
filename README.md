@@ -2,13 +2,7 @@
 
 *OpenNPDB:* an Open Natural Products Database. Actually, this database (DB) consists of XXX'XXX structure - organism pairs, gathered and standardized among XX open DB’s. It represents the most exhaustive open DB for natural products (NP’s) dereplication. It encompasses XXX'XXX distinct structures in XX’XXX resolved taxa. Additionally, both chemical and biological resolved taxonomies are given for each chemical and biological taxon, respectively. Other basic chemical descriptors and in silico tandem mass spectrometry (MS/MS) spectrum are provided for each structure. Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
-![Graphical abstract](outputs/figures/graphical_abstract.png)
-
-<object data="https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/blob/e47e42bb1335d381373ce65aa61a508f25e811c4/outputs/figures/graphical_abstract.pdf" type="application/pdf" width="1920px" height="1080px">
-    <embed src="https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/blob/e47e42bb1335d381373ce65aa61a508f25e811c4/outputs/figures/graphical_abstract.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/blob/e47e42bb1335d381373ce65aa61a508f25e811c4/outputs/figures/graphical_abstract.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+![Graphical abstract](data/processed/figures/graphical_abstract.png)
 
 ## Getting Started
 
