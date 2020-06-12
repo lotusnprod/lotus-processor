@@ -1,21 +1,17 @@
 #title: "MITISHAMBA cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "MITISHAMBA"
-originalfile <- "0_initial_files/Mitishamba_db_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
 ##files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceMitishambaOriginal),
   delim = "\t",
   trim_ws = TRUE,
   escape_backslash = TRUE
@@ -42,9 +38,11 @@ data_standard <-
 #exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbMitishamba,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

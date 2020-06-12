@@ -1,10 +1,13 @@
 #title: "MITISHAMBA scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/Mitishamba_db_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 X <- (1:1102)
 
@@ -27,7 +30,8 @@ GetMitishamba <- function(X)
     df3 <- data.frame(df2) %>%
       filter(rownames(.) == "X2")
     df3[setdiff(
-      row(df3),c(
+      row(df3),
+      c(
         "mw",
         "mmff",
         "logp",
@@ -47,7 +51,7 @@ GetMitishamba <- function(X)
         "name",
         "place_of_collection"
       )
-    )]<- NA
+    )] <- NA
     return(df3)
   },
   error = function(e) {
@@ -62,7 +66,7 @@ MITISHAMBA <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores()-2),
+    mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE
   )
@@ -72,17 +76,27 @@ MITISHAMBA_2 <- MITISHAMBA[MITISHAMBA != "Timed out!"]
 
 MITISHAMBA_3 <- bind_rows(MITISHAMBA_2)
 
-MITISHAMBA_3[] <- lapply(MITISHAMBA_3, function(x) gsub("\r\n", " ", x))
-MITISHAMBA_3[] <- lapply(MITISHAMBA_3, function(x) gsub("\r", " ", x))
-MITISHAMBA_3[] <- lapply(MITISHAMBA_3, function(x) gsub("\n", " ", x))
-MITISHAMBA_3[] <- lapply(MITISHAMBA_3, function(x) gsub("\t", " ", x))
+MITISHAMBA_3[] <-
+  lapply(MITISHAMBA_3, function(x)
+    gsub("\r\n", " ", x))
+MITISHAMBA_3[] <-
+  lapply(MITISHAMBA_3, function(x)
+    gsub("\r", " ", x))
+MITISHAMBA_3[] <-
+  lapply(MITISHAMBA_3, function(x)
+    gsub("\n", " ", x))
+MITISHAMBA_3[] <-
+  lapply(MITISHAMBA_3, function(x)
+    gsub("\t", " ", x))
 
 #exporting
 write.table(
   x = MITISHAMBA_3,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceMitishambaOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
