@@ -7081,7 +7081,7 @@ taxo_cleaning_auto <- function(dfsel) {
 getref <- function(X) {
   tryCatch({
     cr_works(
-      query = X,
+      flq = c(query.bibliographic = X),
       sort = 'score',
       order = "desc",
       limit = 1
