@@ -1,6 +1,7 @@
 name: opennbdb_dev_env
 channels:
   - conda-forge
+  - bioconda
   - defaults
 dependencies:
   - python=3.7
@@ -159,4 +160,4 @@ dependencies:
   - beautifulsoup4
   - lxml
   - urllib3
-prefix: /home/EPGL.UNIGE.LOCAL/allardp/anaconda3/envs/opennbdb_dev_env
+
