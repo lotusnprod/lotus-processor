@@ -1,5 +1,6 @@
 .vscode/
 .DS_Store
+**/.DS_Store
 settings.json
 *.Rhistory
 *.ipynb_checkpoints
@@ -8,3 +9,4 @@ settings.json
 **/0_initial_files/
 *.log
 ci_env
+default.profraw
