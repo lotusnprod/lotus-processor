@@ -251,7 +251,7 @@ pathDataExternalDbSourceKnapsack <-
 ###### original
 pathDataExternalDbSourceKnapsackOriginal <-
   file.path(pathDataExternalDbSourceKnapsack,
-            "0_initial_files/Knapsack_db.tsv.zip")
+            "0_initial_files/knapsackScraped.tsv.zip")
 
 ##### metabolights
 pathDataExternalDbSourceMetabolights <-
@@ -518,6 +518,11 @@ pathDataInterimDbFoodb <-
 pathDataInterimDbInflamnat <-
   file.path(pathDataInterimDb,
             "inflamnat.tsv.zip")
+
+##### knapsack
+pathDataInterimDbKnapsack <-
+  file.path(pathDataInterimDb,
+            "knapsack.tsv.zip")
 
 #### dictionaries
 pathDataInterimDictionaries <-

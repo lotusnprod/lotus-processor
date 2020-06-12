@@ -1,10 +1,13 @@
 #title: "Knapsack scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/Knapsack_db.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
   
 url <-
   'http://www.knapsackfamily.com/knapsack_core/information.jsp?word=C00'
@@ -118,7 +121,7 @@ KNApSAcK_db <- cbind(KnapSackTable,df4)
 #exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
+  file = gzfile(description = pathDataExternalDbSourceKnapsackOriginal,
                 compression = 9,
                 encoding = "UTF-8"),
   row.names = FALSE,
