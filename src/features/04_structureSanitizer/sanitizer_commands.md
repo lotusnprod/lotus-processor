@@ -1,0 +1,1 @@
+python features/04_structureSanitizer/04_structureSanitizer.py ../data/interim/tables/1_translated/rdkit/translatedStructureRdkit.tsv.zip ../data/interim/tables/2_sanitized/sanitizedStructure.tsv.zip structureTranslated

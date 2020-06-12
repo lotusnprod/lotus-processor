@@ -1,0 +1,2526 @@
+---
+title: "Open NP DB Designer"
+---
+
+#loading functions
+```{r}
+source("functions.R")
+```
+
+#loading files
+##fullDB
+```{r}
+inhouseDb <- read_delim(
+  file = gzfile("outputs/tables/3_curated/curatedTable.tsv.zip"),
+  col_types = cols(.default = "c"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+  ) %>% 
+  data.frame()
+#filter(!is.na(organism_lowertaxon))
+```
+
+##open NP DB
+```{r}
+openDb <- inhouseDb %>% 
+  filter(database != "dnp_1")
+```
+
+##dnp 
+```{r}
+dnpDb <- inhouseDb %>% 
+  filter(database == "dnp_1")
+```
+
+##inhouseDb pairs
+```{r}
+inhouseDbPairs <- read_delim(
+  file = gzfile("outputs/tables/inhouseDbPairs.tsv.zip"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+  ) %>% 
+  data.frame()
+```
+
+##open NP DB pairs
+```{r}
+openDbPairs <- read_delim(
+  file = gzfile("outputs/tables/openDbPairs.tsv.zip"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+  ) %>% 
+  data.frame()
+```
+
+##DNP pairs
+```{r}
+dnpDbPairs <- read_delim(
+  file = gzfile("outputs/tables/dnpDbPairs.tsv.zip"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+  ) %>% 
+  data.frame()
+```
+
+#outputing number of databases
+```{r}
+dbnum <-
+  as.numeric(nrow(inhouseDb %>%
+                    distinct(inhouseDb$database)))
+```
+
+#plotting
+##structures
+```{r}
+pdf(file = "outputs/figures/structures.pdf")
+inhouseDb_structures_2plot <- inhouseDb %>%
+  filter(!is.na(structureCurated)) %>%
+  distinct(structureCurated, database) %>%
+  group_by(database) %>%
+  count(structureCurated) %>%
+  ungroup()
+
+inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_structures_dis <- inhouseDb %>%
+  distinct(structureCurated,
+           database,
+           .keep_all = TRUE)
+
+inhouseDb_structures_2plot_wide <-
+  left_join(inhouseDb_structures_2plot_wide,
+            inhouseDb_structures_dis) %>%
+  distinct(structureCurated, .keep_all = TRUE)
+
+mostsuperclass <- inhouseDb_structures_2plot_wide %>%
+  filter(!is.na(chemo_02_superclass)) %>%
+  count(chemo_02_superclass) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+upset(
+  inhouseDb_structures_2plot_wide,
+  nsets = 10,
+  # query.legend = "top",
+  # queries = list(
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1],
+  #         mostsuperclass[6, 1],
+  #         mostsuperclass[7, 1],
+  #         mostsuperclass[8, 1],
+  #         mostsuperclass[9, 1],
+  #         mostsuperclass[10, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#6a3d9a",
+  #     query.name = mostsuperclass[1, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1],
+  #         mostsuperclass[6, 1],
+  #         mostsuperclass[7, 1],
+  #         mostsuperclass[8, 1],
+  #         mostsuperclass[9, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#cab2d6",
+  #     query.name = mostsuperclass[2, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1],
+  #         mostsuperclass[6, 1],
+  #         mostsuperclass[7, 1],
+  #         mostsuperclass[8, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#ff7f00",
+  #     query.name = mostsuperclass[3, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1],
+  #         mostsuperclass[6, 1],
+  #         mostsuperclass[7, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#fdbf6f",
+  #     query.name = mostsuperclass[4, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1],
+  #         mostsuperclass[6, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#e31a1c",
+  #     query.name = mostsuperclass[5, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1],
+  #         mostsuperclass[5, 1]
+  #       )
+  #     ),
+  #     
+  #     active = TRUE,
+  #     color = "#fb9a99",
+  #     query.name = mostsuperclass[6, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(
+  #         mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1],
+  #         mostsuperclass[4, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#33a02c",
+  #     query.name = mostsuperclass[7, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "chemo_02_superclass",
+  #       c(mostsuperclass[1, 1],
+  #         mostsuperclass[2, 1],
+  #         mostsuperclass[3, 1])
+  #     ),
+  #     active = TRUE,
+  #     color = "#b2df8a",
+  #     query.name = mostsuperclass[8, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list("chemo_02_superclass",
+  #                   c(mostsuperclass[1, 1],
+  #                     mostsuperclass[2, 1])),
+  #     active = TRUE,
+  #     color = "#1f78b4",
+  #     query.name = mostsuperclass[9, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list("chemo_02_superclass",
+  #                   c(mostsuperclass[1, 1])),
+  #     active = TRUE,
+  #     color = "#a6cee3",
+  #     query.name = mostsuperclass[10, 1]
+  #   )
+  # ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 15,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per database",
+  set_size.show = TRUE
+)
+```
+
+##bio taxa
+```{r}
+pdf(file = "outputs/figures/bio.pdf")
+inhouseDb_biologicalsource_2plot <- inhouseDb %>%
+  filter(!is.na(organismCurated)) %>%
+  distinct(organismCurated, database) %>%
+  group_by(database) %>%
+  count(organismCurated) %>%
+  ungroup()
+
+inhouseDb_biologicalsource_2plot_wide <-
+  inhouseDb_biologicalsource_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_organism_dis <- inhouseDb %>%
+  filter(!is.na(organismCurated)) %>%
+  distinct(organismCurated,
+           database, 
+           .keep_all = TRUE)
+
+inhouseDb_biologicalsource_2plot_wide <-
+  left_join(inhouseDb_biologicalsource_2plot_wide,
+            inhouseDb_organism_dis) %>%
+  distinct(organismCurated, .keep_all = TRUE)
+
+mostkingdom <- inhouseDb_biologicalsource_2plot_wide %>%
+  filter(!is.na(organism_1_kingdom)) %>%
+  count(organism_1_kingdom) %>%
+  arrange(desc(n))
+
+upset(
+  inhouseDb_biologicalsource_2plot_wide,
+  nsets = 10,
+  # query.legend = "top",
+  # queries = list(
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "organism_1_kingdom",
+  #       c(
+  #         mostkingdom[1, 1],
+  #         mostkingdom[2, 1],
+  #         mostkingdom[3, 1],
+  #         mostkingdom[4, 1],
+  #         mostkingdom[5, 1],
+  #         mostkingdom[6, 1],
+  #         mostkingdom[7, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#fdbf6f",
+  #     query.name = mostkingdom[7, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "organism_1_kingdom",
+  #       c(
+  #         mostkingdom[1, 1],
+  #         mostkingdom[2, 1],
+  #         mostkingdom[3, 1],
+  #         mostkingdom[4, 1],
+  #         mostkingdom[5, 1],
+  #         mostkingdom[6, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#e31a1c",
+  #     query.name = mostkingdom[6, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "organism_1_kingdom",
+  #       c(
+  #         mostkingdom[1, 1],
+  #         mostkingdom[2, 1],
+  #         mostkingdom[3, 1],
+  #         mostkingdom[4, 1],
+  #         mostkingdom[5, 1]
+  #       )
+  #     ),
+  #     active = TRUE,
+  #     color = "#fb9a99",
+  #     query.name = mostkingdom[5, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list(
+  #       "organism_1_kingdom",
+  #       c(mostkingdom[1, 1],
+  #         mostkingdom[2, 1],
+  #         mostkingdom[3, 1],
+  #         mostkingdom[4, 1])
+  #     ),
+  #     active = TRUE,
+  #     color = "#33a02c",
+  #     query.name = mostkingdom[4, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list("organism_1_kingdom",
+  #                   c(mostkingdom[1, 1],
+  #                     mostkingdom[2, 1],
+  #                     mostkingdom[3, 1])),
+  #     active = TRUE,
+  #     color = "#b2df8a",
+  #     query.name = mostkingdom[3, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list("organism_1_kingdom",
+  #                   c(mostkingdom[1, 1],
+  #                     mostkingdom[2, 1])),
+  #     
+  #     active = TRUE,
+  #     color = "#1f78b4",
+  #     query.name = mostkingdom[2, 1]
+  #   ),
+  #   list(
+  #     query = elements,
+  #     params = list("organism_1_kingdom",
+  #                   c(mostkingdom[1, 1])),
+  #     active = TRUE,
+  #     color = "#a6cee3",
+  #     query.name = mostkingdom[1, 1]
+  #   )
+  # ),
+  mb.ratio = c(0.6, 0.4),
+  order.by = "freq",
+  nintersects = 15,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique biological sources per intersection",
+  sets.x.label = "Unique sources per database",
+  set_size.show = TRUE
+)
+```
+
+##pairs
+```{r}
+pdf(file = "outputs/figures/pairs.pdf")
+inhouseDbPairs_2plot <- inhouseDb %>%
+  filter(!is.na(structureCurated) &
+           !is.na(organismCurated)) %>%
+  distinct(structureCurated,
+           organismCurated,
+           database,
+           .keep_all = TRUE) %>%
+  group_by(database) %>%
+  count(structureCurated, organismCurated) %>%
+  ungroup()
+
+inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+upset(
+  inhouseDbPairs_2plot_wide,
+  nsets = 10,
+  mb.ratio = c(0.6, 0.4),
+  order.by = "freq",
+  nintersects = 15,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique pairs per intersection",
+  sets.x.label = "Unique pairs per database",
+  set_size.show = TRUE
+)
+```
+
+##most studied structures
+```{r}
+pdf(file = "outputs/figures/b-sitosterol.pdf")
+inhouseDb_most_structures <- inhouseDbPairs %>%
+  filter(!is.na(structureCurated)) %>%
+  count(structureCurated) %>%
+  arrange(desc(n))
+
+mostinchi <- as.character(inhouseDb_most_structures[1, 1])
+
+inhouseDb_most_structures_2plot <- inhouseDbPairs %>%
+  filter(structureCurated == mostinchi) %>%
+  distinct(structureCurated, 
+           organismCurated,
+           database, 
+           .keep_all = TRUE) %>%
+  group_by(database, organismCurated) %>%
+  count(structureCurated) %>%
+  ungroup()
+
+inhouseDb_most_structures_2plot_wide <-
+  inhouseDb_most_structures_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_most_structures_2plot_wide <-
+  left_join(inhouseDb_most_structures_2plot_wide,
+            inhouseDbPairs) %>%
+  distinct(structureCurated, 
+           organismCurated,
+           .keep_all = TRUE)
+
+mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
+  filter(!is.na(organism_1_kingdom)) %>%
+  count(organism_1_kingdom) %>%
+  arrange(desc(n))
+
+dbnumostinchi <- as.numeric(nrow(
+  inhouseDbPairs %>%
+    filter(structureCurated == mostinchi) %>%
+    distinct(database)
+))
+
+upset(
+  inhouseDb_most_structures_2plot_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "organism_1_kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1],
+          mostkingdom[6, 1],
+          mostkingdom[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostkingdom[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_1_kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1],
+          mostkingdom[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostkingdom[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_1_kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostkingdom[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_1_kingdom",
+        c(mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1])
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostkingdom[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organism_1_kingdom",
+                    c(mostkingdom[1, 1],
+                      mostkingdom[2, 1],
+                      mostkingdom[3, 1])),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostkingdom[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organism_1_kingdom",
+                    c(mostkingdom[1, 1],
+                      mostkingdom[2, 1])),
+      
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostkingdom[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organism_1_kingdom",
+                    c(mostkingdom[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostkingdom[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 20,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique sources per intersection",
+  sets.x.label = "Unique source per database",
+  set_size.show = TRUE
+)
+```
+
+##most studied plant
+```{r}
+pdf(file = "outputs/figures/Panax.pdf")
+
+inhouseDb_most_plant <- inhouseDb %>%
+  filter(!is.na(organismCurated)) %>%
+  filter(organism_1_kingdom == "Plantae") %>%
+  count(organismCurated) %>%
+  arrange(desc(n))
+
+mostplant <- as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCurated == "Panax ginseng", 1])
+
+inhouseDb_most_biologicalsource_2plot <- inhouseDb %>%
+  filter(organismCurated == mostplant) %>%
+  distinct(structureCurated, organismCurated,
+           database, 
+           .keep_all = TRUE) %>%
+  group_by(organismCurated, database) %>%
+  count(structureCurated) %>%
+  ungroup()
+
+inhouseDb_most_biologicalsource_2plot_wide <-
+  inhouseDb_most_biologicalsource_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_most_biologicalsource_2plot_wide <-
+  left_join(inhouseDb_most_biologicalsource_2plot_wide,
+            inhouseDb) %>%
+  distinct(structureCurated,
+           organismCurated,
+           .keep_all = TRUE)
+
+dbnumostbiologicalsource <- as.numeric(nrow(
+  inhouseDb %>%
+    filter(organismCurated == mostplant) %>%
+    distinct(database)
+))
+
+mostclasses <- inhouseDb_most_biologicalsource_2plot_wide %>% 
+  filter(!is.na(chemo_lowertaxon)) %>%
+  count(chemo_lowertaxon) %>%
+  arrange(desc(n)) %>% 
+  head(10)
+
+upset(
+  inhouseDb_most_biologicalsource_2plot_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1],
+          mostclasses[6, 1],
+          mostclasses[7, 1],
+          mostclasses[8, 1],
+          mostclasses[9, 1],
+          mostclasses[10, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#6a3d9a",
+      query.name = mostclasses[10, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1],
+          mostclasses[6, 1],
+          mostclasses[7, 1],
+          mostclasses[8, 1],
+          mostclasses[9, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#cab2d6",
+      query.name = mostclasses[9, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1],
+          mostclasses[6, 1],
+          mostclasses[7, 1],
+          mostclasses[8, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#ff7f00",
+      query.name = mostclasses[8, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1],
+          mostclasses[6, 1],
+          mostclasses[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostclasses[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1],
+          mostclasses[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostclasses[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(
+          mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1],
+          mostclasses[5, 1]
+        )
+      ),
+      
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostclasses[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1],
+          mostclasses[4, 1])
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostclasses[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_lowertaxon",
+        c(mostclasses[1, 1],
+          mostclasses[2, 1],
+          mostclasses[3, 1])
+      ),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostclasses[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("chemo_lowertaxon",
+                    c(mostclasses[1, 1],
+                      mostclasses[2, 1])),
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostclasses[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("chemo_lowertaxon",
+                    c(mostclasses[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostclasses[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 20,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per database",
+  set_size.show = TRUE
+)
+```
+
+##chosen chemical class
+```{r}
+pdf(file = "outputs/figures/tropane_alkaloids.pdf")
+
+inhouseDb_most_chemical_class_2plot <- inhouseDb %>%
+  filter(chemo_03_class == "Tropane alkaloids") %>%
+  distinct(structureCurated,
+           organismCurated,
+           database,
+           .keep_all = TRUE) %>%
+  group_by(organism_5_family, database) %>%
+  count(structureCurated) %>%
+  ungroup()
+
+inhouseDb_most_chemical_class_2plot_wide <-
+  inhouseDb_most_chemical_class_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_most_chemical_class_2plot_wide <-
+  left_join(inhouseDb_most_chemical_class_2plot_wide,
+            inhouseDb) %>%
+  distinct(structureCurated,
+           organismCurated,
+           .keep_all = TRUE)
+
+dbnumostchemicalclass <- as.numeric(nrow(
+  inhouseDb %>%
+    filter(chemo_03_class == "Tropane alkaloids") %>%
+    distinct(database)
+))
+
+mostfamilies <-
+  inhouseDb_most_chemical_class_2plot_wide %>%
+  filter(!is.na(organism_5_family)) %>%
+  count(organism_5_family) %>%
+  arrange(desc(n)) %>%
+  head(10)
+  
+upset(
+  inhouseDb_most_chemical_class_2plot_wide,
+  sets = c(colnames(
+    inhouseDb_most_chemical_class_2plot_wide[, 3:(dbnumostchemicalclass + 2)]
+  )),
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1],
+          mostfamilies[6, 1],
+          mostfamilies[7, 1],
+          mostfamilies[8, 1],
+          mostfamilies[9, 1],
+          mostfamilies[10, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#6a3d9a",
+      query.name = mostfamilies[10, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1],
+          mostfamilies[6, 1],
+          mostfamilies[7, 1],
+          mostfamilies[8, 1],
+          mostfamilies[9, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#cab2d6",
+      query.name = mostfamilies[9, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1],
+          mostfamilies[6, 1],
+          mostfamilies[7, 1],
+          mostfamilies[8, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#ff7f00",
+      query.name = mostfamilies[8, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1],
+          mostfamilies[6, 1],
+          mostfamilies[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostfamilies[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1],
+          mostfamilies[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostfamilies[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(
+          mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1],
+          mostfamilies[5, 1]
+        )
+      ),
+      
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostfamilies[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1],
+          mostfamilies[4, 1])
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostfamilies[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organism_5_family",
+        c(mostfamilies[1, 1],
+          mostfamilies[2, 1],
+          mostfamilies[3, 1])
+      ),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostfamilies[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organism_5_family",
+                    c(mostfamilies[1, 1],
+                      mostfamilies[2, 1])),
+      active = TRUE,
+      
+      color = "#1f78b4",
+      query.name = mostfamilies[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organism_5_family",
+                    c(mostfamilies[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostfamilies[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 20,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per database",
+  set_size.show = TRUE
+)
+```
+
+##chemical superclasses by biological kingdom
+```{r}
+pdf(file = "outputs/figures/kingdoms.pdf")
+inhouseDb_kingdoms <- inhouseDbPairs %>%
+  filter(!is.na(organism_1_kingdom)) %>%
+  distinct(structureCurated,
+           organism_1_kingdom,
+           .keep_all = TRUE) %>%
+  group_by(organism_1_kingdom) %>%
+  count(structureCurated) %>%
+  ungroup()
+
+inhouseDb_kingdoms_wide <-
+  inhouseDb_kingdoms %>%
+  pivot_wider(names_from = organism_1_kingdom,
+              values_from = n) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+chemo <- inhouseDb %>%
+  distinct(structureCurated,
+           chemo_02_superclass)
+
+inhouseDb_kingdoms_wide <-
+  left_join(inhouseDb_kingdoms_wide, chemo) %>%
+  distinct(structureCurated, .keep_all = TRUE)
+
+mostsuperclass <- inhouseDb_kingdoms_wide %>%
+  count(chemo_02_superclass) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+upset(
+  inhouseDb_kingdoms_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1],
+          mostsuperclass[6, 1],
+          mostsuperclass[7, 1],
+          mostsuperclass[8, 1],
+          mostsuperclass[9, 1],
+          mostsuperclass[10, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#6a3d9a",
+      query.name = mostsuperclass[10, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1],
+          mostsuperclass[6, 1],
+          mostsuperclass[7, 1],
+          mostsuperclass[8, 1],
+          mostsuperclass[9, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#cab2d6",
+      query.name = mostsuperclass[9, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1],
+          mostsuperclass[6, 1],
+          mostsuperclass[7, 1],
+          mostsuperclass[8, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#ff7f00",
+      query.name = mostsuperclass[8, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1],
+          mostsuperclass[6, 1],
+          mostsuperclass[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostsuperclass[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1],
+          mostsuperclass[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostsuperclass[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1],
+          mostsuperclass[5, 1]
+        )
+      ),
+      
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostsuperclass[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(
+          mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1],
+          mostsuperclass[4, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostsuperclass[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "chemo_02_superclass",
+        c(mostsuperclass[1, 1],
+          mostsuperclass[2, 1],
+          mostsuperclass[3, 1])
+      ),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostsuperclass[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("chemo_02_superclass",
+                    c(mostsuperclass[1, 1],
+                      mostsuperclass[2, 1])),
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostsuperclass[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("chemo_02_superclass",
+                    c(mostsuperclass[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostsuperclass[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 38,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per kingdom",
+  set_size.show = TRUE
+)
+```
+
+##venn comparisons with DNP
+###structures
+```{r}
+pdf(file = "outputs/figures/Venn_structures.pdf")
+open_structures <- openDb %>%
+  filter(!is.na(structureCurated)) %>% 
+  distinct(structureCurated)
+
+open_structures$database <- "open"
+
+dnp_structures <- dnpDb %>%
+  filter(!is.na(structureCurated)) %>% 
+  distinct(structureCurated, database)
+
+full_structures <- full_join(open_structures,
+                             dnp_structures) %>%
+  pivot_wider(names_from = database,
+              values_from = database)
+
+Venn_structures = c(
+  "open" = nrow(
+    subset(
+      full_structures,
+      full_structures$open == "open" &
+        is.na(full_structures$dnp_1)
+    )
+  ),
+  "dnp" = nrow(
+    subset(
+      full_structures,
+      full_structures$dnp_1 == "dnp_1" &
+        is.na(full_structures$open)
+    )
+  ),
+  "open&dnp" = nrow(
+    subset(
+      full_structures,
+      full_structures$open == "open" &
+        full_structures$dnp_1 == "dnp_1"
+    )
+  )
+)
+
+v_structures <- euler(combinations = Venn_structures)
+
+v1 <- plot(
+  v_structures,
+  legend = TRUE,
+  fills = c("#b2df8a", "#1f78b4"),
+  alpha = 0.8,
+  edges = FALSE,
+  labels = FALSE,
+  quantities = TRUE
+)
+
+v1
+```
+
+###bio taxa
+```{r}
+pdf(file = "outputs/figures/Venn_taxa.pdf")
+open_taxa <- openDb %>%
+  filter(!is.na(organism_lowertaxon)) %>%
+  distinct(organism_lowertaxon)
+
+open_taxa$database <- "open"
+
+dnp_taxa <- dnpDb %>%
+  filter(!is.na(organism_lowertaxon)) %>%
+  distinct(organism_lowertaxon, database)
+
+full_taxa <-
+  full_join(open_taxa, dnp_taxa) %>%
+  pivot_wider(names_from = database, 
+              values_from = database)
+
+Venn_taxa = c(
+  "open" = nrow(subset(
+    full_taxa,
+    full_taxa$open == "open" &
+      is.na(full_taxa$dnp_1)
+  )),
+  "dnp" = nrow(subset(
+    full_taxa,
+    full_taxa$dnp_1 == "dnp_1" &
+      is.na(full_taxa$open)
+  )),
+  "open&dnp" = nrow(
+    subset(full_taxa,
+           full_taxa$open == "open" &
+             full_taxa$dnp_1 == "dnp_1")
+  )
+)
+
+v_taxa <- euler(combinations = Venn_taxa)
+
+v2 <- plot(
+  v_taxa,
+  legend = TRUE,
+  fills = c("#b2df8a", "#1f78b4"),
+  alpha = 0.8,
+  edges = FALSE,
+  labels = FALSE,
+  quantities = TRUE
+)
+v2
+```
+
+###pairs
+```{r}
+pdf(file = "outputs/figures/Venn_pairs.pdf")
+open_pairs <- openDbPairs %>%
+  distinct(structureCurated, 
+           organismCurated)
+
+open_pairs$database <- "open"
+
+dnp_pairs <- dnpDbPairs %>%
+  distinct(structureCurated,
+           organismCurated, 
+           database)
+
+full_pairs <-
+  full_join(open_pairs, dnp_pairs) %>%
+  pivot_wider(names_from = database,
+              values_from = database)
+
+Venn_pairs = c(
+  "open" = nrow(subset(
+    full_pairs,
+    full_pairs$open == "open" &
+      is.na(full_pairs$dnp_1)
+  )),
+  "dnp" = nrow(subset(
+    full_pairs,
+    full_pairs$dnp_1 == "dnp_1" &
+      is.na(full_pairs$open)
+  )),
+  "open&dnp" = nrow(
+    subset(
+      full_pairs,
+      full_pairs$open == "open" &
+        full_pairs$dnp_1 == "dnp_1"
+    )
+  )
+)
+
+v_pairs <- euler(combinations = Venn_pairs)
+
+v3 <- plot(
+  v_pairs,
+  legend = TRUE,
+  fills = c("#b2df8a", "#1f78b4"),
+  alpha = 0.8,
+  edges = FALSE,
+  labels = FALSE,
+  quantities = TRUE
+)
+v3
+```
+
+##trees
+#bio
+```{r}
+data4tree_bio <- openDbPairs %>%
+  filter(
+    !is.na(organism_1_kingdom) &
+      !is.na(organism_2_phylum) &
+      !is.na(organism_3_class) &
+      !is.na(organism_4_order) &
+      !is.na(organism_5_family) &
+      !is.na(organism_6_genus) &
+      !is.na(organism_7_species)
+  ) %>%
+  distinct(organism_7_species,
+           .keep_all = TRUE) %>%
+  group_by(
+    organism_1_kingdom,
+    organism_2_phylum,
+    organism_3_class,
+    organism_4_order,
+    organism_5_family,
+    organism_6_genus,
+    organism_7_species
+  ) %>%
+  summarize("percentage of parent" = n())
+```
+
+```{r}
+Tree_bio <- collapsibleTreeSummary(
+  df = data4tree_bio,
+  hierarchy = c(
+    "organism_1_kingdom",
+    "organism_2_phylum",
+    "organism_3_class",
+    "organism_4_order",
+    "organism_5_family",
+    "organism_6_genus",
+    "organism_7_species"
+  ),
+  root = "Open NP DB",
+  nodeSize = NULL,
+  attribute = "percentage of parent",
+  collapsed = TRUE,
+  fillFun = viridis::viridis,
+  maxPercent = 10,
+  percentOfParent = TRUE,
+  fontSize = 12,
+  width = 4800,
+  height = 9600
+)
+Tree_bio
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(Tree_bio),
+                        file = "Tree_bio.html")
+```
+
+##chemo
+```{r}
+data4tree_chemo <- openDbPairs %>%
+  filter(!is.na(chemo_lowertaxon)) %>%
+  filter(
+    !is.na(chemo_01_kingdom) &
+      !is.na(chemo_02_superclass) &
+      !is.na(chemo_03_class) &
+      !is.na(chemo_04_subclass) &
+      !is.na(chemo_05_parent)
+  ) %>%
+  distinct(chemo_05_parent, .keep_all = TRUE) %>%
+  group_by(
+    chemo_01_kingdom,
+    chemo_02_superclass,
+    chemo_03_class,
+    chemo_04_subclass,
+    chemo_05_parent
+  ) %>%
+  summarize("percentage of parent" = n())
+```
+
+```{r}
+Tree_chemo <-   collapsibleTreeSummary(
+  df = data4tree_chemo,
+  hierarchy = c(
+    "chemo_01_kingdom",
+    "chemo_02_superclass",
+    "chemo_03_class",
+    "chemo_04_subclass",
+    "chemo_05_parent"
+  ),
+  root = "Open NP DB",
+  nodeSize = NULL,
+  attribute = "percentage of parent",
+  collapsed = TRUE,
+  fillFun = viridis::viridis,
+  maxPercent = 10,
+  percentOfParent = TRUE,
+  fontSize = 24,
+  width = 3600,
+  height = 1200
+)
+Tree_chemo
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
+                        file = "Tree_chemo.html")
+```
+
+
+```{r}
+# data4circle <- openDbPairs %>%
+#   distinct(structureCurated, organismCurated, .keep_all = TRUE) %>%
+#   sample_n(1000)
+```
+
+```{r}
+# labelling_intermediate_bio <- function(data)
+# {
+#   label_initial <- data %>%
+#     distinct(organism_1_kingdom,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_1_kingdom,
+#            to = organism_1_kingdom) %>%
+#     mutate(from = "ONPDB",
+#            level_bio = 1)
+#   
+#   label_intermediate_1 <- data %>%
+#     distinct(organism_2_phylum,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_1_kingdom,
+#            to = organism_2_phylum) %>%
+#     mutate(level_bio = 2)
+#   
+#   label_intermediate_2 <- data %>%
+#     distinct(organism_3_class,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_2_phylum,
+#            to = organism_3_class) %>%
+#     mutate(level_bio = 3)
+#   
+#   label_intermediate_3 <- data %>%
+#     distinct(organism_4_order,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_3_class,
+#            to = organism_4_order) %>%
+#     mutate(level_bio = 4)
+#   
+#   label_intermediate_4 <- data %>%
+#     distinct(organism_5_family,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_4_order,
+#            to = organism_5_family) %>%
+#     mutate(level_bio = 5)
+#   
+#   label_intermediate_5 <- data %>%
+#     distinct(organism_6_genus,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_5_family,
+#            to = organism_6_genus) %>%
+#     mutate(level_bio = 6)
+#   
+#   label_intermediate_6 <- data %>%
+#     distinct(organism_7_species,
+#              .keep_all = TRUE) %>%
+#     select(from = organism_6_genus,
+#            to = organism_7_species) %>%
+#     mutate(level_bio = 7)
+#   
+#   labels_intermediate <- rbind(
+#     label_initial,
+#     label_intermediate_1,
+#     label_intermediate_2,
+#     label_intermediate_3,
+#     label_intermediate_4,
+#     label_intermediate_5,
+#     label_intermediate_6
+#   ) %>%
+#     filter(!is.na(from) & !is.na(to)) %>%
+#     distinct(from,
+#              to,
+#              .keep_all = TRUE)
+#   
+#   return(labels_intermediate)
+# }
+```
+
+```{r}
+# hierarchial_network_df_bio <-
+#   labelling_intermediate_bio(data = data4circle)
+```
+
+```{r}
+# labelling_intermediate_chemo <- function(data)
+# {
+#     label_initial <- data %>%
+#     distinct(chemo_01_kingdom,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_01_kingdom,
+#            to = chemo_01_kingdom) %>%
+#     mutate(from = "ONPDB",
+#            level_chemo = 1)
+#     
+#   label_intermediate_01 <- data %>%
+#     distinct(chemo_02_superclass,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_01_kingdom,
+#            to = chemo_02_superclass) %>%
+#     mutate(level_chemo = 2)
+#   
+#   label_intermediate_02 <- data %>%
+#     distinct(chemo_03_class,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_02_superclass,
+#            to = chemo_03_class) %>%
+#     mutate(level_chemo = 3)
+#   
+#   label_intermediate_03 <- data %>%
+#     distinct(chemo_04_subclass,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_03_class,
+#            to = chemo_04_subclass) %>%
+#     mutate(level_chemo = 4)
+#   
+#   label_intermediate_04 <- data %>%
+#     distinct(chemo_05_parent,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_04_subclass,
+#            to = chemo_05_parent) %>%
+#     mutate(level_chemo = 5)
+#   
+#   label_intermediate_05 <- data %>%
+#     distinct(chemo_06_subparent_1,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_05_parent,
+#            to = chemo_06_subparent_1) %>%
+#     mutate(level_chemo = 6)
+#   
+#   label_intermediate_06 <- data %>%
+#     distinct(chemo_07_subparent_2,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_06_subparent_1,
+#            to = chemo_07_subparent_2) %>%
+#     mutate(level_chemo = 7)
+#   
+#   label_intermediate_07 <- data %>%
+#     distinct(chemo_08_subparent_3,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_07_subparent_2,
+#            to = chemo_08_subparent_3) %>%
+#     mutate(level_chemo = 8)
+#   
+#   label_intermediate_08 <- data %>%
+#     distinct(chemo_09_subparent_4,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_08_subparent_3,
+#            to = chemo_09_subparent_4) %>%
+#     mutate(level_chemo = 9)
+#   
+#   label_intermediate_09 <- data %>%
+#     distinct(chemo_10_subparent_5,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_09_subparent_4,
+#            to = chemo_10_subparent_5) %>%
+#     mutate(level_chemo = 10)
+#   
+#   label_intermediate_10 <- data %>%
+#     distinct(chemo_11_subparent_6,
+#              .keep_all = TRUE) %>%
+#     select(from = chemo_10_subparent_5,
+#            to = chemo_11_subparent_6) %>%
+#     mutate(level_chemo = 11)
+#   
+#   labels_intermediate <- rbind(
+#     label_initial,
+#     label_intermediate_01,
+#     label_intermediate_02,
+#     label_intermediate_03,
+#     label_intermediate_04,
+#     label_intermediate_05,
+#     label_intermediate_06,
+#     label_intermediate_07,
+#     label_intermediate_08,
+#     label_intermediate_09,
+#     label_intermediate_10
+#   ) %>%
+#     filter(!is.na(from) & !is.na(to)) %>%
+#     distinct(from,
+#              to,
+#              .keep_all = TRUE)
+#   
+#   return(labels_intermediate)
+# }
+```
+
+```{r}
+# hierarchial_network_df_chemo <-
+#   labelling_intermediate_chemo(data = data4circle)
+```
+
+```{r}
+# hierarchial_network_df <- full_join(hierarchial_network_df_bio, hierarchial_network_df_chemo)
+```
+
+```{r}
+# hierarchial_network_df4test <- hierarchial_network_df %>%
+#   filter(level_bio <= 2 | level_chemo <= 2)
+```
+
+```{r}
+# vertices4test <-
+#   vertices <-
+#   data.frame(name = unique(c(
+#     as.character(hierarchial_network_df4test$from),
+#     as.character(hierarchial_network_df4test$to)
+#   ))) 
+```
+
+```{r}
+# get_pairs <- function(data) {
+# 
+#   label_intermediate_02_1 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_1_kingdom) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 1)
+#   
+#   label_intermediate_02_2 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_2_phylum) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 2)
+#   
+#   label_intermediate_02_3 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_3_class) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 3)
+#   
+#   label_intermediate_02_4 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_4_order) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 4)
+#   
+#   label_intermediate_02_5 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_5_family) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 5)
+#   
+#   label_intermediate_02_6 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_6_genus) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 6)
+#   
+#   label_intermediate_02_7 <- data %>%
+#     select(from = chemo_02_superclass,
+#            to = organism_7_species) %>%
+#     mutate(level_chemo = 2,
+#            level_bio = 7)
+#   
+#   labels_intermediate <- rbind(
+#     label_intermediate_02_1,
+#     label_intermediate_02_2,
+#     label_intermediate_02_3,
+#     label_intermediate_02_4,
+#     label_intermediate_02_5,
+#     label_intermediate_02_6,
+#     label_intermediate_02_7
+#   ) %>%
+#     filter(!is.na(from) & !is.na(to))
+#   
+#   return(labels_intermediate)
+#   }
+```
+
+```{r}
+# connection_df4test <- get_pairs(data = data4circle) %>%
+#   filter(level_bio == 2 & level_chemo == 2)
+```
+
+```{r}
+# d1 <- data.frame(from = "origin", to = paste("group", seq(1, 10), sep = ""))
+# d2 <-
+#   data.frame(from = rep(d1$to, each = 10),
+#              to = paste("subgroup", seq(1, 100), sep = "_"))
+# hierarchy <- rbind(d1, d2)
+# 
+# vertices <-
+#   data.frame(name = unique(c(
+#     as.character(hierarchy$from), as.character(hierarchy$to)
+#   ))) 
+```
+
+```{r}
+# mygraph <- graph_from_data_frame( d = hierarchial_network_df4test, vertices=vertices4test )
+# plot(mygraph, vertex.label="", edge.arrow.size=0, vertex.size=2)
+#  
+# # With ggraph:
+# ggraph(mygraph, layout = 'dendrogram', circular = FALSE) + 
+#   geom_edge_link() +
+#   theme_void()
+#  
+# ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+#   geom_edge_diagonal() +
+#   theme_void()
+```
+
+```{r}
+# from <- match(connection_df4test$from, vertices4test$name)
+# to <- match(connection_df4test$to, vertices4test$name)
+# 
+# ggraph(mygraph, layout = 'dendrogram', circular = TRUE) + 
+#   geom_conn_bundle(data = get_con(from = from, to = to), alpha=0.2, colour="skyblue", tension = 0.9) + 
+#   geom_node_point(aes(filter = leaf, x = x*1.05, y=y*1.05)) +
+#   theme_void()
+```
+
+```{r}
+# #Let's add information concerning the label we are going to add: angle, horizontal adjustement and potential flip
+# #calculate the ANGLE of the labels
+# vertices4test$id <- NA
+# myleaves <-
+#   which(is.na(match(
+#     vertices4test$name, hierarchial_network_df4test$from
+#   )))
+# nleaves <- length(myleaves)
+# vertices4test$id[myleaves] <- seq(1:nleaves)
+# vertices4test$angle <- 90 - 360 * vertices4test$id / nleaves
+# 
+# # calculate the alignment of labels: right or left
+# # If I am on the left part of the plot, my labels have currently an angle < -90
+# vertices4test$hjust <- ifelse(vertices4test$angle < -90, 1, 0)
+# 
+# # flip angle BY to make them readable
+# vertices4test$angle <-
+#   ifelse(vertices4test$angle < -90,
+#          vertices4test$angle + 180,
+#          vertices4test$angle)
+# 
+# vertices4test$group  <-
+#   hierarchial_network_df4test$from[match(vertices4test$name, hierarchial_network_df4test$to)]
+```
+
+```{r}
+# ggraph(mygraph, layout = 'dendrogram', circular = TRUE) +
+#   geom_conn_bundle(
+#     data = get_con(from = from, to = to),
+#     alpha = 0.1,
+#     width = 0.4,
+#     tension = 10,
+#     aes(colour = ..index..)
+#   ) +
+#   scale_edge_colour_distiller(palette = "YlGnBu") +
+#   
+#   geom_node_text(
+#     aes(
+#       x = x * 1.15,
+#       y = y * 1.15,
+#       filter = vertices4test$leaf,
+#       label = vertices4test$name,
+#       # angle = angle,
+#       hjust = vertices4test$hjust,
+#       colour = vertices4test$group
+#     ),
+#     size = 2,
+#     alpha = 1
+#   ) +
+#   
+#   geom_node_point(
+#     aes(
+#       filter = leaf,
+#       x = x * 1.07,
+#       y = y * 1.07,
+#       colour = vertices4test$group,
+#       size = vertices4test$value,
+#       alpha = 0.2
+#     )
+#   ) +
+#   scale_colour_manual(values = rep(brewer.pal(9, "Paired") , 30)) +
+#   scale_size_continuous(range = c(0.1, 10)) +
+#   
+#   theme_void() +
+#   theme(legend.position = "none",
+#         plot.margin = unit(c(0, 0, 0, 0), "cm"),) +
+#   expand_limits(x = c(-1.3, 1.3), y = c(-1.3, 1.3))
+```
+
+#chord
+```{r}
+paired_palette <- c(
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928"
+)
+
+draw_chord <-
+  function(data,
+           biological_level,
+           chemical_level,
+           biological_filter_value = NULL,
+           biological_filter_level = NULL,
+           chemical_filter_value = NULL,
+           chemical_filter_level = NULL)
+  {
+    table <- data.frame(data)
+    table <- table[!is.na(table[, biological_level]), ]
+    table <- table[!is.na(table[, chemical_level]), ]
+    
+    if (!is.null(biological_filter_value))
+      table <-
+      table[table[, biological_filter_level] %in% biological_filter_value, ]
+    
+    if (!is.null(chemical_filter_value))
+      table <-
+      table[table[, chemical_filter_level] %in% chemical_filter_value, ]
+
+    m1 <- as.data.table(table(table[, c(biological_level, chemical_level)]))
+
+    m1 <-   m1 %>%
+      pivot_wider(names_from = 2, values_from = N) %>%
+      unnest() %>%
+      column_to_rownames(var = biological_level)%>%
+      select(order(colSums(-.)))
+    
+    m2 <- t(m1) %>%
+      as.data.frame() %>% 
+      select(order(colSums(-.)))
+    
+    m2$name <- colnames(m1)
+    #colnames(m1) <- paste("chemo", colnames(m1), sep = "_")
+    m1$name <- sort(colnames(m2[,1:ncol(m2)-1]))
+    #colnames(m2)[1:ncol(m2)-1] <- paste("bio", colnames(m2[1:ncol(m2)-1]), sep = "_")
+
+test_3 <- full_join(m2, m1)
+
+test_3[is.na(test_3)] <- 0
+
+rownames(test_3) <- test_3$name
+
+test_3 <- test_3 %>% select(-name)
+
+
+test_4 <- as.matrix(test_3)
+
+test_5 <- test_4[colnames(test_4), colnames(test_4)]
+
+chord <- chorddiag(data = test_5, 
+          groupColors = paired_palette,
+          groupnamePadding = 10,
+          groupThickness = 0.1,
+          chordedgeColor = paired_palette,
+          groupnameFontsize = 18,
+          margin = 260,
+          showTooltips = FALSE,
+          ticklabelFontsize = 0,
+          showTicks = FALSE,
+          showZeroTooltips = FALSE
+          )
+    return(chord)
+  }
+```
+
+##big chord
+```{r}
+paired_palette <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+top_big_chord_bio <- openDbPairs %>%
+  filter(!is.na(organism_1_kingdom) & 
+           !is.na(chemo_02_superclass)) %>% 
+  group_by(organism_1_kingdom) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_1_kingdom) %>% 
+  head(6)
+
+top_big_chord_bio <- top_big_chord_bio$organism_1_kingdom
+
+top_big_chord_chemo <- openDbPairs %>%
+  filter(!is.na(organism_1_kingdom) & 
+           !is.na(chemo_02_superclass)) %>% 
+  group_by(chemo_02_superclass) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_02_superclass) %>% 
+  head(12)
+
+top_big_chord_chemo <- top_big_chord_chemo$chemo_02_superclass
+```
+
+```{r}
+chord_big <- draw_chord(
+  data = openDbPairs,
+  biological_level = "organism_1_kingdom",
+  chemical_level = "chemo_02_superclass",
+  chemical_filter_value = top_big_chord_chemo,
+  chemical_filter_level = "chemo_02_superclass",
+  biological_filter_value = top_big_chord_bio,
+  biological_filter_level = "organism_1_kingdom"
+)
+
+chord_big
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_big),
+                        file = "Chord_big.html")
+```
+
+##medium chord
+```{r}
+paired_palette <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+top_organism_med <- openDbPairs %>%
+  filter(!is.na(organism_5_family)) %>%
+  filter(chemo_02_superclass == "Alkaloids and derivatives") %>%
+  group_by(organism_5_family) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_5_family) %>% 
+  head(12)
+
+top_organism_med <- top_organism_med$organism_5_family
+
+top_chemo_med <- openDbPairs %>%
+  filter(!is.na(organism_5_family)) %>%
+  filter(chemo_02_superclass == "Alkaloids and derivatives") %>%
+  filter(!is.na(chemo_03_class)) %>%
+  group_by(chemo_03_class) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_03_class) %>% 
+  head(12)
+
+top_chemo_med <- top_chemo_med$chemo_03_class
+```
+
+```{r}
+chord_med <-
+  draw_chord(
+    data = openDbPairs,
+    biological_level = "organism_5_family",
+    chemical_level = "chemo_03_class",
+    chemical_filter_value = top_chemo_med,
+    chemical_filter_level = "chemo_03_class",
+    biological_filter_value = top_organism_med,
+    biological_filter_level = "organism_5_family"
+  )
+
+chord_med
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_med),
+                        file = "Chord_med.html")
+```
+
+##small chord
+```{r}
+top_organism_sma <- openDbPairs %>%
+  filter(!is.na(chemo_05_parent) & 
+           !is.na(organism_7_species)) %>% 
+  filter(organism_6_genus == "Erythroxylum") %>%
+  group_by(organism_7_species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_7_species) %>% 
+  head(12)
+
+top_organism_sma <- top_organism_sma$organism_7_species
+
+top_chemo_sma <- openDbPairs %>%
+  filter(!is.na(chemo_05_parent) & 
+           !is.na(organism_7_species)) %>% 
+  filter(organism_6_genus == "Erythroxylum") %>%
+  filter(!is.na(chemo_05_parent)) %>%
+  group_by(chemo_05_parent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_05_parent) %>% 
+  head(12)
+
+top_chemo_sma <- top_chemo_sma$chemo_05_parent
+```
+
+```{r}
+chord_sma <-
+  draw_chord(
+    data = openDbPairs,
+    biological_level = "organism_7_species",
+    chemical_level = "chemo_05_parent",
+    chemical_filter_value = top_chemo_sma,
+    chemical_filter_level = "chemo_05_parent",
+    biological_filter_value = top_organism_sma,
+    biological_filter_level = "organism_7_species"
+  )
+chord_sma
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_sma),
+                        file = "Chord_sma.html")
+```
+
+##top chord
+###6
+```{r}
+paired_palette <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+top_organism_06 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) & 
+           !is.na(chemo_05_parent) &
+           !is.na(organism_7_species)) %>%
+  group_by(organism_7_species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_7_species) %>% 
+  head(6)
+
+top_organism_06 <- top_organism_06$organism_7_species
+
+top_chemo_06 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) &
+           !is.na(chemo_05_parent) & 
+           !is.na(chemo_05_parent)) %>%
+  group_by(chemo_05_parent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_05_parent,
+           .keep_all = TRUE) %>% 
+  head(6)
+
+top_chemo_06 <- top_chemo_06$chemo_05_parent
+```
+
+```{r}
+chord_06 <-
+  draw_chord(
+    data = openDbPairs,
+    biological_level = "organism_7_species",
+    chemical_level = "chemo_05_parent",
+    chemical_filter_value = top_chemo_06,
+    chemical_filter_level = "chemo_05_parent",
+    biological_filter_value = top_organism_06,
+    biological_filter_level = "organism_7_species"
+  )
+
+chord_06
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_06),
+                        file = "Chord_06.html")
+```
+
+###12
+```{r}
+paired_palette <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+top_organism_12 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) &
+           !is.na(chemo_05_parent) &
+           !is.na(organism_7_species)) %>%
+  group_by(organism_7_species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_7_species) %>% 
+  head(12)
+
+top_organism_12 <- top_organism_12$organism_7_species
+
+top_chemo_12 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) & 
+           !is.na(chemo_05_parent) & 
+           !is.na(chemo_05_parent)) %>%
+  group_by(chemo_05_parent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_05_parent,
+           .keep_all = TRUE) %>% 
+  head(12)
+
+top_chemo_12 <- top_chemo_12$chemo_05_parent
+```
+
+```{r}
+chord_12 <-
+  draw_chord(
+    data = openDbPairs,
+    biological_level = "organism_7_species",
+    chemical_level = "chemo_05_parent",
+    chemical_filter_value = top_chemo_12,
+    chemical_filter_level = "chemo_05_parent",
+    biological_filter_value = top_organism_12,
+    biological_filter_level = "organism_7_species"
+  )
+
+chord_12
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_12),
+                        file = "Chord_12.html")
+```
+
+###24
+```{r}
+paired_palette <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+top_organism_24 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) & 
+           !is.na(chemo_05_parent) &
+           !is.na(organism_7_species)) %>%
+  group_by(organism_7_species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organism_7_species) %>% 
+  head(24)
+
+top_organism_24 <- top_organism_24$organism_7_species
+
+top_chemo_24 <- openDbPairs %>%
+  filter(!is.na(organism_7_species) & 
+           !is.na(chemo_05_parent) & 
+           !is.na(chemo_05_parent)) %>%
+  group_by(chemo_05_parent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(chemo_05_parent,
+           .keep_all = TRUE) %>% 
+  head(24)
+
+top_chemo_24 <- top_chemo_24$chemo_05_parent
+```
+
+```{r}
+chord_24 <-
+  draw_chord(
+    data = openDbPairs,
+    biological_level = "organism_7_species",
+    chemical_level = "chemo_05_parent",
+    chemical_filter_value = top_chemo_24,
+    chemical_filter_level = "chemo_05_parent",
+    biological_filter_value = top_organism_24,
+    biological_filter_level = "organism_7_species"
+  )
+
+chord_24
+```
+
+```{r}
+setwd(dir = "outputs/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_24),
+                        file = "Chord_24.html")
+```
+
