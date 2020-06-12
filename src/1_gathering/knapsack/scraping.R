@@ -118,7 +118,7 @@ df4 <- bind_rows(df3[!is.na(df3)])
 
 KNApSAcK_db <- cbind(KnapSackTable,df4)
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
   file = gzfile(description = pathDataExternalDbSourceKnapsackOriginal,

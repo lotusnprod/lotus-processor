@@ -1,4 +1,4 @@
-#title: "MITISHAMBA scrapeR"
+# title: "MITISHAMBA scrapeR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -89,7 +89,7 @@ MITISHAMBA_3[] <-
   lapply(MITISHAMBA_3, function(x)
     gsub("\t", " ", x))
 
-#exporting
+# exporting
 write.table(
   x = MITISHAMBA_3,
   file = gzfile(

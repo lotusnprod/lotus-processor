@@ -299,8 +299,10 @@ pathDataExternalDbSourceMibig <-
 ###### original
 pathDataExternalDbSourceMibigOriginal <-
   list.files(
-    path = file.path(pathDataExternalDbSourceMibig,
-                     "0_initial_files/mibig_json_2.0/"),
+    path = file.path(
+      pathDataExternalDbSourceMibig,
+      "0_initial_files/mibig_json_2.0/"
+    ),
     pattern = "*.json",
     full.names = TRUE
   )
@@ -320,15 +322,53 @@ pathDataExternalDbSourceNanpdb <-
   file.path(pathDataExternalDbSource,
             "nanpdb")
 
+###### original
+pathDataExternalDbSourceNanpdbOriginal <-
+  file.path(pathDataExternalDbSourceNanpdb,
+            "0_initial_files/nanpdbScraped.tsv.zip")
+
 ##### npass
 pathDataExternalDbSourceNpass <-
   file.path(pathDataExternalDbSource,
             "npass")
 
+###### general info
+pathDataExternalDbSourceNpassGeneralInfo <-
+  file.path(
+    pathDataExternalDbSourceNpass,
+    "0_initial_files/NPASSv1.0_download_naturalProducts_generalInfo.txt"
+  )
+
+###### properties
+pathDataExternalDbSourceNpassProperties <-
+  file.path(
+    pathDataExternalDbSourceNpass,
+    "0_initial_files/NPASSv1.0_download_naturalProducts_properties.txt"
+  )
+
+###### species info
+pathDataExternalDbSourceNpassSpeciesInfo <-
+  file.path(
+    pathDataExternalDbSourceNpass,
+    "0_initial_files/NPASSv1.0_download_naturalProducts_speciesInfo.txt"
+  )
+
+###### species pair
+pathDataExternalDbSourceNpassSpeciesPair <-
+  file.path(
+    pathDataExternalDbSourceNpass,
+    "0_initial_files/NPASSv1.0_download_naturalProducts_species_pair.txt"
+  )
+
 ##### npatlas
 pathDataExternalDbSourceNpatlas <-
   file.path(pathDataExternalDbSource,
             "npatlas")
+
+###### original
+pathDataExternalDbSourceNpatlasOriginal <-
+  file.path(pathDataExternalDbSourceNpatlas,
+            "0_initial_files/np_atlas_2019_12.tsv")
 
 ##### npcare
 pathDataExternalDbSourceNpcare <-
@@ -585,6 +625,21 @@ pathDataInterimDbMibig <-
 pathDataInterimDbMitishamba <-
   file.path(pathDataInterimDb,
             "mitishamba.tsv.zip")
+
+##### nanpdb
+pathDataInterimDbNanpdb <-
+  file.path(pathDataInterimDb,
+            "nanpdb.tsv.zip")
+
+##### npass
+pathDataInterimDbNpass <-
+  file.path(pathDataInterimDb,
+            "npass.tsv.zip")
+
+##### npatlas
+pathDataInterimDbNpatlas <-
+  file.path(pathDataInterimDb,
+            "npatlas.tsv.zip")
 
 #### dictionaries
 pathDataInterimDictionaries <-

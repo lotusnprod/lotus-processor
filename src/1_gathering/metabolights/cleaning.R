@@ -1,4 +1,4 @@
-#title: "Metabolights cleaneR"
+# title: "Metabolights cleaneR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -39,7 +39,7 @@ data_selected$biologicalsource <-
 data_selected <- data_selected %>%
   filter(!is.na(biologicalsource))
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -48,7 +48,7 @@ data_standard <-
   )
 
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
   file = gzfile(

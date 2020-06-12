@@ -1,28 +1,24 @@
-#title: "NPATLAS cleaneR"
+# title: "NPATLAS cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "NPATLAS"
-originalfile <- "0_initial_files/np_atlas_2019_12.tsv"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
+## files
 data_original <- read_delim(
-  file = originalfile,
+  file = pathDataExternalDbSourceNpatlasOriginal,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   mutate(organism = paste(Genus,
                           `Origin Species`,
@@ -38,7 +34,7 @@ data_selected <- data_original %>%
     reference
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -46,10 +42,10 @@ data_standard <-
     structure_field = c("name", "inchi", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
+  file = gzfile(description = pathDataInterimDbNpatlas,
                 compression = 9,
                 encoding = "UTF-8"),
   row.names = FALSE,
