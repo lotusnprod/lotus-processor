@@ -7,3 +7,4 @@ settings.json
 *_pm.csv
 **/0_initial_files/
 *.log
+ci_env
