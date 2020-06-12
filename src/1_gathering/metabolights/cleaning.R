@@ -1,24 +1,23 @@
 #title: "Metabolights cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-inpathData <- "0_initial_files/metabolights_data_std.tsv.zip"
+# loading paths
+source("paths.R")
 
-inpathStudies <- "0_initial_files/metabolights_studies_std.tsv.zip"
-
-outpath <- "METABOLIGHTS_std.tsv.zip"
+# loading functions
+source("functions.R")
 
 data_clean_final <- read_delim(
-  file = gzfile(inpathData),
+  file = gzfile(pathDataExternalDbSourceMetabolightsPrecleaned),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 species_studies <- read_delim(
-  file = gzfile(inpathStudies),
+  file = gzfile(pathDataExternalDbSourceMetabolightsStudiesScraped),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -52,9 +51,11 @@ data_standard <-
 #exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbMetabolights,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

@@ -1,12 +1,15 @@
 #title: "Metabolights precleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-data <- xmlParse("0_initial_files/eb-eye_metabolights_complete.xml")
+# loading paths
+source("paths.R")
 
-outpath <- "0_initial_files/metabolights_data_std.tsv.zip"
+# loading functions
+source("functions.R")
+
+data <- xmlParse(pathDataExternalDbSourceMetabolightsComplete)
 
 xml_data <- xmlToList(data)
 
@@ -23,7 +26,7 @@ id <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores()-2),
+  mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
 )
@@ -39,7 +42,7 @@ additionalfields <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores()-2),
+  mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
 )
@@ -55,7 +58,7 @@ references <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores()-2),
+  mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
 )
@@ -63,13 +66,15 @@ references <- pbmclapply(
 data <- tibble(id, additionalfields, references) %>%
   filter(grepl("MTBLC", id)) %>%
   unnest_wider(references) %>%
-  select(uniqueid = id,
-         refkey = dbkey,
-         refdb = dbname,
-         additionalfields)
+  select(
+    uniqueid = id,
+    refkey = dbkey,
+    refdb = dbname,
+    additionalfields
+  )
 
 data_clean <- data  %>%
-  unnest(additionalfields) %>% 
+  unnest(additionalfields) %>%
   unnest(additionalfields) %>%
   mutate(value = lag(additionalfields, 1))
 
@@ -85,7 +90,7 @@ data_clean_2 <- data_clean[-1, ] %>%
   add_count() %>%
   ungroup() %>%
   mutate(name = paste(additionalfields, n, sep = "_")) %>%
-  pivot_wider(names_from = name, values_from = value) %>% 
+  pivot_wider(names_from = name, values_from = value) %>%
   data.frame()
 
 data_clean_inchi <- data_clean_2 %>%
@@ -222,7 +227,7 @@ data_clean_organism_24 <- data_clean_2 %>%
 #   filter(additionalfields == "organism") %>%
 #   select(uniqueid, organism_25) %>%
 #   unnest(2)
-# 
+#
 # data_clean_organism_26 <- data_clean_2 %>%
 #   filter(additionalfields == "organism") %>%
 #   select(uniqueid, organism_26) %>%
@@ -291,24 +296,35 @@ data_clean_3 <- data_joined %>%
   pivot_longer(6:ncol(.)) %>%
   filter(value != "NULL")
 
-data_clean_final <- data_clean_3 %>% 
-  select(uniqueid,
-         inchi = inchi_1,
-         name = iupac_1,
-         biologicalsource = value, 
-         reference = refkey
-         )
+data_clean_final <- data_clean_3 %>%
+  select(
+    uniqueid,
+    inchi = inchi_1,
+    name = iupac_1,
+    biologicalsource = value,
+    reference = refkey
+  )
 
-data_clean_final[] <- lapply(data_clean_final, function(x) gsub("\r\n", " ", x))
-data_clean_final[] <- lapply(data_clean_final, function(x) gsub("\r", " ", x))
-data_clean_final[] <- lapply(data_clean_final, function(x) gsub("\n", " ", x))
-data_clean_final[] <- lapply(data_clean_final, function(x) gsub("\t", " ", x))
+data_clean_final[] <-
+  lapply(data_clean_final, function(x)
+    gsub("\r\n", " ", x))
+data_clean_final[] <-
+  lapply(data_clean_final, function(x)
+    gsub("\r", " ", x))
+data_clean_final[] <-
+  lapply(data_clean_final, function(x)
+    gsub("\n", " ", x))
+data_clean_final[] <-
+  lapply(data_clean_final, function(x)
+    gsub("\t", " ", x))
 
 write.table(
   x = data_clean_final,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceMetabolightsPrecleaned,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
