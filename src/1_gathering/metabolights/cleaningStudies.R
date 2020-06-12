@@ -1,19 +1,22 @@
 #title: "METABOLIGHTS studies cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-path <- "0_initial_files/scraped_studies/"
+# loading paths
+source("paths.R")
 
-outpath <- "0_initial_files/metabolights_studies_std.tsv.zip"
+# loading functions
+source("functions.R")
 
-files <- dir(path = path,
-             pattern = "*.json")
+files <-
+  dir(path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+      pattern = "*.json")
 
-filenames <- list.files(path = path,
-                        pattern = "*.json",
-                        full.names = TRUE)
+filenames <-
+  list.files(path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+             pattern = "*.json",
+             full.names = TRUE)
 
 #just to get problematic entries
 
@@ -35,82 +38,88 @@ id <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores()-2),
+  mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
 )
 
 getname <- function(x) {
   j <- df[[x]][["name"]]
-  j}
+  j
+}
 
 name <- pbmclapply(
   FUN = getname,
   X = x,
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
-  mc.silent = TRUE, 
-  mc.cores = (parallel::detectCores()-2),
-  mc.cleanup = TRUE, 
+  mc.silent = TRUE,
+  mc.cores = (parallel::detectCores() - 2),
+  mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
-  )
+)
 
 getinchi <- function(x) {
   j <- df[[x]][["inchi"]]
-  j}
+  j
+}
 
 inchi <- pbmclapply(
   FUN = getinchi,
   X = x,
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
-  mc.silent = TRUE, 
-  mc.cores = (parallel::detectCores()-2),
-  mc.cleanup = TRUE, 
+  mc.silent = TRUE,
+  mc.cores = (parallel::detectCores() - 2),
+  mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
-  )
+)
 
 getsmiles <- function(x) {
   j <- df[[x]][["smiles"]]
-  j}
+  j
+}
 
 smiles <- pbmclapply(
   FUN = getsmiles,
   X = x,
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
-  mc.silent = TRUE, 
-  mc.cores = (parallel::detectCores()-2),
-  mc.cleanup = TRUE, 
+  mc.silent = TRUE,
+  mc.cores = (parallel::detectCores() - 2),
+  mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
-  )
+)
 
 getspecies <- function(x) {
   j <- names(df[[1]][["species"]])
-  j}
+  j
+}
 
 species <- pbmclapply(
   FUN = getspecies,
   X = x,
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
-  mc.silent = TRUE, 
-  mc.cores = (parallel::detectCores()-2),
-  mc.cleanup = TRUE, 
+  mc.silent = TRUE,
+  mc.cores = (parallel::detectCores() - 2),
+  mc.cleanup = TRUE,
   mc.allow.recursive = TRUE
-  )
+)
 
-data <- tibble(id, name, inchi, smiles, species) %>% 
-  unnest(species) %>% 
+data <- tibble(id, name, inchi, smiles, species) %>%
+  unnest(species) %>%
   mutate_all(as.character)
 
 species <- data %>% distinct(species)
 
 write.table(
   x = data,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceMetabolightsStudiesScraped,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

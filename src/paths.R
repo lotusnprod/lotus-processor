@@ -60,10 +60,8 @@ pathDataExternalDbSourceBiophytmol <-
 
 ###### original
 pathDataExternalDbSourceBiophytmolOriginal <-
-  file.path(
-    pathDataExternalDbSourceBiophytmol,
-    "0_initial_files/biophytmolScraped.tsv.zip"
-  )
+  file.path(pathDataExternalDbSourceBiophytmol,
+            "0_initial_files/biophytmolScraped.tsv.zip")
 
 ##### carotenoiddb
 pathDataExternalDbSourceCarotenoiddb <-
@@ -257,6 +255,43 @@ pathDataExternalDbSourceKnapsackOriginal <-
 pathDataExternalDbSourceMetabolights <-
   file.path(pathDataExternalDbSource,
             "metabolights")
+
+###### COMMENT Not clean #######
+
+###### complete
+pathDataExternalDbSourceMetabolightsComplete <-
+  file.path(
+    pathDataExternalDbSourceMetabolights,
+    "0_initial_files/eb-eye_metabolights_complete.xml"
+  )
+
+###### studies
+pathDataExternalDbSourceMetabolightsStudies <-
+  file.path(
+    pathDataExternalDbSourceMetabolights,
+    "0_initial_files/eb-eye_metabolights_studies.xml"
+  )
+
+###### studies scraped directory
+pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
+  file.path(pathDataExternalDbSourceMetabolights,
+            "0_initial_files/studiesScraped")
+
+###### precleaned
+pathDataExternalDbSourceMetabolightsPrecleaned <-
+  file.path(
+    pathDataExternalDbSourceMetabolights,
+    "0_initial_files/metabolightsPrecleaned.tsv.zip"
+  )
+
+###### studies scraped
+pathDataExternalDbSourceMetabolightsStudiesScraped <-
+  file.path(
+    pathDataExternalDbSourceMetabolights,
+    "0_initial_files/metabolightsStudiesScraped.tsv.zip"
+  )
+
+
 
 ##### mibig
 pathDataExternalDbSourceMibig <-
@@ -523,6 +558,11 @@ pathDataInterimDbInflamnat <-
 pathDataInterimDbKnapsack <-
   file.path(pathDataInterimDb,
             "knapsack.tsv.zip")
+
+##### metabolights
+pathDataInterimDbMetabolights <-
+  file.path(pathDataInterimDb,
+            "metabolights.tsv.zip")
 
 #### dictionaries
 pathDataInterimDictionaries <-
