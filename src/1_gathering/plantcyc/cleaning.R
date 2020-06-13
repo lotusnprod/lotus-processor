@@ -1,26 +1,23 @@
-#title: "PLANTCYC cleaneR"
+# title: "PLANTCYC cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
+# loading paths
+source("paths.R")
 
-##db
-db <- "PLANTCYC"
-
-##paths
-filenames <- list.files("0_initial_files/",
-                        pattern = "*.tsv",
-                        full.names = TRUE)
-
-outpath <- "PLANTCYC_std.tsv.zip"
+# loading functions
+source("functions.R")
 
 data_standard <- do.call("rbind",
-                         lapply(filenames,
+                         lapply(pathDataExternalDbSourcePlantcycOriginal,
                                 function(x) {
-                                  dat <- read.csv(x,
-                                                  header = TRUE,
-                                                  sep = "\t")
+                                  dat <- read_delim(
+                                    file = gzfile(x),
+                                    delim = "\t",
+                                    escape_double = FALSE,
+                                    trim_ws = TRUE
+                                  )
                                   dat
                                 }))
 
@@ -37,9 +34,11 @@ data_standard <-
 #exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbPlantcyc,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

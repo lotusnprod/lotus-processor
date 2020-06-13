@@ -1,33 +1,25 @@
-#title: "PROCARDB cleaneR"
+# title: "PROCARDB cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "PROCARDB"
-originalfile <- "PROCARDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-##paths
-inpath <- paste("0_initial_files/",
-                originalfile,
-                sep = "")
+# loading functions
+source("functions.R")
 
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(inpath),
+  file = gzfile(pathDataExternalDbSourceProcardbOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#selecting
-##atomizing ref
+# selecting
+## atomizing ref
 data_selected <- data_original %>%
   mutate(
     reference = gsub("(\\d+\\.)([[:alpha:]])", "| \\2", REFERENCES),
@@ -45,7 +37,7 @@ data_selected <- data_original %>%
     reference
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -53,12 +45,14 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbProcardb,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

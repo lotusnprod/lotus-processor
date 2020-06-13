@@ -1,10 +1,13 @@
 #title: "PHYTOHUB scrapeR"
 
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/PHYTOHUB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-url <- 'http://phytohub.eu/entries/PHUB'
+# loading functions
+source("functions.R")
 
 X <- (1:1975)
 
@@ -134,9 +137,11 @@ PHYTOHUB_9$reference <- y_as_na(PHYTOHUB_9$reference, "")
 #exporting
 write.table(
   x = PHYTOHUB_9,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourcePhytohubOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

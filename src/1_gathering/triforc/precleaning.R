@@ -1,29 +1,24 @@
-#title: "TRIFORC cleaneR"
+# title: "TRIFORC precleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "TRIFORC"
-originalfile <- "0_initial_files/TriforC_original.tsv"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste("0_initial_files/",
-                 db,
-                 "_to_get.tsv",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
+## files
 data_original <- read_delim(
-  file = originalfile,
+  file = pathDataExternalDbSourceTriforcOriginal,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#cleaning
+# cleaning
 data_selected_final <-  data_original %>%
   select(
     name = Name,
@@ -40,14 +35,14 @@ data_selected_final <-  data_original %>%
     values_drop_na = TRUE
   )
 
-#filtering lost values to retrieve manually
-data_to_get <- data_selected_final %>%
+# filtering lost values to retrieve manually
+dataToGet <- data_selected_final %>%
   filter(grepl("others", biologicalsource))
 
-#exporting
+# exporting
 write.table(
-  x = data_to_get,
-  file = outpath,
+  x = dataToGet,
+  file = pathDataExternalDbSourceTriforcToGet,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t"

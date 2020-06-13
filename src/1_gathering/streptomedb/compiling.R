@@ -1,18 +1,15 @@
-#title: "STREPTOMEDB compileR"
+# title: "STREPTOMEDB compileR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "STREPTOMEDB"
+# loading paths
+source("paths.R")
 
-##paths
-file <- "0_initial_files/streptomedb.sdf"
+# loading functions
+source("functions.R")
 
-outpath <- "0_initial_files/streptomedb.tsv.zip"
-
-data <- read.SDFset(file)
+data <- read.SDFset(pathDataExternalDbSourceStreptomedbOriginal)
 
 df <- data.frame()
 df[1, 1] <- ""
@@ -37,11 +34,14 @@ for (i in 1:length(data@SDF)) {
   df[i, 6] <- data@SDF[[i]]@datablock[["pmids"]]
 }
 
+# exporting
 write.table(
   x = df,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceStreptomedbCompiled,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

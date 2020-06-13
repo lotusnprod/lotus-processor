@@ -1,20 +1,16 @@
-#title: "TMMC cleaneR"
+# title: "TMMC cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "TMMC"
-originalfile <- "0_initial_files/compound.xlsx"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
-data_original <- read_excel(originalfile,
+## files
+data_original <- read_excel(pathDataExternalDbSourceTmmcOriginal,
                             sheet = 1) %>%
   mutate_all(as.character)
 
@@ -34,7 +30,7 @@ data_original_long <- data_original %>%
     biologicalsource = gsub("</i>", "", biologicalsource)
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_original_long,
@@ -42,12 +38,14 @@ data_standard <-
     structure_field = c("name")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbTmmc,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

@@ -1,30 +1,25 @@
-#title: "SANCDB cleaneR"
+# title: "SANCDB cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
+# loading paths
+source("paths.R")
 
-##db
-db <- "SANCDB"
-originalfile <- "0_initial_files/SANCDB_scraped.tsv.zip"
+# loading functions
+source("functions.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceSancdbOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#cleaning
-##function
+#  cleaning
+## function
 SANCDB_clean <- function(dfsel)
 {
   df1 <- dfsel %>% filter(V1_02 == "Entry name:")
@@ -669,7 +664,7 @@ data_selected <- sancdb_clean %>%
 
 data_selected$reference <- gsub(" NA", "", data_selected$reference)
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -677,12 +672,14 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbSancdb,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

@@ -4880,7 +4880,7 @@ taxo_cleaning_manual <- function(dfsel)
 #######################################################
 #######################################################
 
-plantcycleaning <- function(x)
+plantcycompiling <- function(x)
 {
   path <- paste(x,
                 "/",
@@ -4896,7 +4896,8 @@ plantcycleaning <- function(x)
   data_2 <- data %>%
     cSplit(splitCols = "X.",
            sep = " ") %>%
-    select(1:2)
+    select(1:2) %>% 
+    tibble()
   
   colnames(data_2)[1] <- "A"
   colnames(data_2)[2] <- "B"
@@ -4915,7 +4916,8 @@ plantcycleaning <- function(x)
   
   data_5 <- data_4 %>%
     pivot_wider(names_from = A,
-                values_from = B) %>% unnest()
+                values_from = B) %>%
+    unnest()
   
   data$X. <- as.character(data$X.)
   
@@ -4952,17 +4954,20 @@ plantcycleaning <- function(x)
                              replacement = "_",
                              x = biologicalsource)
   
-  outpath <- paste("0_initial_files/",
-                   biologicalsource_2,
-                   "_std.tsv",
-                   sep = "")
+  outpath <- file.path(pathDataExternalDbSourcePlantcyc,
+                       paste(biologicalsource_2,
+                             ".tsv.zip",
+                             sep = ""))
   
   write.table(
     x = data_standard,
-    file = outpath,
+    file = gzfile(description = outpath,
+                  compression = 9,
+                  encoding = "UTF-8"),
     row.names = FALSE,
     quote = FALSE,
-    sep = "\t"
+    sep = "\t",
+    fileEncoding = "UTF-8"
   )
 }
 

@@ -1,28 +1,17 @@
-#title: "SYMMAP cleaneR"
+# title: "SYMMAP cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "SYMMAP"
+# loading paths
+source("paths.R")
 
-originalfile_bio <- "0_initial_files/SymMap v1.0, SMHB file.xlsx"
+# loading functions
+source("functions.R")
 
-originalfile_chemo <- "0_initial_files/SymMap v1.0, SMIT file.xlsx"
-
-##paths
-filenames <- list.files(path = "0_initial_files/data/",
-                        pattern = "*.csv",
-                        full.names = TRUE)
-
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-##files
+## files
 data_original <- do.call("rbind",
-                         lapply(filenames,
+                         lapply(pathDataExternalDbSourceSymmapOriginal,
                                 function(x) {
                                   dat <- read.csv(x, header = TRUE, sep = ",")
                                   dat$fileName <-
@@ -31,13 +20,13 @@ data_original <- do.call("rbind",
                                 })) %>%
   mutate_all(as.character)
 
-data_bio <- read_excel(originalfile_bio) %>%
+data_bio <- read_excel(pathDataExternalDbSourceSymmapBio) %>%
   mutate_all(as.character)
 
-data_chemo <- read_excel(originalfile_chemo) %>%
+data_chemo <- read_excel(pathDataExternalDbSourceSymmapChemo) %>%
   mutate_all(as.character)
 
-#cleaning
+# cleaning
 data_original$fileName <- gsub('data-', '', data_original$fileName)
 
 data_original$Ingredient.id <-
@@ -66,7 +55,7 @@ data_full <- full_join(data_bio, data_original)
 
 data_full <- full_join(data_chemo, data_full)
 
-#selecting
+# selecting
 data_selected <- data_full %>%
   select(
     uniqueid = MOL_id,
@@ -85,7 +74,7 @@ data_selected <- data_full %>%
   mutate(biologicalsource = paste(Latin_name, English_name, sep = " "))
 
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -97,12 +86,14 @@ data_standard$biologicalsource <-
   y_as_na(data_standard$biologicalsource, "NA NA")
 
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbSymmap,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

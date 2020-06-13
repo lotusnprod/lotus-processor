@@ -1,24 +1,17 @@
-#title: "TMDB cleaneR"
+# title: "TMDB cleaneR"
 
-#loading
-##functions
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-source("../../functions.R")
+# loading paths
+source("paths.R")
 
-##db
-db <- "TMDB"
+# loading functions
+source("functions.R")
 
-##paths
-originalfile <- "0_initial_files/TMDB_scraped.tsv.zip"
-
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceTmdbOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -26,7 +19,7 @@ data_original <- read_delim(
   mutate_all(as.character)
 
 
-#pivoting
+# pivoting
 data_pivoted <- data_original %>%
   mutate(level = as.numeric(gl(nrow(.) / 28, 28))) %>%
   group_by(level) %>%
@@ -35,14 +28,14 @@ data_pivoted <- data_original %>%
   ungroup()
 
 
-#selecting
+# selecting
 data_selected <- data_pivoted %>%
   select(name = `Entry name`,
          biologicalsource = `Latin name`,
          reference = References)
 
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(data_selected = data_selected,
                          db = "tmd_1",
@@ -52,12 +45,14 @@ data_standard[] <-
   lapply(data_standard, function(x)
     gsub("Not Available", NA, x))
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbTmdb,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

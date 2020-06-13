@@ -1,35 +1,30 @@
-#title: "UNPD cleaneR"
+# title: "UNPD cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "UNPD"
+# loading paths
+source("paths.R")
 
-##paths
-originalfile <- "0_initial_files/unpd_final.csv.zip"
+# loading functions
+source("functions.R")
 
-originalfileISDB <- "0_initial_files/UNPD_DB.csv.zip"
-
-outpath <- "0_initial_files/unpd_translated.tsv.zip"
-
-##files
+## files
 data_original <- read_delim(
-  file = originalfile,
+  file = pathDataExternalDbSourceUnpdOriginal_1,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 data_original_ISDB <- read_delim(
-  file = originalfileISDB,
+  file = pathDataExternalDbSourceUnpdOriginal_2,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-#selecting
+# selecting
 data_translated <-
   left_join(data_original,
             data_original_ISDB,
@@ -53,12 +48,14 @@ data_translated[] <-
   lapply(data_translated, function(x)
     gsub("\n", " ", x))
 
-#exporting
+# exporting
 write.table(
   x = data_translated,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceUnpdCompiled,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

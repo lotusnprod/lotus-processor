@@ -1,8 +1,13 @@
-#title: "TMDB scrapeR"
+# title: "TMDB scrapeR"
 
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/TMDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 url <- 'http://pcsb.ahau.edu.cn:8080/TCDB/f/browseDetail?id='
 
@@ -47,12 +52,14 @@ TMDB_3 <- bind_rows(TMDB_2)
 TMDB_4 <- TMDB_3 %>%
   filter(!is.na(X1))
 
-#exporting
+# exporting
 write.table(
   x = TMDB_4,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceTmdbOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
