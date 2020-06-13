@@ -1,23 +1,20 @@
-#title: "PAMDB cleaneR"
+# title: "PAMDB cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "PAMDB"
-originalfile <- "0_initial_files/PaMet.xlsx"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
 ##files
-data_original <- read_excel(originalfile) %>%
+data_original <-
+  read_excel(pathDataExternalDbSourcePamdbOriginal) %>%
   mutate_all(as.character)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   select(
     uniqueid = MetID,
@@ -29,7 +26,7 @@ data_selected <- data_original %>%
   ) %>%
   mutate(biologicalsource = "Pseudomonas aeruginosa")
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -37,14 +34,14 @@ data_standard <-
     structure_field = c("name", "inchi", "smiles")
   )
 
-
-
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbPamdb,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
