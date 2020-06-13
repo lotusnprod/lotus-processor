@@ -1,10 +1,13 @@
-#title: "PROCARDB scrapeR"
+# title: "PROCARDB scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/PROCARDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 url <-
   'http://bioinfo.imtech.res.in/servers/procardb/?c=carotenoides&m=getDetail&id=C'
@@ -141,12 +144,14 @@ PROCARDB_final <- full_join(PROCARDB_6, PROCARDB_4) %>%
 PROCARDB_final <- full_join(PROCARDB_final, PROCARDB_2) %>%
   distinct(biologicalsource, `CAROTENOID NAME`, .keep_all = TRUE)
 
-#exporting
+# exporting
 write.table(
   x = PROCARDB_final,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceProcardbOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

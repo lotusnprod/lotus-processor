@@ -9,14 +9,6 @@ source("paths.R")
 # loading functions
 source("functions.R")
 
-## db
-db <- "PHENOLEXPLORER"
-
-## paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
 # loading all files
 compounds_classification <- read_delim(
   file = pathDataExternalDbSourcePhenolexplorerCompoundsClassification,

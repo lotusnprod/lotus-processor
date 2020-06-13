@@ -1,20 +1,18 @@
 #title: "Respect cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "RESPECT"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 ##paths
-filenames <- list.files("0_initial_files/respect/",
+filenames <- list.files(path = pathDataExternalDbSourceRespectDir,
                         pattern = "*.txt",
                         full.names = TRUE)
-
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
 
 library(gdata)
 data_standard <- do.call("cbindX",
@@ -112,9 +110,11 @@ data_standard <-
 #exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbRespect,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

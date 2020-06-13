@@ -1,10 +1,13 @@
 #title: "SANCDB scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/SANCDB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 url <- 'https://sancdb.rubi.ru.ac.za/compounds/'
 
@@ -41,12 +44,14 @@ SANCDB <- invisible(
   t() %>%
   cSplit("V1", "\n")
 
-#exporting
+# exporting
 write.table(
   x = SANCDB,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceSancdbOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

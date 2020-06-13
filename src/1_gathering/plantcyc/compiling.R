@@ -1,23 +1,24 @@
 #title: "PLANTCYC compileR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "PLANTCYC"
+# loading paths
+source("paths.R")
 
-##paths
-inpath <- "0_initial_files/0_data"
+# loading functions
+source("functions.R")
 
-dirnames <- data.frame(list.dirs(inpath))
+## paths
+dirnames <-
+  data.frame(list.dirs(pathDataExternalDbSourcePlantcycDir))
 
 dirnames[, 1] <- as.character(dirnames[, 1])
 
-dirnames <- dirnames[seq(4, nrow(dirnames), 6),]
+dirnames <- dirnames[seq(4, nrow(dirnames), 6), ]
 
 file <- "compounds.dat"
 
-for(i in dirnames) {
-  plantcycleaning(i)
+for (i in dirnames) {
+  plantcycompiling(x = i)
 }

@@ -1,24 +1,20 @@
-#title: "TPPT cleaneR"
+# title: "TPPT cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "TPPT"
-originalfile <- "0_initial_files/TPPT_database.xlsx"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
-data_original_1 <- read_excel(originalfile,
+## files
+data_original_1 <- read_excel(pathDataExternalDbSourceTpptOriginal,
                               sheet = 1) %>%
   mutate_all(as.character)
 
-data_original_2 <- read_excel(originalfile,
+data_original_2 <- read_excel(pathDataExternalDbSourceTpptOriginal,
                               sheet = 3) %>%
   mutate_all(as.character)
 
@@ -35,10 +31,10 @@ data_filled <- data_original_1 %>%
     )
   ))
 
-#joining
+# joining
 data_original <- left_join(data_filled, data_original_2)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   select(
     Phytotoxin_number,
@@ -51,7 +47,7 @@ data_selected <- data_original %>%
   ) %>%
   mutate(reference = gsub(",", "|", reference))
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -59,12 +55,14 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbTmmc,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

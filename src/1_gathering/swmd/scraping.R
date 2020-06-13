@@ -1,11 +1,18 @@
-#title: "SWMD scrapeR"
+# title: "SWMD scrapeR"
 
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/SWMD_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-ids <- gsub(".mol", "", list.files(path = "0_initial_files/Mol/"))
+# loading functions
+source("functions.R")
+
+ids <-
+  gsub(".mol",
+       "",
+       list.files(path = pathDataExternalDbSourceSwmdDirectory))
 
 url <- 'http://www.swmd.co.in/search.php?No='
 
@@ -79,9 +86,11 @@ SWMD_3[] <- lapply(SWMD_3, function(x)
 #exporting
 write.table(
   x = SWMD_3,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceSwmdOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

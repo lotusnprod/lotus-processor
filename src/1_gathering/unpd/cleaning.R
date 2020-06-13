@@ -1,33 +1,30 @@
-#title: "UNPD cleaneR"
+# title: "UNPD cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "UNPD"
+# loading paths
+source("paths.R")
 
-##paths
-originalfile <- "0_initial_files/unpd_translated.tsv.zip"
+# loading functions
+source("functions.R")
 
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceUnpdCompiled),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-#selecting
-##atomizing references
+# selecting
+## atomizing references
 data_selected <- data_original %>%
-  mutate(reference = gsub("(\\(\\d+).\\s","| ",ref),
-         reference = sub("\\| ","",reference)) %>% 
+  mutate(
+    reference = gsub("(\\(\\d+).\\s", "| ", ref),
+    reference = sub("\\| ", "", reference)
+  ) %>%
   select(
     biologicalsource = ln_reduced,
     reference,
@@ -35,7 +32,7 @@ data_selected <- data_original %>%
     smiles = SMILES
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -43,12 +40,14 @@ data_standard <-
     structure_field = c("inchi", "name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbUnpd,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

@@ -1,28 +1,24 @@
-#title: "SWMD cleaneR"
+# title: "SWMD cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "SWMD"
-originalfile <- "0_initial_files/SWMD_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-##paths
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
+# loading functions
+source("functions.R")
 
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(originalfile),
+  file = gzfile(pathDataExternalDbSourceSwmdOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-#selecting
+# selecting
 data_selected <- data_original %>%
   select(
     uniqueid = 1,
@@ -37,7 +33,7 @@ data_selected <- data_original %>%
     reference = Reference
   )
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -45,12 +41,14 @@ data_standard <-
     structure_field = c("name", "smiles", "inchi")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbSwmd,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

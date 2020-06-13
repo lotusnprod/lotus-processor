@@ -1,32 +1,24 @@
-#title: "Phytohub cleaneR"
+# title: "Phytohub cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
-db <- "PHYTOHUB"
-originalfile <- "PHYTOHUB_scraped.tsv.zip"
+# loading paths
+source("paths.R")
 
-##paths
-inpath <- paste("0_initial_files/",
-                originalfile,
-                sep = "")
+# loading functions
+source("functions.R")
 
-outpath <- paste(db,
-                 "_std.tsv.zip",
-                 sep = "")
-
-##files
+## files
 data_original <- read_delim(
-  file = gzfile(inpath),
+  file = gzfile(pathDataExternalDbSourcePhytohubOriginal),
   delim = "\t",
   escape_double = TRUE,
   trim_ws = FALSE
 ) %>%
   mutate_all(as.character)
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_original,
@@ -34,12 +26,14 @@ data_standard <-
     structure_field = c("name", "inchi", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbPhytohub,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
