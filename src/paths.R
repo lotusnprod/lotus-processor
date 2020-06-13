@@ -339,20 +339,80 @@ pathDataExternalDbSourceNpcare <-
   file.path(pathDataExternalDbSource,
             "npcare")
 
+###### original
+pathDataExternalDbSourceNpcareOriginal <-
+  file.path(pathDataExternalDbSourceNpcare,
+            "npcare.zip")
+
 ##### npedia
 pathDataExternalDbSourceNpedia <-
   file.path(pathDataExternalDbSource,
             "npedia")
+
+###### original
+pathDataExternalDbSourceNpediaOriginal <-
+  file.path(pathDataExternalDbSourceNpedia,
+            "npediaScraped.tsv.zip")
 
 ##### pamdb
 pathDataExternalDbSourcePamdb <-
   file.path(pathDataExternalDbSource,
             "pamdb")
 
+###### original
+pathDataExternalDbSourcePamdbOriginal <-
+  file.path(pathDataExternalDbSourcePamdb,
+            "PaMet.xlsx")
+
 ##### phenolexplorer
 pathDataExternalDbSourcePhenolexplorer <-
   file.path(pathDataExternalDbSource,
             "phenolexplorer")
+
+###### compounds classification
+pathDataExternalDbSourcePhenolexplorerCompoundsClassification <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "compounds-classification.csv")
+
+###### compounds structure
+pathDataExternalDbSourcePhenolexplorerCompoundsStructures <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "compounds-structures.csv")
+
+###### compounds
+pathDataExternalDbSourcePhenolexplorerCompounds <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "compounds.csv")
+
+###### foods classification
+pathDataExternalDbSourcePhenolexplorerFoodsClassification <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "foods-classification.csv")
+
+###### foods
+pathDataExternalDbSourcePhenolexplorerFoods <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "foods.csv")
+
+###### metabolites structure
+pathDataExternalDbSourcePhenolexplorerMetabolitesStructures <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "metabolites-structures.csv")
+
+###### metabolites
+pathDataExternalDbSourcePhenolexplorerMetabolites <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "metabolites.csv")
+
+###### publications
+pathDataExternalDbSourcePhenolexplorerPublications <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "publications.csv")
+
+###### composition
+pathDataExternalDbSourcePhenolexplorerComposition <-
+  file.path(pathDataExternalDbSourcePhenolexplorer,
+            "composition-data.xlsx")
 
 ##### phytohub
 pathDataExternalDbSourcePhytohub <-
@@ -598,6 +658,26 @@ pathDataInterimDbNpass <-
 pathDataInterimDbNpatlas <-
   file.path(pathDataInterimDb,
             "npatlas.tsv.zip")
+
+##### npcare
+pathDataInterimDbNpcare <-
+  file.path(pathDataInterimDb,
+            "npcare.tsv.zip")
+
+##### npedia
+pathDataInterimDbNpedia <-
+  file.path(pathDataInterimDb,
+            "npedia.tsv.zip")
+
+##### pamdb
+pathDataInterimDbPamdb <-
+  file.path(pathDataInterimDb,
+            "pamdb.tsv.zip")
+
+##### phenolexplorer
+pathDataInterimDbPhenolexplorer <-
+  file.path(pathDataInterimDb,
+            "phenolexplorer.tsv.zip")
 
 #### dictionaries
 pathDataInterimDictionaries <-

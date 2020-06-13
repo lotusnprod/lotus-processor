@@ -1,10 +1,13 @@
-#title: "NPEDIA scrapeR"
+# title: "NPEDIA scrapeR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-outpath <- "0_initial_files/NPEDIA_scraped.tsv.zip"
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
 
 url <- 'http://www.cbrg.riken.jp/npedia/details.php?ID='
 
@@ -103,12 +106,14 @@ NPEDIA_4 <- NPEDIA_4 %>%
 
 NPEDIA_final <- full_join(NPEDIA_2, NPEDIA_4)
 
-#exporting
+# exporting
 write.table(
   x = NPEDIA_final,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataExternalDbSourceNpediaOriginal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

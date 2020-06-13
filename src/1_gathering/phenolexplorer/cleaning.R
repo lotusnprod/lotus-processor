@@ -1,84 +1,90 @@
-#title: "PhenolExplorer cleaneR"
+# title: "PhenolExplorer cleaneR"
 
-#loading
-##functions
-source("../../functions.R")
+# setting working directory
+setwd("~/GitLab/opennaturalproductsdb/src/")
 
-##db
+# loading paths
+source("paths.R")
+
+# loading functions
+source("functions.R")
+
+## db
 db <- "PHENOLEXPLORER"
 
-##paths
+## paths
 outpath <- paste(db,
                  "_std.tsv.zip",
                  sep = "")
 
-#Loading all files
+# loading all files
 compounds_classification <- read_delim(
-  "0_initial_files/compounds-classification.csv",
+  file = pathDataExternalDbSourcePhenolexplorerCompoundsClassification,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 compounds_structures <- read_delim(
-  "0_initial_files/compounds-structures.csv",
+  file = pathDataExternalDbSourcePhenolexplorerCompoundsStructures,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 compounds <- read_delim(
-  "0_initial_files/compounds.csv",
+  file = pathDataExternalDbSourcePhenolexplorerCompounds,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 foods_classification <- read_delim(
-  "0_initial_files/foods-classification.csv",
+  file = pathDataExternalDbSourcePhenolexplorerFoodsClassification,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 foods <- read_delim(
-  "0_initial_files/foods.csv",
+  file = pathDataExternalDbSourcePhenolexplorerFoods,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 metabolites_structures <- read_delim(
-  "0_initial_files/metabolites-structures.csv",
+  file = pathDataExternalDbSourcePhenolexplorerMetabolitesStructures,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 metabolites <- read_delim(
-  "0_initial_files/metabolites.csv",
+  file = pathDataExternalDbSourcePhenolexplorerMetabolites,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 publications <- read_delim(
-  "0_initial_files/publications.csv",
+  file = pathDataExternalDbSourcePhenolexplorerPublications,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-composition <- read_excel("0_initial_files/composition-data.xlsx",
-                          sheet = 1)
+composition <-
+  read_excel(path = pathDataExternalDbSourcePhenolexplorerComposition,
+             sheet = 1)
 
-###joining
+### joining
 a <- full_join(compounds, compounds_structures)
 b <- full_join(a, composition, by = c("name" = "compound"))
 c <- full_join(b, foods, by = c("food" = "name"))
 
 
-#pivoting to join right references
+# pivoting to join right references
 colnames(c)[29] <- "publicationids"
 
 data_pivoted <- c %>%
@@ -92,7 +98,7 @@ data_pivoted <- c %>%
     values_drop_na = TRUE
   )
 
-#adding references
+# adding references
 data_referenced <-
   left_join(data_pivoted, publications, by = c("publicationids" = "id")) %>%
   select(
@@ -114,7 +120,7 @@ data_referenced[] <-
   lapply(data_referenced, function(x)
     gsub("NULL", NA, x))
 
-#tailing and selecting
+# tailing and selecting
 data_selected <- data_referenced
 
 data_selected$reference <-
@@ -132,7 +138,7 @@ data_selected <- data_selected %>%
          biologicalsource,
          reference)
 
-#standardizing
+# standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
@@ -140,12 +146,14 @@ data_standard <-
     structure_field = c("name", "smiles")
   )
 
-#exporting
+# exporting
 write.table(
   x = data_standard,
-  file = gzfile(description = outpath,
-                compression = 9,
-                encoding = "UTF-8"),
+  file = gzfile(
+    description = pathDataInterimDbPhenolexplorer,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
