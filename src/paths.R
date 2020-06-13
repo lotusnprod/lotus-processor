@@ -625,7 +625,7 @@ pathDataExternalTranslationSourceCommonDrdukeCommon <-
 ####### scientific
 pathDataExternalTranslationSourceCommonDrdukeScientific <-
   file.path(pathDataExternalDbSourceDrduke,
-            "DRDUKE/Duke-Source-CSV/FNFTAX.csv")
+            "Duke-Source-CSV/FNFTAX.csv")
 
 ###### gbif
 ####### vernacular
@@ -646,11 +646,6 @@ pathDataExternalTranslationSourceTcm <-
             "tcm")
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
-
-###### TM-MC
-pathDataExternalTranslationSourceTcmTmmc <-
-  file.path(pathDataExternalDbSourceTmmc,
-            "TMMC/compound.xlsx")
 
 ###### TCMID
 pathDataExternalTranslationSourceTcmTcmid <-
@@ -673,6 +668,12 @@ pathDataInterim <-
 pathDataInterimDb <-
   file.path(pathDataInterim,
             "db")
+
+#### dir
+pathDataInterimDbDir <-
+  Sys.glob(file.path(paste(pathDataInterimDb,
+                           "/*.tsv.zip",
+                           sep = "")))
 
 ##### afrotryp
 pathDataInterimDbAfrotryp <-
@@ -985,21 +986,6 @@ pathDataProcessedFiguresHtml <-
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-# dbInterim
-## allDBs
-pathAllDbsInterim <-
-  Sys.glob(file.path("../data/interim/db/*_std.tsv.zip"))
 
 # original fields
 ## structure

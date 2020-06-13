@@ -12,7 +12,7 @@ source("functions.R")
 # loading files
 ## common names from PhenolExplorer
 commonSciPhe <- read_delim(
-  file = pathTranslationSourceCommonPhenolexplorer,
+  file = pathDataExternalTranslationSourceCommonPhenolexplorer,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -23,7 +23,7 @@ commonSciPhe <- read_delim(
 
 ## common names from FooDB
 commonSciFoo <- read_delim(
-  file = pathTranslationSourceCommonFoodb,
+  file = pathDataExternalTranslationSourceCommonFoodb,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -34,7 +34,7 @@ commonSciFoo <- read_delim(
 
 ## common names from DrDuke
 commonDuk <- read_delim(
-  file = pathTranslationSourceCommonDrdukeCommon,
+  file = pathDataExternalTranslationSourceCommonDrdukeCommon,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -43,7 +43,7 @@ commonDuk <- read_delim(
          FNFNUM)
 
 sciDuk <- read_delim(
-  file = pathTranslationSourceCommonDrdukeScientific,
+  file = pathDataExternalTranslationSourceCommonDrdukeScientific,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -57,7 +57,7 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
 
 # GBIF
 taxa <- read_delim(
-  file = pathTranslationSourceCommonGbifScientific,
+  file = pathDataExternalTranslationSourceCommonGbifScientific,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE,
@@ -72,7 +72,7 @@ taxa <- read_delim(
                 x = canonicalName))
 
 vernacular <- read_delim(
-  file = pathTranslationSourceCommonGbifVernacular,
+  file = pathDataExternalTranslationSourceCommonGbifVernacular,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
@@ -85,7 +85,7 @@ vernacular <- read_delim(
 
 # manually subtracted entries
 manualSubtraction <- read_delim(
-  file = pathInterimCommonManualSubtraction,
+  file = pathDataInterimDictionariesCommonManualSubtraction,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -343,7 +343,7 @@ common2Sci <- commonSciSub %>%
 write.table(
   x = common2Sci,
   file = gzfile(
-    description = pathInterimCommonNamesDic,
+    description = pathDataInterimDictionariesCommonNames,
     compression = 9,
     encoding = "UTF-8"
   ),

@@ -12,7 +12,7 @@ source("functions.R")
 # loading files
 ## tcm names list from TM-MC
 tcmNamesDic_1 <-
-  read_excel(path = pathTranslationSourceTcmTmmc,
+  read_excel(path = pathDataExternalDbSourceTmmcOriginal,
              sheet = 1) %>%
   mutate_all(as.character) %>%
   select(latin = LATIN,
@@ -22,7 +22,7 @@ tcmNamesDic_1 <-
 
 ## tcm names list from TCMID
 tcmNamesDic_2 <- read_delim(
-  file = pathTranslationSourceTcmTcmid,
+  file = pathDataExternalTranslationSourceTcmTcmid,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -35,7 +35,7 @@ tcmNamesDic_2 <- read_delim(
 
 ## tcm names list from Chinese Medicine Board of Australia
 tcmNamesDic_3 <-
-  read_excel(path = pathTranslationSourceTcmCmba,
+  read_excel(path = pathDataExternalTranslationSourceTcmCmba,
              sheet = 1) %>%
   mutate_all(as.character) %>%
   select(latin = 6,
@@ -48,7 +48,7 @@ tcmNamesDic_3 <-
 # latin genitive dictionaries
 ## i
 latinGenitiveIDic <- read_delim(
-  file = pathInterimTcmLatinGenitiveI,
+  file = pathDataInterimDictionariesLatinGenitiveI,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -59,7 +59,7 @@ latinGenitiveIDic <- read_delim(
 
 ## is
 latinGenitiveIsDic <- read_delim(
-  file = pathInterimTcmLatinGenitiveIs,
+  file = pathDataInterimDictionariesLatinGenitiveIs,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -70,7 +70,7 @@ latinGenitiveIsDic <- read_delim(
 
 ## parts
 latinGenitivePartsDic <- read_delim(
-  file = pathInterimSourceTcmPlantParts,
+  file = pathDataInterimDictionariesLatinPlantParts,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -78,7 +78,7 @@ latinGenitivePartsDic <- read_delim(
 
 ## manually subtracted entries
 manualSubtraction <- read_delim(
-  file = pathInterimTcmManualSubtraction,
+  file = pathDataInterimDictionariesTcmManualSubtraction,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -342,7 +342,7 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
 write.table(
   x = tcmNamesDicCurated,
   file = gzfile(
-    description = pathInterimTcmNamesDic,
+    description = pathDataInterimDictionariesTcmNames,
     compression = 9,
     encoding = "UTF-8"
   ),

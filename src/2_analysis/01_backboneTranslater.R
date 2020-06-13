@@ -12,7 +12,7 @@ source("functions.R")
 # loading files
 ## tcm names
 tcmNamesDic <- read_delim(
-  file = gzfile(pathInterimTcmNamesDic),
+  file = gzfile(pathDataInterimDictionariesTcmNames),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
@@ -20,7 +20,7 @@ tcmNamesDic <- read_delim(
 
 ## common names
 commonNamesDic <- read_delim(
-  file = gzfile(pathInterimCommonNamesDic),
+  file = gzfile(pathDataInterimDictionariesCommonNames),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
@@ -28,7 +28,7 @@ commonNamesDic <- read_delim(
 
 ## taxa
 taxa <- read_delim(
-  pathTranslationSourceCommonGbifScientific,
+  pathDataExternalTranslationSourceCommonGbifScientific,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE,
@@ -45,7 +45,7 @@ taxa <- read_delim(
 
 ## manual substraction
 taxaRemovalDic <- read_delim(
-  pathInterimTaxaManualSubtraction,
+  pathDataInterimDictionariesTaxaManualSubtraction,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
@@ -123,7 +123,7 @@ problematicVernacularFull <-
 write.table(
   x = problematicVernacularFull,
   file = gzfile(
-    description = pathInterimProblematicNamesDic,
+    description = pathDataInterimDictionariesTaxaProblematic,
     compression = 9,
     encoding = "UTF-8"
   ),
