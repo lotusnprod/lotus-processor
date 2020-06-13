@@ -10,7 +10,7 @@ source("paths.R")
 source("functions.R")
 
 # loading files
-dbs <- lapply(pathAllDbsInterim, function(x) {
+dbs <- lapply(pathDataInterimDbDir, function(x) {
   out <- db_loader(x)
   return(out)
 })
