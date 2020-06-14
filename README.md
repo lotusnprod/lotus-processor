@@ -38,6 +38,9 @@ graph TD
             251(InChI, SMILES, InChIKey) -->
               |still to do| 262(chem-GPS coordinates)-->
                 270(sanitized metabolite with taxonomy and metadata)
+            251(InChI, SMILES, InChIKey) -->
+              |still to do| 263(in silico tandem ms spectra)-->
+                270(sanitized metabolite with taxonomy and metadata)
           240(sanitized ROMOL) -->
             252(additional terms xlogP, MF, exact mass) -->
                 270(sanitized metabolite with taxonomy and metadata) -->
