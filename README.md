@@ -4,6 +4,64 @@
 
 ![Graphical abstract](data/processed/figures/graphical_abstract.png)
 
+## Flowchart
+
+```mermaid
+graph TD
+000(adequate minimal input) -->
+  100(organism) --> 
+    |actual non-optimal| 110(protection of scientific names with epiteth corresponding to common names) -->
+      120(other common names and tcm names translated in latin) -->
+        |actual non-optimal| 130(deprotection of scientific names with epiteth corresponding to common names) -->
+          140(scientific names) -->
+            150(taxonomies accros multiple taxonomy DBs) -->
+              |could be discussed, human feeling|160(selection of the best taxonomy) -->
+                |could be discussed, human feeling|170(comparison of all obtained taxonomies and upstream filling of taxa choosing best) -->
+                  180(sanitized organism with taxonomy) -->
+999(adequate minimal output)
+
+000(adequate minimal input) --> 
+  200(metabolite) --> 
+    211(InChI) --> 
+      220(InChI)
+  200(metabolite) --> 
+    212(SMILES) --> 
+      220(InChI)
+  200(metabolite) --> 
+    213(name) --> 
+      220(InChI) --> 
+        230(ROMOL) --> 
+          |think about 2D 3D| 240(sanitized ROMOL) -->
+            251(InChI, SMILES, InChIKey) -->
+              261(classyfire taxonomy)-->
+                270(sanitized metabolite with taxonomy and metadata)
+            251(InChI, SMILES, InChIKey) -->
+              |still to do| 262(chem-GPS coordinates)-->
+                270(sanitized metabolite with taxonomy and metadata)
+          240(sanitized ROMOL) -->
+            252(additional terms xlogP, MF, exact mass) -->
+                270(sanitized metabolite with taxonomy and metadata) -->
+999(adequate minimal output)
+
+000(adequate minimal input) --> 
+  300(reference) -->
+    |splitting actual non-optimal| 311(DOIs) -->
+      320(generated reference with metadata)
+  300(reference) -->
+    |splitting actual non-optimal| 312(PubmedIDs )-->
+      |think about minimal required fields DOI, authors, date, title, journal?| 320
+  300(reference) -->
+    |splitting actual non-optimal| 313(text) -->
+      320 -->
+        |think about it|330(additional cleaning steps to define) -->
+          340(sanitized reference with metadata) -->
+999(adequate minimal output)
+```
+
+
+
+
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
