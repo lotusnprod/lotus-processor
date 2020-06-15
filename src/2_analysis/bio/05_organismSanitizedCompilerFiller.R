@@ -95,7 +95,7 @@ dataOrganismSanitized <- bind_rows(dataOrganismFilled) %>%
   select(
     organismTranslated,
     organismSanitized = canonicalname,
-    organism_database = db_taxo,
+    organism_database = dbTaxo,
     everything()
   )
 
