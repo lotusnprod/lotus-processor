@@ -10,14 +10,13 @@
 graph TD
 000(adequate minimal input) -->
   100(organism) --> 
-    |actual non-optimal| 110(protection of scientific names with epiteth corresponding to common names) -->
-      120(other common names and tcm names translated in latin) -->
-        |actual non-optimal| 130(deprotection of scientific names with epiteth corresponding to common names) -->
-          140(scientific names) -->
-            150(taxonomies accros multiple taxonomy DBs) -->
-              |could be discussed, human feeling|160(selection of the best taxonomy) -->
-                |could be discussed, human feeling|170(comparison of all obtained taxonomies and upstream filling of taxa choosing best) -->
-                  180(sanitized organism with taxonomy) -->
+    110(scientific names recognition) -->
+      120(subtraction of recognized scientific names and translation of vernacular and tcm names to scientific) -->
+        130(scientific names recognition) -->
+            140(taxonomies accros multiple taxonomy DBs) -->
+              |could be discussed, human feeling|150(selection of the best taxonomy) -->
+                |could be discussed, human feeling|160(comparison of all obtained taxonomies and upstream filling of taxa choosing best) -->
+                  170(sanitized organism with clean taxonomy) -->
 999(adequate minimal output)
 
 000(adequate minimal input) --> 
