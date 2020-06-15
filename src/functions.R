@@ -429,7 +429,7 @@ biofilling <- function(x)
   
   #manipulating taxonomies (see function above)
   df2 <- manipulating_taxo(dfsel = df,
-                           dic = taxaLevelsDictionary)
+                           dic = taxaRanksDictionary)
   
   #filtering non-empty taxonomies
   df2_full <- df2 %>%
@@ -568,7 +568,7 @@ biofilling <- function(x)
   
   #manipulating taxa
   df6 <- manipulating_taxo(dfsel = df5,
-                           dic = taxaLevelsDictionary) %>%
+                           dic = taxaRanksDictionary) %>%
     select(-user_supplied_name)
   
   #joining
@@ -636,8 +636,8 @@ biofilling <- function(x)
   
   #removing disturbing words
   ##creating variables for replacement by dictionary
-  c <- paste("\\b", blackListDictionary$blackName, "\\b", sep = "")
-  d <- blackListDictionary$replacement
+  c <- paste("\\b", blacklistDictionary$blackName, "\\b", sep = "")
+  d <- blacklistDictionary$replacement
   
   df8$query <-
     stri_replace_all_regex(
@@ -853,7 +853,7 @@ biofilling <- function(x)
   
   #manipulating taxa
   df11 <- manipulating_taxo(dfsel = df10,
-                            dic = taxaLevelsDictionary)
+                            dic = taxaRanksDictionary)
   
   #joining
   df12 <-
@@ -1117,7 +1117,7 @@ biofilling <- function(x)
   
   #manipulating taxa
   df16 <- manipulating_taxo(dfsel = df15,
-                            dic = taxaLevelsDictionary)
+                            dic = taxaRanksDictionary)
   
   #joining
   df17 <-
@@ -6691,18 +6691,7 @@ gnfinder_cleaning <- function(num) {
   data_bio_clean <- biocleaning(x = gnfound,
                                 y = data_bio)
   
-  write.table(
-    x = data_bio_clean,
-    file = gzfile(
-      description = outpath_f,
-      compression = 9,
-      encoding = "UTF-8"
-    ),
-    row.names = FALSE,
-    quote = FALSE,
-    sep = "\t",
-    fileEncoding = "UTF-8"
-  )
+  return(data_bio_clean)
 }
 
 #######################################################

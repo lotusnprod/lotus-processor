@@ -1,4 +1,4 @@
-# title: "Organisms (sanitized) filleR"
+# title: "Organisms (sanitized) compileR"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -9,40 +9,19 @@ source("paths.R")
 # loading functions
 source("functions.R")
 
-# writing paths
-## input
-### files
-filenames <- list.files(pathSanitizedOrganismDirTsv,
-                        pattern = "*.tsv.zip",
-                        full.names = TRUE)
-
-# loading
-## files
-dataOrganismClean <- lapply(filenames,
-                            function(x)
-                            {
-                              read_delim(
-                                file = gzfile(x),
-                                delim = "\t",
-                                escape_double = FALSE,
-                                trim_ws = TRUE
-                              ) %>%
-                                filter(!is.na(organismTranslated)) %>%
-                                mutate_all(as.character)
-                            })
-
+#writing path
 ## dictionaries
 ### taxa levels
-taxaLevelsDictionary <- read_delim(
-  file = pathInterimTaxaLevelsDic,
+taxaRanksDictionary <- read_delim(
+  file = pathDataInterimDictionariesTaxaRanks,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 ### black listed strings
-blackListDictionary <- read_delim(
-  file = pathInterimBlackDic,
+blacklistDictionary <- read_delim(
+  file = pathDataInterimDictionariesCommonBlackDic,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -59,6 +38,32 @@ dataTranslatedOrganism <- read_delim(
   trim_ws = TRUE
 )
 
+dir <- pathTranslatedOrganismDistinct
+
+length <- length(list.files(path = dir,
+                            pattern = 'tsv'))
+
+cut <- 10000
+
+num <- as.integer(seq(
+  from = 1 * cut,
+  to = length * cut,
+  by = cut
+))
+
+dataOrganismClean <- list()
+
+# cleaning GNFinder output
+for (i in num) {
+  j <- i / cut
+  tryCatch({
+    dataOrganismClean[[j]] <-
+      gnfinder_cleaning(num = i)
+  }, error = function(e) {
+    cat("ERROR :", conditionMessage(e), "\n")
+  })
+}
+
 # filling missing organisms and taxonomies
 dataOrganismFilled <- list()
 
@@ -71,6 +76,19 @@ for (i in 1:length(dataOrganismClean))
     cat("ERROR :", conditionMessage(e), "\n")
   })
 }
+
+# explanation on taxize filling step: run:
+# before <- dataOrganismClean[[1]] %>%
+# filter(!is.na(canonicalname)) %>%
+#   distinct(organismTranslated,
+#            canonicalname,
+#            .keep_all = TRUE)
+# after <- dataOrganismFilled[[1]] %>%
+# filter(!is.na(canonicalname)) %>%
+#   distinct(organismTranslated,
+#            canonicalname,
+#            .keep_all = TRUE)
+# diff <- anti_join(after, before)
 
 # selecting and reordering
 dataOrganismSanitized <- bind_rows(dataOrganismFilled) %>%
