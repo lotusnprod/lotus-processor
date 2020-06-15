@@ -129,12 +129,10 @@ biocleaning <- function(x, y)
         )
       )),
       phylum =  sum(as.numeric(
-        stri_detect(
-          str = classificationRank,
-          fixed = c("phylum",
-                    "Phylum",
-                    "phyl.")
-        )
+        stri_detect(str = classificationRank,
+                    fixed = c("phylum",
+                              "Phylum",
+                              "phyl."))
       )),
       class =  sum(as.numeric(
         stri_detect(str = classificationRank,
@@ -149,12 +147,10 @@ biocleaning <- function(x, y)
                               "ord."))
       )),
       family = sum(as.numeric(
-        stri_detect(
-          str = classificationRank,
-          fixed = c("family",
-                    "Family",
-                    "fam.")
-        )
+        stri_detect(str = classificationRank,
+                    fixed = c("family",
+                              "Family",
+                              "fam."))
       )),
       genus =  sum(as.numeric(
         stri_detect(str = classificationRank,
@@ -169,6 +165,14 @@ biocleaning <- function(x, y)
                     "spec.",
                     "sp.")
         )
+      )),
+      variety = sum(as.numeric(
+        stri_detect(
+          str = classificationRank,
+          fixed = c("variety",
+                    "varietas",
+                    "var")
+        )
       ))
     ) %>%
     ungroup()
@@ -180,6 +184,7 @@ biocleaning <- function(x, y)
   df4$family[df4$family >= 1] <- 1
   df4$genus[df4$genus >= 1] <- 1
   df4$species[df4$species >= 1] <- 1
+  df4$variety[df4$variety >= 1] <- 1
   
   #the synonym part is there to avoid the (actually)
   ##non-optimal output from Catalogue of Life in GNFinder
@@ -191,9 +196,10 @@ biocleaning <- function(x, y)
                            "order",
                            "family",
                            "genus",
-                           "species")])) %>%
+                           "species",
+                           "variety")])) %>%
     group_by(id) %>%
-    arrange(desc(n),!is.na(isSynonym)) %>%
+    arrange(desc(n), !is.na(isSynonym)) %>%
     ungroup() %>%
     distinct(id,
              .keep_all = TRUE) %>%
@@ -211,12 +217,21 @@ biocleaning <- function(x, y)
   #joining
   taxo <- right_join(df6, df7) %>%
     select(
-      canonicalname = matchedCanonicalSimple,
-      db_taxo = dataSourceTitle,
+      canonicalname = matchedCanonicalFull,
+      taxonId,
+      dbTaxo = dataSourceTitle,
       taxonomy = classificationPath,
       rank = classificationRank,
       sum
     )
+  
+  dbQuality <- x$names.verification$dataSourceQuality
+  dbTaxo <- x$names.verification$bestResult$dataSourceTitle
+  
+  dfQuality <- data.frame(dbTaxo, dbQuality) %>%
+    distinct(dbTaxo, .keep_all = TRUE)
+  
+  taxoEnhanced <- left_join(taxo, dfQuality)
   
   #computing sum of characters to match with GNFinder results
   y$nchar <-
@@ -227,7 +242,7 @@ biocleaning <- function(x, y)
   }
   
   #adding min and max to merge
-  taxo <- taxo %>%
+  taxoEnhanced <- taxoEnhanced %>%
     mutate(value_min = sum,
            value_max = sum) %>%
     data.table()
@@ -247,28 +262,24 @@ biocleaning <- function(x, y)
     data.table()
   
   #setting joining keys
-  setkey(taxo, value_min, value_max)
+  setkey(taxoEnhanced, value_min, value_max)
   setkey(y_2, value_min, value_max)
   
   #joining
-  pre_final_db <- foverlaps(taxo,
+  pre_final_db <- foverlaps(taxoEnhanced,
                             y_2)
   
   #selecting
   final_db <- left_join(y,
                         pre_final_db) %>%
-    select(
-      # -namesverbatim,
-      -nchar,
-      -sum,
+    select(# -namesverbatim,-nchar,-sum,
       -value_max,
       -value_min,
       -i.sum,
       -i.value_max,
-      -i.value_min
-      )
-      
-      return(final_db)
+      -i.value_min)
+  
+  return(final_db)
 }
 
 #######################################################
@@ -283,7 +294,7 @@ manipulating_taxo <- function(dfsel, dic) {
   df1 <- dfsel %>%
     select(identifier = 1,
            canonicalname,
-           db_taxo,
+           dbTaxo,
            taxonomy,
            rank) %>%
     cSplit(splitCols = "taxonomy",
@@ -335,7 +346,7 @@ manipulating_taxo <- function(dfsel, dic) {
                      yes = "NA",
                      no = df2$rank)
   
-  colnames(df2)[3] <- "db_taxo"
+  colnames(df2)[3] <- "dbTaxo"
   
   #manipulating taxa
   df3 <- df2 %>%
@@ -346,14 +357,15 @@ manipulating_taxo <- function(dfsel, dic) {
         c(
           "identifier",
           "canonicalname",
-          "db_taxo",
+          "dbTaxo",
           "kingdom",
           "phylum",
           "class",
           "order",
           "family",
           "genus",
-          "species"
+          "species",
+          "variety"
         )
     )
   
@@ -381,14 +393,15 @@ manipulating_taxo <- function(dfsel, dic) {
       names(.) %in%
         c(
           "canonicalname",
-          "db_taxo",
+          "dbTaxo",
           "kingdom",
           "phylum",
           "class",
           "order",
           "family",
           "genus",
-          "species"
+          "species",
+          "variety"
         )
     )
   
@@ -441,7 +454,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy)
+    select(-rank, -taxonomy)
   
   #filtering empty taxonomies
   df3 <- df2 %>%
@@ -505,10 +518,8 @@ biofilling <- function(x)
         )
       )),
       phylum =  sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("phylum", "Phylum", "phyl.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("phylum", "Phylum", "phyl."))
       )),
       class =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -519,10 +530,8 @@ biofilling <- function(x)
                     fixed = c("order", "Order", "ord."))
       )),
       family = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("family", "Family", "fam.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("family", "Family", "fam."))
       )),
       genus =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -532,6 +541,14 @@ biofilling <- function(x)
         stri_detect(
           str = classification_path_ranks,
           fixed = c("species", "Species", "spec.", "sp.")
+        )
+      )),
+      variety = sum(as.numeric(
+        stri_detect(
+          str = classification_path_ranks,
+          fixed = c("variety",
+                    "varietas",
+                    "var")
         )
       ))
     ) %>%
@@ -544,6 +561,7 @@ biofilling <- function(x)
   df5$family[df5$family >= 1] <- 1
   df5$genus[df5$genus >= 1] <- 1
   df5$species[df5$species >= 1] <- 1
+  df5$variety[df5$variety >= 1] <- 1
   
   df5 <- df5 %>%
     mutate(n = rowSums(.[c("kingdom",
@@ -552,7 +570,8 @@ biofilling <- function(x)
                            "order",
                            "family",
                            "genus",
-                           "species")])) %>%
+                           "species",
+                           "variety")])) %>%
     group_by(user_supplied_name) %>%
     arrange(desc(score), desc(n)) %>%
     ungroup() %>%
@@ -561,7 +580,8 @@ biofilling <- function(x)
     select(
       user_supplied_name,
       canonicalname = matched_name2,
-      db_taxo = data_source_title,
+      taxonId = taxon_id,
+      dbTaxo = data_source_title,
       taxonomy = classification_path,
       rank = classification_path_ranks
     )
@@ -581,14 +601,17 @@ biofilling <- function(x)
     x = c(
       "organismTranslated",
       "canonicalname",
-      "db_taxo",
+      "dbTaxo",
       "kingdom",
       "phylum",
       "class",
       "order",
       "family",
       "genus",
-      "species"
+      "species",
+      "variety",
+      "nchar", 
+      "sum"
     ),
     y = names(df7)
   )] <- NA
@@ -603,7 +626,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy)
+    select(-rank, -taxonomy)
   
   #filtering empty taxonomies
   df8 <- df7 %>%
@@ -790,10 +813,8 @@ biofilling <- function(x)
         )
       )),
       phylum =  sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("phylum", "Phylum", "phyl.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("phylum", "Phylum", "phyl."))
       )),
       class =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -804,10 +825,8 @@ biofilling <- function(x)
                     fixed = c("order", "Order", "ord."))
       )),
       family = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("family", "Family", "fam.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("family", "Family", "fam."))
       )),
       genus =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -817,6 +836,14 @@ biofilling <- function(x)
         stri_detect(
           str = classification_path_ranks,
           fixed = c("species", "Species", "spec.", "sp.")
+        )
+      )),
+      variety = sum(as.numeric(
+        stri_detect(
+          str = classification_path_ranks,
+          fixed = c("variety",
+                    "varietas",
+                    "var")
         )
       ))
     ) %>%
@@ -829,6 +856,7 @@ biofilling <- function(x)
   df10$family[df10$family >= 1] <- 1
   df10$genus[df10$genus >= 1] <- 1
   df10$species[df10$species >= 1] <- 1
+  df10$variety[df10$variety >= 1] <- 1
   
   df10 <- df10 %>%
     mutate(n = rowSums(.[c("kingdom",
@@ -837,7 +865,8 @@ biofilling <- function(x)
                            "order",
                            "family",
                            "genus",
-                           "species")])) %>%
+                           "species",
+                           "variety")])) %>%
     group_by(user_supplied_name) %>%
     arrange(desc(score), desc(n)) %>%
     ungroup() %>%
@@ -846,7 +875,8 @@ biofilling <- function(x)
     select(
       user_supplied_name,
       canonicalname = matched_name2,
-      db_taxo = data_source_title,
+      taxonId = taxon_id,
+      dbTaxo = data_source_title,
       taxonomy = classification_path,
       rank = classification_path_ranks
     )
@@ -874,7 +904,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #filtering empty taxonomies and removing non-UTF8 characters (else cause bugs when running gnr_resolve)
   df13 <- df12 %>%
@@ -1054,10 +1084,8 @@ biofilling <- function(x)
         )
       )),
       phylum =  sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("phylum", "Phylum", "phyl.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("phylum", "Phylum", "phyl."))
       )),
       class =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -1068,10 +1096,8 @@ biofilling <- function(x)
                     fixed = c("order", "Order", "ord."))
       )),
       family = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("family", "Family", "fam.")
-        )
+        stri_detect(str = classification_path_ranks,
+                    fixed = c("family", "Family", "fam."))
       )),
       genus =  sum(as.numeric(
         stri_detect(str = classification_path_ranks,
@@ -1081,6 +1107,14 @@ biofilling <- function(x)
         stri_detect(
           str = classification_path_ranks,
           fixed = c("species", "Species", "spec.", "sp.")
+        )
+      )),
+      variety = sum(as.numeric(
+        stri_detect(
+          str = classification_path_ranks,
+          fixed = c("variety",
+                    "varietas",
+                    "var")
         )
       ))
     ) %>%
@@ -1093,6 +1127,7 @@ biofilling <- function(x)
   df15$family[df15$family >= 1] <- 1
   df15$genus[df15$genus >= 1] <- 1
   df15$species[df15$species >= 1] <- 1
+  df15$variety[df15$variety >= 1] <- 1
   
   df15 <- df15 %>%
     mutate(n = rowSums(.[c("kingdom",
@@ -1101,7 +1136,8 @@ biofilling <- function(x)
                            "order",
                            "family",
                            "genus",
-                           "species")])) %>%
+                           "species",
+                           "variety")])) %>%
     group_by(user_supplied_name) %>%
     arrange(desc(score), desc(n)) %>%
     ungroup() %>%
@@ -1110,7 +1146,8 @@ biofilling <- function(x)
     select(
       user_supplied_name,
       canonicalname = matched_name2,
-      db_taxo = data_source_title,
+      taxonId = taxon_id,
+      dbTaxo = data_source_title,
       taxonomy = classification_path,
       rank = classification_path_ranks
     )
@@ -1138,7 +1175,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #filtering empty taxonomies
   df17_empty <- df17 %>%
@@ -1150,7 +1187,7 @@ biofilling <- function(x)
         is.na(family) &
         is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #selecting joining variable
   y <- x %>%
@@ -1159,12 +1196,20 @@ biofilling <- function(x)
   #joining (part 1)
   prefinal_df <- left_join(y, df2_full)
   
+  prefinal_df_2 <- rbind(df7_full,
+                         df12_full,
+                         df17_full,
+                         df17_empty)
+  
+  dbQuality <- df2_full %>%
+    select(dbTaxo, dbQuality) %>% 
+    distinct(dbTaxo, .keep_all = TRUE)
+  
+  prefinal_df_3 <- left_join(prefinal_df_2, dbQuality)
+  
   #joining (rest) and removing NA when multiple organisms found
   final_df <- rbind(prefinal_df,
-                    df7_full,
-                    df12_full,
-                    df17_full,
-                    df17_empty) %>%
+                    prefinal_df_3) %>%
     distinct(organismTranslated,
              canonicalname,
              .keep_all = TRUE) %>%
