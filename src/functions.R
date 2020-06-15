@@ -85,7 +85,7 @@ shift <- function(x, n) {
 #######################################################
 #######################################################
 
-biocleaning <- function(x, y)
+biocleaning <- function(x, y, organismCol)
 {
   #selecting and adding row number
   df <- x %>%
@@ -234,8 +234,14 @@ biocleaning <- function(x, y)
   taxoEnhanced <- left_join(taxo, dfQuality)
   
   #computing sum of characters to match with GNFinder results
+  if (organismCol == "organismOriginal")
+    y$nchar <-
+    nchar(x = y$organismOriginal)
+  
+  if (organismCol == "organismInterim")
   y$nchar <-
-    nchar(x = y$organismTranslated)
+    nchar(x = y$organismInterim)
+  
   y[1, "sum"] <- nchar(colnames(y)[1]) + 1
   for (i in 2:nrow(y)) {
     y[i, "sum"] <- y[i - 1, "nchar"] + 1 + y[i - 1, "sum"]
@@ -249,7 +255,6 @@ biocleaning <- function(x, y)
   
   #filtering non-empty values
   y_2 <- y %>%
-    filter(!is.na(organismTranslated)) %>%
     mutate(value_min = sum)
   
   #filling sum values
@@ -414,817 +419,817 @@ manipulating_taxo <- function(dfsel, dic) {
 #######################################################
 #######################################################
 
-biofilling <- function(x)
-{
-  #mutating to char to avoid mismatches
-  x <- x %>%
-    mutate_all(as.character)
-  
-  #avoiding false non-empty taxonomies
-  x$taxonomy <- y_as_na(x = x$taxonomy,
-                        y = "")
-  
-  #filtering taxonomies to fill
-  df <- x
-  
-  #creating lines if none to fill
-  if (nrow(df) == 0)
-    x[nrow(x) + 1, 1] <- "NA na"
-  
-  if (nrow(df) == 0)
-    df[nrow(df) + 1, 1] <- "NA na"
-  
-  if (nrow(df) == 0)
-    x[nrow(x) + 1, 2] <- "NA na"
-  
-  if (nrow(df) == 0)
-    df[nrow(df) + 1, 2] <- "NA na"
-  
-  #manipulating taxonomies (see function above)
-  df2 <- manipulating_taxo(dfsel = df,
-                           dic = taxaRanksDictionary)
-  
-  #filtering non-empty taxonomies
-  df2_full <- df2 %>%
-    filter(
-      !is.na(kingdom) |
-        !is.na(phylum) |
-        !is.na(class) |
-        !is.na(order) |
-        !is.na(family) |
-        !is.na(genus)
-    ) %>%
-    select(-rank, -taxonomy)
-  
-  #filtering empty taxonomies
-  df3 <- df2 %>%
-    filter(
-      is.na(kingdom) &
-        is.na(phylum) &
-        is.na(class) &
-        is.na(order) &
-        is.na(family) &
-        is.na(genus)
-    ) %>%
-    distinct(organismTranslated,
-             canonicalname) %>%
-    mutate_at(
-      .vars = vars(canonicalname),
-      .funs = function(x) {
-        gsub(pattern = "[^ -~]",
-             replacement = "",
-             x = x)
-      }
-    ) #because of problems otherwise (like Abelia  ×  grandiflora)
-  
-  #outputting distinct empty taxonomies to avoid iterations
-  df3_dis <- df3 %>%
-    filter(!is.na(canonicalname)) %>%
-    distinct(canonicalname)
-  
-  if (nrow(df3_dis) == 0)
-    df3_dis[nrow(df3_dis) + 1, 1] <- "NA na"
-  
-  if (nrow(df3_dis) == 0)
-    df3_dis[nrow(df3_dis) + 1, 1] <- "NA na"
-  
-  if (nrow(df3_dis) == 0)
-    df3_dis[nrow(df3_dis) + 1, 2] <- "NA na"
-  
-  if (nrow(df3_dis) == 0)
-    df3_dis[nrow(df3_dis) + 1, 2] <- "NA na"
-  
-  #running gnresolve on identifiers with empty taxonomies
-  df4 <- gnr_resolve(
-    names = df3_dis$canonicalname,
-    data_source_ids = NULL,
-    resolve_once = FALSE,
-    with_context = TRUE,
-    canonical = TRUE,
-    cap_first = FALSE,
-    best_match_only = FALSE,
-    http = "post",
-    fields = "all"
-  )
-  
-  #selecting best result (with best score and best filled taxonomy)
-  df5 <- df4 %>%
-    rowwise() %>%
-    mutate(
-      kingdom = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("kingdom", "Kingdom", "regn.")
-        )
-      )),
-      phylum =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("phylum", "Phylum", "phyl."))
-      )),
-      class =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("class", "Class", "cl."))
-      )),
-      order =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("order", "Order", "ord."))
-      )),
-      family = sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("family", "Family", "fam."))
-      )),
-      genus =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("genus", "Genus"))
-      )),
-      species = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("species", "Species", "spec.", "sp.")
-        )
-      )),
-      variety = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("variety",
-                    "varietas",
-                    "var")
-        )
-      ))
-    ) %>%
-    ungroup()
-  
-  df5$kingdom[df5$kingdom >= 1] <- 1
-  df5$phylum[df5$phylum >= 1] <- 1
-  df5$class[df5$class >= 1] <- 1
-  df5$order[df5$order >= 1] <- 1
-  df5$family[df5$family >= 1] <- 1
-  df5$genus[df5$genus >= 1] <- 1
-  df5$species[df5$species >= 1] <- 1
-  df5$variety[df5$variety >= 1] <- 1
-  
-  df5 <- df5 %>%
-    mutate(n = rowSums(.[c("kingdom",
-                           "phylum",
-                           "class",
-                           "order",
-                           "family",
-                           "genus",
-                           "species",
-                           "variety")])) %>%
-    group_by(user_supplied_name) %>%
-    arrange(desc(score), desc(n)) %>%
-    ungroup() %>%
-    distinct(user_supplied_name,
-             .keep_all = TRUE) %>%
-    select(
-      user_supplied_name,
-      canonicalname = matched_name2,
-      taxonId = taxon_id,
-      dbTaxo = data_source_title,
-      taxonomy = classification_path,
-      rank = classification_path_ranks
-    )
-  
-  #manipulating taxa
-  df6 <- manipulating_taxo(dfsel = df5,
-                           dic = taxaRanksDictionary) %>%
-    select(-user_supplied_name)
-  
-  #joining
-  df7 <-
-    left_join(df3,
-              df6)
-  
-  #harmonizing columns (for rbind)
-  df7[setdiff(
-    x = c(
-      "organismTranslated",
-      "canonicalname",
-      "dbTaxo",
-      "kingdom",
-      "phylum",
-      "class",
-      "order",
-      "family",
-      "genus",
-      "species",
-      "variety",
-      "nchar", 
-      "sum"
-    ),
-    y = names(df7)
-  )] <- NA
-  
-  #filtering non-empty taxonomies
-  df7_full <- df7 %>%
-    filter(
-      !is.na(kingdom) |
-        !is.na(phylum) |
-        !is.na(class) |
-        !is.na(order) |
-        !is.na(family) |
-        !is.na(genus)
-    ) %>%
-    select(-rank, -taxonomy)
-  
-  #filtering empty taxonomies
-  df8 <- df7 %>%
-    filter(
-      is.na(kingdom) &
-        is.na(phylum) &
-        is.na(class) &
-        is.na(order) &
-        is.na(family) &
-        is.na(genus)
-    ) %>%
-    select(organismTranslated) %>%
-    mutate_at(
-      .vars = vars(organismTranslated),
-      .funs = function(x) {
-        gsub(pattern = "[^ -~]",
-             replacement =  "",
-             x =  x)
-      }
-    ) %>%
-    mutate_at(
-      .vars = vars(organismTranslated),
-      .funs = function(x) {
-        gsub(pattern = ";",
-             replacement = "",
-             x = x)
-      }
-    ) %>%
-    mutate(query = organismTranslated)
-  
-  #removing disturbing words
-  ##creating variables for replacement by dictionary
-  c <- paste("\\b", blacklistDictionary$blackName, "\\b", sep = "")
-  d <- blacklistDictionary$replacement
-  
-  df8$query <-
-    stri_replace_all_regex(
-      str = df8$query,
-      pattern = c,
-      replacement = d,
-      case_insensitive = TRUE,
-      vectorize_all = FALSE
-    )
-  
-  df8$query <- gsub(pattern = "FALSE",
-                    replacement = "",
-                    x = df8$query)
-  
-  df8$query <- trimws(df8$query)
-  
-  #outputting distinct empty taxonomies to avoid iterations
-  df8_dis <- df8 %>%
-    distinct(query)
-  
-  #running gnresolve on whole identifier cleaned
-  ##if less than 500 empty entries
-  if (nrow(df8_dis) <= 500)
-    df9 <- gnr_resolve(
-      names = df8_dis$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  ##if more than 500 empty entries slicing in multiple pieces because of gnr_resolve structure
-  ###if more than 1000 empty entries
-  if (nrow(df8_dis) > 1000)
-    df8_dis_a <- slice(df8_dis, 1:500)
-  
-  if (nrow(df8_dis) > 1000)
-    df8_dis_b <- slice(df8_dis, 501:1000)
-  
-  if (nrow(df8_dis) > 1000)
-    df8_dis_c <- slice(df8_dis, 1001:nrow(df8_dis))
-  
-  if (nrow(df8_dis) > 1000)
-    df9_a <- gnr_resolve(
-      names = df8_dis_a$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df8_dis) > 1000)
-    df9_b <- gnr_resolve(
-      names = df8_dis_b$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df8_dis) > 1000)
-    df9_c <- gnr_resolve(
-      names = df8_dis_c$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df8_dis) > 1000)
-    df9_a[setdiff(x = names(df4), y = names(df9_a))] <- NA
-  
-  if (nrow(df8_dis) > 1000)
-    df9_b[setdiff(x = names(df4), y = names(df9_b))] <- NA
-  
-  if (nrow(df8_dis) > 1000)
-    df9_c[setdiff(x = names(df4), y = names(df9_c))] <- NA
-  
-  if (nrow(df8_dis) > 1000)
-    df9 <- rbind(df9_a, df9_b, df9_c)
-  
-  ###if between 500 and 1000 empty entries
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df8_dis_a <- slice(df8_dis, 1:500)
-  
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df8_dis_b <- slice(df8_dis, 501:nrow(df8_dis))
-  
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df9_a <- gnr_resolve(
-      names = df8_dis_a$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df9_b <- gnr_resolve(
-      names = df8_dis_b$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df9_b[setdiff(x = names(df4), y = names(df9_b))] <- NA
-  
-  if (nrow(df8_dis) <= 1000 &
-      nrow(df8_dis) > 500)
-    df9 <- rbind(df9_a, df9_b)
-  
-  #selecting best result (with best score and best filled taxonomy)
-  df10 <- df9 %>%
-    rowwise() %>%
-    mutate(
-      kingdom = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("kingdom", "Kingdom", "regn.")
-        )
-      )),
-      phylum =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("phylum", "Phylum", "phyl."))
-      )),
-      class =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("class", "Class", "cl."))
-      )),
-      order =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("order", "Order", "ord."))
-      )),
-      family = sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("family", "Family", "fam."))
-      )),
-      genus =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("genus", "Genus"))
-      )),
-      species = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("species", "Species", "spec.", "sp.")
-        )
-      )),
-      variety = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("variety",
-                    "varietas",
-                    "var")
-        )
-      ))
-    ) %>%
-    ungroup()
-  
-  df10$kingdom[df10$kingdom >= 1] <- 1
-  df10$phylum[df10$phylum >= 1] <- 1
-  df10$class[df10$class >= 1] <- 1
-  df10$order[df10$order >= 1] <- 1
-  df10$family[df10$family >= 1] <- 1
-  df10$genus[df10$genus >= 1] <- 1
-  df10$species[df10$species >= 1] <- 1
-  df10$variety[df10$variety >= 1] <- 1
-  
-  df10 <- df10 %>%
-    mutate(n = rowSums(.[c("kingdom",
-                           "phylum",
-                           "class",
-                           "order",
-                           "family",
-                           "genus",
-                           "species",
-                           "variety")])) %>%
-    group_by(user_supplied_name) %>%
-    arrange(desc(score), desc(n)) %>%
-    ungroup() %>%
-    distinct(user_supplied_name,
-             .keep_all = TRUE) %>%
-    select(
-      user_supplied_name,
-      canonicalname = matched_name2,
-      taxonId = taxon_id,
-      dbTaxo = data_source_title,
-      taxonomy = classification_path,
-      rank = classification_path_ranks
-    )
-  
-  #manipulating taxa
-  df11 <- manipulating_taxo(dfsel = df10,
-                            dic = taxaRanksDictionary)
-  
-  #joining
-  df12 <-
-    left_join(df8,
-              df11,
-              by = c("query" = "user_supplied_name"))
-  
-  #harmonizing columns (for rbind later on)
-  df12[setdiff(x = names(df7), y = names(df12))] <- NA
-  
-  #filtering non-empty taxonomies
-  df12_full <- df12 %>%
-    filter(
-      !is.na(kingdom) |
-        !is.na(phylum) |
-        !is.na(class) |
-        !is.na(order) |
-        !is.na(family) |
-        !is.na(genus)
-    ) %>%
-    select(-rank, -taxonomy, -query)
-  
-  #filtering empty taxonomies and removing non-UTF8 characters (else cause bugs when running gnr_resolve)
-  df13 <- df12 %>%
-    filter(
-      is.na(kingdom) &
-        is.na(phylum) &
-        is.na(class) &
-        is.na(order) &
-        is.na(family) &
-        is.na(genus)
-    ) %>%
-    select(organismTranslated,
-           query) %>%
-    mutate_at(
-      .vars = vars(organismTranslated, query),
-      .funs = function(x) {
-        gsub(pattern = "[^ -~]",
-             replacement =  "",
-             x =  x)
-      }
-    ) %>%
-    mutate_at(
-      .vars = vars(organismTranslated, query),
-      .funs = function(x) {
-        gsub(pattern = ";",
-             replacement = "",
-             x = x)
-      }
-    ) %>%
-    mutate(query = word(string = query, start = 1))
-  
-  
-  #outputting distinct empty taxonomies to avoid iterations
-  df13_dis <- df13 %>%
-    distinct(query)
-  
-  if (nrow(df13_dis) == 0)
-    df13_dis[nrow(df13_dis) + 1, 1] <- "NA na"
-  
-  if (nrow(df13_dis) == 0)
-    df13_dis[nrow(df13_dis) + 1, 1] <- "NA na"
-  
-  if (nrow(df13_dis) == 0)
-    df13_dis[nrow(df13_dis) + 1, 2] <- "NA na"
-  
-  if (nrow(df13_dis) == 0)
-    df13_dis[nrow(df13_dis) + 1, 2] <- "NA na"
-  
-  #running gnresolve on first string of identifier cleaned
-  ##if less than 500 empty entries
-  if (nrow(df13_dis) <= 500)
-    df14 <- gnr_resolve(
-      names = df13_dis$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  ##if more than 1000 empty entries
-  if (nrow(df13_dis) > 1000)
-    df13_dis_a <- slice(df13_dis, 1:500)
-  
-  if (nrow(df13_dis) > 1000)
-    df13_dis_b <- slice(df13_dis, 501:1000)
-  
-  if (nrow(df13_dis) > 1000)
-    df13_dis_c <- slice(df13_dis, 1001:nrow(df13_dis))
-  
-  if (nrow(df13_dis) > 1000)
-    df14_a <- gnr_resolve(
-      names = df13_dis_a$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df13_dis) > 1000)
-    df14_b <- gnr_resolve(
-      names = df13_dis_b$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df13_dis) > 1000)
-    df14_c <- gnr_resolve(
-      names = df13_dis_c$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df13_dis) > 1000)
-    df14_a[setdiff(x = names(df4), y = names(df14_a))] <- NA
-  
-  if (nrow(df13_dis) > 1000)
-    df14_b[setdiff(x = names(df14_a), y = names(df14_b))] <- NA
-  
-  if (nrow(df13_dis) > 1000)
-    df14_c[setdiff(x = names(df14_b), y = names(df14_c))] <- NA
-  
-  if (nrow(df13_dis) > 1000)
-    df14 <- rbind(df14_a, df14_b, df14_c)
-  
-  ##if between 500 and 1000 empty entries
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df13_dis_a <- slice(df13_dis, 1:500)
-  
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df13_dis_b <- slice(df13_dis, 501:nrow(df13_dis))
-  
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df14_a <- gnr_resolve(
-      names = df13_dis_a$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df14_b <- gnr_resolve(
-      names = df13_dis_b$query,
-      data_source_ids = NULL,
-      resolve_once = FALSE,
-      with_context = TRUE,
-      canonical = TRUE,
-      cap_first = FALSE,
-      best_match_only = FALSE,
-      http = "post",
-      fields = "all"
-    )
-  
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df14_b[setdiff(x = names(df14_a), y = names(df14_b))] <- NA
-  
-  if (nrow(df13_dis) <= 1000 &
-      nrow(df13_dis) > 500)
-    df14 <- rbind(df14_a, df14_b)
-  
-  #selecting best result (with best score and best filled taxonomy)
-  df15 <- df14 %>%
-    rowwise() %>%
-    mutate(
-      kingdom = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("kingdom", "Kingdom", "regn.")
-        )
-      )),
-      phylum =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("phylum", "Phylum", "phyl."))
-      )),
-      class =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("class", "Class", "cl."))
-      )),
-      order =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("order", "Order", "ord."))
-      )),
-      family = sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("family", "Family", "fam."))
-      )),
-      genus =  sum(as.numeric(
-        stri_detect(str = classification_path_ranks,
-                    fixed = c("genus", "Genus"))
-      )),
-      species = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("species", "Species", "spec.", "sp.")
-        )
-      )),
-      variety = sum(as.numeric(
-        stri_detect(
-          str = classification_path_ranks,
-          fixed = c("variety",
-                    "varietas",
-                    "var")
-        )
-      ))
-    ) %>%
-    ungroup()
-  
-  df15$kingdom[df15$kingdom >= 1] <- 1
-  df15$phylum[df15$phylum >= 1] <- 1
-  df15$class[df15$class >= 1] <- 1
-  df15$order[df15$order >= 1] <- 1
-  df15$family[df15$family >= 1] <- 1
-  df15$genus[df15$genus >= 1] <- 1
-  df15$species[df15$species >= 1] <- 1
-  df15$variety[df15$variety >= 1] <- 1
-  
-  df15 <- df15 %>%
-    mutate(n = rowSums(.[c("kingdom",
-                           "phylum",
-                           "class",
-                           "order",
-                           "family",
-                           "genus",
-                           "species",
-                           "variety")])) %>%
-    group_by(user_supplied_name) %>%
-    arrange(desc(score), desc(n)) %>%
-    ungroup() %>%
-    distinct(user_supplied_name,
-             .keep_all = TRUE) %>%
-    select(
-      user_supplied_name,
-      canonicalname = matched_name2,
-      taxonId = taxon_id,
-      dbTaxo = data_source_title,
-      taxonomy = classification_path,
-      rank = classification_path_ranks
-    )
-  
-  #manipulating taxa
-  df16 <- manipulating_taxo(dfsel = df15,
-                            dic = taxaRanksDictionary)
-  
-  #joining
-  df17 <-
-    left_join(df13,
-              df16,
-              by = c("query" = "user_supplied_name"))
-  
-  #harmonizing columns (for rbind later on)
-  df17[setdiff(x = names(df12), y = names(df17))] <- NA
-  
-  #filtering non-empty taxonomies
-  df17_full <- df17 %>%
-    filter(
-      !is.na(kingdom) |
-        !is.na(phylum) |
-        !is.na(class) |
-        !is.na(order) |
-        !is.na(family) |
-        !is.na(genus)
-    ) %>%
-    select(-rank, -taxonomy, -query)
-  
-  #filtering empty taxonomies
-  df17_empty <- df17 %>%
-    filter(
-      is.na(kingdom) &
-        is.na(phylum) &
-        is.na(class) &
-        is.na(order) &
-        is.na(family) &
-        is.na(genus)
-    ) %>%
-    select(-rank, -taxonomy, -query)
-  
-  #selecting joining variable
-  y <- x %>%
-    select(organismTranslated)
-  
-  #joining (part 1)
-  prefinal_df <- left_join(y, df2_full)
-  
-  prefinal_df_2 <- rbind(df7_full,
-                         df12_full,
-                         df17_full,
-                         df17_empty)
-  
-  dbQuality <- df2_full %>%
-    select(dbTaxo, dbQuality) %>% 
-    distinct(dbTaxo, .keep_all = TRUE)
-  
-  prefinal_df_3 <- left_join(prefinal_df_2, dbQuality)
-  
-  #joining (rest) and removing NA when multiple organisms found
-  final_df <- rbind(prefinal_df,
-                    prefinal_df_3) %>%
-    distinct(organismTranslated,
-             canonicalname,
-             .keep_all = TRUE) %>%
-    group_by(organismTranslated) %>%
-    add_count() %>%
-    ungroup() %>%
-    filter(!is.na(canonicalname) |
-             !n > 1) %>%
-    select(-n) %>%
-    distinct(organismTranslated,
-             canonicalname,
-             .keep_all = TRUE)
-  
-  return(final_df)
-}
+# biofilling <- function(x)
+# {
+#   #mutating to char to avoid mismatches
+#   x <- x %>%
+#     mutate_all(as.character)
+#   
+#   #avoiding false non-empty taxonomies
+#   x$taxonomy <- y_as_na(x = x$taxonomy,
+#                         y = "")
+#   
+#   #filtering taxonomies to fill
+#   df <- x
+#   
+#   #creating lines if none to fill
+#   if (nrow(df) == 0)
+#     x[nrow(x) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df) == 0)
+#     df[nrow(df) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df) == 0)
+#     x[nrow(x) + 1, 2] <- "NA na"
+#   
+#   if (nrow(df) == 0)
+#     df[nrow(df) + 1, 2] <- "NA na"
+#   
+#   #manipulating taxonomies (see function above)
+#   df2 <- manipulating_taxo(dfsel = df,
+#                            dic = taxaRanksDictionary)
+#   
+#   #filtering non-empty taxonomies
+#   df2_full <- df2 %>%
+#     filter(
+#       !is.na(kingdom) |
+#         !is.na(phylum) |
+#         !is.na(class) |
+#         !is.na(order) |
+#         !is.na(family) |
+#         !is.na(genus)
+#     ) %>%
+#     select(-rank, -taxonomy)
+#   
+#   #filtering empty taxonomies
+#   df3 <- df2 %>%
+#     filter(
+#       is.na(kingdom) &
+#         is.na(phylum) &
+#         is.na(class) &
+#         is.na(order) &
+#         is.na(family) &
+#         is.na(genus)
+#     ) %>%
+#     distinct(organismTranslated,
+#              canonicalname) %>%
+#     mutate_at(
+#       .vars = vars(canonicalname),
+#       .funs = function(x) {
+#         gsub(pattern = "[^ -~]",
+#              replacement = "",
+#              x = x)
+#       }
+#     ) #because of problems otherwise (like Abelia  ×  grandiflora)
+#   
+#   #outputting distinct empty taxonomies to avoid iterations
+#   df3_dis <- df3 %>%
+#     filter(!is.na(canonicalname)) %>%
+#     distinct(canonicalname)
+#   
+#   if (nrow(df3_dis) == 0)
+#     df3_dis[nrow(df3_dis) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df3_dis) == 0)
+#     df3_dis[nrow(df3_dis) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df3_dis) == 0)
+#     df3_dis[nrow(df3_dis) + 1, 2] <- "NA na"
+#   
+#   if (nrow(df3_dis) == 0)
+#     df3_dis[nrow(df3_dis) + 1, 2] <- "NA na"
+#   
+#   #running gnresolve on identifiers with empty taxonomies
+#   df4 <- gnr_resolve(
+#     names = df3_dis$canonicalname,
+#     data_source_ids = NULL,
+#     resolve_once = FALSE,
+#     with_context = TRUE,
+#     canonical = TRUE,
+#     cap_first = FALSE,
+#     best_match_only = FALSE,
+#     http = "post",
+#     fields = "all"
+#   )
+#   
+#   #selecting best result (with best score and best filled taxonomy)
+#   df5 <- df4 %>%
+#     rowwise() %>%
+#     mutate(
+#       kingdom = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("kingdom", "Kingdom", "regn.")
+#         )
+#       )),
+#       phylum =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("phylum", "Phylum", "phyl."))
+#       )),
+#       class =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("class", "Class", "cl."))
+#       )),
+#       order =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("order", "Order", "ord."))
+#       )),
+#       family = sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("family", "Family", "fam."))
+#       )),
+#       genus =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("genus", "Genus"))
+#       )),
+#       species = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("species", "Species", "spec.", "sp.")
+#         )
+#       )),
+#       variety = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("variety",
+#                     "varietas",
+#                     "var")
+#         )
+#       ))
+#     ) %>%
+#     ungroup()
+#   
+#   df5$kingdom[df5$kingdom >= 1] <- 1
+#   df5$phylum[df5$phylum >= 1] <- 1
+#   df5$class[df5$class >= 1] <- 1
+#   df5$order[df5$order >= 1] <- 1
+#   df5$family[df5$family >= 1] <- 1
+#   df5$genus[df5$genus >= 1] <- 1
+#   df5$species[df5$species >= 1] <- 1
+#   df5$variety[df5$variety >= 1] <- 1
+#   
+#   df5 <- df5 %>%
+#     mutate(n = rowSums(.[c("kingdom",
+#                            "phylum",
+#                            "class",
+#                            "order",
+#                            "family",
+#                            "genus",
+#                            "species",
+#                            "variety")])) %>%
+#     group_by(user_supplied_name) %>%
+#     arrange(desc(score), desc(n)) %>%
+#     ungroup() %>%
+#     distinct(user_supplied_name,
+#              .keep_all = TRUE) %>%
+#     select(
+#       user_supplied_name,
+#       canonicalname = matched_name2,
+#       taxonId = taxon_id,
+#       dbTaxo = data_source_title,
+#       taxonomy = classification_path,
+#       rank = classification_path_ranks
+#     )
+#   
+#   #manipulating taxa
+#   df6 <- manipulating_taxo(dfsel = df5,
+#                            dic = taxaRanksDictionary) %>%
+#     select(-user_supplied_name)
+#   
+#   #joining
+#   df7 <-
+#     left_join(df3,
+#               df6)
+#   
+#   #harmonizing columns (for rbind)
+#   df7[setdiff(
+#     x = c(
+#       "organismTranslated",
+#       "canonicalname",
+#       "dbTaxo",
+#       "kingdom",
+#       "phylum",
+#       "class",
+#       "order",
+#       "family",
+#       "genus",
+#       "species",
+#       "variety",
+#       "nchar", 
+#       "sum"
+#     ),
+#     y = names(df7)
+#   )] <- NA
+#   
+#   #filtering non-empty taxonomies
+#   df7_full <- df7 %>%
+#     filter(
+#       !is.na(kingdom) |
+#         !is.na(phylum) |
+#         !is.na(class) |
+#         !is.na(order) |
+#         !is.na(family) |
+#         !is.na(genus)
+#     ) %>%
+#     select(-rank, -taxonomy)
+#   
+#   #filtering empty taxonomies
+#   df8 <- df7 %>%
+#     filter(
+#       is.na(kingdom) &
+#         is.na(phylum) &
+#         is.na(class) &
+#         is.na(order) &
+#         is.na(family) &
+#         is.na(genus)
+#     ) %>%
+#     select(organismTranslated) %>%
+#     mutate_at(
+#       .vars = vars(organismTranslated),
+#       .funs = function(x) {
+#         gsub(pattern = "[^ -~]",
+#              replacement =  "",
+#              x =  x)
+#       }
+#     ) %>%
+#     mutate_at(
+#       .vars = vars(organismTranslated),
+#       .funs = function(x) {
+#         gsub(pattern = ";",
+#              replacement = "",
+#              x = x)
+#       }
+#     ) %>%
+#     mutate(query = organismTranslated)
+#   
+#   #removing disturbing words
+#   ##creating variables for replacement by dictionary
+#   c <- paste("\\b", blacklistDictionary$blackName, "\\b", sep = "")
+#   d <- blacklistDictionary$replacement
+#   
+#   df8$query <-
+#     stri_replace_all_regex(
+#       str = df8$query,
+#       pattern = c,
+#       replacement = d,
+#       case_insensitive = TRUE,
+#       vectorize_all = FALSE
+#     )
+#   
+#   df8$query <- gsub(pattern = "FALSE",
+#                     replacement = "",
+#                     x = df8$query)
+#   
+#   df8$query <- trimws(df8$query)
+#   
+#   #outputting distinct empty taxonomies to avoid iterations
+#   df8_dis <- df8 %>%
+#     distinct(query)
+#   
+#   #running gnresolve on whole identifier cleaned
+#   ##if less than 500 empty entries
+#   if (nrow(df8_dis) <= 500)
+#     df9 <- gnr_resolve(
+#       names = df8_dis$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   ##if more than 500 empty entries slicing in multiple pieces because of gnr_resolve structure
+#   ###if more than 1000 empty entries
+#   if (nrow(df8_dis) > 1000)
+#     df8_dis_a <- slice(df8_dis, 1:500)
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df8_dis_b <- slice(df8_dis, 501:1000)
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df8_dis_c <- slice(df8_dis, 1001:nrow(df8_dis))
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_a <- gnr_resolve(
+#       names = df8_dis_a$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_b <- gnr_resolve(
+#       names = df8_dis_b$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_c <- gnr_resolve(
+#       names = df8_dis_c$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_a[setdiff(x = names(df4), y = names(df9_a))] <- NA
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_b[setdiff(x = names(df4), y = names(df9_b))] <- NA
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9_c[setdiff(x = names(df4), y = names(df9_c))] <- NA
+#   
+#   if (nrow(df8_dis) > 1000)
+#     df9 <- rbind(df9_a, df9_b, df9_c)
+#   
+#   ###if between 500 and 1000 empty entries
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df8_dis_a <- slice(df8_dis, 1:500)
+#   
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df8_dis_b <- slice(df8_dis, 501:nrow(df8_dis))
+#   
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df9_a <- gnr_resolve(
+#       names = df8_dis_a$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df9_b <- gnr_resolve(
+#       names = df8_dis_b$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df9_b[setdiff(x = names(df4), y = names(df9_b))] <- NA
+#   
+#   if (nrow(df8_dis) <= 1000 &
+#       nrow(df8_dis) > 500)
+#     df9 <- rbind(df9_a, df9_b)
+#   
+#   #selecting best result (with best score and best filled taxonomy)
+#   df10 <- df9 %>%
+#     rowwise() %>%
+#     mutate(
+#       kingdom = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("kingdom", "Kingdom", "regn.")
+#         )
+#       )),
+#       phylum =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("phylum", "Phylum", "phyl."))
+#       )),
+#       class =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("class", "Class", "cl."))
+#       )),
+#       order =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("order", "Order", "ord."))
+#       )),
+#       family = sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("family", "Family", "fam."))
+#       )),
+#       genus =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("genus", "Genus"))
+#       )),
+#       species = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("species", "Species", "spec.", "sp.")
+#         )
+#       )),
+#       variety = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("variety",
+#                     "varietas",
+#                     "var")
+#         )
+#       ))
+#     ) %>%
+#     ungroup()
+#   
+#   df10$kingdom[df10$kingdom >= 1] <- 1
+#   df10$phylum[df10$phylum >= 1] <- 1
+#   df10$class[df10$class >= 1] <- 1
+#   df10$order[df10$order >= 1] <- 1
+#   df10$family[df10$family >= 1] <- 1
+#   df10$genus[df10$genus >= 1] <- 1
+#   df10$species[df10$species >= 1] <- 1
+#   df10$variety[df10$variety >= 1] <- 1
+#   
+#   df10 <- df10 %>%
+#     mutate(n = rowSums(.[c("kingdom",
+#                            "phylum",
+#                            "class",
+#                            "order",
+#                            "family",
+#                            "genus",
+#                            "species",
+#                            "variety")])) %>%
+#     group_by(user_supplied_name) %>%
+#     arrange(desc(score), desc(n)) %>%
+#     ungroup() %>%
+#     distinct(user_supplied_name,
+#              .keep_all = TRUE) %>%
+#     select(
+#       user_supplied_name,
+#       canonicalname = matched_name2,
+#       taxonId = taxon_id,
+#       dbTaxo = data_source_title,
+#       taxonomy = classification_path,
+#       rank = classification_path_ranks
+#     )
+#   
+#   #manipulating taxa
+#   df11 <- manipulating_taxo(dfsel = df10,
+#                             dic = taxaRanksDictionary)
+#   
+#   #joining
+#   df12 <-
+#     left_join(df8,
+#               df11,
+#               by = c("query" = "user_supplied_name"))
+#   
+#   #harmonizing columns (for rbind later on)
+#   df12[setdiff(x = names(df7), y = names(df12))] <- NA
+#   
+#   #filtering non-empty taxonomies
+#   df12_full <- df12 %>%
+#     filter(
+#       !is.na(kingdom) |
+#         !is.na(phylum) |
+#         !is.na(class) |
+#         !is.na(order) |
+#         !is.na(family) |
+#         !is.na(genus)
+#     ) %>%
+#     select(-rank, -taxonomy, -query)
+#   
+#   #filtering empty taxonomies and removing non-UTF8 characters (else cause bugs when running gnr_resolve)
+#   df13 <- df12 %>%
+#     filter(
+#       is.na(kingdom) &
+#         is.na(phylum) &
+#         is.na(class) &
+#         is.na(order) &
+#         is.na(family) &
+#         is.na(genus)
+#     ) %>%
+#     select(organismTranslated,
+#            query) %>%
+#     mutate_at(
+#       .vars = vars(organismTranslated, query),
+#       .funs = function(x) {
+#         gsub(pattern = "[^ -~]",
+#              replacement =  "",
+#              x =  x)
+#       }
+#     ) %>%
+#     mutate_at(
+#       .vars = vars(organismTranslated, query),
+#       .funs = function(x) {
+#         gsub(pattern = ";",
+#              replacement = "",
+#              x = x)
+#       }
+#     ) %>%
+#     mutate(query = word(string = query, start = 1))
+#   
+#   
+#   #outputting distinct empty taxonomies to avoid iterations
+#   df13_dis <- df13 %>%
+#     distinct(query)
+#   
+#   if (nrow(df13_dis) == 0)
+#     df13_dis[nrow(df13_dis) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df13_dis) == 0)
+#     df13_dis[nrow(df13_dis) + 1, 1] <- "NA na"
+#   
+#   if (nrow(df13_dis) == 0)
+#     df13_dis[nrow(df13_dis) + 1, 2] <- "NA na"
+#   
+#   if (nrow(df13_dis) == 0)
+#     df13_dis[nrow(df13_dis) + 1, 2] <- "NA na"
+#   
+#   #running gnresolve on first string of identifier cleaned
+#   ##if less than 500 empty entries
+#   if (nrow(df13_dis) <= 500)
+#     df14 <- gnr_resolve(
+#       names = df13_dis$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   ##if more than 1000 empty entries
+#   if (nrow(df13_dis) > 1000)
+#     df13_dis_a <- slice(df13_dis, 1:500)
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df13_dis_b <- slice(df13_dis, 501:1000)
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df13_dis_c <- slice(df13_dis, 1001:nrow(df13_dis))
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_a <- gnr_resolve(
+#       names = df13_dis_a$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_b <- gnr_resolve(
+#       names = df13_dis_b$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_c <- gnr_resolve(
+#       names = df13_dis_c$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_a[setdiff(x = names(df4), y = names(df14_a))] <- NA
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_b[setdiff(x = names(df14_a), y = names(df14_b))] <- NA
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14_c[setdiff(x = names(df14_b), y = names(df14_c))] <- NA
+#   
+#   if (nrow(df13_dis) > 1000)
+#     df14 <- rbind(df14_a, df14_b, df14_c)
+#   
+#   ##if between 500 and 1000 empty entries
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df13_dis_a <- slice(df13_dis, 1:500)
+#   
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df13_dis_b <- slice(df13_dis, 501:nrow(df13_dis))
+#   
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df14_a <- gnr_resolve(
+#       names = df13_dis_a$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df14_b <- gnr_resolve(
+#       names = df13_dis_b$query,
+#       data_source_ids = NULL,
+#       resolve_once = FALSE,
+#       with_context = TRUE,
+#       canonical = TRUE,
+#       cap_first = FALSE,
+#       best_match_only = FALSE,
+#       http = "post",
+#       fields = "all"
+#     )
+#   
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df14_b[setdiff(x = names(df14_a), y = names(df14_b))] <- NA
+#   
+#   if (nrow(df13_dis) <= 1000 &
+#       nrow(df13_dis) > 500)
+#     df14 <- rbind(df14_a, df14_b)
+#   
+#   #selecting best result (with best score and best filled taxonomy)
+#   df15 <- df14 %>%
+#     rowwise() %>%
+#     mutate(
+#       kingdom = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("kingdom", "Kingdom", "regn.")
+#         )
+#       )),
+#       phylum =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("phylum", "Phylum", "phyl."))
+#       )),
+#       class =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("class", "Class", "cl."))
+#       )),
+#       order =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("order", "Order", "ord."))
+#       )),
+#       family = sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("family", "Family", "fam."))
+#       )),
+#       genus =  sum(as.numeric(
+#         stri_detect(str = classification_path_ranks,
+#                     fixed = c("genus", "Genus"))
+#       )),
+#       species = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("species", "Species", "spec.", "sp.")
+#         )
+#       )),
+#       variety = sum(as.numeric(
+#         stri_detect(
+#           str = classification_path_ranks,
+#           fixed = c("variety",
+#                     "varietas",
+#                     "var")
+#         )
+#       ))
+#     ) %>%
+#     ungroup()
+#   
+#   df15$kingdom[df15$kingdom >= 1] <- 1
+#   df15$phylum[df15$phylum >= 1] <- 1
+#   df15$class[df15$class >= 1] <- 1
+#   df15$order[df15$order >= 1] <- 1
+#   df15$family[df15$family >= 1] <- 1
+#   df15$genus[df15$genus >= 1] <- 1
+#   df15$species[df15$species >= 1] <- 1
+#   df15$variety[df15$variety >= 1] <- 1
+#   
+#   df15 <- df15 %>%
+#     mutate(n = rowSums(.[c("kingdom",
+#                            "phylum",
+#                            "class",
+#                            "order",
+#                            "family",
+#                            "genus",
+#                            "species",
+#                            "variety")])) %>%
+#     group_by(user_supplied_name) %>%
+#     arrange(desc(score), desc(n)) %>%
+#     ungroup() %>%
+#     distinct(user_supplied_name,
+#              .keep_all = TRUE) %>%
+#     select(
+#       user_supplied_name,
+#       canonicalname = matched_name2,
+#       taxonId = taxon_id,
+#       dbTaxo = data_source_title,
+#       taxonomy = classification_path,
+#       rank = classification_path_ranks
+#     )
+#   
+#   #manipulating taxa
+#   df16 <- manipulating_taxo(dfsel = df15,
+#                             dic = taxaRanksDictionary)
+#   
+#   #joining
+#   df17 <-
+#     left_join(df13,
+#               df16,
+#               by = c("query" = "user_supplied_name"))
+#   
+#   #harmonizing columns (for rbind later on)
+#   df17[setdiff(x = names(df12), y = names(df17))] <- NA
+#   
+#   #filtering non-empty taxonomies
+#   df17_full <- df17 %>%
+#     filter(
+#       !is.na(kingdom) |
+#         !is.na(phylum) |
+#         !is.na(class) |
+#         !is.na(order) |
+#         !is.na(family) |
+#         !is.na(genus)
+#     ) %>%
+#     select(-rank, -taxonomy, -query)
+#   
+#   #filtering empty taxonomies
+#   df17_empty <- df17 %>%
+#     filter(
+#       is.na(kingdom) &
+#         is.na(phylum) &
+#         is.na(class) &
+#         is.na(order) &
+#         is.na(family) &
+#         is.na(genus)
+#     ) %>%
+#     select(-rank, -taxonomy, -query)
+#   
+#   #selecting joining variable
+#   y <- x %>%
+#     select(organismTranslated)
+#   
+#   #joining (part 1)
+#   prefinal_df <- left_join(y, df2_full)
+#   
+#   prefinal_df_2 <- rbind(df7_full,
+#                          df12_full,
+#                          df17_full,
+#                          df17_empty)
+#   
+#   dbQuality <- df2_full %>%
+#     select(dbTaxo, dbQuality) %>% 
+#     distinct(dbTaxo, .keep_all = TRUE)
+#   
+#   prefinal_df_3 <- left_join(prefinal_df_2, dbQuality)
+#   
+#   #joining (rest) and removing NA when multiple organisms found
+#   final_df <- rbind(prefinal_df,
+#                     prefinal_df_3) %>%
+#     distinct(organismTranslated,
+#              canonicalname,
+#              .keep_all = TRUE) %>%
+#     group_by(organismTranslated) %>%
+#     add_count() %>%
+#     ungroup() %>%
+#     filter(!is.na(canonicalname) |
+#              !n > 1) %>%
+#     select(-n) %>%
+#     distinct(organismTranslated,
+#              canonicalname,
+#              .keep_all = TRUE)
+#   
+#   return(final_df)
+# }
 
 #######################################################
 #######################################################
@@ -6553,27 +6558,28 @@ preparing_name <- function(x) {
 #######################################################
 #######################################################
 
-split_data_table <- function(x, no_rows_per_frame, path_to_store) {
-  split_vec <- seq(1, nrow(x), no_rows_per_frame)
-  
-  for (split_cut in split_vec) {
-    sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
-    write.table(
-      sample,
-      paste(
-        path_to_store,
-        "translatedOrganismGnfinderUntil_",
-        as.integer(split_cut + (no_rows_per_frame - 1)),
-        ".tsv",
-        sep = ""
-      ),
-      row.names = FALSE,
-      quote = FALSE,
-      sep = "\t",
-      fileEncoding = "UTF-8"
-    )
+split_data_table <-
+  function(x, no_rows_per_frame, text, path_to_store) {
+    split_vec <- seq(1, nrow(x), no_rows_per_frame)
+    
+    for (split_cut in split_vec) {
+      sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
+      write.table(
+        sample,
+        paste(path_to_store,
+              text,
+              as.integer(split_cut + (
+                no_rows_per_frame - 1
+              )),
+              ".tsv",
+              sep = ""),
+        row.names = FALSE,
+        quote = FALSE,
+        sep = "\t",
+        fileEncoding = "UTF-8"
+      )
+    }
   }
-}
 
 #######################################################
 #######################################################
@@ -6699,28 +6705,57 @@ tcm_pharmacopoeia_cleaning <- function(x)
 #######################################################
 #######################################################
 
-gnfinder_cleaning <- function(num) {
+gnfinder_cleaning <- function(num, organismCol) {
+  
+  if (organismCol == "organismOriginal")
   inpath_organism_f <- paste(
-    pathTranslatedOrganismDistinct,
-    "translatedOrganismGnfinderUntil_",
+    pathOriginalOrganismDistinct,
+    "originalOrganismGnfinderUntil_",
     num,
     ".tsv",
     sep = ""
   )
   
+  if (organismCol == "organismInterim")
+    inpath_organism_f <- paste(
+      pathTranslatedOrganismDistinct,
+      "translatedOrganismGnfinderUntil_",
+      num,
+      ".tsv",
+      sep = ""
+    )
+  
+  if (organismCol == "organismOriginal")
   inpath_gnfinder_f <-
-    paste(pathSanitizedOrganismDirJson,
-          "sanitizedOrganismGnfinderUntil_",
+    paste(pathSanitizedOrganismOriginalDirJson,
+          "originalOrganismGnfinderUntil_",
           num,
           ".json",
           sep = "")
   
+  if (organismCol == "organismInterim")
+    inpath_gnfinder_f <-
+      paste(pathSanitizedOrganismTranslatedDirJson,
+            "sanitizedOrganismGnfinderUntil_",
+            num,
+            ".json",
+            sep = "")
+  
+  if (organismCol == "organismOriginal")
   outpath_f <-
-    paste(pathSanitizedOrganismDirTsv,
-          "sanitizedOrganismUntil_",
+    paste(pathSanitizedOrganismOriginalDirTsv,
+          "originalOrganismGnfinderUntil_",
           num,
           ".tsv.zip",
           sep = "")
+  
+  if (organismCol == "organismInterim")
+    outpath_f <-
+      paste(pathSanitizedOrganismTranslatedDirTsv,
+            "translatedOrganismGnfinderUntil_",
+            num,
+            ".tsv.zip",
+            sep = "")
   
   gnfound <- data.frame(fromJSON(txt = inpath_gnfinder_f,
                                  simplifyDataFrame = TRUE))
@@ -6733,8 +6768,11 @@ gnfinder_cleaning <- function(num) {
   ) %>%
     mutate_all(as.character)
   
+  data_bio <- data_bio[!is.na(data_bio[,organismCol]),]
+  
   data_bio_clean <- biocleaning(x = gnfound,
-                                y = data_bio)
+                                y = data_bio,
+                                organismCol = organismCol)
   
   return(data_bio_clean)
 }

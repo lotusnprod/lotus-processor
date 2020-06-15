@@ -1005,6 +1005,10 @@ pathOriginalStructureNominal <-
 pathOriginalOrganism <-
   "../data/interim/tables/0_original/originalOrganism.tsv.zip"
 
+## distinct organism
+pathOriginalOrganismDistinct <-
+  "../data/interim/tables/0_original/gnfinder/"
+
 ## ref
 pathOriginalRef <-
   "../data/interim/tables/0_original/originalReference.tsv.zip"
@@ -1049,13 +1053,24 @@ pathSanitizedReference <-
   "../data/interim/tables/2_sanitized/sanitizedReference.tsv.zip"
 
 ## organism
-### gnfinder json dir
-pathSanitizedOrganismDirJson <-
-  "../data/interim/tables/2_sanitized/gnfinder/json/"
+### gnfinder 
+#### original
+##### json dir
+pathSanitizedOrganismOriginalDirJson <-
+  "../data/interim/tables/2_sanitized/gnfinder/original/json/"
 
-### tsv converted dir
-pathSanitizedOrganismDirTsv <-
-  "../data/interim/tables/2_sanitized/gnfinder/tsv/"
+##### tsv converted dir
+pathSanitizedOrganismOriginalDirTsv <-
+  "../data/interim/tables/2_sanitized/gnfinder/original/tsv/"
+
+#### translated
+##### json dir
+pathSanitizedOrganismTranslatedDirJson <-
+  "../data/interim/tables/2_sanitized/gnfinder/translated/json/"
+
+##### tsv converted dir
+pathSanitizedOrganismTranslatedDirTsv <-
+  "../data/interim/tables/2_sanitized/gnfinder/translated/tsv/"
 
 ### final sanitized organisms
 pathSanitizedOrganism <-

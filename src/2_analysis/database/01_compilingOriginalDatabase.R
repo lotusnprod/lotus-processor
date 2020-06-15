@@ -111,18 +111,11 @@ write.table(
 )
 
 ## organism
-write.table(
-  x = inhouseDbOrganism,
-  file = gzfile(
-    description = pathOriginalOrganism,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+## organisms for gnfinder
+split_data_table(x = inhouseDbOrganism,
+                 no_rows_per_frame = 10000,
+                 text = "originalOrganismGnfinderUntil_",
+                 path_to_store = pathOriginalOrganismDistinct)
 
 ## ref
 write.table(
