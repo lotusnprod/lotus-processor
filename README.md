@@ -66,6 +66,32 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
+You need Git, [DVC](https://www.dvc.org).
+
+You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
+from scratch.
+
+### Access to metabomaps
+
+Add this to your ~/.ssh/config
+
+```
+Host metabomaps
+  IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
+  User <user_remote>
+  HostName metabomaps.nprod.net
+  Port 10311
+```
+
+### Pull the repository
+
+```console
+git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
+
+# If you need the data
+dvc pull  # This will take a while
+```
+
 # TO UPDATE
 
 ```
