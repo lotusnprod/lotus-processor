@@ -4,7 +4,7 @@
 
 # root
 ## data
-pathData <- "../data"
+pathData <- Sys.getenv("DATA_PATH", unset="../data")
 
 ### external
 pathDataExternal <-
