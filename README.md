@@ -91,6 +91,12 @@ $ source ~/anaconda3/etc/profile.d/conda.sh
 $ conda activate your_env
 ````
 
+Your R working directory should be src
+
+````
+$ cd src
+````
+
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
 
 ## Minimal working example
