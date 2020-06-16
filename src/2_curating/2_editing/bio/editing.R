@@ -1,4 +1,4 @@
-# title: "treating bio"
+# title: "editing bio"
 
 # loading paths
 source("paths.R")
