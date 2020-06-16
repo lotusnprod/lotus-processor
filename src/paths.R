@@ -1047,34 +1047,34 @@ pathTranslatedStructureDistinct <-
 pathTranslatedTable <-
   "../data/interim/tables/1_translated/translatedTable.tsv.zip"
 
-# sanitized fields
+# cleaned fields
 ## ref
-pathSanitizedReference <-
-  "../data/interim/tables/2_sanitized/sanitizedReference.tsv.zip"
+pathCleanedReference <-
+  "../data/interim/tables/2_cleaned/cleanedReference.tsv.zip"
 
 ## organism
 ### gnfinder 
 #### original
 ##### json dir
-pathSanitizedOrganismOriginalDirJson <-
-  "../data/interim/tables/2_sanitized/gnfinder/original/json/"
+pathCleanedOrganismOriginalDirJson <-
+  "../data/interim/tables/2_cleaned/gnfinder/original/json/"
 
 ##### tsv converted dir
-pathSanitizedOrganismOriginalDirTsv <-
-  "../data/interim/tables/2_sanitized/gnfinder/original/tsv/"
+pathCleanedOrganismOriginalDirTsv <-
+  "../data/interim/tables/2_cleaned/gnfinder/original/tsv/"
 
 #### translated
 ##### json dir
-pathSanitizedOrganismTranslatedDirJson <-
-  "../data/interim/tables/2_sanitized/gnfinder/translated/json/"
+pathCleanedOrganismTranslatedDirJson <-
+  "../data/interim/tables/2_cleaned/gnfinder/translated/json/"
 
 ##### tsv converted dir
-pathSanitizedOrganismTranslatedDirTsv <-
-  "../data/interim/tables/2_sanitized/gnfinder/translated/tsv/"
+pathCleanedOrganismTranslatedDirTsv <-
+  "../data/interim/tables/2_cleaned/gnfinder/translated/tsv/"
 
-### final sanitized organisms
-pathSanitizedOrganism <-
-  "../data/interim/tables/2_sanitized/sanitizedOrganism.tsv.zip"
+### final cleaned organisms
+pathCleanedOrganism <-
+  "../data/interim/tables/2_cleaned/cleanedOrganism.tsv.zip"
 
 pathCuratedOrganism <-
   "../data/interim/tables/3_curated/curatedOrganism.tsv.zip"
@@ -1084,7 +1084,7 @@ pathCuratedOrganismRealDiff <-
 
 ## dirty for the moment
 pathOriginalGnfinderScript <-
-  "2_curating/2_editing/bio/gnfinder/originalGnfinderLauncher.sh"
+  "2_curating/2_editing/bio/subscripts/shell/originalGnfinderLauncher.sh"
 
 pathTranslatedGnfinderScript <-
-  "2_curating/2_editing/bio/gnfinder/translatedGnfinderLauncher.sh"
+  "2_curating/2_editing/bio/subscripts/shell/translatedGnfinderLauncher.sh"
