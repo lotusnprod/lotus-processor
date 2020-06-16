@@ -1075,3 +1075,9 @@ pathSanitizedOrganismTranslatedDirTsv <-
 ### final sanitized organisms
 pathSanitizedOrganism <-
   "../data/interim/tables/2_sanitized/sanitizedOrganism.tsv.zip"
+
+pathCuratedOrganism <-
+  "../data/interim/tables/3_curated/curatedOrganism.tsv.zip"
+
+pathCuratedOrganismRealDiff <-
+  "../data/interim/tables/curatedOrganismsDifferentSpecies.tsv.zip"

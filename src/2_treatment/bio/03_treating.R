@@ -1,4 +1,4 @@
-# title: "Organisms (sanitized) compileR"
+# title: "treating bio"
 
 # setting working directory
 setwd("~/GitLab/opennaturalproductsdb/src/")
@@ -54,7 +54,7 @@ dataOriginalOrganism <- read_delim(
   trim_ws = TRUE
 )
 
-system (command = "bash 2_analysis/bio/02_sanitizingAndContextualizing/gnfinderLauncher.sh")
+system (command = "bash 2_analysis/bio/gnfinder/OriginalGnfinderLauncher.sh")
 
 length <- length(list.files(path = pathOriginalOrganismDistinct,
                             pattern = 'tsv'))
@@ -248,7 +248,7 @@ split_data_table(
   path_to_store = pathTranslatedOrganismDistinct
 )
 
-system (command = "bash 2_analysis/bio/04_sanitizingAndContextualizing/gnfinderLauncher.sh")
+system (command = "bash 2_analysis/bio/gnfinder/translatedGnfinderLauncher.sh")
 
 length <- length(list.files(path = pathTranslatedOrganismDistinct,
                             pattern = 'tsv'))
@@ -309,11 +309,84 @@ dataSanitizedOrganism <- dataSanitizedOrganism %>%
            !n > 1) %>%
   select(-n)
 
-# exporting
+dataSanitizedOrganismManipulated <-
+  manipulating_taxo(dfsel = dataSanitizedOrganism,
+                    dic = taxaRanksDictionary) %>%
+  select(-rank, -taxonomy)
+
+#curating taxonomy
+##auto
+dataCuratedOrganismAuto <-
+  taxo_cleaning_auto(dfsel = dataSanitizedOrganismManipulated)
+
+##manual
+dataCuratedOrganism <-
+  taxo_cleaning_manual(dfsel = dataCuratedOrganismAuto)
+
+#outputing lowest taxon
+dataCuratedOrganism$organismLowestTaxon <-
+  dataCuratedOrganism$organismCurated
+
+#outputing differences in species names
+diff <-
+  dataCuratedOrganism %>% filter(organismLowestTaxon != organismCurated)
+
+realDiff <-
+  dataCuratedOrganism %>% filter(organismLowestTaxon != organismSanitized &
+                                   !is.na(organism_6_genus)) %>%
+  distinct(organismSanitized,
+           organismCurated,
+           .keep_all = TRUE) %>%
+  group_by(organism_6_genus) %>%
+  add_count() %>%
+  ungroup() %>%
+  select(organismSanitized,
+         organismCurated,
+         n)
+
+#selecting
+dataCuratedOrganism <- dataCuratedOrganism %>%
+  select(
+    organismOriginal,
+    organismSanitized,
+    organismCurated,
+    organismLowestTaxon,
+    #duplicate of organism curated, choose
+    organismDbTaxo,
+    organismDbTaxoQuality,
+    organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
+    organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
+    organismTaxonId,
+    organism_1_kingdom,
+    organism_2_phylum,
+    organism_3_class,
+    organism_4_order,
+    organism_5_family,
+    organism_6_genus,
+    organism_7_species,
+    organism_8_variety
+  )
+
+#exporting
+#curated
 write.table(
-  x = dataSanitizedOrganism,
+  x = dataCuratedOrganism,
   file = gzfile(
-    description = pathSanitizedOrganism,
+    description = pathCuratedOrganism,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+##differences
+write.table(
+  x = realDiff,
+  file = gzfile(
+    description = pathCuratedOrganismRealDiff,
     compression = 9,
     encoding = "UTF-8"
   ),

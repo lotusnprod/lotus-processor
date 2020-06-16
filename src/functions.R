@@ -292,34 +292,36 @@ biocleaning <- function(x, y, organismCol)
 
 manipulating_taxo <- function(dfsel, dic) {
   #creating variables for replacement by dictionary
-  a <- paste("\\b", dic$taxaLevel, "\\b", sep = "")
-  b <- dic$taxaLevelStandard
+  a <- paste("\\b", dic$taxaRank, "\\b", sep = "")
+  b <- dic$taxaRankStandard
   
   #selecting and splitting taxonomy and ranks
   df1 <- dfsel %>%
-    select(identifier = 1,
-           canonicalname,
-           dbTaxo,
+    select(organismOriginal,
+           organismSanitized,
+           organismDbTaxo,
+           taxonId,
+           dbQuality,
            taxonomy,
            rank) %>%
     cSplit(splitCols = "taxonomy",
            sep = "|") %>%
     cSplit(splitCols = "rank",
            sep = "|") %>%
-    lapply(as.character) %>%
-    as_tibble()
+    mutate_all(as.character) %>% 
+    tibble()
   
   #manipulating taxa
   df2 <- df1 %>%
     pivot_longer(
-      cols = 4:ncol(.),
+      cols = 6:ncol(.),
       names_to = c(".value", "level"),
       names_sep = "_",
       values_to = "taxonomy",
       values_drop_na = TRUE
     ) %>%
-    distinct(identifier,
-             canonicalname,
+    distinct(organismOriginal,
+             organismSanitized,
              level,
              .keep_all = TRUE)
   
@@ -332,17 +334,11 @@ manipulating_taxo <- function(dfsel, dic) {
   )
   
   #removing false non-empty cells
-  df2$identifier <- y_as_na(x = df2$identifier,
-                            y = "")
-  
   df2$rank <- y_as_na(x = df2$rank,
                       y = "")
   
   df2$taxonomy <- y_as_na(x = df2$taxonomy,
                           y = "")
-  
-  df2$identifier <- y_as_na(x = df2$identifier,
-                            y = "NA NA")
   
   df2$rank <- y_as_na(x = df2$rank,
                       y = "")
@@ -359,10 +355,11 @@ manipulating_taxo <- function(dfsel, dic) {
                 values_from = taxonomy) %>%
     select_if(
       names(.) %in%
-        c(
-          "identifier",
-          "canonicalname",
-          "dbTaxo",
+        c("organismOriginal",
+          "organismSanitized",
+          "organismDbTaxo",
+          "taxonId",
+          "dbQuality",
           "kingdom",
           "phylum",
           "class",
@@ -375,13 +372,13 @@ manipulating_taxo <- function(dfsel, dic) {
     )
   
   #pasting suffix to colnames to pivot then (the double pivot allows to tidy the data)
-  colnames(df3)[4:ncol(df3)] <-
-    paste("bio_", colnames(df3)[4:ncol(df3)], sep = "")
+  colnames(df3)[5:ncol(df3)] <-
+    paste("bio_", colnames(df3)[5:ncol(df3)], sep = "")
   
   #pivoting (long)
   df4 <- df3 %>%
     pivot_longer(
-      cols = 4:ncol(.),
+      cols = 5:ncol(.),
       names_to = c(".value", "level"),
       names_sep = "_",
       values_to = "taxonomy",
@@ -390,15 +387,17 @@ manipulating_taxo <- function(dfsel, dic) {
   
   #pivoting (wide)
   df5 <- df4 %>%
-    group_by(canonicalname) %>%
+    group_by(organismSanitized) %>%
     distinct(level, .keep_all = TRUE) %>%
     pivot_wider(names_from = level,
                 values_from = bio) %>%
     select_if(
       names(.) %in%
-        c(
-          "canonicalname",
-          "dbTaxo",
+        c("organismOriginal",
+          "organismSanitized",
+          "organismDbTaxo",
+          "taxonId",
+          "dbQuality",
           "kingdom",
           "phylum",
           "class",
@@ -411,7 +410,23 @@ manipulating_taxo <- function(dfsel, dic) {
     )
   
   #adding taxa to initial df
-  df6 <- left_join(dfsel, df5)
+  df6 <- left_join(dfsel, df5) %>% 
+    select(organismOriginal,
+           organismSanitized,
+           organismDbTaxo,
+           organismDbTaxoQuality = dbQuality,
+           organismTaxonId = taxonId,
+           organism_1_kingdom = kingdom,
+           organism_2_phylum = phylum,
+           organism_3_class = class,
+           organism_4_order = order,
+           organism_5_family = family,
+           organism_6_genus = genus,
+           organism_7_species = species,
+           organism_8_variety = variety,
+           rank,
+           taxonomy
+           )
   
   return(df6)
 }
@@ -1259,7 +1274,8 @@ taxo_cleaning_manual <- function(dfsel)
         organism_4_order,
         organism_5_family,
         organism_6_genus,
-        organism_7_species
+        organism_7_species,
+        organism_8_variety
       ),
       .funs = function(x) {
         gsub(pattern = "^c\\(|\\)$",
@@ -1275,7 +1291,8 @@ taxo_cleaning_manual <- function(dfsel)
         organism_4_order,
         organism_5_family,
         organism_6_genus,
-        organism_7_species
+        organism_7_species,
+        organism_8_variety
       ),
       .funs = function(x) {
         gsub(pattern = "\"",
@@ -4232,38 +4249,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db$organism_4_order[inhouse_db$organism_4_order == "Cryptonemiales"] <-
     "Halymeniales"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Ranunculales"] <-
-    "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organism_4_order == "Ranunculales"] <-
-    "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organism_4_order == "Ranunculales"] <-
-    "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Ranunculales"] <-
-    "Magnoliopsida"
-  
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Brassicales"] <-
-    "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organism_4_order == "Brassicales"] <-
-    "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organism_4_order == "Brassicales"] <-
-    "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Brassicales"] <-
-    "Magnoliopsida"
-  
-  inhouse_db$organism_1_kingdom[inhouse_db$organism_4_order == "Asparagales"] <-
-    "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organism_4_order == "Asparagales"] <-
-    "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Asparagales"] <-
-    "Magnoliopsida"
-  
-  inhouse_db$organism_1_kingdom[inhouse_db$organism_4_order == "Alismatales"] <-
-    "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organism_4_order == "Alismatales"] <-
-    "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Alismatales"] <-
-    "Magnoliopsida"
-  
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
   
@@ -4506,16 +4491,63 @@ taxo_cleaning_manual <- function(dfsel)
     y_as_na(x = inhouse_db$organism_7_species,
             y = "")
   
+  inhouse_db$organism_8_variety <-
+    y_as_na(x = inhouse_db$organism_8_variety,
+            y = "")
+  
   inhouse_db$organism_modified_taxonomy_manual <-
     y_as_na(x = inhouse_db$organism_modified_taxonomy_manual,
             y = "")
   
   inhouse_db$organismCurated <-
-    as.character(apply(inhouse_db[5:11], 1, function(x)
+    as.character(apply(inhouse_db[6:13], 1, function(x)
       tail(na.omit(x), 1)))
   
-  organism_7_species_cleaning <-
+  organism_8_variety_cleaning <-
     inhouse_db %>%
+    distinct(
+      organism_1_kingdom,
+      organism_2_phylum,
+      organism_3_class,
+      organism_4_order,
+      organism_5_family,
+      organism_6_genus,
+      organism_7_species,
+      organism_8_variety,
+      .keep_all = TRUE
+    ) %>%
+    group_by(organism_8_variety) %>%
+    filter(!is.na(organism_8_variety)) %>%
+    add_count() %>%
+    filter(n >= 2) %>%
+    select(-n)
+  
+  cat(
+    "you have",
+    nrow(organism_8_variety_cleaning),
+    "species with inconsistent upstream taxonomies",
+    "\n"
+  )
+  
+  inhouse_db_old <- inhouse_db %>%
+    filter(!organismCurated %in% organism_8_variety_cleaning$organismCurated)
+  
+  inhouse_db_new <- inhouse_db %>%
+    filter(organismCurated %in% organism_8_variety_cleaning$organismCurated) %>%
+    select(organismOriginal,
+           organismSanitized,
+           organismCurated)
+  
+  if (nrow(inhouse_db_new) > 0)
+    inhouse_db_new <-
+    left_join(inhouse_db_new,
+              organism_8_variety_cleaning)
+  
+  inhouse_db_organism_8_variety_clean <-
+    rbind(inhouse_db_old, inhouse_db_new)
+  
+  organism_7_species_cleaning <-
+    inhouse_db_organism_8_variety_clean %>%
     distinct(
       organism_1_kingdom,
       organism_2_phylum,
@@ -4545,7 +4577,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db %>%
     filter(organismCurated %in% organism_7_species_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4587,7 +4618,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_7_species_clean %>%
     filter(organismCurated %in% organism_6_genus_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4628,7 +4658,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_6_genus_clean %>%
     filter(organismCurated %in% organism_5_family_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4668,7 +4697,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_5_family_clean %>%
     filter(organismCurated %in% organism_4_order_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4705,7 +4733,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_4_order_clean %>%
     filter(organismCurated %in% organism_3_class_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4740,7 +4767,6 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_3_class_clean %>%
     filter(organismCurated %in% organism_2_phylum_cleaning$organismCurated)  %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
            organismCurated)
   
@@ -4900,6 +4926,10 @@ taxo_cleaning_manual <- function(dfsel)
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_7_species,
             y = "")
   
+  inhouse_db_organism_1_kingdom_clean$organism_8_variety <-
+    y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_8_variety,
+            y = "")
+  
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organismCurated,
             y = "")
@@ -4909,7 +4939,7 @@ taxo_cleaning_manual <- function(dfsel)
             y = "")
   
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
-    as.character(apply(inhouse_db_organism_1_kingdom_clean[5:11], 1, function(x)
+    as.character(apply(inhouse_db_organism_1_kingdom_clean[6:13], 1, function(x)
       tail(na.omit(x), 1)))
   
   inhouse_db_organism_1_kingdom_clean <-
@@ -6781,10 +6811,11 @@ gnfinder_cleaning <- function(num, organismCol) {
 #######################################################
 
 taxo_cleaning_auto <- function(dfsel) {
+ 
   test <- dfsel %>%
     filter(!is.na(organismSanitized)) %>%
     distinct(organismSanitized,
-             organism_database,
+             organismDbTaxo,
              .keep_all = TRUE)
   
   test$organism_1_kingdom <-
@@ -6815,9 +6846,70 @@ taxo_cleaning_auto <- function(dfsel) {
     y_as_na(x = test$organism_7_species,
             y = "Not assigned")
   
+  test$organism_8_variety <-
+    y_as_na(x = test$organism_8_variety,
+            y = "Not assigned")
+  
+  variety <- test %>%
+    filter(!is.na(organism_8_variety)) %>%
+    arrange(match(x = organismDbTaxo,
+                  table =  c("Catalogue of Life",
+                             "NCBI"))) %>%
+    group_by(organism_1_kingdom,
+             organism_8_variety) %>%
+    mutate(
+      organism_2_phylum = na.locf(
+        object = organism_2_phylum,
+        na.rm = FALSE,
+        fromLast = TRUE
+      ),
+      organism_3_class = na.locf(
+        object = organism_3_class,
+        na.rm = FALSE,
+        fromLast = TRUE
+      ),
+      organism_4_order = na.locf(
+        object = organism_4_order,
+        na.rm = FALSE,
+        fromLast = TRUE
+      ),
+      organism_5_family = na.locf(
+        object = organism_5_family,
+        na.rm = FALSE,
+        fromLast = TRUE
+      ),
+      organism_6_genus = na.locf(
+        object = organism_6_genus,
+        na.rm = FALSE,
+        fromLast = TRUE
+      ),
+      organism_7_species = na.locf(
+        object = organism_7_species,
+        na.rm = FALSE,
+        fromLast = TRUE
+      )
+    ) %>%
+    ungroup() %>%
+    distinct(organism_8_variety,
+             .keep_all = TRUE) %>%
+    select(-organismOriginal, -organismSanitized)
+  
+  variety_fill <- test %>%
+    filter(!is.na(organism_8_variety)) %>%
+    select(organismOriginal,
+           organismSanitized,
+           organism_8_variety)
+  
+  variety_full <- left_join(variety_fill, variety)
+  
+  unvariety <- test %>%
+    filter(is.na(organism_8_variety))
+  
+  species_1 <- rbind(variety_full, unvariety)
+  
   species <- test %>%
     filter(!is.na(organism_7_species)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table =  c("Catalogue of Life",
                              "NCBI"))) %>%
     group_by(organism_1_kingdom,
@@ -6852,13 +6944,13 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_7_species,
              .keep_all = TRUE) %>%
-    select(-organismOriginal, -organismTranslated, -organismSanitized)
+    select(-organismOriginal, -organismSanitized)
   
   species_fill <- test %>%
     filter(!is.na(organism_7_species)) %>%
     select(organismOriginal,
-           organismTranslated,
            organismSanitized,
+           organism_8_variety,
            organism_7_species)
   
   species_full <- left_join(species_fill, species)
@@ -6870,7 +6962,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   genus <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table = c("Catalogue of Life",
                             "NCBI"))) %>%
     group_by(organism_1_kingdom,
@@ -6901,16 +6993,16 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_6_genus,
              .keep_all = TRUE) %>%
     select(-organismOriginal,
-           -organismTranslated,
            -organismSanitized,
+           -organism_8_variety,
            -organism_7_species)
   
   genus_fill <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
+      organism_8_variety,
       organism_7_species,
       organism_6_genus
     )
@@ -6924,7 +7016,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   family <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table = c("Catalogue of Life",
                             "NCBI"))) %>%
     group_by(organism_1_kingdom,
@@ -6950,15 +7042,19 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_5_family,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus
+      -organismOriginal,
+      -organismSanitized,
+      -organism_8_variety,
+      -organism_7_species,
+      -organism_6_genus
     )
   
   family_fill <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
+      organism_8_variety,
       organism_7_species,
       organism_6_genus,
       organism_5_family
@@ -6973,7 +7069,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   order <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table = c("Catalogue of Life",
                             "NCBI"))) %>%
     group_by(organism_1_kingdom,
@@ -6995,15 +7091,20 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_4_order,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family
+      -organismOriginal,
+      -organismSanitized,
+      -organism_8_variety,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family
     )
   
   order_fill <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
+      organism_8_variety,
       organism_7_species,
       organism_6_genus,
       organism_5_family,
@@ -7019,7 +7120,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   class <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table = c("Catalogue of Life",
                             "NCBI"))) %>%
     group_by(organism_1_kingdom,
@@ -7033,7 +7134,13 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_3_class,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family,-organism_4_order,
+      -organismOriginal,
+      -organismSanitized,
+      -organism_8_variety,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family,
+      -organism_4_order,
       
     )
   
@@ -7041,8 +7148,8 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_3_class)) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
+      organism_8_variety,
       organism_7_species,
       organism_6_genus,
       organism_5_family,
@@ -7059,7 +7166,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   phylum <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
-    arrange(match(x = organism_database,
+    arrange(match(x = organismDbTaxo,
                   table = c("Catalogue of Life",
                             "NCBI"))) %>%
     group_by(organism_2_phylum) %>%
@@ -7072,15 +7179,22 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_2_phylum,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family,-organism_4_order,-organism_3_class
+      -organismOriginal,
+      -organismSanitized,
+      -organism_8_variety,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family,
+      -organism_4_order,
+      -organism_3_class
     )
   
   phylum_fill <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
+      organism_8_variety,
       organism_7_species,
       organism_6_genus,
       organism_5_family,
@@ -7097,7 +7211,7 @@ taxo_cleaning_auto <- function(dfsel) {
   kingdom_1 <- rbind(phylum_full, unphylum)
   
   kingdom_tojoin <- kingdom_1 %>%
-    select(-organismOriginal,-organismTranslated)
+    select(-organismOriginal)
   
   tojoin <- dfsel
   
@@ -7112,7 +7226,8 @@ taxo_cleaning_auto <- function(dfsel) {
         organism_4_order.x,
         organism_5_family.x,
         organism_6_genus.x,
-        organism_7_species.x
+        organism_7_species.x,
+        organism_8_variety.x
       ) ==
         paste(
           organism_1_kingdom.y,
@@ -7121,16 +7236,18 @@ taxo_cleaning_auto <- function(dfsel) {
           organism_4_order.y,
           organism_5_family.y,
           organism_6_genus.y,
-          organism_7_species.y
+          organism_7_species.y,
+          organism_8_variety.y
         ),
       true = "y",
       false = ""
     )) %>%
     select(
       organismOriginal,
-      organismTranslated,
       organismSanitized,
-      organism_database = organism_database.y,
+      organismDbTaxo = organismDbTaxo.y,
+      organismDbTaxoQuality = organismDbTaxoQuality.y,
+      organismTaxonId = organismTaxonId.y,
       organism_1_kingdom = organism_1_kingdom.y,
       organism_2_phylum = organism_2_phylum.y,
       organism_3_class = organism_3_class.y,
@@ -7138,10 +7255,10 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_5_family = organism_5_family.y,
       organism_6_genus = organism_6_genus.y,
       organism_7_species = organism_7_species.y,
+      organism_8_variety = organism_8_variety.y,
       organism_modified_taxonomy_auto
     ) %>%
     distinct(organismOriginal,
-             organismTranslated,
              organismSanitized,
              .keep_all = TRUE)
   
