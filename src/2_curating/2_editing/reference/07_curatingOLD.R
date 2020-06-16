@@ -1,8 +1,5 @@
 #title: "Reference curatoR"
 
-#loading functions
-source("functions.R")
-
 #writing paths
 ##inputs
 inpath <- "outputs/tables/2_sanitized/sanitizedReference.tsv.zip"

@@ -1,8 +1,5 @@
 #title: "Structure (sanitized) curatoR"
 
-#loading functions
-source("functions.R")
-
 #writing paths
 ##input
 inpath <- # "outputs/tables/2_sanitized/sanitizedStructure.tsv.zip"

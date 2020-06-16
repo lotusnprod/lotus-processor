@@ -1,7 +1,7 @@
 #title: "DB adducteR"
 
 #loading functions
-source("../functions.R")
+source("functions.R")
 
 #writing paths
 ##inpath
