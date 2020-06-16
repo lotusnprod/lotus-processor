@@ -92,6 +92,10 @@ git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
 dvc pull  # This will take a while
 ```
 
+### Having the data in a different place
+
+If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
+
 # TO UPDATE
 
 ```
