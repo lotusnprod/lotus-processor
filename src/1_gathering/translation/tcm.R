@@ -1,8 +1,5 @@
 # title: "TCM to scientific name translatoR"
 
-# setting working directory
-setwd("~/GitLab/opennaturalproductsdb/src/")
-
 # loading paths
 source("paths.R")
 

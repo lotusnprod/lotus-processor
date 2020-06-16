@@ -1,8 +1,5 @@
 #title: "BIOPHYTMOL scrapeR"
 
-# setting working directory
-setwd("~/GitLab/opennaturalproductsdb/src/")
-
 # loading paths
 source("paths.R")
 

@@ -1,8 +1,5 @@
 # title: "Open NP DB (sanitized) compileR"
 
-# setting working directory
-setwd("~/GitLab/opennaturalproductsdb/src/")
-
 # loading paths
 source("paths.R")
 
