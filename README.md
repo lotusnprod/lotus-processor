@@ -1,6 +1,6 @@
 # OpenNPDB: an Open Natural Products Database
 
-*OpenNPDB:* an Open Natural Products Database. Actually, this database (DB) consists of XXX'XXX structure - organism pairs, gathered and standardized among XX open DB’s. It represents the most exhaustive open DB for natural products (NP’s) dereplication. It encompasses XXX'XXX distinct structures in XX’XXX resolved taxa. Additionally, both chemical and biological resolved taxonomies are given for each chemical and biological taxon, respectively. Other basic chemical descriptors and in silico tandem mass spectrometry (MS/MS) spectrum are provided for each structure. Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
+*OpenNPDB:* an Open Natural Products Database. Actually, this database (DB) consists of XXX'XXX structure - organism pairs, gathered and standardized among XX open DB’s. It represents the most exhaustive open DB for natural products (NP’s) dereplication. It encompasses XXX'XXX distinct structures in XX’XXX resolved organisms. Additionally, both chemical and biological taxonomy are given for each pair. Other basic chemical descriptors and in silico tandem mass spectrometry (MS/MS) spectrum are provided for each structure. Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
 ![Graphical abstract](data/processed/figures/graphical_abstract.png)
 
@@ -67,17 +67,9 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 
 # TO UPDATE
-- R (ideally with RStudio (https://rstudio.com))
-- Anaconda distribution (https://www.anaconda.com/distribution/) with RDKit installed (https://www.rdkit.org/docs/Install.html)
-- GNFinder command line app (https://github.com/gnames/gnfinder/releases)
-- ClassyFire API (https://bitbucket.org/wishartlab/classyfire_api/) ## see if necessary after PM's script 
 
 ```
 Give examples
-
-Test on a Windows and Linux machine
-
-(@pma now testing on x2go (debian system))
 ```
 
 ### Packages
@@ -89,9 +81,7 @@ Install it by running in the home directory. Else use the environment_notloose.y
 
 ````
 conda env create -f environment_loose.yml
-
 ````
-
 
 If your environement is not directly sources by your default bash run the following lines
 
@@ -102,20 +92,6 @@ $ conda activate your_env
 ````
 
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
-
-# TO UPDATE
-#### R
-```
-R: to do 
-```
-
-#### Python
-```
-Python dependencies (RdKit): to do 
-Use pip freeze or conda export
-
-maybe use https://pypi.org/project/pipreqs/ instead
-```
 
 ## Minimal working example
 
@@ -164,7 +140,7 @@ See also the list of [contributors](https://gitlab.unige.ch/Adriano.Rutz/opennat
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the GNU GPLv3 license - see the [LICENSE.md](LICENSE.md) file for details
 
 ## Acknowledgments
 
