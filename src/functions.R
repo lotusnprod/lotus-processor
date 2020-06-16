@@ -298,7 +298,7 @@ manipulating_taxo <- function(dfsel, dic) {
   #selecting and splitting taxonomy and ranks
   df1 <- dfsel %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismDbTaxo,
            taxonId,
            dbQuality,
@@ -321,7 +321,7 @@ manipulating_taxo <- function(dfsel, dic) {
       values_drop_na = TRUE
     ) %>%
     distinct(organismOriginal,
-             organismSanitized,
+             organismCleaned,
              level,
              .keep_all = TRUE)
   
@@ -356,7 +356,7 @@ manipulating_taxo <- function(dfsel, dic) {
     select_if(
       names(.) %in%
         c("organismOriginal",
-          "organismSanitized",
+          "organismCleaned",
           "organismDbTaxo",
           "taxonId",
           "dbQuality",
@@ -387,14 +387,14 @@ manipulating_taxo <- function(dfsel, dic) {
   
   #pivoting (wide)
   df5 <- df4 %>%
-    group_by(organismSanitized) %>%
+    group_by(organismCleaned) %>%
     distinct(level, .keep_all = TRUE) %>%
     pivot_wider(names_from = level,
                 values_from = bio) %>%
     select_if(
       names(.) %in%
         c("organismOriginal",
-          "organismSanitized",
+          "organismCleaned",
           "organismDbTaxo",
           "taxonId",
           "dbQuality",
@@ -412,7 +412,7 @@ manipulating_taxo <- function(dfsel, dic) {
   #adding taxa to initial df
   df6 <- left_join(dfsel, df5) %>% 
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismDbTaxo,
            organismDbTaxoQuality = dbQuality,
            organismTaxonId = taxonId,
@@ -1325,191 +1325,191 @@ taxo_cleaning_manual <- function(dfsel)
     x = inhouse_db$organism_5_family
   )
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Animalia"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Arthropoda"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Insecta"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Coleoptera"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Scarabaeidae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Trypoxylus"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Allomyrina dichotoma"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Trypoxylus dichotomus"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Fungi"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Basidiomycota"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricomycetes"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricus"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Agaricus pattersonae"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricus pattersoniae"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Animalia"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Arthropoda"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Insecta"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Hemiptera"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Aphididae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Schlechtendalia"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Melaphis chinensis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Schlechtendalia chinensis"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Animalia"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Arthropoda"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Insecta"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Lepidoptera"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Geometridae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Dysstroma"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Chloroclysta truncata"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Dysstroma truncata"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Magnoliopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Lamiales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Orobanchaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Lindenbergia"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Lindenbergia urticaefolia"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Lindenbergia urticifolia"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Chlorophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Chlorodendrophyceae"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Chlorodendrales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Chlorodendraceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Tetraselmis"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Tetraselmis chui"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Tetraselmis chuii"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Cyanobacteria"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Cyanophyceae"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Nostocales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Aphanizomenonaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Cyanospira"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Cyanospira rippkae"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Cyanospira rippkae"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Magnoliopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Solanales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Solanaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Nicandra"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Nicandra physaloides"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Nicandra physalodes"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Magnoliopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Lamiales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Lamiaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "Salvia"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Salvia shannoni"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Actinobacteria"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Actinobacteria"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Actinomycetales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Streptomycetaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Streptomyces"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Streptomyces tsukubaensis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Streptomyces tsukubensis"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Magnoliopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Malpighiales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Euphorbiaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Hevea"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Evea brasiliensis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Hevea brasiliensis"
   
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismTranslated == "japanese yew"] <-
@@ -1546,777 +1546,777 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db$organism_7_species[inhouse_db$organismTranslated == "Galla Chinensis Rhus"] <-
     "Rhus chinensis"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Chinensis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Chinensis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Sinensis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Sinensis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Ootheca"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Ootheca"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Uncultured"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Uncultured"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Stigma"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Stigma"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Stigma"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Stigma"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Spica"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Spica"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Spica"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Spica"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Semen"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Semen"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Semen"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Semen"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rotundus"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rotundus"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Rotundus"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rhizoma"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rhizoma"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Rhizoma"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Ramulus"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Ramulus"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Ramulus"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Radix"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Radix"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Radix"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Radix"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pollen"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pollen"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Pollen"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pollen"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lignum"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lignum"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Lignum"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lignum"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Fructus"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Fructus"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Fructus"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Fructus"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Flos"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Flos"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Flos"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Flos"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Corolla"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Corolla"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Corolla"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Corolla"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cacumen"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cacumen"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Cacumen"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Bulbus"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Bulbus"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Bulbus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Bulbus"] <-
-    ""
-  
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Megaleia"] <-
-    "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Megaleia"] <-
-    ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Megaleia"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Megaleia"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Candidatus"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Candidatus"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Tasmanian"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Tasmanian"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Asian"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Asian"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Mammalian"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Asian"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Mammalian"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Red"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Red"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Red"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Turkey"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Red"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Turkey"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Synthetis"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Turkey"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Synthetis"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Pagellus erythrinus"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Synthetis"] <-
+    ""
+  
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    "y"
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
+    ""
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
     ""
   #comes from Becker translation
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Lagenorhynchus obliquidens"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
   #comes from Lag translation
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "Actinobacteria"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "Actinobacteria"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "Actinomycetales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Actinomycetales bacterium	"] <-
-    ""
-  
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Galla"] <-
-    "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Galla"] <-
-    ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Galla"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Galla"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Red Sea bacterium KT-2K1"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Galla"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Green Pelican GFP transformation vector"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Peripatoides"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Peripatoides"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Peripatoides"] <-
+    ""
+  
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
+    "y"
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Bacterium MPBA1"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "Proteobacteria"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "Alphaproteobacteria"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "Rhizobiales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "Rhizobiaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Rhizobiaceae bacterium"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cyanophyta"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cyanophyta"] <-
     "Bacteria"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Cyanophyta"] <-
     "Cyanobacteria"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Cyanophyta"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Candida"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Candida"] <-
     "Fungi"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Candida"] <-
     "Ascomycota"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Candida"] <-
     "Saccharomycetes"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Candida"] <-
     "Saccharomycetales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Candida"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Candida"] <-
     "Candida"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Candida"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Candida"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Microsorium"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Microsorium"] <-
     "y"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Microsorium"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Microsorium"] <-
     "Microsorum"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     "Pseudeurotium"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Pseudoeurotium"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lanea"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Lanea"] <-
     "Lannea"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Lanea"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lanea"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Aspidium"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Aspidium"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Aspidium"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Aspidium"] <-
     "Polypodiopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Aspidium"] <-
     "Polypodiales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Aspidium"] <-
     "Dryopteridaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Aspidium"] <-
     "Polystichum"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Aspidium"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Aspidium"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Iris"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Iris"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Iris"] <-
     "Tracheophyta"
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Iris"] <-
     "Liliopsida"
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Iris"] <-
     "Asparagales"
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Iris"] <-
     "Iridaceae"
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Iris"] <-
     "Iris"
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Iris"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Iris"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Plantae"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Plantae"] <-
     "Plantae"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Plantae"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Plantae"] <-
     ""
   
   #sadly can be multiple kingdoms, therefore droped
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Algae"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Algae"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Algae"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Fungi"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Fungi"] <-
     "Fungi"
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Fungi"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Fungi"] <-
     ""
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Anaerobic"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  inhouse_db$organism_7_species[inhouse_db$organismSanitized == "Anaerobic"] <-
+  inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
   
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Myxococcus hansupus"] <-
@@ -3159,19 +3159,19 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Solenopora"] <-
     "Solenoporaceae"
   
-  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Mayodendron"] <-
     "y"
-  inhouse_db$organism_1_kingdom[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  inhouse_db$organism_2_phylum[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_2_phylum[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  inhouse_db$organism_3_class[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_3_class[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  inhouse_db$organism_4_order[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_4_order[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  inhouse_db$organism_5_family[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_5_family[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  inhouse_db$organism_6_genus[inhouse_db$organismSanitized == "Mayodendron"] <-
+  inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
   
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Macfadyena"] <-
@@ -4535,7 +4535,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db %>%
     filter(organismCurated %in% organism_8_variety_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4577,7 +4577,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db %>%
     filter(organismCurated %in% organism_7_species_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4618,7 +4618,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_7_species_clean %>%
     filter(organismCurated %in% organism_6_genus_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4658,7 +4658,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_6_genus_clean %>%
     filter(organismCurated %in% organism_5_family_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4697,7 +4697,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_5_family_clean %>%
     filter(organismCurated %in% organism_4_order_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4733,7 +4733,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_4_order_clean %>%
     filter(organismCurated %in% organism_3_class_cleaning$organismCurated) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4767,7 +4767,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db_new <- inhouse_db_organism_3_class_clean %>%
     filter(organismCurated %in% organism_2_phylum_cleaning$organismCurated)  %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organismCurated)
   
   if (nrow(inhouse_db_new) > 0)
@@ -4876,21 +4876,21 @@ taxo_cleaning_manual <- function(dfsel)
     gsub(
       pattern = "unidentified",
       replacement = "",
-      x = inhouse_db_organism_1_kingdom_clean$organismSanitized
+      x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
   
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     gsub(
       pattern = "Fructus",
       replacement = "",
-      x = inhouse_db_organism_1_kingdom_clean$organismSanitized
+      x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
   
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     gsub(
       pattern = "Radix",
       replacement = "",
-      x = inhouse_db_organism_1_kingdom_clean$organismSanitized
+      x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
   
   #to avoid false genera
@@ -5783,7 +5783,7 @@ name2inchi <- function(i)
   # {
   #   tryCatch({
   #     x <- cts_convert(
-  #       query = dataTranslatedNominal[i, "nameSanitized"],
+  #       query = dataTranslatedNominal[i, "nameCleaned"],
   #       from = "Chemical Name",
   #       to = "InChI Code",
   #       verbose = FALSE,
@@ -5797,7 +5797,7 @@ name2inchi <- function(i)
 # }
 {
   tryCatch({
-    cpd <- dataTranslatedNominal[i, "nameSanitized"]
+    cpd <- dataTranslatedNominal[i, "nameCleaned"]
     url <-
       paste("https://cactus.nci.nih.gov/chemical/structure/",
             cpd,
@@ -6566,21 +6566,21 @@ standardizing_original <- function(data_selected,
 #######################################################
 
 preparing_name <- function(x) {
-  x$nameSanitized <- x$structureOriginalNominal
-  x$nameSanitized <- gsub("α", "alpha", x$nameSanitized)
-  x$nameSanitized <- gsub("Α", "alpha", x$nameSanitized)
-  x$nameSanitized <- gsub("β", "beta", x$nameSanitized)
-  x$nameSanitized <- gsub("Β", "beta", x$nameSanitized)
-  x$nameSanitized <- gsub("γ", "gamma", x$nameSanitized)
-  x$nameSanitized <- gsub("Γ", "gamma", x$nameSanitized)
-  x$nameSanitized <- gsub("δ", "delta", x$nameSanitized)
-  x$nameSanitized <- gsub("Δ", "delta", x$nameSanitized)
-  x$nameSanitized <- gsub("ε", "epsilon", x$nameSanitized)
-  x$nameSanitized <- gsub("Ε", "epsilon", x$nameSanitized)
-  x$nameSanitized <- gsub("- ", "-", x$nameSanitized)
-  x$nameSanitized <- gsub("–", "-", x$nameSanitized)
-  x$nameSanitized <- gsub("\\) ", "\\)", x$nameSanitized)
-  x$nameSanitized <- trimws(x$nameSanitized)
+  x$nameCleaned <- x$structureOriginalNominal
+  x$nameCleaned <- gsub("α", "alpha", x$nameCleaned)
+  x$nameCleaned <- gsub("Α", "alpha", x$nameCleaned)
+  x$nameCleaned <- gsub("β", "beta", x$nameCleaned)
+  x$nameCleaned <- gsub("Β", "beta", x$nameCleaned)
+  x$nameCleaned <- gsub("γ", "gamma", x$nameCleaned)
+  x$nameCleaned <- gsub("Γ", "gamma", x$nameCleaned)
+  x$nameCleaned <- gsub("δ", "delta", x$nameCleaned)
+  x$nameCleaned <- gsub("Δ", "delta", x$nameCleaned)
+  x$nameCleaned <- gsub("ε", "epsilon", x$nameCleaned)
+  x$nameCleaned <- gsub("Ε", "epsilon", x$nameCleaned)
+  x$nameCleaned <- gsub("- ", "-", x$nameCleaned)
+  x$nameCleaned <- gsub("–", "-", x$nameCleaned)
+  x$nameCleaned <- gsub("\\) ", "\\)", x$nameCleaned)
+  x$nameCleaned <- trimws(x$nameCleaned)
   
   return(x)
 }
@@ -6757,7 +6757,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   
   if (organismCol == "organismOriginal")
   inpath_gnfinder_f <-
-    paste(pathSanitizedOrganismOriginalDirJson,
+    paste(pathCleanedOrganismOriginalDirJson,
           "originalOrganismGnfinderUntil_",
           num,
           ".json",
@@ -6765,15 +6765,15 @@ gnfinder_cleaning <- function(num, organismCol) {
   
   if (organismCol == "organismInterim")
     inpath_gnfinder_f <-
-      paste(pathSanitizedOrganismTranslatedDirJson,
-            "sanitizedOrganismGnfinderUntil_",
+      paste(pathCleanedOrganismTranslatedDirJson,
+            "translatedOrganismGnfinderUntil_",
             num,
             ".json",
             sep = "")
   
   if (organismCol == "organismOriginal")
   outpath_f <-
-    paste(pathSanitizedOrganismOriginalDirTsv,
+    paste(pathCleanedOrganismOriginalDirTsv,
           "originalOrganismGnfinderUntil_",
           num,
           ".tsv.zip",
@@ -6781,7 +6781,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   
   if (organismCol == "organismInterim")
     outpath_f <-
-      paste(pathSanitizedOrganismTranslatedDirTsv,
+      paste(pathCleanedOrganismTranslatedDirTsv,
             "translatedOrganismGnfinderUntil_",
             num,
             ".tsv.zip",
@@ -6813,8 +6813,8 @@ gnfinder_cleaning <- function(num, organismCol) {
 taxo_cleaning_auto <- function(dfsel) {
  
   test <- dfsel %>%
-    filter(!is.na(organismSanitized)) %>%
-    distinct(organismSanitized,
+    filter(!is.na(organismCleaned)) %>%
+    distinct(organismCleaned,
              organismDbTaxo,
              .keep_all = TRUE)
   
@@ -6892,12 +6892,12 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_8_variety,
              .keep_all = TRUE) %>%
-    select(-organismOriginal, -organismSanitized)
+    select(-organismOriginal, -organismCleaned)
   
   variety_fill <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organism_8_variety)
   
   variety_full <- left_join(variety_fill, variety)
@@ -6944,12 +6944,12 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_7_species,
              .keep_all = TRUE) %>%
-    select(-organismOriginal, -organismSanitized)
+    select(-organismOriginal, -organismCleaned)
   
   species_fill <- test %>%
     filter(!is.na(organism_7_species)) %>%
     select(organismOriginal,
-           organismSanitized,
+           organismCleaned,
            organism_8_variety,
            organism_7_species)
   
@@ -6993,7 +6993,7 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_6_genus,
              .keep_all = TRUE) %>%
     select(-organismOriginal,
-           -organismSanitized,
+           -organismCleaned,
            -organism_8_variety,
            -organism_7_species)
   
@@ -7001,7 +7001,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_6_genus)) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organism_8_variety,
       organism_7_species,
       organism_6_genus
@@ -7043,7 +7043,7 @@ taxo_cleaning_auto <- function(dfsel) {
              .keep_all = TRUE) %>%
     select(
       -organismOriginal,
-      -organismSanitized,
+      -organismCleaned,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus
@@ -7053,7 +7053,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_5_family)) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -7092,7 +7092,7 @@ taxo_cleaning_auto <- function(dfsel) {
              .keep_all = TRUE) %>%
     select(
       -organismOriginal,
-      -organismSanitized,
+      -organismCleaned,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -7103,7 +7103,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_4_order)) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -7135,7 +7135,7 @@ taxo_cleaning_auto <- function(dfsel) {
              .keep_all = TRUE) %>%
     select(
       -organismOriginal,
-      -organismSanitized,
+      -organismCleaned,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -7148,7 +7148,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_3_class)) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -7180,7 +7180,7 @@ taxo_cleaning_auto <- function(dfsel) {
              .keep_all = TRUE) %>%
     select(
       -organismOriginal,
-      -organismSanitized,
+      -organismCleaned,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -7193,7 +7193,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(!is.na(organism_2_phylum)) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -7217,7 +7217,7 @@ taxo_cleaning_auto <- function(dfsel) {
   
   newdf = left_join(tojoin,
                     kingdom_tojoin,
-                    by = c("organismSanitized" = "organismSanitized")) %>%
+                    by = c("organismCleaned" = "organismCleaned")) %>%
     mutate(organism_modified_taxonomy_auto = if_else(
       condition = paste(
         organism_1_kingdom.x,
@@ -7244,7 +7244,7 @@ taxo_cleaning_auto <- function(dfsel) {
     )) %>%
     select(
       organismOriginal,
-      organismSanitized,
+      organismCleaned,
       organismDbTaxo = organismDbTaxo.y,
       organismDbTaxoQuality = organismDbTaxoQuality.y,
       organismTaxonId = organismTaxonId.y,
@@ -7259,7 +7259,7 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_modified_taxonomy_auto
     ) %>%
     distinct(organismOriginal,
-             organismSanitized,
+             organismCleaned,
              .keep_all = TRUE)
   
   newdf$organism_modified_taxonomy_auto <-
