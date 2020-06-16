@@ -1081,3 +1081,10 @@ pathCuratedOrganism <-
 
 pathCuratedOrganismRealDiff <-
   "../data/interim/tables/curatedOrganismsDifferentSpecies.tsv.zip"
+
+## dirty for the moment
+pathOriginalGnfinderScript <-
+  "2_curating/2_editing/bio/gnfinder/originalGnfinderLauncher.sh"
+
+pathTranslatedGnfinderScript <-
+  "2_curating/2_editing/bio/gnfinder/translatedGnfinderLauncher.sh"

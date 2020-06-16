@@ -54,7 +54,7 @@ dataOriginalOrganism <- read_delim(
   trim_ws = TRUE
 )
 
-system (command = "bash 2_analysis/bio/gnfinder/OriginalGnfinderLauncher.sh")
+system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <- length(list.files(path = pathOriginalOrganismDistinct,
                             pattern = 'tsv'))
@@ -248,7 +248,7 @@ split_data_table(
   path_to_store = pathTranslatedOrganismDistinct
 )
 
-system (command = "bash 2_analysis/bio/gnfinder/translatedGnfinderLauncher.sh")
+system(command = paste("bash", pathTranslatedGnfinderScript))
 
 length <- length(list.files(path = pathTranslatedOrganismDistinct,
                             pattern = 'tsv'))
