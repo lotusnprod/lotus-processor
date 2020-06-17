@@ -4,7 +4,7 @@
 source("paths.R")
 
 # loading functions
-source("functions.R")
+source("functions/bio.R")
 
 # cleaning original organism
 ###COMMENT### temporary, will write path accordingly if validated that way

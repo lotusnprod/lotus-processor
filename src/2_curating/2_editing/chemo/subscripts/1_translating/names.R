@@ -4,7 +4,7 @@
 source("paths.R")
 
 # loading functions
-source("functions.R")
+source("functions/chemo.R")
 
 # loading files
 dataOriginal <- read_delim(

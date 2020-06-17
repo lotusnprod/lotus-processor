@@ -4,7 +4,7 @@
 source("paths.R")
 
 # loading functions
-source("functions.R")
+source("functions/reference.R")
 
 
 # selecting fields corresponding to other sources than articles
