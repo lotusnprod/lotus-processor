@@ -4,7 +4,7 @@
 source("paths.R")
 
 # loading functions
-source("functions.R")
+source("functions/reference.R")
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 ## 2
