@@ -1,4 +1,4 @@
-# title: "Reference sanitizeR"
+# title: "Reference cleaner"
 
 # loading paths
 source("paths.R")
@@ -203,21 +203,21 @@ low70 <- test %>%
 
 ### score above 100 seems to indicate multiple references in 1 row
 
-dataSanitized <- dataTranslated %>%
+dataCleaned <- dataTranslated %>%
   mutate(
-    sanitizedTitle = translatedTitle,
-    sanitizedJournal = translatedJournal,
-    sanitizedDoi = translatedDoi,
-    sanitizedAuthor = translatedAuthor,
-    sanitizedDate = translatedDate,
-    sanitizedTranslationScore = translationScore
+    cleanedTitle = translatedTitle,
+    cleanedJournal = translatedJournal,
+    cleanedDoi = translatedDoi,
+    cleanedAuthor = translatedAuthor,
+    cleanedDate = translatedDate,
+    cleanedTranslationScore = translationScore
   )
 
 # export
 write.table(
-  x = dataSanitized,
+  x = dataCleaned,
   file = gzfile(
-    description = pathSanitizedReference,
+    description = pathCleanedReference,
     compression = 9,
     encoding = "UTF-8"
   ),
