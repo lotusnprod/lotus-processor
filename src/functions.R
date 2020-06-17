@@ -28,7 +28,7 @@ db_loader <- function(path_to_db) {
 #######################################################
 #######################################################
 
-shift <- function(x, n) {
+homemadeShift <- function(x, n) {
   c(x[-(seq(n))], rep(NA, n))
 }
 

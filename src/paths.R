@@ -83,11 +83,6 @@ databases$add(
   interimFile = "coconut.tsv.zip"
 )
 
-###### original
-pathDataExternalDbSourceCoconutOriginal <-
-  file.path(pathDataExternalDbSourceCoconut,
-            "coconutCompiled.tsv.zip")
-
 ##### cyanometdb
 pathDataExternalDbSourceCyanometdb <-
   file.path(pathDataExternalDbSource,

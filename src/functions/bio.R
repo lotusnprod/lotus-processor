@@ -196,7 +196,7 @@ biocleaning <- function(x, y, organismCol)
   
   #filling sum values
   y_2$value_min <- as.numeric(y_2$value_min)
-  y_2$value_max <- shift(y_2$sum, 1) - 1
+  y_2$value_max <- homemadeShift(y_2$sum, 1) - 1
   y_2[nrow(y_2), 5] <- y_2[nrow(y_2), 4] + 10000
   
   #transforming as data table (needed for next function)
