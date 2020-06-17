@@ -4,8 +4,9 @@
 source("paths.R")
 
 # loading functions
-source("functions/bio.R")
+#source("functions/bio.R")
 
+log_debug("  Step 1")
 #writing path
 ## dictionaries
 ### taxa levels

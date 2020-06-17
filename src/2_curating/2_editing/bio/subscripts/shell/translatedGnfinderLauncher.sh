@@ -1,6 +1,6 @@
 for file in ../data/interim/tables/1_translated/gnfinder/*.tsv
 
-do 
+do
 	echo "Submitting File $file to gnfinder servers"
 	f=$(echo "${file##*/}")
   	filename=$(echo $f| cut  -d'.' -f 1| sed  s/translated/translated/g) #file has extension, it return only filename, and here we add a sed line to chenge a given string in the filename
