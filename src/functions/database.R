@@ -8,11 +8,11 @@
 #' @field interimFile The transformed file of the database
 Database <- setRefClass("Database", fields = list(name = "character", sourceFiles = "list", interimFile = "character"),
                         methods = list(
-                          writeInterim = function (data) {
+                          writeFile = function (file, data) {
                             write.table(
                               x = data,
                               file = gzfile(
-                                description = interimFile,
+                                description = file,
                                 compression = 9,
                                 encoding = "UTF-8"
                               ),
@@ -21,6 +21,9 @@ Database <- setRefClass("Database", fields = list(name = "character", sourceFile
                               sep = "\t",
                               fileEncoding = "UTF-8"
                             )
+                          },
+                          writeInterim = function (data) {
+                            writeFile(interimFile, data)
                           }
                         ))
 
