@@ -2,6 +2,7 @@
 
 # loading paths
 source("paths.R")
+source("functions.R")
 source("functions/standardizing.R")
 
 library(dplyr)
@@ -39,5 +40,4 @@ data_standard <-
                          structure_field = "name")
 
 # exporting
-
 database$writeInterim(data_standard)
