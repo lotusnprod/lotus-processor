@@ -44,11 +44,11 @@ biocleaning <- function(x, y, organismCol)
     data.table() %>%
     mutate(nrow = row_number()) %>%
     filter(. != "NULL") %>% select(nrow)
-  
+
   ##as dataframe and adding row number
   df3 <- bind_rows(df2,
                    .id = "id")
-  
+
   #selecting best result (with best score and best filled taxonomy)
   df4 <- df3 %>%
     rowwise() %>%
@@ -113,7 +113,7 @@ biocleaning <- function(x, y, organismCol)
       ))
     ) %>%
     ungroup()
-  
+
   df4$kingdom[df4$kingdom >= 1] <- 1
   df4$phylum[df4$phylum >= 1] <- 1
   df4$class[df4$class >= 1] <- 1
@@ -122,7 +122,7 @@ biocleaning <- function(x, y, organismCol)
   df4$genus[df4$genus >= 1] <- 1
   df4$species[df4$species >= 1] <- 1
   df4$variety[df4$variety >= 1] <- 1
-  
+
   #the synonym part is there to avoid the (actually)
   ##non-optimal output from Catalogue of Life in GNFinder
   ###(explained in https://github.com/gnames/gnfinder/issues/48)
@@ -141,16 +141,16 @@ biocleaning <- function(x, y, organismCol)
     distinct(id,
              .keep_all = TRUE) %>%
     arrange(as.numeric(id))
-  
+
   df6 <- cbind(df5, rows)
-  
+
   #adding row number
   df7 <- x$names.start %>%
     data.table() %>%
     mutate(nrow = row_number())
-  
+
   colnames(df7)[1] <- "sum"
-  
+
   #joining
   taxo <- right_join(df6, df7) %>%
     select(
@@ -161,56 +161,56 @@ biocleaning <- function(x, y, organismCol)
       rank = classificationRank,
       sum
     )
-  
+
   dbQuality <- x$names.verification$dataSourceQuality
   dbTaxo <- x$names.verification$bestResult$dataSourceTitle
-  
+
   dfQuality <- data.frame(dbTaxo, dbQuality) %>%
     distinct(dbTaxo, .keep_all = TRUE)
-  
+
   taxoEnhanced <- left_join(taxo, dfQuality)
-  
+
   #computing sum of characters to match with GNFinder results
   if (organismCol == "organismOriginal")
     y$nchar <-
     nchar(x = y$organismOriginal)
-  
+
   if (organismCol == "organismInterim")
     y$nchar <-
     nchar(x = y$organismInterim)
-  
+
   y[1, "sum"] <- nchar(colnames(y)[1]) + 1
   for (i in 2:nrow(y)) {
     y[i, "sum"] <- y[i - 1, "nchar"] + 1 + y[i - 1, "sum"]
   }
-  
+
   #adding min and max to merge
   taxoEnhanced <- taxoEnhanced %>%
     mutate(value_min = sum,
            value_max = sum) %>%
     data.table()
-  
+
   #filtering non-empty values
   y_2 <- y %>%
     mutate(value_min = sum)
-  
+
   #filling sum values
   y_2$value_min <- as.numeric(y_2$value_min)
   y_2$value_max <- shift(y_2$sum, 1) - 1
   y_2[nrow(y_2), 5] <- y_2[nrow(y_2), 4] + 10000
-  
+
   #transforming as data table (needed for next function)
   y_2 <- y_2 %>%
     data.table()
-  
+
   #setting joining keys
   setkey(taxoEnhanced, value_min, value_max)
   setkey(y_2, value_min, value_max)
-  
+
   #joining
   pre_final_db <- foverlaps(taxoEnhanced,
                             y_2)
-  
+
   #selecting
   final_db <- left_join(y,
                         pre_final_db) %>%
@@ -218,7 +218,7 @@ biocleaning <- function(x, y, organismCol)
       -i.sum,
       -i.value_max,
       -i.value_min)
-  
+
   return(final_db)
 }
 
@@ -229,7 +229,7 @@ manipulating_taxo <- function(dfsel, dic) {
   #creating variables for replacement by dictionary
   a <- paste("\\b", dic$taxaRank, "\\b", sep = "")
   b <- dic$taxaRankStandard
-  
+
   #selecting and splitting taxonomy and ranks
   df1 <- dfsel %>%
     select(
@@ -247,7 +247,7 @@ manipulating_taxo <- function(dfsel, dic) {
            sep = "|") %>%
     mutate_all(as.character) %>%
     tibble()
-  
+
   #manipulating taxa
   df2 <- df1 %>%
     pivot_longer(
@@ -261,7 +261,7 @@ manipulating_taxo <- function(dfsel, dic) {
              organismCleaned,
              level,
              .keep_all = TRUE)
-  
+
   df2$rank <- stri_replace_all_regex(
     str = df2$rank,
     pattern = a,
@@ -269,23 +269,23 @@ manipulating_taxo <- function(dfsel, dic) {
     case_insensitive = FALSE,
     vectorize_all = FALSE
   )
-  
+
   #removing false non-empty cells
   df2$rank <- y_as_na(x = df2$rank,
                       y = "")
-  
+
   df2$taxonomy <- y_as_na(x = df2$taxonomy,
                           y = "")
-  
+
   df2$rank <- y_as_na(x = df2$rank,
                       y = "")
-  
+
   df2$rank <- ifelse(test = is.na(df2$rank),
                      yes = "NA",
                      no = df2$rank)
-  
+
   colnames(df2)[3] <- "dbTaxo"
-  
+
   #manipulating taxa
   df3 <- df2 %>%
     pivot_wider(names_from = rank,
@@ -308,11 +308,11 @@ manipulating_taxo <- function(dfsel, dic) {
           "variety"
         )
     )
-  
+
   #pasting suffix to colnames to pivot then (the double pivot allows to tidy the data)
   colnames(df3)[5:ncol(df3)] <-
     paste("bio_", colnames(df3)[5:ncol(df3)], sep = "")
-  
+
   #pivoting (long)
   df4 <- df3 %>%
     pivot_longer(
@@ -322,7 +322,7 @@ manipulating_taxo <- function(dfsel, dic) {
       values_to = "taxonomy",
       values_drop_na = TRUE
     )
-  
+
   #pivoting (wide)
   df5 <- df4 %>%
     group_by(organismCleaned) %>%
@@ -347,7 +347,7 @@ manipulating_taxo <- function(dfsel, dic) {
           "variety"
         )
     )
-  
+
   #adding taxa to initial df
   df6 <- left_join(dfsel, df5) %>%
     select(
@@ -367,7 +367,7 @@ manipulating_taxo <- function(dfsel, dic) {
       rank,
       taxonomy
     )
-  
+
   return(df6)
 }
 
@@ -1195,7 +1195,7 @@ manipulating_taxo <- function(dfsel, dic) {
 taxo_cleaning_manual <- function(dfsel)
 {
   inhouse_db <- dfsel
-  
+
   inhouse_db <- inhouse_db %>%
     mutate_at(
       .vars = vars(
@@ -1231,31 +1231,31 @@ taxo_cleaning_manual <- function(dfsel)
              x = x)
       }
     )
-  
+
   inhouse_db$organism_1_kingdom <- gsub(
     pattern = "Viridiplantae",
     replacement = "Plantae",
     x = inhouse_db$organism_1_kingdom
   )
-  
+
   inhouse_db$organism_1_kingdom <- gsub(
     pattern = "Metazoa",
     replacement = "Animalia",
     x = inhouse_db$organism_1_kingdom
   )
-  
+
   inhouse_db$organism_2_phylum <- gsub(
     pattern = "Streptophyta",
     replacement = "Tracheophyta",
     x = inhouse_db$organism_2_phylum
   )
-  
+
   inhouse_db$organism_5_family <- gsub(
     pattern = "Trichocomaceae",
     replacement = "Aspergillaceae",
     x = inhouse_db$organism_5_family
   )
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
@@ -1272,7 +1272,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Trypoxylus"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Allomyrina dichotoma"] <-
     "Trypoxylus dichotomus"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
@@ -1289,7 +1289,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Agaricus"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Agaricus pattersonae"] <-
     "Agaricus pattersoniae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
@@ -1306,7 +1306,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Schlechtendalia"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Melaphis chinensis"] <-
     "Schlechtendalia chinensis"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
@@ -1323,7 +1323,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Dysstroma"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Chloroclysta truncata"] <-
     "Dysstroma truncata"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
@@ -1340,7 +1340,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Lindenbergia"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lindenbergia urticaefolia"] <-
     "Lindenbergia urticifolia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
@@ -1357,7 +1357,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Tetraselmis"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Tetraselmis chui"] <-
     "Tetraselmis chuii"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
@@ -1374,7 +1374,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Cyanospira"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cyanospira rippkae"] <-
     "Cyanospira rippkae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
@@ -1391,7 +1391,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Nicandra"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Nicandra physaloides"] <-
     "Nicandra physalodes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Salvia shannoni"] <-
@@ -1408,7 +1408,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Salvia"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Salvia shannoni"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
@@ -1425,7 +1425,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Streptomyces"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Streptomyces tsukubaensis"] <-
     "Streptomyces tsukubensis"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
@@ -1442,7 +1442,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Hevea"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Evea brasiliensis"] <-
     "Hevea brasiliensis"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismTranslated == "japanese yew"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismTranslated == "japanese yew"] <-
@@ -1459,7 +1459,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Taxus"
   inhouse_db$organism_7_species[inhouse_db$organismTranslated == "japanese yew"] <-
     "Taxus cuspidata"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismTranslated == "Galla Chinensis Rhus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismTranslated == "Galla Chinensis Rhus"] <-
@@ -1476,7 +1476,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Rhus"
   inhouse_db$organism_7_species[inhouse_db$organismTranslated == "Galla Chinensis Rhus"] <-
     "Rhus chinensis"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Chinensis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Chinensis"] <-
@@ -1493,7 +1493,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Chinensis"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Sinensis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Sinensis"] <-
@@ -1510,7 +1510,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Sinensis"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Ootheca"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Ootheca"] <-
@@ -1527,7 +1527,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Ootheca"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Uncultured"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Uncultured"] <-
@@ -1544,7 +1544,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Uncultured"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Stigma"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Stigma"] <-
@@ -1561,7 +1561,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Stigma"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Spica"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Spica"] <-
@@ -1578,7 +1578,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Spica"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Semen"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Semen"] <-
@@ -1595,7 +1595,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Semen"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rotundus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rotundus"] <-
@@ -1612,7 +1612,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rotundus"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rhizoma"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rhizoma"] <-
@@ -1629,7 +1629,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rhizoma"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Ramulus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Ramulus"] <-
@@ -1646,7 +1646,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Ramulus"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Radix"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Radix"] <-
@@ -1663,7 +1663,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Radix"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pollen"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pollen"] <-
@@ -1680,7 +1680,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pollen"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lignum"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lignum"] <-
@@ -1697,7 +1697,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lignum"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Fructus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Fructus"] <-
@@ -1714,7 +1714,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Fructus"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Flos"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Flos"] <-
@@ -1731,7 +1731,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Flos"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Corolla"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Corolla"] <-
@@ -1748,7 +1748,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Corolla"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cacumen"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cacumen"] <-
@@ -1765,7 +1765,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cacumen"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Bulbus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Bulbus"] <-
@@ -1782,7 +1782,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Bulbus"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Megaleia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Megaleia"] <-
@@ -1799,7 +1799,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Megaleia"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Candidatus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Candidatus"] <-
@@ -1816,7 +1816,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Candidatus"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Tasmanian"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Tasmanian"] <-
@@ -1833,7 +1833,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Tasmanian"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Asian"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Asian"] <-
@@ -1850,7 +1850,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Asian"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Mammalian"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Mammalian"] <-
@@ -1867,7 +1867,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Mammalian"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Red"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Red"] <-
@@ -1884,7 +1884,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Red"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Turkey"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Turkey"] <-
@@ -1901,7 +1901,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Turkey"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Synthetis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Synthetis"] <-
@@ -1918,7 +1918,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Synthetis"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
@@ -1936,7 +1936,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pagellus erythrinus"] <-
     ""
   #comes from Becker translation
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
@@ -1954,7 +1954,7 @@ taxo_cleaning_manual <- function(dfsel)
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lagenorhynchus obliquidens"] <-
     ""
   #comes from Lag translation
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
@@ -1971,7 +1971,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Actinomycetales bacterium	"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Galla"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Galla"] <-
@@ -1988,7 +1988,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Galla"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
@@ -2005,7 +2005,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Red Sea bacterium KT-2K1"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
@@ -2022,7 +2022,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Green Pelican GFP transformation vector"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Peripatoides"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Peripatoides"] <-
@@ -2039,7 +2039,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Peripatoides"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
@@ -2056,7 +2056,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Bacterium MPBA1"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
@@ -2073,7 +2073,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Rhizobiaceae bacterium"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Cyanophyta"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Cyanophyta"] <-
@@ -2090,7 +2090,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Cyanophyta"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Candida"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Candida"] <-
@@ -2107,12 +2107,12 @@ taxo_cleaning_manual <- function(dfsel)
     "Candida"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Candida"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Microsorium"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Microsorium"] <-
     "Microsorum"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
@@ -2129,7 +2129,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Pseudeurotium"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Pseudoeurotium"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Lanea"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Lanea"] <-
@@ -2146,7 +2146,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Lannea"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Lanea"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Aspidium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Aspidium"] <-
@@ -2163,7 +2163,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Polystichum"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Aspidium"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Iris"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Iris"] <-
@@ -2180,7 +2180,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Iris"
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Iris"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Plantae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Plantae"] <-
@@ -2197,7 +2197,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Plantae"] <-
     ""
-  
+
   #sadly can be multiple kingdoms, therefore droped
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Algae"] <-
     "y"
@@ -2215,7 +2215,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Algae"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Fungi"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Fungi"] <-
@@ -2232,7 +2232,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Fungi"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Anaerobic"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Anaerobic"] <-
@@ -2249,29 +2249,29 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organismCleaned == "Anaerobic"] <-
     ""
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Myxococcus hansupus"] <-
   #   "y"
   # inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Myxococcus hansupus"] <-
   #   "Myxococcus"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Aubrietia deltoidea"] <-
   #   "y"
   # inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Aubrietia deltoidea"] <-
   #   "Aubrietia"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Cystoseira granulata"] <-
   #   "y"
   # inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Cystoseira granulata"] <-
   #   "Cystoseira"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Chromulina ochromonoides"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_7_species == "Chromulina ochromonoides"] <-
     "Chromulinaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Chromulina ochromonoides"] <-
     "Chromulina"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Microchaete loktakensis"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Microchaete loktakensis"] <-
@@ -2280,7 +2280,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Microchaetaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Microchaete loktakensis"] <-
     "Microchaete"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Umezakia natans"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Umezakia natans"] <-
@@ -2289,7 +2289,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Aphanizomenonaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Umezakia natans"] <-
     "Umezakia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Aphanothece sacrum"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Aphanothece sacrum"] <-
@@ -2298,7 +2298,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Aphanothecaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Aphanothece sacrum"] <-
     "Aphanothece"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Aphanothece halophytica"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Aphanothece halophytica"] <-
@@ -2307,7 +2307,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Aphanothecaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Aphanothece halophytica"] <-
     "Aphanothece"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Syringoderma phinneyi"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Syringoderma phinneyi"] <-
@@ -2316,7 +2316,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Syringodermataceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Syringoderma phinneyi"] <-
     "Syringoderma"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Scytonema varium"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Scytonema varium"] <-
@@ -2327,7 +2327,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytonemataceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Scytonema varium"] <-
     "Scytonema"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Scytonema hofmanni"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Scytonema hofmanni"] <-
@@ -2338,7 +2338,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytonemataceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Scytonema hofmanni"] <-
     "Scytonema"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Cylindrospermum muscicola"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Cylindrospermum muscicola"] <-
@@ -2349,7 +2349,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Nostocaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Cylindrospermum muscicola"] <-
     "Cylindrospermum"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Tolypothrix nodosa"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Tolypothrix nodosa"] <-
@@ -2360,7 +2360,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytonemataceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Tolypothrix nodosa"] <-
     "Tolypothrix"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Tolypothrix tjipanasensis"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Tolypothrix tjipanasensis"] <-
@@ -2371,22 +2371,22 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytonemataceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Tolypothrix tjipanasensis"] <-
     "Tolypothrix"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Dolichospermum flos-aquae"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Dolichospermum flos-aquae"] <-
     "Dolichospermum"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Cystoseira barbata"] <-
   #   "y"
   # inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Cystoseira barbata"] <-
   #   "Cystoseira"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Cystoseira barbatula"] <-
   #   "y"
   # inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Cystoseira barbatula"] <-
   #   "Cystoseira"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Scytosiphon lomentaria"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_7_species == "Scytosiphon lomentaria"] <-
@@ -2397,7 +2397,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytosiphonaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Scytosiphon lomentaria"] <-
     "Scytosiphon"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Homoeostrichus sinclairii"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_7_species == "Homoeostrichus sinclairii"] <-
@@ -2408,7 +2408,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Dictyotaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Homoeostrichus sinclairii"] <-
     "Homoeostrichus"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Dictyopteris prolifera"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_7_species == "Dictyopteris prolifera"] <-
@@ -2419,12 +2419,12 @@ taxo_cleaning_manual <- function(dfsel)
     "Dictyotaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Dictyopteris prolifera"] <-
     "Dictyopteris"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Xiphophora gladiata"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Xiphophora gladiata"] <-
     "Xiphophora"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Iyengaria stellata"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_7_species == "Iyengaria stellata"] <-
@@ -2435,7 +2435,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytosiphonaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Iyengaria stellata"] <-
     "Iyengaria"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Astrosporangium hypotensionis"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Astrosporangium hypotensionis"] <-
@@ -2448,7 +2448,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Streptosporangiaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Astrosporangium hypotensionis"] <-
     "Astrosporangium"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Caulerpa scalpelliformis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Caulerpa scalpelliformis"] <-
@@ -2463,7 +2463,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Caulerpaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Caulerpa scalpelliformis"] <-
     "Caulerpa"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Gram-negative bacterium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Gram-negative bacterium"] <-
@@ -2480,7 +2480,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Gram-negative bacterium"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Laurencia viridis"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Laurencia viridis"] <-
@@ -2489,7 +2489,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Rhodomelaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Laurencia viridis"] <-
     "Laurencia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Laurencia complanata"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_7_species == "Laurencia complanata"] <-
@@ -2498,7 +2498,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Rhodomelaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Laurencia complanata"] <-
     "Laurencia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Chondracanthus harveyanus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Chondracanthus harveyanus"] <-
@@ -2513,65 +2513,65 @@ taxo_cleaning_manual <- function(dfsel)
     "Gigartinaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Chondracanthus harveyanus"] <-
     "Chondracanthus"
-  
+
   #examples mismatched genera
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Streptomyces varius"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Streptomyces varius"] <-
     "Streptomyces"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Streptomyces gangtokensis"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Streptomyces gangtokensis"] <-
     "Streptomyces"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Streptomyces kaniharaensis"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Streptomyces kaniharaensis"] <-
     "Streptomyces"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Mus striatus"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Mus striatus"] <-
     "Mus"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Peridinium foliaceum"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Peridinium foliaceum"] <-
     "Peridinium"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Agrobacterium aurantiacum"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Agrobacterium aurantiacum"] <-
     "Agrobacterium"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Aucklandia lappa"] <-
     "y"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Aucklandia lappa"] <-
     "Aucklandia"
-  
+
   #example
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Solanum etuberosum"] <-
     "y"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Solanum etuberosum"] <-
     "Solanum tuberosum"
-  
+
   #example
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Toricellia angulata"] <-
     "y"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Toricellia angulata"] <-
     "Torricellia angulata"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Boerhaavia diffusa"] <-
     "y"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Boerhaavia diffusa"] <-
     "Boerhavia diffusa"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Boerhaavia coccinea"] <-
     "y"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Boerhaavia coccinea"] <-
     "Boerhavia coccinea"
-  
+
   #mismatched genus
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Achromobacter cycloclastes"] <-
     "y"
@@ -2587,7 +2587,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Alcaligenaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Achromobacter cycloclastes"] <-
     "Achromobacter"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Pseudomonas reactans"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Pseudomonas reactans"] <-
@@ -2602,7 +2602,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Pseudomonadaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Pseudomonas reactans"] <-
     "Pseudomonas"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Micromonospora megalomicea"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Micromonospora megalomicea"] <-
@@ -2617,7 +2617,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Micromonosporaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Micromonospora megalomicea"] <-
     "Micromonospora"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Hypnea musciformis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Hypnea musciformis"] <-
@@ -2632,7 +2632,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Cystocloniaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Hypnea musciformis"] <-
     "Hypnea"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Hypnea valentiae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Hypnea valentiae"] <-
@@ -2647,7 +2647,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Cystocloniaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Hypnea valentiae"] <-
     "Hypnea"
-  
+
   #example
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Spirodela polyrrhiza"] <-
     "y"
@@ -2665,7 +2665,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Spirodela"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Spirodela polyrrhiza"] <-
     "Spirodela polyrhiza"
-  
+
   #example_2
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_7_species == "Hyacinthoides nonscripta"] <-
     "y"
@@ -2683,10 +2683,10 @@ taxo_cleaning_manual <- function(dfsel)
     "Hyacinthoides"
   inhouse_db$organism_7_species[inhouse_db$organism_7_species == "Hyacinthoides nonscripta"] <-
     "Hyacinthoides non-scripta"
-  
+
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_7_species == "Turbinaria ornata"] <-
     "Chromista"
   inhouse_db$organism_2_phylum[inhouse_db$organism_7_species == "Turbinaria ornata"] <-
@@ -2699,17 +2699,17 @@ taxo_cleaning_manual <- function(dfsel)
     "Sargassaceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_7_species == "Turbinaria ornata"] <-
     "Turbinaria"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Dolichospermum"] <-
     "Cyanobacteria"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Dolichospermum"] <-
     "Nostocales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Dolichospermum"] <-
     "Aphanizomenonaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Aphanothece"] <-
     "Chroococcaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Eschscholtzia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Eschscholtzia"] <-
@@ -2724,12 +2724,12 @@ taxo_cleaning_manual <- function(dfsel)
     "Papaveraceae"
   inhouse_db$organism_6_genus[inhouse_db$organism_6_genus == "Eschscholtzia"] <-
     "Eschscholzia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Ishige"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Ishige"] <-
     "Ishigeaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Scytothamnus"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Scytothamnus"] <-
@@ -2738,7 +2738,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Scytothamnales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Scytothamnus"] <-
     "Splachnidiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Cystoseira"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Cystoseira"] <-
@@ -2747,7 +2747,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Fucales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Cystoseira"] <-
     "Sargassaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Nigritella"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Nigritella"] <-
@@ -2760,7 +2760,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Asparagales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Nigritella"] <-
     "Orchidaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Lannea"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Lannea"] <-
@@ -2773,7 +2773,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Sapindales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Lannea"] <-
     "Anacardiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
@@ -2786,7 +2786,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Eurotiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
     "Aspergillaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
@@ -2799,7 +2799,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Eurotiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Dichotomomyces"] <-
     "Aspergillaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Microsorum"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Microsorum"] <-
@@ -2812,7 +2812,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Polypodiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Microsorum"] <-
     "Polypodiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Leishmania"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Leishmania"] <-
@@ -2825,7 +2825,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Trypanosomatida"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Leishmania"] <-
     "Trypanosomatidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pseudogymnoascus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Pseudogymnoascus"] <-
@@ -2837,17 +2837,17 @@ taxo_cleaning_manual <- function(dfsel)
   #no organism_4_order
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pseudogymnoascus"] <-
     "Pseudeurotiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Methanothrix"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Methanothrix"] <-
     "Methanotrichaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Daphnia"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Daphnia"] <-
     "Daphniidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Ophryoscolex"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Ophryoscolex"] <-
@@ -2856,7 +2856,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Entodiniomorphida"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Ophryoscolex"] <-
     "Ophryoscolecidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Plasmodium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Plasmodium"] <-
@@ -2865,7 +2865,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Haemospororida"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Plasmodium"] <-
     "Plasmodiidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Megalobulimus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Megalobulimus"] <-
@@ -2876,7 +2876,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Stylommatophora"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Megalobulimus"] <-
     "Megalobulimidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Euglena"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Euglena"] <-
@@ -2889,7 +2889,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Euglenales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Euglena"] <-
     "Euglenaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Zyzza"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Zyzza"] <-
@@ -2902,7 +2902,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Zyzza"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Prochloron"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Prochloron"] <-
@@ -2911,7 +2911,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Chroococcales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Prochloron"] <-
     "Prochloraceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Glomospora"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Glomospora"] <-
@@ -2924,7 +2924,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Platygloeales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Glomospora"] <-
     "Platygloeaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Flacourtia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Flacourtia"] <-
@@ -2937,7 +2937,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Malpighiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Flacourtia"] <-
     "Salicaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Geomyces"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Geomyces"] <-
@@ -2950,7 +2950,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Helotiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Geomyces"] <-
     "Myxotrichaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Robbsia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Robbsia"] <-
@@ -2963,7 +2963,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Burkholderiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Robbsia"] <-
     "Burkholderiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Metanarthecium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Metanarthecium"] <-
@@ -2976,7 +2976,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Dioscoreales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Metanarthecium"] <-
     "Nartheciaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Tichocarpus"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Tichocarpus"] <-
@@ -2989,7 +2989,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Gigartinales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Tichocarpus"] <-
     "Tichocarpaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Flabellina"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Flabellina"] <-
@@ -3002,7 +3002,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Nudibranchia"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Flabellina"] <-
     "Flabellinidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Calcarisporiella"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Calcarisporiella"] <-
@@ -3015,7 +3015,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Calcarisporiellales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Calcarisporiella"] <-
     "Calcarisporiellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Trypanosoma"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Trypanosoma"] <-
@@ -3028,7 +3028,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Trypanosomatida"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Trypanosoma"] <-
     "Trypanosomatidae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Anatheca"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Anatheca"] <-
@@ -3041,7 +3041,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Gigartinales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Anatheca"] <-
     "Solieriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Echinocystis"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Echinocystis"] <-
@@ -3054,7 +3054,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Cucurbitales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Echinocystis"] <-
     "Cucurbitaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Rhabdonia"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Rhabdonia"] <-
@@ -3067,7 +3067,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Gigartinales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Rhabdonia"] <-
     "Areschougiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Hypsizigus"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Hypsizigus"] <-
@@ -3076,7 +3076,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Agaricales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Hypsizigus"] <-
     "Lyophyllaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Solenopora"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Solenopora"] <-
@@ -3089,7 +3089,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Halymeniales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Solenopora"] <-
     "Solenoporaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organismCleaned == "Mayodendron"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organismCleaned == "Mayodendron"] <-
@@ -3104,7 +3104,7 @@ taxo_cleaning_manual <- function(dfsel)
     ""
   inhouse_db$organism_6_genus[inhouse_db$organismCleaned == "Mayodendron"] <-
     ""
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Macfadyena"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Macfadyena"] <-
@@ -3117,7 +3117,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Lamiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Macfadyena"] <-
     "Bignoniaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pseudeurotium"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Pseudeurotium"] <-
@@ -3129,7 +3129,7 @@ taxo_cleaning_manual <- function(dfsel)
   #no order
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pseudeurotium"] <-
     "Pseudeurotiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Ohtaekwangia"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Ohtaekwangia"] <-
@@ -3138,115 +3138,115 @@ taxo_cleaning_manual <- function(dfsel)
     "Cytophagales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Ohtaekwangia"] <-
     "Cytophagaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Nigrospora"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Nigrospora"] <-
     "Trichosphaeriales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Glyphium"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Glyphium"] <-
     "Patellariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Coleophoma"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Coleophoma"] <-
     "Helotiales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Papulaspora"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Papulaspora"] <-
     "Sordariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Passeriniella"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Passeriniella"] <-
     "Pleosporales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Phialemoniopsis"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Phialemoniopsis"] <-
     "Xylariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Resinicium"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Resinicium"] <-
     "Hymenochaetales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Stilbella"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Stilbella"] <-
     "Hypocreales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pseudohyphozyma"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pseudohyphozyma"] <-
     "Chrysozymaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Thyronectria"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Thyronectria"] <-
     "Hypocreales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Thyronectria"] <-
     "Nectriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Racomitrium"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Racomitrium"] <-
     "Grimmiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Racomitrium"] <-
     "Grimmiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pseudobotrytis"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pseudobotrytis"] <-
     "Coniochaetales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pseudobotrytis"] <-
     "Coniochaetaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Prototheca"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Prototheca"] <-
     "Chlorellales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Prototheca"] <-
     "Chlorellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Oxyporus"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Oxyporus"] <-
     "Hymenochaetales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Oxyporus"] <-
     "Schizoporaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Leprocaulon"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Leprocaulon"] <-
     "Leprocaulales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Leprocaulon"] <-
     "Leprocaulaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Haliphthoros"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Haliphthoros"] <-
     "Lagenidiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Haliphthoros"] <-
     "Haliphthoraceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Cora"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Cora"] <-
     "Agaricales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Cora"] <-
     "Hygrophoraceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Acaromyces"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Acaromyces"] <-
     "Exobasidiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Acaromyces"] <-
     "Cryptobasidiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Dichotomophthora"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Dichotomophthora"] <-
@@ -3255,33 +3255,33 @@ taxo_cleaning_manual <- function(dfsel)
     "Pleosporales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Dichotomophthora"] <-
     "Pleosporaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Lauriomyces"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Lauriomyces"] <-
     "Leotiomycetes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Microcyclospora"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Microcyclospora"] <-
     "Dothideomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Microcyclospora"] <-
     "Capnodiales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Zygosporium"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Zygosporium"] <-
     "Sordariomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Zygosporium"] <-
     "Xylariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Hansfordia"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Hansfordia"] <-
     "Sordariomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Hansfordia"] <-
     "Xylariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Veronaea"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Veronaea"] <-
@@ -3290,7 +3290,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Chaetothyriales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Veronaea"] <-
     "Herpotrichiellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Stachylidium"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Stachylidium"] <-
@@ -3299,7 +3299,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Glomerellales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Stachylidium"] <-
     "Plectosphaerellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Culicinomyces"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Culicinomyces"] <-
@@ -3308,7 +3308,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Hypocreales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Culicinomyces"] <-
     "Clavicipitaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Plectophomella"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Plectophomella"] <-
@@ -3317,7 +3317,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Pleosporales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Plectophomella"] <-
     "Leptosphaeriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Chaetosphaeronema"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Chaetosphaeronema"] <-
@@ -3326,7 +3326,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Pleosporales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Chaetosphaeronema"] <-
     "Phaeosphaeriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Phialomyces"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Phialomyces"] <-
@@ -3335,33 +3335,33 @@ taxo_cleaning_manual <- function(dfsel)
     "Eurotiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Phialomyces"] <-
     "Aspergillaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Ovadendron"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Ovadendron"] <-
     "Eurotiomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Ovadendron"] <-
     "Onygenales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pleiochaeta"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Pleiochaeta"] <-
     "Dothideomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pleiochaeta"] <-
     "Pleosporales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Monodictys"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Monodictys"] <-
     "Dothideomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Monodictys"] <-
     "Pleosporales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Albophoma"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Albophoma"] <-
     "Sordariomycetes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Acrophialophora"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Acrophialophora"] <-
@@ -3370,7 +3370,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Sordariales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Acrophialophora"] <-
     "Chaetomiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Acrodontium"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Acrodontium"] <-
@@ -3379,35 +3379,35 @@ taxo_cleaning_manual <- function(dfsel)
     "Capnodiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Acrodontium"] <-
     "Teratosphaeriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Prasinococcus"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Prasinococcus"] <-
     "Prasinococcales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Prasinococcus"] <-
     "Prasinococcaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Gyrodinium"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Gyrodinium"] <-
     "Gymnodiniales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Gyrodinium"] <-
     "Gymnodiniaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pantoneura"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pantoneura"] <-
     "Ceramiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pantoneura"] <-
     "Delesseriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Prochlorococcus"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Prochlorococcus"] <-
     "Synechococcales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Prochlorococcus"] <-
     "Prochloraceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Westiella"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Westiella"] <-
@@ -3416,200 +3416,200 @@ taxo_cleaning_manual <- function(dfsel)
     "Nostocales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Westiella"] <-
     "Hapalosiphonaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Fritschiella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Fritschiella"] <-
     "Fritschiellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Sporobolomyces"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Sporobolomyces"] <-
     "Sporidiobolaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Rhodotorula"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Rhodotorula"] <-
     "Sporidiobolaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Pseudomuriella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pseudomuriella"] <-
     "Pseudomuriellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Melanocarpus"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Melanocarpus"] <-
     "Chaetomiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Nakazawaea"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Nakazawaea"] <-
     "Pichiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Cyberlindnera"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Cyberlindnera"] <-
     "Phaffomycetaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Candida"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Candida"] <-
     "Debaryomycetaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Prasinoderma"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Prasinoderma"] <-
     "Prasinococcaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Plenodomus"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Plenodomus"] <-
     "Pleosporineae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Periconia"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Periconia"] <-
     "Periconiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Mycocentrospora"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Mycocentrospora"] <-
     "Mycosphaerellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Paraphoma"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Paraphoma"] <-
     "Pleosporineae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Clavariopsis"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Clavariopsis"] <-
     "Halosphaeriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Berkleasmium"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Berkleasmium"] <-
     "Tubeufiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Astrosphaeriella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Astrosphaeriella"] <-
     "Astrosphaeriellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Oltmannsiellopsis"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Oltmannsiellopsis"] <-
     "Oltmannsiellopsidaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Myrmecridium"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Myrmecridium"] <-
     "Myrmecridiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Endoconidiophora"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Endoconidiophora"] <-
     "Ceratocystidaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Myrothecium"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Myrothecium"] <-
     "Stachybotryaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Sarocladium"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Sarocladium"] <-
     "Sarocladiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Memnoniella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Memnoniella"] <-
     "Stachybotryaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Ilyonectria"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Ilyonectria"] <-
     "Nectriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Gliomastix"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Gliomastix"] <-
     "Bionectriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Geosmithia"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Geosmithia"] <-
     "Bionectriaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Circinotrichum"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Circinotrichum"] <-
     "Xylariaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Trichosporiella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Trichosporiella"] <-
     "Dermateaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Tapesia"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Tapesia"] <-
     "Dermateaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Glarea"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Glarea"] <-
     "Helotiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Dactylaria"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Dactylaria"] <-
     "Orbiliaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Thermomyces"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Thermomyces"] <-
     "Trichocomaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Tubakia"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Tubakia"] <-
     "Melanconiellaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Stenocarpella"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Stenocarpella"] <-
     "Diaporthaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Poterioochromonas"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Poterioochromonas"] <-
     "Ochromonadaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Sirodesmium"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Sirodesmium"] <-
     "Paradictyoarthriniaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Solibacillus"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Solibacillus"] <-
     "Planococcaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Elmerina"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Elmerina"] <-
     "Aporpiaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_6_genus == "Leucocybe"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Leucocybe"] <-
     "Tricholomataceae"
-  
+
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Calophyllum"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Calophyllum"] <-
@@ -3620,7 +3620,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Malpighiales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Calophyllum"] <-
     "Calophyllaceae"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Heliotropium"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Heliotropium"] <-
@@ -3631,26 +3631,26 @@ taxo_cleaning_manual <- function(dfsel)
     "Boraginales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Heliotropium"] <-
     "Heliotropiaceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Xiphophora"] <-
     "Phaeophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Xiphophora"] <-
     "Fucales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Xiphophora"] <-
     "Fucaceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_6_genus == "Hymenomonas"] <-
     "Coccolithophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Hymenomonas"] <-
     "Coccosphaerales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Hymenomonas"] <-
     "Hymenomonadaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Chondrosia"] <-
     "Chondrosiida"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Chondrosia"] <-
     "Chondrosiidae"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_6_genus == "Hemerocallis"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_6_genus == "Hemerocallis"] <-
@@ -3661,172 +3661,172 @@ taxo_cleaning_manual <- function(dfsel)
     "Asparagales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Hemerocallis"] <-
     "Asphodelaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Fischerella"] <-
     "Stigonematales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Fischerella"] <-
     "Stigonemataceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Grateloupia"] <-
     "Halymeniales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Grateloupia"] <-
     "Halymeniaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pellia"] <-
     "Pelliales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pellia"] <-
     "Pelliaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Phormidium"] <-
     "Nostocales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Phormidium"] <-
     "Oscillatoriaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pleopsidium"] <-
     "Acarosporales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pleopsidium"] <-
     "Acarosporaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pyrenochaeta"] <-
     "Pleosporales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pyrenochaeta"] <-
     "Cucurbitariaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Pyrenula"] <-
     "Pyrenulales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pyrenula"] <-
     "Pyrenulaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Synechococcus"] <-
     "Chroococcales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Synechococcus"] <-
     "Chroococcaceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_6_genus == "Xanthoceras"] <-
     "Sapindales"
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Xanthoceras"] <-
     "Sapindaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Yucca"] <-
     "Asparagaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Viburnum"] <-
     "Adoxaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Viscum"] <-
     "Santalaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Glenodinium"] <-
     "Peridiniaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Sirococcus"] <-
     "Gnomoniaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Monostroma"] <-
     "Gomontiaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Panaeolus"] <-
     "Bolbitiaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Patrinia"] <-
     "Caprifoliaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Pedicularis"] <-
     "Orobanchaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Saccharothrix"] <-
     "Pseudonocardiaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Spinacia"] <-
     "Amaranthaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Brachychiton"] <-
     "Malvaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Campylopus"] <-
     "Dicranaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Caraipa"] <-
     "Calophyllaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Caraipa"] <-
     "Calophyllaceae"
-  
+
   inhouse_db$organism_5_family[inhouse_db$organism_6_genus == "Cochlospermum"] <-
     "Bixaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Scalibregmatidae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Scalibregmatidae"] <-
     "Capitellida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Ropalosporaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ropalosporaceae"] <-
     "Umbilicariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Holopodidae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Holopodidae"] <-
     "Cyrtocrinida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Fuscideaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Fuscideaceae"] <-
     "Umbilicariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Eremomycetaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Eremomycetaceae"] <-
     "Eremomycetales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Chaetopteridae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Chaetopteridae"] <-
     "Spionida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Cephalothecaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Cephalothecaceae"] <-
     "Sordariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Cephalodiscidae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Cephalodiscidae"] <-
     "Cephalodiscida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Capitellidae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Capitellidae"] <-
     "Capitellida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Astasiaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Astasiaceae"] <-
     "Rhabdomonadales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Arenicolidae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Arenicolidae"] <-
     "Capitellida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Apiosporaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Apiosporaceae"] <-
     "Xylariales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Acinetosporaceae"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Acinetosporaceae"] <-
     "Phaeophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Acinetosporaceae"] <-
     "Ectocarpales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Leguminosae"] <-
     "y"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Leguminosae"] <-
     "Fabaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Cervantesiaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Cervantesiaceae"] <-
@@ -3837,26 +3837,26 @@ taxo_cleaning_manual <- function(dfsel)
     "Magnoliopsida"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Cervantesiaceae"] <-
     "Santalales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Globulariaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Globulariaceae"] <-
     "Lamiales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Myoporaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Myoporaceae"] <-
     "Lamiales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Myoporaceae"] <-
     "Scrophulariaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Flacourtiaceae"] <-
     "y"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Flacourtiaceae"] <-
     "Malpighiales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Flacourtiaceae"] <-
     "Salicaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Dracaenaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Dracaenaceae"] <-
@@ -3869,7 +3869,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Asparagales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Dracaenaceae"] <-
     "Ruscaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Agavaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Agavaceae"] <-
@@ -3880,7 +3880,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Magnoliopsida"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Agavaceae"] <-
     "Asparagales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Ternstroemiaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Ternstroemiaceae"] <-
@@ -3893,7 +3893,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Ericales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Ternstroemiaceae"] <-
     "Pentaphylacaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Aroideae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Aroideae"] <-
@@ -3906,7 +3906,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Alismatales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Aroideae"] <-
     "Araceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Epacridaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Epacridaceae"] <-
@@ -3919,7 +3919,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Ericales"
   inhouse_db$organism_5_family[inhouse_db$organism_5_family == "Epacridaceae"] <-
     "Ericaceae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Takakiaceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Takakiaceae"] <-
@@ -3930,7 +3930,7 @@ taxo_cleaning_manual <- function(dfsel)
     "Takakiopsida"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Takakiaceae"] <-
     "Takakiales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Cyanophoraceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Cyanophoraceae"] <-
@@ -3941,17 +3941,17 @@ taxo_cleaning_manual <- function(dfsel)
     "Glaucophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Cyanophoraceae"] <-
     "Glaucocystales"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_5_family == "Phormidiaceae"] <-
     "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_5_family == "Phormidiaceae"] <-
     "Cyanobacteria"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Phormidiaceae"] <-
     "Oscillatoriales"
-  
+
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_5_family == "Fabaceae"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_5_family == "Fabaceae"] <-
@@ -3960,480 +3960,480 @@ taxo_cleaning_manual <- function(dfsel)
     "Magnoliopsida"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Fabaceae"] <-
     "Fabales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Daphniidae"] <-
     "Diplostraca"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Streptomycetaceae"] <-
     "Actinomycetales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Myxotrichaceae"] <-
     "Helotiales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Solanaceae"] <-
     "Solanales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Botrydiaceae"] <-
     "Botrydiales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Bonnemaisoniaceae"] <-
     "Nemaliales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Chattonellaceae"] <-
     "Chattonellales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Chlamydomonadaceae"] <-
     "Chlamydomonadales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Chordariaceae"] <-
     "Ectocarpales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Chromulinaceae"] <-
     "Chromulinales"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_5_family == "Chroomonadaceae"] <-
     "Cryptophyta"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Corallinaceae"] <-
     "Corallinales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Cupressaceae"] <-
     "Pinales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Euglenaceae"] <-
     "Euglenophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Euglenaceae"] <-
     "Euglenales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Gracilariaceae"] <-
     "Gigartinales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Halosphaeriaceae"] <-
     "Sordariomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Halosphaeriaceae"] <-
     "Microascales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Isochrysidaceae"] <-
     "Coccolithophyceae"
-  
+
   #debate
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Kallymeniaceae"] <-
     "Gigartinales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Micrococcaceae"] <-
     "Actinomycetales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Mycosphaerellaceae"] <-
     "Mycosphaerellales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Orbiliaceae"] <-
     "Orbiliomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Orbiliaceae"] <-
     "Orbiliales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Paradictyoarthriniaceae"] <-
     "Dothideomycetes"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Paradictyoarthriniaceae"] <-
     "Pleosporales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Prochloraceae"] <-
     "Synechococcales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Prymnesiaceae"] <-
     "Coccolithophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Pseudeurotiaceae"] <-
     "Leotiomycetes"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Pycnococcaceae"] <-
     "Pyramimonadophyceae"
-  
+
   #not even in the initial two
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Sarcinochrysidaceae"] <-
     "Pelagophyceae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Scytosiphonaceae"] <-
     "Ectocarpales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Tubeufiaceae"] <-
     "Tubeufiales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Tetractinellida"] <-
     "Demospongiae"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Dunaliellaceae"] <-
     "Chlamydomonadales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Gelidiaceae"] <-
     "Nemaliales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Geodiidae"] <-
     "Tetractinellida"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Haematococcaceae"] <-
     "Chlamydomonadales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Halichondriidae"] <-
     "Suberitida"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Holothuriidae"] <-
     "Holothuriida"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Lecideaceae"] <-
     "Lecanorales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ommastrephidae"] <-
     "Oegopsida"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ostreopsidaceae"] <-
     "Peridiniales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Peyssonneliaceae"] <-
     "Halymeniales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Phaeocystaceae"] <-
     "Coccolithophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Phaeocystaceae"] <-
     "Prymnesiales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Plocamiaceae"] <-
     "Gigartinales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Podocarpaceae"] <-
     "Pinales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Rhizocarpaceae"] <-
     "Lecanorales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Scenedesmaceae"] <-
     "Sphaeropleales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Sparidae"] <-
     "Actinopterygii"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Sparidae"] <-
     "Perciformes"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Synechococcaceae"] <-
     "Synechococcales"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_5_family == "Ishigeaceae"] <-
     "Phaeophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ishigeaceae"] <-
     "Ectocarpales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ochromonadaceae"] <-
     "Ochromonadales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Xylariaceae"] <-
     "Xylariales"
-  
+
   inhouse_db$organism_4_order[inhouse_db$organism_5_family == "Ancorinidae"] <-
     "Tetractinellida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Thermoleophilales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Thermoleophilales"] <-
     "Thermoleophilia"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Xylariales"] <-
     "Sordariomycetes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Rubrobacterales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Rubrobacterales"] <-
     "Rubrobacteria"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Umbelopsidales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Umbelopsidales"] <-
     "Umbelopsidomycetes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Tricladida"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Tricladida"] <-
     "Rhabditophora"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Polycladida"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Polycladida"] <-
     "Rhabditophora"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Mycoplasmatales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Mycoplasmatales"] <-
     "Mollicutes"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Bifidobacteriales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Bifidobacteriales"] <-
     "Actinobacteria"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Coriobacteriales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Coriobacteriales"] <-
     "Coriobacteriia"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_4_order == "Cryptonemiales"] <-
     "y"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Cryptonemiales"] <-
     "Florideophyceae"
   inhouse_db$organism_4_order[inhouse_db$organism_4_order == "Cryptonemiales"] <-
     "Halymeniales"
-  
+
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Cladophorales"] <-
     "Ulvophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Isochrysidales"] <-
     "Coccolithophyceae"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_4_order == "Alcyonacea"] <-
     "Animalia"
   inhouse_db$organism_2_phylum[inhouse_db$organism_4_order == "Alcyonacea"] <-
     "Cnidaria"
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Alcyonacea"] <-
     "Anthozoa"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Actinomycetales"] <-
     "Actinobacteria"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Bryopsidales"] <-
     "Ulvophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Chlorodendrales"] <-
     "Chlorodendrophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Cypriniformes"] <-
     "Actinopterygii"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Synechococcales"] <-
     "Cyanophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Patellariales"] <-
     "Dothideomycetes"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Pyramimonadales"] <-
     "Pyramimonadophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Suberitida"] <-
     "Demospongiae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Tetractinellida"] <-
     "Demospongiae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Gigartinales"] <-
     "Florideophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Corallinales"] <-
     "Florideophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Halymeniales"] <-
     "Florideophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Chlorellales"] <-
     "Trebouxiophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Sarcinochrysidales"] <-
     "Pelagophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Ceramiales"] <-
     "Florideophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Chroococcales"] <-
     "Cyanophyceae"
-  
+
   inhouse_db$organism_3_class[inhouse_db$organism_4_order == "Nostocales"] <-
     "Cyanophyceae"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Cryptophyceae"] <-
     "Cryptophyta"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Florideophyceae"] <-
     "Rhodophyta"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Phaeophyceae"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Phaeophyceae"] <-
     "Chromista"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Phaeophyceae"] <-
     "Ochrophyta"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Flavobacteriia"] <- "y"
   inhouse_db$organism_3_class[inhouse_db$organism_3_class == "Flavobacteriia"] <-
     "Flavobacteria"
-  
+
   # Because of NCBI: inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Magnoliopsida"] <-
   #   "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Magnoliopsida"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Magnoliopsida"] <-
     "Tracheophyta"
-  
+
   # Because of NCBI: inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Magnoliopsida"] <-
   #   "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Magnoliopsida"] <-
     "Plantae"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Magnoliopsida"] <-
     "Tracheophyta"
-  
+
   # Because of NCBI: inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Cyanobacteria"] <-
   #   "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Cyanobacteria"] <-
     "Bacteria"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Cyanobacteria"] <-
     "Cyanophyceae"
-  
+
   #double taxonomies -> no "y", just choose one
   #catalogue of Life as reference, then NCBI
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Dinophyceae"] <-
     "Myzozoa"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Bryopsida"] <-
     "Bryophyta"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Sphagnopsida"] <-
     "Bryophyta"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Cycadopsida"] <-
     "Tracheophyta"
-  
+
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Cycadopsida"] <-
     "Tracheophyta"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Raphidophyceae"] <-
     "Chromista"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Raphidophyceae"] <-
     "Ochrophyta"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_3_class == "Pelagophyceae"] <-
     "Chromista"
   inhouse_db$organism_2_phylum[inhouse_db$organism_3_class == "Pelagophyceae"] <-
     "Ochrophyta"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_3_class == "Liliopsida"] <- "y"
   inhouse_db$organism_3_class[inhouse_db$organism_3_class == "Liliopsida"] <-
     "Magnoliopsida"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Evosea"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Evosea"] <-
     "Protozoa"
-  
+
   # Because of NCBI: inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Rhodophyta"] <-
   #   "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Rhodophyta"] <-
     "Plantae"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Bacillariophyta"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Bacillariophyta"] <-
     "Chromista"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Tenericutes"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Tenericutes"] <-
     "Bacteria"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Dinophyta"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Dinophyta"] <-
     "Protozoa"
-  
+
   inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Sipuncula"] <-
     "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Sipuncula"] <-
     "Animalia"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Miozoa"] <- "y"
   inhouse_db$organism_2_phylum[inhouse_db$organism_2_phylum == "Miozoa"] <-
     "Myzozoa"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Myzozoa"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Myzozoa"] <-
     "Chromista"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Myzozoa"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Myzozoa"] <-
     "Chromista"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Myzozoa"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Myzozoa"] <-
     "Chromista"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Chlorophyta"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Chlorophyta"] <-
     "Plantae"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Ciliophora"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Ciliophora"] <-
     "Chromista"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Cyanobacteria"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Cyanobacteria"] <-
     "Bacteria"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Glaucophyta"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Glaucophyta"] <-
     "Plantae"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Ochrophyta"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Ochrophyta"] <-
     "Chromista"
-  
+
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Cryptophyta"] <-
     "Chromista"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_2_phylum == "Tracheophyta"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_2_phylum == "Tracheophyta"] <-
     "Plantae"
-  
+
   # inhouse_db$organism_modified_taxonomy_manual[inhouse_db$organism_1_kingdom == "Protista"] <- "y"
   inhouse_db$organism_1_kingdom[inhouse_db$organism_1_kingdom == "Protista"] <-
     "Protozoa"
-  
+
   inhouse_db$organism_1_kingdom <-
     y_as_na(x = inhouse_db$organism_1_kingdom,
             y = "")
-  
+
   inhouse_db$organism_2_phylum <-
     y_as_na(x = inhouse_db$organism_2_phylum,
             y = "")
-  
+
   inhouse_db$organism_3_class <-
     y_as_na(x = inhouse_db$organism_3_class,
             y = "")
-  
+
   inhouse_db$organism_4_order <-
     y_as_na(x = inhouse_db$organism_4_order,
             y = "")
-  
+
   inhouse_db$organism_5_family <-
     y_as_na(x = inhouse_db$organism_5_family,
             y = "")
-  
+
   inhouse_db$organism_6_genus <-
     y_as_na(x = inhouse_db$organism_6_genus,
             y = "")
-  
+
   inhouse_db$organism_7_species <-
     y_as_na(x = inhouse_db$organism_7_species,
             y = "")
-  
+
   inhouse_db$organism_8_variety <-
     y_as_na(x = inhouse_db$organism_8_variety,
             y = "")
-  
+
   inhouse_db$organism_modified_taxonomy_manual <-
     y_as_na(x = inhouse_db$organism_modified_taxonomy_manual,
             y = "")
-  
+
   inhouse_db$organismCurated <-
     as.character(apply(inhouse_db[6:13], 1, function(x)
       tail(na.omit(x), 1)))
-  
+
   organism_8_variety_cleaning <-
     inhouse_db %>%
     distinct(
@@ -4452,31 +4452,31 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_8_variety_cleaning),
     "species with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db %>%
     filter(!organismCurated %in% organism_8_variety_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db %>%
     filter(organismCurated %in% organism_8_variety_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_8_variety_cleaning)
-  
+
   inhouse_db_organism_8_variety_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_7_species_cleaning <-
     inhouse_db_organism_8_variety_clean %>%
     distinct(
@@ -4494,31 +4494,31 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_7_species_cleaning),
     "species with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db %>%
     filter(!organismCurated %in% organism_7_species_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db %>%
     filter(organismCurated %in% organism_7_species_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_7_species_cleaning)
-  
+
   inhouse_db_organism_7_species_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_6_genus_cleaning <-
     inhouse_db_organism_7_species_clean %>%
     distinct(
@@ -4535,31 +4535,31 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_6_genus_cleaning),
     "genera with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_7_species_clean %>%
     filter(!organismCurated %in% organism_6_genus_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_7_species_clean %>%
     filter(organismCurated %in% organism_6_genus_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_6_genus_cleaning)
-  
+
   inhouse_db_organism_6_genus_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_5_family_cleaning <-
     inhouse_db_organism_6_genus_clean %>%
     distinct(
@@ -4575,31 +4575,31 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_5_family_cleaning),
     "families with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_6_genus_clean %>%
     filter(!organismCurated %in% organism_5_family_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_6_genus_clean %>%
     filter(organismCurated %in% organism_5_family_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_5_family_cleaning)
-  
+
   inhouse_db_organism_5_family_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_4_order_cleaning <-
     inhouse_db_organism_5_family_clean %>%
     distinct(
@@ -4614,31 +4614,31 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_4_order_cleaning),
     "orders with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_5_family_clean %>%
     filter(!organismCurated %in% organism_4_order_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_5_family_clean %>%
     filter(organismCurated %in% organism_4_order_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_4_order_cleaning)
-  
+
   inhouse_db_organism_4_order_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_3_class_cleaning <-
     inhouse_db_organism_4_order_clean %>%
     distinct(organism_1_kingdom,
@@ -4650,30 +4650,30 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_3_class_cleaning),
     "classes with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_4_order_clean %>%
     filter(!organismCurated %in% organism_3_class_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_4_order_clean %>%
     filter(organismCurated %in% organism_3_class_cleaning$organismCurated) %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new, organism_3_class_cleaning)
-  
+
   inhouse_db_organism_3_class_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_2_phylum_cleaning <-
     inhouse_db_organism_3_class_clean %>%
     distinct(organism_1_kingdom,
@@ -4684,207 +4684,207 @@ taxo_cleaning_manual <- function(dfsel)
     add_count() %>%
     filter(n >= 2) %>%
     select(-n)
-  
+
   cat(
     "you have",
     nrow(organism_2_phylum_cleaning),
     "phyla with inconsistent upstream taxonomies",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_3_class_clean %>%
     filter(!organismCurated %in% organism_2_phylum_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_3_class_clean %>%
     filter(organismCurated %in% organism_2_phylum_cleaning$organismCurated)  %>%
     select(organismOriginal,
            organismCleaned,
            organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new,
               organism_2_phylum_cleaning)
-  
+
   inhouse_db_organism_2_phylum_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   organism_1_kingdom_cleaning <-
     inhouse_db_organism_2_phylum_clean %>%
     distinct(organism_1_kingdom,
              .keep_all = TRUE)
-  
+
   organism_1_kingdom_cleaning_2 <-
     inhouse_db_organism_2_phylum_clean %>%
     filter(!is.na(organism_1_kingdom)) %>%
     distinct(organism_1_kingdom,
              .keep_all = TRUE)
-  
+
   cat(
     "you have",
     nrow(organism_1_kingdom_cleaning_2),
     "different kingdoms represented",
     "\n"
   )
-  
+
   inhouse_db_old <- inhouse_db_organism_2_phylum_clean %>%
     filter(!organismCurated %in% organism_1_kingdom_cleaning$organismCurated)
-  
+
   inhouse_db_new <- inhouse_db_organism_2_phylum_clean %>%
     filter(organismCurated %in% organism_1_kingdom_cleaning$organismCurated)
-  
+
   if (nrow(inhouse_db_new) > 0)
     inhouse_db_new <-
     left_join(inhouse_db_new, organism_1_kingdom_cleaning)
-  
+
   inhouse_db_organism_1_kingdom_clean <-
     rbind(inhouse_db_old, inhouse_db_new)
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_1_kingdom <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_1_kingdom
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_2_phylum <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_2_phylum
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_3_class <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_3_class
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_4_order <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_4_order
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_5_family <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_5_family
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_6_genus <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_6_genus
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_6_genus <-
     gsub(
       pattern = "Fructus",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_6_genus
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_7_species <-
     gsub(
       pattern = "Not assigned",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_7_species
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_7_species <-
     gsub(
       pattern = "unidentified",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organism_7_species
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     gsub(
       pattern = "unidentified",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     gsub(
       pattern = "Fructus",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     gsub(
       pattern = "Radix",
       replacement = "",
       x = inhouse_db_organism_1_kingdom_clean$organismCleaned
     )
-  
+
   #to avoid false genera
   inhouse_db_organism_1_kingdom_clean$organism_7_species[str_count(string = inhouse_db_organism_1_kingdom_clean$organism_7_species,
                                                                    pattern = "\\w+") == 1] <-
     ""
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_1_kingdom <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_1_kingdom,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_2_phylum <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_2_phylum,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_3_class <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_3_class,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_4_order <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_4_order,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_5_family <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_5_family,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_6_genus <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_6_genus,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_7_species <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_7_species,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_8_variety <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_8_variety,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organismCurated,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organism_modified_taxonomy_manual <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organism_modified_taxonomy_manual,
             y = "")
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     as.character(apply(inhouse_db_organism_1_kingdom_clean[6:13], 1, function(x)
       tail(na.omit(x), 1)))
-  
+
   inhouse_db_organism_1_kingdom_clean <-
     inhouse_db_organism_1_kingdom_clean %>%
     mutate_all(as.character)
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organismCurated,
             y = "character(0)")
-  
+
   inhouse_db_organism_1_kingdom_clean$organismCurated <-
     y_as_na(x = inhouse_db_organism_1_kingdom_clean$organismCurated,
             y = "NA")
-  
+
   return(inhouse_db_organism_1_kingdom_clean)
 }
 
@@ -4897,79 +4897,79 @@ plantcycompiling <- function(x)
                 "/",
                 file,
                 sep = "")
-  
+
   data <- read.delim(file = path)
-  
+
   data$X. <- as.character(data$X.)
-  
+
   data$X. <- sub(" - ", " ", data$X.)
-  
+
   data_2 <- data %>%
     cSplit(splitCols = "X.",
            sep = " ") %>%
     select(1:2) %>%
     tibble()
-  
+
   colnames(data_2)[1] <- "A"
   colnames(data_2)[2] <- "B"
-  
+
   data_2$A <- as.character(data_2$A)
-  
+
   data_3 <- data_2 %>%
     filter(A == "INCHI" |
              A == "UNIQUE-ID")
-  
+
   data_4 <- data_3 %>%
     filter(A == "UNIQUE-ID" &
              lead(A, n = 1) == "INCHI" |
              A == "INCHI" &
              lag(A, n = 1) == "UNIQUE-ID")
-  
+
   data_5 <- data_4 %>%
     pivot_wider(names_from = A,
                 values_from = B) %>%
     unnest()
-  
+
   data$X. <- as.character(data$X.)
-  
+
   test <- data %>%
     filter(., grepl(pattern = "# Organism: ",
                     x = X.))
-  
+
   test_2 <-
     data.frame(gsub(pattern = "# Organism: ",
                     replacement = "",
                     test)) %>% cSplit(splitCols = 1,
                                       sep = " ")
-  
+
   colnames(test_2)[1] <- "A"
-  
+
   test_2$A <- as.character(test_2$A)
-  
+
   colnames(test_2)[2] <- "B"
-  
+
   test_2$B <- as.character(test_2$B)
-  
+
   biologicalsource <- paste(test_2$A,
                             test_2$B)
-  
+
   colnames(data_5)[1] <- "uniqueid"
-  
+
   colnames(data_5)[2] <- "inchi"
-  
+
   data_5$biologicalsource <- biologicalsource
-  
+
   data_standard <- data_5
-  
+
   biologicalsource_2 <- gsub(pattern = " ",
                              replacement = "_",
                              x = biologicalsource)
-  
+
   outpath <- file.path(pathDataExternalDbSourcePlantcyc,
                        paste(biologicalsource_2,
                              ".tsv.zip",
                              sep = ""))
-  
+
   write.table(
     x = data_standard,
     file = gzfile(
@@ -5000,7 +5000,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_bulbus) != 0)
     data_bulbus$newbiologicalsource <-
     paste(data_bulbus$newbiologicalsource, "bulbus")
-  
+
   data_caulis <- x %>%
     filter(grepl("^Caulis", biologicalsource))
   data_caulis$newbiologicalsource <-
@@ -5012,7 +5012,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_caulis) != 0)
     data_caulis$newbiologicalsource <-
     paste(data_caulis$newbiologicalsource, "caulis")
-  
+
   data_caluis_et_folium <- x %>%
     filter(grepl("^Caluis_et_folium", biologicalsource))
   data_caluis_et_folium$newbiologicalsource <-
@@ -5027,7 +5027,7 @@ tcm_standardizing <- function(x)
     data_caluis_et_folium$newbiologicalsource <-
     paste(data_caluis_et_folium$newbiologicalsource,
           "caluis et folium")
-  
+
   data_corolla <- x %>%
     filter(grepl("^Corolla", biologicalsource))
   data_corolla$newbiologicalsource <-
@@ -5039,7 +5039,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_corolla) != 0)
     data_corolla$newbiologicalsource <-
     paste(data_corolla$newbiologicalsource, "corolla")
-  
+
   data_cortex <- x %>%
     filter(grepl("^Cortex", biologicalsource))
   data_cortex$newbiologicalsource <-
@@ -5051,7 +5051,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_cortex) != 0)
     data_cortex$newbiologicalsource <-
     paste(data_cortex$newbiologicalsource, "cortex")
-  
+
   data_exocarpium <- x %>%
     filter(grepl("^Exocarpium", biologicalsource))
   data_exocarpium$newbiologicalsource <-
@@ -5063,7 +5063,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_exocarpium) != 0)
     data_exocarpium$newbiologicalsource <-
     paste(data_exocarpium$newbiologicalsource, "exocarpium")
-  
+
   data_exocarpium_rubrum <- x %>%
     filter(grepl("^Exocarpium rubrum", biologicalsource))
   data_exocarpium_rubrum$newbiologicalsource <-
@@ -5078,7 +5078,7 @@ tcm_standardizing <- function(x)
     data_exocarpium_rubrum$newbiologicalsource <-
     paste(data_exocarpium_rubrum$newbiologicalsource,
           "exocarpium rubrum")
-  
+
   data_flos <- x %>%
     filter(grepl("^Flos", biologicalsource))
   data_flos$newbiologicalsource <-
@@ -5090,7 +5090,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_flos) != 0)
     data_flos$newbiologicalsource <-
     paste(data_flos$newbiologicalsource, "flos")
-  
+
   data_folium <- x %>%
     filter(grepl("^Folium", biologicalsource))
   data_folium$newbiologicalsource <-
@@ -5102,7 +5102,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_folium) != 0)
     data_folium$newbiologicalsource <-
     paste(data_folium$newbiologicalsource, "folium")
-  
+
   data_folium_et_cacumen <- x %>%
     filter(grepl("^Folium et cacumen", biologicalsource))
   data_folium_et_cacumen$newbiologicalsource <-
@@ -5117,7 +5117,7 @@ tcm_standardizing <- function(x)
     data_folium_et_cacumen$newbiologicalsource <-
     paste(data_folium_et_cacumen$newbiologicalsource,
           "folium et cacumen")
-  
+
   data_folium_et_caulis <- x %>%
     filter(grepl("^Folium et caulis", biologicalsource))
   data_folium_et_caulis$newbiologicalsource <-
@@ -5132,7 +5132,7 @@ tcm_standardizing <- function(x)
     data_folium_et_caulis$newbiologicalsource <-
     paste(data_folium_et_caulis$newbiologicalsource,
           "folium et caulis")
-  
+
   data_fructus <- x %>%
     filter(grepl("^Fructus", biologicalsource))
   data_fructus$newbiologicalsource <-
@@ -5144,7 +5144,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_fructus) != 0)
     data_fructus$newbiologicalsource <-
     paste(data_fructus$newbiologicalsource, "fructus")
-  
+
   data_fructus_germinatus <- x %>%
     filter(grepl("^Fructus germinatus", biologicalsource))
   data_fructus_germinatus$newbiologicalsource <-
@@ -5159,7 +5159,7 @@ tcm_standardizing <- function(x)
     data_fructus_germinatus$newbiologicalsource <-
     paste(data_fructus_germinatus$newbiologicalsource,
           "fructus germinatus")
-  
+
   data_fructus_immaturus <- x %>%
     filter(grepl("^Fructus immaturus", biologicalsource))
   data_fructus_immaturus$newbiologicalsource <-
@@ -5174,7 +5174,7 @@ tcm_standardizing <- function(x)
     data_fructus_immaturus$newbiologicalsource <-
     paste(data_fructus_immaturus$newbiologicalsource,
           "fructus immaturus")
-  
+
   data_fructus_retinervus <- x %>%
     filter(grepl("^Fructus retinervus", biologicalsource))
   data_fructus_retinervus$newbiologicalsource <-
@@ -5189,7 +5189,7 @@ tcm_standardizing <- function(x)
     data_fructus_retinervus$newbiologicalsource <-
     paste(data_fructus_retinervus$newbiologicalsource,
           "fructus retinervus")
-  
+
   data_fructus_rotundus <- x %>%
     filter(grepl("^Fructus rotundus", biologicalsource))
   data_fructus_rotundus$newbiologicalsource <-
@@ -5204,7 +5204,7 @@ tcm_standardizing <- function(x)
     data_fructus_rotundus$newbiologicalsource <-
     paste(data_fructus_rotundus$newbiologicalsource,
           "fructus rotundus")
-  
+
   data_herba <- x %>%
     filter(grepl("^Herba", biologicalsource))
   data_herba$newbiologicalsource <-
@@ -5216,7 +5216,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_herba) != 0)
     data_herba$newbiologicalsource <-
     paste(data_herba$newbiologicalsource, "herba")
-  
+
   data_lignum <- x %>%
     filter(grepl("^Lignum", biologicalsource))
   data_lignum$newbiologicalsource <-
@@ -5228,7 +5228,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_lignum) != 0)
     data_lignum$newbiologicalsource <-
     paste(data_lignum$newbiologicalsource, "lignum")
-  
+
   data_medulla <- x %>%
     filter(grepl("^Medulla", biologicalsource))
   data_medulla$newbiologicalsource <-
@@ -5240,7 +5240,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_medulla) != 0)
     data_medulla$newbiologicalsource <-
     paste(data_medulla$newbiologicalsource, "medulla")
-  
+
   data_pericarpum <- x %>%
     filter(grepl("^Pericarpum", biologicalsource))
   data_pericarpum$newbiologicalsource <-
@@ -5252,7 +5252,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_pericarpum) != 0)
     data_pericarpum$newbiologicalsource <-
     paste(data_pericarpum$newbiologicalsource, "pericarpum")
-  
+
   data_petiolus <- x %>%
     filter(grepl("^Petiolus", biologicalsource))
   data_petiolus$newbiologicalsource <-
@@ -5264,7 +5264,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_petiolus) != 0)
     data_petiolus$newbiologicalsource <-
     paste(data_petiolus$newbiologicalsource, "petiolus")
-  
+
   data_pollen <- x %>%
     filter(grepl("^Pollen", biologicalsource))
   data_pollen$newbiologicalsource <-
@@ -5276,7 +5276,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_pollen) != 0)
     data_pollen$newbiologicalsource <-
     paste(data_pollen$newbiologicalsource, "pollen")
-  
+
   data_radicis_cortex <- x %>%
     filter(grepl("^Radicis cortex", biologicalsource))
   data_radicis_cortex$newbiologicalsource <-
@@ -5290,7 +5290,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_radicis_cortex) != 0)
     data_radicis_cortex$newbiologicalsource <-
     paste(data_radicis_cortex$newbiologicalsource, "radicis cortex")
-  
+
   data_radix <- x %>%
     filter(grepl("^Radix", biologicalsource))
   data_radix$newbiologicalsource <-
@@ -5302,7 +5302,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_radix) != 0)
     data_radix$newbiologicalsource <-
     paste(data_radix$newbiologicalsource, "radix")
-  
+
   data_radix_et_rhizoma <- x %>%
     filter(grepl("^Radix et rhizoma", biologicalsource))
   data_radix_et_rhizoma$newbiologicalsource <-
@@ -5317,7 +5317,7 @@ tcm_standardizing <- function(x)
     data_radix_et_rhizoma$newbiologicalsource <-
     paste(data_radix_et_rhizoma$newbiologicalsource,
           "radix et rhizoma")
-  
+
   data_radix_preparata <- x %>%
     filter(grepl("^Radix preparata", biologicalsource))
   data_radix_preparata$newbiologicalsource <-
@@ -5332,7 +5332,7 @@ tcm_standardizing <- function(x)
     data_radix_preparata$newbiologicalsource <-
     paste(data_radix_preparata$newbiologicalsource,
           "radix preparata")
-  
+
   data_ramulus <- x %>%
     filter(grepl("^Ramulus", biologicalsource))
   data_ramulus$newbiologicalsource <-
@@ -5344,7 +5344,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_ramulus) != 0)
     data_ramulus$newbiologicalsource <-
     paste(data_ramulus$newbiologicalsource, "ramulus")
-  
+
   data_ramulus_cum_uncus <- x %>%
     filter(grepl("^Ramulus cum uncus", biologicalsource))
   data_ramulus_cum_uncus$newbiologicalsource <-
@@ -5359,7 +5359,7 @@ tcm_standardizing <- function(x)
     data_ramulus_cum_uncus$newbiologicalsource <-
     paste(data_ramulus_cum_uncus$newbiologicalsource,
           "ramulus cum uncus")
-  
+
   data_ramulus_et_folium <- x %>%
     filter(grepl("^Ramulus et folium", biologicalsource))
   data_ramulus_et_folium$newbiologicalsource <-
@@ -5374,7 +5374,7 @@ tcm_standardizing <- function(x)
     data_ramulus_et_folium$newbiologicalsource <-
     paste(data_ramulus_et_folium$newbiologicalsource,
           "ramulus et folium")
-  
+
   data_rhizoma <- x %>%
     filter(grepl("^Rhizoma", biologicalsource))
   data_rhizoma$newbiologicalsource <-
@@ -5386,7 +5386,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_rhizoma) != 0)
     data_rhizoma$newbiologicalsource <-
     paste(data_rhizoma$newbiologicalsource, "rhizoma")
-  
+
   data_rhizoma_alba <- x %>%
     filter(grepl("^Rhizoma alba", biologicalsource))
   data_rhizoma_alba$newbiologicalsource <-
@@ -5398,7 +5398,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_rhizoma_alba) != 0)
     data_rhizoma_alba$newbiologicalsource <-
     paste(data_rhizoma_alba$newbiologicalsource, "rhizoma alba")
-  
+
   data_rhizoma_et_radix <- x %>%
     filter(grepl("^Rhizoma et radix", biologicalsource))
   data_rhizoma_et_radix$newbiologicalsource <-
@@ -5413,7 +5413,7 @@ tcm_standardizing <- function(x)
     data_rhizoma_et_radix$newbiologicalsource <-
     paste(data_rhizoma_et_radix$newbiologicalsource,
           "rhizoma et radix")
-  
+
   data_semen <- x %>%
     filter(grepl("^Semen", biologicalsource))
   data_semen$newbiologicalsource <-
@@ -5425,7 +5425,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_semen) != 0)
     data_semen$newbiologicalsource <-
     paste(data_semen$newbiologicalsource, "semen")
-  
+
   data_semen_germinatum <- x %>%
     filter(grepl("^Semen germinatum", biologicalsource))
   data_semen_germinatum$newbiologicalsource <-
@@ -5440,7 +5440,7 @@ tcm_standardizing <- function(x)
     data_semen_germinatum$newbiologicalsource <-
     paste(data_semen_germinatum$newbiologicalsource,
           "semen germinatum")
-  
+
   data_spica <- x %>%
     filter(grepl("Spica ", biologicalsource, fixed = TRUE))
   data_spica$newbiologicalsource <-
@@ -5452,7 +5452,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_spica) != 0)
     data_spica$newbiologicalsource <-
     paste(data_spica$newbiologicalsource, "spica")
-  
+
   data_stamen <- x %>%
     filter(grepl("^Stamen", biologicalsource))
   data_stamen$newbiologicalsource <-
@@ -5464,7 +5464,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_stamen) != 0)
     data_stamen$newbiologicalsource <-
     paste(data_stamen$newbiologicalsource, "stamen")
-  
+
   data_stigma <- x %>%
     filter(grepl("Stigma ", biologicalsource, fixed = TRUE))
   data_stigma$newbiologicalsource <-
@@ -5476,7 +5476,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_stigma) != 0)
     data_stigma$newbiologicalsource <-
     paste(data_stigma$newbiologicalsource, "stigma")
-  
+
   data_storax <- x %>%
     filter(grepl("^Storax", biologicalsource))
   data_storax$newbiologicalsource <-
@@ -5488,7 +5488,7 @@ tcm_standardizing <- function(x)
   if (nrow(data_storax) != 0)
     data_storax$newbiologicalsource <-
     paste(data_storax$newbiologicalsource, "storax")
-  
+
   data_thallus <- x %>%
     filter(grepl("^Thallus", biologicalsource, fixed = TRUE))
   data_thallus$newbiologicalsource <-
@@ -5501,7 +5501,7 @@ tcm_standardizing <- function(x)
     data_thallus$newbiologicalsource <-
     paste(data_thallus$newbiologicalsource, "thallus")
   #not tuber
-  
+
   x_2 <-
     rbind(
       data_bulbus,
@@ -5545,41 +5545,41 @@ tcm_standardizing <- function(x)
       data_storax,
       data_thallus
     )
-  
+
   x_3 <- left_join(x, x_2)
-  
+
   x_3$newnewbiologicalsource <-
     apply(x_3, 1, function(x)
       tail(na.omit(x), 1))
-  
+
   x_3 <- x_3 %>%
     select(biologicalsource,
            newnewbiologicalsource)
-  
+
   x_4 <-
     left_join(x_3, food_names_list, by = c("newnewbiologicalsource" = "name"))
-  
+
   x_4 <-
     left_join(x_4, tcm_names_list, by = c("newnewbiologicalsource" = "latin"))
-  
+
   x_4 <-
     left_join(x_4,
               tcm_names_list,
               by = c("newnewbiologicalsource" = "common"))
-  
+
   x_4$newnewnewbiologicalsource <-
     apply(x_4, 1, function(x)
       tail(na.omit(x), 1))
-  
+
   x_4 <- x_4 %>%
     select(biologicalsource = biologicalsource.x,
            newnewnewbiologicalsource)
-  
+
   data_standard_2 <- left_join(data_standard, x_4) %>%
     select(-biologicalsource) %>%
     select(biologicalsource = newnewnewbiologicalsource,
            everything())
-  
+
   data_standard_2
 }
 
@@ -5599,7 +5599,7 @@ tcm_inverting <- function(x)
   if (nrow(data_bulbus) != 0)
     data_bulbus$newbiologicalsource <-
     paste(data_bulbus$newbiologicalsource, "bulbus")
-  
+
   data_caulis <- x %>%
     filter(grepl("^Caulis", biologicalsource))
   data_caulis$newbiologicalsource <-
@@ -5611,7 +5611,7 @@ tcm_inverting <- function(x)
   if (nrow(data_caulis) != 0)
     data_caulis$newbiologicalsource <-
     paste(data_caulis$newbiologicalsource, "caulis")
-  
+
   data_caluis_et_folium <- x %>%
     filter(grepl("^Caluis_et_folium", biologicalsource))
   data_caluis_et_folium$newbiologicalsource <-
@@ -5626,7 +5626,7 @@ tcm_inverting <- function(x)
     data_caluis_et_folium$newbiologicalsource <-
     paste(data_caluis_et_folium$newbiologicalsource,
           "caluis et folium")
-  
+
   data_corolla <- x %>%
     filter(grepl("^Corolla", biologicalsource))
   data_corolla$newbiologicalsource <-
@@ -5638,7 +5638,7 @@ tcm_inverting <- function(x)
   if (nrow(data_corolla) != 0)
     data_corolla$newbiologicalsource <-
     paste(data_corolla$newbiologicalsource, "corolla")
-  
+
   data_cortex <- x %>%
     filter(grepl("^Cortex", biologicalsource))
   data_cortex$newbiologicalsource <-
@@ -5650,7 +5650,7 @@ tcm_inverting <- function(x)
   if (nrow(data_cortex) != 0)
     data_cortex$newbiologicalsource <-
     paste(data_cortex$newbiologicalsource, "cortex")
-  
+
   data_exocarpium <- x %>%
     filter(grepl("^Exocarpium", biologicalsource))
   data_exocarpium$newbiologicalsource <-
@@ -5662,7 +5662,7 @@ tcm_inverting <- function(x)
   if (nrow(data_exocarpium) != 0)
     data_exocarpium$newbiologicalsource <-
     paste(data_exocarpium$newbiologicalsource, "exocarpium")
-  
+
   data_exocarpium_rubrum <- x %>%
     filter(grepl("^Exocarpium rubrum", biologicalsource))
   data_exocarpium_rubrum$newbiologicalsource <-
@@ -5677,7 +5677,7 @@ tcm_inverting <- function(x)
     data_exocarpium_rubrum$newbiologicalsource <-
     paste(data_exocarpium_rubrum$newbiologicalsource,
           "exocarpium rubrum")
-  
+
   data_flos <- x %>%
     filter(grepl("^Flos", biologicalsource))
   data_flos$newbiologicalsource <-
@@ -5689,7 +5689,7 @@ tcm_inverting <- function(x)
   if (nrow(data_flos) != 0)
     data_flos$newbiologicalsource <-
     paste(data_flos$newbiologicalsource, "flos")
-  
+
   data_folium <- x %>%
     filter(grepl("^Folium", biologicalsource))
   data_folium$newbiologicalsource <-
@@ -5701,7 +5701,7 @@ tcm_inverting <- function(x)
   if (nrow(data_folium) != 0)
     data_folium$newbiologicalsource <-
     paste(data_folium$newbiologicalsource, "folium")
-  
+
   data_folium_et_cacumen <- x %>%
     filter(grepl("^Folium et cacumen", biologicalsource))
   data_folium_et_cacumen$newbiologicalsource <-
@@ -5716,7 +5716,7 @@ tcm_inverting <- function(x)
     data_folium_et_cacumen$newbiologicalsource <-
     paste(data_folium_et_cacumen$newbiologicalsource,
           "folium et cacumen")
-  
+
   data_folium_et_caulis <- x %>%
     filter(grepl("^Folium et caulis", biologicalsource))
   data_folium_et_caulis$newbiologicalsource <-
@@ -5731,7 +5731,7 @@ tcm_inverting <- function(x)
     data_folium_et_caulis$newbiologicalsource <-
     paste(data_folium_et_caulis$newbiologicalsource,
           "folium et caulis")
-  
+
   data_fructus <- x %>%
     filter(grepl("^Fructus", biologicalsource))
   data_fructus$newbiologicalsource <-
@@ -5743,7 +5743,7 @@ tcm_inverting <- function(x)
   if (nrow(data_fructus) != 0)
     data_fructus$newbiologicalsource <-
     paste(data_fructus$newbiologicalsource, "fructus")
-  
+
   data_fructus_germinatus <- x %>%
     filter(grepl("^Fructus germinatus", biologicalsource))
   data_fructus_germinatus$newbiologicalsource <-
@@ -5758,7 +5758,7 @@ tcm_inverting <- function(x)
     data_fructus_germinatus$newbiologicalsource <-
     paste(data_fructus_germinatus$newbiologicalsource,
           "fructus germinatus")
-  
+
   data_fructus_immaturus <- x %>%
     filter(grepl("^Fructus immaturus", biologicalsource))
   data_fructus_immaturus$newbiologicalsource <-
@@ -5773,7 +5773,7 @@ tcm_inverting <- function(x)
     data_fructus_immaturus$newbiologicalsource <-
     paste(data_fructus_immaturus$newbiologicalsource,
           "fructus immaturus")
-  
+
   data_fructus_retinervus <- x %>%
     filter(grepl("^Fructus retinervus", biologicalsource))
   data_fructus_retinervus$newbiologicalsource <-
@@ -5788,7 +5788,7 @@ tcm_inverting <- function(x)
     data_fructus_retinervus$newbiologicalsource <-
     paste(data_fructus_retinervus$newbiologicalsource,
           "fructus retinervus")
-  
+
   data_fructus_rotundus <- x %>%
     filter(grepl("^Fructus rotundus", biologicalsource))
   data_fructus_rotundus$newbiologicalsource <-
@@ -5803,7 +5803,7 @@ tcm_inverting <- function(x)
     data_fructus_rotundus$newbiologicalsource <-
     paste(data_fructus_rotundus$newbiologicalsource,
           "fructus rotundus")
-  
+
   data_herba <- x %>%
     filter(grepl("^Herba", biologicalsource))
   data_herba$newbiologicalsource <-
@@ -5815,7 +5815,7 @@ tcm_inverting <- function(x)
   if (nrow(data_herba) != 0)
     data_herba$newbiologicalsource <-
     paste(data_herba$newbiologicalsource, "herba")
-  
+
   data_lignum <- x %>%
     filter(grepl("^Lignum", biologicalsource))
   data_lignum$newbiologicalsource <-
@@ -5827,7 +5827,7 @@ tcm_inverting <- function(x)
   if (nrow(data_lignum) != 0)
     data_lignum$newbiologicalsource <-
     paste(data_lignum$newbiologicalsource, "lignum")
-  
+
   data_medulla <- x %>%
     filter(grepl("^Medulla", biologicalsource))
   data_medulla$newbiologicalsource <-
@@ -5839,7 +5839,7 @@ tcm_inverting <- function(x)
   if (nrow(data_medulla) != 0)
     data_medulla$newbiologicalsource <-
     paste(data_medulla$newbiologicalsource, "medulla")
-  
+
   data_pericarpum <- x %>%
     filter(grepl("^Pericarpum", biologicalsource))
   data_pericarpum$newbiologicalsource <-
@@ -5851,7 +5851,7 @@ tcm_inverting <- function(x)
   if (nrow(data_pericarpum) != 0)
     data_pericarpum$newbiologicalsource <-
     paste(data_pericarpum$newbiologicalsource, "pericarpum")
-  
+
   data_petiolus <- x %>%
     filter(grepl("^Petiolus", biologicalsource))
   data_petiolus$newbiologicalsource <-
@@ -5863,7 +5863,7 @@ tcm_inverting <- function(x)
   if (nrow(data_petiolus) != 0)
     data_petiolus$newbiologicalsource <-
     paste(data_petiolus$newbiologicalsource, "petiolus")
-  
+
   data_pollen <- x %>%
     filter(grepl("^Pollen", biologicalsource))
   data_pollen$newbiologicalsource <-
@@ -5875,7 +5875,7 @@ tcm_inverting <- function(x)
   if (nrow(data_pollen) != 0)
     data_pollen$newbiologicalsource <-
     paste(data_pollen$newbiologicalsource, "pollen")
-  
+
   data_radicis_cortex <- x %>%
     filter(grepl("^Radicis cortex", biologicalsource))
   data_radicis_cortex$newbiologicalsource <-
@@ -5889,7 +5889,7 @@ tcm_inverting <- function(x)
   if (nrow(data_radicis_cortex) != 0)
     data_radicis_cortex$newbiologicalsource <-
     paste(data_radicis_cortex$newbiologicalsource, "radicis cortex")
-  
+
   data_radix <- x %>%
     filter(grepl("^Radix", biologicalsource))
   data_radix$newbiologicalsource <-
@@ -5901,7 +5901,7 @@ tcm_inverting <- function(x)
   if (nrow(data_radix) != 0)
     data_radix$newbiologicalsource <-
     paste(data_radix$newbiologicalsource, "radix")
-  
+
   data_radix_et_rhizoma <- x %>%
     filter(grepl("^Radix et rhizoma", biologicalsource))
   data_radix_et_rhizoma$newbiologicalsource <-
@@ -5916,7 +5916,7 @@ tcm_inverting <- function(x)
     data_radix_et_rhizoma$newbiologicalsource <-
     paste(data_radix_et_rhizoma$newbiologicalsource,
           "radix et rhizoma")
-  
+
   data_radix_preparata <- x %>%
     filter(grepl("^Radix preparata", biologicalsource))
   data_radix_preparata$newbiologicalsource <-
@@ -5931,7 +5931,7 @@ tcm_inverting <- function(x)
     data_radix_preparata$newbiologicalsource <-
     paste(data_radix_preparata$newbiologicalsource,
           "radix preparata")
-  
+
   data_ramulus <- x %>%
     filter(grepl("^Ramulus", biologicalsource))
   data_ramulus$newbiologicalsource <-
@@ -5943,7 +5943,7 @@ tcm_inverting <- function(x)
   if (nrow(data_ramulus) != 0)
     data_ramulus$newbiologicalsource <-
     paste(data_ramulus$newbiologicalsource, "ramulus")
-  
+
   data_ramulus_cum_uncus <- x %>%
     filter(grepl("^Ramulus cum uncus", biologicalsource))
   data_ramulus_cum_uncus$newbiologicalsource <-
@@ -5958,7 +5958,7 @@ tcm_inverting <- function(x)
     data_ramulus_cum_uncus$newbiologicalsource <-
     paste(data_ramulus_cum_uncus$newbiologicalsource,
           "ramulus cum uncus")
-  
+
   data_ramulus_et_folium <- x %>%
     filter(grepl("^Ramulus et folium", biologicalsource))
   data_ramulus_et_folium$newbiologicalsource <-
@@ -5973,7 +5973,7 @@ tcm_inverting <- function(x)
     data_ramulus_et_folium$newbiologicalsource <-
     paste(data_ramulus_et_folium$newbiologicalsource,
           "ramulus et folium")
-  
+
   data_rhizoma <- x %>%
     filter(grepl("^Rhizoma", biologicalsource))
   data_rhizoma$newbiologicalsource <-
@@ -5985,7 +5985,7 @@ tcm_inverting <- function(x)
   if (nrow(data_rhizoma) != 0)
     data_rhizoma$newbiologicalsource <-
     paste(data_rhizoma$newbiologicalsource, "rhizoma")
-  
+
   data_rhizoma_alba <- x %>%
     filter(grepl("^Rhizoma alba", biologicalsource))
   data_rhizoma_alba$newbiologicalsource <-
@@ -5997,7 +5997,7 @@ tcm_inverting <- function(x)
   if (nrow(data_rhizoma_alba) != 0)
     data_rhizoma_alba$newbiologicalsource <-
     paste(data_rhizoma_alba$newbiologicalsource, "rhizoma alba")
-  
+
   data_rhizoma_et_radix <- x %>%
     filter(grepl("^Rhizoma et radix", biologicalsource))
   data_rhizoma_et_radix$newbiologicalsource <-
@@ -6012,7 +6012,7 @@ tcm_inverting <- function(x)
     data_rhizoma_et_radix$newbiologicalsource <-
     paste(data_rhizoma_et_radix$newbiologicalsource,
           "rhizoma et radix")
-  
+
   data_semen <- x %>%
     filter(grepl("^Semen", biologicalsource))
   data_semen$newbiologicalsource <-
@@ -6024,7 +6024,7 @@ tcm_inverting <- function(x)
   if (nrow(data_semen) != 0)
     data_semen$newbiologicalsource <-
     paste(data_semen$newbiologicalsource, "semen")
-  
+
   data_semen_germinatum <- x %>%
     filter(grepl("^Semen germinatum", biologicalsource))
   data_semen_germinatum$newbiologicalsource <-
@@ -6039,7 +6039,7 @@ tcm_inverting <- function(x)
     data_semen_germinatum$newbiologicalsource <-
     paste(data_semen_germinatum$newbiologicalsource,
           "semen germinatum")
-  
+
   data_spica <- x %>%
     filter(grepl("Spica ", biologicalsource, fixed = TRUE))
   data_spica$newbiologicalsource <-
@@ -6051,7 +6051,7 @@ tcm_inverting <- function(x)
   if (nrow(data_spica) != 0)
     data_spica$newbiologicalsource <-
     paste(data_spica$newbiologicalsource, "spica")
-  
+
   data_stamen <- x %>%
     filter(grepl("^Stamen", biologicalsource))
   data_stamen$newbiologicalsource <-
@@ -6063,7 +6063,7 @@ tcm_inverting <- function(x)
   if (nrow(data_stamen) != 0)
     data_stamen$newbiologicalsource <-
     paste(data_stamen$newbiologicalsource, "stamen")
-  
+
   data_stigma <- x %>%
     filter(grepl("Stigma ", biologicalsource, fixed = TRUE))
   data_stigma$newbiologicalsource <-
@@ -6075,7 +6075,7 @@ tcm_inverting <- function(x)
   if (nrow(data_stigma) != 0)
     data_stigma$newbiologicalsource <-
     paste(data_stigma$newbiologicalsource, "stigma")
-  
+
   data_storax <- x %>%
     filter(grepl("^Storax", biologicalsource))
   data_storax$newbiologicalsource <-
@@ -6087,7 +6087,7 @@ tcm_inverting <- function(x)
   if (nrow(data_storax) != 0)
     data_storax$newbiologicalsource <-
     paste(data_storax$newbiologicalsource, "storax")
-  
+
   data_thallus <- x %>%
     filter(grepl("^Thallus", biologicalsource, fixed = TRUE))
   data_thallus$newbiologicalsource <-
@@ -6100,7 +6100,7 @@ tcm_inverting <- function(x)
     data_thallus$newbiologicalsource <-
     paste(data_thallus$newbiologicalsource, "thallus")
   #not tuber
-  
+
   x_2 <-
     rbind(
       data_bulbus,
@@ -6144,18 +6144,18 @@ tcm_inverting <- function(x)
       data_storax,
       data_thallus
     )
-  
+
   x_3 <- left_join(x, x_2)
-  
+
   x_3$newnewbiologicalsource <-
     apply(x_3, 1, function(x)
       tail(na.omit(x), 1))
-  
+
   x_4 <- x_3 %>%
     select(-biologicalsource, -newbiologicalsource) %>%
     mutate(biologicalsource = newnewbiologicalsource) %>%
     select(-newnewbiologicalsource)
-  
+
   return(x_4)
 }
 
@@ -6165,129 +6165,129 @@ tcm_inverting <- function(x)
 tcm_cleaning <- function(x)
 {
   data <- x
-  
+
   data$newbiologicalsource <-
     gsub(" bulbus", "", data$latin, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" caulis", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" caulis et folium", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" corolla", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" cortex", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" exocarpium", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" exocarpium rubrum", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" flos", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" folium", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" folium et cacumen", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" folium et caulis", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" fructus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" fructus germinatus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" fructus immaturus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" fructus retinervus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" fructus rotundus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" herba", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" lignum", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" medulla", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" pericarpum", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" petiolus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" pollen", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" radicis cortex", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" radix", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" radix et rhizoma", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" radix preparata", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" ramulus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" ramulus cum uncus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" ramus et folium", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" rhizoma", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" rhizoma alba", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" rhizoma et radix", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" semen", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" semen germinatum", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" spica", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" stamen", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" stigma", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" thallus", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub(" et", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   #not tuber
   data_final <- data %>%
     mutate(latin = newbiologicalsource) %>%
     select(latin, common, biologicalsource)
-  
+
   return(data_final)
 }
 
@@ -6298,181 +6298,119 @@ tcm_cleaning <- function(x)
 tcm_pharmacopoeia_cleaning <- function(x)
 {
   data <- x
-  
+
   data$newbiologicalsource <-
     gsub("Bulbus ", "", data$organismTranslated, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Cacumen ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Caulis ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Corolla ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Cortex ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Exocarpium ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Exocarpium rubrum ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Flos ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Folium ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Folium ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Fructus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Fructus germinatus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Fructus immaturus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Fructus retinervus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Fructus rotundus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Herba ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Lignum ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Medulla ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Pericarpum ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Petiolus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Pollen ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Radicis cortex ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Radix ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Radix et rhizoma ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Ramulus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Ramus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Rhizoma ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Semen ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Semen germinatum ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Spica ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Stamen ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Stigma ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Thallus ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("Uncis ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   data$newbiologicalsource <-
     gsub("et ", "", data$newbiologicalsource, fixed = TRUE)
-  
+
   #not tuber
   data_final <- data %>%
     select(-organismTranslated) %>%
     mutate(organismTranslated = newbiologicalsource) %>%
     select(-newbiologicalsource)
-  
+
   return(data_final)
-}
-
-#######################################################
-#######################################################
-
-gnfinder_cleaning <- function(num, organismCol) {
-  if (organismCol == "organismOriginal")
-    inpath_organism_f <- paste(
-      pathOriginalOrganismDistinct,
-      "originalOrganismGnfinderUntil_",
-      num,
-      ".tsv",
-      sep = ""
-    )
-  
-  if (organismCol == "organismInterim")
-    inpath_organism_f <- paste(
-      pathTranslatedOrganismDistinct,
-      "translatedOrganismGnfinderUntil_",
-      num,
-      ".tsv",
-      sep = ""
-    )
-  
-  if (organismCol == "organismOriginal")
-    inpath_gnfinder_f <-
-      paste(
-        pathCleanedOrganismOriginalDirJson,
-        "originalOrganismGnfinderUntil_",
-        num,
-        ".json",
-        sep = ""
-      )
-  
-  if (organismCol == "organismInterim")
-    inpath_gnfinder_f <-
-      paste(
-        pathCleanedOrganismTranslatedDirJson,
-        "translatedOrganismGnfinderUntil_",
-        num,
-        ".json",
-        sep = ""
-      )
-    
-  gnfound <- data.frame(fromJSON(txt = inpath_gnfinder_f,
-                                 simplifyDataFrame = TRUE))
-  
-  data_bio <- read_delim(
-    file = inpath_organism_f,
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = FALSE
-  ) %>%
-    mutate_all(as.character)
-  
-  data_bio <- data_bio[!is.na(data_bio[, organismCol]),]
-  
-  data_bio_clean <- biocleaning(x = gnfound,
-                                y = data_bio,
-                                organismCol = organismCol)
-  
-  return(data_bio_clean)
 }
 
 #######################################################
@@ -6484,39 +6422,39 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organismCleaned,
              organismDbTaxo,
              .keep_all = TRUE)
-  
+
   test$organism_1_kingdom <-
     y_as_na(x = test$organism_1_kingdom,
             y = "Not assigned")
-  
+
   test$organism_2_phylum <-
     y_as_na(x = test$organism_2_phylum,
             y = "Not assigned")
-  
+
   test$organism_3_class <-
     y_as_na(x = test$organism_3_class,
             y = "Not assigned")
-  
+
   test$organism_4_order <-
     y_as_na(x = test$organism_4_order,
             y = "Not assigned")
-  
+
   test$organism_5_family <-
     y_as_na(x = test$organism_5_family,
             y = "Not assigned")
-  
+
   test$organism_6_genus <-
     y_as_na(x = test$organism_6_genus,
             y = "Not assigned")
-  
+
   test$organism_7_species <-
     y_as_na(x = test$organism_7_species,
             y = "Not assigned")
-  
+
   test$organism_8_variety <-
     y_as_na(x = test$organism_8_variety,
             y = "Not assigned")
-  
+
   variety <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6560,20 +6498,20 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_8_variety,
              .keep_all = TRUE) %>%
     select(-organismOriginal, -organismCleaned)
-  
+
   variety_fill <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     select(organismOriginal,
            organismCleaned,
            organism_8_variety)
-  
+
   variety_full <- left_join(variety_fill, variety)
-  
+
   unvariety <- test %>%
     filter(is.na(organism_8_variety))
-  
+
   species_1 <- rbind(variety_full, unvariety)
-  
+
   species <- test %>%
     filter(!is.na(organism_7_species)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6612,21 +6550,21 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_7_species,
              .keep_all = TRUE) %>%
     select(-organismOriginal, -organismCleaned)
-  
+
   species_fill <- test %>%
     filter(!is.na(organism_7_species)) %>%
     select(organismOriginal,
            organismCleaned,
            organism_8_variety,
            organism_7_species)
-  
+
   species_full <- left_join(species_fill, species)
-  
+
   unspecies <- test %>%
     filter(is.na(organism_7_species))
-  
+
   genus_1 <- rbind(species_full, unspecies)
-  
+
   genus <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6663,7 +6601,7 @@ taxo_cleaning_auto <- function(dfsel) {
            -organismCleaned,
            -organism_8_variety,
            -organism_7_species)
-  
+
   genus_fill <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     select(
@@ -6673,14 +6611,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_7_species,
       organism_6_genus
     )
-  
+
   genus_full <- left_join(genus_fill, genus)
-  
+
   ungenus <- genus_1 %>%
     filter(is.na(organism_6_genus))
-  
+
   family_1 <- rbind(genus_full, ungenus)
-  
+
   family <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6715,7 +6653,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_7_species,
       -organism_6_genus
     )
-  
+
   family_fill <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     select(
@@ -6726,14 +6664,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_6_genus,
       organism_5_family
     )
-  
+
   family_full <- left_join(family_fill, family)
-  
+
   unfamily <- family_1 %>%
     filter(is.na(organism_5_family))
-  
+
   order_1 <- rbind(family_full, unfamily)
-  
+
   order <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6765,7 +6703,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_6_genus,
       -organism_5_family
     )
-  
+
   order_fill <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     select(
@@ -6777,14 +6715,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_5_family,
       organism_4_order
     )
-  
+
   order_full <- left_join(order_fill, order)
-  
+
   unorder <- order_1 %>%
     filter(is.na(organism_4_order))
-  
+
   class_1 <- rbind(order_full, unorder)
-  
+
   class <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6808,9 +6746,9 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_6_genus,
       -organism_5_family,
       -organism_4_order,
-      
+
     )
-  
+
   class_fill <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     select(
@@ -6823,14 +6761,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_4_order,
       organism_3_class
     )
-  
+
   class_full <- left_join(class_fill, class)
-  
+
   unclass <- class_1 %>%
     filter(is.na(organism_3_class))
-  
+
   phylum_1 <- rbind(class_full, unclass)
-  
+
   phylum <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     arrange(match(x = organismDbTaxo,
@@ -6855,7 +6793,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_4_order,
       -organism_3_class
     )
-  
+
   phylum_fill <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     select(
@@ -6869,19 +6807,19 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_3_class,
       organism_2_phylum
     )
-  
+
   phylum_full <- left_join(phylum_fill, phylum)
-  
+
   unphylum <- phylum_1 %>%
     filter(is.na(organism_2_phylum))
-  
+
   kingdom_1 <- rbind(phylum_full, unphylum)
-  
+
   kingdom_tojoin <- kingdom_1 %>%
     select(-organismOriginal)
-  
+
   tojoin <- dfsel
-  
+
   newdf = left_join(tojoin,
                     kingdom_tojoin,
                     by = c("organismCleaned" = "organismCleaned")) %>%
@@ -6928,11 +6866,11 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organismOriginal,
              organismCleaned,
              .keep_all = TRUE)
-  
+
   newdf$organism_modified_taxonomy_auto <-
     y_as_na(x = newdf$organism_modified_taxonomy_auto,
             y = "")
-  
+
   return(newdf)
 }
 
