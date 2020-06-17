@@ -2,3 +2,4 @@
 .dvc
 data
 ci_env
+bin

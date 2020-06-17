@@ -4,7 +4,9 @@
 source("paths.R")
 
 # loading functions
-source("functions/bio.R")
+#source("functions/bio.R")
+
+log_debug("  Step 3")
 
 system(command = paste("bash", pathTranslatedGnfinderScript))
 

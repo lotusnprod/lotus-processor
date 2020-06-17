@@ -4,7 +4,9 @@
 source("paths.R")
 
 # loading functions
-source("functions/bio.R")
+#source("functions/bio.R")
+
+log_debug("  Step 2")
 
 ## tcm names
 tcmNamesDic <- read_delim(
@@ -13,7 +15,7 @@ tcmNamesDic <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 )
-
+log_debug("      Loaded TCM names")
 ## common names
 commonNamesDic <- read_delim(
   file = gzfile(pathDataInterimDictionariesCommonNames),
@@ -21,7 +23,7 @@ commonNamesDic <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 )
-
+log_debug("      Loaded Common Names")
 ## black listed strings
 blacklistDictionary <- read_delim(
   file = pathDataInterimDictionariesCommonBlackDic,
@@ -33,6 +35,7 @@ blacklistDictionary <- read_delim(
   arrange(desc(n)) %>%
   select(-n)
 
+log_debug("      Loaded blacklist")
 dataInterimOrganism <- dataCleanedOriginalOrganism %>%
   mutate(
     organismInterim = stri_replace_all_regex(
@@ -50,6 +53,7 @@ dataInterimOrganism <- dataCleanedOriginalOrganism %>%
     replacement = "",
   ))
 
+log_debug("      Cleaned up")
 dataInterimOrganism$organismInterim <-
   gsub(
     pattern = ".",
@@ -83,89 +87,30 @@ dataInterimOrganismToFill$organismInterim <- gsub(
   fixed = TRUE
 )
 
-## replacing tcm names
-a <- paste("\\b", tcmNamesDic$vernacularName, "\\b", sep = "")
-b <- tcmNamesDic$canonicalName
-X <- 1:nrow(dataInterimOrganismToFill)
 
-replaceTCMNames <- function(X) {
-  dataInterimOrganismToFill$organismInterim[X] <-
-    stri_replace_all_regex(
-      str = dataInterimOrganismToFill$organismInterim[X],
-      pattern = a,
-      replacement = b,
-      case_insensitive = TRUE,
-      vectorize_all = FALSE
-    )
-}
 
-dataInterimOrganismToFill$organismInterim <- pbmclapply(
-  FUN = replaceTCMNames,
-  X = X,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
-  mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
-)
-
-## replacing tcm names (2nd)
+## replacing names
 tcmNamesDic2 <- tcmNamesDic %>%
   filter(canonicalName != newCanonicalName)
 
-c <-
-  paste("\\b", tcmNamesDic2$canonicalName, "\\b", sep = "")
-d <- tcmNamesDic2$newCanonicalName
+log_debug("      Ready to replace")
 
-replaceTCMNames2 <- function(X) {
-  dataInterimOrganismToFill$organismInterim[X] <-
-    stri_replace_all_regex(
-      str = dataInterimOrganismToFill$organismInterim[X],
-      pattern = c,
-      replacement = d,
-      case_insensitive = TRUE,
-      vectorize_all = FALSE
-    )
+replaceCommonNames <- function(value) {
+  stri_replace_all_fixed(
+    str_trim(value),
+    c(commonNamesDic$vernacularName, tcmNamesDic$vernacularName, tcmNamesDic2$canonicalName),
+    c(commonNamesDic$canonicalName, tcmNamesDic$canonicalName, tcmNamesDic2$newCanonicalName),
+    case_insensitive = TRUE,
+    vectorize_all = FALSE
+  )
 }
 
-dataInterimOrganismToFill$organismInterim <- pbmclapply(
-  FUN = replaceTCMNames2,
-  X = X,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
-  mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
-)
-
-## replacing common names
-e <- paste("\\b", commonNamesDic$vernacularName, "\\b", sep = "")
-f <- commonNamesDic$canonicalName
-
-replaceCommonNames <- function(X) {
-  dataInterimOrganismToFill$organismInterim[X] <-
-    stri_replace_all_regex(
-      str = dataInterimOrganismToFill$organismInterim[X],
-      pattern = e,
-      replacement = f,
-      case_insensitive = TRUE,
-      vectorize_all = FALSE
-    )
-}
-
-dataInterimOrganismToFill$organismInterim <- pbmclapply(
+dataInterimOrganismToFill$organismInterim <- lapply(
   FUN = replaceCommonNames,
-  X = X,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
-  mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  X = dataInterimOrganismToFill$organismInterim,
 )
 
+log_debug("       Finished replacing the common names")
 dataInterimOrganismToFill$organismInterim <-
   as.character(dataInterimOrganismToFill$organismInterim)
 
@@ -180,7 +125,7 @@ dataInterimOrganismToFillGnfinder <- dataInterimOrganismToFill %>%
   mutate_all(as.character) %>%
   filter(!is.na(organismInterim)) %>%
   select(organismInterim)
-
+log_debug("     Exporting")
 # exporting
 split_data_table(
   x = dataInterimOrganismToFillGnfinder,

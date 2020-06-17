@@ -9,5 +9,6 @@ settings.json
 **/0_initial_files/
 *.log
 *~
+bin/gnfinder
 ci_env
 default.profraw

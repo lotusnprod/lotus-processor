@@ -2,6 +2,7 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
 library(dplyr)
 library(pbmcapply)
@@ -36,7 +37,7 @@ extracted_elements <- invisible(
     FUN = getalkamid,
     X = X,
     mc.silent = FALSE,
-    mc.cores = 8,
+    mc.cores = numCores,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE
   )
