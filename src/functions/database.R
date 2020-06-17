@@ -6,7 +6,23 @@
 #' @field name Name of the database
 #' @field sourceFile The source file of the database
 #' @field interimFile The transformed file of the database
-Database <- setRefClass("Database", fields = list(name = "character", sourceFile = "character", interimFile = "character"))
+Database <- setRefClass("Database", fields = list(name = "character", sourceFiles = "list", interimFile = "character"),
+                        methods = list(
+                          writeInterim = function (data) {
+                            write.table(
+                              x = data,
+                              file = gzfile(
+                                description = interimFile,
+                                compression = 9,
+                                encoding = "UTF-8"
+                              ),
+                              row.names = FALSE,
+                              quote = FALSE,
+                              sep = "\t",
+                              fileEncoding = "UTF-8"
+                            )
+                          }
+                        ))
 
 #' A container for databases
 #'
@@ -25,9 +41,10 @@ Databases <- setRefClass("Databases", fields = list(pathDbSource = "character", 
                            #' @param name Name of the database
                            #' @param sourceFile Name of the source file (without path)
                            #' @param interimFile Name of the interim file (without path)
-                           add = function (name, sourceFile, interimFile) {
+                           add = function (name, sourceFiles, interimFile) {
                              .self$paths[[name]] = Database$new(name = name,
-                                                                sourceFile = file.path(pathDbSource, file.path(name, sourceFile)),
+                                                                sourceFiles = lapply(sourceFiles,
+                                                                                    function(path) file.path(pathDbSource, file.path(name, path))),
                                                                 interimFile = file.path(pathDbInterim, interimFile))
                            },
                            get = function (name) {

@@ -31,22 +31,8 @@ pathDataInterimDb <-
 
 databases <- Databases$new(pathDbSource=pathDataExternalDbSource, pathDbInterim=pathDataInterimDb)
 
-databases$add(name="afrotryp", sourceFile="afrotryp.tsv.zip", interimFile="afrotryp.tsv.zip")
-
-##### alkamid
-pathDataExternalDbSourceAlkamid <-
-  file.path(pathDataExternalDbSource,
-            "alkamid")
-
-###### original
-pathDataExternalDbSourceAlkamidOriginal <-
-  file.path(pathDataExternalDbSourceAlkamid,
-            "alkamidScraped.tsv.zip")
-
-###### ref
-pathDataExternalDbSourceAlkamidRef <-
-  file.path(pathDataExternalDbSourceAlkamid,
-            "alkamidRefScraped.tsv.zip")
+databases$add(name="afrotryp", sourceFiles=list(tsv="afrotryp.tsv.zip"), interimFile="afrotryp.tsv.zip")
+databases$add(name="alkamid", sourceFiles=list(tsv="alkamidScraped.tsv.zip", tsvRef="alkamidRefScraped.tsv.zip"), interimFile="alkamid.tsv.zip")
 
 ##### biofacquim
 pathDataExternalDbSourceBiofacquim <-
@@ -672,10 +658,6 @@ pathDataInterimDbDir <-
                            "/*.tsv.zip",
                            sep = "")))
 
-##### alkamid
-pathDataInterimDbAlkamid <-
-  file.path(pathDataInterimDb,
-            "alkamid.tsv.zip")
 
 ##### biofacquim
 pathDataInterimDbBiofacquim <-
