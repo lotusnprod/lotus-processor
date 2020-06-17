@@ -22,7 +22,7 @@ db_loader <- function(path_to_db) {
     escape_double = FALSE,
     trim_ws = TRUE
   )
-  return(db)
+  return(db)()
 }
 
 #######################################################
@@ -38,7 +38,7 @@ shift <- function(x, n) {
 split_data_table <-
   function(x, no_rows_per_frame, text, path_to_store) {
     split_vec <- seq(1, nrow(x), no_rows_per_frame)
-    
+
     for (split_cut in split_vec) {
       sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
       write.table(
