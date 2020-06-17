@@ -7,7 +7,6 @@ Created on Fri Feb 14 16:08:34 2020
 """
 
 ## importing packages 
-from __future__ import print_function
 from rdkit import Chem
 import pandas as pd
 import numpy as np
@@ -25,23 +24,23 @@ try:
     input_file_path = sys.argv[1]
     ouput_file_path = sys.argv[2]
     inchi_column_header = sys.argv[3]
-    
-    print('Parsing tab separated file' 
+
+    print('Parsing tab separated file'
           + input_file_path 
           + 'with column: '
           + inchi_column_header
           + 'as InChI column.'
-          + 'Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :' 
+          + 'Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :'
           + ouput_file_path)
 except:
-    print('Please add input and output file path as first and second argument and SMILES and InChI column header as third and forth argument.')    
+    print('Please add input and output file path as first and second argument and SMILES and InChI column header as third and forth argument.')
 
 ## Loading the df with inchi columns 
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
-	myZip, 
-	sep = '\t') 
+	myZip,
+	sep = '\t')
 
 ## eventually filter display some info, comment according to your needs
 #df = df[df['originaldb'] == 'tcm']
@@ -62,11 +61,11 @@ uc = Uncharger()
 # we generate ROMol object from smiles and or inchi
 df['ROMol'] = df[inchi_column_header].map(Chem.MolFromInchi)
 
-# we eventually remove rows were no ROMol pobject was generated 
+# we eventually remove rows were no ROMol pobject was generated
 df = df[~df['ROMol'].isnull()]
 
-## and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns. 
-# Note that these are sequentially applied 
+## and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
+# Note that these are sequentially applied
 df['validatorLog'] = df['ROMol'].apply(validator.validate)
 df['ROMolSanitized'] = df['ROMol'].apply(s.standardize)
 #df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.choose)
@@ -83,7 +82,7 @@ df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.M
 if  df['inchiSanitized'] == None.any():
   print( e + df['ROMolSanitizedLargestFragmentUncharged'])
 
-df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.MolToInchiKey) 
+df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.MolToInchiKey)
 if  df['inchikeySanitized'] == None.any():
   print( e + df['ROMolSanitizedLargestFragmentUncharged'])
 
@@ -91,14 +90,14 @@ if  df['inchikeySanitized'] == None.any():
 df['smilesSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToSmiles)
 print(df['ROMolSanitized'])
 df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchi)
-df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchiKey) 
+df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchiKey)
 >>>>>>> origin/pma_repo_minimizing:src/04_structureSanitizer/04_structureSanitizer.py
 df['shortikSanitized'] = df['inchikeySanitized'].str.split("-", n = 1, expand = True)[0]
 
 df['formulaSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(rdMolDescriptors.CalcMolFormula)
 
 df['exactmassSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Descriptors.ExactMolWt)
- 
+
 df['xlogpSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.Crippen.MolLogP)
 
 # outputing final df inofs

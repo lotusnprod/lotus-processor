@@ -6454,27 +6454,7 @@ gnfinder_cleaning <- function(num, organismCol) {
         ".json",
         sep = ""
       )
-  
-  if (organismCol == "organismOriginal")
-    outpath_f <-
-      paste(
-        pathCleanedOrganismOriginalDirTsv,
-        "originalOrganismGnfinderUntil_",
-        num,
-        ".tsv.zip",
-        sep = ""
-      )
-  
-  if (organismCol == "organismInterim")
-    outpath_f <-
-      paste(
-        pathCleanedOrganismTranslatedDirTsv,
-        "translatedOrganismGnfinderUntil_",
-        num,
-        ".tsv.zip",
-        sep = ""
-      )
-  
+    
   gnfound <- data.frame(fromJSON(txt = inpath_gnfinder_f,
                                  simplifyDataFrame = TRUE))
   
