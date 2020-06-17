@@ -12,7 +12,7 @@ database <- databases$get("afrotryp")
 
 # files
 data_original <- read_delim(
-  file = database$sourceFile,
+  file = unz(database$sourceFiles$tsv, "AFROTRYP.tsv"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -39,15 +39,5 @@ data_standard <-
                          structure_field = "name")
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = database$interimFile,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+
+database$writeInterim(data_standard)

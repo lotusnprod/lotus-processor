@@ -1,3 +1,12 @@
+DATA_PATH ?= ${PWD}/data
+
+INTERIM_PATH = ${DATA_PATH}/interim/db
+SOURCE_PATH = ${DATA_PATH}/external/dbSource
+
+AFROTRYP_SOURCE_PATH = ${SOURCE_PATH}/afrotryp
+ALKAMID_SOURCE_PATH = ${SOURCE_PATH}/alkamid
+
+
 .PHONY: help docker-build docker-bash databases afrotryp
 
 help:
@@ -13,9 +22,14 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp
+databases: afrotryp alkamid
 
-afrotryp: ${DATA_PATH}/interim/db/afrotryp.tsv.zip
+afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
 ${DATA_PATH}/interim/db/afrotryp.tsv.zip: ${DATA_PATH}/external/dbSource/afrotryp/afrotryp.tsv.zip
 	cd src &&	Rscript 1_gathering/db/afrotryp/standardizing.R
+
+alkamid: ${INTERIM_PATH}/alkamid.tsv.zip
+
+${DATA_PATH}/interim/db/alkamid.tsv.zip: ${ALKAMID_SOURCE_PATH}/alkamidRefScraped.tsv.zip ${ALKAMID_SOURCE_PATH}/alkamidRefScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/alkamid/standardizing.R
