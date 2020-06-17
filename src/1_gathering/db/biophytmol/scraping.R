@@ -3,8 +3,15 @@
 # loading paths
 source("paths.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("biophytmol")
 
 url <-
   'http://crdd.osdd.net/servers/biophytmol/search-biophytmol.php?compound_id='
@@ -70,15 +77,4 @@ BIOPHYTMOL_4 <- BIOPHYTMOL_3 %>%
          reference)
 
 # exporting
-write.table(
-  x = BIOPHYTMOL_4,
-  file = gzfile(
-    description = pathDataExternalDbSourceBiophytmolOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, BIOPHYTMOL_4)

@@ -19,4 +19,4 @@ sdf_frame = PandasTools.LoadSDF(my_sdf_file,
                                 includeFingerprints = False)
 
 #exporting
-sdf_frame.to_csv('../data/external/dbSource/COCONUT/0_initial_files/coconutCompiled.tsv.zip', compression = 'gzip', sep = '\t')
+sdf_frame.to_csv('../data/external/dbSource/COCONUT/0_initial_files/coconutConverted.tsv.zip', compression = 'gzip', sep = '\t')

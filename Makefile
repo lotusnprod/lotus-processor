@@ -5,9 +5,14 @@ SOURCE_PATH = ${DATA_PATH}/external/dbSource
 
 AFROTRYP_SOURCE_PATH = ${SOURCE_PATH}/afrotryp
 ALKAMID_SOURCE_PATH = ${SOURCE_PATH}/alkamid
+BIOFACQUIM_SOURCE_PATH = ${SOURCE_PATH}/biofacquim
+BIOPHYTMOL_SOURCE_PATH = ${SOURCE_PATH}/biophytmol
+CAROTENOIDDB_SOURCE_PATH = ${SOURCE_PATH}/carotenoiddb
+CMAUP_SOURCE_PATH = ${SOURCE_PATH}/cmaup
+COCONUT_SOURCE_PATH = ${SOURCE_PATH}/coconut
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut
 
 help:
 	@echo "Builder"
@@ -22,19 +27,52 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut
 
-databases-rescrape: alkamid-rescrape
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
-${DATA_PATH}/interim/db/afrotryp.tsv.zip: ${DATA_PATH}/external/dbSource/afrotryp/afrotryp.tsv.zip
+${DATA_PATH}/interim/db/afrotryp.tsv.zip: ${AFROTRYP_SOURCE_PATH}/afrotryp.tsv.zip
 	cd src &&	Rscript 1_gathering/db/afrotryp/standardizing.R
 
 alkamid: ${INTERIM_PATH}/alkamid.tsv.zip
 
-${DATA_PATH}/interim/db/alkamid.tsv.zip: ${ALKAMID_SOURCE_PATH}/alkamidRefScraped.tsv.zip ${ALKAMID_SOURCE_PATH}/alkamidRefScraped.tsv.zip
+${DATA_PATH}/interim/db/alkamid.tsv.zip: ${ALKAMID_SOURCE_PATH}/alkamidRefScraped.tsv.zip ${ALKAMID_SOURCE_PATH}/alkamidScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/alkamid/standardizing.R
 
 alkamid-rescrape:
 	cd src && Rscript 1_gathering/db/alkamid/scraping.R
+
+biofacquim: ${INTERIM_PATH}/biofacquim.tsv.zip
+
+${DATA_PATH}/interim/db/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/apps_database_csv_BIOFACQUIM.csv
+	cd src &&	Rscript 1_gathering/db/biofacquim/standardizing.R
+
+biophytmol: ${INTERIM_PATH}/biophytmol.tsv.zip
+
+${DATA_PATH}/interim/db/biophytmol.tsv.zip: ${BIOPHYTMOL_SOURCE_PATH}/biophytmolScraped.tsv.zip 
+	cd src &&	Rscript 1_gathering/db/biophytmol/standardizing.R
+
+biophytmol-rescrape:
+	cd src && Rscript 1_gathering/db/biophytmol/scraping.R
+
+carotenoiddb: ${INTERIM_PATH}/carotenoiddb.tsv.zip
+
+${DATA_PATH}/interim/db/carotenoiddb.tsv.zip: ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip ${CAROTENOIDDB_SOURCE_PATH}/Carotenoids_InChI_InChIKey.tsv
+	cd src &&	Rscript 1_gathering/db/carotenoiddb/standardizing.R
+
+carotenoiddb-rescrape:
+	cd src && Rscript 1_gathering/db/carotenoiddb/scraping.R
+
+cmaup: ${INTERIM_PATH}/cmaup.tsv.zip
+
+${DATA_PATH}/interim/db/cmaup.tsv.zip: ${CMAUP_SOURCE_PATH}/CMAUPv1.0_download_Ingredients_All.txt ${CMAUP_SOURCE_PATH}/CMAUPv1.0_download_Plants.txt ${CMAUP_SOURCE_PATH}/CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt
+	cd src &&	Rscript 1_gathering/db/cmaup/standardizing.R
+
+# maybe not the right way to do it
+coconut: ${INTERIM_PATH}/coconut.tsv.zip
+
+${DATA_PATH}/interim/db/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip
+	cd src &&	python 1_gathering/db/coconut/converting.py  && Rscript 1_gathering/db/coconut/standardizing.R
+
