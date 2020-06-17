@@ -5,7 +5,6 @@
 
 # loading packages
 
-from __future__ import print_function
 from rdkit import Chem
 import pandas as pd
 import gzip
