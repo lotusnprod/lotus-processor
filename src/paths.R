@@ -2,6 +2,8 @@
 ######################   Paths   ######################
 #######################################################
 
+source("functions/database.R")
+
 # root
 ## data
 pathData <- Sys.getenv("DATA_PATH", unset="../data")
@@ -16,15 +18,20 @@ pathDataExternalDbSource <-
   file.path(pathDataExternal,
             "dbSource")
 
-##### afrotryp
-pathDataExternalDbSourceAfrotryp <-
-  file.path(pathDataExternalDbSource,
-            "afrotryp")
+### interim
+pathDataInterim <-
+  file.path(pathData,
+            "interim")
 
-###### original
-pathDataExternalDbSourceAfrotrypOriginal <-
-  file.path(pathDataExternalDbSourceAfrotryp,
-            "afrotryp.tsv.zip")
+#### db
+pathDataInterimDb <-
+  file.path(pathDataInterim,
+            "db")
+
+
+databases <- Databases$new(pathDbSource=pathDataExternalDbSource, pathDbInterim=pathDataInterimDb)
+
+databases$add(name="afrotryp", sourceFile="afrotryp.tsv.zip", interimFile="afrotryp.tsv.zip")
 
 ##### alkamid
 pathDataExternalDbSourceAlkamid <-
@@ -659,26 +666,11 @@ pathDataExternalTranslationSourceTcmCmba <-
     "Chinese-Medicine-Board---List---Nomenclature-list-of-commonly-used-Chinese-herbal-medicines.XLSX"
   )
 
-### interim
-pathDataInterim <-
-  file.path(pathData,
-            "interim")
-
-#### db
-pathDataInterimDb <-
-  file.path(pathDataInterim,
-            "db")
-
 #### dir
 pathDataInterimDbDir <-
   Sys.glob(file.path(paste(pathDataInterimDb,
                            "/*.tsv.zip",
                            sep = "")))
-
-##### afrotryp
-pathDataInterimDbAfrotryp <-
-  file.path(pathDataInterimDb,
-            "afrotryp.tsv.zip")
 
 ##### alkamid
 pathDataInterimDbAlkamid <-

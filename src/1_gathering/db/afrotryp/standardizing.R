@@ -2,13 +2,17 @@
 
 # loading paths
 source("paths.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+
+# get paths
+database <- databases$get("afrotryp")
 
 # files
 data_original <- read_delim(
-  file = pathDataExternalDbSourceAfrotrypOriginal,
+  file = database$sourceFile,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -38,7 +42,7 @@ data_standard <-
 write.table(
   x = data_standard,
   file = gzfile(
-    description = pathDataInterimDbAfrotryp,
+    description = database$interimFile,
     compression = 9,
     encoding = "UTF-8"
   ),
