@@ -4,7 +4,7 @@
 source("paths.R")
 
 # loading functions
-source("functions.R")
+source("functions/reference.R")
 
 # loading files
 dataTranslated <- read_delim(
