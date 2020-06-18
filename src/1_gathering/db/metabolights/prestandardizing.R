@@ -2,11 +2,19 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+library(XML)
 
-data <- xmlParse(pathDataExternalDbSourceMetabolightsComplete)
+# get paths
+database <- databases$get("metabolights")
+
+data <- xmlParse(database$sourceFiles$xmlComplete)
 
 xml_data <- xmlToList(data)
 

@@ -2,11 +2,15 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(XML)
 
-data <- xmlParse(pathDataExternalDbSourceMetabolightsStudies)
+# get paths
+database <- databases$get("metabolights")
+
+
+data <- xmlParse(database$sourceFiles$xmlStudies)
 
 xml_data <- xmlToList(data)
 
@@ -14,7 +18,7 @@ n <- length(xml_data[["entries"]][[1]])
 df <-
   structure(xml_data[["entries"]], row.names = c(NA, -n), class = "data.frame")
 
-entries <- as.data.frame(unlist(df[3,]))
+entries <- as.data.frame(unlist(df[3, ]))
 
 entries_filtered <- entries %>%
   filter(grepl("MTBLC", `unlist(df[3, ])`)) %>%

@@ -107,4 +107,3 @@ data_standard <-
 
 # exporting
 database$writeInterim(data_standard)
-

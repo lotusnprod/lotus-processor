@@ -2,9 +2,17 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(jsonlite)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("metabolights")
 
 files <-
   dir(path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,

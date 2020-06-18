@@ -152,37 +152,22 @@ databases$add(
   interimFile = "knapsack.tsv.zip"
 )
 
-##### metabolights
-pathDataExternalDbSourceMetabolights <-
-  file.path(pathDataExternalDbSource,
-            "metabolights")
+databases$add(
+  name = "metabolights",
+  sourceFiles = list(xmlComplete = "eb-eye_metabolights_complete.xml",
+                     xmlStudies = "eb-eye_metabolights_studies.xml",
+                     tsvPrecleaned = "metabolightsPrecleaned.tsv.zip",
+                     tsvStudies = "metabolightsStudiesScraped.tsv.zip"
+                     ),
+  interimFile = "metabolights.tsv.zip"
+)
 
 ###### COMMENT Not clean #######
-
-###### complete
-pathDataExternalDbSourceMetabolightsComplete <-
-  file.path(pathDataExternalDbSourceMetabolights,
-            "eb-eye_metabolights_complete.xml")
-
-###### studies
-pathDataExternalDbSourceMetabolightsStudies <-
-  file.path(pathDataExternalDbSourceMetabolights,
-            "eb-eye_metabolights_studies.xml")
 
 ###### studies scraped directory
 pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
   file.path(pathDataExternalDbSourceMetabolights,
             "studiesScraped")
-
-###### precleaned
-pathDataExternalDbSourceMetabolightsPrecleaned <-
-  file.path(pathDataExternalDbSourceMetabolights,
-            "metabolightsPrecleaned.tsv.zip")
-
-###### studies scraped
-pathDataExternalDbSourceMetabolightsStudiesScraped <-
-  file.path(pathDataExternalDbSourceMetabolights,
-            "metabolightsStudiesScraped.tsv.zip")
 
 ##### mibig
 pathDataExternalDbSourceMibig <-
