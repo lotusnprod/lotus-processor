@@ -89,19 +89,20 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_8_variety,
              .keep_all = TRUE) %>%
-    select(-organismOriginal, -organismCleaned)
-
+    select(-organismOriginal, -organismCleaned, -organismTaxonId)
+  
   variety_fill <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     select(organismOriginal,
            organismCleaned,
+           organismTaxonId,
            organism_8_variety)
-
+  
   variety_full <- left_join(variety_fill, variety)
-
+  
   unvariety <- test %>%
     filter(is.na(organism_8_variety))
-
+  
   species_1 <- rbind(variety_full, unvariety)
 
   species <- test %>%
@@ -141,12 +142,16 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_7_species,
              .keep_all = TRUE) %>%
-    select(-organismOriginal, -organismCleaned)
-
+    select(-organismOriginal,
+           -organismCleaned,
+           -organismTaxonId,
+           -organism_8_variety)
+  
   species_fill <- test %>%
     filter(!is.na(organism_7_species)) %>%
     select(organismOriginal,
            organismCleaned,
+           organismTaxonId,
            organism_8_variety,
            organism_7_species)
 
@@ -191,6 +196,7 @@ taxo_cleaning_auto <- function(dfsel) {
              .keep_all = TRUE) %>%
     select(-organismOriginal,
            -organismCleaned,
+           -organismTaxonId,
            -organism_8_variety,
            -organism_7_species)
 
@@ -199,6 +205,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       organismOriginal,
       organismCleaned,
+      organismTaxonId,
       organism_8_variety,
       organism_7_species,
       organism_6_genus
@@ -241,6 +248,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       -organismOriginal,
       -organismCleaned,
+      -organismTaxonId,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus
@@ -251,6 +259,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       organismOriginal,
       organismCleaned,
+      organismTaxonId,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -290,6 +299,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       -organismOriginal,
       -organismCleaned,
+      -organismTaxonId,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -301,6 +311,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       organismOriginal,
       organismCleaned,
+      organismTaxonId,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -333,6 +344,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       -organismOriginal,
       -organismCleaned,
+      -organismTaxonId,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -346,6 +358,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       organismOriginal,
       organismCleaned,
+      organismTaxonId,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -378,6 +391,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       -organismOriginal,
       -organismCleaned,
+      -organismTaxonId,
       -organism_8_variety,
       -organism_7_species,
       -organism_6_genus,
@@ -391,6 +405,7 @@ taxo_cleaning_auto <- function(dfsel) {
     select(
       organismOriginal,
       organismCleaned,
+      organismTaxonId,
       organism_8_variety,
       organism_7_species,
       organism_6_genus,
@@ -405,7 +420,10 @@ taxo_cleaning_auto <- function(dfsel) {
   unphylum <- phylum_1 %>%
     filter(is.na(organism_2_phylum))
 
-  kingdom_1 <- rbind(phylum_full, variety_full)
+  variety_tojoin <- variety_full %>% 
+    select(everything())
+  
+  kingdom_1 <- rbind(phylum_full, unphylum)
 
   kingdom_tojoin <- kingdom_1 %>%
     select(-organismOriginal)
