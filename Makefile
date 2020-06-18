@@ -16,9 +16,11 @@ DRDUKE_SOURCE_PATH = ${SOURCE_PATH}/drduke
 ETCM_SOURCE_PATH = ${SOURCE_PATH}/etcm
 FOODB_SOURCE_PATH = ${SOURCE_PATH}/foodb
 INFLAMNAT_SOURCE_PATH = ${SOURCE_PATH}/inflamnat
+KNAPSACK_SOURCE_PATH = ${SOURCE_PATH}/knapsack
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat
+
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -38,9 +40,9 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack
 
-databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
@@ -116,6 +118,14 @@ inflamnat: ${INTERIM_PATH}/inflamnat.tsv.zip
 
 ${DATA_PATH}/interim/db/inflamnat.tsv.zip: ${INFLAMNAT_SOURCE_PATH}/ci8b00560_si_001.xlsx
 	cd src &&	Rscript 1_gathering/db/inflamnat/standardizing.R
+
+knapsack: ${INTERIM_PATH}/carotenoiddb.tsv.zip
+
+${DATA_PATH}/interim/db/knapsack.tsv.zip: ${KNAPSACK_SOURCE_PATH}/knapsackScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/knapsack/standardizing.R
+
+knapsack-rescrape:
+	cd src && Rscript 1_gathering/db/knapsack/scraping.R
 
 curating: curating-integrating curating-editing
 
