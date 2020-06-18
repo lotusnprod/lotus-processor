@@ -1,4 +1,7 @@
 gnfinder_cleaning <- function(num, organismCol) {
+  
+  source("2_curating/2_editing/bio/functions/biocleaning.R")
+  
   if (organismCol == "organismOriginal") {
     inpath_organism_f <- paste(
       pathOriginalOrganismDistinct,

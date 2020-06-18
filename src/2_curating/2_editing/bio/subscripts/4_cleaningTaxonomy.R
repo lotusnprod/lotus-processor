@@ -6,8 +6,6 @@ source("paths.R")
 # loading functions
 #source("functions/bio.R")
 
-#######################################################
-#######################################################
 log_debug(" Step 4")
 
 taxo_cleaning_auto <- function(dfsel) {
