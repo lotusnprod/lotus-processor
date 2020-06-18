@@ -13,6 +13,7 @@ COCONUT_SOURCE_PATH = ${SOURCE_PATH}/coconut
 
 
 .PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut
+.PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
 	@echo "Builder"
@@ -20,6 +21,10 @@ help:
 	@echo ""
 	@echo "docker-build: build the docker image (with no data)"
 	@echo "docker-bash: run a shell into the docker image"
+	@echo "databases: build the databases (no scraping)"
+	@echo "databases-rescrape: rescrape the databases (when possible)"
+	@echo ""
+	@echo "curating: Run the 2_curating scripts"
 
 docker-build:
 	docker build -t onpdb-environment .
@@ -76,3 +81,12 @@ coconut: ${INTERIM_PATH}/coconut.tsv.zip
 ${DATA_PATH}/interim/db/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip
 	cd src &&	python 1_gathering/db/coconut/converting.py  && Rscript 1_gathering/db/coconut/standardizing.R
 
+curating: curating-integrating curating-editing
+
+curating-integrating:
+	cd src && Rscript 2_curating/1_integrating/integratingOriginalDatabase.R
+
+curating-editing:  curating-editing-bio
+
+curating-editing-bio:
+	cd src && Rscript 2_curating/2_editing/bio/editing.R

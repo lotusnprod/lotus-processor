@@ -3,8 +3,10 @@
 # loading paths
 source("paths.R")
 
-# loading functions
-source("functions.R")
+source("functions/helpers.R")
+
+library(data.table)
+library(dplyr)
 
 # loading files
 dbs <- lapply(pathDataInterimDbDir, function(x) {
