@@ -105,8 +105,7 @@ ${DATA_PATH}/interim/db/drduke.tsv.zip: ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/CO
 	cd src &&	Rscript 1_gathering/db/drduke/standardizing.R
 
 etcm: ${INTERIM_PATH}/etcm.tsv.zip
-# DO NOT KNOW HOW TO DO IT (all files in folder), source folder?
-${DATA_PATH}/interim/db/etcm.tsv.zip: ${ETCM_SOURCE_PATH}...
+${DATA_PATH}/interim/db/etcm.tsv.zip: $(wildcard ${ETCM_SOURCE_PATH}data/*.csv)
 	cd src &&	Rscript 1_gathering/db/etcm/standardizing.R
 
 foodb: ${INTERIM_PATH}/foodb.tsv.zip

@@ -107,7 +107,7 @@ databases$add(
   interimFile = "drduke.tsv.zip"
 )
 
-# COMMENT not sure about those lines
+# COMMENT not sure about how clean those lines are
 ##### etcm
 pathDataExternalDbSourceEtcm <-
   file.path(pathDataExternalDbSource,
