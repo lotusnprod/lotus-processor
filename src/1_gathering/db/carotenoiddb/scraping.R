@@ -6,9 +6,12 @@ source("paths.R")
 # loading functions
 source("functions.R")
 
+# get paths
+database <- databases$get("carotenoiddb")
+
 ## files
 ids <- read_delim(
-  file = pathDataExternalDbSourceCarotenoiddbInchikey,
+  file = database$sourceFiles$tsvInchi,
   delim = "\t",
   escape_double = FALSE,
   col_names = FALSE,
@@ -78,15 +81,4 @@ CAROTENOIDDB_3[] <-
     gsub("\n", " ", x))
 
 # exporting
-write.table(
-  x = CAROTENOIDDB_3,
-  file = gzfile(
-    description = pathDataExternalDbSourceCarotenoiddbOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, CAROTENOIDDB_3)

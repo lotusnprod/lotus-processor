@@ -105,9 +105,14 @@ replaceCommonNames <- function(value) {
   )
 }
 
-dataInterimOrganismToFill$organismInterim <- lapply(
+dataInterimOrganismToFill$organismInterim <- mclapply(
   FUN = replaceCommonNames,
   X = dataInterimOrganismToFill$organismInterim,
+  mc.set.seed = TRUE,
+  mc.silent = FALSE,
+  mc.cores = numCores,
+  mc.cleanup = TRUE,
+  mc.allow.recursive = TRUE
 )
 
 log_debug("       Finished replacing the common names")

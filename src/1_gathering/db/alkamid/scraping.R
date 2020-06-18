@@ -24,12 +24,13 @@ getalkamid <- function(X)
   url_id <- paste(url, cd_id, "&typegroup=genusgroup")
   url_id <- gsub("\\s", "", url_id)
   html <- read_html(url_id) %>% html_node("body")
-  data <- html %>% html_node(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div") %>% html_text()
+  data <-
+    html %>% html_node(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div") %>% html_text()
   ref <- html %>%
     html_node(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div[8]/div[2]/table") %>%
     html_table() %>%
     mutate_all(as.character)
-  list(data=data, ref=ref)
+  list(data = data, ref = ref)
 }
 
 extracted_elements <- invisible(
@@ -43,12 +44,16 @@ extracted_elements <- invisible(
   )
 )
 
-ALKAMID = lapply(extracted_elements, function (x) { x$data }) %>%
+ALKAMID = lapply(extracted_elements, function (x) {
+  x$data
+}) %>%
   as.data.table() %>%
   t() %>%
   cSplit("V1", "\n")
 
-ALKAMID_REF = lapply(extracted_elements, function (x) { x$ref })
+ALKAMID_REF = lapply(extracted_elements, function (x) {
+  x$ref
+})
 ALKAMID_REF_2 <- ALKAMID_REF[!is.na(ALKAMID_REF)]
 ALKAMID_REF_3 <- bind_rows(ALKAMID_REF_2, .id = "entry_id")
 
