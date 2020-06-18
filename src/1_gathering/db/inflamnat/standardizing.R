@@ -2,13 +2,21 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(readxl)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("inflamnat")
 
 ## files
 data_original <-
-  read_excel(pathDataExternalDbSourceInflamnatOriginal,
+  read_excel(path = database$sourceFiles$tsv,
              sheet = 1) %>%
   mutate_all(as.character)
 
@@ -32,15 +40,5 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbInflamnat,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)
+

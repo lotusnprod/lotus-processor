@@ -15,9 +15,10 @@ DNP_SOURCE_PATH = ${SOURCE_PATH}/dnp
 DRDUKE_SOURCE_PATH = ${SOURCE_PATH}/drduke
 ETCM_SOURCE_PATH = ${SOURCE_PATH}/etcm
 FOODB_SOURCE_PATH = ${SOURCE_PATH}/foodb
+INFLAMNAT_SOURCE_PATH = ${SOURCE_PATH}/inflamnat
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -37,7 +38,7 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat
 
 databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape
 
@@ -110,6 +111,11 @@ foodb: ${INTERIM_PATH}/foodb.tsv.zip
 
 ${DATA_PATH}/interim/db/foodb.tsv.zip: ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/CompoundsFlavor_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Compound_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Content.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Flavor.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Food_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Reference.csv
 	cd src &&	Rscript 1_gathering/db/foodb/standardizing.R
+
+inflamnat: ${INTERIM_PATH}/inflamnat.tsv.zip
+
+${DATA_PATH}/interim/db/inflamnat.tsv.zip: ${INFLAMNAT_SOURCE_PATH}/ci8b00560_si_001.xlsx
+	cd src &&	Rscript 1_gathering/db/inflamnat/standardizing.R
 
 curating: curating-integrating curating-editing
 
