@@ -2,6 +2,7 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
 library(dplyr)
 library(pbmcapply)

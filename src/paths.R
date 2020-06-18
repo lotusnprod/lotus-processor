@@ -83,102 +83,60 @@ databases$add(
   interimFile = "coconut.tsv.zip"
 )
 
-##### cyanometdb
-pathDataExternalDbSourceCyanometdb <-
-  file.path(pathDataExternalDbSource,
-            "cyanometdb")
+databases$add(
+  name = "cyanometdb",
+  sourceFiles = list(tsv = "media-1.csv"),
+  interimFile = "cyanometdb.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceCyanometdbOriginal <-
-  file.path(pathDataExternalDbSourceCyanometdb,
-            "media-1.tsv.zip")
-
-##### dnp
-pathDataExternalDbSourceDnp <-
-  file.path(pathDataExternalDbSource,
-            "dnp")
+databases$add(
+  name = "dnp",
+  sourceFiles = list(tsv = "28_2/full_set.csv"),
+  interimFile = "dnp.tsv.zip"
+)
 
 ###### COMMENT THERE ARE SCRIPTS IN DNP DATA FOLDER #######
 ###### WE HAVE TO MOVE THEM WHEN UPDATING #######
 
-###### original
-pathDataExternalDbSourceDnpOriginal <-
-  file.path(pathDataExternalDbSourceDnp,
-            "28_2/full_set.csv")
+databases$add(
+  name = "drduke",
+  sourceFiles = list(tsvCommon = "Duke-Source-CSV/COMMON_NAMES.csv",
+                     tsvFarmacy = "Duke-Source-CSV/FARMACY_NEW.csv",
+                     tsvTaxa = "Duke-Source-CSV/FNFTAX.csv",
+                     tsvReference = "Duke-Source-CSV/REFERENCES.csv"),
+  interimFile = "drduke.tsv.zip"
+)
 
-##### drduke
-pathDataExternalDbSourceDrduke <-
-  file.path(pathDataExternalDbSource,
-            "drduke")
-
-###### common names
-pathDataExternalDbSourceDrdukeCommonNames <-
-  file.path(pathDataExternalDbSourceDrduke,
-            "Duke-Source-CSV/COMMON_NAMES.csv")
-
-###### farmacy
-pathDataExternalDbSourceDrdukeFarmacy <-
-  file.path(pathDataExternalDbSourceDrduke,
-            "Duke-Source-CSV/FARMACY_NEW.csv")
-
-###### taxa
-pathDataExternalDbSourceDrdukeTaxa <-
-  file.path(pathDataExternalDbSourceDrduke,
-            "Duke-Source-CSV/FNFTAX.csv")
-
-###### references
-pathDataExternalDbSourceDrdukeReferences <-
-  file.path(pathDataExternalDbSourceDrduke,
-            "Duke-Source-CSV/REFERENCES.csv")
-
+# COMMENT not sure about those lines
 ##### etcm
 pathDataExternalDbSourceEtcm <-
   file.path(pathDataExternalDbSource,
             "etcm")
 
-###### original
-pathDataExternalDbSourceEtcmOriginal <-
-  list.files(
+# COMMENT DO NOT KNOW HOW TO DO
+databases$add(
+  name = "etcm",
+  sourceFiles = list(tsvPath = list.files(
     path = file.path(pathDataExternalDbSourceEtcm,
                      "data/"),
     pattern = "*.csv",
     full.names = TRUE
-  )
+  )),
+  interimFile = "etcm.tsv.zip"
+)
 
-##### foodb
-pathDataExternalDbSourceFoodb <-
-  file.path(pathDataExternalDbSource,
-            "foodb")
-
-###### compounds flavors
-pathDataExternalDbSourceFoodbCompoundsFlavors <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/CompoundsFlavor_copy.csv")
-
-###### compounds
-pathDataExternalDbSourceFoodbCompounds <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/Compound_copy.csv")
-
-###### content
-pathDataExternalDbSourceFoodbContent <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/Content.csv")
-
-###### flavor
-pathDataExternalDbSourceFoodbFlavor <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/Flavor.csv")
-
-###### food
-pathDataExternalDbSourceFoodbFood <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/Food_copy.csv")
-
-###### reference
-pathDataExternalDbSourceFoodbReference <-
-  file.path(pathDataExternalDbSourceFoodb,
-            "foodb_2020_04_07_csv/Reference.csv")
+databases$add(
+  name = "foodb",
+  sourceFiles = list(
+    tsvCompoundsFlavors = "foodb_2020_04_07_csv/CompoundsFlavor_copy.csv",
+    tsvCompounds = "foodb_2020_04_07_csv/Compound_copy.csv",
+    tsvContent = "foodb_2020_04_07_csv/Content.csv",
+    tsvFlavor = "foodb_2020_04_07_csv/Flavor.csv",
+    tsvFood = "foodb_2020_04_07_csv/Food_copy.csv",
+    tsvReference = "foodb_2020_04_07_csv/Reference.csv"
+  ),
+  interimFile = "foodb.tsv.zip"
+)
 
 ##### inflamnat
 pathDataExternalDbSourceInflamnat <-
@@ -587,9 +545,18 @@ pathDataExternalTranslationSourceCommonPhenolexplorer <-
             "foods.csv")
 
 ###### foodb
+pathDataExternalDbSourceFoodb <-
+  file.path(pathDataExternalDbSource,
+            "foodb")
+###### foodb
 pathDataExternalTranslationSourceCommonFoodb <-
   file.path(pathDataExternalDbSourceFoodb,
             "foodb_2020_04_07_csv/Food_copy.csv")
+
+###### drduke
+pathDataExternalDbSourceDrduke <-
+  file.path(pathDataExternalDbSource,
+            "drduke")
 
 ###### drduke
 ####### common

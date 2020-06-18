@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("foodb")
 
 # files
 compounds_flavors <- read_delim(
-  file = pathDataExternalDbSourceFoodbCompoundsFlavors,
+  file = database$sourceFiles$tsvCompoundsFlavors,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -16,7 +23,7 @@ compounds_flavors <- read_delim(
   mutate_all(as.character)
 
 compounds <- read_delim(
-  file = pathDataExternalDbSourceFoodbCompounds,
+  file = database$sourceFiles$tsvCompounds,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -24,7 +31,7 @@ compounds <- read_delim(
   mutate_all(as.character)
 
 contents <- read_delim(
-  file = pathDataExternalDbSourceFoodbContent,
+  file = database$sourceFiles$tsvContent,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -32,7 +39,7 @@ contents <- read_delim(
   mutate_all(as.character)
 
 flavors <- read_delim(
-  file = pathDataExternalDbSourceFoodbFlavor,
+  file = database$sourceFiles$tsvFlavor,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -40,7 +47,7 @@ flavors <- read_delim(
   mutate_all(as.character)
 
 foods <- read_delim(
-  file = pathDataExternalDbSourceFoodbFood,
+  file = database$sourceFiles$tsvFood,
   delim = ",",
   escape_double = TRUE,
   trim_ws = TRUE
@@ -48,7 +55,7 @@ foods <- read_delim(
   mutate_all(as.character)
 
 references <- read_delim(
-  file = pathDataExternalDbSourceFoodbReference,
+  file = tsvReference,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -141,15 +148,4 @@ data_standard <- standardizing_original(
 )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbFoodb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

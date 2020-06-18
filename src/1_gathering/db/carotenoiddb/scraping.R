@@ -2,9 +2,7 @@
 
 # loading paths
 source("paths.R")
-
-# loading functions
-source("functions.R")
+source("functions/parallel.R")
 
 # get paths
 database <- databases$get("carotenoiddb")
