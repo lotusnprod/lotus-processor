@@ -116,11 +116,14 @@ pathDataExternalDbSourceEtcm <-
 # COMMENT DO NOT KNOW HOW TO DO
 databases$add(
   name = "etcm",
-  sourceFiles = list(tsvPath = list.files(
-    path = file.path(pathDataExternalDbSourceEtcm,
-                     "data/"),
-    pattern = "*.csv",
-    full.names = TRUE
+  sourceFiles = list(tsvPath = file.path(
+    "data",
+    list.files(
+      path = file.path(pathDataExternalDbSourceEtcm,
+                       "data"),
+      pattern = "*.csv",
+      full.names = FALSE
+    )
   )),
   interimFile = "etcm.tsv.zip"
 )
@@ -138,15 +141,13 @@ databases$add(
   interimFile = "foodb.tsv.zip"
 )
 
-##### inflamnat
-pathDataExternalDbSourceInflamnat <-
-  file.path(pathDataExternalDbSource,
-            "inflamnat")
+databases$add(
+  name = "inflamnat",
+  sourceFiles = list(tsv = "ci8b00560_si_001.xlsx"),
+  interimFile = "inflamnat.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceInflamnatOriginal <-
-  file.path(pathDataExternalDbSourceInflamnat,
-            "ci8b00560_si_001.xlsx")
+
 
 ##### knapsack
 pathDataExternalDbSourceKnapsack <-

@@ -13,11 +13,9 @@ library(tidyr)
 # get paths
 database <- databases$get("etcm")
 
-###DONT KNOW HOW TO DO
-
 ## files
 data_original <- do.call("rbind",
-                         lapply(databases$sourceFiles$tsvPath,
+                         lapply(database$sourceFiles$tsv,
                                 function(x) {
                                   dat <- read_delim(
                                     file = x,
@@ -37,7 +35,7 @@ data_original$fileName <-
   gsub('tableExport-', '', data_original$fileName)
 
 data_wide <-
-  pivot_wider(data_original, names_from = X, values_from = X.1) %>%
+  pivot_wider(data_original, names_from = X1, values_from = X2) %>%
   select(
     herbid = fileName,
     latin = `Herb Name in Ladin`,
