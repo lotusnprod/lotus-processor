@@ -87,8 +87,6 @@ dataInterimOrganismToFill$organismInterim <- gsub(
   fixed = TRUE
 )
 
-
-
 ## replacing names
 tcmNamesDic2 <- tcmNamesDic %>%
   filter(canonicalName != newCanonicalName)
@@ -98,8 +96,16 @@ log_debug("      Ready to replace")
 replaceCommonNames <- function(value) {
   stri_replace_all_fixed(
     str_trim(value),
-    c(commonNamesDic$vernacularName, tcmNamesDic$vernacularName, tcmNamesDic2$canonicalName),
-    c(commonNamesDic$canonicalName, tcmNamesDic$canonicalName, tcmNamesDic2$newCanonicalName),
+    c(
+      commonNamesDic$vernacularName,
+      tcmNamesDic$vernacularName,
+      tcmNamesDic2$canonicalName
+    ),
+    c(
+      commonNamesDic$canonicalName,
+      tcmNamesDic$canonicalName,
+      tcmNamesDic2$newCanonicalName
+    ),
     case_insensitive = TRUE,
     vectorize_all = FALSE
   )
@@ -131,6 +137,7 @@ dataInterimOrganismToFillGnfinder <- dataInterimOrganismToFill %>%
   filter(!is.na(organismInterim)) %>%
   select(organismInterim)
 log_debug("     Exporting")
+
 # exporting
 split_data_table(
   x = dataInterimOrganismToFillGnfinder,
