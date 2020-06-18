@@ -405,7 +405,7 @@ taxo_cleaning_auto <- function(dfsel) {
   unphylum <- phylum_1 %>%
     filter(is.na(organism_2_phylum))
 
-  kingdom_1 <- rbind(phylum_full, unphylum)
+  kingdom_1 <- rbind(phylum_full, variety_full)
 
   kingdom_tojoin <- kingdom_1 %>%
     select(-organismOriginal)
