@@ -6,7 +6,8 @@ source("functions/database.R")
 
 # root
 ## data
-pathData <- Sys.getenv("DATA_PATH", unset="../data")
+pathData <- Sys.getenv("DATA_PATH",
+                       unset = "../data")
 
 ### external
 pathDataExternal <-
@@ -29,77 +30,58 @@ pathDataInterimDb <-
             "db")
 
 
-databases <- Databases$new(pathDbSource=pathDataExternalDbSource, pathDbInterim=pathDataInterimDb)
+databases <-
+  Databases$new(pathDbSource = pathDataExternalDbSource,
+                pathDbInterim = pathDataInterimDb)
 
-databases$add(name="afrotryp", sourceFiles=list(tsv="afrotryp.tsv.zip"), interimFile="afrotryp.tsv.zip")
-databases$add(name="alkamid", sourceFiles=list(tsv="alkamidScraped.tsv.zip", tsvRef="alkamidRefScraped.tsv.zip"), interimFile="alkamid.tsv.zip")
+databases$add(
+  name = "afrotryp",
+  sourceFiles = list(tsv = "afrotryp.tsv.zip"),
+  interimFile = "afrotryp.tsv.zip"
+)
 
-##### biofacquim
-pathDataExternalDbSourceBiofacquim <-
-  file.path(pathDataExternalDbSource,
-            "biofacquim")
+databases$add(
+  name = "alkamid",
+  sourceFiles = list(tsv = "alkamidScraped.tsv.zip",
+                     tsvRef = "alkamidRefScraped.tsv.zip"),
+  interimFile = "alkamid.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceBiofacquimOriginal <-
-  file.path(pathDataExternalDbSourceBiofacquim,
-            "apps_database_csv_BIOFACQUIM.csv")
+databases$add(
+  name = "biofacquim",
+  sourceFiles = list(tsv = "apps_database_csv_BIOFACQUIM.csv"),
+  interimFile = "biofacquim.tsv.zip"
+)
 
-##### biophytmol
-pathDataExternalDbSourceBiophytmol <-
-  file.path(pathDataExternalDbSource,
-            "biophytmol")
+databases$add(
+  name = "biophytmol",
+  sourceFiles = list(tsv = "biophytmolScraped.tsv.zip"),
+  interimFile = "biophytmol.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceBiophytmolOriginal <-
-  file.path(pathDataExternalDbSourceBiophytmol,
-            "biophytmolScraped.tsv.zip")
+databases$add(
+  name = "carotenoiddb",
+  sourceFiles = list(tsv = "carotenoiddbScraped.tsv.zip",
+                     tsvInchi = "Carotenoids_InChI_InChIKey.tsv"),
+  interimFile = "carotenoiddb.tsv.zip"
+)
 
-##### carotenoiddb
-pathDataExternalDbSourceCarotenoiddb <-
-  file.path(pathDataExternalDbSource,
-            "carotenoiddb")
+databases$add(
+  name = "cmaup",
+  sourceFiles = list(
+    tsvIngredients = "CMAUPv1.0_download_Ingredients_All.txt",
+    tsvPlants = "CMAUPv1.0_download_Plants.txt",
+    tsvAssociations = "CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
+  ),
+  interimFile = "cmaup.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceCarotenoiddbOriginal <-
-  file.path(pathDataExternalDbSourceCarotenoiddb,
-            "carotenoiddbScraped.tsv.zip")
-
-###### inchikey
-pathDataExternalDbSourceCarotenoiddbInchikey <-
-  file.path(pathDataExternalDbSourceCarotenoiddb,
-            "Carotenoids_InChI_InChIKey.tsv")
-
-##### cmaup
-pathDataExternalDbSourceCmaup <-
-  file.path(pathDataExternalDbSource,
-            "cmaup")
-
-###### ingredients
-pathDataExternalDbSourceCmaupIngredients <-
-  file.path(pathDataExternalDbSourceCmaup,
-            "CMAUPv1.0_download_Ingredients_All.txt")
-
-###### plants
-pathDataExternalDbSourceCmaupPlants <-
-  file.path(pathDataExternalDbSourceCmaup,
-            "CMAUPv1.0_download_Plants.txt")
-
-###### associations
-pathDataExternalDbSourceCmaupAssociations <-
-  file.path(
-    pathDataExternalDbSourceCmaup,
-    "CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
-  )
-
-##### coconut
-pathDataExternalDbSourceCoconut <-
-  file.path(pathDataExternalDbSource,
-            "coconut")
-
-###### original
-pathDataExternalDbSourceCoconutOriginal <-
-  file.path(pathDataExternalDbSourceCoconut,
-            "coconutCompiled.tsv.zip")
+databases$add(
+  name = "coconut",
+  sourceFiles = list(sdf = "COCONUT.sdf.zip",
+                     tsv = "coconutConverted.tsv.zip"),
+  interimFile = "coconut.tsv.zip"
+)
 
 ##### cyanometdb
 pathDataExternalDbSourceCyanometdb <-
@@ -1027,7 +1009,7 @@ pathCleanedReference <-
   "../data/interim/tables/2_cleaned/cleanedReference.tsv.zip"
 
 ## organism
-### gnfinder 
+### gnfinder
 #### original
 ##### json dir
 pathCleanedOrganismOriginalDirJson <-

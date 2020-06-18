@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
-
-# loading functions
 source("functions.R")
+source("functions/standardizing.R")
+
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("cmaup")
 
 ## files
 data_original_1 <- read_delim(
-  file = pathDataExternalDbSourceCmaupIngredients,
+  file = database$sourceFiles$tsvIngredients,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE,
@@ -17,7 +24,7 @@ data_original_1 <- read_delim(
   mutate_all(as.character)
 
 data_original_2 <- read_delim(
-  file = pathDataExternalDbSourceCmaupPlants,
+  file = database$sourceFiles$tsvPlants,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -25,7 +32,7 @@ data_original_2 <- read_delim(
   mutate_all(as.character)
 
 data_original_3 <- read_delim(
-  file = pathDataExternalDbSourceCmaupAssociations,
+  file = database$sourceFiles$tsvAssociations,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE,
@@ -93,15 +100,4 @@ data_standard <-
 data_standard$name <- y_as_na(data_standard$name, "n.a.")
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbCmaup,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)
