@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("drduke")
 
 ## files
 data_common <- read_delim(
-  file = pathDataExternalDbSourceDrdukeCommonNames,
+  file = database$sourceFiles$tsvCommon,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -17,7 +24,7 @@ data_common <- read_delim(
   select(FNFNUM, CNNAM)
 
 data_farmacy <- read_delim(
-  file = pathDataExternalDbSourceDrdukeFarmacy,
+  file = database$sourceFiles$tsvFarmacy,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -25,7 +32,7 @@ data_farmacy <- read_delim(
   mutate_all(as.character)
 
 data_fntax <- read_delim(
-  file = pathDataExternalDbSourceDrdukeTaxa,
+  file = database$sourceFiles$tsvTaxa,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -34,7 +41,7 @@ data_fntax <- read_delim(
   select(FNFNUM, TAXON)
 
 data_reference <- read_delim(
-  file = pathDataExternalDbSourceDrdukeReferences,
+  file = database$sourceFiles$tsvReference,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -65,15 +72,4 @@ data_standard <-
                          structure_field = "name")
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbDrduke,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

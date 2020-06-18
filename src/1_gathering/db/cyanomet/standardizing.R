@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("cyanometdb")
 
 ## files
 data_original <- read_delim(
-  file = pathDataExternalDbSourceCyanometdb,
+  file = database$sourceFiles$tsv,
   delim = ",",
   escape_double = TRUE,
   trim_ws = FALSE
@@ -44,15 +51,4 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbCyanometdb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

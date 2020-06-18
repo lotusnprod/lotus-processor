@@ -2,15 +2,30 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("etcm")
+
+###DONT KNOW HOW TO DO
 
 ## files
 data_original <- do.call("rbind",
-                         lapply(pathDataExternalDbSourceEtcmOriginal,
+                         lapply(databases$sourceFiles$tsvPath,
                                 function(x) {
-                                  dat <- read.csv(x, header = TRUE, sep = ",")
+                                  dat <- read_delim(
+                                    file = x,
+                                    delim = ",",
+                                    escape_double = FALSE,
+                                    trim_ws = TRUE
+                                  ) %>%
+                                    mutate_all(as.character)
                                   dat$fileName <-
                                     tools::file_path_sans_ext(basename(x))
                                   dat
@@ -77,15 +92,4 @@ data_standard <-
                          structure_field = "name")
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbEtcm,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

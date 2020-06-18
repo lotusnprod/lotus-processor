@@ -2,7 +2,7 @@
 
 # loading paths
 source("paths.R")
-source("functions.R")
+source("functions/helpers.R")
 source("functions/standardizing.R")
 
 library(dplyr)

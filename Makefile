@@ -10,9 +10,14 @@ BIOPHYTMOL_SOURCE_PATH = ${SOURCE_PATH}/biophytmol
 CAROTENOIDDB_SOURCE_PATH = ${SOURCE_PATH}/carotenoiddb
 CMAUP_SOURCE_PATH = ${SOURCE_PATH}/cmaup
 COCONUT_SOURCE_PATH = ${SOURCE_PATH}/coconut
+CYANOMETDB_SOURCE_PATH = ${SOURCE_PATH}/cyanometdb
+DNP_SOURCE_PATH = ${SOURCE_PATH}/dnp
+DRDUKE_SOURCE_PATH = ${SOURCE_PATH}/drduke
+ETCM_SOURCE_PATH = ${SOURCE_PATH}/etcm
+FOODB_SOURCE_PATH = ${SOURCE_PATH}/foodb
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -32,7 +37,7 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb
 
 databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape
 
@@ -80,6 +85,31 @@ coconut: ${INTERIM_PATH}/coconut.tsv.zip
 
 ${DATA_PATH}/interim/db/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip
 	cd src &&	python 1_gathering/db/coconut/converting.py  && Rscript 1_gathering/db/coconut/standardizing.R
+
+cyanometdb: ${INTERIM_PATH}/cyanometdb.tsv.zip
+
+${DATA_PATH}/interim/db/cyanometdb.tsv.zip: ${CYANOMETDB_SOURCE_PATH}/media-1.csv
+	cd src &&	Rscript 1_gathering/db/cyanometdb/standardizing.R
+
+dnp: ${INTERIM_PATH}/dnp.tsv.zip
+
+${DATA_PATH}/interim/db/dnp.tsv.zip: ${DNP_SOURCE_PATH}/28_2/full_set.csv
+	cd src &&	Rscript 1_gathering/db/dnp/standardizing.R
+
+drduke: ${INTERIM_PATH}/drduke.tsv.zip
+
+${DATA_PATH}/interim/db/drduke.tsv.zip: ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/COMMON_NAMES.csv ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/FARMACY_NEW.csv ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/FNFTAX.csv ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/REFERENCES.csv
+	cd src &&	Rscript 1_gathering/db/drduke/standardizing.R
+
+etcm: ${INTERIM_PATH}/etcm.tsv.zip
+# DO NOT KNOW HOW TO DO IT (all files in folder), source folder?
+${DATA_PATH}/interim/db/etcm.tsv.zip: ${ETCM_SOURCE_PATH}...
+	cd src &&	Rscript 1_gathering/db/etcm/standardizing.R
+
+foodb: ${INTERIM_PATH}/foodb.tsv.zip
+
+${DATA_PATH}/interim/db/foodb.tsv.zip: ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/CompoundsFlavor_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Compound_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Content.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Flavor.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Food_copy.csv ${FOODB_SOURCE_PATH}/foodb_2020_04_07_csv/Reference.csv
+	cd src &&	Rscript 1_gathering/db/foodb/standardizing.R
 
 curating: curating-integrating curating-editing
 
