@@ -2,9 +2,10 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+# get paths
+database <- databases$get("knapsack")
   
 url <-
   'http://www.knapsackfamily.com/knapsack_core/information.jsp?word=C00'
@@ -116,13 +117,4 @@ df4 <- bind_rows(df3[!is.na(df3)])
 KNApSAcK_db <- cbind(KnapSackTable,df4)
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(description = pathDataExternalDbSourceKnapsackOriginal,
-                compression = 9,
-                encoding = "UTF-8"),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, KNApSAcK_db)
