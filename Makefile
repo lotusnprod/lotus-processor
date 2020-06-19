@@ -321,8 +321,8 @@ unpd: ${INTERIM_PATH}/unpd.tsv.zip
 ${INTERIM_PATH}/unpd.tsv.zip: ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip
 	cd src &&	Rscript 1_gathering/db/unpd/standardizing.R
 
-triforc-reintegrate: ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip
-UNPD_SOURCE_PATH
+unpd-reintegrate: ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip
+
 ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip: ${UNPD_SOURCE_PATH}/unpd_final.csv.zip ${UNPD_SOURCE_PATH}/UNPD_DB.csv.zip
 	cd src && Rscript 1_gathering/db/unpd/integrating.R	
 
