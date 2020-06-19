@@ -1,4 +1,8 @@
 [core]
-    remote = myremote
-['remote "myremote"']
+    remote = minio
+['remote "minio"']
+    url = s3://onpdb
+    endpointurl = https://metabomaps-data.nprod.net
+    profile = onpdb-rw
+['remote "ssh"']
     url = ssh://metabomaps/srv/dvc/onpdb
