@@ -8,6 +8,7 @@ source("functions/standardizing.R")
 library(dplyr)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
