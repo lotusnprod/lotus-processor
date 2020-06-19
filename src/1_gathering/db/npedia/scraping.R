@@ -2,9 +2,18 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(stringr) # provides str_pad
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("npedia")
 
 url <- 'http://www.cbrg.riken.jp/npedia/details.php?ID='
 
@@ -104,15 +113,4 @@ NPEDIA_4 <- NPEDIA_4 %>%
 NPEDIA_final <- full_join(NPEDIA_2, NPEDIA_4)
 
 # exporting
-write.table(
-  x = NPEDIA_final,
-  file = gzfile(
-    description = pathDataExternalDbSourceNpediaOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, NPEDIA_final)
