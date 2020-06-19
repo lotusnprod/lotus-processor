@@ -4,6 +4,14 @@
 source("paths.R")
 source("functions/parallel.R")
 
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(stringr) # provides str_pad
+library(rvest)  # provides read_html
+
 # get paths
 database <- databases$get("knapsack")
   

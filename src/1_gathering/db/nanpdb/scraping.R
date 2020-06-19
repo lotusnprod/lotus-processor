@@ -2,9 +2,17 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("nanpdb")
 
 url <- 'http://african-compounds.org/nanpdb/get_compound_card/'
 
@@ -25,7 +33,7 @@ getnanp <- function(X)
     
     df2 <- t(df1)
     
-    colnames(df2) <- df2[1, ]
+    colnames(df2) <- df2[1,]
     
     df3 <- data.frame(df2) %>%
       filter(rownames(.) == "X2")
@@ -98,15 +106,4 @@ NANPDB_2[] <- lapply(NANPDB_2, function(x)
   gsub("  ", " ", x))
 
 # exporting
-write.table(
-  x = NANPDB_2,
-  file = gzfile(
-    description = pathDataExternalDbSourceNanpdbOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, NANPDB_2)

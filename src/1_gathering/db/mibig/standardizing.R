@@ -1,12 +1,22 @@
-# title: "MIBIG scrapeR"
+# title: "MIBIG cleaneR"
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(jsonlite)
+library(pbmcapply)
+library(readr)
+library(splitstackshape)
+library(tidyr)
 
-df <- rbind(lapply(pathDataExternalDbSourceMibigOriginal, fromJSON))
+# get paths
+database <- databases$get("mibig")
+
+df <- rbind(lapply(database$sourceFiles$tsv, fromJSON))
 
 x <- 1:length(df)
 
@@ -97,15 +107,4 @@ data_standard <- standardizing_original(
 )
 
 # exporting
-write.table(
-  x = data,
-  file = gzfile(
-    description = pathDataInterimDbMibig,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)
