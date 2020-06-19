@@ -2,18 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
-
-##paths
-filenames <- list.files(path = pathDataExternalDbSourceRespectDir,
-                        pattern = "*.txt",
-                        full.names = TRUE)
-
+library(dplyr)
 library(gdata)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("respect")
+
 data_standard <- do.call("cbindX",
-                         lapply(filenames,
+                         lapply(database$sourceFiles$tsv,
                                 function(x) {
                                   dat <- read.csv(x,
                                                   header = TRUE,
@@ -104,16 +106,5 @@ data_standard <-
     structure_field = c("name", "inchi", "smiles")
   )
 
-#exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbRespect,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# exporting
+database$writeInterim(data_standard)

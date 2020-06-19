@@ -29,8 +29,20 @@ PAMDB_SOURCE_PATH = ${SOURCE_PATH}/pamdb
 PHENOLEXPLORER_SOURCE_PATH = ${SOURCE_PATH}/phenolexplorer
 PHYTOHUB_SOURCE_PATH = ${SOURCE_PATH}/phytohub
 PLANTCYC_SOURCE_PATH = ${SOURCE_PATH}/plantcyc
+PROCARDB_SOURCE_PATH = ${SOURCE_PATH}/procardb
+RESPECT_SOURCE_PATH = ${SOURCE_PATH}/respect
+SANCDB_SOURCE_PATH = ${SOURCE_PATH}/sancdb
+STREPTOMEDB_SOURCE_PATH = ${SOURCE_PATH}/streptomedb
+SWMD_SOURCE_PATH = ${SOURCE_PATH}/swmd
+SYMMAP_SOURCE_PATH = ${SOURCE_PATH}/symmap
+TMDB_SOURCE_PATH = ${SOURCE_PATH}/tmdb
+TMMC_SOURCE_PATH = ${SOURCE_PATH}/tmmc
+TPPT_SOURCE_PATH = ${SOURCE_PATH}/tppt
+TRIFORC_SOURCE_PATH = ${SOURCE_PATH}/triforc
+UNPD_SOURCE_PATH = ${SOURCE_PATH}/unpd
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate
+
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate procardb procardb-rescrape respect sancdb sancdb-rescrape streptomedb streptomedb-reconvert swmd swmd-rescrape symmap tmdb tmdb-rescrape tmmc tppt triforc triforc-reintegrate unpd unpd-reintegrate
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -50,13 +62,13 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc procardb respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd
 
-databases-reconvert: metabolights-reconvert
+databases-reconvert: metabolights-reconvert streptomedb-reconvert
 
-databases-reintegrate: plantcyc-reintegrate
+databases-reintegrate: plantcyc-reintegrate triforc-reintegrate unpd-reintegrate
 
-databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape procardb-rescrape sancdb-rescrape swmd-rescrape tmdb-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
@@ -231,6 +243,88 @@ plantcyc-reintegrate: $(wildcard ${PLANTCYC_SOURCE_PATH}/*.tsv.zip)
 
 $(wildcard ${PLANTCYC_SOURCE_PATH}/*.tsv.zip) : $(wildcard ${PLANTCYC_SOURCE_PATH}/0_data/*/*/data/compounds.dat)
 	cd src && Rscript 1_gathering/db/plantcyc/integrating.R
+
+procardb: ${INTERIM_PATH}/procardb.tsv.zip
+
+${INTERIM_PATH}/procardb.tsv.zip: ${PROCARDB_SOURCE_PATH}/procardbScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/procardb/standardizing.R
+
+prodardb-rescrape:
+	cd src && Rscript 1_gathering/db/procardb/scraping.R
+
+respect: ${INTERIM_PATH}/respect.tsv.zip
+
+${INTERIM_PATH}/respect.tsv.zip: $(wildcard ${RESPECT_SOURCE_PATH}/respect/*.txt)
+	cd src &&	Rscript 1_gathering/db/respect/standardizing.R
+
+sancdb: ${INTERIM_PATH}/sancdb.tsv.zip
+
+${INTERIM_PATH}/sancdb.tsv.zip: ${SANCDB_SOURCE_PATH}/sancdbScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/sancdb/standardizing.R
+
+sancdb-rescrape:
+	cd src && Rscript 1_gathering/db/sancdb/scraping.R
+
+streptomedb: ${INTERIM_PATH}/streptomedb.tsv.zip
+
+${INTERIM_PATH}/streptomedb.tsv.zip: ${STREPTOMEDB_SOURCE_PATH}/streptomedb.tsv.zip
+	cd src &&	Rscript 1_gathering/db/streptomedb/standardizing.R
+
+streptomedb-reconvert: ${STREPTOMEDB_SOURCE_PATH}/streptomedb.tsv.zip
+
+${STREPTOMEDB_SOURCE_PATH}/streptomedb.tsv.zip: ${STREPTOMEDB_SOURCE_PATH}/streptomedb.sdf
+	cd src &&	Rscript 1_gathering/db/streptomedb/converting.R
+
+swmd: ${INTERIM_PATH}/swmd.tsv.zip
+
+${INTERIM_PATH}/swmd.tsv.zip: ${SWMD_SOURCE_PATH}/swmdScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/swmd/standardizing.R
+
+swmd-rescrape:
+	cd src && Rscript 1_gathering/db/swmd/scraping.R
+
+symmap: ${INTERIM_PATH}/symmap.tsv.zip
+
+${INTERIM_PATH}/symmap.tsv.zip: $(wildcard ${SYMMAP_SOURCE_PATH}/data/*.csv)
+	cd src &&	Rscript 1_gathering/db/symmap/standardizing.R
+
+tmdb: ${INTERIM_PATH}/tmdb.tsv.zip
+
+${INTERIM_PATH}/tmdb.tsv.zip: ${TMDB_SOURCE_PATH}/tmdbScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/tmdb/standardizing.R
+
+tmdb-rescrape:
+	cd src && Rscript 1_gathering/db/tmdb/scraping.R
+
+tmmc: ${INTERIM_PATH}/tmmc.tsv.zip
+
+${INTERIM_PATH}/tmmc.tsv.zip: ${TMMC_SOURCE_PATH}/compound.xlsx
+	cd src &&	Rscript 1_gathering/db/tmmc/standardizing.R
+
+tppt: ${INTERIM_PATH}/tppt.tsv.zip
+
+${INTERIM_PATH}/tppt.tsv.zip: ${TPPT_SOURCE_PATH}/TPPT_database.xlsx
+	cd src &&	Rscript 1_gathering/db/tppt/standardizing.R
+
+triforc: ${INTERIM_PATH}/triforc.tsv.zip
+
+${INTERIM_PATH}/triforc.tsv.zip: ${TRIFORC_SOURCE_PATH}/triforcBis.tsv
+	cd src &&	Rscript 1_gathering/db/triforc/standardizing.R
+
+triforc-reintegrate: ${TRIFORC_SOURCE_PATH}/triforcBis.tsv
+
+${TRIFORC_SOURCE_PATH}/triforcBis.tsv : ${TRIFORC_SOURCE_PATH}/triforcOriginal.tsv ${TRIFORC_SOURCE_PATH}/triforcToGet.tsv
+	cd src && Rscript 1_gathering/db/triforc/prestandardizing.R
+
+unpd: ${INTERIM_PATH}/unpd.tsv.zip
+
+${INTERIM_PATH}/unpd.tsv.zip: ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip
+	cd src &&	Rscript 1_gathering/db/unpd/standardizing.R
+
+triforc-reintegrate: ${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip
+UNPD_SOURCE_PATH
+${UNPD_SOURCE_PATH}/unpdIntegrated.tsv.zip: ${UNPD_SOURCE_PATH}/unpd_final.csv.zip ${UNPD_SOURCE_PATH}/UNPD_DB.csv.zip
+	cd src && Rscript 1_gathering/db/unpd/integrating.R	
 
 curating: curating-integrating curating-editing
 

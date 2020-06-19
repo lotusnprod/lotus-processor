@@ -242,15 +242,17 @@ databases$add(
 
 databases$add(
   name = "phenolexplorer",
-  sourceFiles = list(tsvCompoundsClassification = "compounds-classification.csv",
-                     tsvCompoundsStructures = "compounds-structures.csv",
-                     tsvCompounds = "compounds.csv",
-                     tsvFoodsClassification = "foods-classification.csv",
-                     tsvFoods = "foods.csv",
-                     tsvMetabolitesStructures = "metabolites-structures.csv",
-                     tsvMetabolites = "metabolites.csv",
-                     tsvPublications = "publications.csv",
-                     tsvComposition = "composition-data.xlsx"),
+  sourceFiles = list(
+    tsvCompoundsClassification = "compounds-classification.csv",
+    tsvCompoundsStructures = "compounds-structures.csv",
+    tsvCompounds = "compounds.csv",
+    tsvFoodsClassification = "foods-classification.csv",
+    tsvFoods = "foods.csv",
+    tsvMetabolitesStructures = "metabolites-structures.csv",
+    tsvMetabolites = "metabolites.csv",
+    tsvPublications = "publications.csv",
+    tsvComposition = "composition-data.xlsx"
+  ),
   interimFile = "phenolexplorer.tsv.zip"
 )
 
@@ -283,50 +285,43 @@ pathDataExternalDbSourcePlantcycOriginal <-
              pattern = "*.tsv.zip",
              full.names = TRUE)
 
-##### procardb
-pathDataExternalDbSourceProcardb <-
-  file.path(pathDataExternalDbSource,
-            "procardb")
-
-###### original
-pathDataExternalDbSourceProcardbOriginal <-
-  file.path(pathDataExternalDbSourceProcardb,
-            "procardbScraped.tsv.zip")
+databases$add(
+  name = "procardb",
+  sourceFiles = list(tsv = "procardbScraped.tsv.zip"),
+  interimFile = "procardb.tsv.zip"
+)
 
 ##### respect
 pathDataExternalDbSourceRespect <-
   file.path(pathDataExternalDbSource,
             "respect")
 
-###### directory
-pathDataExternalDbSourceRespectDir <-
-  file.path(pathDataExternalDbSourceRespect,
-            "respect")
+databases$add(
+  name = "respect",
+  sourceFiles = list(tsvPath = file.path(
+    "respect",
+    list.files(
+      path = file.path(pathDataExternalDbSourceRespect,
+                       "respect"),
+      pattern = "*.txt",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "respect.tsv.zip"
+)
 
-##### sancdb
-pathDataExternalDbSourceSancdb <-
-  file.path(pathDataExternalDbSource,
-            "sancdb")
+databases$add(
+  name = "sancdb",
+  sourceFiles = list(tsv = "sancdbScraped.tsv.zip"),
+  interimFile = "sancdb.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceSancdbOriginal <-
-  file.path(pathDataExternalDbSourceSancdb,
-            "sancdbScraped.tsv.zip")
-
-##### streptomedb
-pathDataExternalDbSourceStreptomedb <-
-  file.path(pathDataExternalDbSource,
-            "streptomedb")
-
-##### original
-pathDataExternalDbSourceStreptomedbOriginal <-
-  file.path(pathDataExternalDbSourceStreptomedb,
-            "streptomedb.sdf")
-
-##### compiled
-pathDataExternalDbSourceStreptomedbCompiled <-
-  file.path(pathDataExternalDbSourceStreptomedb,
-            "streptomedb.tsv.zip")
+databases$add(
+  name = "streptomedb",
+  sourceFiles = list(sdf = "streptomedb.sdf",
+                     tsv = "streptomedb.tsv.zip"),
+  interimFile = "streptomedb.tsv.zip"
+)
 
 ##### swmd
 pathDataExternalDbSourceSwmd <-
@@ -338,24 +333,30 @@ pathDataExternalDbSourceSwmdDirectory <-
   file.path(pathDataExternalDbSourceSwmd,
             "Mol")
 
-##### original
-pathDataExternalDbSourceSwmdOriginal <-
-  file.path(pathDataExternalDbSourceSwmd,
-            "swmdScraped.tsv.zip")
+databases$add(
+  name = "swmd",
+  sourceFiles = list(tsv = "swmdScraped.tsv.zip"),
+  interimFile = "swmd.tsv.zip"
+)
 
 ##### symmap
 pathDataExternalDbSourceSymmap <-
   file.path(pathDataExternalDbSource,
             "symmap")
 
-###### original
-pathDataExternalDbSourceSymmapOriginal <-
-  list.files(
-    path = file.path(pathDataExternalDbSourceSymmap,
-                     "data"),
-    pattern = "*.csv",
-    full.names = TRUE
-  )
+databases$add(
+  name = "symmap",
+  sourceFiles = list(tsvPath = file.path(
+    "data",
+    list.files(
+      path = file.path(pathDataExternalDbSourceSymmap,
+                       "data"),
+      pattern = "*.csv",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "symmap.tsv.zip"
+)
 
 ###### bio
 pathDataExternalDbSourceSymmapBio <-
@@ -367,75 +368,64 @@ pathDataExternalDbSourceSymmapChemo <-
   file.path(pathDataExternalDbSourceSymmap,
             "SymMap v1.0, SMIT file.xlsx")
 
-##### tmdb
-pathDataExternalDbSourceTmdb <-
-  file.path(pathDataExternalDbSource,
-            "tmdb")
+databases$add(
+  name = "tmdb",
+  sourceFiles = list(tsv = "tmdbScraped.tsv.zip"),
+  interimFile = "tmdb.tsv.zip"
+)
 
-##### original
-pathDataExternalDbSourceTmdbOriginal <-
-  file.path(pathDataExternalDbSourceTmdb,
-            "tmdbScraped.tsv.zip")
+databases$add(
+  name = "tmmc",
+  sourceFiles = list(tsv = "compound.xlsx"),
+  interimFile = "tmmc.tsv.zip"
+)
 
-##### tmmc
-pathDataExternalDbSourceTmmc <-
-  file.path(pathDataExternalDbSource,
-            "tmmc")
+databases$add(
+  name = "tppt",
+  sourceFiles = list(tsv = "TPPT_database.xlsx"),
+  interimFile = "tppt.tsv.zip"
+)
 
-##### original
-pathDataExternalDbSourceTmmcOriginal <-
-  file.path(pathDataExternalDbSourceTmmc,
-            "compound.xlsx")
-
-##### tppt
-pathDataExternalDbSourceTppt <-
-  file.path(pathDataExternalDbSource,
-            "tppt")
-
-##### original
-pathDataExternalDbSourceTpptOriginal <-
-  file.path(pathDataExternalDbSourceTppt,
-            "TPPT_database.xlsx")
+databases$add(
+  name = "triforc",
+  sourceFiles = list(tsv1 = "triforcOriginal.tsv",
+                     tsv2 = "triforcBis.tsv"),
+  interimFile = "triforc.tsv.zip"
+)
 
 ##### triforc
 pathDataExternalDbSourceTriforc <-
   file.path(pathDataExternalDbSource,
             "triforc")
 
-##### original
-pathDataExternalDbSourceTriforcOriginal <-
-  file.path(pathDataExternalDbSourceTriforc,
-            "triforcOriginal.tsv")
-
 ##### to get
 pathDataExternalDbSourceTriforcToGet <-
   file.path(pathDataExternalDbSourceTriforc,
             "triforcToGet.tsv")
 
-##### bis
-pathDataExternalDbSourceTriforBis <-
-  file.path(pathDataExternalDbSourceTriforc,
-            "triforcBis.tsv")
+databases$add(
+  name = "triforc",
+  sourceFiles = list(tsv1 = "triforcOriginal.tsv",
+                     tsv2 = "triforcBis.tsv"),
+  interimFile = "triforc.tsv.zip"
+)
 
 ##### unpd
 pathDataExternalDbSourceUnpd <-
   file.path(pathDataExternalDbSource,
             "unpd")
 
-##### original Jo
-pathDataExternalDbSourceUnpdOriginal_1 <-
-  file.path(pathDataExternalDbSourceUnpd,
-            "unpd_final.csv.zip")
-
-##### original PM
-pathDataExternalDbSourceUnpdOriginal_2 <-
-  file.path(pathDataExternalDbSourceUnpd,
-            "UNPD_DB.csv.zip")
-
 ##### compiled
-pathDataExternalDbSourceUnpdCompiled <-
+pathDataExternalDbSourceUnpdIntegrated <-
   file.path(pathDataExternalDbSourceUnpd,
-            "unpdCompiled.tsv.zip")
+            "unpdIntegrated.tsv.zip")
+
+databases$add(
+  name = "unpd",
+  sourceFiles = list(tsvJo = "unpd_final.csv.zip",
+                     tsvPm = "UNPD_DB.csv.zip"),
+  interimFile = "unpd.tsv.zip"
+)
 
 #### translation source
 pathDataExternalTranslationSource <-

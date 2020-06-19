@@ -2,19 +2,25 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("tmdb")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathDataExternalDbSourceTmdbOriginal),
+  file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
-
 
 # pivoting
 data_pivoted <- data_original %>%
@@ -43,15 +49,4 @@ data_standard[] <-
     gsub("Not Available", NA, x))
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbTmdb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

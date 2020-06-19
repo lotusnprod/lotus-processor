@@ -2,11 +2,19 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+library(ChemmineR)
 
-data <- read.SDFset(pathDataExternalDbSourceStreptomedbOriginal)
+# get paths
+database <- databases$get("streptomedb")
+
+data <- read.SDFset(database$sourceFiles$sdf)
 
 df <- data.frame()
 df[1, 1] <- ""
@@ -32,15 +40,4 @@ for (i in 1:length(data@SDF)) {
 }
 
 # exporting
-write.table(
-  x = df,
-  file = gzfile(
-    description = pathDataExternalDbSourceStreptomedbCompiled,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, df)
