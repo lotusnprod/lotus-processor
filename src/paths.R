@@ -49,7 +49,8 @@ databases$add(
 
 databases$add(
   name = "biofacquim",
-  sourceFiles = list(tsv = "apps_database_csv_BIOFACQUIM.csv"),
+  sourceFiles = list(sdf = "BIOFACQUIM_V2.sdf",
+                     tsv = "biofacquim.tsv.zip"),
   interimFile = "biofacquim.tsv.zip"
 )
 
@@ -169,6 +170,7 @@ databases$add(
 pathDataExternalDbSourceMetabolights <-
   file.path(pathDataExternalDbSource,
             "metabolights")
+
 ###### studies scraped directory
 pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
   file.path(pathDataExternalDbSourceMetabolights,

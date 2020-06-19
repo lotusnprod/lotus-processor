@@ -15,8 +15,8 @@ database <- databases$get("biofacquim")
 
 ## files
 data_original <- read_delim(
-  file = database$sourceFiles$tsv,
-  delim = ",",
+  file = gzfile(database$sourceFiles$tsv),
+  delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
@@ -29,7 +29,7 @@ data_selected <- data_original %>%
     name = Name,
     smiles = SMILES,
     biologicalsource = Specie,
-    reference = Reference
+    reference = DOI
   )
 
 ## standardizing
