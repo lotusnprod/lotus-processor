@@ -11,6 +11,7 @@ library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
 library(rvest)  # provides read_html
+library(tidyr) #provides pivot_wider
 
 # get paths
 database <- databases$get("npedia")

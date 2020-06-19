@@ -26,8 +26,11 @@ NPATLAS_SOURCE_PATH = ${SOURCE_PATH}/npatlas
 NPCARE_SOURCE_PATH = ${SOURCE_PATH}/npcare
 NPEDIA_SOURCE_PATH = ${SOURCE_PATH}/npedia
 PAMDB_SOURCE_PATH = ${SOURCE_PATH}/pamdb
+PHENOLEXPLORER_SOURCE_PATH = ${SOURCE_PATH}/phenolexplorer
+PHYTOHUB_SOURCE_PATH = ${SOURCE_PATH}/phytohub
+PLANTCYC_SOURCE_PATH = ${SOURCE_PATH}/plantcyc
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -47,11 +50,13 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc
 
 databases-reconvert: metabolights-reconvert
 
-databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape
+databases-reintegrate: plantcyc-reintegrate
+
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
@@ -73,7 +78,7 @@ ${INTERIM_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/apps_database_csv_
 
 biophytmol: ${INTERIM_PATH}/biophytmol.tsv.zip
 
-${INTERIM_PATH}/biophytmol.tsv.zip: ${BIOPHYTMOL_SOURCE_PATH}/biophytmolScraped.tsv.zip 
+${INTERIM_PATH}/biophytmol.tsv.zip: ${BIOPHYTMOL_SOURCE_PATH}/biophytmolScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/biophytmol/standardizing.R
 
 biophytmol-rescrape:
@@ -81,10 +86,10 @@ biophytmol-rescrape:
 
 carotenoiddb: ${INTERIM_PATH}/carotenoiddb.tsv.zip
 
-${INTERIM_PATH}/carotenoiddb.tsv.zip: ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip 
+${INTERIM_PATH}/carotenoiddb.tsv.zip: ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/carotenoiddb/standardizing.R
 
-carotenoiddb-rescrape: ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip 
+carotenoiddb-rescrape: ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip
 
 ${CAROTENOIDDB_SOURCE_PATH}/carotenoiddbScraped.tsv.zip : ${CAROTENOIDDB_SOURCE_PATH}/Carotenoids_InChI_InChIKey.tsv
 	cd src && Rscript 1_gathering/db/carotenoiddb/scraping.R
@@ -117,7 +122,7 @@ ${INTERIM_PATH}/drduke.tsv.zip: ${DRDUKE_SOURCE_PATH}/Duke-Source-CSV/COMMON_NAM
 
 etcm: ${INTERIM_PATH}/etcm.tsv.zip
 
-${INTERIM_PATH}/etcm.tsv.zip: $(wildcard ${ETCM_SOURCE_PATH}data/*.csv)
+${INTERIM_PATH}/etcm.tsv.zip: $(wildcard ${ETCM_SOURCE_PATH}/data/*.csv)
 	cd src &&	Rscript 1_gathering/db/etcm/standardizing.R
 
 foodb: ${INTERIM_PATH}/foodb.tsv.zip
@@ -146,7 +151,7 @@ ${INTERIM_PATH}/metabolights.tsv.zip: ${METABOLIGHTS_SOURCE_PATH}/metabolightsPr
 
 metabolights-reconvert: ${INTERIM_PATH}/metabolightsPrecleaned.tsv.zip ${METABOLIGHTS_SOURCE_PATH}/metabolightsStudiesScraped.tsv.zip
 
-${INTERIM_PATH}/metabolightsPrecleaned.tsv.zip: $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.json) ${METABOLIGHTS_SOURCE_PATH}/eb-eye_metabolights_complete.xml
+${INTERIM_PATH}/metabolightsPrecleaned.tsv.zip: $(wildcard ${METABOLIGHTS_SOURCE_PATH}/studiesScraped/*.json) ${METABOLIGHTS_SOURCE_PATH}/eb-eye_metabolights_complete.xml
 	cd src &&	Rscript 1_gathering/db/metabolights/prestandardizing.R &&	Rscript 1_gathering/db/metabolights/standardizingStudies.R
 
 metabolights-rescrape: $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.json)
@@ -156,7 +161,7 @@ $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.json) : ${METABOLIGHTS_SO
 
 mibig: ${INTERIM_PATH}/mibig.tsv.zip
 
-${INTERIM_PATH}/mibig.tsv.zip: $(wildcard ${MIBIG_SOURCE_PATH}mibig_json_2.0/*.json) 
+${INTERIM_PATH}/mibig.tsv.zip: $(wildcard ${MIBIG_SOURCE_PATH}/mibig_json_2.0/*.json)
 	cd src &&	Rscript 1_gathering/db/mibig/standardizing.R
 
 mitishamba: ${INTERIM_PATH}/mitishamba.tsv.zip
@@ -173,7 +178,7 @@ ${INTERIM_PATH}/nanpdb.tsv.zip: ${NANPDB_SOURCE_PATH}/nanpdbScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/nanpdb/standardizing.R
 
 nanpdb-rescrape:
-	cd src && Rscript 1_gathering/db/nanpdb/scraping.R	
+	cd src && Rscript 1_gathering/db/nanpdb/scraping.R
 
 npass: ${INTERIM_PATH}/npass.tsv.zip
 
@@ -188,7 +193,7 @@ ${INTERIM_PATH}/npatlas.tsv.zip: ${NPATLAS_SOURCE_PATH}/np_atlas_2019_12.tsv
 npcare: ${INTERIM_PATH}/npcare.tsv.zip
 
 ${INTERIM_PATH}/npcare.tsv.zip: ${NPCARE_SOURCE_PATH}/npcare.zip
-	cd src &&	Rscript 1_gathering/db/npcare/standardizing.R	
+	cd src &&	Rscript 1_gathering/db/npcare/standardizing.R
 
 npedia: ${INTERIM_PATH}/npedia.tsv.zip
 
@@ -196,12 +201,36 @@ ${INTERIM_PATH}/npedia.tsv.zip: ${NPEDIA_SOURCE_PATH}/npediaScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/npedia/standardizing.R
 
 npedia-rescrape:
-	cd src && Rscript 1_gathering/db/npedia/scraping.R	
+	cd src && Rscript 1_gathering/db/npedia/scraping.R
 
 pamdb: ${INTERIM_PATH}/pamdb.tsv.zip
 
 ${INTERIM_PATH}/pamdb.tsv.zip: ${PAMDB_SOURCE_PATH}/PaMet.xlsx
-	cd src &&	Rscript 1_gathering/db/pamdb/standardizing.R	
+	cd src &&	Rscript 1_gathering/db/pamdb/standardizing.R
+
+phenolexplorer: ${INTERIM_PATH}/phenolexplorer.tsv.zip
+
+${INTERIM_PATH}/phenolexplorer.tsv.zip: ${PHENOLEXPLORER_SOURCE_PATH}/compounds-classification.csv ${PHENOLEXPLORER_SOURCE_PATH}/compounds-structures.csv ${PHENOLEXPLORER_SOURCE_PATH}/compounds.csv ${PHENOLEXPLORER_SOURCE_PATH}/foods-classification.csv ${PHENOLEXPLORER_SOURCE_PATH}/foods.csv ${PHENOLEXPLORER_SOURCE_PATH}/metabolites-structures.csv ${PHENOLEXPLORER_SOURCE_PATH}/metabolites.csv ${PHENOLEXPLORER_SOURCE_PATH}/publications.csv ${PHENOLEXPLORER_SOURCE_PATH}/composition-data.xlsx
+	cd src &&	Rscript 1_gathering/db/phenolexplorer/standardizing.R
+
+phytohub: ${INTERIM_PATH}/phytohub.tsv.zip
+
+${INTERIM_PATH}/phytohub.tsv.zip: ${PHYTOHUB_SOURCE_PATH}/phytohubScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/phytohub/standardizing.R
+
+phytohub-rescrape:
+	cd src && Rscript 1_gathering/db/phytohub/scraping.R
+
+plantcyc: ${INTERIM_PATH}/plantcyc.tsv.zip
+
+${INTERIM_PATH}/plantcyc.tsv.zip: $(wildcard ${PLANTCYC_SOURCE_PATH}/*.tsv.zip)
+	cd src &&	Rscript 1_gathering/db/plantcyc/standardizing.R
+
+# do not know how to proceed here... might be wrong
+plantcyc-reintegrate: $(wildcard ${PLANTCYC_SOURCE_PATH}/*.tsv.zip)
+
+$(wildcard ${PLANTCYC_SOURCE_PATH}/*.tsv.zip) : $(wildcard ${PLANTCYC_SOURCE_PATH}/0_data/*/*/data/compounds.dat)
+	cd src && Rscript 1_gathering/db/plantcyc/integrating.R
 
 curating: curating-integrating curating-editing
 

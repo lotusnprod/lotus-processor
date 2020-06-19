@@ -2,9 +2,21 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(stringr) # provides str_pad
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("phytohub")
+
+url <- 'http://phytohub.eu/entries/PHUB'
 
 X <- (1:1975)
 
@@ -30,7 +42,7 @@ getphytohub <- function(X)
       html_text()
     
     df <- cbind(scrape1, scrape2, scrape5, scrape4)
-    final_df <- as.data.frame(df)
+    final_df <- data.frame(df)
     return(final_df)
   },
   error = function(e) {
@@ -62,7 +74,7 @@ PHYTOHUB_4 <- PHYTOHUB_3 %>%
     smiles = scrape5,
     biologicalsource = Name,
     name_precursor = Precursor,
-    biologicalsource_precursor = `Food Source`
+    biologicalsource_precursor = Food.Source
   ) %>%
   filter(is.na(name_precursor)) %>%
   select(name,
@@ -131,16 +143,5 @@ PHYTOHUB_9 <- full_join(PHYTOHUB_7, PHYTOHUB_8) %>%
 
 PHYTOHUB_9$reference <- y_as_na(PHYTOHUB_9$reference, "")
 
-#exporting
-write.table(
-  x = PHYTOHUB_9,
-  file = gzfile(
-    description = pathDataExternalDbSourcePhytohubOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# exporting
+database$writeFile(database$sourceFiles$tsv, PHYTOHUB_9)

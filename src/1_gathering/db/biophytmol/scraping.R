@@ -10,6 +10,7 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest)  # provides read_html
+library(tidyr) #provides pivot_wider
 
 # get paths
 database <- databases$get("biophytmol")

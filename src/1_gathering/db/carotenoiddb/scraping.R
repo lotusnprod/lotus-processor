@@ -2,6 +2,7 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
 source("functions/parallel.R")
 
 library(dplyr)
@@ -10,6 +11,7 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest)  # provides read_html
+library(tidyr) #provides pivot_wider
 
 # get paths
 database <- databases$get("carotenoiddb")
