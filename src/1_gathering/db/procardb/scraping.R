@@ -2,9 +2,19 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(stringr) # provides str_pad
+library(rvest)  # provides read_html
+library(tidyr) #provides pivot_wider
+
+# get paths
+database <- databases$get("procardb")
 
 url <-
   'http://bioinfo.imtech.res.in/servers/procardb/?c=carotenoides&m=getDetail&id=C'
@@ -142,15 +152,4 @@ PROCARDB_final <- full_join(PROCARDB_final, PROCARDB_2) %>%
   distinct(biologicalsource, `CAROTENOID NAME`, .keep_all = TRUE)
 
 # exporting
-write.table(
-  x = PROCARDB_final,
-  file = gzfile(
-    description = pathDataExternalDbSourceProcardbOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, PROCARDB_final)

@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("streptomedb")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathDataExternalDbSourceStreptomedbCompiled),
+  file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -19,10 +26,7 @@ data_original <- read_delim(
 data_selected <- data_original %>%
   select(uniqueid,
          name,
-         #inchi = ,
-         #inchikey = ,
          smiles,
-         #cas = ,
          pubchem,
          reference = pubmedid,
          biologicalsource)
@@ -36,15 +40,4 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbStreptomedb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

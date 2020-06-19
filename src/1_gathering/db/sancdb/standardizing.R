@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("sancdb")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathDataExternalDbSourceSancdbOriginal),
+  file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -650,8 +657,6 @@ data_selected <- sancdb_clean %>%
   select(
     uniqueid = 1,
     name = 3,
-    #inchi = ,
-    #inchikey = ,
     smiles = 27,
     biologicalsource = 65,
     cas = 17,
@@ -670,15 +675,4 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbSancdb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

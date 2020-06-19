@@ -2,9 +2,18 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("swmd")
 
 ids <-
   gsub(".mol",
@@ -80,16 +89,5 @@ SWMD_3[] <- lapply(SWMD_3, function(x)
 SWMD_3[] <- lapply(SWMD_3, function(x)
   gsub("\n", " ", x))
 
-#exporting
-write.table(
-  x = SWMD_3,
-  file = gzfile(
-    description = pathDataExternalDbSourceSwmdOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# exporting
+database$writeFile(database$sourceFiles$tsv, SWMD_3)

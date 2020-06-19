@@ -2,13 +2,20 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("triforc")
 
 ## files
 data_original <- read_delim(
-  file = pathDataExternalDbSourceTriforcOriginal,
+  file = database$sourceFiles$tsv1,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE

@@ -2,9 +2,17 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("sancdb")
 
 url <- 'https://sancdb.rubi.ru.ac.za/compounds/'
 
@@ -42,15 +50,4 @@ SANCDB <- invisible(
   cSplit("V1", "\n")
 
 # exporting
-write.table(
-  x = SANCDB,
-  file = gzfile(
-    description = pathDataExternalDbSourceSancdbOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, SANCDB)

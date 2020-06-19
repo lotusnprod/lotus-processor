@@ -2,9 +2,17 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("tmdb")
 
 url <- 'http://pcsb.ahau.edu.cn:8080/TCDB/f/browseDetail?id='
 
@@ -50,15 +58,4 @@ TMDB_4 <- TMDB_3 %>%
   filter(!is.na(X1))
 
 # exporting
-write.table(
-  x = TMDB_4,
-  file = gzfile(
-    description = pathDataExternalDbSourceTmdbOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, TMDB_4)

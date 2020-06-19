@@ -2,13 +2,21 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(readxl)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("symmap")
 
 ## files
 data_original <- do.call("rbind",
-                         lapply(pathDataExternalDbSourceSymmapOriginal,
+                         lapply(database$sourceFiles$tsv,
                                 function(x) {
                                   dat <- read.csv(x, header = TRUE, sep = ",")
                                   dat$fileName <-
@@ -70,6 +78,8 @@ data_selected <- data_full %>%
   ) %>%
   mutate(biologicalsource = paste(Latin_name, English_name, sep = " "))
 
+data_selected$biologicalsource <-
+  y_as_na(data_selected$biologicalsource, "NA NA")
 
 # standardizing
 data_standard <-
@@ -79,20 +89,5 @@ data_standard <-
     structure_field = c("name")
   )
 
-data_standard$biologicalsource <-
-  y_as_na(data_standard$biologicalsource, "NA NA")
-
-
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbSymmap,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

@@ -2,20 +2,27 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("unpd")
 
 ## files
 data_original <- read_delim(
-  file = pathDataExternalDbSourceUnpdOriginal_1,
+  file = database$sourceFiles$tsvJo,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 data_original_ISDB <- read_delim(
-  file = pathDataExternalDbSourceUnpdOriginal_2,
+  file = database$sourceFiles$tsvPm,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -49,7 +56,7 @@ data_translated[] <-
 write.table(
   x = data_translated,
   file = gzfile(
-    description = pathDataExternalDbSourceUnpdCompiled,
+    description = pathDataExternalDbSourceUnpdIntegrated,
     compression = 9,
     encoding = "UTF-8"
   ),
