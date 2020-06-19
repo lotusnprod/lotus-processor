@@ -2,69 +2,77 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(readxl)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("phenolexplorer")
 
 # loading all files
 compounds_classification <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerCompoundsClassification,
+  file = database$sourceFiles$tsvCompoundsClassification,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 compounds_structures <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerCompoundsStructures,
+  file = database$sourceFiles$tsvCompoundsStructures,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 compounds <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerCompounds,
+  file = database$sourceFiles$tsvCompounds,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 foods_classification <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerFoodsClassification,
+  file = database$sourceFiles$tsvFoodsClassification,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 foods <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerFoods,
+  file = database$sourceFiles$tsvFoods,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 metabolites_structures <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerMetabolitesStructures,
+  file = database$sourceFiles$tsvMetabolitesStructures,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 metabolites <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerMetabolites,
+  file = database$sourceFiles$tsvMetabolites,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 publications <- read_delim(
-  file = pathDataExternalDbSourcePhenolexplorerPublications,
+  file = database$sourceFiles$tsvPublications,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
 composition <-
-  read_excel(path = pathDataExternalDbSourcePhenolexplorerComposition,
+  read_excel(path = database$sourceFiles$tsvComposition,
              sheet = 1)
 
 ### joining
@@ -136,15 +144,4 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbPhenolexplorer,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)

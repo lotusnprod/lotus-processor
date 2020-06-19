@@ -240,65 +240,32 @@ databases$add(
   interimFile = "pamdb.tsv.zip"
 )
 
-##### phenolexplorer
-pathDataExternalDbSourcePhenolexplorer <-
-  file.path(pathDataExternalDbSource,
-            "phenolexplorer")
+databases$add(
+  name = "phenolexplorer",
+  sourceFiles = list(tsvCompoundsClassification = "compounds-classification.csv",
+                     tsvCompoundsStructures = "compounds-structures.csv",
+                     tsvCompounds = "compounds.csv",
+                     tsvFoodsClassification = "foods-classification.csv",
+                     tsvFoods = "foods.csv",
+                     tsvMetabolitesStructures = "metabolites-structures.csv",
+                     tsvMetabolites = "metabolites.csv",
+                     tsvPublications = "publications.csv",
+                     tsvComposition = "composition-data.xlsx"),
+  interimFile = "phenolexplorer.tsv.zip"
+)
 
-###### compounds classification
-pathDataExternalDbSourcePhenolexplorerCompoundsClassification <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "compounds-classification.csv")
+databases$add(
+  name = "phytohub",
+  sourceFiles = list(tsv = "phytohubScraped.tsv.zip"),
+  interimFile = "phytohub.tsv.zip"
+)
 
-###### compounds structure
-pathDataExternalDbSourcePhenolexplorerCompoundsStructures <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "compounds-structures.csv")
-
-###### compounds
-pathDataExternalDbSourcePhenolexplorerCompounds <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "compounds.csv")
-
-###### foods classification
-pathDataExternalDbSourcePhenolexplorerFoodsClassification <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "foods-classification.csv")
-
-###### foods
-pathDataExternalDbSourcePhenolexplorerFoods <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "foods.csv")
-
-###### metabolites structure
-pathDataExternalDbSourcePhenolexplorerMetabolitesStructures <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "metabolites-structures.csv")
-
-###### metabolites
-pathDataExternalDbSourcePhenolexplorerMetabolites <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "metabolites.csv")
-
-###### publications
-pathDataExternalDbSourcePhenolexplorerPublications <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "publications.csv")
-
-###### composition
-pathDataExternalDbSourcePhenolexplorerComposition <-
-  file.path(pathDataExternalDbSourcePhenolexplorer,
-            "composition-data.xlsx")
-
-##### phytohub
-pathDataExternalDbSourcePhytohub <-
-  file.path(pathDataExternalDbSource,
-            "phytohub")
-
-###### original
-pathDataExternalDbSourcePhytohubOriginal <-
-  file.path(pathDataExternalDbSourcePhytohub,
-            "phytohubScraped.tsv.zip")
+# here we should allow a list of interim files, so for the moment I let it as it is
+# databases$add(
+#   name = "plantcyc",
+#   sourceFiles = list(tsv = "phytohubScraped.tsv.zip"),
+#   interimFile = "plantcyc.tsv.zip"
+# )
 
 ##### plantcyc
 pathDataExternalDbSourcePlantcyc <-
@@ -483,6 +450,12 @@ pathDataExternalTranslationSourceCommon <-
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
 
 ###### phenolexplorer
+
+###### phenolexplorer
+pathDataExternalDbSourcePhenolexplorer <-
+  file.path(pathDataExternalDbSource,
+            "phenolexplorer")
+
 pathDataExternalTranslationSourceCommonPhenolexplorer <-
   file.path(pathDataExternalDbSourcePhenolexplorer,
             "foods.csv")

@@ -2,9 +2,16 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("plantcyc")
 
 data_standard <- do.call("rbind",
                          lapply(pathDataExternalDbSourcePlantcycOriginal,
