@@ -2,9 +2,18 @@
 
 # loading paths
 source("paths.R")
+source("functions/parallel.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(stringr) # provides str_pad
+library(rvest)  # provides read_html
+
+# get paths
+database <- databases$get("mitishamba")
 
 X <- (1:1102)
 
@@ -87,15 +96,4 @@ MITISHAMBA_3[] <-
     gsub("\t", " ", x))
 
 # exporting
-write.table(
-  x = MITISHAMBA_3,
-  file = gzfile(
-    description = pathDataExternalDbSourceMitishambaOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeFile(database$sourceFiles$tsv, MITISHAMBA_3)

@@ -163,7 +163,9 @@ databases$add(
 )
 
 ###### COMMENT Not clean #######
-
+pathDataExternalDbSourceMetabolights <-
+  file.path(pathDataExternalDbSource,
+            "metabolights")
 ###### studies scraped directory
 pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
   file.path(pathDataExternalDbSourceMetabolights,
@@ -174,34 +176,31 @@ pathDataExternalDbSourceMibig <-
   file.path(pathDataExternalDbSource,
             "mibig")
 
-###### original
-pathDataExternalDbSourceMibigOriginal <-
-  list.files(
-    path = file.path(pathDataExternalDbSourceMibig,
-                     "mibig_json_2.0/"),
-    pattern = "*.json",
-    full.names = TRUE
-  )
+databases$add(
+  name = "mibig",
+  sourceFiles = list(tsvPath = file.path(
+    "mibig_json_2.0",
+    list.files(
+      path = file.path(pathDataExternalDbSourceMibig,
+                       "mibig_json_2.0"),
+      pattern = "*.json",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "mibig.tsv.zip"
+)
 
-##### mitishamba
-pathDataExternalDbSourceMitishamba <-
-  file.path(pathDataExternalDbSource,
-            "mitishamba")
+databases$add(
+  name = "mitishamba",
+  sourceFiles = list(tsv = "mitishambaScraped.tsv.zip"),
+  interimFile = "mitishamba.tsv.zip"
+)
 
-###### original
-pathDataExternalDbSourceMitishambaOriginal <-
-  file.path(pathDataExternalDbSourceMitishamba,
-            "mitishambaScraped.tsv.zip")
-
-##### nanpdb
-pathDataExternalDbSourceNanpdb <-
-  file.path(pathDataExternalDbSource,
-            "nanpdb")
-
-###### original
-pathDataExternalDbSourceNanpdbOriginal <-
-  file.path(pathDataExternalDbSourceNanpdb,
-            "nanpdbScraped.tsv.zip")
+databases$add(
+  name = "nanpdb",
+  sourceFiles = list(tsv = "nanpdbScraped.tsv.zip"),
+  interimFile = "nanpdb.tsv.zip"
+)
 
 ##### npass
 pathDataExternalDbSourceNpass <-

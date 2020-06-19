@@ -18,9 +18,12 @@ FOODB_SOURCE_PATH = ${SOURCE_PATH}/foodb
 INFLAMNAT_SOURCE_PATH = ${SOURCE_PATH}/inflamnat
 KNAPSACK_SOURCE_PATH = ${SOURCE_PATH}/knapsack
 METABOLIGHTS_SOURCE_PATH = ${SOURCE_PATH}/metabolights
+MIBIG_SOURCE_PATH = ${SOURCE_PATH}/mibig
+MITISHAMBA_SOURCE_PATH = ${SOURCE_PATH}/mitishamba
+NANPDB_SOURCE_PATH = ${SOURCE_PATH}/nanpdb
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -40,11 +43,11 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb
 
 databases-reconvert: metabolights-reconvert
 
-databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
@@ -148,6 +151,26 @@ metabolights-rescrape: $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.js
 $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.json) : ${METABOLIGHTS_SOURCE_PATH}/eb-eye_metabolights_studies.xml
 	cd src && Rscript 1_gathering/db/metabolights/scraping.R
 
+mibig: ${INTERIM_PATH}/mibig.tsv.zip
+
+${INTERIM_PATH}/mibig.tsv.zip: $(wildcard ${MIBIG_SOURCE_PATH}mibig_json_2.0/*.json) 
+	cd src &&	Rscript 1_gathering/db/mibig/standardizing.R
+
+mitishamba: ${INTERIM_PATH}/mitishamba.tsv.zip
+
+${INTERIM_PATH}/mitishamba.tsv.zip: ${MITISHAMBA_SOURCE_PATH}/mitishambaScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/mitishamba/standardizing.R
+
+mitishamba-rescrape:
+	cd src && Rscript 1_gathering/db/mitishamba/scraping.R
+
+nanpdb: ${INTERIM_PATH}/nanpdb.tsv.zip
+
+${INTERIM_PATH}/nanpdb.tsv.zip: ${NANPDB_SOURCE_PATH}/nanpdbScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/nanpdb/standardizing.R
+
+nanpdb-rescrape:
+	cd src && Rscript 1_gathering/db/nanpdb/scraping.R	
 
 curating: curating-integrating curating-editing
 

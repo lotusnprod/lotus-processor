@@ -4,6 +4,12 @@
 source("paths.R")
 source("functions/parallel.R")
 
+library(dplyr)
+library(pbmcapply)
+library(parallel)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest)  # provides read_html
 library(XML)
 
 # get paths

@@ -2,13 +2,21 @@
 
 # loading paths
 source("paths.R")
+source("functions/helpers.R")
+source("functions/standardizing.R")
 
-# loading functions
-source("functions.R")
+library(dplyr)
+library(readr)
+library(readxl)
+library(splitstackshape)
+library(tidyr)
+
+# get paths
+database <- databases$get("nanpdb")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(pathDataExternalDbSourceNanpdbOriginal),
+  file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -67,15 +75,4 @@ data_standard <-
   )
 
 # exporting
-write.table(
-  x = data_standard,
-  file = gzfile(
-    description = pathDataInterimDbNanpdb,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+database$writeInterim(data_standard)
