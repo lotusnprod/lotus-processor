@@ -100,10 +100,12 @@ databases$add(
 
 databases$add(
   name = "drduke",
-  sourceFiles = list(tsvCommon = "Duke-Source-CSV/COMMON_NAMES.csv",
-                     tsvFarmacy = "Duke-Source-CSV/FARMACY_NEW.csv",
-                     tsvTaxa = "Duke-Source-CSV/FNFTAX.csv",
-                     tsvReference = "Duke-Source-CSV/REFERENCES.csv"),
+  sourceFiles = list(
+    tsvCommon = "Duke-Source-CSV/COMMON_NAMES.csv",
+    tsvFarmacy = "Duke-Source-CSV/FARMACY_NEW.csv",
+    tsvTaxa = "Duke-Source-CSV/FNFTAX.csv",
+    tsvReference = "Duke-Source-CSV/REFERENCES.csv"
+  ),
   interimFile = "drduke.tsv.zip"
 )
 
@@ -154,11 +156,12 @@ databases$add(
 
 databases$add(
   name = "metabolights",
-  sourceFiles = list(xmlComplete = "eb-eye_metabolights_complete.xml",
-                     xmlStudies = "eb-eye_metabolights_studies.xml",
-                     tsvPrecleaned = "metabolightsPrecleaned.tsv.zip",
-                     tsvStudies = "metabolightsStudiesScraped.tsv.zip"
-                     ),
+  sourceFiles = list(
+    xmlComplete = "eb-eye_metabolights_complete.xml",
+    xmlStudies = "eb-eye_metabolights_studies.xml",
+    tsvPrecleaned = "metabolightsPrecleaned.tsv.zip",
+    tsvStudies = "metabolightsStudiesScraped.tsv.zip"
+  ),
   interimFile = "metabolights.tsv.zip"
 )
 
@@ -202,78 +205,40 @@ databases$add(
   interimFile = "nanpdb.tsv.zip"
 )
 
-##### npass
-pathDataExternalDbSourceNpass <-
-  file.path(pathDataExternalDbSource,
-            "npass")
+databases$add(
+  name = "npass",
+  sourceFiles = list(
+    tsvGeneral = "NPASSv1.0_download_naturalProducts_generalInfo.txt",
+    tsvProperties = "NPASSv1.0_download_naturalProducts_properties.txt",
+    tsvSpeciesInfo = "NPASSv1.0_download_naturalProducts_speciesInfo.txt",
+    tsvSpeciesPair = "NPASSv1.0_download_naturalProducts_species_pair.txt"
+  ),
+  interimFile = "npass.tsv.zip"
+)
 
-###### general info
-pathDataExternalDbSourceNpassGeneralInfo <-
-  file.path(
-    pathDataExternalDbSourceNpass,
-    "NPASSv1.0_download_naturalProducts_generalInfo.txt"
-  )
+databases$add(
+  name = "npatlas",
+  sourceFiles = list(tsv = "np_atlas_2019_12.tsv"),
+  interimFile = "npatlas.tsv.zip"
+)
 
-###### properties
-pathDataExternalDbSourceNpassProperties <-
-  file.path(
-    pathDataExternalDbSourceNpass,
-    "NPASSv1.0_download_naturalProducts_properties.txt"
-  )
+databases$add(
+  name = "npcare",
+  sourceFiles = list(tsv = "npcare.zip"),
+  interimFile = "npcare.tsv.zip"
+)
 
-###### species info
-pathDataExternalDbSourceNpassSpeciesInfo <-
-  file.path(
-    pathDataExternalDbSourceNpass,
-    "NPASSv1.0_download_naturalProducts_speciesInfo.txt"
-  )
+databases$add(
+  name = "npedia",
+  sourceFiles = list(tsv = "npediaScraped.tsv.zip"),
+  interimFile = "npedia.tsv.zip"
+)
 
-###### species pair
-pathDataExternalDbSourceNpassSpeciesPair <-
-  file.path(
-    pathDataExternalDbSourceNpass,
-    "NPASSv1.0_download_naturalProducts_species_pair.txt"
-  )
-
-##### npatlas
-pathDataExternalDbSourceNpatlas <-
-  file.path(pathDataExternalDbSource,
-            "npatlas")
-
-###### original
-pathDataExternalDbSourceNpatlasOriginal <-
-  file.path(pathDataExternalDbSourceNpatlas,
-            "np_atlas_2019_12.tsv")
-
-##### npcare
-pathDataExternalDbSourceNpcare <-
-  file.path(pathDataExternalDbSource,
-            "npcare")
-
-###### original
-pathDataExternalDbSourceNpcareOriginal <-
-  file.path(pathDataExternalDbSourceNpcare,
-            "npcare.zip")
-
-##### npedia
-pathDataExternalDbSourceNpedia <-
-  file.path(pathDataExternalDbSource,
-            "npedia")
-
-###### original
-pathDataExternalDbSourceNpediaOriginal <-
-  file.path(pathDataExternalDbSourceNpedia,
-            "npediaScraped.tsv.zip")
-
-##### pamdb
-pathDataExternalDbSourcePamdb <-
-  file.path(pathDataExternalDbSource,
-            "pamdb")
-
-###### original
-pathDataExternalDbSourcePamdbOriginal <-
-  file.path(pathDataExternalDbSourcePamdb,
-            "PaMet.xlsx")
+databases$add(
+  name = "pamdb",
+  sourceFiles = list(tsv = "PaMet.xlsx"),
+  interimFile = "pamdb.tsv.zip"
+)
 
 ##### phenolexplorer
 pathDataExternalDbSourcePhenolexplorer <-

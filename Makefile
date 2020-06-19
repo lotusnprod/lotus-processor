@@ -21,9 +21,13 @@ METABOLIGHTS_SOURCE_PATH = ${SOURCE_PATH}/metabolights
 MIBIG_SOURCE_PATH = ${SOURCE_PATH}/mibig
 MITISHAMBA_SOURCE_PATH = ${SOURCE_PATH}/mitishamba
 NANPDB_SOURCE_PATH = ${SOURCE_PATH}/nanpdb
+NPASS_SOURCE_PATH = ${SOURCE_PATH}/npass
+NPATLAS_SOURCE_PATH = ${SOURCE_PATH}/npatlas
+NPCARE_SOURCE_PATH = ${SOURCE_PATH}/npcare
+NPEDIA_SOURCE_PATH = ${SOURCE_PATH}/npedia
+PAMDB_SOURCE_PATH = ${SOURCE_PATH}/pamdb
 
-
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -43,11 +47,11 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
 
-databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb
+databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb
 
 databases-reconvert: metabolights-reconvert
 
-databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape
+databases-rescrape: alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape
 
 afrotryp: ${INTERIM_PATH}/afrotryp.tsv.zip
 
@@ -134,7 +138,6 @@ ${INTERIM_PATH}/knapsack.tsv.zip: ${KNAPSACK_SOURCE_PATH}/knapsackScraped.tsv.zi
 knapsack-rescrape:
 	cd src && Rscript 1_gathering/db/knapsack/scraping.R
 
-
 # PROCESS DONE FOR METABOLIGHTS IS HORROR... my apologies I can't write it another way
 metabolights: ${INTERIM_PATH}/metabolights.tsv.zip
 
@@ -171,6 +174,34 @@ ${INTERIM_PATH}/nanpdb.tsv.zip: ${NANPDB_SOURCE_PATH}/nanpdbScraped.tsv.zip
 
 nanpdb-rescrape:
 	cd src && Rscript 1_gathering/db/nanpdb/scraping.R	
+
+npass: ${INTERIM_PATH}/npass.tsv.zip
+
+${INTERIM_PATH}/npass.tsv.zip: ${NPASS_SOURCE_PATH}/NPASSv1.0_download_naturalProducts_generalInfo.txt ${NPASS_SOURCE_PATH}/NPASSv1.0_download_naturalProducts_properties.txt ${NPASS_SOURCE_PATH}/NPASSv1.0_download_naturalProducts_speciesInfo.txt ${NPASS_SOURCE_PATH}/NPASSv1.0_download_naturalProducts_species_pair.txt
+	cd src &&	Rscript 1_gathering/db/npass/standardizing.R
+
+npatlas: ${INTERIM_PATH}/npatlas.tsv.zip
+
+${INTERIM_PATH}/npatlas.tsv.zip: ${NPATLAS_SOURCE_PATH}/np_atlas_2019_12.tsv
+	cd src &&	Rscript 1_gathering/db/npatlas/standardizing.R
+
+npcare: ${INTERIM_PATH}/npcare.tsv.zip
+
+${INTERIM_PATH}/npcare.tsv.zip: ${NPCARE_SOURCE_PATH}/npcare.zip
+	cd src &&	Rscript 1_gathering/db/npcare/standardizing.R	
+
+npedia: ${INTERIM_PATH}/npedia.tsv.zip
+
+${INTERIM_PATH}/npedia.tsv.zip: ${NPEDIA_SOURCE_PATH}/npediaScraped.tsv.zip
+	cd src &&	Rscript 1_gathering/db/npedia/standardizing.R
+
+npedia-rescrape:
+	cd src && Rscript 1_gathering/db/npedia/scraping.R	
+
+pamdb: ${INTERIM_PATH}/pamdb.tsv.zip
+
+${INTERIM_PATH}/pamdb.tsv.zip: ${PAMDB_SOURCE_PATH}/PaMet.xlsx
+	cd src &&	Rscript 1_gathering/db/pamdb/standardizing.R	
 
 curating: curating-integrating curating-editing
 

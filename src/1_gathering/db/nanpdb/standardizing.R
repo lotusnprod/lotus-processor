@@ -7,7 +7,6 @@ source("functions/standardizing.R")
 
 library(dplyr)
 library(readr)
-library(readxl)
 library(splitstackshape)
 library(tidyr)
 
