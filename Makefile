@@ -42,7 +42,7 @@ TRIFORC_SOURCE_PATH = ${SOURCE_PATH}/triforc
 UNPD_SOURCE_PATH = ${SOURCE_PATH}/unpd
 
 
-.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate procardb procardb-rescrape respect sancdb sancdb-rescrape streptomedb streptomedb-reconvert swmd swmd-rescrape symmap tmdb tmdb-rescrape tmmc tppt triforc triforc-reintegrate unpd unpd-reintegrate
+.PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biofacquim-reconvert biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate procardb procardb-rescrape respect sancdb sancdb-rescrape streptomedb streptomedb-reconvert swmd swmd-rescrape symmap tmdb tmdb-rescrape tmmc tppt triforc triforc-reintegrate unpd unpd-reintegrate
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
 
 help:
@@ -64,7 +64,7 @@ docker-bash:
 
 databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc procardb respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd
 
-databases-reconvert: metabolights-reconvert streptomedb-reconvert
+databases-reconvert: biofacuim-reconvert metabolights-reconvert streptomedb-reconvert
 
 databases-reintegrate: plantcyc-reintegrate triforc-reintegrate unpd-reintegrate
 
@@ -85,8 +85,13 @@ alkamid-rescrape:
 
 biofacquim: ${INTERIM_PATH}/biofacquim.tsv.zip
 
-${INTERIM_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/apps_database_csv_BIOFACQUIM.csv
+${INTERIM_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/biofacquim.tsv.zip
 	cd src &&	Rscript 1_gathering/db/biofacquim/standardizing.R
+
+biofacquim-reconvert: ${BIOFACQUIM_SOURCE_PATH}/biofacquim.tsv.zip
+
+${STREPTOMEDB_SOURCE_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/BIOFACQUIM_V2.sdf
+	cd src &&	Rscript 1_gathering/db/biofacquim/converting.R
 
 biophytmol: ${INTERIM_PATH}/biophytmol.tsv.zip
 
