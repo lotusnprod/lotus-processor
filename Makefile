@@ -64,7 +64,7 @@ docker-bash:
 
 databases: afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc procardb respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd
 
-databases-reconvert: biofacuim-reconvert metabolights-reconvert streptomedb-reconvert
+databases-reconvert: biofacquim-reconvert metabolights-reconvert streptomedb-reconvert
 
 databases-reintegrate: plantcyc-reintegrate triforc-reintegrate unpd-reintegrate
 
@@ -336,7 +336,10 @@ curating: curating-integrating curating-editing
 curating-integrating:
 	cd src && Rscript 2_curating/1_integrating/integratingOriginalDatabase.R
 
-curating-editing:  curating-editing-bio
+curating-editing:  curating-editing-bio curating-editing-reference
 
 curating-editing-bio:
 	cd src && Rscript 2_curating/2_editing/bio/editing.R
+
+curating-editing-reference:
+	cd src && Rscript 2_curating/2_editing/reference/editing.R

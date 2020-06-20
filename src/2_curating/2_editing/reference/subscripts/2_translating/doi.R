@@ -7,7 +7,7 @@ source("paths.R")
 source("functions/reference.R")
 
 # getting references
-reflistDoi <- invisible(
+reflistDoi <-
   pbmclapply(
     FUN = getrefDoi,
     X = dataReferenceFillDoi$value,
@@ -16,9 +16,9 @@ reflistDoi <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
-)
 
 # joining with original dataframe
 for (i in 1:length(reflistDoi)) {
@@ -32,7 +32,9 @@ for (i in 1:length(reflistDoi)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflistDoi)) {
   dataReferenceFillDoi[i, "translatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
@@ -43,7 +45,9 @@ for (i in 1:length(reflistDoi)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflistDoi)) {
   dataReferenceFillDoi[i, "translatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
@@ -54,7 +58,9 @@ for (i in 1:length(reflistDoi)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflistDoi)) {
   dataReferenceFillDoi[i, "translatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
@@ -65,7 +71,9 @@ for (i in 1:length(reflistDoi)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflistDoi)) {
   dataReferenceFillDoi[i, "translatedAuthor"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
@@ -76,10 +84,12 @@ for (i in 1:length(reflistDoi)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflistDoi)) {
   dataReferenceFillDoi[i, "translationScore"] <-
     as.character(ifelse(
-      test = !is.na(reflistDoi[[i]][["data"]][["score"]]),
+      test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
         test = !is.null(reflistDoi[[i]][["data"]][["score"]]),
         yes = reflistDoi[[i]][["data"]][["score"]],

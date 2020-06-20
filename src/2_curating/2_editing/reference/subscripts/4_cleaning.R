@@ -22,149 +22,152 @@ test <- dataTranslated %>%
   add_count() %>%
   arrange(desc(n))
 
+
+# COMMENT: JUST AS FOR BIOLOGICAL SOURCES THOSE LINES SHOULD COME THEN 
+## BEFORE TRANSLATION OF THE REFERENCE. WE DO IT AFTER BECAUSE YOU CAN
+### NOT GUESS IT BUT THEN BUILDING A REPLACEMENT DIC SEEMS GOOD FOR ME
+
 test2 <- test %>%
   filter(grepl("Harborne, The Handbook of Natural Flavonoids", referenceSplit)) %>%
   mutate(
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 1,Anthocyanins",
       replacement = "",
       x = referenceSplit,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 2.Flavones, John Wiley & Son",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 3.Flavone O-glycosides, John Wiley & Son",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 3.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 8.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 9.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 11.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 12.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 13.Flavone O-glycosides,",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 181.Flavonols",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 297.Flavonol O-glycosides",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 355,Flavans and proanthocyanidins",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 517,Isoflavonoids and neoflavonoids",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 549,C-glycosylflavones",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 1, (1999), 645,Biflavonyls",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harbone, Comparative Biochemisty of the Flavonoids,(1965),39, Academic Press",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, Comparative Biochemstry of the Flavonoides,(1967),41, Academic Press",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne,Comparative Biochemistry of the Flavonoids, (1967) Academic Press",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Chalcones,dihydrochalcones and aurones",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = FALSE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999)",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = ", [0-9]{3},",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = FALSE
     ),
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999)Flavanones and dihydroflavonols",
       replacement = "",
-      x = referenceSplit,
+      x = referenceSplitNew,
       fixed = TRUE
     )
   )
 
-
-
 test3 <- test %>%
   filter(n == 631) %>%
   mutate(
-    referenceSplit = gsub(
+    referenceSplitNew = gsub(
       pattern = "; Khimiya .*",
       replacement = "",
       x = referenceSplit,

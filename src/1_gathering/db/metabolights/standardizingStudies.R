@@ -45,7 +45,8 @@ id <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getname <- function(x) {
@@ -61,7 +62,8 @@ name <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getinchi <- function(x) {
@@ -77,7 +79,8 @@ inchi <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getsmiles <- function(x) {
@@ -93,7 +96,8 @@ smiles <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getspecies <- function(x) {
@@ -109,7 +113,8 @@ species <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 data <- tibble(id, name, inchi, smiles, species) %>%

@@ -49,7 +49,8 @@ PROCARDB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 
@@ -95,7 +96,8 @@ PROCARDB_3 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 
@@ -127,7 +129,8 @@ PROCARDB_5 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 

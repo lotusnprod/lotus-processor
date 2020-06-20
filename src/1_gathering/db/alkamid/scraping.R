@@ -40,7 +40,8 @@ extracted_elements <- invisible(
     mc.silent = FALSE,
     mc.cores = numCores,
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 

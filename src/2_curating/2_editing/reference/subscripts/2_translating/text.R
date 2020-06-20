@@ -16,7 +16,8 @@ reflist <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 
@@ -32,7 +33,9 @@ for (i in 1:length(reflist)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflist)) {
   dataReferenceFillAuto[i, "translatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
@@ -43,7 +46,9 @@ for (i in 1:length(reflist)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflist)) {
   dataReferenceFillAuto[i, "translatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
@@ -54,7 +59,9 @@ for (i in 1:length(reflist)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflist)) {
   dataReferenceFillAuto[i, "translatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
@@ -65,10 +72,12 @@ for (i in 1:length(reflist)) {
       ),
       no = NA
     )[1])
-  
+}
+
+for (i in 1:length(reflist)) {
   dataReferenceFillAuto[i, "translatedAuthor"] <-
     as.character(ifelse(
-      test = !is.na(reflist[[i]][["data"]][["author"]][[1]][["family"]][1]),
+      test = !is.na(reflist[[i]]),
       yes = ifelse(
         test = !is.null(reflist[[i]][["data"]][["author"]][[1]][["family"]][1]),
         yes = reflist[[i]][["data"]][["author"]][[1]][["family"]][1],
@@ -77,9 +86,12 @@ for (i in 1:length(reflist)) {
       no = NA
     )[1])
   
+}
+
+for (i in 1:length(reflist)) {
   dataReferenceFillAuto[i, "translationScore"] <-
     as.character(ifelse(
-      test = !is.na(reflist[[i]][["data"]][["score"]]),
+      test = !is.na(reflist[[i]]),
       yes = ifelse(
         test = !is.null(reflist[[i]][["data"]][["score"]]),
         yes = reflist[[i]][["data"]][["score"]],
@@ -88,4 +100,3 @@ for (i in 1:length(reflist)) {
       no = 0
     )[1])
 }
-
