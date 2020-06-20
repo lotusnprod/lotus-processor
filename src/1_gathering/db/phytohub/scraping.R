@@ -59,7 +59,8 @@ PHYTOHUB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 
@@ -120,7 +121,8 @@ PHYTOHUB_REF <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 

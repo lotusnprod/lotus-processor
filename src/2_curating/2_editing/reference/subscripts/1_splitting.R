@@ -4,7 +4,14 @@
 source("paths.R")
 
 # loading functions
+source("functions/helpers.R")
 source("functions/reference.R")
+
+library(dplyr)
+library(readr)
+library(stringr)
+library(splitstackshape)
+library(tidyr)
 
 # loading files
 ## reference
@@ -79,13 +86,15 @@ dataReferenceFillAuto <- dataReferenceLongSplit %>%
       !grepl(pattern = "http://www.ncbi.nlm.nih.gov/pubmed/",
              x = value) &
       str_count(string = value) > 28
-  )
+  ) %>% 
+  mutate_all(as.character)
 
 # fields that will be hard to retrieve automatically (typically XX et al.)
 dataReferenceFillManual <- dataReferenceLongSplit %>%
   filter(str_count(string = value) <= 28 &
            grepl(pattern = "et al",
-                 x = value))
+                 x = value)) %>% 
+  mutate_all(as.character)
 
 # selecting fields probably corresponding to pubmed ID
 dataReferenceFillPubmed <- dataReferenceLongSplit %>%
@@ -133,9 +142,11 @@ dataReferenceFillPubmed <- dataReferenceLongSplit %>%
     pattern = "?term=",
     replacement = "",
     x = value
-  ))
+  )) %>% 
+  mutate_all(as.character)
 
 # selecting fields corresponding to DOIs
 dataReferenceFillDoi <- dataReferenceLongSplit %>%
   filter(grepl("^doi:", value) |
-           grepl("^10\\.\\d{4,9}", value))
+           grepl("^10\\.\\d{4,9}", value)) %>% 
+  mutate_all(as.character)

@@ -99,7 +99,8 @@ df1 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores()-2),
     mc.cleanup = FALSE,
-    mc.allow.recursive = FALSE
+    mc.allow.recursive = FALSE, 
+    ignore.interactive = TRUE
   )
 ) 
 
@@ -116,7 +117,8 @@ df3 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
+    mc.allow.recursive = TRUE, 
+    ignore.interactive = TRUE
   )
 )
 

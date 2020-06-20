@@ -3,9 +3,11 @@
 # loading paths
 source("paths.R")
 source("functions/helpers.R")
+source("functions/parallel.R")
 source("functions/standardizing.R")
 
 library(dplyr)
+library(pbmcapply)
 library(readr)
 library(splitstackshape)
 library(tidyr)
@@ -33,7 +35,8 @@ id <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getadditionalfields <- function(x) {
@@ -49,7 +52,8 @@ additionalfields <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 getref <- function(x) {
@@ -65,7 +69,8 @@ references <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE, 
+  ignore.interactive = TRUE
 )
 
 data <- tibble(id, additionalfields, references) %>%
