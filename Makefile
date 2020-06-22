@@ -11,9 +11,14 @@ INTERIM_TABLE_TRANSLATED_PATH = ${INTERIM_TABLE_PATH}/1_translated
 INTERIM_TABLE_CLEANED_PATH = ${INTERIM_TABLE_PATH}/2_cleaned
 INTERIM_TABLE_CURATED_PATH = ${INTERIM_TABLE_PATH}/3_curated
 
+
 SRC_GATHERING_PATH = ${SRC_PATH}/1_gathering
 SRC_CURATING_PATH = ${SRC_PATH}/2_curating
 
+SRC_CURATING_EDITING_PATH = ${SRC_CURATING_PATH}/2_editing
+SRC_CURATING_EDITING_CHEMO_PATH =  ${SRC_CURATING_EDITING_PATH}/chemo
+SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_PATH =  ${SRC_CURATING_EDITING_CHEMO_PATH}/subscripts
+SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH =  ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_PATH}/1_translating
 
 AFROTRYP_SOURCE_PATH = ${SOURCE_PATH}/afrotryp
 ALKAMID_SOURCE_PATH = ${SOURCE_PATH}/alkamid
@@ -358,7 +363,11 @@ curating-editing-reference:
 
 curating-editing-chemo: curating-editing-chemo-name curating-editing-chemo-smiles
 
-curating-editing-chemo-name: ${INTERIM_PATH}/unpd.tsv.zip
+curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
+
+${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
+${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
+
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
 curating-editing-chemo-smiles: 
