@@ -1,4 +1,5 @@
 /external
 /interim
 /processed
+/dvc_outputs
 .DS_Store
