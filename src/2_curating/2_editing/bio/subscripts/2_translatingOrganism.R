@@ -3,8 +3,19 @@
 # loading paths
 source("paths.R")
 
-# loading functions
-#source("functions/bio.R")
+## functions
+source("functions/bio.R")
+source("functions/helpers.R")
+source("functions/parallel.R")
+source("functions/log.R")
+
+## libraries
+library(data.table)
+library(dplyr)
+library(pbmcapply)
+library(readr)
+library(tidyverse)
+library(tidyr)
 
 log_debug("  Step 2")
 
