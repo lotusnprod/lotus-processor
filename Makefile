@@ -367,7 +367,6 @@ curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructur
 
 ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
-
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
 curating-editing-chemo-smiles: 
