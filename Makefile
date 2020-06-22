@@ -137,7 +137,7 @@ ${INTERIM_PATH}/cmaup.tsv.zip: ${CMAUP_SOURCE_PATH}/CMAUPv1.0_download_Ingredien
 # maybe not the right way to do it
 coconut: ${INTERIM_PATH}/coconut.tsv.zip
 
-${INTERIM_PATH}/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip python ${SRC_GATHERING_PATH}/coconut/converting.py ${SRC_GATHERING_PATH}/coconut/standardizing.R
+${INTERIM_PATH}/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip ${SRC_GATHERING_PATH}/coconut/converting.py ${SRC_GATHERING_PATH}/coconut/standardizing.R
 	cd src &&	python ${SRC_GATHERING_PATH}/coconut/converting.py  && Rscript ${SRC_GATHERING_PATH}/coconut/standardizing.R
 
 cyanometdb: ${INTERIM_PATH}/cyanometdb.tsv.zip
@@ -354,7 +354,7 @@ curating: curating-integrating curating-editing
 curating-integrating:
 	cd src && Rscript 2_curating/1_integrating/integratingOriginalDatabase.R
 
-curating-editing:  curating-editing-bio curating-editing-reference
+curating-editing: curating-editing-bio curating-editing-reference
 
 curating-editing-bio:
 	cd src && Rscript 2_curating/2_editing/bio/editing.R
