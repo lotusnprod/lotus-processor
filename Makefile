@@ -1,7 +1,7 @@
 DATA_PATH ?= ${PWD}/data
 
 INTERIM_PATH = ${DATA_PATH}/interim/db
-SOURCE_PATH = ${DATA_PATH}/external/dbSource
+SOURCE_PATH = ${DATA_PATH}/external/dbSource #SOURCE_PATH is somewhat ambiguous .... I was expecting the src directory here ...
 
 AFROTRYP_SOURCE_PATH = ${SOURCE_PATH}/afrotryp
 ALKAMID_SOURCE_PATH = ${SOURCE_PATH}/alkamid
@@ -343,3 +343,11 @@ curating-editing-bio:
 
 curating-editing-reference:
 	cd src && Rscript 2_curating/2_editing/reference/editing.R
+
+curating-editing-chemo: curating-editing-chemo-name curating-editing-chemo-smiles
+
+curating-editing-chemo-name: 
+	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
+
+curating-editing-chemo-smiles: 
+	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
