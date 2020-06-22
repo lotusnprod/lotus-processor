@@ -19,7 +19,8 @@ df = pd.read_csv(
 	myZip,
 	sep = '\t') 
 
-df.head()
+# df.head()
+# df.info()
 
 # keeping non-null entries
 df_i = df[df['structureOriginalSmiles'].notnull()]

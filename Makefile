@@ -1,7 +1,19 @@
 DATA_PATH ?= ${PWD}/data
+SRC_PATH ?= ${PWD}/src
 
 INTERIM_PATH = ${DATA_PATH}/interim/db
 SOURCE_PATH = ${DATA_PATH}/external/dbSource #SOURCE_PATH is somewhat ambiguous .... I was expecting the src directory here ...
+
+# Below is and endless PATH nightmare. Why dont we have a unique ITERIM folder to dump all files, uniquely named ?
+INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
+INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original
+INTERIM_TABLE_TRANSLATED_PATH = ${INTERIM_TABLE_PATH}/1_translated
+INTERIM_TABLE_CLEANED_PATH = ${INTERIM_TABLE_PATH}/2_cleaned
+INTERIM_TABLE_CURATED_PATH = ${INTERIM_TABLE_PATH}/3_curated
+
+SRC_GATHERING_PATH = ${SRC_PATH}/1_gathering
+SRC_CURATING_PATH = ${SRC_PATH}/2_curating
+
 
 AFROTRYP_SOURCE_PATH = ${SOURCE_PATH}/afrotryp
 ALKAMID_SOURCE_PATH = ${SOURCE_PATH}/alkamid
@@ -346,7 +358,7 @@ curating-editing-reference:
 
 curating-editing-chemo: curating-editing-chemo-name curating-editing-chemo-smiles
 
-curating-editing-chemo-name: 
+curating-editing-chemo-name: ${INTERIM_PATH}/unpd.tsv.zip
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
 curating-editing-chemo-smiles: 
