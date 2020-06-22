@@ -55,7 +55,7 @@ foods <- read_delim(
   mutate_all(as.character)
 
 references <- read_delim(
-  file = tsvReference,
+  file = database$sourceFiles$tsvReference,
   delim = ",",
   escape_double = FALSE,
   trim_ws = TRUE
