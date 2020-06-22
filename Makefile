@@ -2,15 +2,17 @@ DATA_PATH ?= ${PWD}/data
 SRC_PATH ?= ${PWD}/src
 
 INTERIM_PATH = ${DATA_PATH}/interim/db
-SOURCE_PATH = ${DATA_PATH}/external/dbSource #SOURCE_PATH is somewhat ambiguous .... I was expecting the src directory here ...
+SOURCE_PATH = ${DATA_PATH}/external/dbSource
+# SOURCE_PATH is somewhat ambiguous .... I was expecting the src directory here ...
+## be carfeul with comments they can ruin the makefile as stated here: https://www.gnu.org/software/make/manual/html_node/Recipe-Syntax.html. At least it made mine do not work anymore
 
 # Below is and endless PATH nightmare. Why dont we have a unique ITERIM folder to dump all files, uniquely named ?
+## This is because the files should be slowly removed and renamed in dictionaries instead. so working with interim/original table at the begining, bunch of dictionaries (original to translated, translated to curated etc) and processed table in the end, in my view at least
 INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
 INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original
 INTERIM_TABLE_TRANSLATED_PATH = ${INTERIM_TABLE_PATH}/1_translated
 INTERIM_TABLE_CLEANED_PATH = ${INTERIM_TABLE_PATH}/2_cleaned
 INTERIM_TABLE_CURATED_PATH = ${INTERIM_TABLE_PATH}/3_curated
-
 
 SRC_GATHERING_PATH = ${SRC_PATH}/1_gathering
 SRC_CURATING_PATH = ${SRC_PATH}/2_curating
@@ -57,7 +59,6 @@ TMMC_SOURCE_PATH = ${SOURCE_PATH}/tmmc
 TPPT_SOURCE_PATH = ${SOURCE_PATH}/tppt
 TRIFORC_SOURCE_PATH = ${SOURCE_PATH}/triforc
 UNPD_SOURCE_PATH = ${SOURCE_PATH}/unpd
-
 
 .PHONY: help docker-build docker-bash databases afrotryp alkamid alkamid-rescrape biofacquim biofacquim-reconvert biophytmol biophytmol-rescrape carotenoiddb carotenoiddb-rescrape cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack knapsack-rescrape metabolights metabolights-rescrape metabolights-reconvert mibig mitishamba mitishamba-rescrape nanpdb nanpdb-rescrape npass npatlas npcare npedia npedia-rescrape pamdb phenolexplorer phytohub phytohub-rescrape plantcyc plantcyc-reintegrate procardb procardb-rescrape respect sancdb sancdb-rescrape streptomedb streptomedb-reconvert swmd swmd-rescrape symmap tmdb tmdb-rescrape tmmc tppt triforc triforc-reintegrate unpd unpd-reintegrate
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
