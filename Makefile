@@ -350,4 +350,4 @@ curating-editing-chemo-name:
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
 curating-editing-chemo-smiles: 
-	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
+	cd src && python 2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
