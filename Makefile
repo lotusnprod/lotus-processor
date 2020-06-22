@@ -90,7 +90,7 @@ ${INTERIM_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/biofacquim.tsv.zip
 
 biofacquim-reconvert: ${BIOFACQUIM_SOURCE_PATH}/biofacquim.tsv.zip
 
-${STREPTOMEDB_SOURCE_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/BIOFACQUIM_V2.sdf
+${BIOFACQUIM_SOURCE_PATH}/biofacquim.tsv.zip: ${BIOFACQUIM_SOURCE_PATH}/BIOFACQUIM_V2.sdf
 	cd src &&	Rscript 1_gathering/db/biofacquim/converting.R
 
 biophytmol: ${INTERIM_PATH}/biophytmol.tsv.zip
