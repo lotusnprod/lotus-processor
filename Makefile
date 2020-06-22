@@ -166,9 +166,9 @@ metabolights: ${INTERIM_PATH}/metabolights.tsv.zip
 ${INTERIM_PATH}/metabolights.tsv.zip: ${METABOLIGHTS_SOURCE_PATH}/metabolightsPrecleaned.tsv.zip ${METABOLIGHTS_SOURCE_PATH}/metabolightsStudiesScraped.tsv.zip
 	cd src &&	Rscript 1_gathering/db/metabolights/standardizing.R
 
-metabolights-reconvert: ${INTERIM_PATH}/metabolightsPrecleaned.tsv.zip ${METABOLIGHTS_SOURCE_PATH}/metabolightsStudiesScraped.tsv.zip
+metabolights-reconvert: ${METABOLIGHTS_SOURCE_PATH}/metabolightsPrecleaned.tsv.zip ${METABOLIGHTS_SOURCE_PATH}/metabolightsStudiesScraped.tsv.zip
 
-${INTERIM_PATH}/metabolightsPrecleaned.tsv.zip: $(wildcard ${METABOLIGHTS_SOURCE_PATH}/studiesScraped/*.json) ${METABOLIGHTS_SOURCE_PATH}/eb-eye_metabolights_complete.xml
+${METABOLIGHTS_SOURCE_PATH}/metabolightsPrecleaned.tsv.zip: $(wildcard ${METABOLIGHTS_SOURCE_PATH}/studiesScraped/*.json) ${METABOLIGHTS_SOURCE_PATH}/eb-eye_metabolights_complete.xml
 	cd src &&	Rscript 1_gathering/db/metabolights/prestandardizing.R &&	Rscript 1_gathering/db/metabolights/standardizingStudies.R
 
 metabolights-rescrape: $(wildcard ${METABOLIGHTS_SOURCE_PATH}studiesScraped/*.json)
