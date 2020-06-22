@@ -137,6 +137,7 @@ ${INTERIM_PATH}/cmaup.tsv.zip: ${CMAUP_SOURCE_PATH}/CMAUPv1.0_download_Ingredien
 # maybe not the right way to do it
 coconut: ${INTERIM_PATH}/coconut.tsv.zip
 
+# maybe split both indeed else long
 ${INTERIM_PATH}/coconut.tsv.zip: ${COCONUT_SOURCE_PATH}/COCONUT.sdf.zip ${COCONUT_SOURCE_PATH}/coconutConverted.tsv.zip ${SRC_GATHERING_PATH}/coconut/converting.py ${SRC_GATHERING_PATH}/coconut/standardizing.R
 	cd src &&	python ${SRC_GATHERING_PATH}/coconut/converting.py  && Rscript ${SRC_GATHERING_PATH}/coconut/standardizing.R
 
@@ -179,6 +180,7 @@ knapsack-rescrape:
 	cd src && Rscript ${SRC_GATHERING_PATH}/knapsack/scraping.R
 
 # PROCESS DONE FOR METABOLIGHTS IS HORROR... my apologies I can't write it another way
+## to be changed
 metabolights: ${INTERIM_PATH}/metabolights.tsv.zip
 
 ${INTERIM_PATH}/metabolights.tsv.zip: ${METABOLIGHTS_SOURCE_PATH}/metabolightsPrecleaned.tsv.zip ${METABOLIGHTS_SOURCE_PATH}/metabolightsStudiesScraped.tsv.zip ${SRC_GATHERING_PATH}/metabolights/standardizing.R
