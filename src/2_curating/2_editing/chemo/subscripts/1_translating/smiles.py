@@ -30,11 +30,7 @@ df_i['structureOriginalSmiles'].replace(regex = True,
 										to_replace = r'"',
 										value = r''
 										)
-df_i['structureOriginalSmiles'].replace(regex = True,
-										inplace = True,
-										to_replace = r'"',
-										value = r''
-										)
+
 
 # generating ROMOL
 df_i['ROMol'] = df_i['structureOriginalSmiles'].map(Chem.MolFromSmiles)
