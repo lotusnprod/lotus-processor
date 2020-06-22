@@ -7,7 +7,7 @@ from rdkit.Chem import PandasTools
 import zipfile
 
 # file path
-my_zip_file = zipfile.ZipFile(file = '../data/external/dbSource/coconut/0_initial_files/COCONUT.sdf.zip', mode = 'r')
+my_zip_file = zipfile.ZipFile(file = '../data/external/dbSource/coconut/COCONUT.sdf.zip', mode = 'r')
 my_sdf_file = my_zip_file.open('COCONUT.sdf')
 
 
@@ -19,4 +19,4 @@ sdf_frame = PandasTools.LoadSDF(my_sdf_file,
                                 includeFingerprints = False)
 
 #exporting
-sdf_frame.to_csv('../data/external/dbSource/coconut/0_initial_files/coconutConverted.tsv.zip', compression = 'gzip', sep = '\t')
+sdf_frame.to_csv('../data/external/dbSource/coconut/coconutConverted.tsv.zip', compression = 'gzip', sep = '\t')
