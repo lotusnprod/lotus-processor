@@ -1,10 +1,23 @@
 # title: "treating bio"
 
-# loading paths
+# loading
+## paths
 source("paths.R")
 
-# loading functions
-#source("functions/bio.R")
+## functions
+source("functions/bio.R")
+source("functions/helpers.R")
+source("functions/log.R")
+source("2_curating/2_editing/bio/functions/manipulating_taxo.R")
+source("2_curating/2_editing/bio/functions/gnfinder_cleaning.R")
+
+## libraries
+library(data.table)
+library(dplyr)
+library(jsonlite)
+library(readr)
+library(tidyverse)
+library(tidyr)
 
 log_debug("  Step 3")
 
