@@ -22,4 +22,4 @@ dvc-pull:
 build-databases:
   stage: build-databases
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/data -v /srv/onpdb-data/dvc/tmp:/srv/onpdb/.dvc/tmp -v /srv/onpdb-data/dvc/cache:/srv/onpdb/.dvc/cache -v $PWD:/srv/onpdb onpdb-environment make databases
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc/tmp:/srv/onpdb/.dvc/tmp -v /srv/onpdb-data/dvc/cache:/srv/onpdb/.dvc/cache -v $PWD:/srv/onpdb onpdb-environment make databases
