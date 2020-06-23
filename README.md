@@ -101,6 +101,21 @@ If you want to have the data in a different place (for example for running a tes
 
 make -C src/1_gathering/db -B alkamid 
 
+
+### Use docker to build
+
+Install docker on your machine, make sure it is on your path
+
+then
+
+````console
+make docker-build
+make docker-bash
+````
+
+This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
+
+
 # TO UPDATE
 
 ```
