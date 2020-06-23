@@ -15,10 +15,10 @@ help:
 	@echo "curating: Run the 2_curating scripts"
 
 docker-build:
-	docker build -t onpdb-environment .
+	docker build -t onpdb-environment --build-arg USER_ID=$(shell id -u) --build-arg GROUP_ID=$(shell id -g) .
 
 docker-bash:
-	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment bash
+	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment 
 
 databases:
 	@echo Running database specific makefile $@

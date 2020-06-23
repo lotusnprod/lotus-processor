@@ -1,6 +1,6 @@
 include ../../../paths.mk
 
-DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub plantcyc procardb respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd
+DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb dnp drduke etcm foodb inflamnat knapsack mibig mitishamba nanpdb npass npatlas npcare npedia pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd #metabolights plantcyc 
 
 DATABASES_RECONVERT = biofacquim-reconvert metabolights-reconvert streptomedb-reconvert
 
@@ -81,7 +81,7 @@ ${INTERIM_PATH}/foodb.tsv.zip: ${DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Comp
 ${INTERIM_PATH}/inflamnat.tsv.zip: ${DB_SOURCE_PATH}/inflamnat/ci8b00560_si_001.xlsx ${SRC_GATHERING_PATH}/inflamnat/standardizing.R
 	cd ${PWD}/src &&	Rscript ${SRC_GATHERING_PATH}/inflamnat/standardizing.R
 
-${INTERIM_PATH}/knapsack.tsv.zip: ${DB_SOURCE_PATH}/knapsack/knapsack/Scraped.tsv.zip ${SRC_GATHERING_PATH}/knapsack/standardizing.R
+${INTERIM_PATH}/knapsack.tsv.zip: ${DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.zip ${SRC_GATHERING_PATH}/knapsack/standardizing.R
 	cd ${PWD}/src &&	Rscript ${SRC_GATHERING_PATH}/knapsack/standardizing.R
 
 knapsack-rescrape:

@@ -6,7 +6,12 @@ ENV CONDA_DEFAULT_ENV /srv/onpdb_env
 RUN mkdir /srv/onpdb
 WORKDIR /srv/onpdb
 RUN cd /tmp && curl -L https://github.com/gnames/gnfinder/releases/download/v0.11.1/gnfinder-v0.11.1-linux.tar.gz | tar xz && mv gnfinder /usr/local/bin
-RUN echo "conda activate /srv/onpdb_env" >> ~/.bashrc
 COPY environment_non_conda.sh /environment_non_conda.sh
 RUN /environment_non_conda.sh
 SHELL ["/bin/bash", "-c"]
+ARG USER_ID
+ARG GROUP_ID
+RUN addgroup --gid $GROUP_ID user
+RUN adduser --disabled-password --gecos '' --uid $USER_ID --gid $GROUP_ID user
+USER user
+RUN echo "conda activate /srv/onpdb_env" >> ~/.bashrc
