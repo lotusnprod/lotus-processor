@@ -157,6 +157,7 @@ dependencies:
   - r-ggraph
   - r-reticulate
   - r-tidyverse
+  - r-gdata
   - beautifulsoup4
   - lxml
   - urllib3
