@@ -79,6 +79,24 @@ name2inchi <- function(i)
 
 preparing_name <- function(x) {
   x$nameCleaned <- x$structureOriginalNominal
+  x$nameCleaned <- gsub("\\u03b1", "alpha", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u03b2", "beta", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u03b3", "gamma", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u03b4", "delta", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u03b5", "epsilon", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u03c9", "omega", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("(\\u00b1)-", "", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u00f6", "ö", x$nameCleaned,
+                        fixed = TRUE)
+  x$nameCleaned <- gsub("\\u2192", "->", x$nameCleaned,
+                        fixed = TRUE)
   x$nameCleaned <- gsub("α", "alpha", x$nameCleaned)
   x$nameCleaned <- gsub("Α", "alpha", x$nameCleaned)
   x$nameCleaned <- gsub("β", "beta", x$nameCleaned)
