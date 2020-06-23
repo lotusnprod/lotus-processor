@@ -17,7 +17,7 @@ validate_docker_image:
 dvc-pull:
   stage: pull-data
   script:
-    - docker run --rm -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && dvc pull -f"
+    - docker run --rm -v /home/gitlab-runner/.aws:/home/user/.aws -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && dvc pull -f"
 
 build-databases:
   stage: build-databases
