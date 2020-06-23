@@ -18,8 +18,17 @@ dvc-pull:
   stage: pull-data
   script:
     - docker run --rm -v /home/gitlab-runner/.aws:/home/user/.aws -v $PWD:/srv/onpdb  -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed onpdb-environment bash -c "cd /srv/onpdb && dvc cache dir /srv/dvc && dvc pull -f"
+  rules:
+    - changes:
+      - data/*.dvc
+    - when: manual  
 
 build-databases:
   stage: build-databases
   script:
     - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment "cd /srv/onpda && make databases"
+  rules:
+    - changes:
+      - data/*.dvc
+      - src/1_gathering/db/**/*
+    - when: manual  
