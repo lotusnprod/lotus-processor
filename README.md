@@ -97,6 +97,10 @@ dvc pull  # This will take a while
 
 If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
 
+### If you want to build only a simple DB
+
+make -C src/1_gathering/db -B alkamid 
+
 # TO UPDATE
 
 ```
