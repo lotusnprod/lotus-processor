@@ -14,4 +14,4 @@ build_docker_image:
 validate_docker_image:
   stage: docker
   script:
-    - docker run -it --rm -v $PWD:/srv/onpdb onpdb-environment true
+    - docker run --rm -v $PWD:/srv/onpdb onpdb-environment true
