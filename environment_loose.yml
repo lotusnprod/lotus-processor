@@ -161,3 +161,4 @@ dependencies:
   - beautifulsoup4
   - lxml
   - urllib3
+  - dvc
