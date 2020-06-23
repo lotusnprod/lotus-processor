@@ -5,11 +5,6 @@ build_docker_image:
   stage: docker
   script:
     - make docker-build
-  rules:
-    - changes:
-        - Dockerfile
-      when: manual
-      allow_failure: false
 
 validate_docker_image:
   stage: docker
