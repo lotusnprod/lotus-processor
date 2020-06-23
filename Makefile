@@ -21,8 +21,16 @@ docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment 
 
 databases:
-	@echo Running database specific makefile $@
-	make -C ${SRC_GATHERING_PATH}
+	make -C ${SRC_GATHERING_PATH} databases
+
+databases-reconvert: ${DATABASES_RECONVERT}
+	make -C ${SRC_GATHERING_PATH} databases-reconvert
+
+databases-reintegrate: ${DATABASES_REINTEGRATE}
+	make -C ${SRC_GATHERING_PATH} databases-reintegrate
+
+databases-rescrape: ${DATABASES_RESCRAPE}
+	make -C ${SRC_GATHERING_PATH} databases-rescrape
 
 curating: curating-integrating curating-editing
 
