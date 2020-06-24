@@ -118,6 +118,8 @@ dirnames <- dirnames[seq(4, nrow(dirnames), 6), ]
 
 file <- "compounds.dat"
 
+print(x = "This might take several minutes")
+
 for (i in dirnames) {
   plantcycompiling(x = i)
 }
