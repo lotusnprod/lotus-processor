@@ -31,7 +31,7 @@ graph TD
     213(name) --> 
       220(InChI) --> 
         230(ROMOL) --> 
-          |think about 2D 3D| 240(sanitized ROMOL) -->
+          240(sanitized ROMOL) -->
             251(InChI, SMILES, InChIKey) -->
               261(classyfire taxonomy)-->
                 270(sanitized metabolite with taxonomy and metadata)
