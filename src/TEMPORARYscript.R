@@ -156,3 +156,23 @@ fullDbFiltered <- fullDb %>%
            cleanedTranslationScore <= 110 &
            !is.na(organismCurated)) %>% 
   distinct(inchiSanitized, organismCurated, cleanedDoi, .keep_all = TRUE)
+
+fullDbFilteredDnp <- fullDb %>% 
+  filter(database == "dnp_1")
+
+fullDbFilteredNoDnp <- fullDb %>% 
+  filter(database != "dnp_1")
+
+fullDBDnpTop <- rbind(fullDbFilteredDnp, fullDbFilteredNoDnp)
+
+fullDbFilteredOutsideDnp <- fullDBDnpTop %>% 
+  filter(!is.na(organismCurated)) %>% 
+  distinct(inchiSanitized, organismCurated, .keep_all = TRUE) %>% 
+  filter(database != "dnp_1") %>% 
+  filter(cleanedTranslationScore >= 90 &
+           cleanedTranslationScore <= 110)
+
+stats <- fullDbFilteredOutsideDnp %>% 
+  group_by(database) %>%
+  count()
+
