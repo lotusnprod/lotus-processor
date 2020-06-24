@@ -1,7 +1,3 @@
-md5: e48289113d40aea9daf2ef88e129f007
 outs:
-- md5: f8551b41bf6ca1fa195f9ec3d2fa7990.dir
+- md5: 3e18bd001e800e17a54a483ccfd92481.dir
   path: interim
-  cache: true
-  metric: false
-  persist: false
