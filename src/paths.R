@@ -79,7 +79,7 @@ databases$add(
 
 databases$add(
   name = "coconut",
-  sourceFiles = list(sdf = "COCONUT.sdf.zip",
+  sourceFiles = list(sdf = "COCONUT_DB.sdf",
                      tsv = "coconutConverted.tsv.zip"),
   interimFile = "coconut.tsv.zip"
 )
