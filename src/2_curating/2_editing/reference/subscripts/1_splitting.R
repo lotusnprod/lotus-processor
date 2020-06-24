@@ -84,16 +84,8 @@ dataReferenceFillAuto <- dataReferenceLongSplit %>%
       !grepl(pattern = "^\\d+(;\\d+)*$",
              x = value)  &
       !grepl(pattern = "http://www.ncbi.nlm.nih.gov/pubmed/",
-             x = value) &
-      str_count(string = value) > 28
+             x = value)
   ) %>% 
-  mutate_all(as.character)
-
-# fields that will be hard to retrieve automatically (typically XX et al.)
-dataReferenceFillManual <- dataReferenceLongSplit %>%
-  filter(str_count(string = value) <= 28 &
-           grepl(pattern = "et al",
-                 x = value)) %>% 
   mutate_all(as.character)
 
 # selecting fields probably corresponding to pubmed ID
