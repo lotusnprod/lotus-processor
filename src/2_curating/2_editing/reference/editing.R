@@ -14,9 +14,6 @@ source("2_curating/2_editing/reference/subscripts/1_splitting.R")
 ## DOI
 source("2_curating/2_editing/reference/subscripts/2_translating/doi.R")
 
-## manual
-source("2_curating/2_editing/reference/subscripts/2_translating/manual.R")
-
 ## other sources
 source("2_curating/2_editing/reference/subscripts/2_translating/other.R")
 

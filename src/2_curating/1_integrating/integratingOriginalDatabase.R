@@ -29,7 +29,7 @@ inhouseDbSelected <- inhouseDb %>%
     # structureOriginalNumericalPubchem = pubchem, # pubchem problematic (see vanillic acid / vanillate)
     structureOriginalNominal,
     referenceOriginal = reference
-  ) %>% sample_n(10000)
+  ) # %>% sample_n(10000)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")

@@ -10,7 +10,6 @@ source("functions/reference.R")
 dataFull <- rbind(
   dataReferenceFillAuto,
   dataReferenceFillDoi,
-  dataReferenceFillManual,
   dataReferenceFillNoArticle,
   dataReferenceFillPubmed
 )
