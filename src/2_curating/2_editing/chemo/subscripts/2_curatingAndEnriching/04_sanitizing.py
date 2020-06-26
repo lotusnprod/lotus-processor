@@ -44,7 +44,7 @@ df = pd.read_csv(
 
 ## eventually filter display some info, comment according to your needs
 #df = df[df['originaldb'] == 'tcm']
-#df = df.head(1000)
+df = df.head(1000)
 df.columns
 df.info()
 
@@ -57,6 +57,9 @@ s = Standardizer()
 #lf = LargestFragmentChooser()
 lf = FragmentRemover()
 uc = Uncharger()
+
+#we make sure we have inchi for each row
+df = df[~df[inchi_column_header].isnull()]
 
 # we generate ROMol object from smiles and or inchi
 df['ROMol'] = df[inchi_column_header].map(Chem.MolFromInchi)
