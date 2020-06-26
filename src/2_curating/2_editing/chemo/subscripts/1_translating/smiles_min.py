@@ -13,6 +13,7 @@ from rdkit.Chem import Descriptors
 import numpy as np
 import os
 
+
 os.chdir('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src')
 
 
@@ -56,7 +57,7 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
 df.to_csv(
-    "../data/out/translatedStructureSmiles_min.tsv.zip",
+    "../data/dvc_pipeline_outputs/translatedStructureSmiles_min.tsv.zip",
     sep = '\t',
     index = False,
     compression = 'gzip'
