@@ -57,6 +57,12 @@ ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TAB
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
 dvc run -n namer \
-          -d src/2_curating/2_editing/chemo/subscripts/1_translating/names.R -d data/interim/tables/0_original/originalStructureNames.tsv.zip \
-          -o data/dvc_pipeline_outputs/translatedStructureSmiles_min.tsv.zip \
-          R src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+          -d src/2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R -d data/interim/tables/0_original/originalStructureNominal.tsv.zip \
+          -o data/dvc_pipeline_outputs/translatedStructureNominal.tsv.zip \
+          Rscript src/2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R
+
+
+dvc run -n namer \
+          -d 2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R -d ../data/interim/tables/0_original/originalStructureNominal.tsv.zip \
+          -o ../data/dvc_pipeline_outputs/translatedStructureNominal.tsv.zip \
+          Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R
