@@ -19,6 +19,7 @@ from molvs import Validator
 from molvs import Uncharger ## add this to init.py see above from .fragment import LargestFragmentChooser from .charge import Uncharger
 import sys
 import gzip
+import yaml
 
 try:
     input_file_path = sys.argv[1]
@@ -35,6 +36,15 @@ try:
 except:
     print('Please add input and output file path as first and second argument and SMILES and InChI column header as third and forth argument.')
 
+
+# This load the associated params.yaml file were we can specify some variables of the script, here (head_lenght)
+# The pipeline can then just be rerunned using dvc repro
+
+with open("params.yaml", 'r') as fd:
+    params = yaml.safe_load(fd)
+
+head_lenght = params['head_lenght']
+
 ## Loading the df with inchi columns 
 myZip = gzip.open(input_file_path)
 
@@ -44,7 +54,7 @@ df = pd.read_csv(
 
 ## eventually filter display some info, comment according to your needs
 #df = df[df['originaldb'] == 'tcm']
-df = df.head(1000)
+df = df.head(head_lenght)
 df.columns
 df.info()
 

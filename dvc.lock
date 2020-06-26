@@ -16,7 +16,10 @@ sanitizer:
   - path: data/interim/tables/1_translated/translatedTable.tsv.zip
     md5: 15f836d427cf3f24d30470b98381d0c5
   - path: src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py
-    md5: 121fab3b25590e4540d21ace72206de6
+    md5: c48c7c2e483c0389e542f78d931e0482
+  params:
+    params.yaml:
+      head_lenght: 500
   outs:
   - path: data/dvc_pipeline_outputs/sanitized_structures.tsv.zip
-    md5: 482c5626552b2ad8765c4156ffb6a398
+    md5: 915c3eb188e3a34d79b823dbf18a4351
