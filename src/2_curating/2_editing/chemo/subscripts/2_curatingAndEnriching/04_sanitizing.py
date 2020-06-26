@@ -73,25 +73,10 @@ df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.remove)
 df['ROMolSanitizedLargestFragmentUncharged'] = df['ROMolSanitizedLargestFragment'].apply(uc.uncharge)
 
 # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
-<<<<<<< HEAD:04_structureSanitizer/04_structureSanitizer.py
-df['smilesSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.MolToSmiles)
-if  df['smilesSanitized'] == None.any():
-  print( e + df['ROMolSanitizedLargestFragmentUncharged'])
-
-df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.MolToInchi)
-if  df['inchiSanitized'] == None.any():
-  print( e + df['ROMolSanitizedLargestFragmentUncharged'])
-
-df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.MolToInchiKey)
-if  df['inchikeySanitized'] == None.any():
-  print( e + df['ROMolSanitizedLargestFragmentUncharged'])
-
-=======
 df['smilesSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToSmiles)
 print(df['ROMolSanitized'])
 df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchi)
 df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchiKey)
->>>>>>> origin/pma_repo_minimizing:src/04_structureSanitizer/04_structureSanitizer.py
 df['shortikSanitized'] = df['inchikeySanitized'].str.split("-", n = 1, expand = True)[0]
 
 df['formulaSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(rdMolDescriptors.CalcMolFormula)
