@@ -30,24 +30,9 @@ See
 https://github.com/iterative/dvc/issues/2027
 
 
-dvc run -n smiler \
-          -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
-          -o data/dvc_outputs \
-          -f data_smiled.dvc \
-          python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
-
+Works now !
 
 dvc run -n smiler \
           -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
-          -o data/prepared/ \
-          cd src && python 2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
-
-
-dvc run -n smiler \
-          -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
-          python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
-
-dvc run -n smiler \
-          -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
-          -o data/out \
+          -o data/out/translatedStructureSmiles_min.tsv.zip \
           python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
