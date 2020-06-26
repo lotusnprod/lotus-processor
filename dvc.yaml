@@ -4,3 +4,5 @@ stages:
     deps:
     - data/interim/tables/0_original/originalStructureSmiles.tsv.zip
     - src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+    outs:
+    - data/out/translatedStructureSmiles_min.tsv.zip
