@@ -48,7 +48,7 @@ dvc run -n smiler \
           python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
 
 
-Let's try to traduce this one 
+##Let's try to traduce this one 
 
 curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
 
@@ -61,8 +61,15 @@ dvc run -n namer \
           -o data/dvc_pipeline_outputs/translatedStructureNominal.tsv.zip \
           Rscript src/2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R
 
-
+Mooving to src to launch this one (too long and path mess)
 dvc run -n namer \
           -d 2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R -d ../data/interim/tables/0_original/originalStructureNominal.tsv.zip \
           -o ../data/dvc_pipeline_outputs/translatedStructureNominal.tsv.zip \
           Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names_dvc.R
+
+## Working on the sanitizing script
+
+dvc run -n sanitizer \
+          -d src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py -d data/interim/tables/1_translated/translatedTable.tsv.zip \
+          -o data/dvc_pipeline_outputs/sanitized_structures.tsv.zip \
+          python src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py data/interim/tables/1_translated/translatedTable.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip structureTranslated
