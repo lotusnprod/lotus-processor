@@ -32,7 +32,26 @@ https://github.com/iterative/dvc/issues/2027
 
 Works now !
 
+so the "dvc traduction of 
+
+curating-editing-chemo-smiles: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles_min.tsv.zip
+${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles_min.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles_min.py
+${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles_min.py: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureSmiles.tsv.zip
+	cd src && python 2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+
+is 
+
+
 dvc run -n smiler \
           -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
           -o data/dvc_pipeline_outputs/translatedStructureSmiles_min.tsv.zip \
           python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+
+
+Let's try to traduce this one 
+
+curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
+
+${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
+${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
+	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
