@@ -53,5 +53,7 @@ ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURAT
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
-curating-editing-chemo-smiles:
+curating-editing-chemo-smiles: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles.tsv.zip
+${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py
+${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureSmiles.tsv.zip
 	cd src && python 2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
