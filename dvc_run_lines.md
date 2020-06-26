@@ -55,3 +55,8 @@ curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructur
 ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
+
+dvc run -n namer \
+          -d src/2_curating/2_editing/chemo/subscripts/1_translating/names.R -d data/interim/tables/0_original/originalStructureNames.tsv.zip \
+          -o data/dvc_pipeline_outputs/translatedStructureSmiles_min.tsv.zip \
+          R src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py

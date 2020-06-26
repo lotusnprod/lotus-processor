@@ -866,6 +866,11 @@ pathTranslatedStructureSmiles <-
 pathTranslatedStructureNominal <-
   "../data/interim/tables/1_translated/translatedStructureNominal.tsv.zip"
 
+### nominal_dvc
+pathTranslatedStructureNominal_dvc <-
+  "../data/dvc_pipeline_outputs/tables/1_translated/translatedStructureNominal.tsv.zip"
+
+
 ## distinct organism
 pathTranslatedOrganismDistinct <-
   "../data/interim/tables/1_translated/gnfinder/"
