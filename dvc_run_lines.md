@@ -73,3 +73,13 @@ dvc run -n sanitizer \
           -d src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py -d data/interim/tables/1_translated/translatedTable.tsv.zip \
           -o data/dvc_pipeline_outputs/sanitized_structures.tsv.zip \
           python src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py data/interim/tables/1_translated/translatedTable.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip structureTranslated
+
+
+Now adding parameters (these are kept in the params.yaml file)
+
+
+dvc run -n sanitizer \
+          -d src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py -d data/interim/tables/1_translated/translatedTable.tsv.zip \
+          -p head_lenght \
+          -o data/dvc_pipeline_outputs/sanitized_structures.tsv.zip \
+          python src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py data/interim/tables/1_translated/translatedTable.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip structureTranslated

@@ -15,3 +15,5 @@ stages:
     - src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py
     outs:
     - data/dvc_pipeline_outputs/sanitized_structures.tsv.zip
+    params:
+    - head_lenght
