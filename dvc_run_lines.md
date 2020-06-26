@@ -27,6 +27,5 @@ See here for details https://github.com/iterative/dvc/issues/2984
 dvc run -n smiler \
           -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py -d data/interim/tables/0_original/originalStructureSmiles.tsv.zip \
           -o data/dvc_outputs \
-          -f data_smiled.dvc
+          -f data_smiled.dvc \
           python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
-
