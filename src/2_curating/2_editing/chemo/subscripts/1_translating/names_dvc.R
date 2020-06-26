@@ -59,7 +59,7 @@ dataTranslated <- left_join(dataOriginal, dataTranslatedNominal) %>%
 write.table(
   x = dataTranslated,
   file = gzfile(
-    description = pathTranslatedStructureNominal,
+    description = pathTranslatedStructureNominal_dvc,
     compression = 9,
     encoding = "UTF-8"
   ),
