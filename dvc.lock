@@ -1,0 +1,7 @@
+smiler:
+  cmd: python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+  deps:
+  - path: data/interim/tables/0_original/originalStructureSmiles.tsv.zip
+    md5: 1c3765916844d804f41cb87de3f00e2b
+  - path: src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+    md5: cdd635b76fbcf7494c21f1fc250de9c1

@@ -11,6 +11,10 @@ import gzip
 from rdkit.Chem import PandasTools
 from rdkit.Chem import Descriptors
 import numpy as np
+import os
+
+os.chdir('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src')
+
 
 # loading data
 myZip = gzip.open('../data/interim/tables/0_original/originalStructureSmiles.tsv.zip')
@@ -52,7 +56,7 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
 df.to_csv(
-    "../data/interim/tables/1_translated/translatedStructureSmiles_min.tsv.zip",
+    "../data/out/translatedStructureSmiles_min.tsv.zip",
     sep = '\t',
     index = False,
     compression = 'gzip'
