@@ -7,15 +7,15 @@ source("functions/helpers.R")
 
 library(data.table)
 library(dplyr)
+library(stringr)
 
 # loading files
 dbs <- lapply(pathDataInterimDbDir, function(x) {
   out <- db_loader(x)
   return(out)
 })
-inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
-head(inhouseDb, 3)
+inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
 # selecting
 set.seed(1234)
@@ -73,13 +73,17 @@ ifelse(!dir.exists(pathDataInterimTables),
        dir.create(pathDataInterimTables),
        FALSE)
 
-ifelse(!dir.exists(pathDataInterimTablesOriginal),
-       dir.create(pathDataInterimTablesOriginal),
-       FALSE)
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginal),
+  dir.create(pathDataInterimTablesOriginal),
+  FALSE
+)
 
-ifelse(!dir.exists(pathDataInterimTablesOriginalGnfinder),
-       dir.create(pathDataInterimTablesOriginalGnfinder),
-       FALSE)
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalGnfinder),
+  dir.create(pathDataInterimTablesOriginalGnfinder),
+  FALSE
+)
 
 ## inchi
 write.table(
@@ -128,7 +132,7 @@ write.table(
 split_data_table(
   x = inhouseDbOrganism,
   no_rows_per_frame = 10000,
-  text = "originalOrganismGnfinderUntil_",
+  text = "",
   path_to_store = pathDataInterimTablesOriginalGnfinder
 )
 
@@ -159,4 +163,3 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
-

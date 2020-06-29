@@ -173,6 +173,6 @@ ifelse(
 split_data_table(
   x = dataInterimOrganismToFillGnfinder,
   no_rows_per_frame = cut,
-  text = "translatedOrganismGnfinderUntil_",
+  text = "",
   path_to_store = pathDataInterimTablesTranslatedGnfinder
 )

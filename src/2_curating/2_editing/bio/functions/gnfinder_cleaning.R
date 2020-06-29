@@ -4,16 +4,23 @@ gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismOriginal") {
     inpath_organism_f <- paste(
       pathDataInterimTablesOriginalGnfinder,
-      "originalOrganismGnfinderUntil_",
-      num,
+      str_pad(
+        string = num,
+        width = 6,
+        pad = 0
+      ),
       ".tsv",
-      sep = "")
+      sep = ""
+    )
 
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedGnfinderOriginalJson,
-        "originalOrganismGnfinderUntil_",
-        num,
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
         ".json",
         sep = "")
   }
@@ -21,16 +28,22 @@ gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismInterim") {
     inpath_organism_f <- paste(
       pathDataInterimTablesTranslatedGnfinder,
-      "translatedOrganismGnfinderUntil_",
-      num,
+      str_pad(
+        string = num,
+        width = 6,
+        pad = 0
+      ),
       ".tsv",
       sep = "")
 
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedGnfinderTranslatedJson,
-        "translatedOrganismGnfinderUntil_",
-        num,
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
         ".json",
         sep = "")
    }
