@@ -15,7 +15,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste(
-        pathDataInterimTablesCleanedGnfinderOriginalJson,
+        pathDataInterimTablesCleanedGnfinderOriginal,
         str_pad(
           string = num,
           width = 6,
@@ -38,7 +38,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste(
-        pathDataInterimTablesCleanedGnfinderTranslatedJson,
+        pathDataInterimTablesCleanedGnfinderTranslated,
         str_pad(
           string = num,
           width = 6,
