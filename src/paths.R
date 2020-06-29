@@ -827,11 +827,11 @@ pathDataProcessedFiguresHtml <-
 ## structure
 ### InChI
 pathOriginalStructureInchi <-
-  "../data/interim/tables/0_original/originalStructureInchi.tsv.zip"
+  file.path(pathDataInterimTables, "0_original/originalStructureInchi.tsv.zip")
 
 ### SMILES
-pathOriginalStructureSmiles <-
-  "../data/interim/tables/0_original/originalStructureSmiles.tsv.zip"
+pathOriginalStructureSmiles <- 
+  file.path(pathDataInterimTables, "0_original/originalStructureSmiles.tsv.zip")
 
 ### nominal
 pathOriginalStructureNominal <-
