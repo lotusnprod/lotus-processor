@@ -29,7 +29,7 @@ inhouseDbSelected <- inhouseDb %>%
     structureOriginalSmiles = smiles,
     structureOriginalNominal = name,
     referenceOriginal = reference
-  ) %>% sample_n(10000)
+  ) %>% sample_n(500)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
