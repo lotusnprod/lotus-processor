@@ -6,8 +6,11 @@ source("functions/database.R")
 
 # root
 ## data
+# pathData <- Sys.getenv("DATA_PATH",
+#                        unset = "../data")
+
 pathData <- Sys.getenv("DATA_PATH",
-                       unset = "../data")
+                       unset = "../data_min")
 
 ### external
 pathDataExternal <-
