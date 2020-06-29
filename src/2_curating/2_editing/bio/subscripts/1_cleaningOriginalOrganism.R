@@ -58,7 +58,7 @@ length <-
 
 cut <- 10000
 
-num <- as.integer(seq(®
+num <- as.integer(seq(
   from = 1 * cut,
   to = length * cut,
   by = cut
