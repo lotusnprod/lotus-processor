@@ -29,12 +29,6 @@ ifelse(
   FALSE
 )
 
-ifelse(
-  !dir.exists(pathDataInterimTablesCleanedGnfinderTranslatedJson),
-  dir.create(pathDataInterimTablesCleanedGnfinderTranslatedJson),
-  FALSE
-)
-
 system(command = paste("bash", pathTranslatedGnfinderScript))
 
 length <-

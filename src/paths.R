@@ -898,27 +898,11 @@ pathDataInterimTablesCleanedGnfinder <-
 
 #### original
 pathDataInterimTablesCleanedGnfinderOriginal <- 
-  file.path(pathDataInterimTablesCleanedGnfinder, "original")
-
-##### json dir
-pathDataInterimTablesCleanedGnfinderOriginalJson <- 
-  file.path(pathDataInterimTablesCleanedGnfinderOriginal, "json/")
-
-##### tsv converted dir
-pathDataInterimTablesCleanedGnfinderOriginalTsv <- 
-  file.path(pathDataInterimTablesCleanedGnfinderOriginal, "tsv/")
+  file.path(pathDataInterimTablesCleanedGnfinder, "original/")
 
 #### translated
 pathDataInterimTablesCleanedGnfinderTranslated <- 
-  file.path(pathDataInterimTablesCleanedGnfinder, "translated")
-
-##### json dir
-pathDataInterimTablesCleanedGnfinderTranslatedJson <- 
-  file.path(pathDataInterimTablesCleanedGnfinderTranslated, "json/")
-
-##### tsv converted dir
-pathDataInterimTablesCleanedGnfinderTranslatedTsv <- 
-  file.path(pathDataInterimTablesCleanedGnfinderTranslated, "tsv/")
+  file.path(pathDataInterimTablesCleanedGnfinder, "translated/")
 
 ## ref
 pathDataInterimTablesCleanedReference <-

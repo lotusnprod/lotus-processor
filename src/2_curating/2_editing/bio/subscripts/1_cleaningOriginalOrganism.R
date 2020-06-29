@@ -50,12 +50,6 @@ ifelse(
   FALSE
 )
 
-ifelse(
-  !dir.exists(pathDataInterimTablesCleanedGnfinderOriginalJson),
-  dir.create(pathDataInterimTablesCleanedGnfinderOriginalJson),
-  FALSE
-)
-
 system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <-
