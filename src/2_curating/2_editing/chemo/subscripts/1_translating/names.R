@@ -8,7 +8,7 @@ source("functions/chemo.R")
 
 # loading files
 dataOriginal <- read_delim(
-  file = gzfile(pathOriginalStructureNominal),
+  file = gzfile(pathDataInterimTablesOriginalNominal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -55,11 +55,19 @@ dataTranslated <- left_join(dataOriginal, dataTranslatedNominal) %>%
   )) %>%
   select(-inchiNominal)
 
+## creating directories if they do not exist
+
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedNominal),
+  dir.create(pathDataInterimTablesTranslatedNominal),
+  FALSE
+)
+
 # exporting
 write.table(
   x = dataTranslated,
   file = gzfile(
-    description = pathTranslatedStructureNominal,
+    description = pathDataInterimTablesTranslatedNominal,
     compression = 9,
     encoding = "UTF-8"
   ),
