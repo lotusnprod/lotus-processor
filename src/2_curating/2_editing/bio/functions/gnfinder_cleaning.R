@@ -3,7 +3,7 @@ source("2_curating/2_editing/bio/functions/biocleaning.R")
 gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismOriginal") {
     inpath_organism_f <- paste(
-      pathOriginalOrganismDistinct,
+      pathDataInterimTablesOriginalGnfinder,
       "originalOrganismGnfinderUntil_",
       num,
       ".tsv",
@@ -11,7 +11,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste(
-        pathCleanedOrganismOriginalDirJson,
+        pathDataInterimTablesCleanedGnfinderOriginalJson,
         "originalOrganismGnfinderUntil_",
         num,
         ".json",
@@ -20,7 +20,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
   if (organismCol == "organismInterim") {
     inpath_organism_f <- paste(
-      pathTranslatedOrganismDistinct,
+      pathDataInterimTablesTranslatedGnfinder,
       "translatedOrganismGnfinderUntil_",
       num,
       ".tsv",
@@ -28,7 +28,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste(
-        pathCleanedOrganismTranslatedDirJson,
+        pathDataInterimTablesCleanedGnfinderTranslatedJson,
         "translatedOrganismGnfinderUntil_",
         num,
         ".json",
