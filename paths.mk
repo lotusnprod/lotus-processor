@@ -1,4 +1,5 @@
-export DATA_PATH ?= ${PWD}/data
+# export DATA_PATH ?= ${PWD}/data
+export DATA_PATH ?= ${PWD}/data_min
 export SRC_PATH ?= ${PWD}/src
 
 export INTERIM_PATH = ${DATA_PATH}/interim/db
