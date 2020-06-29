@@ -16,7 +16,7 @@ library(tidyr)
 # loading files
 ## reference
 dataReference <- read_delim(
-  file = gzfile(pathOriginalRef),
+  file = gzfile(pathDataInterimTablesOriginalReference),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
