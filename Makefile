@@ -50,11 +50,17 @@ curating-editing-reference:
 
 curating-editing-chemo: curating-editing-chemo-name curating-editing-chemo-smiles
 
-curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
+# curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
+# ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
+# ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
+# 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
 
-${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
+
+curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip
+${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R: ${INTERIM_TABLE_ORIGINAL_PATH}/originalStructureNominal.tsv.zip
 	cd src && Rscript 2_curating/2_editing/chemo/subscripts/1_translating/names.R
+	
 
 curating-editing-chemo-smiles: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles_min.tsv.zip
 ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureSmiles_min.tsv.zip: ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles_min.py

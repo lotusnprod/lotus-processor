@@ -55,13 +55,6 @@ dataTranslated <- left_join(dataOriginal, dataTranslatedNominal) %>%
   )) %>%
   select(-inchiNominal)
 
-## creating directories if they do not exist
-
-ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedNominal),
-  dir.create(pathDataInterimTablesTranslatedNominal),
-  FALSE
-)
 
 # exporting
 write.table(
