@@ -9,7 +9,6 @@ source("functions/database.R")
 pathData <- Sys.getenv("DATA_PATH",
                        unset = "../data")
 
-
 ### external
 pathDataExternal <-
   file.path(pathData,
