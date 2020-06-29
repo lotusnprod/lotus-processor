@@ -26,7 +26,9 @@ tcmNamesDic <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 )
+
 log_debug("      Loaded TCM names")
+
 ## common names
 commonNamesDic <- read_delim(
   file = gzfile(pathDataInterimDictionariesCommonNames),
@@ -34,7 +36,9 @@ commonNamesDic <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 )
+
 log_debug("      Loaded Common Names")
+
 ## black listed strings
 blacklistDictionary <- read_delim(
   file = pathDataInterimDictionariesCommonBlackDic,
@@ -47,6 +51,7 @@ blacklistDictionary <- read_delim(
   select(-n)
 
 log_debug("      Loaded blacklist")
+
 dataInterimOrganism <- dataCleanedOriginalOrganism %>%
   mutate(
     organismInterim = stri_replace_all_regex(
@@ -65,6 +70,7 @@ dataInterimOrganism <- dataCleanedOriginalOrganism %>%
   ))
 
 log_debug("      Cleaned up")
+
 dataInterimOrganism$organismInterim <-
   gsub(
     pattern = ".",
@@ -147,12 +153,26 @@ dataInterimOrganismToFillGnfinder <- dataInterimOrganismToFill %>%
   mutate_all(as.character) %>%
   filter(!is.na(organismInterim)) %>%
   select(organismInterim)
+
 log_debug("     Exporting")
+
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslated),
+  dir.create(pathDataInterimTablesTranslated),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedGnfinder),
+  dir.create(pathDataInterimTablesTranslatedGnfinder),
+  FALSE
+)
 
 # exporting
 split_data_table(
   x = dataInterimOrganismToFillGnfinder,
   no_rows_per_frame = cut,
-  text = "translatedOrganismGnfinderUntil_",
-  path_to_store = pathTranslatedOrganismDistinct
+  text = "",
+  path_to_store = pathDataInterimTablesTranslatedGnfinder
 )

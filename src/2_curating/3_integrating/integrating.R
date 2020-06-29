@@ -1,4 +1,4 @@
-# temporary file to get some numbers to see if we are on the right way!
+# title: "integrating bio chemo ref"
 
 # loading
 ## functions
@@ -13,7 +13,7 @@ library(tidyverse)
 ## files
 ### original table
 originalTable <- read_delim(
-  file = gzfile(description = "../data/interim/tables/0_original/originalTable.tsv.zip"),
+  file = gzfile(description = pathDataInterimTablesOriginalTable),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -23,7 +23,7 @@ originalTable <- read_delim(
 ### structure table
 #### loading multiple old files, will be optimized later on
 smilesStructureTable <- read_delim(
-  file = gzfile(description = "../data/interim/tables/1_translated/translatedStructureSmiles.tsv.zip"),
+  file = gzfile(description = pathDataInterimTablesTranslatedSmiles),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -31,7 +31,7 @@ smilesStructureTable <- read_delim(
 )
 
 nominalStructureTable <- read_delim(
-  file = gzfile(description = "../data/interim/tables/1_translated/translatedStructureNominal.tsv.zip"),
+  file = gzfile(description = pathDataInterimTablesTranslatedNominal),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -49,7 +49,7 @@ structureTable <- read_delim(
 
 ### organism table
 organismTable <- read_delim(
-  file = gzfile(description = "../data/interim/tables/3_curated/curatedOrganism.tsv.zip"),
+  file = gzfile(description = pathDataInterimTablesCuratedOrganism),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -58,7 +58,7 @@ organismTable <- read_delim(
 
 ### reference table
 referenceTable <- read_delim(
-  file = gzfile(description = "../data/interim/tables/2_cleaned/cleanedReference.tsv.zip"),
+  file = gzfile(description = pathDataInterimTablesCleanedReference),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -138,41 +138,43 @@ referenceOrganismStructureIntegratedTable <-
 
 # selecting minimal columns
 fullDb <- referenceOrganismStructureIntegratedTable %>%
-  mutate(cleanedTranslationScore = as.numeric(cleanedTranslationScore)) %>% 
-  select(database,
-         organismOriginal,
-         structureTranslated,
-         referenceOriginal,
-         inchiSanitized,
-         inchiKeySanitized,
-         inchiKey2DSanitized,
-         organismCurated,
-         cleanedDoi,
-         cleanedTranslationScore
-         )
+  mutate(cleanedTranslationScore = as.numeric(cleanedTranslationScore)) %>%
+  select(
+    database,
+    organismOriginal,
+    structureTranslated,
+    referenceOriginal,
+    inchiSanitized,
+    inchiKeySanitized,
+    inchiKey2DSanitized,
+    organismCurated,
+    cleanedDoi,
+    cleanedTranslationScore
+  )
 
-fullDbFiltered <- fullDb %>% 
-  filter(cleanedTranslationScore >= 90 &
-           cleanedTranslationScore <= 110 &
-           !is.na(organismCurated)) %>% 
+fullDbFiltered <- fullDb %>%
+  filter(
+    cleanedTranslationScore >= 90 &
+      cleanedTranslationScore <= 110 &
+      !is.na(organismCurated)
+  ) %>%
   distinct(inchiSanitized, organismCurated, cleanedDoi, .keep_all = TRUE)
 
-fullDbFilteredDnp <- fullDb %>% 
+fullDbFilteredDnp <- fullDb %>%
   filter(database == "dnp_1")
 
-fullDbFilteredNoDnp <- fullDb %>% 
+fullDbFilteredNoDnp <- fullDb %>%
   filter(database != "dnp_1")
 
 fullDBDnpTop <- rbind(fullDbFilteredDnp, fullDbFilteredNoDnp)
 
-fullDbFilteredOutsideDnp <- fullDBDnpTop %>% 
-  filter(!is.na(organismCurated)) %>% 
-  distinct(inchiSanitized, organismCurated, .keep_all = TRUE) %>% 
-  filter(database != "dnp_1") %>% 
+fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
+  filter(!is.na(organismCurated)) %>%
+  distinct(inchiSanitized, organismCurated, .keep_all = TRUE) %>%
+  filter(database != "dnp_1") %>%
   filter(cleanedTranslationScore >= 90 &
            cleanedTranslationScore <= 110)
 
-stats <- fullDbFilteredOutsideDnp %>% 
+stats <- fullDbFilteredOutsideDnp %>%
   group_by(database) %>%
   count()
-

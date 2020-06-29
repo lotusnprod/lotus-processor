@@ -14,39 +14,39 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organismCleaned,
              organismDbTaxo,
              .keep_all = TRUE)
-
+  
   test$organism_1_kingdom <-
     y_as_na(x = test$organism_1_kingdom,
             y = "Not assigned")
-
+  
   test$organism_2_phylum <-
     y_as_na(x = test$organism_2_phylum,
             y = "Not assigned")
-
+  
   test$organism_3_class <-
     y_as_na(x = test$organism_3_class,
             y = "Not assigned")
-
+  
   test$organism_4_order <-
     y_as_na(x = test$organism_4_order,
             y = "Not assigned")
-
+  
   test$organism_5_family <-
     y_as_na(x = test$organism_5_family,
             y = "Not assigned")
-
+  
   test$organism_6_genus <-
     y_as_na(x = test$organism_6_genus,
             y = "Not assigned")
-
+  
   test$organism_7_species <-
     y_as_na(x = test$organism_7_species,
             y = "Not assigned")
-
+  
   test$organism_8_variety <-
     y_as_na(x = test$organism_8_variety,
             y = "Not assigned")
-
+  
   variety <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     arrange(match(x = organismDbTaxo,
@@ -104,7 +104,7 @@ taxo_cleaning_auto <- function(dfsel) {
     filter(is.na(organism_8_variety))
   
   species_1 <- rbind(variety_full, unvariety)
-
+  
   species <- test %>%
     filter(!is.na(organism_7_species)) %>%
     arrange(match(x = organismDbTaxo,
@@ -149,19 +149,21 @@ taxo_cleaning_auto <- function(dfsel) {
   
   species_fill <- test %>%
     filter(!is.na(organism_7_species)) %>%
-    select(organismOriginal,
-           organismCleaned,
-           organismTaxonId,
-           organism_8_variety,
-           organism_7_species)
-
+    select(
+      organismOriginal,
+      organismCleaned,
+      organismTaxonId,
+      organism_8_variety,
+      organism_7_species
+    )
+  
   species_full <- left_join(species_fill, species)
-
+  
   unspecies <- test %>%
     filter(is.na(organism_7_species))
-
+  
   genus_1 <- rbind(species_full, unspecies)
-
+  
   genus <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     arrange(match(x = organismDbTaxo,
@@ -194,12 +196,14 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     distinct(organism_6_genus,
              .keep_all = TRUE) %>%
-    select(-organismOriginal,
-           -organismCleaned,
-           -organismTaxonId,
-           -organism_8_variety,
-           -organism_7_species)
-
+    select(
+      -organismOriginal,
+      -organismCleaned,
+      -organismTaxonId,
+      -organism_8_variety,
+      -organism_7_species
+    )
+  
   genus_fill <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     select(
@@ -210,14 +214,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_7_species,
       organism_6_genus
     )
-
+  
   genus_full <- left_join(genus_fill, genus)
-
+  
   ungenus <- genus_1 %>%
     filter(is.na(organism_6_genus))
-
+  
   family_1 <- rbind(genus_full, ungenus)
-
+  
   family <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     arrange(match(x = organismDbTaxo,
@@ -253,7 +257,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_7_species,
       -organism_6_genus
     )
-
+  
   family_fill <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     select(
@@ -265,14 +269,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_6_genus,
       organism_5_family
     )
-
+  
   family_full <- left_join(family_fill, family)
-
+  
   unfamily <- family_1 %>%
     filter(is.na(organism_5_family))
-
+  
   order_1 <- rbind(family_full, unfamily)
-
+  
   order <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     arrange(match(x = organismDbTaxo,
@@ -305,7 +309,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_6_genus,
       -organism_5_family
     )
-
+  
   order_fill <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     select(
@@ -318,14 +322,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_5_family,
       organism_4_order
     )
-
+  
   order_full <- left_join(order_fill, order)
-
+  
   unorder <- order_1 %>%
     filter(is.na(organism_4_order))
-
+  
   class_1 <- rbind(order_full, unorder)
-
+  
   class <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     arrange(match(x = organismDbTaxo,
@@ -350,9 +354,9 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_6_genus,
       -organism_5_family,
       -organism_4_order,
-
+      
     )
-
+  
   class_fill <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     select(
@@ -366,14 +370,14 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_4_order,
       organism_3_class
     )
-
+  
   class_full <- left_join(class_fill, class)
-
+  
   unclass <- class_1 %>%
     filter(is.na(organism_3_class))
-
+  
   phylum_1 <- rbind(class_full, unclass)
-
+  
   phylum <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     arrange(match(x = organismDbTaxo,
@@ -399,7 +403,7 @@ taxo_cleaning_auto <- function(dfsel) {
       -organism_4_order,
       -organism_3_class
     )
-
+  
   phylum_fill <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     select(
@@ -414,22 +418,22 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_3_class,
       organism_2_phylum
     )
-
+  
   phylum_full <- left_join(phylum_fill, phylum)
-
+  
   unphylum <- phylum_1 %>%
     filter(is.na(organism_2_phylum))
-
-  variety_tojoin <- variety_full %>% 
+  
+  variety_tojoin <- variety_full %>%
     select(everything())
   
   kingdom_1 <- rbind(phylum_full, unphylum)
-
+  
   kingdom_tojoin <- kingdom_1 %>%
     select(-organismOriginal)
-
+  
   tojoin <- dfsel
-
+  
   newdf = left_join(tojoin,
                     kingdom_tojoin,
                     by = c("organismCleaned" = "organismCleaned")) %>%
@@ -476,11 +480,11 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organismOriginal,
              organismCleaned,
              .keep_all = TRUE)
-
+  
   newdf$organism_modified_taxonomy_auto <-
     y_as_na(x = newdf$organism_modified_taxonomy_auto,
             y = "")
-
+  
   return(newdf)
 }
 
@@ -539,12 +543,19 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
     organism_8_variety
   )
 
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesCurated),
+  dir.create(pathDataInterimTablesCurated),
+  FALSE
+)
+
 #exporting
 #curated
 write.table(
   x = dataCuratedOrganism,
   file = gzfile(
-    description = pathCuratedOrganism,
+    description = pathDataInterimTablesCuratedOrganism,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -558,7 +569,7 @@ write.table(
 write.table(
   x = realDiff,
   file = gzfile(
-    description = pathCuratedOrganismRealDiff,
+    description = pathDataInterimTablesCuratedOrganismRealDiff,
     compression = 9,
     encoding = "UTF-8"
   ),

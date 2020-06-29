@@ -31,18 +31,22 @@ db_loader <- function(path_to_db) {
 split_data_table <-
   function(x, no_rows_per_frame, text, path_to_store) {
     split_vec <- seq(1, nrow(x), no_rows_per_frame)
-
+    
     for (split_cut in split_vec) {
       sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
       write.table(
         sample,
-        paste(path_to_store,
-              text,
-              as.integer(split_cut + (
-                no_rows_per_frame - 1
-              )),
-              ".tsv",
-              sep = ""),
+        paste(
+          path_to_store,
+          text,
+          str_pad(
+            string = split_cut + (no_rows_per_frame - 1),
+            width = 6,
+            pad = "0"
+          ),
+          ".tsv",
+          sep = ""
+        ),
         row.names = FALSE,
         quote = FALSE,
         sep = "\t",

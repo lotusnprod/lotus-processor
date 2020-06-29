@@ -8,7 +8,7 @@ source("functions/reference.R")
 
 # loading files
 dataTranslated <- read_delim(
-  file = gzfile(pathTranslatedReference),
+  file = gzfile(pathDataInterimTablesTranslatedReference),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -21,7 +21,6 @@ test <- dataTranslated %>%
   distinct(referenceSplit, .keep_all = TRUE) %>%
   add_count() %>%
   arrange(desc(n))
-
 
 # COMMENT: JUST AS FOR BIOLOGICAL SOURCES THOSE LINES SHOULD COME THEN 
 ## BEFORE TRANSLATION OF THE REFERENCE. WE DO IT AFTER BECAUSE YOU CAN
@@ -175,7 +174,6 @@ test3 <- test %>%
     )
   )
 
-
 test4 <- test %>%
   filter(n != 631 &
            !grepl("Harborne, The Handbook of Natural Flavonoids", referenceSplit) &
@@ -216,11 +214,18 @@ dataCleaned <- dataTranslated %>%
     cleanedTranslationScore = translationScore
   )
 
-# export
+# exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesCleaned),
+  dir.create(pathDataInterimTablesCleaned),
+  FALSE
+)
+
 write.table(
   x = dataCleaned,
   file = gzfile(
-    description = pathCleanedReference,
+    description = pathDataInterimTablesCleanedReference,
     compression = 9,
     encoding = "UTF-8"
   ),

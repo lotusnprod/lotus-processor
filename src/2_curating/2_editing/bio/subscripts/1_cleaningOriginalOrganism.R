@@ -16,6 +16,7 @@ library(data.table)
 library(dplyr)
 library(jsonlite)
 library(readr)
+library(stringr)
 library(tidyverse)
 library(tidyr)
 
@@ -30,11 +31,30 @@ taxaRanksDictionary <- read_delim(
   trim_ws = TRUE
 )
 
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesCleaned),
+  dir.create(pathDataInterimTablesCleaned),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesCleanedGnfinder),
+  dir.create(pathDataInterimTablesCleanedGnfinder),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesCleanedGnfinderOriginal),
+  dir.create(pathDataInterimTablesCleanedGnfinderOriginal),
+  FALSE
+)
 
 system(command = paste("bash", pathOriginalGnfinderScript))
 
-length <- length(list.files(path = pathOriginalOrganismDistinct,
-                            pattern = 'tsv'))
+length <-
+  length(list.files(path = pathDataInterimTablesOriginalGnfinder,
+                    pattern = 'tsv'))
 
 cut <- 10000
 
