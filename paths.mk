@@ -8,7 +8,8 @@ export DB_SOURCE_PATH = ${DATA_PATH}/external/dbSource
 
 # Below is and endless PATH nightmare. Why dont we have a unique ITERIM folder to dump all files, uniquely named ?
 ## This is because the files should be slowly removed and renamed in dictionaries instead. so working with interim/original table at the begining, bunch of dictionaries (original to translated, translated to curated etc) and processed table in the end, in my view at least
-export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
+# export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
+export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables_min
 export INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original
 export INTERIM_TABLE_TRANSLATED_PATH = ${INTERIM_TABLE_PATH}/1_translated
 export INTERIM_TABLE_CLEANED_PATH = ${INTERIM_TABLE_PATH}/2_cleaned
