@@ -68,6 +68,14 @@ inhouseDbReference <- inhouseDbSelected %>%
   filter(!is.na(referenceOriginal)) %>%
   distinct(referenceOriginal)
 
+
+mkdir(pathOriginalStructureInchi)
+mkdir(pathOriginalStructureSmiles)
+mkdir(pathOriginalStructureNominal)
+mkdir(pathOriginalOrganismDistinct)
+mkdir(pathOriginalRef)
+mkdir(pathOriginalTable)
+
 # exporting
 ## inchi
 write.table(
