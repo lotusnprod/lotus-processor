@@ -20,18 +20,16 @@ inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 # selecting
 set.seed(1234)
 inhouseDbSelected <- inhouseDb %>%
-mutate(structureOriginalNominal = name) %>%
+  mutate(structureOriginalNominal = name) %>%
   select(
     database,
     name,
     organismOriginal = biologicalsource,
     structureOriginalInchi = inchi,
     structureOriginalSmiles = smiles,
-    # structureOriginalNumericalCas = cas, # cas numbers problematic (see 4-Guanidinobutanoate vs 4-Guanidinobutanoic acid)
-    # structureOriginalNumericalPubchem = pubchem, # pubchem problematic (see vanillic acid / vanillate)
     structureOriginalNominal = name,
     referenceOriginal = reference
-  )  %>% sample_n(10000)
+  ) %>% sample_n(10000)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
@@ -69,6 +67,19 @@ inhouseDbReference <- inhouseDbSelected %>%
   distinct(referenceOriginal)
 
 # exporting
+## creating directories if they do not exist
+ifelse(!dir.exists(pathDataInterimTables),
+       dir.create(pathDataInterimTables),
+       FALSE)
+
+ifelse(!dir.exists(pathDataInterimTablesOriginal),
+       dir.create(pathDataInterimTablesOriginal),
+       FALSE)
+
+ifelse(!dir.exists(pathOriginalOrganismDistinct),
+       dir.create(pathOriginalOrganismDistinct),
+       FALSE)
+
 ## inchi
 write.table(
   x = inhouseDbStructureInchi,
@@ -147,3 +158,4 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
