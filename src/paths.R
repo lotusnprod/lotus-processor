@@ -30,7 +30,6 @@ pathDataInterimDb <-
   file.path(pathDataInterim,
             "db")
 
-
 databases <-
   Databases$new(pathDbSource = pathDataExternalDbSource,
                 pathDbInterim = pathDataInterimDb)
@@ -795,6 +794,9 @@ pathDataInterimDictionariesTcmNames <-
             "names.tsv.zip")
 
 ##### COMMENT ##### The tables will have to slowly move to lists in dictionaries folder in flat format.s
+###
+### here are the only lines needed to be modified to obtained minimal working example
+###
 
 #### tables
 # pathDataInterimTables <-
@@ -804,6 +806,9 @@ pathDataInterimDictionariesTcmNames <-
 pathDataInterimTables <-
   file.path(pathDataInterim,
             "tables_min")
+###
+### here are the only lines needed to be modified to obtained minimal working example
+###
 
 ### processed
 pathDataProcessed <-

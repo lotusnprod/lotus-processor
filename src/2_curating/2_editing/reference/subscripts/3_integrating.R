@@ -55,11 +55,18 @@ dataReferencedSelected$translationScore[dataReferencedSelected$translationScore 
   100
 
 # exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslated),
+  dir.create(pathDataInterimTablesTranslated),
+  FALSE
+)
+
 ## ref
 write.table(
   x = dataReferencedSelected,
   file = gzfile(
-    description = pathTranslatedReference,
+    description = pathDataInterimTablesTranslatedReference,
     compression = 9,
     encoding = "UTF-8"
   ),
