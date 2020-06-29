@@ -13,7 +13,7 @@ from rdkit.Chem import Descriptors
 import numpy as np
 
 # loading data
-myZip = gzip.open('../data/interim/tables/0_original/originalStructureSmiles.tsv.zip')
+myZip = gzip.open('../data/interim/tables_min/0_original/smiles.tsv.zip')
 
 df = pd.read_csv(
 	myZip,
@@ -52,7 +52,7 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
 df.to_csv(
-    "../data/interim/tables/1_translated/translatedStructureSmiles.tsv.zip",
+    "../data/interim/tables_min/1_translated/smiles.tsv.zip",
     sep = '\t',
     index = False,
     compression = 'gzip'
