@@ -60,7 +60,7 @@ ${INTERIM_PATH}/cmaup.tsv.zip: ${DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Ingred
 	cd ${PWD}/src &&	Rscript ${SRC_GATHERING_PATH}/cmaup/standardizing.R
 
 # maybe split both indeed else long
-${INTERIM_PATH}/coconut.tsv.zip: ${DB_SOURCE_PATH}/coconut/COCONUT.sdf.zip ${DB_SOURCE_PATH}/coconut/coconutConverted.tsv.zip ${SRC_GATHERING_PATH}/coconut/converting.py ${SRC_GATHERING_PATH}/coconut/standardizing.R
+${INTERIM_PATH}/coconut.tsv.zip: ${DB_SOURCE_PATH}/coconut/COCONUT_DB.sdf ${DB_SOURCE_PATH}/coconut/coconutConverted.tsv.zip ${SRC_GATHERING_PATH}/coconut/converting.py ${SRC_GATHERING_PATH}/coconut/standardizing.R
 	cd ${PWD}/src &&	python ${SRC_GATHERING_PATH}/coconut/converting.py  && Rscript ${SRC_GATHERING_PATH}/coconut/standardizing.R
 
 ${INTERIM_PATH}/cyanometdb.tsv.zip: ${DB_SOURCE_PATH}/cyanometdb/media-1.csv ${SRC_GATHERING_PATH}/cyanometdb/standardizing.R
