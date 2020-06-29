@@ -36,8 +36,9 @@ ifelse(
 
 system(command = paste("bash", pathTranslatedGnfinderScript))
 
-length <- length(list.files(path = pathDataInterimTablesTranslatedGnfinder,
-                            pattern = 'tsv'))
+length <-
+  length(list.files(path = pathDataInterimTablesTranslatedGnfinder,
+                    pattern = 'tsv'))
 
 num <- as.integer(seq(
   from = 1 * cut,
