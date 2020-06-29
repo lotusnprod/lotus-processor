@@ -21,13 +21,9 @@ pathDataExternalDbSource <-
             "dbSource")
 
 ### interim
-# pathDataInterim <-
-#   file.path(pathData,
-#             "interim")
-
 pathDataInterim <-
   file.path(pathData,
-            "interim_min")
+            "interim")
 
 #### db
 pathDataInterimDb <-
@@ -801,9 +797,13 @@ pathDataInterimDictionariesTcmNames <-
 ##### COMMENT ##### The tables will have to slowly move to lists in dictionaries folder in flat format.s
 
 #### tables
+# pathDataInterimTables <-
+#   file.path(pathDataInterim,
+#             "tables")
+
 pathDataInterimTables <-
   file.path(pathDataInterim,
-            "tables")
+            "tables_min")
 
 ### processed
 pathDataProcessed <-
