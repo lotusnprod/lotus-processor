@@ -32,9 +32,9 @@ databases-reintegrate: ${DATABASES_REINTEGRATE}
 databases-rescrape: ${DATABASES_RESCRAPE}
 	make -C ${SRC_GATHERING_PATH} databases-rescrape
 
-curating: curating-integrating curating-editing
+curating: curating-integrating curating-editing curating-editing-chemo
 
-curating-integrating:
+curating-integrating: ${DATABASES}
 	cd src && Rscript 2_curating/1_integrating/integratingOriginalDatabase.R
 
 curating-editing: curating-editing-bio curating-editing-reference

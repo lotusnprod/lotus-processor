@@ -1,5 +1,5 @@
 # title: "Open NP DB (original) compileR"
-
+#setwd("/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src")
 # loading paths
 source("paths.R")
 
@@ -15,10 +15,12 @@ dbs <- lapply(pathDataInterimDbDir, function(x) {
 })
 inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
+#head(inhouseDbSelected, 3)
+
 # selecting
 set.seed(1234)
 inhouseDbSelected <- inhouseDb %>%
-  mutate(structureOriginalNominal = name) %>%
+mutate(structureOriginalNominal = name) %>%
   select(
     database,
     name,
@@ -27,7 +29,7 @@ inhouseDbSelected <- inhouseDb %>%
     structureOriginalSmiles = smiles,
     # structureOriginalNumericalCas = cas, # cas numbers problematic (see 4-Guanidinobutanoate vs 4-Guanidinobutanoic acid)
     # structureOriginalNumericalPubchem = pubchem, # pubchem problematic (see vanillic acid / vanillate)
-    structureOriginalNominal,
+    structureOriginalNominal = name,
     referenceOriginal = reference
   )  %>% sample_n(10000)
 
