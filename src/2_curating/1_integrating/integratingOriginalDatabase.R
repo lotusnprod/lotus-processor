@@ -15,7 +15,7 @@ dbs <- lapply(pathDataInterimDbDir, function(x) {
 })
 inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
-#head(inhouseDbSelected, 3)
+head(inhouseDb, 3)
 
 # selecting
 set.seed(1234)

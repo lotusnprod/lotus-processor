@@ -797,9 +797,9 @@ pathDataInterimDictionariesTcmNames <-
 ##### COMMENT ##### The tables will have to slowly move to lists in dictionaries folder in flat format.s
 
 #### tables
-# pathDataInterimTables <-
-#   file.path(pathDataInterim,
-#             "tables")
+pathDataInterimTables <-
+  file.path(pathDataInterim,
+            "tables")
 
 pathDataInterimTables <-
   file.path(pathDataInterim,
