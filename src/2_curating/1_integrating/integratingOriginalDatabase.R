@@ -77,15 +77,15 @@ ifelse(!dir.exists(pathDataInterimTablesOriginal),
        dir.create(pathDataInterimTablesOriginal),
        FALSE)
 
-ifelse(!dir.exists(pathOriginalOrganismDistinct),
-       dir.create(pathOriginalOrganismDistinct),
+ifelse(!dir.exists(pathDataInterimTablesOriginalGnfinder),
+       dir.create(pathDataInterimTablesOriginalGnfinder),
        FALSE)
 
 ## inchi
 write.table(
   x = inhouseDbStructureInchi,
   file = gzfile(
-    description = pathOriginalStructureInchi,
+    description = pathDataInterimTablesOriginalInchi,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -99,7 +99,7 @@ write.table(
 write.table(
   x = inhouseDbStructureSmiles,
   file = gzfile(
-    description = pathOriginalStructureSmiles,
+    description = pathDataInterimTablesOriginalSmiles,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -113,7 +113,7 @@ write.table(
 write.table(
   x = inhouseDbStructureNominal,
   file = gzfile(
-    description = pathOriginalStructureNominal,
+    description = pathDataInterimTablesOriginalNominal,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -129,14 +129,14 @@ split_data_table(
   x = inhouseDbOrganism,
   no_rows_per_frame = 10000,
   text = "originalOrganismGnfinderUntil_",
-  path_to_store = pathOriginalOrganismDistinct
+  path_to_store = pathDataInterimTablesOriginalGnfinder
 )
 
 ## ref
 write.table(
   x = inhouseDbReference,
   file = gzfile(
-    description = pathOriginalRef,
+    description = pathDataInterimTablesOriginalReference,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -150,7 +150,7 @@ write.table(
 write.table(
   x = inhouseDbSelected,
   file = gzfile(
-    description = pathOriginalTable,
+    description = pathDataInterimTablesOriginalTable,
     compression = 9,
     encoding = "UTF-8"
   ),

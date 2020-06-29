@@ -21,9 +21,22 @@ library(tidyr)
 
 log_debug("  Step 3")
 
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesCleanedGnfinderTranslated),
+  dir.create(pathDataInterimTablesCleanedGnfinderTranslated),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesCleanedGnfinderTranslatedJson),
+  dir.create(pathDataInterimTablesCleanedGnfinderTranslatedJson),
+  FALSE
+)
+
 system(command = paste("bash", pathTranslatedGnfinderScript))
 
-length <- length(list.files(path = pathTranslatedOrganismDistinct,
+length <- length(list.files(path = pathDataInterimTablesTranslatedGnfinder,
                             pattern = 'tsv'))
 
 num <- as.integer(seq(
