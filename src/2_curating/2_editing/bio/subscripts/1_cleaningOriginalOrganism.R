@@ -16,6 +16,7 @@ library(data.table)
 library(dplyr)
 library(jsonlite)
 library(readr)
+library(stringr)
 library(tidyverse)
 library(tidyr)
 
