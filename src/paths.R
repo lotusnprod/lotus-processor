@@ -824,6 +824,9 @@ pathDataProcessedFiguresHtml <-
 
 
 # original fields
+pathDataInterimTablesOriginal <-
+  file.path(pathDataInterimTables, "0_original")
+
 ## structure
 ### InChI
 pathOriginalStructureInchi <-
