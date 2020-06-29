@@ -1,4 +1,4 @@
-for file in ../data/interim/tables/0_original/gnfinder/*.tsv
+for file in ../data/interim/tables_min/0_original/gnfinder/*.tsv
 
 do
 	echo "Submitting File $file to gnfinder servers"
