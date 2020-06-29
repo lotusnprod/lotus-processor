@@ -42,10 +42,10 @@ curating-integrating: ${DATABASES}
 
 curating-editing: curating-editing-bio curating-editing-reference
 
-curating-editing-bio:
+curating-editing-bio: ${DATABASES}
 	cd src && Rscript 2_curating/2_editing/bio/editing.R
 
-curating-editing-reference:
+curating-editing-reference: ${DATABASES}
 	cd src && Rscript 2_curating/2_editing/reference/editing.R
 
 curating-editing-chemo: curating-editing-chemo-name curating-editing-chemo-smiles
