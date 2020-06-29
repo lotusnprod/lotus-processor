@@ -1,6 +1,6 @@
-#######################################################
-######################   Paths   ######################
-#######################################################
+###############################################################################
+##################################   Paths   ##################################
+###############################################################################
 
 source("functions/database.R")
 
@@ -834,7 +834,7 @@ pathDataInterimTablesOriginalInchi <-
   file.path(pathDataInterimTablesOriginal, "inchi.tsv.zip")
 
 ### SMILES
-pathDataInterimTablesOriginalSmiles <- 
+pathDataInterimTablesOriginalSmiles <-
   file.path(pathDataInterimTablesOriginal, "smiles.tsv.zip")
 
 ### nominal
@@ -880,7 +880,8 @@ pathDataInterimTablesTranslatedGnfinder <-
 
 ## distinct structure
 pathDataInterimTablesTranslatedRdkit <-
-  file.path(pathDataInterimTablesTranslated, "rdkit/translatedStructureRdkit.tsv.zip")
+  file.path(pathDataInterimTablesTranslated,
+            "rdkit/translatedStructureRdkit.tsv.zip")
 
 ## table
 pathDataInterimTablesTranslatedTable <-
@@ -896,11 +897,11 @@ pathDataInterimTablesCleanedGnfinder <-
   file.path(pathDataInterimTablesCleaned, "gnfinder")
 
 #### original
-pathDataInterimTablesCleanedGnfinderOriginal <- 
+pathDataInterimTablesCleanedGnfinderOriginal <-
   file.path(pathDataInterimTablesCleanedGnfinder, "original/")
 
 #### translated
-pathDataInterimTablesCleanedGnfinderTranslated <- 
+pathDataInterimTablesCleanedGnfinderTranslated <-
   file.path(pathDataInterimTablesCleanedGnfinder, "translated/")
 
 ## ref
@@ -921,7 +922,8 @@ pathDataInterimTablesCuratedOrganism <-
   file.path(pathDataInterimTablesCurated, "organism.tsv.zip")
 
 pathDataInterimTablesCuratedOrganismRealDiff <-
-  file.path(pathDataInterimTablesCurated, "organismsDifferentSpecies.tsv.zip")
+  file.path(pathDataInterimTablesCurated,
+            "organismsDifferentSpecies.tsv.zip")
 
 ## dirty for the moment
 pathOriginalGnfinderScript <-
