@@ -7,15 +7,15 @@ source("functions/helpers.R")
 
 library(data.table)
 library(dplyr)
+library(stringr)
 
 # loading files
 dbs <- lapply(pathDataInterimDbDir, function(x) {
   out <- db_loader(x)
   return(out)
 })
-inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
-head(inhouseDb, 3)
+inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
 # selecting
 set.seed(1234)
@@ -73,19 +73,23 @@ ifelse(!dir.exists(pathDataInterimTables),
        dir.create(pathDataInterimTables),
        FALSE)
 
-ifelse(!dir.exists(pathDataInterimTablesOriginal),
-       dir.create(pathDataInterimTablesOriginal),
-       FALSE)
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginal),
+  dir.create(pathDataInterimTablesOriginal),
+  FALSE
+)
 
-ifelse(!dir.exists(pathOriginalOrganismDistinct),
-       dir.create(pathOriginalOrganismDistinct),
-       FALSE)
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalGnfinder),
+  dir.create(pathDataInterimTablesOriginalGnfinder),
+  FALSE
+)
 
 ## inchi
 write.table(
   x = inhouseDbStructureInchi,
   file = gzfile(
-    description = pathOriginalStructureInchi,
+    description = pathDataInterimTablesOriginalInchi,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -99,7 +103,7 @@ write.table(
 write.table(
   x = inhouseDbStructureSmiles,
   file = gzfile(
-    description = pathOriginalStructureSmiles,
+    description = pathDataInterimTablesOriginalSmiles,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -113,7 +117,7 @@ write.table(
 write.table(
   x = inhouseDbStructureNominal,
   file = gzfile(
-    description = pathOriginalStructureNominal,
+    description = pathDataInterimTablesOriginalNominal,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -128,15 +132,15 @@ write.table(
 split_data_table(
   x = inhouseDbOrganism,
   no_rows_per_frame = 10000,
-  text = "originalOrganismGnfinderUntil_",
-  path_to_store = pathOriginalOrganismDistinct
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalGnfinder
 )
 
 ## ref
 write.table(
   x = inhouseDbReference,
   file = gzfile(
-    description = pathOriginalRef,
+    description = pathDataInterimTablesOriginalReference,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -150,7 +154,7 @@ write.table(
 write.table(
   x = inhouseDbSelected,
   file = gzfile(
-    description = pathOriginalTable,
+    description = pathDataInterimTablesOriginalTable,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -159,4 +163,3 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
-
