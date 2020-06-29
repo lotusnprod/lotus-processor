@@ -30,6 +30,7 @@ taxaRanksDictionary <- read_delim(
   trim_ws = TRUE
 )
 
+
 system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <- length(list.files(path = pathOriginalOrganismDistinct,
@@ -37,7 +38,7 @@ length <- length(list.files(path = pathOriginalOrganismDistinct,
 
 cut <- 10000
 
-num <- as.integer(seq(
+num <- as.integer(seq(®
   from = 1 * cut,
   to = length * cut,
   by = cut
