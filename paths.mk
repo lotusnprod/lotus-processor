@@ -2,6 +2,7 @@ export DATA_PATH ?= ${PWD}/data
 #export DATA_PATH ?= ${PWD}/data_min
 export SRC_PATH ?= ${PWD}/src
 
+
 export INTERIM_PATH = ${DATA_PATH}/interim/db
 export DB_SOURCE_PATH = ${DATA_PATH}/external/dbSource
 ## be carfeul with comments they can ruin the makefile as stated here: https://www.gnu.org/software/make/manual/html_node/Recipe-Syntax.html. At least it made mine do not work anymore

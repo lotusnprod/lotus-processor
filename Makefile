@@ -20,6 +20,9 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment 
 
+# Is the line below worthwile ?
+path-check: ${SRC_PATH}/path.R 
+
 databases:
 	make -C ${SRC_GATHERING_PATH} databases
 

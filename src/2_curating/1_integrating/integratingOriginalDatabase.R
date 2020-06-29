@@ -67,13 +67,6 @@ inhouseDbReference <- inhouseDbSelected %>%
   distinct(referenceOriginal)
 
 
-mkdir(pathOriginalStructureInchi)
-mkdir(pathOriginalStructureSmiles)
-mkdir(pathOriginalStructureNominal)
-mkdir(pathOriginalOrganismDistinct)
-mkdir(pathOriginalRef)
-mkdir(pathOriginalTable)
-
 # exporting
 ## creating directories if they do not exist
 ifelse(!dir.exists(pathDataInterimTables),
