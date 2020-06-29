@@ -6,11 +6,9 @@ source("functions/database.R")
 
 # root
 ## data
-# pathData <- Sys.getenv("DATA_PATH",
-#                        unset = "../data")
-
 pathData <- Sys.getenv("DATA_PATH",
-                       unset = "../data_min")
+                       unset = "../data")
+
 
 ### external
 pathDataExternal <-
@@ -23,9 +21,13 @@ pathDataExternalDbSource <-
             "dbSource")
 
 ### interim
+# pathDataInterim <-
+#   file.path(pathData,
+#             "interim")
+
 pathDataInterim <-
   file.path(pathData,
-            "interim")
+            "interim_min")
 
 #### db
 pathDataInterimDb <-
