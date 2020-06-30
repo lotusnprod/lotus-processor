@@ -57,6 +57,13 @@ dataTranslated <- left_join(dataOriginal, dataTranslatedNominal) %>%
 
 
 # exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslated),
+  dir.create(pathDataInterimTablesTranslated),
+  FALSE
+)
+
 write.table(
   x = dataTranslated,
   file = gzfile(

@@ -874,6 +874,14 @@ pathDataInterimTablesTranslatedSmiles <-
 pathDataInterimTablesTranslatedNominal <-
   file.path(pathDataInterimTablesTranslated, "nominal.tsv.zip")
 
+### structure
+pathDataInterimTablesTranslatedStructure <-
+  file.path(pathDataInterimTablesTranslated, "structure.tsv.zip")
+
+### structure
+pathDataInterimTablesTranslatedStructureUnique <-
+  file.path(pathDataInterimTablesTranslated, "structureUnique.tsv.zip")
+
 ## distinct organism
 pathDataInterimTablesTranslatedGnfinder <-
   file.path(pathDataInterimTablesTranslated, "gnfinder/")
