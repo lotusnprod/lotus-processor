@@ -6,6 +6,7 @@ source("functions/helpers.R")
 source("functions/standardizing.R")
 
 library(dplyr)
+library(Hmisc) #neeed for capitalize()
 library(readr)
 library(splitstackshape)
 library(tidyr)
@@ -21,7 +22,7 @@ data_clean_final <- read_delim(
 )
 
 species_studies <- read_delim(
-  file = gzfile(database$sourceFiles$tsvStudiess),
+  file = gzfile(database$sourceFiles$tsvStudies),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE

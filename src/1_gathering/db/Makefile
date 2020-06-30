@@ -1,6 +1,6 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	dnp	drduke	etcm	foodb	inflamnat	knapsack	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	pamdb	phenolexplorer	phytohub	procardb	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	#	metabolights	plantcyc
+DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
@@ -25,8 +25,6 @@ databases-rescrape:	${DATABASES_RESCRAPE}
 
 ${DATABASES}:%:${INTERIM_DB_PATH}/%.tsv.zip
 
-
-
 afrotryp:	${INTERIM_DB_PATH}/afrotryp.tsv.zip
 ${INTERIM_DB_PATH}/afrotryp.tsv.zip: ${DB_SOURCE_PATH}/afrotryp/afrotryp.tsv.zip	${SRC_GATHERING_PATH}/afrotryp/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/afrotryp/standardizing.R
@@ -36,7 +34,7 @@ ${INTERIM_DB_PATH}/alkamid.tsv.zip:	${DB_SOURCE_PATH}/alkamid/alkamidRefScraped.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/alkamid/standardizing.R
 
 alkamid-rescrape:	${DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.zip	${DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.zip
-${DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.zip	${DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.zip:
+${DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.zip	${DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/alkamid/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/alkamid/scraping.R
 
 biofacquim:	${INTERIM_DB_PATH}/biofacquim.tsv.zip
@@ -52,7 +50,7 @@ ${INTERIM_DB_PATH}/biophytmol.tsv.zip:	${DB_SOURCE_PATH}/biophytmol/biophytmolSc
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/biophytmol/standardizing.R
 
 biophytmol-rescrape:	${DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.zip
-${DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.zip:
+${DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/biophytmol/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/biophytmol/scraping.R
 
 carotenoiddb:	${INTERIM_DB_PATH}/carotenoiddb.tsv.zip
@@ -60,7 +58,7 @@ ${INTERIM_DB_PATH}/carotenoiddb.tsv.zip:	${DB_SOURCE_PATH}/carotenoiddb/caroteno
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/carotenoiddb/standardizing.R
 
 carotenoiddb-rescrape:	${DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.zip
-${DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.zip:	${DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv
+${DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.zip:	${DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv	# ${SRC_GATHERING_PATH}/carotenoiddb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/carotenoiddb/scraping.R
 
 cmaup:	${INTERIM_DB_PATH}/cmaup.tsv.zip
@@ -104,7 +102,7 @@ ${INTERIM_DB_PATH}/knapsack.tsv.zip:	${DB_SOURCE_PATH}/knapsack/knapsackScraped.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/knapsack/standardizing.R
 
 knapsack-rescrape:	${DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.zip
-${DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.zip:
+${DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/knapsack/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/knapsack/scraping.R
 
 # PROCESS DONE FOR METABOLIGHTS IS HORROR... my apologies I can't write it another way
@@ -115,11 +113,11 @@ ${INTERIM_DB_PATH}/metabolights.tsv.zip:	${DB_SOURCE_PATH}/metabolights/metaboli
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/metabolights/standardizing.R
 
 metabolights-reconvert:	${DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.zip
-${DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/metabolights/studiesScraped/*.json)	${DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml	${SRC_GATHERING_PATH}/metabolights/prestandardizing.R	${SRC_GATHERING_PATH}/metabolights/standardizingStudies.R
+${DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/metabolights/studiesScraped/*.json)	${DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml	# ${SRC_GATHERING_PATH}/metabolights/prestandardizing.R	${SRC_GATHERING_PATH}/metabolights/standardizingStudies.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/metabolights/prestandardizing.R	&&	Rscript	${SRC_GATHERING_PATH}/metabolights/standardizingStudies.R
 
 metabolights-rescrape:	${DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.zip
-${DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.zip:	${DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml	${SRC_GATHERING_PATH}/metabolights/scraping.R
+${DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.zip:	${DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml	# ${SRC_GATHERING_PATH}/metabolights/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/metabolights/scraping.R
 
 ${INTERIM_DB_PATH}/mibig.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/mibig/mibig_json_2.0/*.json)	${SRC_GATHERING_PATH}/mibig/standardizing.R
@@ -130,7 +128,7 @@ ${INTERIM_DB_PATH}/mitishamba.tsv.zip:	${DB_SOURCE_PATH}/mitishamba/mitishambaSc
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/mitishamba/standardizing.R
 
 mitishamba-rescrape:	${DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.zip
-${DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.zip:
+${DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/mitishamba/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/mitishamba/scraping.R
 
 nanpdb:	${INTERIM_DB_PATH}/nanpdb.tsv.zip
@@ -138,7 +136,7 @@ ${INTERIM_DB_PATH}/nanpdb.tsv.zip:	${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zi
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/nanpdb/standardizing.R
 
 nanpdb-rescrape:	${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zip
-${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zip:
+${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/nanpdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/nanpdb/scraping.R
 
 npass:	${INTERIM_DB_PATH}/npass.tsv.zip
@@ -158,7 +156,7 @@ ${INTERIM_DB_PATH}/npedia.tsv.zip:	${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zi
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/npedia/standardizing.R
 
 npedia-rescrape:	${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zip
-${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zip:
+${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/npedia/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/npedia/scraping.R
 
 pamdb:	${INTERIM_DB_PATH}/pamdb.tsv.zip
@@ -174,7 +172,7 @@ ${INTERIM_DB_PATH}/phytohub.tsv.zip:	${DB_SOURCE_PATH}/phytohub/phytohubScraped.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/phytohub/standardizing.R
 
 phytohub-rescrape:	${DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.zip
-${DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.zip:
+${DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/phytohub/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/phytohub/scraping.R
 
 plantcyc:	${INTERIM_DB_PATH}/plantcyc.tsv.zip
@@ -182,7 +180,7 @@ ${INTERIM_DB_PATH}/plantcyc.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/plantcyc/*.tsv
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/plantcyc/standardizing.R
 
 plantcyc-reintegrate:	$(wildcard	${DB_SOURCE_PATH}/plantcyc/*.tsv.zip)	
-$(wildcard	${DB_SOURCE_PATH}/plantcyc/*.tsv.zip):	$(wildcard	${DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat)	${SRC_GATHERING_PATH}/plantcyc/integrating.R
+$(wildcard	${DB_SOURCE_PATH}/plantcyc/*.tsv.zip):	$(wildcard	${DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat)
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/plantcyc/integrating.R
 
 procardb:	${INTERIM_DB_PATH}/procardb.tsv.zip
@@ -190,7 +188,7 @@ ${INTERIM_DB_PATH}/procardb.tsv.zip:	${DB_SOURCE_PATH}/procardb/procardbScraped.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/procardb/standardizing.R
 
 prodardb-rescrape:	${DB_SOURCE_PATH}/procardb/procardbScraped.tsv.zip
-${DB_SOURCE_PATH}/procardb/procardbScraped.tsv.zip:
+${DB_SOURCE_PATH}/procardb/procardbScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/procardb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/procardb/scraping.R
 
 respect:	${INTERIM_DB_PATH}/respect.tsv.zip
@@ -202,7 +200,7 @@ ${INTERIM_DB_PATH}/sancdb.tsv.zip:	${DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.zi
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/sancdb/standardizing.R
 
 sancdb-rescrape:${DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.zip
-${DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.zip:	
+${DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/sancdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/sancdb/scraping.R
 
 streptomedb:	${INTERIM_DB_PATH}/streptomedb.tsv.zip
@@ -218,7 +216,7 @@ ${INTERIM_DB_PATH}/swmd.tsv.zip:	${DB_SOURCE_PATH}/swmd/swmdScraped.tsv.zip	${SR
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/swmd/standardizing.R
 
 swmd-rescrape:	${DB_SOURCE_PATH}/swmd/swmdScraped.tsv.zip
-${DB_SOURCE_PATH}/swmd/swmdScraped.tsv.zip:
+${DB_SOURCE_PATH}/swmd/swmdScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/swmd/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/swmd/scraping.R
 
 symmap:	${INTERIM_DB_PATH}/symmap.tsv.zip
@@ -230,7 +228,7 @@ ${INTERIM_DB_PATH}/tmdb.tsv.zip:	${DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.zip	${SR
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/tmdb/standardizing.R
 
 tmdb-rescrape:	${DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.zip
-${DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.zip:
+${DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/tmdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/tmdb/scraping.R
 
 tmmc:	${INTERIM_DB_PATH}/tmmc.tsv.zip
