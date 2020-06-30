@@ -40,10 +40,10 @@ except:
 # This load the associated params.yaml file were we can specify some variables of the script, here (head_lenght)
 # The pipeline can then just be rerunned using dvc repro
 
-with open("params.yaml", 'r') as fd:
-    params = yaml.safe_load(fd)
+# with open("params.yaml", 'r') as fd:
+#     params = yaml.safe_load(fd)
 
-head_lenght = params['head_lenght']
+# head_lenght = params['head_lenght']
 
 ## Loading the df with inchi columns 
 myZip = gzip.open(input_file_path)
@@ -54,7 +54,7 @@ df = pd.read_csv(
 
 ## eventually filter display some info, comment according to your needs
 #df = df[df['originaldb'] == 'tcm']
-df = df.head(head_lenght)
+# df = df.head(head_lenght)
 df.columns
 df.info()
 
