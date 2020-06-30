@@ -30,7 +30,7 @@ except:
 
 
 # loading data
-myZip = gzip.open('../data/interim/tables_min/0_original/smiles.tsv.zip')
+myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
 	myZip,
@@ -40,10 +40,10 @@ df = pd.read_csv(
 # df.info()
 
 # keeping non-null entries
-df_i = df[df['structureOriginalSmiles'].notnull()]
+df = df[df[smiles_column_header].notnull()]
 
 # replacing unwanted characters
-df_i['structureOriginalSmiles'].replace(regex = True,
+df[smiles_column_header].replace(regex = True,
 										inplace = True,
 										to_replace = r'"',
 										value = r''
@@ -51,9 +51,7 @@ df_i['structureOriginalSmiles'].replace(regex = True,
 
 
 # generating ROMOL
-df_i['ROMol'] = df_i['structureOriginalSmiles'].map(Chem.MolFromSmiles)
-
-df = df_i
+df['ROMol'] = df[smiles_column_header].map(Chem.MolFromSmiles)
 
 # removing entries for which no ROMol object could be generated
 df = df[~df['ROMol'].isnull()]
@@ -62,6 +60,8 @@ df = df[~df['ROMol'].isnull()]
 df['inchi'] = df['ROMol'].map(Chem.MolToInchi)
 
 # renaming
+# naming not OK checkz with Adriano 
+
 df['structureTranslatedSmiles'] = df['inchi']
 
 # dropping old columns
@@ -69,7 +69,7 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
 df.to_csv(
-    "../data/interim/tables_min/1_translated/smiles.tsv.zip",
+    ouput_file_path,
     sep = '\t',
     index = False,
     compression = 'gzip'
