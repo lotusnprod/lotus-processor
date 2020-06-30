@@ -328,10 +328,11 @@ data_clean_final[] <-
   lapply(data_clean_final, function(x)
     gsub("\t", " ", x))
 
+# export
 write.table(
   x = data_clean_final,
   file = gzfile(
-    description = pathDataExternalDbSourceMetabolightsPrecleaned,
+    description = database$sourceFiles$tsvPrecleaned,
     compression = 9,
     encoding = "UTF-8"
   ),

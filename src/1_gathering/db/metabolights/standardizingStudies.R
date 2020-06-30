@@ -7,6 +7,7 @@ source("functions/standardizing.R")
 
 library(dplyr)
 library(jsonlite)
+library(pbmcapply)
 library(readr)
 library(splitstackshape)
 library(tidyr)
@@ -126,7 +127,7 @@ species <- data %>% distinct(species)
 write.table(
   x = data,
   file = gzfile(
-    description = pathDataExternalDbSourceMetabolightsStudiesScraped,
+    description = database$sourceFiles$tsvStudies,
     compression = 9,
     encoding = "UTF-8"
   ),
