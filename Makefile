@@ -37,15 +37,18 @@ databases-rescrape:	${DATABASES_RESCRAPE}
 
 curating:	curating-integrating	curating-editing
 
-curating-integrating:	${DATABASES}	2_curating/1_integrating/integratingOriginalDatabase.R
+curating-integrating:	${INTERIM_TABLE_ORIGINAL_PATH}
+${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
 	cd	src	&&	Rscript	2_curating/1_integrating/integratingOriginalDatabase.R
 
 curating-editing:	curating-editing-bio	curating-editing-reference	curating-editing-chemo
 
-curating-editing-bio:	${DATABASES}	2_curating/2_editing/bio/editing.R
+curating-editing-bio:	${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip
+${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip: ${INTERIM_TABLE_ORIGINAL_GNFINDER_PATH}	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip
 	cd	src	&&	Rscript	2_curating/2_editing/bio/editing.R
 
-curating-editing-reference:	${DATABASES}	2_curating/2_editing/reference/editing.R
+curating-editing-reference:	${INTERIM_TABLE_CLEANED_PATH}/reference.tsv.zip
+${INTERIM_TABLE_CLEANED_PATH}/reference.tsv.zip:	${INTERIM_TABLE_ORIGINAL_PATH}/reference.tsv.zip
 	cd	src	&&	Rscript	2_curating/2_editing/reference/editing.R
 
 curating-editing-chemo:	curating-editing-chemo-name	curating-editing-chemo-smiles
