@@ -920,6 +920,10 @@ pathDataInterimTablesCleanedReference <-
 pathDataInterimTablesCleanedOrganism <-
   file.path(pathDataInterimTablesCleaned, "organism.tsv.zip")
 
+### final cleaned table
+pathDataInterimTablesCleanedTable <-
+  file.path(pathDataInterimTablesCleaned, "table.tsv.zip")
+
 ### WE SHOULD RENAME HERE INCOHERENCE WITH CURATION/CLEANING/CURATION
 # curated fields
 pathDataInterimTablesCurated <-
