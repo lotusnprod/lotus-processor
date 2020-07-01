@@ -1,18 +1,20 @@
 # title: "integrating bio chemo ref"
 
 # loading
-
+setwd('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src')
 ##paths
 source("paths.R")
+
+## libraries
+library(tidyverse)
+library(dplyr)
+library(readr)
 
 ## functions
 source("functions/analysis.R")
 source("functions/helpers.R")
 
-## libraries
-library(dplyr)
-library(readr)
-library(tidyverse)
+
 
 ## files
 ### original table
@@ -89,13 +91,13 @@ structureTable <- structureTable %>%
     structure_5_directParent = direct_parent.name
   )
 
-## organism
-organismTable <- organismTable %>%
-  select(...)
+# ## organism
+# organismTable <- organismTable %>%
+#   select(...)
 
-## organism
-referenceTable <- referenceTable %>%
-  select(...)
+# ## organism
+# referenceTable <- referenceTable %>%
+#   select(...)
 
 # integrating
 ## structure
