@@ -193,6 +193,17 @@ If you are using Visual Studio be sure to set your R path in the settings option
 A minimal working example containing XXX entries coming from various DB's is proposed.
 Use this example to check if all steps are running correctly on your machine.
 
+## To build a graph from the make
+(Requires remake and gprof2dot https://github.com/jrfonseca/gprof2dot)
+
+```
+remake --profile -B curating
+gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
+
+```
+
+
+
 ### Description
 
 The minimal working example file contains following columns:
