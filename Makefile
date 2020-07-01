@@ -75,7 +75,10 @@ ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py
 	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
 
 
-curating-3-integrating:	${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip
-${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
-${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R: ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/reference.tsv.zip
+# curating-3-integrating:	${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip
+# ${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
+# ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R: ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/reference.tsv.zip
+# 	cd	src	&&	Rscript	${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
+
+curating-3-integrating:
 	cd	src	&&	Rscript	${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
