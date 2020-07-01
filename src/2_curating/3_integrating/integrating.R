@@ -1,6 +1,5 @@
 # title: "integrating bio chemo ref"
 
-setwd('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src')
 # loading
 
 ##paths
