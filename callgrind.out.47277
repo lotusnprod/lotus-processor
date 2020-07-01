@@ -1,0 +1,173 @@
+version: 1
+creator: remake 4.1+dbg1.1
+cmd: remake --profile curating-3-integrating
+pid: 47277
+
+desc: Trigger: Normal program termination
+desc: Node: Targets
+
+positions: line
+events: 100usec
+summary: 546401
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/1_translating/names.R
+60 41623
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/nominal.tsv.zip
+calls=1 60
+60 4
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/nominal.tsv.zip
+59 41629
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/1_translating/names.R
+calls=1 59
+59 41623
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/tcm/names.tsv.zip
+0 11
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/3_cleaningAndEnriching/sanitizing.py
+74 74668
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/structureUnique.tsv.zip
+calls=1 74
+74 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/structureUnique.tsv.zip
+0 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/table.tsv.zip
+0 4
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/smiles.tsv.zip
+64 10961
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
+calls=1 64
+64 10953
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/3_integrating/integrating.R
+80 546369
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/reference.tsv.zip
+calls=1 80
+80 4
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/3_curated/organism.tsv.zip
+calls=1 80
+80 37
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/structureUnique.tsv.zip
+calls=1 80
+80 74673
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/nominal.tsv.zip
+calls=1 80
+80 41629
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/1_translated/smiles.tsv.zip
+calls=1 80
+80 10961
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/table.tsv.zip
+calls=1 80
+80 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/black.tsv
+0 4
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/table.tsv.zip
+79 546374
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/3_integrating/integrating.R
+calls=1 79
+79 546369
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/1_translating/smiles.py
+65 10953
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/smiles.tsv.zip
+calls=1 65
+65 4
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/3_curated/organism.tsv.zip
+47 37
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/tcm/names.tsv.zip
+calls=1 47
+47 11
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/taxa/ranks.tsv
+calls=1 47
+47 4
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/names.tsv.zip
+calls=1 47
+47 4
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/manualSubtraction.tsv
+calls=1 47
+47 6
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/black.tsv
+calls=1 47
+47 4
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/gnfinder
+calls=1 47
+47 5
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/manualSubtraction.tsv
+0 6
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/structureUnique.tsv.zip
+73 74673
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src/2_curating/2_editing/chemo/subscripts/3_cleaningAndEnriching/sanitizing.py
+calls=1 73
+73 74668
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/smiles.tsv.zip
+0 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/taxa/ranks.tsv
+0 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/gnfinder
+0 5
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/reference.tsv.zip
+0 4
+
+fl=Makefile
+
+fn=curating-3-integrating
+78 1
+cfi=Makefile
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/table.tsv.zip
+calls=1 78
+78 546374
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/dictionaries/common/names.tsv.zip
+0 4
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/nominal.tsv.zip
+0 4
+
+fl=Makefile
+
+fn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/2_cleaned/reference.tsv.zip
+51 4
+cfn=/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables_min/0_original/reference.tsv.zip
+calls=1 51
+51 4
+
