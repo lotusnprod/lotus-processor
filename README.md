@@ -13,7 +13,7 @@ B{script}
 
 040{integrating script} --> 100(unique organisms originalOrganism.tsv.zip)
 
-040{integrating script} --> 210(unique InChIs originalStructureInChI.tsv.zip)
+040{integrating script} --> 210(unique InChIs 0_original/inchi.tsv.zip)
 
 040{integrating script} --> 220(unique SMILES originalStructureSmiles.tsv.zip)
 
