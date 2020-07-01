@@ -49,6 +49,8 @@ df[smiles_column_header].replace(regex = True,
 										value = r''
 										)
 
+##
+
 
 # generating ROMOL
 df['ROMol'] = df[smiles_column_header].map(Chem.MolFromSmiles)

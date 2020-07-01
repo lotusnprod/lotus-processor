@@ -74,7 +74,7 @@ curating-editing-chemo-integrating:
 	cd	src	&&	Rscript	2_curating/2_editing/chemo/subscripts/2_integrating/integrating.R
 
 
-curating-editing-chemo-sanitizing:	${INTERIM_TABLE_TRANSLATED_PATH}/sanitized.tsv.zip
-${INTERIM_TABLE_TRANSLATED_PATH}/sanitized.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/sanitizing.py
-${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/sanitizing.py:	${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip
-	cd	src	&&	python	2_curating/2_editing/chemo/subscripts/3_curatingAndEnriching/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/sanitized.tsv.zip structureTranslatedSmiles
+curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip
+${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py
+${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py:	${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
+	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
