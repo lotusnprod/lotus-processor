@@ -1,6 +1,11 @@
 # title: "integrating bio chemo ref"
 
+setwd('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src')
 # loading
+
+##paths
+source("paths.R")
+
 ## functions
 source("functions/analysis.R")
 source("functions/helpers.R")
@@ -178,3 +183,18 @@ fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
 stats <- fullDbFilteredOutsideDnp %>%
   group_by(database) %>%
   count()
+
+
+## table
+write.table(
+  x = fullDb,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
