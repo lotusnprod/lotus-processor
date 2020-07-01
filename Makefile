@@ -35,7 +35,7 @@ databases-reintegrate:	${DATABASES_REINTEGRATE}
 databases-rescrape:	${DATABASES_RESCRAPE}
 	make	-C	${SRC_GATHERING_PATH}	databases-rescrape
 
-curating:	curating-integrating	curating-editing
+curating:	curating-1-integrating curating-editing curating-3-integrating
 
 curating-1-integrating:	${INTERIM_TABLE_ORIGINAL_PATH}
 ${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
