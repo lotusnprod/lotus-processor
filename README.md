@@ -1,64 +1,103 @@
 # OpenNPDB: an Open Natural Products Database
 
-*OpenNPDB:* an Open Natural Products Database. Actually, this database (DB) consists of XXX'XXX structure - organism pairs, gathered and standardized among XX open DB’s. It represents the most exhaustive open DB for natural products (NP’s) dereplication. It encompasses XXX'XXX distinct structures in XX’XXX resolved organisms. Additionally, both chemical and biological taxonomy are given for each pair. Other basic chemical descriptors and in silico tandem mass spectrometry (MS/MS) spectrum are provided for each structure. Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
-
-![Graphical abstract](data/processed/figures/graphical_abstract.png)
+*OpenNPDB:* an Open Natural Products Database. Actually, this database (DB) consists of XXX'XXX structure - organism pairs, gathered and standardized among XX open DBâ€™s. It represents the most exhaustive open DB for natural products (NPâ€™s) dereplication. It encompasses XXX'XXX distinct structures in XXâ€™XXX resolved organisms. Additionally, both chemical and biological taxonomy are given for each pair. Other basic chemical descriptors and in silico tandem mass spectrometry (MS/MS) spectrum are provided for each structure. Within the frame of current computational approaches to guide NPâ€™s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
 
 ## Flowchart
 
 ```mermaid
 graph TD
-000(adequate minimal input) -->
-  100(organism) --> 
-    110(scientific names recognition) -->
-      120(subtraction of recognized scientific names and translation of vernacular and tcm names to scientific) -->
-        130(scientific names recognition) -->
-            140(taxonomies accros multiple taxonomy DBs) -->
-              |could be discussed, human feeling|150(selection of the best taxonomy) -->
-                |could be discussed, human feeling|160(comparison of all obtained taxonomies and upstream filling of taxa choosing best) -->
-                  170(sanitized organism with clean taxonomy) -->
-999(adequate minimal output)
+A(file)
+B{script}
+010(external db source x n) --> 020{standardizing script x n} --> 030(interim db source x n) --> 040{integrating script}
 
-000(adequate minimal input) --> 
-  200(metabolite) --> 
-    211(InChI) --> 
-      220(InChI)
-  200(metabolite) --> 
-    212(SMILES) --> 
-      220(InChI)
-  200(metabolite) --> 
-    213(name) --> 
-      220(InChI) --> 
-        230(ROMOL) --> 
-          240(sanitized ROMOL) -->
-            251(InChI, SMILES, InChIKey) -->
-              261(classyfire taxonomy)-->
-                270(sanitized metabolite with taxonomy and metadata)
-            251(InChI, SMILES, InChIKey) -->
-              |still to do| 262(chem-GPS coordinates)-->
-                270(sanitized metabolite with taxonomy and metadata)
-            251(InChI, SMILES, InChIKey) -->
-              |still to do| 263(in silico tandem ms spectra)-->
-                270(sanitized metabolite with taxonomy and metadata)
-          240(sanitized ROMOL) -->
-            252(additional terms xlogP, MF, exact mass) -->
-                270(sanitized metabolite with taxonomy and metadata) -->
-999(adequate minimal output)
+040{integrating script} --> 100(unique organisms originalOrganism.tsv.zip)
 
-000(adequate minimal input) --> 
-  300(reference) -->
-    |splitting actual non-optimal| 311(DOIs) -->
-      320(generated reference with metadata)
-  300(reference) -->
-    |splitting actual non-optimal| 312(PubmedIDs )-->
-      |think about minimal required fields DOI, authors, date, title, journal?| 320
-  300(reference) -->
-    |splitting actual non-optimal| 313(text) -->
-      320 -->
-        |think about it|330(additional cleaning steps to define) -->
-          340(sanitized reference with metadata) -->
-999(adequate minimal output)
+040{integrating script} --> 210(unique InChIs originalStructureInChI.tsv.zip)
+
+040{integrating script} --> 220(unique SMILES originalStructureSmiles.tsv.zip)
+
+040{integrating script} --> 230(unique names originalStructureNominal.tsv.zip)
+
+040{integrating script} --> 300(unique references originalReference.tsv.zip)
+
+040{integrating script} --> |maybe could be renamed| 400(adequate minimal input originalTable.tsv.zip) --> 
+    998{integrating bio, chemo, ref and original table} --> 999(adequate minimal output)
+
+100(unique organisms named originalOrganism.tsv.zip) -->
+  |real steps, maybe split scripts| 101{cleaningOriginalOrganism GNFINDER} --> 
+    102(cleanedOriginalOrganisms enriched with taxonomy) -->
+        103{integrating original names and Gnfinder results}
+100(unique organisms named originalOrganism.tsv.zip) -->
+        103{integrating original names and Gnfinder results} -->
+            |NOT SAVED| 104(original organisms with taxonomy) -->
+                                    112{integrating all obtained taxa}
+    102(cleanedOriginalOrganisms enriched with taxonomy) -->
+        105{substracting scientific from original names} -->
+             |NOT SAVED| 106(original names with scientific names substracted) -->
+                107{translating common and tcm to scientific names} -->
+                    108(translated names) -->
+                        109{cleaningTranslatedOrganism GNFINDER} --> 
+                             110{integrating translated names with Gnfinder results} -->
+                                 |NOT SAVED| 111(translated organisms with taxonomy) -->
+                                    112{integrating all obtained taxa} -->
+                                        120(cleanedOrganism.tsv.zip) -->
+                                            130{cleaningTaxonomy} -->
+                                            |name probably to change| 140(curatedOrganism.tsv.zip) -->
+998{integrating bio, chemo, ref and original table}
+
+210(unique InChIs originalStructureInChI.tsv.zip) -->
+            240{integrating InChIs} 
+220(unique SMILES originalStructureSmiles.tsv.zip) -->
+    221{translating smiles} -->
+        222(smilesTranslated to InChI) -->
+            240{integrating InChIs} 
+230(unique names originalStructureNominal.tsv.zip) -->
+    231{translating names} -->
+        232(namesTranslated to InChI) -->
+            240{integrating InChIs} -->
+                250(translatedStructureRdkit) -->
+                    260{sanitizing} -->
+                        270(cleanedAndEnrichedStructure.tsv) -->
+                            |external| 281{classyfire} -->
+                                |external| 291(structures enriched taxonomy) -->
+                                    298{integrating enrichment}
+                        270(cleanedStructure.tsv) -->
+                            |external| 282{chemGPS} -->
+                                |external| 292(structures enriched chemGPS) -->
+                                    298{integrating enrichment}
+                        270(cleanedStructure.tsv) -->
+                            |external| 283{insilico} -->
+                                |external| 293(structures enriched silico spectra) -->
+                                    298{integrating enrichment} -->
+                                        299(clean and enriched structures) -->
+998{integrating bio, chemo, ref and original table}
+
+300(unique references named originalReference.tsv.zip) -->
+    |splitting actual non-optimal| 310{splitting} -->
+        |NOT SAVED| 320(DOI) -->
+            321{translatingDOI} -->
+                |NOT SAVED| 322(otbained fields) -->
+                    360{integrating obtained references}
+    310{splitting} -->
+        |NOT SAVED| 330(pubmedID) -->
+            331{translatingPubmedID} -->
+                 |NOT SAVED| 332(otbained fields) -->
+                    360{integrating obtained references}
+    310{splitting} -->
+        |NOT SAVED| 340(text) -->
+            341{translatingText} -->
+                |NOT SAVED| 342(otbained fields) -->
+                    360{integrating obtained references} 
+    310{splitting} -->
+        |NOT SAVED| 350(other) -->
+            |think about it| 351{find something to do} -->
+                |NOT SAVED| 352(otbained fields) -->
+                    360{integrating obtained references} -->
+                        |think about minimal required fields| 370(translatedReferences) -->
+                            380{cleaning} -->
+                                390(cleanedReference) -->
+998{integrating bio, chemo, ref and original table}
 ```
 
 ## Getting Started
