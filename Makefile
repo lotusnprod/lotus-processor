@@ -65,11 +65,6 @@ ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SU
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py:	${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip
 	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip structureOriginalSmiles
 
-# curating-editing-chemo-integrating:	${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
-# ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip:	2_curating/3_integrating/integrating.R
-# src/2_curating/3_integrating/integrating.R:	${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip
-# 	cd	src	&&	Rscript	2_curating/3_integrating/integrating.R
-
 curating-editing-chemo-integrating:
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R
 
