@@ -37,7 +37,7 @@ databases-rescrape:	${DATABASES_RESCRAPE}
 
 curating:	curating-integrating	curating-editing
 
-curating-integrating:	${INTERIM_TABLE_ORIGINAL_PATH}
+curating-integrating-db:	${INTERIM_TABLE_ORIGINAL_PATH}
 ${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
 	cd	src	&&	Rscript	2_curating/1_integrating/integratingOriginalDatabase.R
 
@@ -73,3 +73,8 @@ curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique
 ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py:	${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
 	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
+
+
+curating-integrating-tables:	${INTERIM_TABLE_ORIGINAL_PATH}
+${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
+	cd	src	&&	Rscript	2_curating/1_integrating/integratingOriginalDatabase.R
