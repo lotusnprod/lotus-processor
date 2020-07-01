@@ -58,12 +58,12 @@ curating-editing-chemo-translating:	curating-editing-chemo-translating-name	cura
 curating-editing-chemo-translating-name:	${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip
 ${INTERIM_TABLE_TRANSLATED_PATH}/nominal.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R:	${INTERIM_TABLE_ORIGINAL_PATH}/nominal.tsv.zip
-	cd	src	&&	Rscript	2_curating/2_editing/chemo/subscripts/1_translating/names.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/names.R
 
 curating-editing-chemo-translating-smiles:	${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip
 ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py
 ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py:	${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip
-	cd	src	&&	python	2_curating/2_editing/chemo/subscripts/1_translating/smiles.py ${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip structureOriginalSmiles
+	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_PATH}/smiles.tsv.zip structureOriginalSmiles
 
 # curating-editing-chemo-integrating:	${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
 # ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip:	2_curating/3_integrating/integrating.R
@@ -71,7 +71,7 @@ ${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py:	${INTERIM_T
 # 	cd	src	&&	Rscript	2_curating/3_integrating/integrating.R
 
 curating-editing-chemo-integrating:
-	cd	src	&&	Rscript	2_curating/2_editing/chemo/subscripts/2_integrating/integrating.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R
 
 
 curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip
