@@ -22,6 +22,6 @@ system(
 )
 
 # curating and enriching structures
-# source("2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/...")
+# source("2_curating/2_editing/chemo/subscripts/2_cleaningAndEnriching/...")
 
 # more enriching ...
