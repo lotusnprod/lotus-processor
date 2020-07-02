@@ -46,7 +46,7 @@ B{script}
                                             |name probably to change| 140(curatedOrganism.tsv.zip) -->
 998{integrating bio, chemo, ref and original table}
 
-210(unique InChIs originalStructureInChI.tsv.zip) -->
+210(unique InChIs 0_original/inchi.tsv.zip) -->
             240{integrating InChIs} 
 220(unique SMILES originalStructureSmiles.tsv.zip) -->
     221{translating smiles} -->
