@@ -428,6 +428,13 @@ databases$add(
   interimFile = "unpd.tsv.zip"
 )
 
+##### wakankensaku
+databases$add(
+  name = "wakankensaku",
+  sourceFiles = list(tsv = "wakankensakuScraped.tsv.zip"),
+  interimFile = "wakankensaku.tsv.zip"
+)
+
 #### translation source
 pathDataExternalTranslationSource <-
   file.path(pathDataExternal,
