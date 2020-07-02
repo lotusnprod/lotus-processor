@@ -2,6 +2,7 @@ include paths.mk
 
 .PHONY: help docker-build docker-bash databases
 .PHONY: curating curating-integrating curating-editing curating-editing-bio
+.PRECIOUS: %.tsv %.zip
 
 help:
 	@echo "Builder"
