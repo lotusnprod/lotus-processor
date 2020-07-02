@@ -6,7 +6,7 @@ Our initial idea was to create a dedicated WikiProject page (could you tell us i
 
 1. WikiProject Chemistry (https://www.wikidata.org/wiki/Category:WikiProject_Chemistry)
 2. WikiProject Taxonomy (https://www.wikidata.org/wiki/Wikidata:WikiProject_Taxonomy)
-3. WikiProject Bibliographic_references (check exact name)
+3. WikiProject_Source_MetaData (https://www.wikidata.org/wiki/Wikidata:WikiProject_Source_MetaData/Bibliographic_metadata_for_scholarly_articles_in_Wikidata)
 
 We thus decided to contact you as maintainers/active contributors of one of the above WikiProjects in order to check wether our idea was feasible.
 If it is the case could you give us 
