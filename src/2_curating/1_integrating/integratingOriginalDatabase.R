@@ -1,5 +1,5 @@
 # title: "Open NP DB (original) compileR"
-setwd("/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src")
+#setwd("/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src")
 # loading paths
 source("paths.R")
 
