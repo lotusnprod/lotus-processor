@@ -12,11 +12,11 @@ library(stringr)
 library(tidyr)
 
 # get paths
-database <- databases$get("wakankensaku")
+database <- databases$get("datawarrior")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
+  file = database$sourceFiles$tsv,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -26,17 +26,19 @@ data_original <- read_delim(
 # manipulating
 data_manipulated <- data_original %>%
   select(
-    name = Compound,
-    biologicalsource = `Plant resources`,
-    reference = Literature
+    name,
+    smiles = Smiles,
+    inchi = InChI,
+    biologicalsource = remarks,
+    reference
   )
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "wak_1",
-    structure_field = c("name")
+    db = "dat_1",
+    structure_field = c("name", "inchi", "smiles")
   )
 
 # exporting

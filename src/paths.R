@@ -90,6 +90,12 @@ databases$add(
 )
 
 databases$add(
+  name = "datawarrior",
+  sourceFiles = list(tsv = "NaturalProducts.txt"),
+  interimFile = "datawarrior.tsv.zip"
+)
+
+databases$add(
   name = "dnp",
   sourceFiles = list(tsv = "28_2/full_set.csv"),
   interimFile = "dnp.tsv.zip"
