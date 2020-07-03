@@ -86,12 +86,12 @@ if __name__ == "__main__":
         df['ROMolSanitizedLargestFragmentUncharged'] = pool.map(uncharger_fun, df['ROMolSanitizedLargestFragment'])
         df.drop('ROMolSanitizedLargestFragment', axis=1, inplace=True)
         # # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
-        df['smiles_sanitized'] = pool.map(MolToSmiles_fun, df['ROMolSanitizedLargestFragmentUncharged'])
+        df['smilesSanitized'] = pool.map(MolToSmiles_fun, df['ROMolSanitizedLargestFragmentUncharged'])
         # for the inchi and IK since some specific structures are raising issues we use the ***_fun_safe functions (see associated chemosanitizer_function.py)
         # df['inchi_sanitized'] = pool.map(MolToInchi_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['inchi_sanitized'] = pool.starmap(MolToInchi_fun_safe, zip(df['smiles_sanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
+        df['inchiSanitized'] = pool.starmap(MolToInchi_fun_safe, zip(df['smilesSanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
         #df['inchikeySanitized'] = pool.map(MolToIK_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(df['smiles_sanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
+        df['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(df['smilesSanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
         df['shortikSanitized'] = df['inchikeySanitized'].str.split("-", n=1, expand=True)[0]
         df['formulaSanitized'] = pool.map(MolToMF_fun, df['ROMolSanitizedLargestFragmentUncharged'])
         df['exactmassSanitized'] = pool.map(MolToEmass_fun, df['ROMolSanitizedLargestFragmentUncharged'])
