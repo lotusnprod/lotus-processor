@@ -3,6 +3,7 @@ import time
 import multiprocessing
 import pandas as pd
 import sys
+import gzip
 
 
 
