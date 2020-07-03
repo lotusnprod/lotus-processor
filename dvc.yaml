@@ -1,11 +1,13 @@
 stages:
   smiler:
-    cmd: python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+    cmd: python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_dvc.py
+      data/interim/tables_min/0_original/smiles.tsv.zip data/dvc_pipeline_outputs/translated_smiles.tsv.zip
+      structureOriginalSmiles
     deps:
-    - data/interim/tables/0_original/originalStructureSmiles.tsv.zip
-    - src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
+    - data/interim/tables_min/0_original/smiles.tsv.zip
+    - src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_dvc.py
     outs:
-    - data/dvc_pipeline_outputs/translatedStructureSmiles_min.tsv.zip
+    - data/dvc_pipeline_outputs/translated_smiles.tsv.zip
   sanitizer:
     cmd: python src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py
       data/interim/tables/1_translated/translatedTable.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip
