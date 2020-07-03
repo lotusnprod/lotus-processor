@@ -1,12 +1,12 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
+DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	datawarrior	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	nubbe	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
 DATABASES_REINTEGRATE = plantcyc-reintegrate	triforc-reintegrate	unpd-reintegrate
 
-DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape
+DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape	# nubbe-rescrape not done
 
 .PHONY:	${DATABASES}	${DATABATES_RECONVERT}	${DATABASES_REINTEGRATE}	${DATABASES_RESCRAPE}
 
@@ -76,6 +76,10 @@ ${DB_SOURCE_PATH}/coconut/coconutConverted.tsv.zip:	${DB_SOURCE_PATH}/coconut/CO
 cyanometdb:	${INTERIM_DB_PATH}/cyanometdb.tsv.zip
 ${INTERIM_DB_PATH}/cyanometdb.tsv.zip:	${DB_SOURCE_PATH}/cyanometdb/media-1.csv	${SRC_GATHERING_PATH}/cyanometdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/cyanometdb/standardizing.R
+
+datawarrior:	${INTERIM_DB_PATH}/datawarrior.tsv.zip
+${INTERIM_DB_PATH}/datawarrior.tsv.zip:	${DB_SOURCE_PATH}/datawarrior/NaturalProducts.txt	${SRC_GATHERING_PATH}/datawarrior/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/datawarrior/standardizing.R
 
 dnp:	${INTERIM_DB_PATH}/dnp.tsv.zip
 ${INTERIM_DB_PATH}/dnp.tsv.zip:	${DB_SOURCE_PATH}/dnp/28_2/full_set.csv	${SRC_GATHERING_PATH}/dnp/standardizing.R
@@ -158,6 +162,12 @@ ${INTERIM_DB_PATH}/npedia.tsv.zip:	${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zi
 npedia-rescrape:	${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zip
 ${DB_SOURCE_PATH}/npedia/npediaScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/npedia/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/npedia/scraping.R
+
+nubbe:	${INTERIM_DB_PATH}/nubbe.tsv.zip
+${INTERIM_DB_PATH}/nubbe.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/nubbe/nubbe_raw/*.xml)	${SRC_GATHERING_PATH}/nubbe/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/nubbe/standardizing.R
+
+# nubbe-rescrape not done
 
 pamdb:	${INTERIM_DB_PATH}/pamdb.tsv.zip
 ${INTERIM_DB_PATH}/pamdb.tsv.zip:	${DB_SOURCE_PATH}/pamdb/PaMet.xlsx	${SRC_GATHERING_PATH}/pamdb/standardizing.R
