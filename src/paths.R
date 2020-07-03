@@ -265,6 +265,25 @@ databases$add(
   interimFile = "pamdb.tsv.zip"
 )
 
+##### pharmdbk
+pathDataExternalDbSourcePharmdbk <-
+  file.path(pathDataExternalDbSource,
+            "pharmdbk")
+
+databases$add(
+  name = "pharmdbk",
+  sourceFiles = list(tsvPath = file.path(
+    "pharmdbk_raw",
+    list.files(
+      path = file.path(pathDataExternalDbSourcePharmdbk,
+                       "pharmdbk_raw"),
+      pattern = "*.json.gz",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "pharmdbk.tsv.zip"
+)
+
 databases$add(
   name = "phenolexplorer",
   sourceFiles = list(
