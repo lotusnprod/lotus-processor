@@ -241,6 +241,24 @@ databases$add(
   interimFile = "npedia.tsv.zip"
 )
 
+pathDataExternalDbSourceNubbe <-
+  file.path(pathDataExternalDbSource,
+            "nubbe")
+
+databases$add(
+  name = "nubbe",
+  sourceFiles = list(tsvPath = file.path(
+    "nubbe_raw",
+    list.files(
+      path = file.path(pathDataExternalDbSourceNubbe,
+                       "nubbe_raw"),
+      pattern = "*.xml",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "nubbe.tsv.zip"
+)
+
 databases$add(
   name = "pamdb",
   sourceFiles = list(tsv = "PaMet.xlsx"),
@@ -925,6 +943,9 @@ pathDataInterimTablesCleanedGnfinderOriginal <-
 pathDataInterimTablesCleanedGnfinderTranslated <-
   file.path(pathDataInterimTablesCleanedGnfinder, "translated/")
 
+### structure
+pathDataInterimTablesCleanedStructureUnique <-
+  file.path(pathDataInterimTablesCleaned, "structureUnique.tsv.zip")
 ## ref
 pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference.tsv.zip")
