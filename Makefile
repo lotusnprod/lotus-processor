@@ -71,14 +71,14 @@ curating-editing-chemo-integrating:
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R
 
 
-curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip
-${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
-	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
+# curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip
+# ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
+# 	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
 
 
-curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip
-${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
-	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/sanitizing.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique.tsv.zip structureTranslated
+curating-editing-chemo-sanitizing:	${INTERIM_TABLE_CLEANED_PATH}/structureUnique_chemosan.tsv.zip
+${INTERIM_TABLE_CLEANED_PATH}/structureUnique_chemosan.tsv.zip:	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip
+	cd	src	&&	python	${SRC_CURATING_EDITING_CHEMO_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_PATH}/structureUnique.tsv.zip ${INTERIM_TABLE_CLEANED_PATH}/structureUnique_chemosan.tsv.zip structureTranslated 8
 
 
 curating-3-integrating:	${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip
