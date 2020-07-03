@@ -10,101 +10,58 @@ library(readr)
 library(splitstackshape)
 library(stringr)
 library(tidyr)
+library(jsonlite)
 
 # get paths
-database <- databases$get("carotenoiddb")
+database <- databases$get("tipdb")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
+ids <- read_delim(
+  file = database$sourceFiles$tsv,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 
-# manipulating
-data_manipulated <- data_original %>%
-  select(
-    uniqueid = Entry,
-    name = `Carotenoid Name`,
-    inchi = InChI,
-    inchikey = InChIKey,
-    smiles = `Canonical SMILES`,
-    cas = CAS,
-    biologicalsource = `Source organisms`,
-    reference = References
-  )
+colnames(ids)[1] <- "id"
+X <- ids$id
 
-data_manipulated$biologicalsource <-
-  gsub("(\\))([A-Z])",
-       ")SPLIT\\2",
-       data_manipulated$biologicalsource)
+jsonfileAll <- "../data/external/dbSource/tipdb/tipdb_raw/all.json"
 
-data_manipulated <- data_manipulated %>%
-  cSplit(
-    "biologicalsource",
-    sep = "SPLIT",
-    stripWhite = FALSE,
-    fixed = FALSE
-  ) %>%
-  mutate(across(.cols = everything(), as.character))
+dfAll <- as.data.frame(fromJSON(jsonfileAll, simplifyDataFrame = TRUE))
 
-data_manipulated_long <- data_manipulated %>%
-  gather(c(8:ncol(.)),
-         key = "n",
-         value = "biologicalsource") %>%
-  group_by(uniqueid) %>%
-  select(-n) %>%
-  distinct(biologicalsource, .keep_all = TRUE) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(!is.na(biologicalsource) | !n > 1) %>%
-  select(-n) %>%
-  arrange(uniqueid)
+list <- list()
 
-data_manipulated_long$reference <-
-  gsub("(Ref.\\d* : )", "SPLIT\\1", data_manipulated_long$reference)
+for (i in 1:length(X)){
+  
+  jsonfile <- gzfile(X[i])
+  
+  df <- as.data.frame(fromJSON(jsonfile, simplifyDataFrame = TRUE))
+  
+  list[[i]] <- df
+}
 
-data_manipulated_long_ref <- data_manipulated_long %>%
-  cSplit("reference",
-         sep = "SPLIT",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
-  mutate_all(as.character) %>%
-  gather(c(8:ncol(.)),
-         key = "n",
-         value = "reference") %>%
-  select(-n) %>%
-  group_by(uniqueid) %>%
-  distinct(biologicalsource, reference, .keep_all = TRUE) %>%
-  ungroup() %>%
-  group_by(uniqueid, biologicalsource) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(!is.na(reference) | !n > 1) %>%
-  select(-n) %>%
-  arrange(uniqueid)
+data_original <- rbindlist(list, fill = TRUE) %>% 
+  data.frame()
 
-data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
-  mutate(
-    refnum = str_extract(data_manipulated_long_ref$reference, "(Ref.\\d*)"),
-    biorefnum = str_extract(data_manipulated_long_ref$biologicalsource, "(Ref.\\d*)")
-  ) %>%
-  filter(refnum == biorefnum | is.na(refnum))
-
-data_manipulated_long_ref_unique$reference <-
-  gsub("(Ref.\\d* : )",
-       "",
-       data_manipulated_long_ref_unique$reference)
-
-# standardizing
-data_standard <-
-  standardizing_original(
-    data_selected = data_manipulated_long_ref_unique,
-    db = "car_1",
-    structure_field = c("inchi", "name", "smiles")
-  )
-
-# exporting
-database$writeInterim(data_standard)
+# # manipulating
+# data_manipulated <- data_original %>%
+#   select(
+#     name,
+#     smiles,
+#     inchi,
+#     biologicalsource = name1,
+#     reference = source
+#   )
+# 
+# # standardizing
+# data_standard <-
+#   standardizing_original(
+#     data_selected = data_manipulated,
+#     db = "pha_1",
+#     structure_field = c("inchi", "name", "smiles")
+#   )
+# 
+# # exporting
+# database$writeInterim(data_standard)

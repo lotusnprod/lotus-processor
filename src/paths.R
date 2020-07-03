@@ -412,6 +412,25 @@ pathDataExternalDbSourceSymmapChemo <-
   file.path(pathDataExternalDbSourceSymmap,
             "SymMap v1.0, SMIT file.xlsx")
 
+##### tipdb
+pathDataExternalDbSourceTipdb <-
+  file.path(pathDataExternalDbSource,
+            "tipdb")
+
+databases$add(
+  name = "tipdb",
+  sourceFiles = list(tsvPath = file.path(
+    "tipdb_raw",
+    list.files(
+      path = file.path(pathDataExternalDbSourceTipdb,
+                       "tipdb_raw"),
+      pattern = "^chemical_TIP",
+      full.names = FALSE
+    )
+  )),
+  interimFile = "tipdb.tsv.zip"
+)
+
 databases$add(
   name = "tmdb",
   sourceFiles = list(tsv = "tmdbScraped.tsv.zip"),

@@ -30,31 +30,28 @@ X <- ids$id
 
 list <- list()
 
-for (i in 1:length(X)){
+for (i in 1:length(X)) {
+  jsonfile <- gzfile(X[i])
   
-jsonfile <- gzfile(X[i])
-
-df <- as.data.frame(fromJSON(jsonfile, simplifyDataFrame = TRUE))
-
-df2 <- df %>% 
-  unnest()
-
-if (nrow(df2)!=0)
-list[[i]] <- df2
+  df <- as.data.frame(fromJSON(jsonfile, simplifyDataFrame = TRUE))
+  
+  df2 <- df %>%
+    unnest()
+  
+  if (nrow(df2) != 0)
+    list[[i]] <- df2
 }
 
-data_original <- rbindlist(list) %>% 
+data_original <- rbindlist(list) %>%
   data.frame()
 
 # manipulating
 data_manipulated <- data_original %>%
-  select(
-    name,
-    smiles,
-    inchi,
-    biologicalsource = name1,
-    reference = source
-  )
+  select(name,
+         smiles,
+         inchi,
+         biologicalsource = name1,
+         reference = source)
 
 # standardizing
 data_standard <-
