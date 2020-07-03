@@ -1,12 +1,12 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	datawarrior	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	nubbe	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
+DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	datawarrior	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	nubbe	pamdb	pharmdbk	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
 DATABASES_REINTEGRATE = plantcyc-reintegrate	triforc-reintegrate	unpd-reintegrate
 
-DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape	# nubbe-rescrape not done
+DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape	# nubbe-rescrape pharmdbk-rescrape not done
 
 .PHONY:	${DATABASES}	${DATABATES_RECONVERT}	${DATABASES_REINTEGRATE}	${DATABASES_RESCRAPE}
 
@@ -172,6 +172,12 @@ ${INTERIM_DB_PATH}/nubbe.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/nubbe/nubbe_raw/*
 pamdb:	${INTERIM_DB_PATH}/pamdb.tsv.zip
 ${INTERIM_DB_PATH}/pamdb.tsv.zip:	${DB_SOURCE_PATH}/pamdb/PaMet.xlsx	${SRC_GATHERING_PATH}/pamdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/pamdb/standardizing.R
+
+pharmdbk:	${INTERIM_DB_PATH}/pharmdbk.tsv.zip
+${INTERIM_DB_PATH}/pharmdbk.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/pharmdbk/pharmdbk_raw/*.json.gz)	${SRC_GATHERING_PATH}/pharmdbk/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/pharmdbk/standardizing.R
+
+# pharmdbk-rescrape not done
 
 phenolexplorer:	${INTERIM_DB_PATH}/phenolexplorer.tsv.zip
 ${INTERIM_DB_PATH}/phenolexplorer.tsv.zip:	${DB_SOURCE_PATH}/phenolexplorer/compounds-classification.csv	${DB_SOURCE_PATH}/phenolexplorer/compounds-structures.csv	${DB_SOURCE_PATH}/phenolexplorer/compounds.csv	${DB_SOURCE_PATH}/phenolexplorer/foods-classification.csv	${DB_SOURCE_PATH}/phenolexplorer/foods.csv	${DB_SOURCE_PATH}/phenolexplorer/metabolites-structures.csv	${DB_SOURCE_PATH}/phenolexplorer/metabolites.csv	${DB_SOURCE_PATH}/phenolexplorer/publications.csv	${DB_SOURCE_PATH}/phenolexplorer/composition-data.xlsx	${SRC_GATHERING_PATH}/phenolexplorer/standardizing.R
