@@ -48,6 +48,12 @@ dvc run -n smiler \
           python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_min.py
 
 
+dvc run -n smiler \
+          -d src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_dvc.py -d data/interim/tables_min/0_original/smiles.tsv.zip \
+          -o data/dvc_pipeline_outputs/translated_smiles.tsv.zip \
+          python src/2_curating/2_editing/chemo/subscripts/1_translating/smiles_dvc.py data/interim/tables_min/0_original/smiles.tsv.zip data/dvc_pipeline_outputs/translated_smiles.tsv.zip structureOriginalSmiles
+
+
 ##Let's try to traduce this one 
 
 curating-editing-chemo-name: ${INTERIM_TABLE_TRANSLATED_PATH}/translatedStructureNominal.tsv.zip
@@ -83,3 +89,10 @@ dvc run -n sanitizer \
           -p head_lenght \
           -o data/dvc_pipeline_outputs/sanitized_structures.tsv.zip \
           python src/2_curating/2_editing/chemo/subscripts/2_curatingAndEnriching/04_sanitizing.py data/interim/tables/1_translated/translatedTable.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip structureTranslated
+
+
+dvc run -n sanitizer \
+          -d src/2_curating/2_editing/chemo/subscripts/3_cleaningAndEnriching/sanitizing.py -d data/dvc_pipeline_outputs/translated_smiles.tsv.zip \
+          -p head_lenght \
+          -o data/dvc_pipeline_outputs/sanitized_structures.tsv.zip \
+          python src/2_curating/2_editing/chemo/subscripts/3_cleaningAndEnriching/sanitizing.py data/dvc_pipeline_outputs/translated_smiles.tsv.zip data/dvc_pipeline_outputs/sanitized_structures.tsv.zip structureTranslatedSmiles
