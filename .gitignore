@@ -12,3 +12,4 @@ settings.json
 bin/gnfinder
 ci_env
 default.profraw
+callgrind.*
