@@ -1,12 +1,12 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd
+DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	pamdb	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
 DATABASES_REINTEGRATE = plantcyc-reintegrate	triforc-reintegrate	unpd-reintegrate
 
-DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape
+DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape
 
 .PHONY:	${DATABASES}	${DATABATES_RECONVERT}	${DATABASES_REINTEGRATE}	${DATABASES_RESCRAPE}
 
@@ -254,3 +254,11 @@ ${INTERIM_DB_PATH}/unpd.tsv.zip:	${DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.zip	$
 unpd-reintegrate:	${DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.zip
 ${DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.zip:
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/unpd/integrating.R
+
+wakankensaku:	${INTERIM_DB_PATH}/wakankensaku.tsv.zip
+${INTERIM_DB_PATH}/wakankensaku.tsv.zip:	${DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.zip	${SRC_GATHERING_PATH}/wakankensaku/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/wakankensaku/standardizing.R
+
+wakankensaku-rescrape:	${DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.zip
+${DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/wakankensaku/scraping.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/wakankensaku/scraping.R
