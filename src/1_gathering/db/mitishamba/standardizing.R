@@ -29,15 +29,17 @@ data_selected <- data_original %>%
     smiles,
     biologicalsource = plant_species,
     name = common_name,
-    reference = authors
-  )
+    reference_unsplittable = authors
+  ) %>% 
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "mit_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c("reference_unsplittable")
   )
 
 # exporting

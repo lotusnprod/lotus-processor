@@ -11,6 +11,7 @@ library(jsonlite)
 library(pbmcapply)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -114,7 +115,24 @@ data <- tibble(id, smiles, organism, reference) %>%
   select(id,
          smiles,
          biologicalsource = organism,
-         reference)
+         reference) %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = "doi:",
+      replacement = "",
+      x = str_extract(string = reference, pattern = "^doi.*")
+    ),
+    reference_pubmed = gsub(
+      pattern = "pubmed:",
+      replacement = "",
+      x = str_extract(string = reference, pattern = "^pubmed.*")
+    ),
+    reference_external = ifelse(
+      test = is.na(reference_doi) & is.na(reference_pubmed),
+      yes = reference,
+      no = NA
+    )
+  )
 
 data$name <- NA
 
@@ -122,7 +140,8 @@ data$name <- NA
 data_standard <- standardizing_original(
   data_selected = data,
   db = "mib_1",
-  structure_field = c("name", "smiles")
+  structure_field = c("name", "smiles"),
+  reference_field = c("reference_doi", "reference_pubmed", "reference_external")
 )
 
 # exporting

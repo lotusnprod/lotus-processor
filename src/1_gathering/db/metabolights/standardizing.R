@@ -42,14 +42,17 @@ data_selected$biologicalsource <-
   y_as_na(data_selected$biologicalsource, "reference compound")
 
 data_selected <- data_selected %>%
-  filter(!is.na(biologicalsource))
+  filter(!is.na(biologicalsource)) %>% 
+  mutate(reference_external = reference) %>% 
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "met_1",
-    structure_field = c("name", "inchi")
+    structure_field = c("name", "inchi"),
+    reference_field = c("reference_external")
   )
 
 # exporting
