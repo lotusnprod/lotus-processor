@@ -9,6 +9,7 @@ library(dplyr)
 library(readr)
 library(readxl)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
