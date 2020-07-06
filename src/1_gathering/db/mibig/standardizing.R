@@ -16,7 +16,23 @@ library(tidyr)
 # get paths
 database <- databases$get("mibig")
 
-df <- rbind(lapply(database$sourceFiles$tsv, fromJSON))
+
+fileInZip <-
+  function(inZip) {
+    outFile <- list()
+    fileList <- unzip(inZip, list = TRUE)
+    fileList[, 1] <-
+      gsub("__MACOSX/._", "", fileList[, 1]) #error thrown on one line for me otherwise
+    for (i in 1:nrow(fileList)) {
+      if (grepl(".json", fileList[i, 1])) {
+        oFa <- fromJSON(unz(inZip, fileList[i, 1]))
+        outFile[[i]] <- oFa
+      }
+    }
+    return(outFile)
+  }
+
+df <- fileInZip(inZip = database$sourceFiles$data)
 
 x <- 1:length(df)
 
@@ -33,7 +49,7 @@ id <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -50,7 +66,7 @@ smiles <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -67,7 +83,7 @@ organism <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -84,7 +100,7 @@ reference <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 

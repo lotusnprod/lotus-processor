@@ -14,21 +14,27 @@ library(tidyr)
 database <- databases$get("etcm")
 
 ## files
-data_original <- do.call("rbind",
-                         lapply(database$sourceFiles$tsv,
-                                function(x) {
-                                  dat <- read_delim(
-                                    file = x,
-                                    delim = ",",
-                                    escape_double = FALSE,
-                                    trim_ws = TRUE
-                                  ) %>%
-                                    mutate_all(as.character)
-                                  dat$fileName <-
-                                    tools::file_path_sans_ext(basename(x))
-                                  dat
-                                })) %>%
-  mutate_all(as.character)
+fileInZip <-
+  function(inZip, varList) {
+    outFile <- data.frame()
+    fileList <- unzip(inZip, list = TRUE)
+    for (i in 1:nrow(fileList)) {
+      if (grepl("csv", fileList[i, 1])) {
+        oFa <- read_delim(
+          unz(inZip, fileList[i, 1]),
+          delim = ",",
+          escape_double = FALSE,
+          trim_ws = TRUE
+        )
+        oFa$fileName <- fileList[i, 1]
+        outFile <-
+          rbind(outFile, oFa)
+      }
+    }
+    return(outFile)
+  }
+
+data_original <- fileInZip(inZip = database$sourceFiles$data, varList = "c")
 
 # cleaning
 data_original$fileName <-
