@@ -16,37 +16,50 @@ library(tidyr)
 database <- databases$get("symmap")
 
 ## files
-data_original <- do.call("rbind",
-                         lapply(database$sourceFiles$tsv,
-                                function(x) {
-                                  dat <- read.csv(x, header = TRUE, sep = ",")
-                                  dat$fileName <-
-                                    tools::file_path_sans_ext(basename(x))
-                                  dat
-                                })) %>%
+fileInZip <-
+  function(inZip, varList) {
+    outFile <- data.frame()
+    fileList <- unzip(inZip, list = TRUE)
+    for (i in 1:nrow(fileList)) {
+      if (grepl("csv", fileList[i, 1])) {
+        oFa <- read_delim(
+          unz(inZip, fileList[i, 1]),
+          delim = ",",
+          escape_double = FALSE,
+          trim_ws = TRUE
+        )
+        oFa$fileName <- fileList[i, 1]
+        outFile <-
+          rbind(outFile, oFa)
+      }
+    }
+    return(outFile)
+  }
+
+data_original <- fileInZip(inZip = database$sourceFiles$data, varList = "c")
+
+data_bio <- read_excel(database$sourceFiles$bio) %>%
   mutate_all(as.character)
 
-data_bio <- read_excel(pathDataExternalDbSourceSymmapBio) %>%
-  mutate_all(as.character)
-
-data_chemo <- read_excel(pathDataExternalDbSourceSymmapChemo) %>%
+data_chemo <- read_excel(database$sourceFiles$chemo) %>%
   mutate_all(as.character)
 
 # cleaning
+data_original$fileName <- gsub('data/', '', data_original$fileName)
 data_original$fileName <- gsub('data-', '', data_original$fileName)
-
-data_original$Ingredient.id <-
-  gsub('SMIT', '', data_original$Ingredient.id)
+data_original$fileName <- gsub('.csv', '', data_original$fileName)
+data_original$`Ingredient id` <-
+  gsub('SMIT', '', data_original$`Ingredient id`)
 
 data_original <- data_original %>%
   select(
-    MOL_id = Ingredient.id,
-    Molecule_name = Molecule.name,
-    Molecule_formula = Molecule.formula,
-    Molecule_weight = Molecule.weight,
-    OB_score = OB.score,
-    Pubchem_id = PubChem.id,
-    CAS_id = CAS.id,
+    MOL_id = `Ingredient id`,
+    Molecule_name = `Molecule name`,
+    Molecule_formula = `Molecule formula`,
+    Molecule_weight = `Molecule weight`,
+    OB_score = `OB score`,
+    Pubchem_id = `PubChem id`,
+    CAS_id = `CAS id`,
     Herb_id = fileName
   )
 

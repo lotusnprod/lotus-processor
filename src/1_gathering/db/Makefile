@@ -237,7 +237,7 @@ ${DB_SOURCE_PATH}/swmd/swmdScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/swmd/scrapin
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/swmd/scraping.R
 
 symmap:	${INTERIM_DB_PATH}/symmap.tsv.zip
-${INTERIM_DB_PATH}/symmap.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/symmap/data/*.csv)	${SRC_GATHERING_PATH}/symmap/standardizing.R
+${INTERIM_DB_PATH}/symmap.tsv.zip:	${DB_SOURCE_PATH}/symmap/data.zip	${SRC_GATHERING_PATH}/symmap/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/symmap/standardizing.R
 
 tmdb:	${INTERIM_DB_PATH}/tmdb.tsv.zip

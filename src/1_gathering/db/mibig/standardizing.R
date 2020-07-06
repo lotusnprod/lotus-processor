@@ -16,7 +16,6 @@ library(tidyr)
 # get paths
 database <- databases$get("mibig")
 
-
 fileInZip <-
   function(inZip) {
     outFile <- list()
