@@ -115,8 +115,6 @@ databases$add(
   interimFile = "drduke.tsv.zip"
 )
 
-# COMMENT not sure about how clean those lines are
-##### etcm
 databases$add(
   name = "etcm",
   sourceFiles = list(data = "data.zip"),
@@ -358,34 +356,13 @@ databases$add(
   interimFile = "swmd.tsv.zip"
 )
 
-##### symmap
-pathDataExternalDbSourceSymmap <-
-  file.path(pathDataExternalDbSource,
-            "symmap")
-
 databases$add(
   name = "symmap",
-  sourceFiles = list(tsvPath = file.path(
-    "data",
-    list.files(
-      path = file.path(pathDataExternalDbSourceSymmap,
-                       "data"),
-      pattern = "*.csv",
-      full.names = FALSE
-    )
-  )),
+  sourceFiles = list(data = "data.zip",
+                     bio = "SymMap v1.0, SMHB file.xlsx",
+                     chemo = "SymMap v1.0, SMIT file.xlsx"),
   interimFile = "symmap.tsv.zip"
 )
-
-###### bio
-pathDataExternalDbSourceSymmapBio <-
-  file.path(pathDataExternalDbSourceSymmap,
-            "SymMap v1.0, SMHB file.xlsx")
-
-###### chemo
-pathDataExternalDbSourceSymmapChemo <-
-  file.path(pathDataExternalDbSourceSymmap,
-            "SymMap v1.0, SMIT file.xlsx")
 
 ##### tipdb
 pathDataExternalDbSourceTipdb <-
