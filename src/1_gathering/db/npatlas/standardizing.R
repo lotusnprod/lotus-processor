@@ -24,10 +24,13 @@ data_original <- read_delim(
 
 # selecting
 data_selected <- data_original %>%
-  mutate(organism = paste(Genus,
-                          `Origin Species`,
-                          sep = " "),
-         reference = `Isolation Reference DOI`) %>%
+  mutate(
+    organism = paste(Genus,
+                     `Origin Species`,
+                     sep = " "),
+    reference_doi = `Isolation Reference DOI`,
+    reference_unsplittable = `Isolation Reference Citation`
+  ) %>%
   select(
     NPAID,
     name = Names,
@@ -35,7 +38,8 @@ data_selected <- data_original %>%
     inchi = InChI,
     smiles = SMILES,
     biologicalsource = organism,
-    reference
+    reference_doi,
+    reference_unsplittable
   )
 
 # standardizing
@@ -43,7 +47,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "npa_2",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c("reference_doi", "reference_unsplittable")
   )
 
 # exporting

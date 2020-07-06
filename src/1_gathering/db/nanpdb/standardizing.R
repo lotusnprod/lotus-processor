@@ -32,7 +32,8 @@ data_selected <- data_original %>%
     smiles = SMILES.,
     biologicalsource = Source.Species.Information,
     pubchem = PubChem.,
-    reference = Reference.information
+    reference = Reference.information,
+    reference_authors = Authors.information
   ) %>%
   cSplit("biologicalsource",
          " Known use:",
@@ -43,7 +44,8 @@ data_selected <- data_original %>%
          smiles,
          biologicalsource = biologicalsource_1,
          pubchem,
-         reference) %>%
+         reference,
+         reference_authors) %>%
   mutate(biologicalsource = gsub("Source: ",
                                  "",
                                  biologicalsource)) %>%
@@ -60,17 +62,32 @@ data_selected <- data_original %>%
          " Reference: ",
          stripWhite = FALSE,
          fixed = FALSE) %>%
-  mutate(reference = paste(reference_2_1,
-                           reference_1_2,
-                           sep = ", ")) %>%
-  tibble()
+  cSplit("reference_authors",
+         "Author(s): ",
+         stripWhite = FALSE,
+         fixed = TRUE) %>%
+  cSplit("reference_authors_2",
+         "Curator(s): ",
+         stripWhite = FALSE,
+         fixed = TRUE) %>%
+  mutate(
+    reference_title = reference_2_1,
+    reference_authors = reference_authors_2_1,
+    reference_publishingDetails = reference_1_2
+  ) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "nan_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c(
+      "reference_title",
+      "reference_authors",
+      "reference_publishingDetails"
+    )
   )
 
 # exporting
