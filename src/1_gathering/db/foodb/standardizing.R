@@ -161,8 +161,6 @@ foodb <- compounds_contents_flavors %>%
 foodb$biologicalsource <- trimws(foodb$biologicalsource)
 foodb$biologicalsource <-
   y_as_na(foodb$biologicalsource, "")
-foodb$reference <-
-  y_as_na(foodb$reference, "NA NA")
 
 # standardizing
 data_standard <- standardizing_original(
