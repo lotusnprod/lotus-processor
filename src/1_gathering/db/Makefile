@@ -90,7 +90,7 @@ ${INTERIM_DB_PATH}/drduke.tsv.zip:	${DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMM
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/drduke/standardizing.R
 
 etcm:	${INTERIM_DB_PATH}/etcm.tsv.zip
-${INTERIM_DB_PATH}/etcm.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/etcm/data/*.csv)	${SRC_GATHERING_PATH}/etcm/standardizing.R
+${INTERIM_DB_PATH}/etcm.tsv.zip:	${DB_SOURCE_PATH}/etcm/data.zip	${SRC_GATHERING_PATH}/etcm/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/etcm/standardizing.R
 
 foodb:	${INTERIM_DB_PATH}/foodb.tsv.zip
@@ -124,7 +124,8 @@ metabolights-rescrape:	${DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped
 ${DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.zip:	${DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml	# ${SRC_GATHERING_PATH}/metabolights/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/metabolights/scraping.R
 
-${INTERIM_DB_PATH}/mibig.tsv.zip:	$(wildcard	${DB_SOURCE_PATH}/mibig/mibig_json_2.0/*.json)	${SRC_GATHERING_PATH}/mibig/standardizing.R
+mibig:	${INTERIM_DB_PATH}/mibig.tsv.zip
+${INTERIM_DB_PATH}/mibig.tsv.zip:	${DB_SOURCE_PATH}/mibig/data.zip	${SRC_GATHERING_PATH}/mibig/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/mibig/standardizing.R
 
 mitishamba:	${INTERIM_DB_PATH}/mitishamba.tsv.zip

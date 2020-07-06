@@ -117,21 +117,9 @@ databases$add(
 
 # COMMENT not sure about how clean those lines are
 ##### etcm
-pathDataExternalDbSourceEtcm <-
-  file.path(pathDataExternalDbSource,
-            "etcm")
-
 databases$add(
   name = "etcm",
-  sourceFiles = list(tsvPath = file.path(
-    "data",
-    list.files(
-      path = file.path(pathDataExternalDbSourceEtcm,
-                       "data"),
-      pattern = "*.csv",
-      full.names = FALSE
-    )
-  )),
+  sourceFiles = list(data = "data.zip"),
   interimFile = "etcm.tsv.zip"
 )
 
@@ -181,22 +169,9 @@ pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
   file.path(pathDataExternalDbSourceMetabolights,
             "studiesScraped")
 
-##### mibig
-pathDataExternalDbSourceMibig <-
-  file.path(pathDataExternalDbSource,
-            "mibig")
-
 databases$add(
   name = "mibig",
-  sourceFiles = list(tsvPath = file.path(
-    "mibig_json_2.0",
-    list.files(
-      path = file.path(pathDataExternalDbSourceMibig,
-                       "mibig_json_2.0"),
-      pattern = "*.json",
-      full.names = FALSE
-    )
-  )),
+  sourceFiles = list(data = "data.zip"),
   interimFile = "mibig.tsv.zip"
 )
 
