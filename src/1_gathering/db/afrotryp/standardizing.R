@@ -22,22 +22,23 @@ data_original <- read_delim(
 
 # selecting
 data_selected <- data_original %>%
-  mutate(reference = paste(Reference, Publisher, sep = " ")) %>%
   select(
     uniqueid = `Compound code`,
     name = `Compound name`,
     biologicalsource = `Species name`,
     biologicalpart = `plant part`,
-    reference
+    reference_authors = Reference,
+    reference_publishingDetails = Publisher
   )
-
-data_selected$reference <- gsub("NA", "", data_selected$reference)
 
 # standardizing
 data_standard <-
-  standardizing_original(data_selected = data_selected,
-                         db = "afr_1",
-                         structure_field = "name")
+  standardizing_original(
+    data_selected = data_selected,
+    db = "afr_1",
+    structure_field = "name",
+    reference_field = c("reference_authors", "reference_publishingDetails")
+  )
 
 # exporting
 database$writeInterim(data_standard)

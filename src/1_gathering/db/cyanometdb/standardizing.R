@@ -36,18 +36,31 @@ data_manipulated <- data_original %>%
     smiles = `SMILES (canonical or isomeric)`
   )
 
-data_manipulated$reference <-
-  apply(data_manipulated[, c(11, 17, 23)] , 1 , paste , collapse = "|")
-
 data_manipulated$biologicalsource <-
   y_as_na(data_manipulated$biologicalsource, " ")
+
+data_selected <- data_manipulated %>%
+  mutate(reference = `Reference_Text Title; Journal; Vol,; Issue; pages; year; type; DOI; author1; authors2; etc.`) %>%
+  cSplit("reference", sep = ";") %>%
+  select(
+    name,
+    biologicalsource,
+    inchi,
+    smiles,
+    reference_doi = `DOI   `,
+    reference_title = reference_01,
+    reference_journal = reference_02
+  ) %>%
+  data.frame()
+
 
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_manipulated,
+    data_selected = data_selected,
     db = "cya_1",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c("reference_doi", "reference_title", "reference_journal")
   )
 
 # exporting

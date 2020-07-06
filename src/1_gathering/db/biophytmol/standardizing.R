@@ -30,11 +30,20 @@ data_selected <- data_original %>%
          biologicalsource,
          reference) %>%
   cSplit("biologicalsource", "     ") %>%
-  select(uniqueid,
-         name,
-         smiles,
-         biologicalsource = biologicalsource_1,
-         reference) %>%
+  cSplit("reference", "§") %>%
+  cSplit("reference_1", ",", direction = "long") %>%
+  cSplit("reference_2", ".", fixed = TRUE) %>%
+  mutate(reference_authors = gsub("[0-9]\\) ", "", reference_2_01)) %>%
+  select(
+    uniqueid,
+    name,
+    smiles,
+    biologicalsource = biologicalsource_1,
+    reference_authors,
+    reference_pubmed = reference_1,
+    reference_title = reference_2_02,
+    reference_journal = reference_2_03
+  ) %>%
   mutate_all(as.character) %>%
   tibble()
 
@@ -43,9 +52,13 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "bio_2",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c(
+      "reference_authors",
+      "reference_journal",
+      "reference_pubmed",
+      "reference_title")
   )
 
 # exporting
 database$writeInterim(data_standard)
-

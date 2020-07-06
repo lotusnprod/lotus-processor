@@ -56,20 +56,20 @@ data_joined <- left_join(data_joined, data_reference)
 
 # selecting
 data_selected <- data_joined %>%
-  select(name = CHEM,
-         biologicalsource = TAXON,
-         reference = LONGREF) %>%
-  mutate(reference = ifelse(
-    test = !is.na(reference),
-    yes = reference,
-    no = "DrDuke"
-  ))
+  select(
+    name = CHEM,
+    biologicalsource = TAXON,
+    reference_unsplittable = LONGREF
+  )
 
 # standardizing
 data_standard <-
-  standardizing_original(data_selected = data_selected,
-                         db = "duk_1",
-                         structure_field = "name")
+  standardizing_original(
+    data_selected = data_selected,
+    db = "duk_1",
+    structure_field = "name",
+    reference_field = "reference_unsplittable"
+  )
 
 # exporting
 database$writeInterim(data_standard)

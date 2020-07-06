@@ -8,6 +8,7 @@ source("functions/standardizing.R")
 library(dplyr)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -118,7 +119,28 @@ foodb <- compounds_contents_flavors %>%
     biologicalsource = paste(orig_food_scientific_name,
                              orig_food_common_name,
                              sep = " "),
-    reference = paste(citation, citation_type, sep = "§")
+    reference_external = ifelse(
+      test = citation_type == "DATABASE" |
+        citation_type == "UNKNOWN" |
+        citation_type == "EXPERIMENTAL" |
+        citation_type == "PREDICTED",
+      yes = citation,
+      no = NA
+    ),
+    reference_pubmed = ifelse(
+      test = citation_type == "ARTICLE" | citation_type == "TEXTBOOK",
+      yes = str_extract(string = citation, pattern = "[0-9]{6,9}"),
+      no = NA
+    ),
+    reference_unsplittable = ifelse(
+      test =
+        !grepl(pattern = "[0-9]{6,9}", x = citation) &
+        citation_type == "ARTICLE" |
+        citation_type == "TEXTBOOK" |
+        is.na(citation_type),
+      yes = citation,
+      no = NA
+    )
   ) %>%
   select(
     uniqueid = public_id,
@@ -126,7 +148,9 @@ foodb <- compounds_contents_flavors %>%
     biologicalsource,
     orig_food_part,
     standard_content,
-    reference,
+    reference_external,
+    reference_pubmed,
+    reference_unsplittable,
     smiles = moldb_smiles,
     inchi = moldb_inchi,
     inchikey = moldb_inchikey,
@@ -144,7 +168,12 @@ foodb$reference <-
 data_standard <- standardizing_original(
   data_selected = foodb,
   db = "foo_1",
-  structure_field = c("name", "smiles", "inchi")
+  structure_field = c("name", "smiles", "inchi"),
+  reference_field = c(
+    "reference_external",
+    "reference_pubmed",
+    "reference_unsplittable"
+  )
 )
 
 # exporting

@@ -29,7 +29,9 @@ data_selected <- data_original %>%
     name = Name,
     smiles = SMILES,
     biologicalsource = Specie,
-    reference = DOI
+    reference_journal = Journal,
+    reference_doi = DOI,
+    reference_publishingDetails = Reference
   )
 
 ## standardizing
@@ -37,7 +39,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "bio_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c("reference_doi", "reference_journal", "reference_publishingDetails")
   )
 
 # exporting

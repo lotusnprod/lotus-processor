@@ -93,7 +93,7 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
   ) %>%
   filter(refnum == biorefnum | is.na(refnum))
 
-data_manipulated_long_ref_unique$reference <-
+data_manipulated_long_ref_unique$reference_unsplittable <-
   gsub("(Ref.\\d* : )",
        "",
        data_manipulated_long_ref_unique$reference)
@@ -103,7 +103,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated_long_ref_unique,
     db = "car_1",
-    structure_field = c("inchi", "name", "smiles")
+    structure_field = c("inchi", "name", "smiles"),
+    reference_field = c("reference_unsplittable")
   )
 
 # exporting
