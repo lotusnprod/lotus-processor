@@ -138,28 +138,25 @@ data_selected <- cleaning_alkamid(x = data_original)
 
 # making names compatible
 ref_prepared <- ref_original %>%
-  mutate(
-    uniqueid = paste("Alkamid moleculeID", entry_id, sep = ""),
-    reference = paste(Title, `Author(s)`, Journal, Year, sep = " ")
-  ) %>%
-  select(uniqueid, reference)
+  mutate(uniqueid = paste("Alkamid moleculeID", entry_id, sep = "")) %>%
+  select(
+    uniqueid,
+    reference_authors = `Author(s)`,
+    reference_journal = Journal,
+    reference_title = Title
+  )
 
 # joining references
 data_referenced <- left_join(data_selected, ref_prepared) %>%
-  group_by(uniqueid, biologicalsource) %>%
-  mutate(level = "reference") %>%
-  pivot_wider(names_from = level, values_from = reference) %>%
-  unnest_wider(reference)
-
-data_referenced$reference <-
-  apply(data_referenced[, 5:ncol(data_referenced)] , 1 , paste , collapse = "|")
+  group_by(uniqueid, biologicalsource)
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_referenced,
     db = "alk_1",
-    structure_field = c("smiles", "name")
+    structure_field = c("smiles", "name"),
+    reference_field = c("reference_authors", "reference_journal", "reference_title")
   )
 
 # exporting

@@ -94,7 +94,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "cma_1",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c()
   )
 
 data_standard$name <- y_as_na(data_standard$name, "n.a.")

@@ -31,15 +31,17 @@ data_selected <- data_original %>%
     inchi = InChICode,
     smiles = SMILES,
     biologicalsource = Organism,
-    reference = Reference
-  )
+    reference_unsplittable = Reference
+  ) %>% 
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "kna_1",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c("reference_unsplittable")
   )
 
 # exporting

@@ -34,7 +34,8 @@ fileInZip <-
     return(outFile)
   }
 
-data_original <- fileInZip(inZip = database$sourceFiles$data, varList = "c")
+data_original <-
+  fileInZip(inZip = database$sourceFiles$data, varList = "c")
 
 # cleaning
 data_original$fileName <-
@@ -91,9 +92,12 @@ data_selected_long <- data_selected %>%
 
 # standardizing
 data_standard <-
-  standardizing_original(data_selected = data_selected_long,
-                         db = "etc_1",
-                         structure_field = "name")
+  standardizing_original(
+    data_selected = data_selected_long,
+    db = "etc_1",
+    structure_field = "name",
+    reference_field = c()
+  )
 
 # exporting
 database$writeInterim(data_standard)
