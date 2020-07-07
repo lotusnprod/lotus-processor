@@ -8,6 +8,7 @@ source("functions/standardizing.R")
 library(dplyr)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -41,12 +42,40 @@ data_selected <- data_original %>%
     reference
   )
 
+data_manipulated <- data_selected %>%
+  cSplit(
+    "reference",
+    sep = "|",
+    fixed = TRUE,
+    stripWhite = FALSE,
+    direction = "long",
+    drop = FALSE
+  ) %>%
+  mutate(reference = sub(pattern = ":", replacement = "§", reference)) %>%
+  cSplit("reference", sep = "§") %>%
+  cSplit("reference_2",
+         sep = "(PMID",
+         fixed = TRUE,
+         stripWhite = FALSE) %>%
+  mutate_all(as.character) %>%
+  mutate(
+    reference_authors = reference_1,
+    reference_unsplittable = reference_2_1,
+    reference_pubmed = str_extract(string = reference_2_2, pattern = "[0-9]{6,9}")
+  ) %>%
+  data.frame()
+
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_manipulated,
     db = "pro_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c(
+      "reference_authors",
+      "reference_unsplittable",
+      "reference_pubmed"
+    )
   )
 
 # exporting

@@ -9,6 +9,7 @@ library(dplyr)
 library(readr)
 library(readxl)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -31,12 +32,49 @@ data_selected <- data_original %>%
   ) %>%
   mutate(biologicalsource = "Pseudomonas aeruginosa")
 
+data_manipulated <- data_selected %>%
+  cSplit("reference",
+         sep = "Pubmed:",
+         fixed = TRUE,
+         stripWhite = FALSE) %>%
+  mutate_all(as.character) %>%
+  mutate(
+    reference_title = str_extract(string = reference_1, pattern = "\".*\""),
+    reference_unsplittable = ifelse(
+      test = !is.na(reference_title),
+      yes = NA,
+      no = reference_1
+    )
+  ) %>%
+  cSplit("reference_2",
+         sep = " ",
+         fixed = TRUE,
+         stripWhite = FALSE) %>%
+  mutate_all(as.character) %>%
+  select(
+    uniqueid,
+    biologicalsource,
+    name,
+    inchi,
+    smiles,
+    cas,
+    reference_unsplittable,
+    reference_title,
+    reference_pubmed = reference_2_02
+  ) %>%
+  data.frame()
+
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_manipulated,
     db = "pam_1",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c(
+      "reference_unsplittable",
+      "reference_pubmed",
+      "reference_title"
+    )
   )
 
 # exporting

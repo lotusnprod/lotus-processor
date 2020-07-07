@@ -26,13 +26,15 @@ data_standard <- do.call("rbind",
                                 }))
 
 data_standard$name <- NA
+data_standard$reference_external <- "PLANTCYC"
 
 #standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_standard,
     db = "pla_1",
-    structure_field = c("name", "inchi")
+    structure_field = c("name", "inchi"),
+    reference_field = c("reference_external")
   )
 
 #exporting

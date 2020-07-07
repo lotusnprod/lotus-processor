@@ -45,20 +45,31 @@ for (i in 1:length(X)) {
 data_original <- rbindlist(list) %>%
   data.frame()
 
+data_original$inchi <- y_as_na(x = data_original$inchi, y = "")
+data_original$smiles <- y_as_na(x = data_original$smiles, y = "")
+data_original$name <- y_as_na(x = data_original$name, y = "")
+data_original$name1 <- y_as_na(x = data_original$name1, y = "")
+
 # manipulating
 data_manipulated <- data_original %>%
+  mutate(inchi = ifelse(
+    test = !is.na(inchi),
+    yes = paste("InChI=", inchi, sep = ""),
+    no = inchi
+  )) %>%
   select(name,
          smiles,
          inchi,
          biologicalsource = name1,
-         reference = source)
+         reference_external = source)
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "pha_1",
-    structure_field = c("inchi", "name", "smiles")
+    structure_field = c("inchi", "name", "smiles"),
+    reference_field = c("reference_external")
   )
 
 # exporting
