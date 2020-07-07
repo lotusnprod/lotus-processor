@@ -28,20 +28,22 @@ data_original_long <- data_original %>%
   mutate(
     name = COMPOUND,
     biologicalsource = str_extract(SCIENCE, "(?<=\\[).+?(?=\\])"),
-    reference = LINK
+    reference_pubmed = str_extract(string = LINK, pattern = "[0-9]{6,9}")
   ) %>%
   distinct(name, .keep_all = TRUE) %>%
   mutate(
     biologicalsource = gsub("<i>", "", biologicalsource),
     biologicalsource = gsub("</i>", "", biologicalsource)
-  )
+  ) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_original_long,
     db = "tmm_1",
-    structure_field = c("name")
+    structure_field = c("name"),
+    reference_field = c("reference_pubmed")
   )
 
 # exporting

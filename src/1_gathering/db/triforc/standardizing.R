@@ -44,7 +44,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "tri_1",
-    structure_field = c("name")
+    structure_field = c("name"),
+    reference_field = c()
   )
 
 # exporting

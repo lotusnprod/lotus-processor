@@ -25,23 +25,42 @@ data_original <- read_delim(
 # selecting
 ## atomizing references
 data_selected <- data_original %>%
-  mutate(
-    reference = gsub("(\\(\\d+).\\s", "| ", ref),
-    reference = sub("\\| ", "", reference)
-  ) %>%
+  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref),) %>%
+  cSplit("reference", sep = "|", direction = "long") %>%
+  mutate_all(as.character) %>%
   select(
     biologicalsource = ln_reduced,
-    reference,
+    reference_unsplittable = reference,
     inchi = InChI,
     smiles = SMILES
+  ) %>%
+  data.frame()
+
+data_manipulated <- data_selected %>%
+  mutate(
+    reference_external = ifelse(
+      test = reference_unsplittable == "Retrieved from CNPD",
+      yes = reference_unsplittable,
+      no = NA
+    ),
+    reference_unsplittable = gsub(
+      pattern = "Retrieved from CNPD",
+      replacement = "",
+      x = reference_unsplittable,
+      fixed = TRUE
+    )
   )
+
+data_manipulated$reference_unsplittable <-
+  y_as_na(x = data_manipulated$reference_unsplittable, y = "")
 
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_manipulated,
     db = "unp_1",
-    structure_field = c("inchi", "name", "smiles")
+    structure_field = c("inchi", "name", "smiles"),
+    reference_field = c("reference_unsplittable", "reference_external")
   )
 
 # exporting

@@ -28,15 +28,19 @@ data_selected <- data_original %>%
          name,
          smiles,
          pubchem,
-         reference = pubmedid,
-         biologicalsource)
+         reference_pubchem = pubmedid,
+         biologicalsource) %>%
+  cSplit("reference_pubchem", sep = ";", direction = "long") %>%
+  cSplit("biologicalsource", sep = ";", direction = "long") %>%
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "str_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c("reference_pubchem")
   )
 
 # exporting
