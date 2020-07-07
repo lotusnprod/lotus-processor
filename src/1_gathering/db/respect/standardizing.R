@@ -9,6 +9,7 @@ library(dplyr)
 library(gdata)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -98,12 +99,51 @@ RESPECT_clean <- function(dfsel)
 ##applying
 data_selected <- RESPECT_clean(dfsel = data_transposed)
 
+data_manipulated <- data_selected %>%
+  cSplit("reference", sep = "§") %>%
+  cSplit("reference_1", sep = ";") %>%
+  mutate_all(as.character) %>%
+  mutate(
+    reference_publishingDetails = paste(reference_1_2,
+                                        reference_1_3,
+                                        reference_1_4,
+                                        sep = ";"),
+    reference_pubmed = str_extract(string = reference_2,
+                                   pattern = "[0-9]{6,9}")
+  ) %>%
+  mutate(
+    reference_publishingDetails = gsub(
+      pattern = ";NA",
+      replacement = "",
+      x = reference_publishingDetails,
+      fixed = TRUE
+    )
+  ) %>%
+  select(
+    name,
+    biologicalsource,
+    inchi,
+    smiles,
+    reference_pubmed,
+    reference_publishingDetails,
+    reference_authors = reference_1_1,
+    reference_journal = reference_1_2
+  ) %>%
+  data.frame()
+
+
 #standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_manipulated,
     db = "res_1",
-    structure_field = c("name", "inchi", "smiles")
+    structure_field = c("name", "inchi", "smiles"),
+    reference_field = c(
+      "reference_pubmed",
+      "reference_publishingDetails",
+      "reference_authors",
+      "reference_journal"
+    )
   )
 
 # exporting

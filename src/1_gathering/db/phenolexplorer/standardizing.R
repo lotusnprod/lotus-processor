@@ -83,17 +83,20 @@ c <- full_join(b, foods, by = c("food" = "name"))
 
 # pivoting to join right references
 colnames(c)[29] <- "publicationids"
+colnames(c)[30] <- "pubmedids"
 
 data_pivoted <- c %>%
   cSplit("publicationids", ";") %>%
+  cSplit("pubmedids", ";") %>%
   group_by(id.x) %>%
   pivot_longer(
-    38:ncol(.),
+    37:ncol(.),
     names_to = c(".value", "level"),
     names_sep = "_",
     values_to = "taxonomy",
     values_drop_na = TRUE
-  )
+  ) %>%
+  ungroup()
 
 # adding references
 data_referenced <-
@@ -106,41 +109,30 @@ data_referenced <-
     smiles,
     standardcontent = mean,
     biologicalsource = food_source_scientific_name,
-    level,
-    reference = title
+    reference_title = title,
+    reference_pubmed = pubmedids,
+    reference_journal = journal_name,
+    reference_authors = authors
   ) %>%
-  pivot_wider(names_from = level,
-              values_from = reference) %>%
-  mutate_all(as.character)
+  mutate_all(as.character) %>%
+  data.frame()
 
 data_referenced[] <-
   lapply(data_referenced, function(x)
     gsub("NULL", NA, x))
 
-# tailing and selecting
-data_selected <- data_referenced
-
-data_selected$reference <-
-  apply(data_selected[, 8:ncol(data_selected)] , 1 , paste , collapse = "|")
-
-data_selected$reference <- gsub("|NA", "", data_selected$reference)
-
-data_selected <- data_selected %>%
-  select(uniqueid,
-         name,
-         cas,
-         pubchem,
-         smiles,
-         standardcontent,
-         biologicalsource,
-         reference)
-
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_referenced,
     db = "phe_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c(
+      "reference_title",
+      "reference_pubmed",
+      "reference_journal",
+      "reference_authors"
+    )
   )
 
 # exporting

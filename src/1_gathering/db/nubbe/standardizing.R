@@ -125,27 +125,42 @@ data_manipulated <- data_original %>%
                              sep = " "),
     inchi = paste("InChI=", inchi, sep = "")
   ) %>%
-  select(id,
-         name,
-         inchi,
-         inchikey,
-         smiles,
-         #temporary
-         biologicalsource,
-         reference = referenceFull)
-
-data_manipulated$biologicalsource <-
-  gsub("NA ",
-       "",
-       data_manipulated$biologicalsource,
-       fixed = TRUE)
+  cSplit("referenceFull", sep = ";") %>%
+  mutate_all(as.character) %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = "DOI: ",
+      replacement = "",
+      x = referenceFull_01
+    ),
+    biologicalsource = gsub(
+      pattern = "NA ",
+      replacement = "",
+      x = biologicalsource,
+      fixed = TRUE
+    )
+  ) %>%
+  select(
+    id,
+    name,
+    inchi,
+    inchikey,
+    smiles,
+    #temporary
+    biologicalsource,
+    reference_authors = referenceAuthors,
+    reference_title = referenceTitle,
+    reference_doi
+  ) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "nub_1",
-    structure_field = c("inchi", "name", "smiles")
+    structure_field = c("inchi", "name", "smiles"),
+    reference_field = c("reference_authors", "reference_title", "reference_doi")
   )
 
 # exporting
