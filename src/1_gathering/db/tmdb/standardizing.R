@@ -33,16 +33,31 @@ data_pivoted <- data_original %>%
 
 # selecting
 data_selected <- data_pivoted %>%
-  select(name = `Entry name`,
-         biologicalsource = `Latin name`,
-         reference = References)
-
+  select(
+    name = `Entry name`,
+    biologicalsource = `Latin name`,
+    reference_publishingDetails = References
+  ) %>%
+  cSplit("reference_publishingDetails",
+         sep = ";",
+         direction = "long") %>%
+  mutate(
+    reference_publishingDetails = gsub(
+      pattern = "\\(.*\\D.*\\)",
+      replacement = "",
+      x = reference_publishingDetails
+    )
+  ) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
-  standardizing_original(data_selected = data_selected,
-                         db = "tmd_1",
-                         structure_field = "name")
+  standardizing_original(
+    data_selected = data_selected,
+    db = "tmd_1",
+    structure_field = c("name"),
+    reference_field = c("reference_publishingDetails")
+  )
 
 data_standard[] <-
   lapply(data_standard, function(x)

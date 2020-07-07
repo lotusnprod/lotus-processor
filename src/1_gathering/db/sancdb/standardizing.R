@@ -8,6 +8,7 @@ source("functions/standardizing.R")
 library(dplyr)
 library(readr)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -637,23 +638,6 @@ sancdb_clean <- SANCDB_clean(dfsel = data_original)
 
 #selecting
 data_selected <- sancdb_clean %>%
-  mutate(
-    reference = paste(
-      V1_29,
-      V1_30,
-      V1_31,
-      V1_32,
-      V1_33,
-      V1_34,
-      V1_35,
-      V1_36,
-      V1_37,
-      V1_38,
-      V1_39,
-      V1_40,
-      sep = " "
-    )
-  ) %>%
   select(
     uniqueid = 1,
     name = 3,
@@ -661,17 +645,132 @@ data_selected <- sancdb_clean %>%
     biologicalsource = 65,
     cas = 17,
     pubchem = 13,
-    reference
+    V1_29,
+    V1_30,
+    V1_31,
+    V1_32,
+    V1_33,
+    V1_34,
+    V1_35,
+    V1_36,
+    V1_37,
+    V1_38,
+    V1_39,
+    V1_40
   )
 
-data_selected$reference <- gsub(" NA", "", data_selected$reference)
+data_selected_21 <- data_selected %>%
+  filter(grepl(pattern = "^\\(", x = V1_30))
+
+for (i in (ncol(data_selected_21):8))
+{
+  data_selected_21[, i] <- data_selected_21[, i - 1]
+}
+
+data_selected_21$V1_30 <- NA
+data_selected_21$V1_30 <- as.character(data_selected_21$V1_30)
+
+data_selected_22 <- data_selected %>%
+  filter(!grepl(pattern = "^\\(", x = V1_30))
+
+data_selected_3 <- full_join(data_selected_22, data_selected_21)
+
+data_selected_31 <- data_selected_3 %>%
+  filter(grepl(pattern = "^\\(", x = V1_33))
+
+for (i in (ncol(data_selected_31):11))
+{
+  data_selected_31[, i] <- data_selected_31[, i - 1]
+}
+
+data_selected_31$V1_33 <- NA
+data_selected_31$V1_33 <- as.character(data_selected_31$V1_33)
+
+data_selected_32 <- data_selected_3 %>%
+  filter(!grepl(pattern = "^\\(", x = V1_33))
+
+data_manipulated <-
+  full_join(data_selected_32, data_selected_31) %>%
+  mutate(
+    referenceAuthors_1 = paste(V1_29, V1_30, sep = " "),
+    referenceAuthors_2 = paste(V1_32, V1_33, sep = " "),
+    referenceAuthors_3 = paste(V1_35, V1_36, sep = " "),
+    referenceAuthors_4 = paste(V1_38, V1_39, sep = " ")
+  ) %>%
+  select(
+    uniqueid,
+    name,
+    smiles,
+    biologicalsource,
+    cas,
+    pubchem,
+    referenceAuthors_1,
+    referenceAuthors_2,
+    referenceAuthors_3,
+    referenceAuthors_4,
+    referenceTitle_1 = V1_31,
+    referenceTitle_2 = V1_34,
+    referenceTitle_3 = V1_37,
+    referenceTitle_4 = V1_40
+  ) %>%
+  pivot_longer(
+    7:ncol(.),
+    names_to = c(".value", "level"),
+    names_sep = "_",
+    values_to = "reference",
+    values_drop_na = TRUE
+  ) %>%
+  mutate(
+    referenceAuthors = paste(
+      gsub(
+        pattern = "NA",
+        replacement = "",
+        x = referenceAuthors,
+        fixed = TRUE
+      ),
+      str_extract(string = referenceTitle, pattern = "\\([0-9]{4}\\)")
+    ),
+    referenceTitle = gsub(
+      pattern = "\\([0-9]{4}\\)",
+      replacement = "",
+      x = referenceTitle
+    )
+  )
+
+data_manipulated$referenceAuthors <-
+  gsub(
+    pattern = " NA",
+    replacement = "",
+    x = data_manipulated$referenceAuthors
+  )
+
+data_manipulated$referenceAuthors <-
+  trimws(data_manipulated$referenceAuthors)
+
+data_manipulated$referenceAuthors <-
+  y_as_na(x = data_manipulated$referenceAuthors, y = "")
+
+data_manipulated$referenceTitle <-
+  trimws(data_manipulated$referenceTitle)
+
+data_manipulated <- data_manipulated %>% 
+  select(uniqueid,
+        name,
+        smiles,
+        biologicalsource,
+        cas,
+        pubchem,
+        reference_authors = referenceAuthors,
+        reference_title = referenceTitle) %>% 
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_manipulated,
     db = "san_1",
-    structure_field = c("name", "smiles")
+    structure_field = c("name", "smiles"),
+    reference_field = c("reference_authors", "reference_title")
   )
 
 # exporting

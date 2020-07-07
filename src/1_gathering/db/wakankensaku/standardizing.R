@@ -28,15 +28,17 @@ data_manipulated <- data_original %>%
   select(
     name = Compound,
     biologicalsource = `Plant resources`,
-    reference = Literature
-  )
+    reference_unsplittable = Literature
+  ) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "wak_1",
-    structure_field = c("name")
+    structure_field = c("name"),
+    reference_field = c("reference_unsplittable")
   )
 
 # exporting
