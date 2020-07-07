@@ -1,3 +1,7 @@
+md5: 6342de16a33c6847a2d8e3c766ce550e
 outs:
-- md5: 67f62b99f66b03e14ac707b8495d2aca.dir
+- md5: fcd83dd5ba28a5381b36174f8544fd8b.dir
   path: external
+  cache: true
+  metric: false
+  persist: false
