@@ -1,33 +1,41 @@
 # title: "Ref translatoR"
 
-# loading paths
+# loading
+## paths
 source("paths.R")
 
-# loading functions
+## functions
 source("functions/reference.R")
 
+## file
+dataFull <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferenceFull),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate_all(as.character)
+
 # joining all types together again
-dataFull <- rbind(
-  dataReferenceFillAuto,
-  dataReferenceFillDoi,
-  dataReferenceFillNoArticle,
-  dataReferenceFillPubmed
-)
-
-# joining with original df
-dataReferenceMin <- dataReferenceLongSplit %>%
-  select(referenceOriginal)
-
-dataReferenced <- left_join(dataReferenceMin, dataFull)
+dataFull <- full_join(dataFull, dataDoi)
+dataFull <- full_join(dataFull, dataPubmed)
+dataFull <- full_join(dataFull, dataTitle)
+dataFull <- full_join(dataFull, dataUnsplit)
 
 ### problematic reference field containing multiple references with no clear association ###
 ### I also think we should output a "nonarticleref" column for external DB links etc ###
 ### inconsistency of journal name depending on retrieval method (check JNP) ###
 
-dataReferencedSelected <- dataReferenced %>%
+dataReferencedSelected <- dataFull %>%
   select(
-    referenceOriginal,
-    referenceSplit = value,
+    referenceOriginalAuthors,
+    referenceOriginalDoi,
+    referenceOriginalExternal,
+    referenceOriginalIsbn,
+    referenceOriginalJournal,
+    referenceOriginalPubmed,
+    referenceOriginalTitle,
+    referenceOriginalUnsplit,
     translatedDoi,
     translatedJournal,
     translatedTitle,
@@ -37,8 +45,14 @@ dataReferencedSelected <- dataReferenced %>%
   ) %>%
   mutate(translationScore = replace_na(translationScore, "0")) %>%
   distinct(
-    referenceOriginal,
-    referenceSplit,
+    referenceOriginalAuthors,
+    referenceOriginalDoi,
+    referenceOriginalExternal,
+    referenceOriginalIsbn,
+    referenceOriginalJournal,
+    referenceOriginalPubmed,
+    referenceOriginalTitle,
+    referenceOriginalUnsplit,
     translatedTitle,
     translatedJournal,
     translatedDate,
@@ -62,11 +76,17 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedReference),
+  dir.create(pathDataInterimTablesTranslatedReference),
+  FALSE
+)
+
 ## ref
 write.table(
   x = dataReferencedSelected,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedReference,
+    description = pathDataInterimTablesTranslatedReferenceFile,
     compression = 9,
     encoding = "UTF-8"
   ),

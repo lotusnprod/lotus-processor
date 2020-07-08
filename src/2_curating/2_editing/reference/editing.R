@@ -10,14 +10,14 @@ source("functions/reference.R")
 ## DOI
 source("2_curating/2_editing/reference/subscripts/1_translating/doi.R")
 
-## other sources
-source("2_curating/2_editing/reference/subscripts/1_translating/other.R")
-
 ## pubmed
 source("2_curating/2_editing/reference/subscripts/1_translating/pubmed.R")
 
-## text
-source("2_curating/2_editing/reference/subscripts/1_translating/text.R")
+## title
+source("2_curating/2_editing/reference/subscripts/1_translating/title.R")
+
+## unsplit
+source("2_curating/2_editing/reference/subscripts/1_translating/unsplit.R")
 
 # integrating references
 source("2_curating/2_editing/reference/subscripts/2_integrating.R")
