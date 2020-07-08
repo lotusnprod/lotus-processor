@@ -1,10 +1,7 @@
-# title: "treating bio"
+# title: "cleaning taxonomy"
 
 # loading paths
 source("paths.R")
-
-# loading functions
-#source("functions/bio.R")
 
 log_debug(" Step 4")
 
@@ -543,19 +540,12 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
     organism_8_variety
   )
 
-## creating directories if they do not exist
-ifelse(
-  !dir.exists(pathDataInterimTablesCurated),
-  dir.create(pathDataInterimTablesCurated),
-  FALSE
-)
-
 #exporting
 #curated
 write.table(
   x = dataCuratedOrganism,
   file = gzfile(
-    description = pathDataInterimTablesCuratedOrganism,
+    description = pathDataInterimTablesCleanedOrganismFinal,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -569,7 +559,7 @@ write.table(
 write.table(
   x = realDiff,
   file = gzfile(
-    description = pathDataInterimTablesCuratedOrganismRealDiff,
+    description = pathDataInterimTablesCleanedOrganismRealDiff,
     compression = 9,
     encoding = "UTF-8"
   ),

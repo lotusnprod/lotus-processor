@@ -8,7 +8,7 @@ source("functions/chemo.R")
 
 # loading files
 dataOriginal <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalNominal),
+  file = gzfile(pathDataInterimTablesOriginalStructureNominal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -64,10 +64,16 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedStructure),
+  dir.create(pathDataInterimTablesTranslatedStructure),
+  FALSE
+)
+
 write.table(
   x = dataTranslated,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedNominal,
+    description = pathDataInterimTablesTranslatedStructureNominal,
     compression = 9,
     encoding = "UTF-8"
   ),

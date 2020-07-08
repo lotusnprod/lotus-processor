@@ -1,4 +1,4 @@
-# title: "treating bio"
+# title: "cleaning original organism"
 
 # loading
 ## paths
@@ -8,8 +8,8 @@ source("paths.R")
 source("functions/bio.R")
 source("functions/helpers.R")
 source("functions/log.R")
-source("2_curating/2_editing/bio/functions/manipulating_taxo.R") # shouldnt these path be in the path.R ???
-source("2_curating/2_editing/bio/functions/gnfinder_cleaning.R") # shouldnt these path be in the path.R ???
+source("2_curating/2_editing/organism/functions/manipulating_taxo.R") # shouldnt these path be in the path.R ???
+source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R") # shouldnt these path be in the path.R ???
 
 ## libraries
 library(data.table)
@@ -39,21 +39,21 @@ ifelse(
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedGnfinder),
-  dir.create(pathDataInterimTablesCleanedGnfinder),
+  !dir.exists(pathDataInterimTablesCleanedOrganism),
+  dir.create(pathDataInterimTablesCleanedOrganism),
   FALSE
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedGnfinderOriginal),
-  dir.create(pathDataInterimTablesCleanedGnfinderOriginal),
+  !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
+  dir.create(pathDataInterimTablesCleanedOrganismOriginal),
   FALSE
 )
 
 system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <-
-  length(list.files(path = pathDataInterimTablesOriginalGnfinder,
+  length(list.files(path = pathDataInterimTablesOriginalOrganism,
                     pattern = 'tsv'))
 
 cut <- 10000

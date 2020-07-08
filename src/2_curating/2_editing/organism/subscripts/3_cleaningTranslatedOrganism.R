@@ -1,4 +1,4 @@
-# title: "treating bio"
+# title: "cleaning translated organism"
 
 # loading
 ## paths
@@ -8,8 +8,8 @@ source("paths.R")
 source("functions/bio.R")
 source("functions/helpers.R")
 source("functions/log.R")
-source("2_curating/2_editing/bio/functions/manipulating_taxo.R")
-source("2_curating/2_editing/bio/functions/gnfinder_cleaning.R")
+source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
+source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R")
 
 ## libraries
 library(data.table)
@@ -24,15 +24,15 @@ log_debug("  Step 3")
 
 ## creating directories if they do not exist
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedGnfinderTranslated),
-  dir.create(pathDataInterimTablesCleanedGnfinderTranslated),
+  !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
+  dir.create(pathDataInterimTablesCleanedOrganismTranslated),
   FALSE
 )
 
 system(command = paste("bash", pathTranslatedGnfinderScript))
 
 length <-
-  length(list.files(path = pathDataInterimTablesTranslatedGnfinder,
+  length(list.files(path = pathDataInterimTablesTranslatedOrganism,
                     pattern = 'tsv'))
 
 num <- as.integer(seq(

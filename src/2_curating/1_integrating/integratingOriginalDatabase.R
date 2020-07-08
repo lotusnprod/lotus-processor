@@ -1,5 +1,5 @@
 # title: "Open NP DB (original) compileR"
-#setwd("/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/src")
+
 # loading paths
 source("paths.R")
 
@@ -18,7 +18,7 @@ dbs <- lapply(pathDataInterimDbDir, function(x) {
 inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
 # selecting
-set.seed(1234)
+set.seed(42)
 inhouseDbSelected <- inhouseDb %>%
   mutate(structureOriginalNominal = name) %>%
   select(
@@ -26,35 +26,19 @@ inhouseDbSelected <- inhouseDb %>%
     name,
     organismOriginal = biologicalsource,
     structureOriginalInchi = inchi,
-    structureOriginalSmiles = smiles,
     structureOriginalNominal = name,
-    referenceOriginal = reference
-  ) %>% sample_n(500)
+    structureOriginalSmiles = smiles,
+    referenceOriginalDoi = reference_doi,
+    referenceOriginalExternal = reference_external,
+    referenceOriginalIsbn = reference_isbn,
+    referenceOriginalJournal = reference_journal,
+    referenceOriginalPubmed = reference_pubmed,
+    referenceOriginalTitle = reference_title,
+    referenceOriginalUnsplit = reference_unsplittable,
+  ) %>% sample_n(2000)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
-
-# chemical
-## entries with InChI
-inhouseDbStructureInchi <- inhouseDbSelected %>%
-  filter(grepl(pattern = "^InChI=.*",
-               x = structureOriginalInchi)) %>%
-  distinct(structureOriginalInchi)
-
-### entries without InChI but SMILES
-inhouseDbStructureSmiles <- inhouseDbSelected %>%
-  filter(!grepl(pattern = "^InChI=.*",
-                x = structureOriginalInchi)) %>%
-  filter(!is.na(structureOriginalSmiles)) %>%
-  distinct(structureOriginalSmiles)
-
-### entries without InChI nor SMILES but name
-inhouseDbStructureNominal <- inhouseDbSelected %>%
-  filter(!grepl(pattern = "^InChI=.*",
-                x = structureOriginalInchi)) %>%
-  filter(is.na(structureOriginalSmiles)) %>%
-  filter(!is.na(structureOriginalNominal)) %>%
-  distinct(structureOriginalNominal)
 
 ## organism
 inhouseDbOrganism <- inhouseDbSelected %>%
@@ -62,85 +46,240 @@ inhouseDbOrganism <- inhouseDbSelected %>%
   distinct(organismOriginal)
 
 ## reference
-inhouseDbReference <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginal)) %>%
-  distinct(referenceOriginal)
+### DOI
+inhouseDbReferenceDoi <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalDoi)) %>%
+  distinct(referenceOriginalDoi)
 
+### external
+inhouseDbReferenceExternal <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalExternal)) %>%
+  distinct(referenceOriginalExternal)
+
+### ISBN
+inhouseDbReferenceIsbn <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalIsbn)) %>%
+  distinct(referenceOriginalIsbn)
+
+### journal
+inhouseDbReferenceJournal <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalJournal)) %>%
+  distinct(referenceOriginalJournal)
+
+### pubmed
+inhouseDbReferencePubmed <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalPubmed)) %>%
+  distinct(referenceOriginalPubmed)
+
+### title
+inhouseDbReferenceTitle <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalTitle)) %>%
+  distinct(referenceOriginalTitle)
+
+### unsplit
+inhouseDbReferenceUnsplit <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalUnsplit)) %>%
+  distinct(referenceOriginalUnsplit)
+
+# structures
+## with InChI
+inhouseDbStructureInchi <- inhouseDbSelected %>%
+  filter(grepl(pattern = "^InChI=.*",
+               x = structureOriginalInchi)) %>%
+  distinct(structureOriginalInchi)
+
+### without InChI nor SMILES but name
+inhouseDbStructureNominal <- inhouseDbSelected %>%
+  filter(!grepl(pattern = "^InChI=.*",
+                x = structureOriginalInchi)) %>%
+  filter(is.na(structureOriginalSmiles)) %>%
+  filter(!is.na(structureOriginalNominal)) %>%
+  distinct(structureOriginalNominal)
+
+### without InChI but SMILES
+inhouseDbStructureSmiles <- inhouseDbSelected %>%
+  filter(!grepl(pattern = "^InChI=.*",
+                x = structureOriginalInchi)) %>%
+  filter(!is.na(structureOriginalSmiles)) %>%
+  distinct(structureOriginalSmiles)
 
 # exporting
 ## creating directories if they do not exist
+### interim tables
 ifelse(!dir.exists(pathDataInterimTables),
        dir.create(pathDataInterimTables),
        FALSE)
 
+#### original
 ifelse(
   !dir.exists(pathDataInterimTablesOriginal),
   dir.create(pathDataInterimTablesOriginal),
   FALSE
 )
 
+##### organism
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalGnfinder),
-  dir.create(pathDataInterimTablesOriginalGnfinder),
+  !dir.exists(pathDataInterimTablesOriginalOrganism),
+  dir.create(pathDataInterimTablesOriginalOrganism),
   FALSE
 )
 
-## inchi
-write.table(
-  x = inhouseDbStructureInchi,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalInchi,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+##### reference
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalReference),
+  dir.create(pathDataInterimTablesOriginalReference),
+  FALSE
 )
 
-## smiles
-write.table(
-  x = inhouseDbStructureSmiles,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalSmiles,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+##### structure
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalStructure),
+  dir.create(pathDataInterimTablesOriginalStructure),
+  FALSE
 )
 
-## nominal
-write.table(
-  x = inhouseDbStructureNominal,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalNominal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-## organism
-## organisms for gnfinder
+## writing files
+### organism
 split_data_table(
   x = inhouseDbOrganism,
   no_rows_per_frame = 10000,
   text = "",
-  path_to_store = pathDataInterimTablesOriginalGnfinder
+  path_to_store = pathDataInterimTablesOriginalOrganism
 )
 
-## ref
+### reference
+#### DOI
 write.table(
-  x = inhouseDbReference,
+  x = inhouseDbReferenceDoi,
   file = gzfile(
-    description = pathDataInterimTablesOriginalReference,
+    description = pathDataInterimTablesOriginalReferenceDoi,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### external
+write.table(
+  x = inhouseDbReferenceExternal,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceExternal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### ISBN
+write.table(
+  x = inhouseDbReferenceIsbn,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceIsbn,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### journal
+write.table(
+  x = inhouseDbReferenceJournal,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceJournal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### pubmed
+write.table(
+  x = inhouseDbReferencePubmed,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferencePubmed,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### title
+write.table(
+  x = inhouseDbReferenceTitle,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceTitle,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### unsplit
+write.table(
+  x = inhouseDbReferenceUnsplit,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceUnsplit,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### structure
+#### inchi
+write.table(
+  x = inhouseDbStructureInchi,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalStructureInchi,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### nominal
+write.table(
+  x = inhouseDbStructureNominal,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalStructureNominal,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### smiles
+write.table(
+  x = inhouseDbStructureSmiles,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalStructureSmiles,
     compression = 9,
     encoding = "UTF-8"
   ),
