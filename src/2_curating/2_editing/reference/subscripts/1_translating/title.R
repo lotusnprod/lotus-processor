@@ -1,16 +1,25 @@
 # title: "Ref translatoR"
 
-# loading paths
+# loading 
+## paths
 source("paths.R")
 
-# loading functions
+## functions
 source("functions/reference.R")
+
+## file
+dataTitle <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferenceTitle),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
 
 # getting references
 reflist <- invisible(
   pbmclapply(
     FUN = getref,
-    X = dataReferenceFillAuto$value,
+    X = dataTitle$referenceOriginalTitle,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -21,9 +30,12 @@ reflist <- invisible(
   )
 )
 
+dataTitle <- dataTitle %>%
+  mutate_all(as.character)
+
 # joining with original dataframe
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translatedDoi"] <-
+  dataTitle[i, "translatedDoi"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -36,7 +48,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translatedJournal"] <-
+  dataTitle[i, "translatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -49,7 +61,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translatedTitle"] <-
+  dataTitle[i, "translatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -62,7 +74,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translatedDate"] <-
+  dataTitle[i, "translatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -75,7 +87,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translatedAuthor"] <-
+  dataTitle[i, "translatedAuthor"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -89,7 +101,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataReferenceFillAuto[i, "translationScore"] <-
+  dataTitle[i, "translationScore"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(

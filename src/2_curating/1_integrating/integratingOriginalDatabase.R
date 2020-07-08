@@ -28,6 +28,7 @@ inhouseDbSelected <- inhouseDb %>%
     structureOriginalInchi = inchi,
     structureOriginalNominal = name,
     structureOriginalSmiles = smiles,
+    referenceOriginalAuthors = reference_authors,
     referenceOriginalDoi = reference_doi,
     referenceOriginalExternal = reference_external,
     referenceOriginalIsbn = reference_isbn,
@@ -46,40 +47,65 @@ inhouseDbOrganism <- inhouseDbSelected %>%
   distinct(organismOriginal)
 
 ## reference
+### authors
+inhouseDbReferenceAuthors <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginalAuthors)) %>%
+  distinct(referenceOriginalAuthors)
+
 ### DOI
 inhouseDbReferenceDoi <- inhouseDbSelected %>%
   filter(!is.na(referenceOriginalDoi)) %>%
   distinct(referenceOriginalDoi)
 
-### external
-inhouseDbReferenceExternal <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginalExternal)) %>%
-  distinct(referenceOriginalExternal)
+# ### external
+# inhouseDbReferenceExternal <- inhouseDbSelected %>%
+#   filter(!is.na(referenceOriginalExternal)) %>%
+#   distinct(referenceOriginalExternal)
 
-### ISBN
-inhouseDbReferenceIsbn <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginalIsbn)) %>%
-  distinct(referenceOriginalIsbn)
+# ### ISBN
+# inhouseDbReferenceIsbn <- inhouseDbSelected %>%
+#   filter(!is.na(referenceOriginalIsbn)) %>%
+#   distinct(referenceOriginalIsbn)
 
-### journal
-inhouseDbReferenceJournal <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginalJournal)) %>%
-  distinct(referenceOriginalJournal)
+# ### journal
+# inhouseDbReferenceJournal <- inhouseDbSelected %>%
+#   filter(!is.na(referenceOriginalJournal)) %>%
+#   distinct(referenceOriginalJournal)
 
 ### pubmed
 inhouseDbReferencePubmed <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginalDoi)) %>%
   filter(!is.na(referenceOriginalPubmed)) %>%
   distinct(referenceOriginalPubmed)
 
 ### title
 inhouseDbReferenceTitle <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginalDoi)) %>%
+  filter(is.na(referenceOriginalPubmed)) %>%
   filter(!is.na(referenceOriginalTitle)) %>%
   distinct(referenceOriginalTitle)
 
 ### unsplit
 inhouseDbReferenceUnsplit <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginalDoi)) %>%
+  filter(is.na(referenceOriginalPubmed)) %>%
+  filter(is.na(referenceOriginalTitle)) %>%
   filter(!is.na(referenceOriginalUnsplit)) %>%
   distinct(referenceOriginalUnsplit)
+
+### unsplit
+inhouseDbReferenceFull <- inhouseDbSelected %>%
+  distinct(
+    referenceOriginalAuthors,
+    referenceOriginalDoi,
+    referenceOriginalExternal,
+    referenceOriginalIsbn,
+    referenceOriginalJournal,
+    referenceOriginalPubmed,
+    referenceOriginalTitle,
+    referenceOriginalUnsplit
+  ) %>%
+  mutate_all(as.character)
 
 # structures
 ## with InChI
@@ -148,6 +174,21 @@ split_data_table(
 )
 
 ### reference
+
+# #### authors
+# write.table(
+#   x = inhouseDbReferenceDoi,
+#   file = gzfile(
+#     description = pathDataInterimTablesOriginalReferenceAuthors,
+#     compression = 9,
+#     encoding = "UTF-8"
+#   ),
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )
+
 #### DOI
 write.table(
   x = inhouseDbReferenceDoi,
@@ -162,47 +203,47 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### external
-write.table(
-  x = inhouseDbReferenceExternal,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceExternal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# #### external
+# write.table(
+#   x = inhouseDbReferenceExternal,
+#   file = gzfile(
+#     description = pathDataInterimTablesOriginalReferenceExternal,
+#     compression = 9,
+#     encoding = "UTF-8"
+#   ),
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )
 
-#### ISBN
-write.table(
-  x = inhouseDbReferenceIsbn,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceIsbn,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# #### ISBN
+# write.table(
+#   x = inhouseDbReferenceIsbn,
+#   file = gzfile(
+#     description = pathDataInterimTablesOriginalReferenceIsbn,
+#     compression = 9,
+#     encoding = "UTF-8"
+#   ),
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )
 
-#### journal
-write.table(
-  x = inhouseDbReferenceJournal,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceJournal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# #### journal
+# write.table(
+#   x = inhouseDbReferenceJournal,
+#   file = gzfile(
+#     description = pathDataInterimTablesOriginalReferenceJournal,
+#     compression = 9,
+#     encoding = "UTF-8"
+#   ),
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )
 
 #### pubmed
 write.table(
@@ -237,6 +278,20 @@ write.table(
   x = inhouseDbReferenceUnsplit,
   file = gzfile(
     description = pathDataInterimTablesOriginalReferenceUnsplit,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### unsplit
+write.table(
+  x = inhouseDbReferenceFull,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceFull,
     compression = 9,
     encoding = "UTF-8"
   ),

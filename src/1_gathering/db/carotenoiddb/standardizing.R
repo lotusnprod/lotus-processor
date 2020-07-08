@@ -98,13 +98,23 @@ data_manipulated_long_ref_unique$reference_unsplittable <-
        "",
        data_manipulated_long_ref_unique$reference)
 
+data_manipulated_long_ref_unique$reference_title <-
+  gsub(
+    pattern = "\"",
+    replacement = "",
+    x = str_extract(
+      string = data_manipulated_long_ref_unique$reference_unsplittable,
+      pattern = "\".*\""
+    )
+  )
+
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated_long_ref_unique,
     db = "car_1",
     structure_field = c("inchi", "name", "smiles"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_unsplittable", "reference_title")
   )
 
 # exporting

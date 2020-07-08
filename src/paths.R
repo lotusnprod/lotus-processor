@@ -861,21 +861,25 @@ pathDataInterimTablesOriginalOrganism <-
 pathDataInterimTablesOriginalReference <-
   file.path(pathDataInterimTablesOriginal, "reference")
 
+# ### authors
+# pathDataInterimTablesOriginalReferenceAuthors <-
+#   file.path(pathDataInterimTablesOriginalReference, "authors.tsv.zip")
+
 ### DOI
 pathDataInterimTablesOriginalReferenceDoi <-
   file.path(pathDataInterimTablesOriginalReference, "doi.tsv.zip")
 
-### external
-pathDataInterimTablesOriginalReferenceExternal <-
-  file.path(pathDataInterimTablesOriginalReference, "external.tsv.zip")
+# ### external
+# pathDataInterimTablesOriginalReferenceExternal <-
+#   file.path(pathDataInterimTablesOriginalReference, "external.tsv.zip")
 
-### isbn
-pathDataInterimTablesOriginalReferenceIsbn <-
-  file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.zip")
+# ### isbn
+# pathDataInterimTablesOriginalReferenceIsbn <-
+#   file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.zip")
 
-### journal
-pathDataInterimTablesOriginalReferenceJournal <-
-  file.path(pathDataInterimTablesOriginalReference, "journal.tsv.zip")
+# ### journal
+# pathDataInterimTablesOriginalReferenceJournal <-
+#   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.zip")
 
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
@@ -888,6 +892,10 @@ pathDataInterimTablesOriginalReferenceTitle <-
 ### title
 pathDataInterimTablesOriginalReferenceUnsplit <-
   file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.zip")
+
+### full
+pathDataInterimTablesOriginalReferenceFull <-
+  file.path(pathDataInterimTablesOriginalReference, "full.tsv.zip")
 
 ## table
 pathDataInterimTablesOriginalTable <-
@@ -906,11 +914,12 @@ pathDataInterimTablesTranslatedOrganism <-
 pathDataInterimTablesTranslatedOrganismFile <-
   file.path(pathDataInterimTablesTranslatedOrganism, "organism.tsv.zip")
 
-
-
 ## ref
 pathDataInterimTablesTranslatedReference <-
-  file.path(pathDataInterimTablesTranslated, "reference.tsv.zip")
+  file.path(pathDataInterimTablesTranslated, "reference")
+
+pathDataInterimTablesTranslatedReferenceFile <-
+  file.path(pathDataInterimTablesTranslatedReference, "reference.tsv.zip")
 
 ## structure
 pathDataInterimTablesTranslatedStructure <-
@@ -961,13 +970,18 @@ pathDataInterimTablesCleanedOrganismRealDiff <-
             "organismsDifferentSpecies.tsv.zip")
 
 ### structure
-pathDataInterimTablesCleanedStructureUnique <-
-  file.path(pathDataInterimTablesCleaned, "structureUnique.tsv.zip")
+pathDataInterimTablesCleanedStructure <-
+  file.path(pathDataInterimTablesCleaned, "structure")
+
+pathDataInterimTablesCleanedStructureFile <-
+  file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.zip")
 
 ## ref
 pathDataInterimTablesCleanedReference <-
-  file.path(pathDataInterimTablesCleaned, "reference.tsv.zip")
+  file.path(pathDataInterimTablesCleaned, "reference")
 
+pathDataInterimTablesCleanedReferenceFile <-
+  file.path(pathDataInterimTablesCleanedReference, "reference.tsv.zip")
 
 ### final cleaned table
 pathDataInterimTablesCleanedTable <-

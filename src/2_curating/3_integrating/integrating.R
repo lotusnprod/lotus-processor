@@ -13,8 +13,6 @@ library(readr)
 source("functions/analysis.R")
 source("functions/helpers.R")
 
-
-
 ## files
 ### original table
 originalTable <- read_delim(
@@ -25,28 +23,28 @@ originalTable <- read_delim(
   trim_ws = TRUE
 )
 
-### structure table
-#### interim
-translatedStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesTranslatedStructure),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
-
-#### cleaned
-cleanedStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureUnique),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
-
-### organism table
+### organism 
 organismTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCuratedOrganism),
+  file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+### structure
+#### cleaned
+translatedStructureTable <- read_delim(
+  file = gzfile(description = pathDataInterimTablesTranslatedStructureFinal),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+#### translated
+cleanedStructureTable <- read_delim(
+  file = gzfile(description = pathDataInterimTablesCleanedStructureFile),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -55,7 +53,7 @@ organismTable <- read_delim(
 
 ### reference table
 referenceTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedReference),
+  file = gzfile(description = pathDataInterimTablesCleanedReferenceFile),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,

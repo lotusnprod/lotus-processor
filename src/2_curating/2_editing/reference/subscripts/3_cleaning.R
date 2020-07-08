@@ -8,7 +8,7 @@ source("functions/reference.R")
 
 # loading files
 dataTranslated <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReference),
+  file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -18,21 +18,27 @@ dataTranslated <- read_delim(
 test <- dataTranslated %>%
   filter(!is.na(translatedTitle)) %>%
   group_by(translatedTitle) %>%
-  distinct(referenceSplit, .keep_all = TRUE) %>%
+  distinct(
+    referenceOriginalDoi,
+    referenceOriginalPubmed,
+    referenceOriginalTitle,
+    referenceOriginalUnsplit,
+    .keep_all = TRUE
+  ) %>%
   add_count() %>%
   arrange(desc(n))
 
-# COMMENT: JUST AS FOR BIOLOGICAL SOURCES THOSE LINES SHOULD COME THEN 
+# COMMENT: JUST AS FOR BIOLOGICAL SOURCES THOSE LINES SHOULD COME THEN
 ## BEFORE TRANSLATION OF THE REFERENCE. WE DO IT AFTER BECAUSE YOU CAN
 ### NOT GUESS IT BUT THEN BUILDING A REPLACEMENT DIC SEEMS GOOD FOR ME
 
 test2 <- test %>%
-  filter(grepl("Harborne, The Handbook of Natural Flavonoids", referenceSplit)) %>%
+  filter(grepl("Harborne, The Handbook of Natural Flavonoids", referenceOriginalUnsplit)) %>%
   mutate(
     referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 1,Anthocyanins",
       replacement = "",
-      x = referenceSplit,
+      x = referenceOriginalUnsplit,
       fixed = TRUE
     ),
     referenceSplitNew = gsub(
@@ -169,14 +175,14 @@ test3 <- test %>%
     referenceSplitNew = gsub(
       pattern = "; Khimiya .*",
       replacement = "",
-      x = referenceSplit,
+      x = referenceOriginalUnsplit,
       fixed = FALSE
     )
   )
 
 test4 <- test %>%
   filter(n != 631 &
-           !grepl("Harborne, The Handbook of Natural Flavonoids", referenceSplit) &
+           !grepl("Harborne, The Handbook of Natural Flavonoids", referenceOriginalUnsplit) &
            n > 10)
 
 test5 <- test4 %>%
@@ -222,10 +228,16 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimTablesCleanedReference),
+  dir.create(pathDataInterimTablesCleanedReference),
+  FALSE
+)
+
 write.table(
   x = dataCleaned,
   file = gzfile(
-    description = pathDataInterimTablesCleanedReference,
+    description = pathDataInterimTablesCleanedReferenceFile,
     compression = 9,
     encoding = "UTF-8"
   ),

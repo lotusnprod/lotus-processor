@@ -1,16 +1,25 @@
 # title: "Ref translatoR"
 
-# loading paths
+# loading 
+## paths
 source("paths.R")
 
-# loading functions
+## functions
 source("functions/reference.R")
+
+## file
+dataDoi <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferenceDoi),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
 
 # getting references
 reflistDoi <-
   pbmclapply(
     FUN = getrefDoi,
-    X = dataReferenceFillDoi$value,
+    X = dataDoi$referenceOriginalDoi,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -22,7 +31,7 @@ reflistDoi <-
 
 # joining with original dataframe
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translatedDoi"] <-
+  dataDoi[i, "translatedDoi"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -35,7 +44,7 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translatedJournal"] <-
+  dataDoi[i, "translatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -48,7 +57,7 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translatedTitle"] <-
+  dataDoi[i, "translatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -61,7 +70,7 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translatedDate"] <-
+  dataDoi[i, "translatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -74,7 +83,7 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translatedAuthor"] <-
+  dataDoi[i, "translatedAuthor"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -87,7 +96,7 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataReferenceFillDoi[i, "translationScore"] <-
+  dataDoi[i, "translationScore"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
@@ -98,3 +107,6 @@ for (i in 1:length(reflistDoi)) {
       no = 0
     )[1])
 }
+
+dataDoi <- dataDoi %>% 
+  mutate_all(as.character)
