@@ -1,4 +1,4 @@
-# title: "treating bio"
+# title: "translating organism"
 
 # loading paths
 source("paths.R")
@@ -164,8 +164,8 @@ ifelse(
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedGnfinder),
-  dir.create(pathDataInterimTablesTranslatedGnfinder),
+  !dir.exists(pathDataInterimTablesTranslatedOrganism),
+  dir.create(pathDataInterimTablesTranslatedOrganism),
   FALSE
 )
 
@@ -174,5 +174,5 @@ split_data_table(
   x = dataInterimOrganismToFillGnfinder,
   no_rows_per_frame = cut,
   text = "",
-  path_to_store = pathDataInterimTablesTranslatedGnfinder
+  path_to_store = pathDataInterimTablesTranslatedOrganism
 )

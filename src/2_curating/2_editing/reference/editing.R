@@ -6,25 +6,21 @@ source("paths.R")
 # loading functions
 source("functions/reference.R")
 
-# splitting references
-###COMMENT### temporary, will write path accordingly if validated that way
-source("2_curating/2_editing/reference/subscripts/1_splitting.R")
-
 # translating references
 ## DOI
-source("2_curating/2_editing/reference/subscripts/2_translating/doi.R")
+source("2_curating/2_editing/reference/subscripts/1_translating/doi.R")
 
 ## other sources
-source("2_curating/2_editing/reference/subscripts/2_translating/other.R")
+source("2_curating/2_editing/reference/subscripts/1_translating/other.R")
 
 ## pubmed
-source("2_curating/2_editing/reference/subscripts/2_translating/pubmed.R")
+source("2_curating/2_editing/reference/subscripts/1_translating/pubmed.R")
 
 ## text
-source("2_curating/2_editing/reference/subscripts/2_translating/text.R")
+source("2_curating/2_editing/reference/subscripts/1_translating/text.R")
 
 # integrating references
-source("2_curating/2_editing/reference/subscripts/3_integrating.R")
+source("2_curating/2_editing/reference/subscripts/2_integrating.R")
 
 # cleaning references
-source("2_curating/2_editing/reference/subscripts/4_cleaning.R")
+source("2_curating/2_editing/reference/subscripts/3_cleaning.R")

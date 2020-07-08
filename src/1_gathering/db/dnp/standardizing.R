@@ -30,14 +30,17 @@ data_selected <- data_original %>%
     inchi = MolfileName,
     biologicalsource = Biological_Source
   ) %>%
-  distinct(uniqueid, .keep_all = TRUE)
+  distinct(uniqueid, .keep_all = TRUE) %>% 
+  mutate(reference_external = "DNP")
+  data.frame()
 
 ## standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "dnp_1",
-    structure_field = c("name", "inchi")
+    structure_field = c("name", "inchi"),
+    reference_field = c("reference_external")
   )
 
 # exporting

@@ -123,6 +123,17 @@ df.drop(colstodrop, axis=1, inplace=True)
 df.info()
 # exporting df
 
+import os
+import errno
+
+filename = ouput_file_path
+if not os.path.exists(os.path.dirname(filename)):
+    try:
+        os.makedirs(os.path.dirname(filename))
+    except OSError as exc: # Guard against race condition
+        if exc.errno != errno.EEXIST:
+            raise
+            
 #df.to_csv(ouput_file_path, sep='\t', index=False)
 
 df.to_csv(

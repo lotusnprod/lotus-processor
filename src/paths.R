@@ -279,13 +279,6 @@ databases$add(
   interimFile = "phytohub.tsv.zip"
 )
 
-# here we should allow a list of interim files, so for the moment I let it as it is
-# databases$add(
-#   name = "plantcyc",
-#   sourceFiles = list(tsv = "phytohubScraped.tsv.zip"),
-#   interimFile = "plantcyc.tsv.zip"
-# )
-
 ##### plantcyc
 pathDataExternalDbSourcePlantcyc <-
   file.path(pathDataExternalDbSource,
@@ -460,9 +453,6 @@ pathDataExternalTranslationSourceCommon <-
             "common")
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
-
-###### phenolexplorer
-
 ###### phenolexplorer
 pathDataExternalDbSourcePhenolexplorer <-
   file.path(pathDataExternalDbSource,
@@ -516,7 +506,6 @@ pathDataExternalTranslationSourceTcm <-
             "tcm")
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
-
 ###### TCMID
 pathDataExternalTranslationSourceTcmTcmid <-
   file.path(pathDataExternalTranslationSourceTcm,
@@ -534,7 +523,6 @@ pathDataInterimDbDir <-
   Sys.glob(file.path(paste(pathDataInterimDb,
                            "/*.tsv.zip",
                            sep = "")))
-
 
 ##### biofacquim
 pathDataInterimDbBiofacquim <-
@@ -777,7 +765,6 @@ pathDataInterimDictionariesTaxaKingdom <-
             "kingdom.tsv")
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
-
 ####### manual subtraction
 pathDataInterimDictionariesTaxaManualSubtraction <-
   file.path(pathDataInterimDictionariesTaxa,
@@ -814,6 +801,7 @@ pathDataInterimDictionariesTcmNames <-
             "names.tsv.zip")
 
 ##### COMMENT ##### The tables will have to slowly move to lists in dictionaries folder in flat format.s
+
 ###
 ### here are the only lines needed to be modified to obtained minimal working example
 ###
@@ -850,25 +838,56 @@ pathDataInterimTablesOriginal <-
   file.path(pathDataInterimTables, "0_original")
 
 ## structure
+pathDataInterimTablesOriginalStructure <-
+  file.path(pathDataInterimTablesOriginal, "structure")
+
 ### InChI
-pathDataInterimTablesOriginalInchi <-
-  file.path(pathDataInterimTablesOriginal, "inchi.tsv.zip")
+pathDataInterimTablesOriginalStructureInchi <-
+  file.path(pathDataInterimTablesOriginalStructure, "inchi.tsv.zip")
 
 ### SMILES
-pathDataInterimTablesOriginalSmiles <-
-  file.path(pathDataInterimTablesOriginal, "smiles.tsv.zip")
+pathDataInterimTablesOriginalStructureSmiles <-
+  file.path(pathDataInterimTablesOriginalStructure, "smiles.tsv.zip")
 
 ### nominal
-pathDataInterimTablesOriginalNominal <-
-  file.path(pathDataInterimTablesOriginal, "nominal.tsv.zip")
+pathDataInterimTablesOriginalStructureNominal <-
+  file.path(pathDataInterimTablesOriginalStructure, "nominal.tsv.zip")
 
 ## distinct organism
-pathDataInterimTablesOriginalGnfinder <-
-  file.path(pathDataInterimTablesOriginal, "gnfinder/")
+pathDataInterimTablesOriginalOrganism <-
+  file.path(pathDataInterimTablesOriginal, "organism/")
 
 ## ref
 pathDataInterimTablesOriginalReference <-
-  file.path(pathDataInterimTablesOriginal, "reference.tsv.zip")
+  file.path(pathDataInterimTablesOriginal, "reference")
+
+### DOI
+pathDataInterimTablesOriginalReferenceDoi <-
+  file.path(pathDataInterimTablesOriginalReference, "doi.tsv.zip")
+
+### external
+pathDataInterimTablesOriginalReferenceExternal <-
+  file.path(pathDataInterimTablesOriginalReference, "external.tsv.zip")
+
+### isbn
+pathDataInterimTablesOriginalReferenceIsbn <-
+  file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.zip")
+
+### journal
+pathDataInterimTablesOriginalReferenceJournal <-
+  file.path(pathDataInterimTablesOriginalReference, "journal.tsv.zip")
+
+### pubmed
+pathDataInterimTablesOriginalReferencePubmed <-
+  file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.zip")
+
+### title
+pathDataInterimTablesOriginalReferenceTitle <-
+  file.path(pathDataInterimTablesOriginalReference, "title.tsv.zip")
+
+### title
+pathDataInterimTablesOriginalReferenceUnsplit <-
+  file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.zip")
 
 ## table
 pathDataInterimTablesOriginalTable <-
@@ -880,37 +899,38 @@ pathDataInterimTablesTranslated <-
 
 ## organism
 pathDataInterimTablesTranslatedOrganism <-
-  file.path(pathDataInterimTablesTranslated, "organism.tsv.zip")
+  file.path(pathDataInterimTablesTranslated, "organism/")
+
+###file
+##### maybe not useful #####
+pathDataInterimTablesTranslatedOrganismFile <-
+  file.path(pathDataInterimTablesTranslatedOrganism, "organism.tsv.zip")
+
+
 
 ## ref
 pathDataInterimTablesTranslatedReference <-
   file.path(pathDataInterimTablesTranslated, "reference.tsv.zip")
 
 ## structure
+pathDataInterimTablesTranslatedStructure <-
+  file.path(pathDataInterimTablesTranslated, "structure")
+
 ### smiles
-pathDataInterimTablesTranslatedSmiles <-
-  file.path(pathDataInterimTablesTranslated, "smiles.tsv.zip")
+pathDataInterimTablesTranslatedStructureSmiles <-
+  file.path(pathDataInterimTablesTranslatedStructure, "smiles.tsv.zip")
 
 ### nominal
-pathDataInterimTablesTranslatedNominal <-
-  file.path(pathDataInterimTablesTranslated, "nominal.tsv.zip")
+pathDataInterimTablesTranslatedStructureNominal <-
+  file.path(pathDataInterimTablesTranslatedStructure, "nominal.tsv.zip")
 
-### structure
-pathDataInterimTablesTranslatedStructure <-
-  file.path(pathDataInterimTablesTranslated, "structure.tsv.zip")
+### both
+pathDataInterimTablesTranslatedStructureFinal <-
+  file.path(pathDataInterimTablesTranslatedStructure, "final.tsv.zip")
 
-### structure
+### unique
 pathDataInterimTablesTranslatedStructureUnique <-
-  file.path(pathDataInterimTablesTranslated, "structureUnique.tsv.zip")
-
-## distinct organism
-pathDataInterimTablesTranslatedGnfinder <-
-  file.path(pathDataInterimTablesTranslated, "gnfinder/")
-
-## distinct structure
-pathDataInterimTablesTranslatedRdkit <-
-  file.path(pathDataInterimTablesTranslated,
-            "rdkit/translatedStructureRdkit.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedStructure, "unique.tsv.zip")
 
 ## table
 pathDataInterimTablesTranslatedTable <-
@@ -921,49 +941,41 @@ pathDataInterimTablesCleaned <-
   file.path(pathDataInterimTables, "2_cleaned")
 
 ## organism
-### gnfinder
-pathDataInterimTablesCleanedGnfinder <-
-  file.path(pathDataInterimTablesCleaned, "gnfinder")
+pathDataInterimTablesCleanedOrganism <-
+  file.path(pathDataInterimTablesCleaned, "organism")
 
-#### original
-pathDataInterimTablesCleanedGnfinderOriginal <-
-  file.path(pathDataInterimTablesCleanedGnfinder, "original/")
+### original
+pathDataInterimTablesCleanedOrganismOriginal <-
+  file.path(pathDataInterimTablesCleanedOrganism, "original/")
 
-#### translated
-pathDataInterimTablesCleanedGnfinderTranslated <-
-  file.path(pathDataInterimTablesCleanedGnfinder, "translated/")
+### translated
+pathDataInterimTablesCleanedOrganismTranslated <-
+  file.path(pathDataInterimTablesCleanedOrganism, "translated/")
+
+### final cleaned organisms
+pathDataInterimTablesCleanedOrganismFinal <-
+  file.path(pathDataInterimTablesCleanedOrganism, "organism.tsv.zip")
+
+pathDataInterimTablesCleanedOrganismRealDiff <-
+  file.path(pathDataInterimTablesCleanedOrganism,
+            "organismsDifferentSpecies.tsv.zip")
 
 ### structure
 pathDataInterimTablesCleanedStructureUnique <-
   file.path(pathDataInterimTablesCleaned, "structureUnique.tsv.zip")
+
 ## ref
 pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference.tsv.zip")
 
-### final cleaned organisms
-pathDataInterimTablesCleanedOrganism <-
-  file.path(pathDataInterimTablesCleaned, "organism.tsv.zip")
 
 ### final cleaned table
 pathDataInterimTablesCleanedTable <-
   file.path(pathDataInterimTablesCleaned, "table.tsv.zip")
 
-### WE SHOULD RENAME HERE INCOHERENCE WITH CURATION/CLEANING/CURATION
-# curated fields
-pathDataInterimTablesCurated <-
-  file.path(pathDataInterimTables, "3_curated")
-
-## organism
-pathDataInterimTablesCuratedOrganism <-
-  file.path(pathDataInterimTablesCurated, "organism.tsv.zip")
-
-pathDataInterimTablesCuratedOrganismRealDiff <-
-  file.path(pathDataInterimTablesCurated,
-            "organismsDifferentSpecies.tsv.zip")
-
 ## dirty for the moment
 pathOriginalGnfinderScript <-
-  "2_curating/2_editing/bio/subscripts/shell/originalGnfinderLauncher.sh"
+  "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher.sh"
 
 pathTranslatedGnfinderScript <-
-  "2_curating/2_editing/bio/subscripts/shell/translatedGnfinderLauncher.sh"
+  "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher.sh"

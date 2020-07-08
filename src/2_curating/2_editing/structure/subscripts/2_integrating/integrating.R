@@ -21,23 +21,23 @@ originalTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-) %>% 
+) %>%
   select(structureOriginalInchi,
          structureOriginalSmiles,
          structureOriginalNominal)
 
 ### structure table
 #### loading multiple old files, will be optimized later on
-smilesStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesTranslatedSmiles),
+nominalStructureTable <- read_delim(
+  file = gzfile(description = pathDataInterimTablesTranslatedStructureNominal),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-nominalStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesTranslatedNominal),
+smilesStructureTable <- read_delim(
+  file = gzfile(description = pathDataInterimTablesTranslatedStructureSmiles),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -82,7 +82,7 @@ translatedStructureTableUnique <- translatedStructureTable %>%
 write.table(
   x = translatedStructureTable,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedStructure,
+    description = pathDataInterimTablesTranslatedStructureFinal,
     compression = 9,
     encoding = "UTF-8"
   ),

@@ -24,9 +24,9 @@ log_debug("Ready to start")
 log_debug("Creating biocleaning")
 #######################################################
 #######################################################
-source("2_curating/2_editing/bio/functions/biocleaning.R")
-source("2_curating/2_editing/bio/functions/gnfinder_cleaning.R")
-source("2_curating/2_editing/bio/functions/manipulating_taxo.R")
+source("2_curating/2_editing/organism/functions/biocleaning.R")
+source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R")
+source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 #######################################################
 #######################################################
 log_debug("Finished loading functions")
@@ -34,13 +34,13 @@ log_debug("Finished loading functions")
 
 # cleaning original organism
 ###COMMENT### temporary, will write path accordingly if validated that way
-source("2_curating/2_editing/bio/subscripts/1_cleaningOriginalOrganism.R")
+source("2_curating/2_editing/organism/subscripts/1_cleaningOriginalOrganism.R")
 
 # translating organism
-source("2_curating/2_editing/bio/subscripts/2_translatingOrganism.R")
+source("2_curating/2_editing/organism/subscripts/2_translatingOrganism.R")
 
 # cleaning translated organism 
-source("2_curating/2_editing/bio/subscripts/3_cleaningTranslatedOrganism.R")
+source("2_curating/2_editing/organism/subscripts/3_cleaningTranslatedOrganism.R")
 
 # cleaning taxonomy
-source("2_curating/2_editing/bio/subscripts/4_cleaningTaxonomy.R")
+source("2_curating/2_editing/organism/subscripts/4_cleaningTaxonomy.R")
