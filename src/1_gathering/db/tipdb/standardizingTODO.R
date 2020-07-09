@@ -3,9 +3,11 @@
 # loading paths
 source("paths.R")
 source("functions/helpers.R")
+source("functions/parallel.R")
 source("functions/standardizing.R")
 
 library(dplyr)
+library(pbmcapply)
 library(readr)
 library(splitstackshape)
 library(stringr)
@@ -17,51 +19,58 @@ database <- databases$get("tipdb")
 
 ## files
 ids <- read_delim(
-  file = database$sourceFiles$tsv,
+  file = database$sourceFiles$mol,
   delim = "\t",
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_names = "id"
 ) %>%
-  mutate_all(as.character)
+  mutate_all(as.character) %>%
+  filter(grepl(pattern = "*.mol", x = id))
 
-colnames(ids)[1] <- "id"
 X <- ids$id
 
-jsonfileAll <- "../data/external/dbSource/tipdb/tipdb_raw/all.json"
-
-dfAll <- as.data.frame(fromJSON(jsonfileAll, simplifyDataFrame = TRUE))
-
-list <- list()
-
-for (i in 1:length(X)){
+getTipInChI <- function(i) {
+  path <-
+    paste(
+      "'/Users/rutza/GitLab/opennaturalproductsdb",
+      gsub(
+        pattern = "..",
+        replacement = "",
+        x = X[i],
+        fixed = TRUE
+      ),
+      "'",
+      sep = ""
+    )
   
-  jsonfile <- gzfile(X[i])
+  path
   
-  df <- as.data.frame(fromJSON(jsonfile, simplifyDataFrame = TRUE))
+  file <- str_extract(string = path, pattern = "TIP[0-9]{6}.mol")
   
-  list[[i]] <- df
+  command <-
+    paste("/usr/local/bin/obabel -imol ", path, " -as   -oinchi")
+  
+  test <- data.frame(file,
+            system(command = command,
+                   intern = TRUE))
+  return(test)
 }
 
-data_original <- rbindlist(list, fill = TRUE) %>% 
-  data.frame()
+i <- 1:length(X)
 
-# # manipulating
-# data_manipulated <- data_original %>%
-#   select(
-#     name,
-#     smiles,
-#     inchi,
-#     biologicalsource = name1,
-#     reference = source
-#   )
-# 
-# # standardizing
-# data_standard <-
-#   standardizing_original(
-#     data_selected = data_manipulated,
-#     db = "pha_1",
-#     structure_field = c("inchi", "name", "smiles")
-#   )
-# 
-# # exporting
-# database$writeInterim(data_standard)
+tipInchiList <- invisible(
+  pbmclapply(
+    FUN = getTipInChI,
+    X = i,
+    mc.silent = FALSE,
+    mc.cores = numCores,
+    mc.cleanup = TRUE,
+    mc.allow.recursive = TRUE,
+    ignore.interactive = TRUE
+  )
+)
+
+tipInchiDf <- bind_rows(tipInchiList)
+
+colnames(tipInchiDf)[2] <- "inchi"

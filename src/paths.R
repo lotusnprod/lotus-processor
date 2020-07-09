@@ -364,12 +364,20 @@ pathDataExternalDbSourceTipdb <-
 
 databases$add(
   name = "tipdb",
-  sourceFiles = list(tsvPath = file.path(
+  sourceFiles = list(json = file.path(
     "tipdb_raw",
     list.files(
       path = file.path(pathDataExternalDbSourceTipdb,
                        "tipdb_raw"),
       pattern = "^chemical_TIP",
+      full.names = FALSE
+    )
+  ),mol = file.path(
+    "tipdb_raw",
+    list.files(
+      path = file.path(pathDataExternalDbSourceTipdb,
+                       "tipdb_raw"),
+      pattern = "^TIP",
       full.names = FALSE
     )
   )),
