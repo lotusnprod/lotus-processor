@@ -45,7 +45,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
 curating-editing:	curating-editing-organism	curating-editing-reference	curating-editing-structure
 
 curating-editing-organism:	${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip
-${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip: $(wildcard	${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}*.tsv)	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip
+${INTERIM_TABLE_CURATED_PATH}/organism.tsv.zip: $(wildcard	${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv)	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip
 	cd	src	&&	Rscript	2_curating/2_editing/organism/editing.R
 
 curating-editing-reference:	${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/reference.tsv.zip
