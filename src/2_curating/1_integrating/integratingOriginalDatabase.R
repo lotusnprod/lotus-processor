@@ -36,7 +36,7 @@ inhouseDbSelected <- inhouseDb %>%
     referenceOriginalPubmed = reference_pubmed,
     referenceOriginalTitle = reference_title,
     referenceOriginalUnsplit = reference_unsplittable,
-  ) %>% sample_n(2000)
+  ) #%>% sample_n(2000)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
