@@ -97,7 +97,7 @@ databases$add(
 
 databases$add(
   name = "dnp",
-  sourceFiles = list(tsv = "28_2/full_set.csv"),
+  sourceFiles = list(tsv = "29_1/full_set.csv"),
   interimFile = "dnp.tsv.zip"
 )
 
