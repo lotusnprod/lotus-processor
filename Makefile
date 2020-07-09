@@ -39,7 +39,7 @@ databases-rescrape:	${DATABASES_RESCRAPE}
 curating:	curating-1-integrating curating-editing curating-3-integrating
 
 curating-1-integrating:	${INTERIM_TABLE_ORIGINAL_PATH}
-${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}
+${INTERIM_TABLE_ORIGINAL_PATH}:	${DATABASES}	paths.mk
 	cd	src	&&	Rscript	${SRC_CURATING_1_INTEGRATING_PATH}/integratingOriginalDatabase.R
 
 curating-editing:	curating-editing-organism	curating-editing-reference	curating-editing-structure
