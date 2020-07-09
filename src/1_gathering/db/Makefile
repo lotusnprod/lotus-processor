@@ -82,7 +82,7 @@ ${INTERIM_DB_PATH}/datawarrior.tsv.zip:	${DB_SOURCE_PATH}/datawarrior/NaturalPro
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/datawarrior/standardizing.R
 
 dnp:	${INTERIM_DB_PATH}/dnp.tsv.zip
-${INTERIM_DB_PATH}/dnp.tsv.zip:	${DB_SOURCE_PATH}/dnp/28_2/full_set.csv	${SRC_GATHERING_PATH}/dnp/standardizing.R
+${INTERIM_DB_PATH}/dnp.tsv.zip:	${DB_SOURCE_PATH}/dnp/29_1/full_set.csv	${SRC_GATHERING_PATH}/dnp/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/dnp/standardizing.R
 
 drduke:	${INTERIM_DB_PATH}/drduke.tsv.zip
