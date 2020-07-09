@@ -40,7 +40,7 @@ split_data_table <-
           path_to_store,
           text,
           str_pad(
-            string = split_cut + (no_rows_per_frame - 1),
+            string = as.integer(split_cut + (no_rows_per_frame - 1)),
             width = 6,
             pad = "0"
           ),
