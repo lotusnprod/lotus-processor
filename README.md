@@ -85,6 +85,10 @@ style structure fill:#FEE6CE
                                 |external| 293([structures enriched in silico spectra]) -->
                                     298[[integrating enrichment]] -->
                                         299([clean and enriched structures])
+
+classDef NotDone color:red
+class 281,291,282,292,283,293 NotDone
+
 end
 
 subgraph reference
