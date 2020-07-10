@@ -16,7 +16,6 @@ C[(database)]
 end
 
 subgraph 1_gathering
-style 1_gathering fill:#FFFFFF,stroke:#424242,stroke-width:2px
 010[(external/db/...)] -- n times --> 020[[db/.../standardizing.R]] -- n times --> 030([interim/db/...]) 
 end
 
@@ -122,7 +121,7 @@ subgraph 3_integrating
 998[[integrating.R]]
 
 400([0_original/table]) --> 
-    998[[integrating.R]] --> 999([2_cleaned/table])
+    998[[integrating.R]] --> 999[(2_cleaned/table)]
 end
 end    
 end
