@@ -7,97 +7,125 @@
 
 ```mermaid
 graph TD
-A(file)
-B{script}
-010(external db source x n) --> 020{standardizing script x n} --> 030(interim db source x n) --> 040{integrating script}
 
-040{integrating script} --> 100(unique organisms originalOrganism.tsv.zip)
+subgraph legend
+style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
+A([file])
+B[[script]]
+C[(database)]
+end
 
-040{integrating script} --> 210(unique InChIs 0_original/inchi.tsv.zip)
+subgraph 1_gathering
+style 1_gathering fill:#FFFFFF,stroke:#424242,stroke-width:2px
+010[(external/db/...)] -- n times --> 020[[db/.../standardizing.R]] -- n times --> 030([interim/db/...]) 
+end
 
-040{integrating script} --> 220(unique SMILES originalStructureSmiles.tsv.zip)
+subgraph 2_curating
+subgraph 1_integrating
+030([interim/db/...]) --> 040[[integrating.R]]
+040[[integrating.R]] --> 100([0_original/organism/organism])
+040[[integrating.R]] --> 210([0_original/structure/inchi])
+040[[integrating.R]] --> 220([0_original/structure/smiles])
+040[[integrating.R]] --> 230([0_original/structure/nominal])
+040[[integrating.R]] --> 310([0_original/reference/full])
+040[[integrating.R]] --> 320([0_original/reference/doi])
+040[[integrating.R]] --> 330([0_original/reference/pubmed])
+040[[integrating.R]] --> 340([0_original/reference/title])
+040[[integrating.R]] --> 350([0_original/reference/unsplit])
 
-040{integrating script} --> 230(unique names originalStructureNominal.tsv.zip)
+040[[integrating.R]] --> 400([0_original/table])
+end
 
-040{integrating script} --> 300(unique references originalReference.tsv.zip)
+subgraph 2_editing
+subgraph organism
+style organism fill:#E5F5E0
+100([0_original/organism/organism]) -->
+  |real steps, maybe split scripts| 101[[1_cleaningOriginalOrganism.R]] --> 
+    102([2_cleaned/organism/original/*.json]) --> 
+        103[[2_translatingOrganism.R]]
+100([0_original/organism/organism]) -->
+        103[[2_translatingOrganism.R]] -->
+            |NOT SAVED| 104([original organisms with taxonomy]) -->
+                                    112[[3_cleaningTranslatedOrganism.R]]
+    102([2_cleaned/organism/original/*.json]) -->
+        105[[2_translatingOrganism.R]] -->
+             |NOT SAVED| 106([original names with scientific names substracted]) -->
+                107[[2_translatingOrganism.R]] -->
+                    108([1_translated/organism/*.tsv]) -->
+                        109[[3_cleaningTranslatedOrganism.R]] --> 
+                             110[[3_cleaningTranslatedOrganism.R]] -->
+                                 |NOT SAVED| 111([translated organisms with taxonomy]) -->
+                                    112[[4_cleaningTaxonomy.R]] -->
+                                        120([2_cleaned/organism/organism])
+end
 
-040{integrating script} --> |maybe could be renamed| 400(adequate minimal input originalTable.tsv.zip) --> 
-    998{integrating bio, chemo, ref and original table} --> 999(adequate minimal output)
+subgraph structure
+style structure fill:#FEE6CE
+210([0_original/structure/inchi]) -->
+            240[[2_integrating.R]]
+220([0_original/structure/smiles]) -->
+    221[[1_translating/smiles.py]] -->
+        222([1_translated/structure/smiles]) -->
+            240[[2_integrating.R]]
+230([0_original/structure/nominal]) -->
+    231[[1_translating/names.R]] -->
+        232([1_translated/structure/names]) -->
+            240[[2_integrating.R]] -->
+                250([1_translated/structure/unique]) -->
+                    260[[3_CleaningAndEnriching/chemosanitizer.py]] -->
+                        270([1_translated/structure/cleaned]) -->
+                            |external| 281[[classyfire]] -->
+                                |external| 291([structures enriched taxonomy]) -->
+                                    298[[integrating enrichment]]
+                        270([1_translated/structure/cleaned]) -->
+                            |external| 282[[chemGPS]] -->
+                                |external| 292([structures enriched chemGPS]) -->
+                                    298[[integrating enrichment]]
+                        270([1_translated/structure/cleaned]) -->
+                            |external| 283[[in silico]] -->
+                                |external| 293([structures enriched in silico spectra]) -->
+                                    298[[integrating enrichment]] -->
+                                        299([clean and enriched structures])
+end
 
-100(unique organisms named originalOrganism.tsv.zip) -->
-  |real steps, maybe split scripts| 101{cleaningOriginalOrganism GNFINDER} --> 
-    102(cleanedOriginalOrganisms enriched with taxonomy) -->
-        103{integrating original names and Gnfinder results}
-100(unique organisms named originalOrganism.tsv.zip) -->
-        103{integrating original names and Gnfinder results} -->
-            |NOT SAVED| 104(original organisms with taxonomy) -->
-                                    112{integrating all obtained taxa}
-    102(cleanedOriginalOrganisms enriched with taxonomy) -->
-        105{substracting scientific from original names} -->
-             |NOT SAVED| 106(original names with scientific names substracted) -->
-                107{translating common and tcm to scientific names} -->
-                    108(translated names) -->
-                        109{cleaningTranslatedOrganism GNFINDER} --> 
-                             110{integrating translated names with Gnfinder results} -->
-                                 |NOT SAVED| 111(translated organisms with taxonomy) -->
-                                    112{integrating all obtained taxa} -->
-                                        120(cleanedOrganism.tsv.zip) -->
-                                            130{cleaningTaxonomy} -->
-                                            |name probably to change| 140(curatedOrganism.tsv.zip) -->
-998{integrating bio, chemo, ref and original table}
+subgraph reference
+style reference fill:#EFEDF5
+320([0_original/reference/doi]) -->
+    321[[1_translating/doi.R]] -->
+                |NOT SAVED| 322([translated DOI]) -->
+                    360[[2_integrating/integrating.R]]
+330([0_original/reference/pubmed]) -->
+    331[[1_translating/pubmed.R]] -->
+                |NOT SAVED| 332([translated PubmedID]) -->
+                    360[[2_integrating/integrating.R]]
+340([0_original/reference/title]) -->
+    341[[1_translating/title.R]] -->
+                |NOT SAVED| 342([translated title]) -->
+                    360[[2_integrating/integrating.R]]
+350([0_original/reference/title]) -->
+    351[[1_translating/unsplit.R]] -->
+                |NOT SAVED| 352([translated unsplit]) -->
+                    360[[2_integrating/integrating.R]] -->
+                        |think about minimal required fields| 370([1_translated/reference/reference]) -->
+                            380[[3_cleaning.R]] -->
+                                390([2_cleaned/reference/reference])
+end
 
-210(unique InChIs 0_original/inchi.tsv.zip) -->
-            240{integrating InChIs} 
-220(unique SMILES originalStructureSmiles.tsv.zip) -->
-    221{translating smiles} -->
-        222(smilesTranslated to InChI) -->
-            240{integrating InChIs} 
-230(unique names originalStructureNominal.tsv.zip) -->
-    231{translating names} -->
-        232(namesTranslated to InChI) -->
-            240{integrating InChIs} -->
-                250(translatedStructureRdkit) -->
-                    260{sanitizing} -->
-                        270(cleanedAndEnrichedStructure.tsv) -->
-                            |external| 281{classyfire} -->
-                                |external| 291(structures enriched taxonomy) -->
-                                    298{integrating enrichment}
-                        270(cleanedStructure.tsv) -->
-                            |external| 282{chemGPS} -->
-                                |external| 292(structures enriched chemGPS) -->
-                                    298{integrating enrichment}
-                        270(cleanedStructure.tsv) -->
-                            |external| 283{insilico} -->
-                                |external| 293(structures enriched silico spectra) -->
-                                    298{integrating enrichment} -->
-                                        299(clean and enriched structures) -->
-998{integrating bio, chemo, ref and original table}
+subgraph 3_integrating
+120([2_cleaned/organism/organism]) -->
+998[[integrating.R]]
 
-300(unique references named originalReference.tsv.zip) -->
-    |splitting actual non-optimal| 310{splitting} -->
-        |NOT SAVED| 320(DOI) -->
-            321{translatingDOI} -->
-                |NOT SAVED| 322(otbained fields) -->
-                    360{integrating obtained references}
-    310{splitting} -->
-        |NOT SAVED| 330(pubmedID) -->
-            331{translatingPubmedID} -->
-                 |NOT SAVED| 332(otbained fields) -->
-                    360{integrating obtained references}
-    310{splitting} -->
-        |NOT SAVED| 340(text) -->
-            341{translatingText} -->
-                |NOT SAVED| 342(otbained fields) -->
-                    360{integrating obtained references} 
-    310{splitting} -->
-        |NOT SAVED| 350(other) -->
-            |think about it| 351{find something to do} -->
-                |NOT SAVED| 352(otbained fields) -->
-                    360{integrating obtained references} -->
-                        |think about minimal required fields| 370(translatedReferences) -->
-                            380{cleaning} -->
-                                390(cleanedReference) -->
-998{integrating bio, chemo, ref and original table}
+299([clean and enriched structures]) -->
+998[[integrating.R]]
+
+390([2_cleaned/reference/reference]) -->
+998[[integrating.R]]
+
+400([0_original/table]) --> 
+    998[[integrating.R]] --> 999([2_cleaned/table])
+end
+end    
+end
 ```
 
 ## Getting Started
