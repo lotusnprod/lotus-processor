@@ -1,6 +1,6 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	datawarrior	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	npass	npatlas	npcare	npedia	nubbe	pamdb	pharmdbk	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
+DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cyanometdb	datawarrior	dnp	drduke	etcm	foodb	inflamnat	knapsack	metabolights	mibig	mitishamba	nanpdb	napralert	npass	npatlas	npcare	npedia	nubbe	pamdb	pharmdbk	phenolexplorer	phytohub	procardb	plantcyc	respect	sancdb	streptomedb	swmd	symmap	tmdb	tmmc	tppt	triforc	unpd	wakankensaku
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
@@ -143,6 +143,10 @@ ${INTERIM_DB_PATH}/nanpdb.tsv.zip:	${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zi
 nanpdb-rescrape:	${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zip
 ${DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.zip:	# ${SRC_GATHERING_PATH}/nanpdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/nanpdb/scraping.R
+
+nanpdb:	${INTERIM_DB_PATH}/napralert.tsv.zip
+${INTERIM_DB_PATH}/napralert.tsv.zip:	${DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz	${SRC_GATHERING_PATH}/napralert/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_PATH}/nanpdb/standardizing.R
 
 npass:	${INTERIM_DB_PATH}/npass.tsv.zip
 ${INTERIM_DB_PATH}/npass.tsv.zip:	${DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_generalInfo.txt	${DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_properties.txt	${DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_speciesInfo.txt	${DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_species_pair.txt	${SRC_GATHERING_PATH}/npass/standardizing.R

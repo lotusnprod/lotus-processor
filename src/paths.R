@@ -186,6 +186,12 @@ databases$add(
 )
 
 databases$add(
+  name = "napralert",
+  sourceFiles = list(tsv = "napralert_matched_final_unified.tsv.gz"),
+  interimFile = "napralert.tsv.zip"
+)
+
+databases$add(
   name = "npass",
   sourceFiles = list(
     tsvGeneral = "NPASSv1.0_download_naturalProducts_generalInfo.txt",
