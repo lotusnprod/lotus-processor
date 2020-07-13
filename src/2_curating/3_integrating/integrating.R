@@ -33,7 +33,7 @@ organismTable <- read_delim(
 )
 
 ### structure
-#### cleaned
+#### translated
 translatedStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesTranslatedStructureFinal),
   delim = "\t",
@@ -42,7 +42,7 @@ translatedStructureTable <- read_delim(
   trim_ws = TRUE
 )
 
-#### translated
+#### cleaned
 cleanedStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedStructureFile),
   delim = "\t",
