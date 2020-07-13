@@ -34,13 +34,13 @@ log_debug("Finished loading functions")
 
 # cleaning original organism
 ###COMMENT### temporary, will write path accordingly if validated that way
-source("2_curating/2_editing/organism/subscripts/1_cleaningOriginalOrganism.R")
+source("2_curating/2_editing/organism/subscripts/1_cleaningOriginal.R")
 
 # translating organism
-source("2_curating/2_editing/organism/subscripts/2_translatingOrganism.R")
+source("2_curating/2_editing/organism/subscripts/2_translating.R")
 
 # cleaning translated organism 
-source("2_curating/2_editing/organism/subscripts/3_cleaningTranslatedOrganism.R")
+source("2_curating/2_editing/organism/subscripts/3_cleaningTranslated.R")
 
 # cleaning taxonomy
 source("2_curating/2_editing/organism/subscripts/4_cleaningTaxonomy.R")

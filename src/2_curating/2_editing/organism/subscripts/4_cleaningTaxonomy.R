@@ -485,8 +485,15 @@ taxo_cleaning_auto <- function(dfsel) {
   return(newdf)
 }
 
-
 print("  Step 4")
+
+## cleaned original names
+dataCleanedOrganismManipulated <- read_delim(
+  file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedTable),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = FALSE
+)
 #curating taxonomy
 ##auto
 dataCuratedOrganismAuto <-

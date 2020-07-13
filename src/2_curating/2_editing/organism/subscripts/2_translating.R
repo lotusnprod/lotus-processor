@@ -19,6 +19,16 @@ library(tidyr)
 
 log_debug("  Step 2")
 
+## cleaned original names
+dataCleanedOriginalOrganism <- read_delim(
+  file = gzfile(pathDataInterimTablesCleanedOrganismOriginalTable),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = FALSE
+)
+
+log_debug("      Loaded cleaned original names")
+
 ## tcm names
 tcmNamesDic <- read_delim(
   file = gzfile(pathDataInterimDictionariesTcmNames),
@@ -111,12 +121,12 @@ tcmNamesDic2 <- tcmNamesDic %>%
 log_debug("      Ready to replace")
 
 replaceCommonNames <- function(value) {
-  stri_replace_all_fixed(
+  stri_replace_all_regex(
     str_trim(value),
     c(
-      commonNamesDic$vernacularName,
-      tcmNamesDic$vernacularName,
-      tcmNamesDic2$canonicalName
+      paste("\\b", commonNamesDic$vernacularName, "\\b", sep = ""),
+      paste("\\b", tcmNamesDic$vernacularName, "\\b", sep = ""),
+      paste("\\b", tcmNamesDic$canonicalName, "\\b", sep = "")
     ),
     c(
       commonNamesDic$canonicalName,
@@ -128,14 +138,15 @@ replaceCommonNames <- function(value) {
   )
 }
 
-dataInterimOrganismToFill$organismInterim <- mclapply(
+dataInterimOrganismToFill$organismInterim <- pbmclapply(
   FUN = replaceCommonNames,
   X = dataInterimOrganismToFill$organismInterim,
   mc.set.seed = TRUE,
   mc.silent = FALSE,
   mc.cores = numCores,
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE
+  mc.allow.recursive = TRUE,
+  ignore.interactive = TRUE
 )
 
 log_debug("       Finished replacing the common names")

@@ -971,13 +971,19 @@ pathDataInterimTablesCleanedOrganism <-
 pathDataInterimTablesCleanedOrganismOriginal <-
   file.path(pathDataInterimTablesCleanedOrganism, "original/")
 
+pathDataInterimTablesCleanedOrganismOriginalTable <-
+  file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.zip")
+
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated/")
 
+pathDataInterimTablesCleanedOrganismTranslatedTable <-
+  file.path(pathDataInterimTablesCleanedOrganism, "translated.tsv.zip")
+
 ### final cleaned organisms
 pathDataInterimTablesCleanedOrganismFinal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "organism.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "final.tsv.zip")
 
 pathDataInterimTablesCleanedOrganismRealDiff <-
   file.path(pathDataInterimTablesCleanedOrganism,
