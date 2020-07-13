@@ -50,7 +50,7 @@ style organism fill:#E5F5E0
                 109[[3_cleaningTranslatedOrganism.R]] --> 
                     111([translated organisms with taxonomy]) -->
                         112[[4_cleaningTaxonomy.R]] -->
-                            120([2_cleaned/organism/organism])
+                            120([2_cleaned/organism/final])
                 109[[3_cleaningTranslatedOrganism.R]] --> 110([2_cleaned/organism/translated/*.json]) --> 109[[3_cleaningTranslatedOrganism.R]]
 end
 
@@ -91,33 +91,33 @@ subgraph reference
 style reference fill:#EFEDF5
 320([0_original/reference/doi]) -->
     321[[1_translating/doi.R]] -->
-                |NOT SAVED| 322([translated DOI]) -->
-                    360[[2_integrating/integrating.R]]
+        322([1_translated/reference/doi]) -->
+            360[[2_integrating/integrating.R]]
 330([0_original/reference/pubmed]) -->
     331[[1_translating/pubmed.R]] -->
-                |NOT SAVED| 332([translated PubmedID]) -->
-                    360[[2_integrating/integrating.R]]
+        332([1_translated/reference/pubmed]) -->
+            360[[2_integrating/integrating.R]]
 340([0_original/reference/title]) -->
     341[[1_translating/title.R]] -->
-                |NOT SAVED| 342([translated title]) -->
-                    360[[2_integrating/integrating.R]]
-350([0_original/reference/title]) -->
+        342([1_translated/reference/title]) -->
+            360[[2_integrating/integrating.R]]
+350([0_original/reference/unsplit]) -->
     351[[1_translating/unsplit.R]] -->
-                |NOT SAVED| 352([translated unsplit]) -->
-                    360[[2_integrating/integrating.R]] -->
-                        |think about minimal required fields| 370([1_translated/reference/reference]) -->
-                            380[[3_cleaning.R]] -->
-                                390([2_cleaned/reference/reference])
+        352([1_translated/reference/unsplit]) -->
+            360[[2_integrating/integrating.R]] -->
+                370([1_translated/reference/reference]) -->
+                    380[[3_cleaning.R]] -->
+                        390([2_cleaned/reference/cleaned.tsv.zip])
 end
 
 subgraph 3_integrating
-120([2_cleaned/organism/organism]) -->
+120([2_cleaned/organism/cleaned.tsv.zip]) -->
 998[[integrating.R]]
 
 299([clean and enriched structures]) -->
 998[[integrating.R]]
 
-390([2_cleaned/reference/reference]) -->
+390([2_cleaned/reference/cleaned.tsv.zip]) -->
 998[[integrating.R]]
 
 400([0_original/table]) --> 
