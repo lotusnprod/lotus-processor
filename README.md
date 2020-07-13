@@ -40,18 +40,19 @@ subgraph organism
 style organism fill:#E5F5E0
 100([0_original/organism/organism/*.tsv]) -->
     101[[1_cleaningOriginal.R]] --> 
-        102([2_cleaned/organism/original/*.json])
-    101[[1_cleaningOriginal.R]] --> 
-        104([original organisms with taxonomy]) -->
-                                    112[[3_cleaningTranslatedOrganism.R]]
-    102([2_cleaned/organism/original/*.json]) -->
-        107[[2_translatingOrganism.R]] -->
-            108([1_translated/organism/*.tsv]) -->
-                109[[3_cleaningTranslatedOrganism.R]] --> 
-                    111([translated organisms with taxonomy]) -->
-                        112[[4_cleaningTaxonomy.R]] -->
-                            120([2_cleaned/organism/final])
-                109[[3_cleaningTranslatedOrganism.R]] --> 110([2_cleaned/organism/translated/*.json]) --> 109[[3_cleaningTranslatedOrganism.R]]
+        102([2_cleaned/organism/original/*.json]) --> 
+            103[[1_cleaningOriginal.R]] --> 
+                104([2_cleaned/organism/original]) -->
+                    111[[4_cleaningTaxonomy.R]]
+        102([2_cleaned/organism/original/*.json]) -->
+            105[[2_translating.R]] -->
+                106([1_translated/organism/*.tsv]) -->
+                    107[[3_cleaningTranslated.R]] --> 
+                        108([2_cleaned/organism/translated/*.json]) --> 
+                            109[[3_cleaningTranslated.R]] -->  
+                                110([2_cleaned/organism/translated]) -->
+                                    111[[4_cleaningTaxonomy.R]] -->
+                                        120([2_cleaned/organism/cleaned])
 end
 
 subgraph structure
