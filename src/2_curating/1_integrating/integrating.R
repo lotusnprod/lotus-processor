@@ -18,7 +18,6 @@ dbs <- lapply(pathDataInterimDbDir, function(x) {
 inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
 # selecting
-set.seed(42)
 inhouseDbSelected <- inhouseDb %>%
   mutate(structureOriginalNominal = name) %>%
   select(
@@ -36,7 +35,14 @@ inhouseDbSelected <- inhouseDb %>%
     referenceOriginalPubmed = reference_pubmed,
     referenceOriginalTitle = reference_title,
     referenceOriginalUnsplit = reference_unsplittable,
-  ) %>% #sample_n(2000)
+  )
+
+if (mode == "min")
+  set.seed(42)
+
+if (mode == "min")
+  inhouseDbSelected <- inhouseDbSelected %>%
+  sample_n(2000)
 
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
