@@ -22,9 +22,9 @@ originalTable <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  select(structureOriginalInchi,
-         structureOriginalSmiles,
-         structureOriginalNominal)
+  distinct(structureOriginalInchi,
+           structureOriginalSmiles,
+           structureOriginalNominal)
 
 ### structure table
 #### loading multiple old files, will be optimized later on
