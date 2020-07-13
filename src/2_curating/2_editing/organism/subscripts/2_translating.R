@@ -181,6 +181,19 @@ ifelse(
 )
 
 # exporting
+write.table(
+  x = dataInterimOrganismToFill,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedOrganismTranslatedInterim,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
 split_data_table(
   x = dataInterimOrganismToFillGnfinder,
   no_rows_per_frame = cut,
