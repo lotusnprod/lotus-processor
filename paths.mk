@@ -6,8 +6,8 @@ export INTERIM_DICTIONARY_PATH = ${DATA_PATH}/interim/dictionaries
 export DB_SOURCE_PATH = ${DATA_PATH}/external/dbSource
 
 # line to be (un)commented for minimal example or full version
-# export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
- export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables_min
+export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
+# export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables_min
 
 export INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original
 export INTERIM_TABLE_ORIGINAL_ORGANISM_PATH = ${INTERIM_TABLE_ORIGINAL_PATH}/organism
