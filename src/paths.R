@@ -4,6 +4,9 @@
 
 source("functions/database.R")
 
+# mode <- "min"
+mode <- "full"
+
 # root
 ## data
 pathData <- Sys.getenv("DATA_PATH",
@@ -370,23 +373,26 @@ pathDataExternalDbSourceTipdb <-
 
 databases$add(
   name = "tipdb",
-  sourceFiles = list(json = file.path(
-    "tipdb_raw",
-    list.files(
-      path = file.path(pathDataExternalDbSourceTipdb,
-                       "tipdb_raw"),
-      pattern = "^chemical_TIP",
-      full.names = FALSE
+  sourceFiles = list(
+    json = file.path(
+      "tipdb_raw",
+      list.files(
+        path = file.path(pathDataExternalDbSourceTipdb,
+                         "tipdb_raw"),
+        pattern = "^chemical_TIP",
+        full.names = FALSE
+      )
+    ),
+    mol = file.path(
+      "tipdb_raw",
+      list.files(
+        path = file.path(pathDataExternalDbSourceTipdb,
+                         "tipdb_raw"),
+        pattern = "^TIP",
+        full.names = FALSE
+      )
     )
-  ),mol = file.path(
-    "tipdb_raw",
-    list.files(
-      path = file.path(pathDataExternalDbSourceTipdb,
-                       "tipdb_raw"),
-      pattern = "^TIP",
-      full.names = FALSE
-    )
-  )),
+  ),
   interimFile = "tipdb.tsv.zip"
 )
 
@@ -814,23 +820,16 @@ pathDataInterimDictionariesTcmNames <-
   file.path(pathDataInterimDictionariesTcm,
             "names.tsv.zip")
 
-##### COMMENT ##### The tables will have to slowly move to lists in dictionaries folder in flat format.s
-
-###
-### here are the only lines needed to be modified to obtained minimal working example
-###
-
 #### tables
-pathDataInterimTables <-
+if (mode == "full")
+  pathDataInterimTables <-
   file.path(pathDataInterim,
             "tables")
 
-# pathDataInterimTables <-
-#   file.path(pathDataInterim,
-#             "tables_min")
-###
-### here are the only lines needed to be modified to obtained minimal working example
-###
+if (mode == "min")
+  pathDataInterimTables <-
+  file.path(pathDataInterim,
+            "tables_min")
 
 ### processed
 pathDataProcessed <-
@@ -945,7 +944,8 @@ pathDataInterimTablesTranslatedReferenceUnsplit <-
   file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.zip")
 
 pathDataInterimTablesTranslatedReferenceFile <-
-  file.path(pathDataInterimTablesTranslatedReference, "integrated.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference,
+            "integrated.tsv.zip")
 
 ## structure
 pathDataInterimTablesTranslatedStructure <-
@@ -1023,8 +1023,18 @@ pathDataInterimTablesCleanedTable <-
   file.path(pathDataInterimTablesCleaned, "table.tsv.zip")
 
 ## dirty for the moment
+if (mode == "full")
 pathOriginalGnfinderScript <-
-  "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher.sh"
+  "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_full.sh"
 
+if (mode == "min")
+  pathOriginalGnfinderScript <-
+  "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_min.sh"
+
+if (mode == "full")
 pathTranslatedGnfinderScript <-
-  "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher.sh"
+  "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_full.sh"
+
+if (mode == "min")
+  pathTranslatedGnfinderScript <-
+  "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_min.sh"
