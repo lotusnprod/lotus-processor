@@ -22,12 +22,28 @@ library(tidyr)
 
 log_debug("  Step 3")
 
+## interim
+dataInterimOrganismToFill <- read_delim(
+  file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedInterim),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = FALSE
+)
+
 ## cleaned original names
 dataCleanedOriginalOrganism <- read_delim(
   file = gzfile(pathDataInterimTablesCleanedOrganismOriginalTable),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
+)
+
+### taxa levels
+taxaRanksDictionary <- read_delim(
+  file = pathDataInterimDictionariesTaxaRanks,
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
 )
 
 ## creating directories if they do not exist

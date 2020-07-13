@@ -990,6 +990,9 @@ pathDataInterimTablesCleanedOrganismOriginalTable <-
 pathDataInterimTablesCleanedOrganismTranslated <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated/")
 
+pathDataInterimTablesCleanedOrganismTranslatedInterim <-
+  file.path(pathDataInterimTablesCleanedOrganism, "interim.tsv.zip")
+
 pathDataInterimTablesCleanedOrganismTranslatedTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated.tsv.zip")
 

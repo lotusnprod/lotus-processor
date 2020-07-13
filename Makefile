@@ -44,9 +44,23 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.zip:	${DATABASES}	paths.mk	${SRC_PATH}/
 
 curating-editing:	curating-editing-organism	curating-editing-reference	curating-editing-structure
 
-curating-editing-organism:	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/final.tsv.zip
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/final.tsv.zip: $(wildcard	${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv)	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip
-	cd	src	&&	Rscript	2_curating/2_editing/organism/editing.R
+curating-editing-organism:	curating-editing-organism-cleaning-original	curating-editing-organism-translating	curating-editing-organism-cleaning-translated	curating-editing-organism-cleaning-taxonomy
+
+curating-editing-organism-cleaning-original:	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.zip
+${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.zip: $(wildcard	${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv)	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
+
+curating-editing-organism-translating:	$(wildcard	${INTERIM_TABLE_TRANSLATED_ORGANISM_PATH}/*.tsv)
+$(wildcard	${INTERIM_TABLE_TRANSLATED_ORGANISM_PATH}/*.tsv): ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.zip	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/2_translating.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/2_translating.R
+
+curating-editing-organism-cleaning-translated:	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.zip
+${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.zip: $(wildcard	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated/*.json)	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/3_cleaningTranslated.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/3_cleaningTranslated.R
+
+curating-editing-organism-cleaning-taxonomy:	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.zip
+${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.zip: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.zip	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.zip	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/4_cleaningTaxonomy.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/4_cleaningTaxonomy.R
 
 curating-editing-reference:	curating-editing-reference-translating	curating-editing-reference-integrating	curating-editing-reference-cleaning
 

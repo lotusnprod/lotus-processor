@@ -2,6 +2,10 @@
 
 # loading paths
 source("paths.R")
+source("functions/log.R")
+source("functions/helpers.R")
+source("functions/bio.R")
+source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 
 log_debug(" Step 4")
 
