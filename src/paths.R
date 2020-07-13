@@ -4,8 +4,7 @@
 
 source("functions/database.R")
 
-# mode <- "min"
-mode <- "full"
+mode <- Sys.getenv("FULL", unset = "min")
 
 # root
 ## data
