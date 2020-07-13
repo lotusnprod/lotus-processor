@@ -48,9 +48,33 @@ curating-editing-organism:	${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/final.tsv.zip
 ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/final.tsv.zip: $(wildcard	${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv)	${INTERIM_DICTIONARY_PATH}/common/black.tsv	${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv	${INTERIM_DICTIONARY_PATH}/common/names.tsv.zip	${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.zip
 	cd	src	&&	Rscript	2_curating/2_editing/organism/editing.R
 
-curating-editing-reference:	${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/reference.tsv.zip
-${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/reference.tsv.zip:	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}
-	cd	src	&&	Rscript	2_curating/2_editing/reference/editing.R
+curating-editing-reference:	curating-editing-reference-translating	curating-editing-reference-integrating	curating-editing-reference-cleaning
+
+curating-editing-reference-translating:	curating-editing-reference-translating-doi	curating-editing-reference-translating-pubmed	curating-editing-reference-translating-title	curating-editing-reference-translating-unsplit
+
+curating-editing-reference-translating-doi:	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.zip
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/doi.R	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/doi.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/doi.R
+
+curating-editing-reference-translating-pubmed:	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.zip
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/pubmed.R	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/pubmed.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/pubmed.R
+
+curating-editing-reference-translating-title:	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.zip
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/title.R	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/title.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/title.R
+
+curating-editing-reference-translating-unsplit:	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.zip
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/unsplit.R	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/unsplit.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/unsplit.R
+
+curating-editing-reference-integrating:	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.zip
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/2_integrating.R	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.zip	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.zip	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.zip	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.zip	${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/full.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/2_integrating.R
+
+curating-editing-reference-cleaning:	${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.zip
+${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.zip:	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R	${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.zip
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R
 
 curating-editing-structure:	curating-editing-structure-translating	curating-editing-structure-integrating	curating-editing-structure-sanitizing
 
@@ -73,5 +97,5 @@ ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.zip:	${SRC_CURATING_EDITING_
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.zip ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.zip structureTranslated 8
 
 curating-3-integrating:	${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip
-${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.zip ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.zip ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.zip ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/organism.tsv.zip ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/reference.tsv.zip
+${INTERIM_TABLE_CLEANED_PATH}/table.tsv.zip: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.zip ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.zip ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.zip ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.zip ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.zip ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.zip
 	cd	src	&&	Rscript	${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
