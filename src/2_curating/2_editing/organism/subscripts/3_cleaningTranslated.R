@@ -22,6 +22,14 @@ library(tidyr)
 
 log_debug("  Step 3")
 
+## cleaned original names
+dataCleanedOriginalOrganism <- read_delim(
+  file = gzfile(pathDataInterimTablesCleanedOrganismOriginalTable),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = FALSE
+)
+
 ## creating directories if they do not exist
 ifelse(
   !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
@@ -95,3 +103,17 @@ dataCleanedOrganismManipulated <-
   manipulating_taxo(dfsel = dataCleanedOrganism,
                     dic = taxaRanksDictionary) %>%
   select(-rank, -taxonomy)
+
+# exporting
+write.table(
+  x = dataCleanedOrganismManipulated,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedOrganismTranslatedTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)

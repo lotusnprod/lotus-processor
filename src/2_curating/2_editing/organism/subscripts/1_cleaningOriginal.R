@@ -88,3 +88,17 @@ dataCleanedOriginalOrganism <-
     everything()
   ) %>%
   select(-nchar, -sum)
+
+# exporting
+write.table(
+  x = dataCleanedOriginalOrganism,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedOrganismOriginalTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
