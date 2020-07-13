@@ -821,13 +821,13 @@ pathDataInterimDictionariesTcmNames <-
 ###
 
 #### tables
-# pathDataInterimTables <-
-#   file.path(pathDataInterim,
-#             "tables")
-
 pathDataInterimTables <-
   file.path(pathDataInterim,
-            "tables_min")
+            "tables")
+
+# pathDataInterimTables <-
+#   file.path(pathDataInterim,
+#             "tables_min")
 ###
 ### here are the only lines needed to be modified to obtained minimal working example
 ###
