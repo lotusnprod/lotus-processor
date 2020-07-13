@@ -66,3 +66,31 @@ for (i in 1:nrow(reflistPubmedBound)) {
 
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)
+
+# exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslated),
+  dir.create(pathDataInterimTablesTranslated),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedReference),
+  dir.create(pathDataInterimTablesTranslatedReference),
+  FALSE
+)
+
+## exporting
+write.table(
+  x = dataPubmed,
+  file = gzfile(
+    description = pathDataInterimTablesTranslatedReferencePubmed,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)

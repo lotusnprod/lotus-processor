@@ -7,7 +7,39 @@ source("paths.R")
 ## functions
 source("functions/reference.R")
 
-## file
+## files
+dataDoi <- read_delim(
+  file = gzfile(pathDataInterimTablesTranslatedReferenceDoi),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate_all(as.character)
+
+dataPubmed <- read_delim(
+  file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate_all(as.character)
+
+dataTitle <- read_delim(
+  file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate_all(as.character)
+
+dataUnsplit <- read_delim(
+  file = gzfile(pathDataInterimTablesTranslatedReferenceUnsplit),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate_all(as.character)
+
 dataFull <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalReferenceFull),
   delim = "\t",
@@ -68,21 +100,7 @@ dataReferencedSelected$translationScore <-
 dataReferencedSelected$translationScore[dataReferencedSelected$translationScore == 1] <-
   100
 
-# exporting
-## creating directories if they do not exist
-ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
-)
-
-ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
-)
-
-## ref
+## exporting
 write.table(
   x = dataReferencedSelected,
   file = gzfile(

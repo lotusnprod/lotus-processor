@@ -1,6 +1,6 @@
 # title: "Ref translatoR"
 
-# loading 
+# loading
 ## paths
 source("paths.R")
 
@@ -25,7 +25,7 @@ reflistDoi <-
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 
@@ -108,5 +108,33 @@ for (i in 1:length(reflistDoi)) {
     )[1])
 }
 
-dataDoi <- dataDoi %>% 
+dataDoi <- dataDoi %>%
   mutate_all(as.character)
+
+# exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslated),
+  dir.create(pathDataInterimTablesTranslated),
+  FALSE
+)
+
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedReference),
+  dir.create(pathDataInterimTablesTranslatedReference),
+  FALSE
+)
+
+## exporting
+write.table(
+  x = dataDoi,
+  file = gzfile(
+    description = pathDataInterimTablesTranslatedReferenceDoi,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)

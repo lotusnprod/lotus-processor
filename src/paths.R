@@ -932,8 +932,20 @@ pathDataInterimTablesTranslatedOrganismFile <-
 pathDataInterimTablesTranslatedReference <-
   file.path(pathDataInterimTablesTranslated, "reference")
 
+pathDataInterimTablesTranslatedReferenceDoi <-
+  file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.zip")
+
+pathDataInterimTablesTranslatedReferencePubmed <-
+  file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.zip")
+
+pathDataInterimTablesTranslatedReferenceTitle <-
+  file.path(pathDataInterimTablesTranslatedReference, "title.tsv.zip")
+
+pathDataInterimTablesTranslatedReferenceUnsplit <-
+  file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.zip")
+
 pathDataInterimTablesTranslatedReferenceFile <-
-  file.path(pathDataInterimTablesTranslatedReference, "reference.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference, "integrated.tsv.zip")
 
 ## structure
 pathDataInterimTablesTranslatedStructure <-
@@ -983,7 +995,7 @@ pathDataInterimTablesCleanedOrganismTranslatedTable <-
 
 ### final cleaned organisms
 pathDataInterimTablesCleanedOrganismFinal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "final.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "cleaned.tsv.zip")
 
 pathDataInterimTablesCleanedOrganismRealDiff <-
   file.path(pathDataInterimTablesCleanedOrganism,
@@ -1001,7 +1013,7 @@ pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference")
 
 pathDataInterimTablesCleanedReferenceFile <-
-  file.path(pathDataInterimTablesCleanedReference, "reference.tsv.zip")
+  file.path(pathDataInterimTablesCleanedReference, "cleaned.tsv.zip")
 
 ### final cleaned table
 pathDataInterimTablesCleanedTable <-
