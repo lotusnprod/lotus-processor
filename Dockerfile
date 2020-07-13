@@ -21,4 +21,6 @@ RUN cd /tmp && curl -L https://github.com/gnames/gnfinder/releases/download/v0.1
 RUN conda run -p /srv/onpdb_env /environment_non_conda.sh
 
 USER user
+
+RUN conda init bash
 RUN echo "conda activate /srv/onpdb_env" >> ~/.bashrc
