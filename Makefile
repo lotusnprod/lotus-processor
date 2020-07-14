@@ -1,7 +1,7 @@
 include config.mk
 include paths.mk
 
-.PHONY: help docker-build docker-bash databases
+.PHONY: help docker-build docker-bash gathering-databases
 .PHONY: curating curating-integrating curating-editing curating-editing-organism curating-editing-organism-translating
 .PRECIOUS: %.tsv %.zip	%.json	%.gz
 
