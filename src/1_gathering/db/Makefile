@@ -4,7 +4,7 @@ DATABASES = afrotryp	alkamid	biofacquim	biophytmol	carotenoiddb	cmaup	coconut	cy
 
 DATABASES_RECONVERT = biofacquim-reconvert	coconut-reconvert	metabolights-reconvert	streptomedb-reconvert
 
-DATABASES_REINTEGRATE = plantcyc-reintegrate	triforc-reintegrate	unpd-reintegrate
+DATABASES_REINTEGRATE = plantcyc-reintegrate	unpd-reintegrate
 
 DATABASES_RESCRAPE = alkamid-rescrape	biophytmol-rescrape	carotenoiddb-rescrape	knapsack-rescrape	metabolights-rescrape	mitishamba-rescrape	nanpdb-rescrape	npedia-rescrape	phytohub-rescrape	procardb-rescrape	sancdb-rescrape	swmd-rescrape	tmdb-rescrape	wakankensaku-rescrape	# nubbe-rescrape pharmdbk-rescrape not done
 
@@ -145,9 +145,9 @@ nanpdb-rescrape:	${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 
-nanpdb:	${INTERIM_DB_PATH}/napralert.tsv.gz
+napralert:	${INTERIM_DB_PATH}/napralert.tsv.gz
 ${INTERIM_DB_PATH}/napralert.tsv.gz:	${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz	${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
 
 npass:	${INTERIM_DB_PATH}/npass.tsv.gz
 ${INTERIM_DB_PATH}/npass.tsv.gz:	${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_generalInfo.txt	${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_properties.txt	${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_speciesInfo.txt	${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_species_pair.txt	${SRC_GATHERING_DB_PATH}/npass/standardizing.R
@@ -264,10 +264,6 @@ ${INTERIM_DB_PATH}/tppt.tsv.gz:	${EXTERNAL_DB_SOURCE_PATH}/tppt/TPPT_database.xl
 triforc:	${INTERIM_DB_PATH}/triforc.tsv.gz
 ${INTERIM_DB_PATH}/triforc.tsv.gz:	${EXTERNAL_DB_SOURCE_PATH}/triforc/triforcBis.tsv	${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
-
-triforc-reintegrate:	${EXTERNAL_DB_SOURCE_PATH}/triforc/triforcBis.tsv
-${EXTERNAL_DB_SOURCE_PATH}/triforc/triforcBis.tsv:	${SRC_GATHERING_DB_PATH}/triforc/prestandardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/triforc/prestandardizing.R
 
 unpd:	${INTERIM_DB_PATH}/unpd.tsv.gz
 ${INTERIM_DB_PATH}/unpd.tsv.gz:	${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz	${SRC_GATHERING_DB_PATH}/unpd/standardizing.R
