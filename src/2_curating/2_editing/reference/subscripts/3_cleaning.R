@@ -16,8 +16,8 @@ dataTranslated <- read_delim(
 
 ### Find something appropriate
 test <- dataTranslated %>%
-  filter(!is.na(translatedTitle)) %>%
-  group_by(translatedTitle) %>%
+  filter(!is.na(referenceTranslatedTitle)) %>%
+  group_by(referenceTranslatedTitle) %>%
   distinct(
     referenceOriginalDoi,
     referenceOriginalPubmed,
@@ -195,11 +195,11 @@ test6 <- test4 %>%
   filter(n == 194)
 
 RefShouldBeOk <- test %>%
-  filter(n < 5 & translationScore > 80 & translationScore <= 100)
+  filter(n < 5 & referenceTranslationScore > 80 & referenceTranslationScore <= 100)
 
 ### analyzing how low we can go
 low70 <- test %>%
-  filter(n < 5 & translationScore > 70 & translationScore <= 80)
+  filter(n < 5 & referenceTranslationScore > 70 & referenceTranslationScore <= 80)
 
 ## example
 ### Luesch, Hendrik; Yoshida, Wesley Y.; Moore, Richard E.; Paul, Valerie J.; Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439.
@@ -212,12 +212,12 @@ low70 <- test %>%
 
 dataCleaned <- dataTranslated %>%
   mutate(
-    cleanedTitle = translatedTitle,
-    cleanedJournal = translatedJournal,
-    cleanedDoi = translatedDoi,
-    cleanedAuthor = translatedAuthor,
-    cleanedDate = translatedDate,
-    cleanedTranslationScore = translationScore
+    referenceCleanedTitle = referenceTranslatedTitle,
+    referenceCleanedJournal = referenceTranslatedJournal,
+    referenceCleanedDoi = referenceTranslatedDoi,
+    referenceCleanedAuthor = referenceTranslatedAuthor,
+    referenceCleanedDate = referenceTranslatedDate,
+    referenceCleanedTranslationScore = referenceTranslationScore
   )
 
 # exporting

@@ -32,7 +32,7 @@ reflist <- invisible(
 
 # joining with original dataframe
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translatedDoi"] <-
+  dataUnsplit[i, "referenceTranslatedDoi"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -45,7 +45,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translatedJournal"] <-
+  dataUnsplit[i, "referenceTranslatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -58,7 +58,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translatedTitle"] <-
+  dataUnsplit[i, "referenceTranslatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -71,7 +71,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translatedDate"] <-
+  dataUnsplit[i, "referenceTranslatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -84,7 +84,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translatedAuthor"] <-
+  dataUnsplit[i, "referenceTranslatedAuthor"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -98,7 +98,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "translationScore"] <-
+  dataUnsplit[i, "referenceTranslationScore"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
