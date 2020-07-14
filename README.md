@@ -45,7 +45,7 @@ style organism fill:#E5F5E0
                 104([2_cleaned/organism/original]) -->
                     111[[4_cleaningTaxonomy.R]]
         102([2_cleaned/organism/original/*.json]) -->
-            105[[2_translating.R]] -->
+            105[[2_translating.kotlin]] -->
                 106([1_translated/organism/*.tsv]) -->
                     107[[3_cleaningTranslated.R]] --> 
                         108([2_cleaned/organism/translated/*.json]) --> 
@@ -268,7 +268,7 @@ Should we include versioning?
 
 * **Adriano Rutz** - *Initial work* - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
 * **Pierre-Marie Allard** - *Investigator* - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
-* **Jonathan Bisson** - *To define* - [bjo](https://gitlab.unige.ch/bjo)
+* **Jonathan Bisson** - *Hacker in Chief* - [bjo](https://gitlab.unige.ch/bjo)
 
 See also the list of [contributors](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members) who participated in this project.
 

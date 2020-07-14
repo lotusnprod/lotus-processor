@@ -13,3 +13,7 @@ bin/gnfinder
 ci_env
 default.profraw
 callgrind.*
+/src/2_curating/2_editing/organism/subscripts/2_translating_organism_kotlin/.gradle/
+/.gradle/
+/src/2_curating/2_editing/organism/subscripts/2_translating_organism_kotlin/build/
+.idea
