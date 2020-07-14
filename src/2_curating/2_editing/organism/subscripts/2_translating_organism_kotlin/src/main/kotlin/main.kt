@@ -28,8 +28,8 @@ fun main(args: Array<String>) {
     val pathDataInterim = "$pathData/interim"
 
     val pathDataInterimDictionaries = "$pathDataInterim/dictionaries"
-    val pathDataInterimDictionariesTcmNames = "$pathDataInterimDictionaries/tcm/names.tsv.zip"
-    val pathDataInterimDictionariesCommonNames = "$pathDataInterimDictionaries/common/names.tsv.zip"
+    val pathDataInterimDictionariesTcmNames = "$pathDataInterimDictionaries/tcm/names.tsv.gz"
+    val pathDataInterimDictionariesCommonNames = "$pathDataInterimDictionaries/common/names.tsv.gz"
     val pathDataInterimDictionariesCommonBlackDic = "$pathDataInterimDictionaries/common/black.tsv"
 
     val pathDataInterimTables = when (args[1]) {
@@ -40,9 +40,9 @@ fun main(args: Array<String>) {
 
     val pathDataInterimTablesCleaned = "$pathDataInterimTables/2_cleaned"
     val pathDataInterimTablesCleanedOrganism = "$pathDataInterimTablesCleaned/organism"
-    val pathDataInterimTablesCleanedOrganismOriginalTable = "$pathDataInterimTablesCleanedOrganism/original.tsv.zip"
+    val pathDataInterimTablesCleanedOrganismOriginalTable = "$pathDataInterimTablesCleanedOrganism/original.tsv.gz"
     val pathDataInterimTablesCleanedOrganismTranslatedInterim =
-        "$pathDataInterimTablesCleanedOrganism/interim.tsv.zip"
+        "$pathDataInterimTablesCleanedOrganism/interim.tsv.gz"
 
     val pathDataInterimTablesTranslatedOrganism = "$pathDataInterimTables/1_translated/organism"
 

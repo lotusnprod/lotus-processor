@@ -40,7 +40,11 @@ translatedStructureTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>% 
+  distinct(structureOriginalInchi,
+           structureOriginalSmiles,
+           structureOriginalNominal,
+           .keep_all = TRUE)
 
 #### cleaned
 cleanedStructureTable <- read_delim(
