@@ -26,6 +26,11 @@ pathDataInterim <-
   file.path(pathData,
             "interim")
 
+### processed
+pathDataProcessed <-
+  file.path(pathData,
+            "processed")
+
 #### db
 pathDataInterimDb <-
   file.path(pathDataInterim,
@@ -830,10 +835,16 @@ if (mode == "min")
   file.path(pathDataInterim,
             "tables_min")
 
-### processed
-pathDataProcessed <-
-  file.path(pathData,
-            "processed")
+#### tables
+if (mode == "full")
+  pathDataProcessedTables <-
+  file.path(pathDataProcessed,
+            "tables")
+
+if (mode == "min")
+  pathDataProcessedTables <-
+  file.path(pathDataProcessed,
+            "tables_min")
 
 #### figures
 pathDataProcessedFigures <-
@@ -1037,3 +1048,44 @@ pathTranslatedGnfinderScript <-
 if (mode == "min")
   pathTranslatedGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_min.sh"
+
+### processed triplets
+#### open
+pathDataProcessedTablesOpenDbTriplets <-
+  file.path(pathDataProcessedTables,
+            "openDbTriplets.tsv.zip")
+
+#### inhouse
+pathDataProcessedTablesInhouseDbTriplets <-
+  file.path(pathDataProcessedTables,
+            "inhouseDbTriplets.tsv.zip")
+
+#### DNP
+pathDataProcessedTablesDnpDbTriplets <-
+  file.path(pathDataProcessedTables,
+            "dnpDbTriplets.tsv.zip")
+
+#### structures by kingdom
+pathDataProcessedTablesStructuresByKingdom <-
+  file.path(pathDataProcessedTables,
+            "structuresByKingdom.tsv")
+
+#### unique structures by species
+pathDataProcessedTablesUniqueStructuresBySpecies <-
+  file.path(pathDataProcessedTables,
+            "uniqueStructuresBySpecies.tsv")
+
+#### widespread structures
+pathDataProcessedTablesWidespreadStructures <-
+  file.path(pathDataProcessedTables,
+            "widespreadStructures.tsv")
+
+#### mismatched genera
+pathDataProcessedTablesMismatchedGenera <-
+  file.path(pathDataProcessedTables,
+            "mismatchedGenera.tsv")
+
+#### redundancy table
+pathDataProcessedTablesRedundancyTable <-
+  file.path(pathDataProcessedTables,
+            "redundancyTable.tsv")

@@ -23,7 +23,7 @@ originalTable <- read_delim(
   trim_ws = TRUE
 )
 
-### organism 
+### organism
 organismTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
   delim = "\t",
@@ -91,31 +91,33 @@ referenceOrganismStructureIntegratedTable <-
 
 # selecting minimal columns
 fullDb <- referenceOrganismStructureIntegratedTable %>%
-  mutate(cleanedTranslationScore = as.numeric(cleanedTranslationScore)) %>%
+  mutate(referenceCleanedTranslationScore = as.numeric(referenceCleanedTranslationScore)) %>%
   select(
-    -structureOriginalNominal,
-    -structureOriginalInchi,
-    -structureOriginalSmiles,
     -nameCleaned,
     -structureTranslatedSmiles,
     -structureTranslatedNominal,
     -validatorLog,
-    -smilesSanitized,
     -organismCleaned,
-    -translatedDoi,
-    -translatedJournal,
-    -translatedTitle,
-    -translatedDate,
-    -translatedAuthor
+    -referenceTranslatedDoi,
+    -referenceTranslatedJournal,
+    -referenceTranslatedTitle,
+    -referenceTranslatedDate,
+    -referenceTranslatedAuthor
   )
 
 fullDbFiltered <- fullDb %>%
   filter(
-    cleanedTranslationScore >= 90 &
-      cleanedTranslationScore <= 110 &
+    referenceCleanedTranslationScore >= 90 &
+      referenceCleanedTranslationScore <= 110 &
       !is.na(organismCurated)
   ) %>%
-  distinct(inchiSanitized, organismCurated, cleanedDoi, .keep_all = TRUE)
+  distinct(
+    inchiSanitized,
+    organismCurated,
+    referenceOriginalExternal,
+    referenceCleanedDoi,
+    .keep_all = TRUE
+  )
 
 fullDbFilteredDnp <- fullDb %>%
   filter(database == "dnp_1")
@@ -129,13 +131,12 @@ fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
   filter(!is.na(organismCurated)) %>%
   distinct(inchiSanitized, organismCurated, .keep_all = TRUE) %>%
   filter(database != "dnp_1") %>%
-  filter(cleanedTranslationScore >= 90 &
-           cleanedTranslationScore <= 110)
+  filter(referenceCleanedTranslationScore >= 90 &
+           referenceCleanedTranslationScore <= 110)
 
 stats <- fullDbFilteredOutsideDnp %>%
   group_by(database) %>%
   count()
-
 
 ## table
 write.table(

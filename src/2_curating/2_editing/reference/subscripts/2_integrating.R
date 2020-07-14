@@ -68,14 +68,14 @@ dataReferencedSelected <- dataFull %>%
     referenceOriginalPubmed,
     referenceOriginalTitle,
     referenceOriginalUnsplit,
-    translatedDoi,
-    translatedJournal,
-    translatedTitle,
-    translatedDate,
-    translatedAuthor,
-    translationScore
+    referenceTranslatedDoi,
+    referenceTranslatedJournal,
+    referenceTranslatedTitle,
+    referenceTranslatedDate,
+    referenceTranslatedAuthor,
+    referenceTranslationScore
   ) %>%
-  mutate(translationScore = replace_na(translationScore, "0")) %>%
+  mutate(referenceTranslationScore = replace_na(referenceTranslationScore, "0")) %>%
   distinct(
     referenceOriginalAuthors,
     referenceOriginalDoi,
@@ -85,19 +85,19 @@ dataReferencedSelected <- dataFull %>%
     referenceOriginalPubmed,
     referenceOriginalTitle,
     referenceOriginalUnsplit,
-    translatedTitle,
-    translatedJournal,
-    translatedDate,
-    translatedAuthor,
-    translatedDoi,
-    translationScore,
+    referenceTranslatedTitle,
+    referenceTranslatedJournal,
+    referenceTranslatedDate,
+    referenceTranslatedAuthor,
+    referenceTranslatedDoi,
+    referenceTranslationScore,
     .keep_all = TRUE
   )
 
-dataReferencedSelected$translationScore <-
-  as.numeric(dataReferencedSelected$translationScore)
+dataReferencedSelected$referenceTranslationScore <-
+  as.numeric(dataReferencedSelected$referenceTranslationScore)
 
-dataReferencedSelected$translationScore[dataReferencedSelected$translationScore == 1] <-
+dataReferencedSelected$referenceTranslationScore[dataReferencedSelected$referenceTranslationScore == 1] <-
   100
 
 ## exporting

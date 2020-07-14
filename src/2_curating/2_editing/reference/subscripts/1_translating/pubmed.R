@@ -36,32 +36,32 @@ reflistPubmedBound <- bind_rows(reflistPubmed)
 
 # joining with original dataframe
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translatedDoi"] <-
+  dataPubmed[i, "referenceTranslatedDoi"] <-
     reflistPubmedBound[i, "translatedDoi"]
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translatedJournal"] <-
+  dataPubmed[i, "referenceTranslatedJournal"] <-
     reflistPubmedBound[i, "translatedJournal"]
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translatedTitle"] <-
+  dataPubmed[i, "referenceTranslatedTitle"] <-
     reflistPubmedBound[i, "translatedTitle"]
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translatedAuthor"] <-
+  dataPubmed[i, "referenceTranslatedAuthor"] <-
     reflistPubmedBound[i, "translatedAuthor"]
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translatedDate"] <-
+  dataPubmed[i, "referenceTranslatedDate"] <-
     reflistPubmedBound[i, "translatedDate"]
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "translationScore"] <- 1
+  dataPubmed[i, "referenceTranslationScore"] <- 1
 }
 
 dataPubmed <- dataPubmed %>%

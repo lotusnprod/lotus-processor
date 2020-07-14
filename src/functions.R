@@ -193,7 +193,7 @@ biocleaning <- function(x, y)
                            "genus",
                            "species")])) %>%
     group_by(id) %>%
-    arrange(desc(n),!is.na(isSynonym)) %>%
+    arrange(desc(n), !is.na(isSynonym)) %>%
     ungroup() %>%
     distinct(id,
              .keep_all = TRUE) %>%
@@ -257,18 +257,11 @@ biocleaning <- function(x, y)
   #selecting
   final_db <- left_join(y,
                         pre_final_db) %>%
-    select(
-      # -namesverbatim,
-      -nchar,
-      -sum,
-      -value_max,
-      -value_min,
-      -i.sum,
+    select(# -namesverbatim,-nchar,-sum,-value_max,-value_min,-i.sum,
       -i.value_max,
-      -i.value_min
-      )
-      
-      return(final_db)
+      -i.value_min)
+  
+  return(final_db)
 }
 
 #######################################################
@@ -441,7 +434,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy)
+    select(-rank, -taxonomy)
   
   #filtering empty taxonomies
   df3 <- df2 %>%
@@ -603,7 +596,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy)
+    select(-rank, -taxonomy)
   
   #filtering empty taxonomies
   df8 <- df7 %>%
@@ -874,7 +867,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #filtering empty taxonomies and removing non-UTF8 characters (else cause bugs when running gnr_resolve)
   df13 <- df12 %>%
@@ -1138,7 +1131,7 @@ biofilling <- function(x)
         !is.na(family) |
         !is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #filtering empty taxonomies
   df17_empty <- df17 %>%
@@ -1150,7 +1143,7 @@ biofilling <- function(x)
         is.na(family) &
         is.na(genus)
     ) %>%
-    select(-rank,-taxonomy,-query)
+    select(-rank, -taxonomy, -query)
   
   #selecting joining variable
   y <- x %>%
@@ -4972,8 +4965,8 @@ plantcycleaning <- function(x)
 distinct_biosources <- function(x)
 {
   newdf  <- x %>%
-    filter(!is.na(organism_lowertaxon)) %>%
-    distinct(organism_lowertaxon,
+    filter(!is.na(organismLowestTaxon)) %>%
+    distinct(organismLowestTaxon,
              .keep_all = TRUE) %>%
     group_by(organism_7_species) %>%
     add_count() %>%
@@ -5025,66 +5018,79 @@ distinct_biosources <- function(x)
 #######################################################
 #######################################################
 
-distinct_pairs <- function(x)
+distinct_triplets <- function(x)
 {
   newdf  <- x %>%
-    filter(
-      !is.na(structureCurated) &
-        !is.na(organism_lowertaxon) &
-        !is.na(referenceOriginal) |
-        # this will have to be adapted later on
-        database == "dnp_1"
-    ) %>% # this will have to be adapted later on
-    distinct(structureCurated,
-             organism_lowertaxon,
+    filter(!is.na(referenceCleanedDoi) |
+             !is.na(referenceOriginalExternal)) %>%
+    filter(!is.na(inchikeySanitized) &
+             !is.na(organismLowestTaxon)) %>%
+    distinct(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
+             organismLowestTaxon,
              .keep_all = TRUE) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_7_species) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_6_genus) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_5_family) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_4_order) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_3_class) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_2_phylum) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(structureCurated,
+    group_by(inchikeySanitized,
+             referenceCleanedDoi,
+             referenceOriginalExternal,
              organism_1_kingdom) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n)
   
@@ -6298,7 +6304,7 @@ tcm_inverting <- function(x)
       tail(na.omit(x), 1))
   
   x_4 <- x_3 %>%
-    select(-biologicalsource,-newbiologicalsource) %>%
+    select(-biologicalsource, -newbiologicalsource) %>%
     mutate(biologicalsource = newnewbiologicalsource) %>%
     select(-newnewbiologicalsource)
   
@@ -6659,11 +6665,13 @@ gnfinder_cleaning <- function(num) {
   )
   
   inpath_gnfinder_f <-
-    paste(pathSanitizedOrganismDirJson,
-          "sanitizedOrganismGnfinderUntil_",
-          num,
-          ".json",
-          sep = "")
+    paste(
+      pathSanitizedOrganismDirJson,
+      "sanitizedOrganismGnfinderUntil_",
+      num,
+      ".json",
+      sep = ""
+    )
   
   outpath_f <-
     paste(pathSanitizedOrganismDirTsv,
@@ -6873,7 +6881,11 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_5_family,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus
+      -organismOriginal,
+      -organismTranslated,
+      -organismSanitized,
+      -organism_7_species,
+      -organism_6_genus
     )
   
   family_fill <- family_1 %>%
@@ -6918,7 +6930,12 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_4_order,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family
+      -organismOriginal,
+      -organismTranslated,
+      -organismSanitized,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family
     )
   
   order_fill <- order_1 %>%
@@ -6956,7 +6973,13 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_3_class,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family,-organism_4_order,
+      -organismOriginal,
+      -organismTranslated,
+      -organismSanitized,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family,
+      -organism_4_order,
       
     )
   
@@ -6995,7 +7018,14 @@ taxo_cleaning_auto <- function(dfsel) {
     distinct(organism_2_phylum,
              .keep_all = TRUE) %>%
     select(
-      -organismOriginal,-organismTranslated,-organismSanitized,-organism_7_species,-organism_6_genus,-organism_5_family,-organism_4_order,-organism_3_class
+      -organismOriginal,
+      -organismTranslated,
+      -organismSanitized,
+      -organism_7_species,
+      -organism_6_genus,
+      -organism_5_family,
+      -organism_4_order,
+      -organism_3_class
     )
   
   phylum_fill <- phylum_1 %>%
@@ -7020,7 +7050,7 @@ taxo_cleaning_auto <- function(dfsel) {
   kingdom_1 <- rbind(phylum_full, unphylum)
   
   kingdom_tojoin <- kingdom_1 %>%
-    select(-organismOriginal,-organismTranslated)
+    select(-organismOriginal, -organismTranslated)
   
   tojoin <- dfsel
   

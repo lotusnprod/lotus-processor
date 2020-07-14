@@ -2,71 +2,18 @@
 
 #loading functions
 source("functions.R")
-
-inpath <- "outputs/tables/3_curated/curatedTable.tsv.zip"
-
-#outpaths
-outpathOpen <- "outputs/tables/openDbPairs.tsv.zip"
-
-outpathInhouse <- "outputs/tables/inhouseDbPairs.tsv.zip"
-
-outpathDNP <- "outputs/tables/dnpDbPairs.tsv.zip"
-
-outpathKingdom <- "outputs/tables/structuresByKingdom.tsv"
-
-outpathSpecies <- "outputs/tables/uniqueStructuresBySpecies.tsv"
-
-outpathWidespread <- "outputs/tables/widespreadStructures.tsv"
-
-outpathMismatched <- "outputs/tables/mismatchedGenera.tsv"
-
-outpathRedundancy <- "outputs/tables/redundancyTable.tsv"
+source("paths.R")
 
 #loading files
 ##fullDB
 inhouseDb <- read_delim(
-  file = gzfile(inpath),
+  file = gzfile(pathDataInterimTablesCleanedTable),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame() %>%
-  select(
-    database,
-    nameSanitized,
-    structureOriginalInchi,
-    structureOriginalSmiles,
-    structureOriginalNominal,
-    organismOriginal,
-    referenceOriginal,
-    organismCurated,
-    structureCurated,
-    sanitizedTitle,
-    sanitizedDoi,
-    inchi,
-    smiles,
-    inchikey,
-    inchikey2D,
-    molecularFormula,
-    exactMass,
-    xlogP,
-    chemo_lowertaxon,
-    chemo_01_kingdom,
-    chemo_02_superclass,
-    chemo_03_class,
-    chemo_04_subclass,
-    chemo_05_parent,
-    organism_lowertaxon,
-    organism_1_kingdom,
-    organism_2_phylum,
-    organism_3_class,
-    organism_4_order,
-    organism_5_family,
-    organism_6_genus,
-    organism_7_species
-  )
-#filter(!is.na(organism_lowertaxon))
+  data.frame()
 
 ##openDB
 openDb <- inhouseDb %>%
@@ -90,28 +37,41 @@ dnpDbOrganism <- distinct_biosources(x = dnpDb)
 ##structures
 ###open NP DB
 openDbStructure <- openDb %>%
-  filter(!is.na(structureCurated)) %>%
-  distinct(structureCurated, .keep_all = TRUE)
+  filter(!is.na(inchikeySanitized)) %>%
+  distinct(inchikeySanitized, .keep_all = TRUE)
 
 ###inhouseDB
 inhouseDbStructure <- inhouseDb %>%
-  filter(!is.na(structureCurated)) %>%
-  distinct(structureCurated, .keep_all = TRUE)
+  filter(!is.na(inchikeySanitized)) %>%
+  distinct(inchikeySanitized, .keep_all = TRUE)
 
 ###DNP
 dnpDbStructure <- dnpDb %>%
-  filter(!is.na(structureCurated)) %>%
-  distinct(structureCurated, .keep_all = TRUE)
+  filter(!is.na(inchikeySanitized)) %>%
+  distinct(inchikeySanitized, .keep_all = TRUE)
+
+##triplets
+###open NP DB
+openDbTriplets <- distinct_triplets(x = openDb)
+
+###inhouseDB
+inhouseDbTriplets <- distinct_triplets(x = inhouseDb)
+
+###DNP
+dnpDbTriplets <- distinct_triplets(dnpDb)
 
 ##pairs
 ###open NP DB
-openDbPairs <- distinct_pairs(x = openDb)
+openDbPairs <- openDbTriplets %>%
+  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ###inhouseDB
-inhouseDbPairs <- distinct_pairs(x = inhouseDb)
+inhouseDbPairs <- inhouseDbTriplets %>%
+  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ###DNP
-dnpDbPairs <- distinct_pairs(dnpDb)
+dnpDbPairs <- dnpDbTriplets %>%
+  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 #writing tabular stats
 ##species by kingdom
@@ -129,12 +89,12 @@ inhouseSpeciesByKingdom <- inhouseDbPairs %>%
 
 ##structures by class
 inhouseStructuresByClass <- inhouseDbPairs %>%
-  group_by(chemo_03_class) %>%
-  distinct(structureCurated, .keep_all = TRUE) %>%
-  count(chemo_03_class) %>%
+  group_by(structure_03_class) %>%
+  distinct(inchikeySanitized, .keep_all = TRUE) %>%
+  count(structure_03_class) %>%
   ungroup() %>%
   mutate(structuresPercent = 100 * n / sum(n)) %>%
-  select(class = chemo_03_class,
+  select(class = structure_03_class,
          structures = n,
          structuresPercent) %>%
   arrange(desc(structuresPercent)) %>%
@@ -143,7 +103,7 @@ inhouseStructuresByClass <- inhouseDbPairs %>%
 ##structures by kingdom
 inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
   group_by(organism_1_kingdom) %>%
-  distinct(structureCurated, organism_1_kingdom, .keep_all = TRUE) %>%
+  distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
   count(organism_1_kingdom) %>%
   ungroup() %>%
   mutate(structuresPercent = 100 * n / sum(n)) %>%
@@ -155,13 +115,13 @@ inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
 
 ##unique structures per kingdom
 inhouseUniqueStructuresPerKingdom <- inhouseDbPairs %>%
-  group_by(structureCurated) %>%
-  add_count(structureCurated) %>%
+  group_by(inchikeySanitized) %>%
+  add_count(inchikeySanitized) %>%
   ungroup() %>%
   filter(n == 1) %>%
   select(-n) %>%
   group_by(organism_1_kingdom) %>%
-  distinct(structureCurated, organism_1_kingdom, .keep_all = TRUE) %>%
+  distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
   count(organism_1_kingdom) %>%
   ungroup() %>%
   select(kingdom = organism_1_kingdom,
@@ -183,13 +143,13 @@ inhouseStructuresByKingdom <-
 
 ##unique structures per species
 inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
-  group_by(structureCurated) %>%
-  add_count(structureCurated) %>%
+  group_by(inchikeySanitized) %>%
+  add_count(inchikeySanitized) %>%
   ungroup() %>%
   filter(n == 1) %>%
   select(-n) %>%
   group_by(organism_7_species) %>%
-  distinct(structureCurated, organism_7_species, .keep_all = TRUE) %>%
+  distinct(inchikeySanitized, organism_7_species, .keep_all = TRUE) %>%
   count(organism_7_species) %>%
   ungroup() %>%
   select(species = organism_7_species,
@@ -199,13 +159,13 @@ inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
 
 ##widespread metabolites
 openDbWidespread <- openDbPairs %>%
-  group_by(structureCurated) %>%
+  group_by(inchikeySanitized) %>%
   filter(!is.na(organism_1_kingdom)) %>%
   distinct(organism_1_kingdom, .keep_all = TRUE) %>%
   add_count() %>%
   ungroup() %>%
   filter(n == 7) %>%
-  arrange(structureCurated)
+  arrange(inchikeySanitized)
 
 ##word(species,1) != genus
 mismatchedGenera <- inhouseDbOrganism %>%
@@ -214,13 +174,13 @@ mismatchedGenera <- inhouseDbOrganism %>%
 ##redundancy table
 redundancydf  <- inhouseDb %>%
   filter(!is.na(organismCurated) &
-           !is.na(structureCurated) &
+           !is.na(inchikeySanitized) &
            !is.na(organism_7_species)) %>%
   distinct(organismCurated,
-           structureCurated,
+           inchikeySanitized,
            database,
            .keep_all = TRUE) %>%
-  group_by(organismCurated, structureCurated) %>%
+  group_by(organismCurated, inchikeySanitized) %>%
   add_count() %>%
   ungroup() %>%
   filter(n >= 5) %>%
@@ -231,7 +191,7 @@ redundancydf  <- inhouseDb %>%
     structureOriginalNominal,
     organismOriginal,
     organismCurated,
-    structureCurated,
+    inchikeySanitized,
     n
   )
 
@@ -263,22 +223,22 @@ redundancydf  <- inhouseDb %>%
 #   head(10)
 #
 # a_annua_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Artemisia annua",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Artemisia annua",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # a_capillaris_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Artemisia capillaris",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Artemisia capillaris",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # a_annua_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Artemisia annua",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Artemisia annua",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # a_capillaris_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Artemisia capillaris",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Artemisia capillaris",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -305,22 +265,22 @@ redundancydf  <- inhouseDb %>%
 #   head(10)
 #
 # s_scandens_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Senecio scandens",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Senecio scandens",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # s_squalidus_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Senecio squalidus",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Senecio squalidus",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # s_scandens_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Senecio scandens",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Senecio scandens",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # s_squalidus_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Senecio squalidus",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Senecio squalidus",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -356,22 +316,22 @@ redundancydf  <- inhouseDb %>%
 #   head(10)
 #
 # g_uralensis_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Glycyrrhiza uralensis",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Glycyrrhiza uralensis",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # g_glabra_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Glycyrrhiza glabra",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Glycyrrhiza glabra",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # g_uralensis_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Glycyrrhiza uralensis",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Glycyrrhiza uralensis",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # g_glabra_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Glycyrrhiza glabra",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Glycyrrhiza glabra",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -398,22 +358,22 @@ redundancydf  <- inhouseDb %>%
 #   head(10)
 #
 # s_flavescens_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Sophora flavescens",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Sophora flavescens",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # s_japonica_3D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Sophora japonica",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Sophora japonica",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # s_flavescens_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Sophora flavescens",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Sophora flavescens",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # s_japonica_2D <- inhouseDbPairs %>%
-#   filter(organism_7_species == "Sophora japonica",!is.na(structureCurated)) %>%
+#   filter(organism_7_species == "Sophora japonica",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -430,22 +390,22 @@ redundancydf  <- inhouseDb %>%
 #   100 * overlap_percent_sophora_3D / overlap_percent_sophora_2D
 #
 # artemisia_3D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Artemisia",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Artemisia",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # artemisia_2D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Artemisia",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Artemisia",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # senecio_3D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Senecio",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Senecio",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # senecio_2D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Senecio",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Senecio",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -462,22 +422,22 @@ redundancydf  <- inhouseDb %>%
 #   100 * overlap_percent_asteraceae_3D / overlap_percent_asteraceae_2D
 #
 # glycyrrhiza_3D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Glycyrrhiza",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Glycyrrhiza",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # glycyrrhiza_2D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Glycyrrhiza",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Glycyrrhiza",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
 # sophora_3D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Sophora",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Sophora",!is.na(inchikeySanitized)) %>%
 #   select(structure_inchikey) %>%
 #   data.table()
 #
 # sophora_2D <- inhouseDbPairs %>%
-#   filter(organism_6_genus == "Sophora",!is.na(structureCurated)) %>%
+#   filter(organism_6_genus == "Sophora",!is.na(inchikeySanitized)) %>%
 #   select(structure_shortinchikey) %>%
 #   data.table()
 #
@@ -658,7 +618,7 @@ redundancydf  <- inhouseDb %>%
 
 organismFilterDf <- openDbPairs %>%
   filter(!is.na(organism_7_species)) %>%
-  filter(chemo_04_subclass == "Terpene lactones") %>%
+  filter(structure_04_subclass == "Terpene lactones") %>%
   group_by(organism_7_species) %>%
   add_count() %>%
   ungroup() %>%
@@ -669,15 +629,15 @@ organismFilterDf <- openDbPairs %>%
 organismFilter <- organismFilterDf$organism_7_species
 
 structureFilterDf <- openDbPairs %>%
-  filter(!is.na(chemo_04_subclass)) %>%
-  group_by(chemo_04_subclass) %>%
+  filter(!is.na(structure_04_subclass)) %>%
+  group_by(structure_04_subclass) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(chemo_04_subclass) %>%
-  filter(chemo_04_subclass == "Terpene lactones")
+  distinct(structure_04_subclass) %>%
+  filter(structure_04_subclass == "Terpene lactones")
 
-structureFilter <- structureFilterDf$chemo_04_subclass
+structureFilter <- structureFilterDf$structure_04_subclass
 
 # stereolist <- get_stereo_ratio(
 #   data = open_db_pairs,
@@ -685,15 +645,21 @@ structureFilter <- structureFilterDf$chemo_04_subclass
 #   biological_filter_value = organism_filter,
 #   biological_filter_level = "organism_7_species",
 #   chemical_filter_value = structure_filter,
-#   chemical_filter_level = "chemo_04_subclass"
+#   chemical_filter_level = "structure_04_subclass"
 # )
 
 #exporting
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataProcessedTables),
+  dir.create(pathDataProcessedTables),
+  FALSE
+)
 ##open
 write.table(
-  x = openDbPairs,
+  x = openDbTriplets,
   file = gzfile(
-    description = outpathOpen,
+    description = pathDataProcessedTablesOpenDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -705,9 +671,9 @@ write.table(
 
 ##inhouse
 write.table(
-  x = inhouseDbPairs,
+  x = inhouseDbTriplets,
   file = gzfile(
-    description = outpathInhouse,
+    description = pathDataProcessedTablesInhouseDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -719,9 +685,9 @@ write.table(
 
 ##dnp
 write.table(
-  x = dnpDbPairs,
+  x = dnpDbTriplets,
   file = gzfile(
-    description = outpathDNP,
+    description = pathDataProcessedTablesDnpDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -735,7 +701,7 @@ write.table(
 ###structures by kingdom
 write.table(
   x = inhouseStructuresByKingdom,
-  file = outpathKingdom,
+  file = pathDataProcessedTablesStructuresByKingdom,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -745,7 +711,7 @@ write.table(
 ###unique structures per species
 write.table(
   x = inhouseUniqueStructuresPerSpecies,
-  file = outpathSpecies,
+  file = pathDataProcessedTablesUniqueStructuresBySpecies,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -755,7 +721,7 @@ write.table(
 ###widespread metabolites
 write.table(
   x = openDbWidespread,
-  file = outpathWidespread,
+  file = pathDataProcessedTablesWidespreadStructures,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -765,7 +731,7 @@ write.table(
 ###mismatched genera
 write.table(
   x = mismatchedGenera,
-  file = outpathMismatched,
+  file = pathDataProcessedTablesMismatchedGenera,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -775,7 +741,7 @@ write.table(
 ###redundancy table
 write.table(
   x = redundancydf,
-  file = outpathRedundancy,
+  file = pathDataProcessedTablesRedundancyTable,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
