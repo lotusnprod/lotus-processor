@@ -49,6 +49,11 @@ except:
 # Loading the df with inchi columns
 #df = pd.read_csv(input_file_path, sep='\t')
 
+input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
+
+
+
+
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
@@ -57,53 +62,84 @@ df = pd.read_csv(
 
 # eventually filter display some info, comment according to your needs
 # df = df[df['originaldb'] == 'tcm']
-#df = df.head(10000)
+#df = df.head(50000)
 df.columns
 df.info()
 
+df = df[df['structureTranslated'].astype(str).str.startswith('InChI')]
+
+df.columns
+df.info()
+
+
+# the full df is splitted and each subdf are treated sequentially as df > 900000 rows retruned errors 
+# (parralel treatment of these subdf should improve performance)
+
+n = 20000  #chunk row size
+list_df = [df[i:i+n] for i in range(0,df.shape[0],n)]
 
 # timer is started
 start_time = time.time()
 
 
-# here we define the multiprocessing wrapper for the function. Beware to set the number of running tasks according to your cpu number
+for i in range(0, len(list_df)):
 
-if __name__ == "__main__":
-    # with multiprocessing.Pool(multiprocessing.cpu_count() - 2 ) as pool:
-    with multiprocessing.Pool(int(cpus)) as pool:
-        
-        # # we generate ROMol object from smiles and or inchi
-        df['ROMol'] = pool.map(MolFromInchi_fun, df[inchi_column_header])
-        # # we eventually remove rows were no ROMol pobject was generated
-        df = df[~df['ROMol'].isnull()]
-        # # and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
-        # # Note that these are sequentially applied
-        df['validatorLog'] = pool.map(validator_fun, df['ROMol'])
-        df['ROMolSanitized'] = pool.map(standardizor_fun, df['ROMol'])
-        df.drop('ROMol', axis=1, inplace=True)
-        df['ROMolSanitizedLargestFragment'] = pool.map(fragremover_fun, df['ROMolSanitized'])
-        df.drop('ROMolSanitized', axis=1, inplace=True)
-        df['ROMolSanitizedLargestFragmentUncharged'] = pool.map(uncharger_fun, df['ROMolSanitizedLargestFragment'])
-        df.drop('ROMolSanitizedLargestFragment', axis=1, inplace=True)
-        # # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
-        df['smilesSanitized'] = pool.map(MolToSmiles_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        # for the inchi and IK since some specific structures are raising issues we use the ***_fun_safe functions (see associated chemosanitizer_function.py)
-        # df['inchi_sanitized'] = pool.map(MolToInchi_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['inchiSanitized'] = pool.starmap(MolToInchi_fun_safe, zip(df['smilesSanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
-        #df['inchikeySanitized'] = pool.map(MolToIK_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(df['smilesSanitized'], df['ROMolSanitizedLargestFragmentUncharged']))
-        df['shortikSanitized'] = df['inchikeySanitized'].str.split("-", n=1, expand=True)[0]
-        df['formulaSanitized'] = pool.map(MolToMF_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['exactmassSanitized'] = pool.map(MolToEmass_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        df['xlogpSanitized'] = pool.map(MolToLogP_fun, df['ROMolSanitizedLargestFragmentUncharged'])
-        
-        pool.close()
-        pool.join()
+    # here we define the multiprocessing wrapper for the function. Beware to set the number of running tasks according to your cpu number
+
+    if __name__ == "__main__":
+        # with multiprocessing.Pool(multiprocessing.cpu_count() - 2 ) as pool:
+        with multiprocessing.Pool(int(cpus)) as pool:
+
+            # list_df[i].to_csv(
+            #     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/2_cleaned/structure/outfirst38%i.csv" % i , 
+            #     sep = '\t', 
+            #     index = False,
+            #     compression = 'gzip'
+            #     )
+
+            # # we generate ROMol object from smiles and or inchi
+            list_df[i]['ROMol'] = pool.map(MolFromInchi_fun, list_df[i][inchi_column_header])
+            # # we eventually remove rows were no ROMol pobject was generated
+            list_df[i] = list_df[i][~list_df[i]['ROMol'].isnull()]
+            # # and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
+            # # Note that these are sequentially applied
+            list_df[i]['validatorLog'] = pool.map(validator_fun, list_df[i]['ROMol'])
+            list_df[i]['ROMolSanitized'] = pool.map(standardizor_fun, list_df[i]['ROMol'])
+            list_df[i].drop('ROMol', axis=1, inplace=True)
+            list_df[i]['ROMolSanitizedLargestFragment'] = pool.map(fragremover_fun, list_df[i]['ROMolSanitized'])
+            list_df[i].drop('ROMolSanitized', axis=1, inplace=True)
+            list_df[i]['ROMolSanitizedLargestFragmentUncharged'] = pool.map(uncharger_fun, list_df[i]['ROMolSanitizedLargestFragment'])
+            list_df[i].drop('ROMolSanitizedLargestFragment', axis=1, inplace=True)
+            # # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
+            list_df[i]['smilesSanitized'] = pool.map(MolToSmiles_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            # for the inchi and IK since some specific structures are raising issues we use the ***_fun_safe functions (see associated chemosanitizer_function.py)
+            # list_df[i]['inchi_sanitized'] = pool.map(MolToInchi_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            list_df[i]['inchiSanitized'] = pool.starmap(MolToInchi_fun_safe, zip(list_df[i]['smilesSanitized'], list_df[i]['ROMolSanitizedLargestFragmentUncharged']))
+            #list_df[i]['inchikeySanitized'] = pool.map(MolToIK_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            list_df[i]['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(list_df[i]['smilesSanitized'], list_df[i]['ROMolSanitizedLargestFragmentUncharged']))
+            list_df[i]['shortikSanitized'] = list_df[i]['inchikeySanitized'].str.split("-", n=1, expand=True)[0]
+            list_df[i]['formulaSanitized'] = pool.map(MolToMF_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            list_df[i]['exactmassSanitized'] = pool.map(MolToEmass_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            list_df[i]['xlogpSanitized'] = pool.map(MolToLogP_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            list_df[i].drop('ROMolSanitizedLargestFragmentUncharged', axis=1, inplace=True)
+            
+            pool.close()
+            pool.join()
+
+            # list_df[i].to_csv(
+            #     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/2_cleaned/structure/oouthoupla_%i.csv" % i , 
+            #     sep = '\t', 
+            #     index = False,
+            #     compression = 'gzip'
+            #     )
 
 # timer is stopped
 print(" Above command executed in --- %s seconds ---" %
       (time.time() - start_time))
 
+# we merge the previously obtained df
+
+df = pd.concat(list_df)
 
 
 
@@ -116,9 +152,9 @@ print(" Above command executed in --- %s seconds ---" %
 #               'ROMolSanitizedLargestFragmentUncharged'
 #               ]
 
-colstodrop = ['ROMolSanitizedLargestFragmentUncharged']
+#colstodrop = ['ROMolSanitizedLargestFragmentUncharged']
 
-df.drop(colstodrop, axis=1, inplace=True)
+#df.drop(colstodrop, axis=1, inplace=True)
 
 df.info()
 # exporting df
