@@ -28,11 +28,20 @@ from molvs.fragment import FragmentRemover
 from molvs.charge import Uncharger
 
 
+def printer(inchi):
+    print(inchi)
+
 def MolFromInchi_fun(inchi):
     m = Chem.MolFromInchi(inchi)
     if m:
         return m
     return None
+
+# def MolFromInchi_fun(inchi):
+#     m = Chem.MolFromInchi(inchi)
+#     if m:
+#         return m
+#     print(inchi)
 
 def MolToSmiles_fun(romol):
     m = Chem.MolToSmiles(romol)
