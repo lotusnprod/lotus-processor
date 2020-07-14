@@ -45,7 +45,7 @@ style organism fill:#E5F5E0
                 104([2_cleaned/organism/original]) -->
                     111[[4_cleaningTaxonomy.R]]
         102([2_cleaned/organism/original/*.json]) -->
-            105[[2_translating.R]] -->
+            105[[2_translating.kotlin]] -->
                 106([1_translated/organism/*.tsv]) -->
                     107[[3_cleaningTranslated.R]] --> 
                         108([2_cleaned/organism/translated/*.json]) --> 
