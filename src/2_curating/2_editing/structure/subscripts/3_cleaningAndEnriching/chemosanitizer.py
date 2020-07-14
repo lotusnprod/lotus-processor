@@ -49,7 +49,7 @@ except:
 # Loading the df with inchi columns
 #df = pd.read_csv(input_file_path, sep='\t')
 
-input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
+#input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
 
 
 
