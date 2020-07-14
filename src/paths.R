@@ -43,34 +43,34 @@ databases <-
 databases$add(
   name = "afrotryp",
   sourceFiles = list(tsv = "afrotryp.tsv.zip"),
-  interimFile = "afrotryp.tsv.zip"
+  interimFile = "afrotryp.tsv.gz"
 )
 
 databases$add(
   name = "alkamid",
-  sourceFiles = list(tsv = "alkamidScraped.tsv.zip",
-                     tsvRef = "alkamidRefScraped.tsv.zip"),
-  interimFile = "alkamid.tsv.zip"
+  sourceFiles = list(tsv = "alkamidScraped.tsv.gz",
+                     tsvRef = "alkamidRefScraped.tsv.gz"),
+  interimFile = "alkamid.tsv.gz"
 )
 
 databases$add(
   name = "biofacquim",
   sourceFiles = list(sdf = "BIOFACQUIM_V2.sdf",
-                     tsv = "biofacquim.tsv.zip"),
-  interimFile = "biofacquim.tsv.zip"
+                     tsv = "biofacquim.tsv.gz"),
+  interimFile = "biofacquim.tsv.gz"
 )
 
 databases$add(
   name = "biophytmol",
-  sourceFiles = list(tsv = "biophytmolScraped.tsv.zip"),
-  interimFile = "biophytmol.tsv.zip"
+  sourceFiles = list(tsv = "biophytmolScraped.tsv.gz"),
+  interimFile = "biophytmol.tsv.gz"
 )
 
 databases$add(
   name = "carotenoiddb",
-  sourceFiles = list(tsv = "carotenoiddbScraped.tsv.zip",
+  sourceFiles = list(tsv = "carotenoiddbScraped.tsv.gz",
                      tsvInchi = "Carotenoids_InChI_InChIKey.tsv"),
-  interimFile = "carotenoiddb.tsv.zip"
+  interimFile = "carotenoiddb.tsv.gz"
 )
 
 databases$add(
@@ -80,32 +80,32 @@ databases$add(
     tsvPlants = "CMAUPv1.0_download_Plants.txt",
     tsvAssociations = "CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
   ),
-  interimFile = "cmaup.tsv.zip"
+  interimFile = "cmaup.tsv.gz"
 )
 
 databases$add(
   name = "coconut",
   sourceFiles = list(sdf = "COCONUT_DB.sdf",
-                     tsv = "coconutConverted.tsv.zip"),
-  interimFile = "coconut.tsv.zip"
+                     tsv = "coconutConverted.tsv.gz"),
+  interimFile = "coconut.tsv.gz"
 )
 
 databases$add(
   name = "cyanometdb",
   sourceFiles = list(tsv = "media-1.csv"),
-  interimFile = "cyanometdb.tsv.zip"
+  interimFile = "cyanometdb.tsv.gz"
 )
 
 databases$add(
   name = "datawarrior",
   sourceFiles = list(tsv = "NaturalProducts.txt"),
-  interimFile = "datawarrior.tsv.zip"
+  interimFile = "datawarrior.tsv.gz"
 )
 
 databases$add(
   name = "dnp",
   sourceFiles = list(tsv = "29_1/full_set.csv"),
-  interimFile = "dnp.tsv.zip"
+  interimFile = "dnp.tsv.gz"
 )
 
 ###### COMMENT THERE ARE SCRIPTS IN DNP DATA FOLDER #######
@@ -119,13 +119,13 @@ databases$add(
     tsvTaxa = "Duke-Source-CSV/FNFTAX.csv",
     tsvReference = "Duke-Source-CSV/REFERENCES.csv"
   ),
-  interimFile = "drduke.tsv.zip"
+  interimFile = "drduke.tsv.gz"
 )
 
 databases$add(
   name = "etcm",
   sourceFiles = list(data = "data.zip"),
-  interimFile = "etcm.tsv.zip"
+  interimFile = "etcm.tsv.gz"
 )
 
 databases$add(
@@ -138,19 +138,19 @@ databases$add(
     tsvFood = "foodb_2020_04_07_csv/Food_copy.csv",
     tsvReference = "foodb_2020_04_07_csv/Reference.csv"
   ),
-  interimFile = "foodb.tsv.zip"
+  interimFile = "foodb.tsv.gz"
 )
 
 databases$add(
   name = "inflamnat",
   sourceFiles = list(tsv = "ci8b00560_si_001.xlsx"),
-  interimFile = "inflamnat.tsv.zip"
+  interimFile = "inflamnat.tsv.gz"
 )
 
 databases$add(
   name = "knapsack",
-  sourceFiles = list(tsv = "knapsackScraped.tsv.zip"),
-  interimFile = "knapsack.tsv.zip"
+  sourceFiles = list(tsv = "knapsackScraped.tsv.gz"),
+  interimFile = "knapsack.tsv.gz"
 )
 
 databases$add(
@@ -158,10 +158,10 @@ databases$add(
   sourceFiles = list(
     xmlComplete = "eb-eye_metabolights_complete.xml",
     xmlStudies = "eb-eye_metabolights_studies.xml",
-    tsvPrecleaned = "metabolightsPrecleaned.tsv.zip",
-    tsvStudies = "metabolightsStudiesScraped.tsv.zip"
+    tsvPrecleaned = "metabolightsPrecleaned.tsv.gz",
+    tsvStudies = "metabolightsStudiesScraped.tsv.gz"
   ),
-  interimFile = "metabolights.tsv.zip"
+  interimFile = "metabolights.tsv.gz"
 )
 
 ###### COMMENT Not clean #######
@@ -177,25 +177,25 @@ pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
 databases$add(
   name = "mibig",
   sourceFiles = list(data = "data.zip"),
-  interimFile = "mibig.tsv.zip"
+  interimFile = "mibig.tsv.gz"
 )
 
 databases$add(
   name = "mitishamba",
-  sourceFiles = list(tsv = "mitishambaScraped.tsv.zip"),
-  interimFile = "mitishamba.tsv.zip"
+  sourceFiles = list(tsv = "mitishambaScraped.tsv.gz"),
+  interimFile = "mitishamba.tsv.gz"
 )
 
 databases$add(
   name = "nanpdb",
-  sourceFiles = list(tsv = "nanpdbScraped.tsv.zip"),
-  interimFile = "nanpdb.tsv.zip"
+  sourceFiles = list(tsv = "nanpdbScraped.tsv.gz"),
+  interimFile = "nanpdb.tsv.gz"
 )
 
 databases$add(
   name = "napralert",
   sourceFiles = list(tsv = "napralert_matched_final_unified.tsv.gz"),
-  interimFile = "napralert.tsv.zip"
+  interimFile = "napralert.tsv.gz"
 )
 
 databases$add(
@@ -206,25 +206,25 @@ databases$add(
     tsvSpeciesInfo = "NPASSv1.0_download_naturalProducts_speciesInfo.txt",
     tsvSpeciesPair = "NPASSv1.0_download_naturalProducts_species_pair.txt"
   ),
-  interimFile = "npass.tsv.zip"
+  interimFile = "npass.tsv.gz"
 )
 
 databases$add(
   name = "npatlas",
   sourceFiles = list(tsv = "np_atlas_2019_12.tsv"),
-  interimFile = "npatlas.tsv.zip"
+  interimFile = "npatlas.tsv.gz"
 )
 
 databases$add(
   name = "npcare",
   sourceFiles = list(tsv = "npcare.zip"),
-  interimFile = "npcare.tsv.zip"
+  interimFile = "npcare.tsv.gz"
 )
 
 databases$add(
   name = "npedia",
-  sourceFiles = list(tsv = "npediaScraped.tsv.zip"),
-  interimFile = "npedia.tsv.zip"
+  sourceFiles = list(tsv = "npediaScraped.tsv.gz"),
+  interimFile = "npedia.tsv.gz"
 )
 
 pathDataExternalDbSourceNubbe <-
@@ -242,13 +242,13 @@ databases$add(
       full.names = FALSE
     )
   )),
-  interimFile = "nubbe.tsv.zip"
+  interimFile = "nubbe.tsv.gz"
 )
 
 databases$add(
   name = "pamdb",
   sourceFiles = list(tsv = "PaMet.xlsx"),
-  interimFile = "pamdb.tsv.zip"
+  interimFile = "pamdb.tsv.gz"
 )
 
 ##### pharmdbk
@@ -267,7 +267,7 @@ databases$add(
       full.names = FALSE
     )
   )),
-  interimFile = "pharmdbk.tsv.zip"
+  interimFile = "pharmdbk.tsv.gz"
 )
 
 databases$add(
@@ -283,13 +283,13 @@ databases$add(
     tsvPublications = "publications.csv",
     tsvComposition = "composition-data.xlsx"
   ),
-  interimFile = "phenolexplorer.tsv.zip"
+  interimFile = "phenolexplorer.tsv.gz"
 )
 
 databases$add(
   name = "phytohub",
-  sourceFiles = list(tsv = "phytohubScraped.tsv.zip"),
-  interimFile = "phytohub.tsv.zip"
+  sourceFiles = list(tsv = "phytohubScraped.tsv.gz"),
+  interimFile = "phytohub.tsv.gz"
 )
 
 ##### plantcyc
@@ -305,13 +305,13 @@ pathDataExternalDbSourcePlantcycDir <-
 ###### original
 pathDataExternalDbSourcePlantcycOriginal <-
   list.files(path = pathDataExternalDbSourcePlantcyc,
-             pattern = "*.tsv.zip",
+             pattern = "*.tsv.gz",
              full.names = TRUE)
 
 databases$add(
   name = "procardb",
-  sourceFiles = list(tsv = "procardbScraped.tsv.zip"),
-  interimFile = "procardb.tsv.zip"
+  sourceFiles = list(tsv = "procardbScraped.tsv.gz"),
+  interimFile = "procardb.tsv.gz"
 )
 
 ##### respect
@@ -330,20 +330,20 @@ databases$add(
       full.names = FALSE
     )
   )),
-  interimFile = "respect.tsv.zip"
+  interimFile = "respect.tsv.gz"
 )
 
 databases$add(
   name = "sancdb",
-  sourceFiles = list(tsv = "sancdbScraped.tsv.zip"),
-  interimFile = "sancdb.tsv.zip"
+  sourceFiles = list(tsv = "sancdbScraped.tsv.gz"),
+  interimFile = "sancdb.tsv.gz"
 )
 
 databases$add(
   name = "streptomedb",
   sourceFiles = list(sdf = "streptomedb.sdf",
-                     tsv = "streptomedb.tsv.zip"),
-  interimFile = "streptomedb.tsv.zip"
+                     tsv = "streptomedb.tsv.gz"),
+  interimFile = "streptomedb.tsv.gz"
 )
 
 ##### swmd
@@ -358,8 +358,8 @@ pathDataExternalDbSourceSwmdDirectory <-
 
 databases$add(
   name = "swmd",
-  sourceFiles = list(tsv = "swmdScraped.tsv.zip"),
-  interimFile = "swmd.tsv.zip"
+  sourceFiles = list(tsv = "swmdScraped.tsv.gz"),
+  interimFile = "swmd.tsv.gz"
 )
 
 databases$add(
@@ -367,7 +367,7 @@ databases$add(
   sourceFiles = list(data = "data.zip",
                      bio = "SymMap v1.0, SMHB file.xlsx",
                      chemo = "SymMap v1.0, SMIT file.xlsx"),
-  interimFile = "symmap.tsv.zip"
+  interimFile = "symmap.tsv.gz"
 )
 
 ##### tipdb
@@ -375,54 +375,47 @@ pathDataExternalDbSourceTipdb <-
   file.path(pathDataExternalDbSource,
             "tipdb")
 
-databases$add(
-  name = "tipdb",
-  sourceFiles = list(
-    json = file.path(
-      "tipdb_raw",
-      list.files(
-        path = file.path(pathDataExternalDbSourceTipdb,
-                         "tipdb_raw"),
-        pattern = "^chemical_TIP",
-        full.names = FALSE
-      )
-    ),
-    mol = file.path(
-      "tipdb_raw",
-      list.files(
-        path = file.path(pathDataExternalDbSourceTipdb,
-                         "tipdb_raw"),
-        pattern = "^TIP",
-        full.names = FALSE
-      )
-    )
-  ),
-  interimFile = "tipdb.tsv.zip"
-)
+# databases$add(
+#   name = "tipdb",
+#   sourceFiles = list(
+#     json = file.path(
+#       "tipdb_raw",
+#       list.files(
+#         path = file.path(pathDataExternalDbSourceTipdb,
+#                          "tipdb_raw"),
+#         pattern = "^chemical_TIP",
+#         full.names = FALSE
+#       )
+#     ),
+#     mol = file.path(
+#       "tipdb_raw",
+#       list.files(
+#         path = file.path(pathDataExternalDbSourceTipdb,
+#                          "tipdb_raw"),
+#         pattern = "^TIP",
+#         full.names = FALSE
+#       )
+#     )
+#   ),
+#   interimFile = "tipdb.tsv.gz"
+# )
 
 databases$add(
   name = "tmdb",
-  sourceFiles = list(tsv = "tmdbScraped.tsv.zip"),
-  interimFile = "tmdb.tsv.zip"
+  sourceFiles = list(tsv = "tmdbScraped.tsv.gz"),
+  interimFile = "tmdb.tsv.gz"
 )
 
 databases$add(
   name = "tmmc",
   sourceFiles = list(tsv = "compound.xlsx"),
-  interimFile = "tmmc.tsv.zip"
+  interimFile = "tmmc.tsv.gz"
 )
 
 databases$add(
   name = "tppt",
   sourceFiles = list(tsv = "TPPT_database.xlsx"),
-  interimFile = "tppt.tsv.zip"
-)
-
-databases$add(
-  name = "triforc",
-  sourceFiles = list(tsv1 = "triforcOriginal.tsv",
-                     tsv2 = "triforcBis.tsv"),
-  interimFile = "triforc.tsv.zip"
+  interimFile = "tppt.tsv.gz"
 )
 
 ##### triforc
@@ -439,7 +432,7 @@ databases$add(
   name = "triforc",
   sourceFiles = list(tsv1 = "triforcOriginal.tsv",
                      tsv2 = "triforcBis.tsv"),
-  interimFile = "triforc.tsv.zip"
+  interimFile = "triforc.tsv.gz"
 )
 
 ##### unpd
@@ -450,20 +443,20 @@ pathDataExternalDbSourceUnpd <-
 ##### compiled
 pathDataExternalDbSourceUnpdIntegrated <-
   file.path(pathDataExternalDbSourceUnpd,
-            "unpdIntegrated.tsv.zip")
+            "unpdIntegrated.tsv.gz")
 
 databases$add(
   name = "unpd",
   sourceFiles = list(tsvJo = "unpd_final.csv.zip",
                      tsvPm = "UNPD_DB.csv.zip"),
-  interimFile = "unpd.tsv.zip"
+  interimFile = "unpd.tsv.gz"
 )
 
 ##### wakankensaku
 databases$add(
   name = "wakankensaku",
-  sourceFiles = list(tsv = "wakankensakuScraped.tsv.zip"),
-  interimFile = "wakankensaku.tsv.zip"
+  sourceFiles = list(tsv = "wakankensakuScraped.tsv.gz"),
+  interimFile = "wakankensaku.tsv.gz"
 )
 
 #### translation source
@@ -533,7 +526,7 @@ pathDataExternalTranslationSourceTcm <-
 ###### TCMID
 pathDataExternalTranslationSourceTcmTcmid <-
   file.path(pathDataExternalTranslationSourceTcm,
-            "TCMID/data/herb-TCMID.v2.01.txt")
+            "tcmid/data/herb-TCMID.v2.01.txt")
 
 ###### Chinese Medicine Board of Australia
 pathDataExternalTranslationSourceTcmCmba <-
@@ -545,183 +538,183 @@ pathDataExternalTranslationSourceTcmCmba <-
 #### dir
 pathDataInterimDbDir <-
   Sys.glob(file.path(paste(pathDataInterimDb,
-                           "/*.tsv.zip",
+                           "/*.tsv.gz",
                            sep = "")))
 
 ##### biofacquim
 pathDataInterimDbBiofacquim <-
   file.path(pathDataInterimDb,
-            "biofacquim.tsv.zip")
+            "biofacquim.tsv.gz")
 
 ##### biophytmol
 pathDataInterimDbBiophytmol <-
   file.path(pathDataInterimDb,
-            "biophytmol.tsv.zip")
+            "biophytmol.tsv.gz")
 
 ##### carotenoiddb
 pathDataInterimDbCarotenoiddb <-
   file.path(pathDataInterimDb,
-            "carotenoiddb.tsv.zip")
+            "carotenoiddb.tsv.gz")
 
 ##### cmaup
 pathDataInterimDbCmaup <-
   file.path(pathDataInterimDb,
-            "cmaup.tsv.zip")
+            "cmaup.tsv.gz")
 
 ##### coconut
 pathDataInterimDbCoconut <-
   file.path(pathDataInterimDb,
-            "coconut.tsv.zip")
+            "coconut.tsv.gz")
 
 ##### cyanometdb
 pathDataInterimDbCyanometdb <-
   file.path(pathDataInterimDb,
-            "cyanometdb.tsv.zip")
+            "cyanometdb.tsv.gz")
 
 ##### dnp
 pathDataInterimDbDnp <-
   file.path(pathDataInterimDb,
-            "dnp.tsv.zip")
+            "dnp.tsv.gz")
 
 ##### drduke
 pathDataInterimDbDrduke <-
   file.path(pathDataInterimDb,
-            "drduke.tsv.zip")
+            "drduke.tsv.gz")
 
 ##### etcm
 pathDataInterimDbEtcm <-
   file.path(pathDataInterimDb,
-            "etcm.tsv.zip")
+            "etcm.tsv.gz")
 
 ##### foodb
 pathDataInterimDbFoodb <-
   file.path(pathDataInterimDb,
-            "foodb.tsv.zip")
+            "foodb.tsv.gz")
 
 ##### inflamnat
 pathDataInterimDbInflamnat <-
   file.path(pathDataInterimDb,
-            "inflamnat.tsv.zip")
+            "inflamnat.tsv.gz")
 
 ##### knapsack
 pathDataInterimDbKnapsack <-
   file.path(pathDataInterimDb,
-            "knapsack.tsv.zip")
+            "knapsack.tsv.gz")
 
 ##### metabolights
 pathDataInterimDbMetabolights <-
   file.path(pathDataInterimDb,
-            "metabolights.tsv.zip")
+            "metabolights.tsv.gz")
 
 ##### mibig
 pathDataInterimDbMibig <-
   file.path(pathDataInterimDb,
-            "mibig.tsv.zip")
+            "mibig.tsv.gz")
 
 ##### mitishamba
 pathDataInterimDbMitishamba <-
   file.path(pathDataInterimDb,
-            "mitishamba.tsv.zip")
+            "mitishamba.tsv.gz")
 
 ##### nanpdb
 pathDataInterimDbNanpdb <-
   file.path(pathDataInterimDb,
-            "nanpdb.tsv.zip")
+            "nanpdb.tsv.gz")
 
 ##### npass
 pathDataInterimDbNpass <-
   file.path(pathDataInterimDb,
-            "npass.tsv.zip")
+            "npass.tsv.gz")
 
 ##### npatlas
 pathDataInterimDbNpatlas <-
   file.path(pathDataInterimDb,
-            "npatlas.tsv.zip")
+            "npatlas.tsv.gz")
 
 ##### npcare
 pathDataInterimDbNpcare <-
   file.path(pathDataInterimDb,
-            "npcare.tsv.zip")
+            "npcare.tsv.gz")
 
 ##### npedia
 pathDataInterimDbNpedia <-
   file.path(pathDataInterimDb,
-            "npedia.tsv.zip")
+            "npedia.tsv.gz")
 
 ##### pamdb
 pathDataInterimDbPamdb <-
   file.path(pathDataInterimDb,
-            "pamdb.tsv.zip")
+            "pamdb.tsv.gz")
 
 ##### phenolexplorer
 pathDataInterimDbPhenolexplorer <-
   file.path(pathDataInterimDb,
-            "phenolexplorer.tsv.zip")
+            "phenolexplorer.tsv.gz")
 
 ##### phytohub
 pathDataInterimDbPhytohub <-
   file.path(pathDataInterimDb,
-            "phytohub.tsv.zip")
+            "phytohub.tsv.gz")
 
 ##### plantcyc
 pathDataInterimDbPlantcyc <-
   file.path(pathDataInterimDb,
-            "plantcyc.tsv.zip")
+            "plantcyc.tsv.gz")
 
 ##### procardb
 pathDataInterimDbProcardb <-
   file.path(pathDataInterimDb,
-            "procardb.tsv.zip")
+            "procardb.tsv.gz")
 
 ##### respect
 pathDataInterimDbRespect <-
   file.path(pathDataInterimDb,
-            "respect.tsv.zip")
+            "respect.tsv.gz")
 
 ##### sancdb
 pathDataInterimDbSancdb <-
   file.path(pathDataInterimDb,
-            "sancdb.tsv.zip")
+            "sancdb.tsv.gz")
 
 ##### streptomedb
 pathDataInterimDbStreptomedb <-
   file.path(pathDataInterimDb,
-            "streptomedb.tsv.zip")
+            "streptomedb.tsv.gz")
 
 ##### swmd
 pathDataInterimDbSwmd <-
   file.path(pathDataInterimDb,
-            "swmd.tsv.zip")
+            "swmd.tsv.gz")
 
 ##### symmap
 pathDataInterimDbSymmap <-
   file.path(pathDataInterimDb,
-            "symmap.tsv.zip")
+            "symmap.tsv.gz")
 
 ##### tmdb
 pathDataInterimDbTmdb <-
   file.path(pathDataInterimDb,
-            "tmdb.tsv.zip")
+            "tmdb.tsv.gz")
 
 ##### tmmc
 pathDataInterimDbTmmc <-
   file.path(pathDataInterimDb,
-            "tmmc.tsv.zip")
+            "tmmc.tsv.gz")
 
 ##### tppt
 pathDataInterimDbTmmc <-
   file.path(pathDataInterimDb,
-            "tppt.tsv.zip")
+            "tppt.tsv.gz")
 
 ##### triforc
 pathDataInterimDbTriforc <-
   file.path(pathDataInterimDb,
-            "triforc.tsv.zip")
+            "triforc.tsv.gz")
 
 ##### unpd
 pathDataInterimDbUnpd <-
   file.path(pathDataInterimDb,
-            "unpd.tsv.zip")
+            "unpd.tsv.gz")
 
 #### dictionaries
 pathDataInterimDictionaries <-
@@ -746,7 +739,7 @@ pathDataInterimDictionariesCommonManualSubtraction <-
 ####### names
 pathDataInterimDictionariesCommonNames <-
   file.path(pathDataInterimDictionariesCommon,
-            "names.tsv.zip")
+            "names.tsv.gz")
 
 ###### latin
 pathDataInterimDictionariesLatin <-
@@ -802,7 +795,7 @@ pathDataInterimDictionariesTaxaPhylum <-
 ####### problematic
 pathDataInterimDictionariesTaxaProblematic <-
   file.path(pathDataInterimDictionariesTaxa,
-            "problematic.tsv.zip")
+            "problematic.tsv.zip") # to check
 
 ####### problematic
 pathDataInterimDictionariesTaxaRanks <-
@@ -822,7 +815,7 @@ pathDataInterimDictionariesTcmManualSubtraction <-
 ####### names
 pathDataInterimDictionariesTcmNames <-
   file.path(pathDataInterimDictionariesTcm,
-            "names.tsv.zip")
+            "names.tsv.gz")
 
 #### tables
 if (mode == "full")
@@ -866,15 +859,15 @@ pathDataInterimTablesOriginalStructure <-
 
 ### InChI
 pathDataInterimTablesOriginalStructureInchi <-
-  file.path(pathDataInterimTablesOriginalStructure, "inchi.tsv.zip")
+  file.path(pathDataInterimTablesOriginalStructure, "inchi.tsv.gz")
 
 ### SMILES
 pathDataInterimTablesOriginalStructureSmiles <-
-  file.path(pathDataInterimTablesOriginalStructure, "smiles.tsv.zip")
+  file.path(pathDataInterimTablesOriginalStructure, "smiles.tsv.gz")
 
 ### nominal
 pathDataInterimTablesOriginalStructureNominal <-
-  file.path(pathDataInterimTablesOriginalStructure, "nominal.tsv.zip")
+  file.path(pathDataInterimTablesOriginalStructure, "nominal.tsv.gz")
 
 ## distinct organism
 pathDataInterimTablesOriginalOrganism <-
@@ -886,43 +879,43 @@ pathDataInterimTablesOriginalReference <-
 
 # ### authors
 # pathDataInterimTablesOriginalReferenceAuthors <-
-#   file.path(pathDataInterimTablesOriginalReference, "authors.tsv.zip")
+#   file.path(pathDataInterimTablesOriginalReference, "authors.tsv.gz")
 
 ### DOI
 pathDataInterimTablesOriginalReferenceDoi <-
-  file.path(pathDataInterimTablesOriginalReference, "doi.tsv.zip")
+  file.path(pathDataInterimTablesOriginalReference, "doi.tsv.gz")
 
 # ### external
 # pathDataInterimTablesOriginalReferenceExternal <-
-#   file.path(pathDataInterimTablesOriginalReference, "external.tsv.zip")
+#   file.path(pathDataInterimTablesOriginalReference, "external.tsv.gz")
 
 # ### isbn
 # pathDataInterimTablesOriginalReferenceIsbn <-
-#   file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.zip")
+#   file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.gz")
 
 # ### journal
 # pathDataInterimTablesOriginalReferenceJournal <-
-#   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.zip")
+#   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.gz")
 
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
-  file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.zip")
+  file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.gz")
 
 ### title
 pathDataInterimTablesOriginalReferenceTitle <-
-  file.path(pathDataInterimTablesOriginalReference, "title.tsv.zip")
+  file.path(pathDataInterimTablesOriginalReference, "title.tsv.gz")
 
 ### title
 pathDataInterimTablesOriginalReferenceUnsplit <-
-  file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.zip")
+  file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.gz")
 
 ### full
 pathDataInterimTablesOriginalReferenceFull <-
-  file.path(pathDataInterimTablesOriginalReference, "full.tsv.zip")
+  file.path(pathDataInterimTablesOriginalReference, "full.tsv.gz")
 
 ## table
 pathDataInterimTablesOriginalTable <-
-  file.path(pathDataInterimTablesOriginal, "table.tsv.zip")
+  file.path(pathDataInterimTablesOriginal, "table.tsv.gz")
 
 # translated fields
 pathDataInterimTablesTranslated <-
@@ -935,27 +928,27 @@ pathDataInterimTablesTranslatedOrganism <-
 ###file
 ##### maybe not useful #####
 pathDataInterimTablesTranslatedOrganismFile <-
-  file.path(pathDataInterimTablesTranslatedOrganism, "organism.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedOrganism, "organism.tsv.gz")
 
 ## ref
 pathDataInterimTablesTranslatedReference <-
   file.path(pathDataInterimTablesTranslated, "reference")
 
 pathDataInterimTablesTranslatedReferenceDoi <-
-  file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.gz")
 
 pathDataInterimTablesTranslatedReferencePubmed <-
-  file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
-  file.path(pathDataInterimTablesTranslatedReference, "title.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceUnsplit <-
-  file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceFile <-
   file.path(pathDataInterimTablesTranslatedReference,
-            "integrated.tsv.zip")
+            "integrated.tsv.gz")
 
 ## structure
 pathDataInterimTablesTranslatedStructure <-
@@ -963,23 +956,23 @@ pathDataInterimTablesTranslatedStructure <-
 
 ### smiles
 pathDataInterimTablesTranslatedStructureSmiles <-
-  file.path(pathDataInterimTablesTranslatedStructure, "smiles.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedStructure, "smiles.tsv.gz")
 
 ### nominal
 pathDataInterimTablesTranslatedStructureNominal <-
-  file.path(pathDataInterimTablesTranslatedStructure, "nominal.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedStructure, "nominal.tsv.gz")
 
 ### both
 pathDataInterimTablesTranslatedStructureFinal <-
-  file.path(pathDataInterimTablesTranslatedStructure, "final.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedStructure, "final.tsv.gz")
 
 ### unique
 pathDataInterimTablesTranslatedStructureUnique <-
-  file.path(pathDataInterimTablesTranslatedStructure, "unique.tsv.zip")
+  file.path(pathDataInterimTablesTranslatedStructure, "unique.tsv.gz")
 
 ## table
 pathDataInterimTablesTranslatedTable <-
-  file.path(pathDataInterimTablesTranslated, "table.tsv.zip")
+  file.path(pathDataInterimTablesTranslated, "table.tsv.gz")
 
 # cleaned fields
 pathDataInterimTablesCleaned <-
@@ -994,43 +987,43 @@ pathDataInterimTablesCleanedOrganismOriginal <-
   file.path(pathDataInterimTablesCleanedOrganism, "original/")
 
 pathDataInterimTablesCleanedOrganismOriginalTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
 
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated/")
 
 pathDataInterimTablesCleanedOrganismTranslatedInterim <-
-  file.path(pathDataInterimTablesCleanedOrganism, "interim.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "interim.tsv.gz")
 
 pathDataInterimTablesCleanedOrganismTranslatedTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "translated.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "translated.tsv.gz")
 
 ### final cleaned organisms
 pathDataInterimTablesCleanedOrganismFinal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "cleaned.tsv.zip")
+  file.path(pathDataInterimTablesCleanedOrganism, "cleaned.tsv.gz")
 
 pathDataInterimTablesCleanedOrganismRealDiff <-
   file.path(pathDataInterimTablesCleanedOrganism,
-            "organismsDifferentSpecies.tsv.zip")
+            "organismsDifferentSpecies.tsv.gz")
 
 ### structure
 pathDataInterimTablesCleanedStructure <-
   file.path(pathDataInterimTablesCleaned, "structure")
 
 pathDataInterimTablesCleanedStructureFile <-
-  file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.zip")
+  file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.gz")
 
 ## ref
 pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference")
 
 pathDataInterimTablesCleanedReferenceFile <-
-  file.path(pathDataInterimTablesCleanedReference, "cleaned.tsv.zip")
+  file.path(pathDataInterimTablesCleanedReference, "cleaned.tsv.gz")
 
 ### final cleaned table
 pathDataInterimTablesCleanedTable <-
-  file.path(pathDataInterimTablesCleaned, "table.tsv.zip")
+  file.path(pathDataInterimTablesCleaned, "table.tsv.gz")
 
 ## dirty for the moment
 if (mode == "full")
@@ -1053,39 +1046,39 @@ if (mode == "min")
 #### open
 pathDataProcessedTablesOpenDbTriplets <-
   file.path(pathDataProcessedTables,
-            "openDbTriplets.tsv.zip")
+            "openDbTriplets.tsv.gz")
 
 #### inhouse
 pathDataProcessedTablesInhouseDbTriplets <-
   file.path(pathDataProcessedTables,
-            "inhouseDbTriplets.tsv.zip")
+            "inhouseDbTriplets.tsv.gz")
 
 #### DNP
 pathDataProcessedTablesDnpDbTriplets <-
   file.path(pathDataProcessedTables,
-            "dnpDbTriplets.tsv.zip")
+            "dnpDbTriplets.tsv.gz")
 
 #### structures by kingdom
 pathDataProcessedTablesStructuresByKingdom <-
   file.path(pathDataProcessedTables,
-            "structuresByKingdom.tsv")
+            "structuresByKingdom.gz")
 
 #### unique structures by species
 pathDataProcessedTablesUniqueStructuresBySpecies <-
   file.path(pathDataProcessedTables,
-            "uniqueStructuresBySpecies.tsv")
+            "uniqueStructuresBySpecies.gz")
 
 #### widespread structures
 pathDataProcessedTablesWidespreadStructures <-
   file.path(pathDataProcessedTables,
-            "widespreadStructures.tsv")
+            "widespreadStructures.gz")
 
 #### mismatched genera
 pathDataProcessedTablesMismatchedGenera <-
   file.path(pathDataProcessedTables,
-            "mismatchedGenera.tsv")
+            "mismatchedGenera.gz")
 
 #### redundancy table
 pathDataProcessedTablesRedundancyTable <-
   file.path(pathDataProcessedTables,
-            "redundancyTable.tsv")
+            "redundancyTable.gz")

@@ -1,4 +1,4 @@
-# title: "biofacwuim compileR"
+# title: "biofacquim converteR"
 
 # loading paths
 source("paths.R")

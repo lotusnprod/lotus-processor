@@ -1,1 +1,0 @@
-actually there is a curation step included, shall we split?

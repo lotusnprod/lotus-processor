@@ -6,11 +6,11 @@ source("paths.R")
 # loading functions
 source("functions.R")
 
-# loading files
-## tcm names list from TM-MC
-tcmNamesDic_1 <-
-  read_excel(path = pathDataExternalDbSourceTmmcOriginal,
-             sheet = 1) %>%
+database <- databases$get("tmmc")
+
+## files
+tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
+                            sheet = 1) %>%
   mutate_all(as.character) %>%
   select(latin = LATIN,
          common = COMMON,
@@ -315,11 +315,6 @@ tcmNamesDicCurated <-
   rbind(tcmNamesDicCurated, tcmNamesDic_i, tcmNamesDic_is) %>%
   arrange(newbiologicalsource) %>%
   distinct(common, .keep_all = TRUE)
-
-tcmNamesDicCurated$newbiologicalsource <-
-  as.character(apply(tcmNamesDicCurated[2:3], 1, function(x)
-    tail(na.omit(x), 1)))
-
 
 # deleting ambiguous entries
 tcmNamesDicCurated <- tcmNamesDicCurated %>%

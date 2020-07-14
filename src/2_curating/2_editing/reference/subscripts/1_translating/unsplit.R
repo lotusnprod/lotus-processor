@@ -30,6 +30,8 @@ reflist <- invisible(
   )
 )
 
+print(x = "This may take several minutes")
+
 # joining with original dataframe
 for (i in 1:length(reflist)) {
   dataUnsplit[i, "referenceTranslatedDoi"] <-

@@ -90,7 +90,7 @@ plantcycompiling <- function(x)
   
   outpath <- file.path(pathDataExternalDbSourcePlantcyc,
                        paste(biologicalsource_2,
-                             ".tsv.zip",
+                             ".tsv.gz",
                              sep = ""))
   
   write.table(
