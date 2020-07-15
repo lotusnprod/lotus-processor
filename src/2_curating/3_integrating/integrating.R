@@ -97,16 +97,34 @@ referenceOrganismStructureIntegratedTable <-
 fullDb <- referenceOrganismStructureIntegratedTable %>%
   mutate(referenceCleanedTranslationScore = as.numeric(referenceCleanedTranslationScore)) %>%
   select(
-    -nameCleaned,
     -structureTranslatedSmiles,
     -structureTranslatedNominal,
+    -nameCleaned,
+    -structureTranslated,
     -validatorLog,
+    -smilesSanitized,
+    -inchiSanitized,
+    -formulaSanitized,
+    -exactmassSanitized,
+    -xlogpSanitized,
     -organismCleaned,
+    -organismDbTaxoQuality,
+    -organism_1_kingdom,
+    -organism_2_phylum,
+    -organism_3_class,
+    -organism_4_order,
+    -organism_5_family,
+    -organism_6_genus,
+    -organism_7_species,
+    -organism_8_variety,
     -referenceTranslatedDoi,
     -referenceTranslatedJournal,
     -referenceTranslatedTitle,
     -referenceTranslatedDate,
-    -referenceTranslatedAuthor
+    -referenceTranslatedAuthor,
+    -referenceTranslationScore,
+    -referenceCleanedAuthor,
+    -referenceCleanedDate
   )
 
 fullDbFiltered <- fullDb %>%
@@ -116,7 +134,7 @@ fullDbFiltered <- fullDb %>%
       !is.na(organismCurated)
   ) %>%
   distinct(
-    inchiSanitized,
+    inchikeySanitized,
     organismCurated,
     referenceOriginalExternal,
     referenceCleanedDoi,
@@ -133,7 +151,7 @@ fullDBDnpTop <- rbind(fullDbFilteredDnp, fullDbFilteredNoDnp)
 
 fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
   filter(!is.na(organismCurated)) %>%
-  distinct(inchiSanitized, organismCurated, .keep_all = TRUE) %>%
+  distinct(inchikeySanitized, organismCurated, .keep_all = TRUE) %>%
   filter(database != "dnp_1") %>%
   filter(referenceCleanedTranslationScore >= 90 &
            referenceCleanedTranslationScore <= 110)
