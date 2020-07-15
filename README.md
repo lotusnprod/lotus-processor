@@ -12,11 +12,10 @@ subgraph legend
 style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
 A([file])
 B[[script]]
-C[(database)]
 end
 
 subgraph 1_gathering
-010[(external/db/...)] -- n times --> 020[[db/.../standardizing.R]] -- n times --> 030([interim/db/...]) 
+010([external/db/...]) -- n times --> 020[[db/.../standardizing.R]] -- n times --> 030([interim/db/...]) 
 end
 
 subgraph 2_curating
@@ -122,7 +121,7 @@ subgraph 3_integrating
 998[[integrating.R]]
 
 400([0_original/table]) --> 
-    998[[integrating.R]] --> 999[(2_cleaned/table)]
+    998[[integrating.R]] --> 999([2_cleaned/table])
 end
 end    
 end
