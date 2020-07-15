@@ -8,13 +8,13 @@
 ```mermaid
 graph TD
 
+subgraph 1_gathering
 subgraph legend
 style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
 A([file])
 B[[script]]
 end
 
-subgraph 1_gathering
 subgraph db
 style db fill:#ffffcc
 010([external/db/...]) -- x times --> 020[[db/.../standardizing.R]] -- x times --> 030([interim/db/...]) 
@@ -149,7 +149,7 @@ style . fill:#EFEDF5
         390([cleaned.tsv.gz])
 end
 end
-
+end
 subgraph 3_integrating
 080[[integrating.R]] --> 400([0_original/table])
 120([cleaned.tsv.gz]) -->
@@ -163,7 +163,6 @@ subgraph 3_integrating
 
 400([0_original/table]) --> 
     998[[integrating.R]] --> 999([table.tsv.gz])
-end
 end    
 end
 ```
