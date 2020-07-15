@@ -22,10 +22,10 @@ end
 
 subgraph translation
 style translation fill:#E5F5E0
-010([external/db/...]) -- y times --> 040[[translation/common.R]]
-011([external/translation/...]) -- z times --> 040[[translation/common.R]] --> 050([common/names])
-010([external/db/...]) -- y2 times --> 060[[translation/tcm.R]]
-011([external/translation/...]) -- z2 times --> 060[[translation/tcm.R]] --> 070([tcm/names])
+010([external/db/...])
+011([external/translation/...]) -- y times --> 040[[translation/common.R]] --> 050([common/names])
+010([external/db/...])
+011([external/translation/...]) -- z times --> 060[[translation/tcm.R]] --> 070([tcm/names])
 end
 
 end
@@ -35,41 +35,35 @@ end
 
 subgraph 2_curating
 subgraph 1_integrating
-030([interim/db/...]) --> 080[[integrating.R]]
-080[[integrating.R]] --> 100([organism/*.tsv])
-080[[integrating.R]] --> 210([inchi.tsv.gz])
-080[[integrating.R]] --> 220([smiles.tsv.gz])
-080[[integrating.R]] --> 230([nominal.tsv.gz])
-080[[integrating.R]] --> 310([full.tsv.gz])
-080[[integrating.R]] --> 320([doi.tsv.gz])
-080[[integrating.R]] --> 330([pubmed.tsv.gz])
-080[[integrating.R]] --> 340([title.tsv.gz])
-080[[integrating.R]] --> 350([unsplit.tsv.gz])
-080[[integrating.R]] --> 400([0_original/table])
+030([interim/db/...])  --> 080[[integrating.R]]
 end
 
 subgraph 2_editing
 subgraph organism
+080[[integrating.R]] --> 100([organism/*.tsv])
 style organism fill:#E5F5E0
 100([organism/*.tsv]) -->
-    101[[1_cleaningOriginal.R]] --> 
+    101[[cleaningOriginal.R]] --> 
         102([original/*.json]) --> 
-            103[[1_cleaningOriginal.R]] --> 
+            103[[cleaningOriginal.R]] --> 
                 104([original.tsv.gz]) -->
-                    111[[4_cleaningTaxonomy.R]]
+                    111[[cleaningTaxonomy.R]]
         102([original/*.json]) -->
-            105[[2_translating.kt]] -->
+            105[[translating.kt]] -->
                 106([organism/*.tsv]) -->
-                    107[[3_cleaningTranslated.R]] --> 
+                    107[[cleaningTranslated.R]] --> 
                         108([translated/*.json]) --> 
-                            109[[3_cleaningTranslated.R]] -->  
+                            109[[cleaningTranslated.R]] -->  
                                 110([translated.tsv.gz]) -->
-                                    111[[4_cleaningTaxonomy.R]] -->
+                                    111[[cleaningTaxonomy.R]] -->
                                         120([cleaned.tsv.gz])
 end
 
 subgraph structure
 style structure fill:#FEE6CE
+080[[integrating.R]] --> 210([inchi.tsv.gz])
+080[[integrating.R]] --> 220([smiles.tsv.gz])
+080[[integrating.R]] --> 230([nominal.tsv.gz])
 subgraph str_1_translating
 style str_1_translating fill:#FEE6CE
 220([smiles.tsv.gz]) -->
@@ -121,6 +115,10 @@ end
 
 subgraph reference
 style reference fill:#EFEDF5
+080[[integrating.R]] --> 320([doi.tsv.gz])
+080[[integrating.R]] --> 330([pubmed.tsv.gz])
+080[[integrating.R]] --> 340([title.tsv.gz])
+080[[integrating.R]] --> 350([unsplit.tsv.gz])
 subgraph ref_1_translating
 style ref_1_translating fill:#EFEDF5
 320([doi.tsv.gz]) -->
@@ -138,11 +136,10 @@ style ref_1_translating fill:#EFEDF5
 end
 subgraph ref_2_integrating
 style ref_2_integrating fill:#EFEDF5
-310([full.tsv.gz]) --> 360[[2_integrating/integrating.R]]
-322([doi.tsv.gz]) --> 360[[2_integrating/integrating.R]]
-332([pubmed.tsv.gz]) --> 360[[2_integrating/integrating.R]]
-342([title.tsv.gz]) --> 360[[2_integrating/integrating.R]]
-352([unsplit.tsv.gz]) --> 360[[2_integrating/integrating.R]] -->
+322([doi.tsv.gz]) --> 360[[integrating.R]]
+332([pubmed.tsv.gz]) --> 360[[integrating.R]]
+342([title.tsv.gz]) --> 360[[integrating.R]]
+352([unsplit.tsv.gz]) --> 360[[integrating.R]] -->
         370([reference.tsv.gz]) 
 end
 subgraph .
@@ -154,6 +151,7 @@ end
 end
 
 subgraph 3_integrating
+080[[integrating.R]] --> 400([0_original/table])
 120([cleaned.tsv.gz]) -->
 998[[integrating.R]]
 
@@ -164,7 +162,7 @@ subgraph 3_integrating
 998[[integrating.R]]
 
 400([0_original/table]) --> 
-    998[[integrating.R]] --> 999([2_cleaned/table.tsv.gz])
+    998[[integrating.R]] --> 999([table.tsv.gz])
 end
 end    
 end
