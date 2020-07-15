@@ -3,6 +3,7 @@ stages:
   - test-docker
   - pull-data
   - build-databases
+  - build-translation
   - build-curating
 
 build_docker_image:
