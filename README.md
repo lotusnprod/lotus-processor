@@ -16,10 +16,12 @@ end
 
 subgraph 1_gathering
 subgraph db
+style db fill:#ffffcc
 010([external/db/...]) -- x times --> 020[[db/.../standardizing.R]] -- x times --> 030([interim/db/...]) 
 end
 
 subgraph translation
+style translation fill:#E5F5E0
 010([external/db/...]) -- y times --> 040[[translation/common.R]]
 011([external/translation/...]) -- z times --> 040[[translation/common.R]] --> 050([common/names])
 010([external/db/...]) -- y2 times --> 060[[translation/tcm.R]]
