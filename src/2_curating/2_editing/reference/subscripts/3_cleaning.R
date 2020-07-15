@@ -33,7 +33,10 @@ test <- dataTranslated %>%
 ### NOT GUESS IT BUT THEN BUILDING A REPLACEMENT DIC SEEMS GOOD FOR ME
 
 test2 <- test %>%
-  filter(grepl("Harborne, The Handbook of Natural Flavonoids", referenceOriginalUnsplit)) %>%
+  filter(grepl(
+    "Harborne, The Handbook of Natural Flavonoids",
+    referenceOriginalUnsplit
+  )) %>%
   mutate(
     referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 1,Anthocyanins",
@@ -181,9 +184,14 @@ test3 <- test %>%
   )
 
 test4 <- test %>%
-  filter(n != 631 &
-           !grepl("Harborne, The Handbook of Natural Flavonoids", referenceOriginalUnsplit) &
-           n > 10)
+  filter(
+    n != 631 &
+      !grepl(
+        "Harborne, The Handbook of Natural Flavonoids",
+        referenceOriginalUnsplit
+      ) &
+      n > 10
+  )
 
 test5 <- test4 %>%
   filter(n == 274) # problematic issue from PlantaMed
@@ -195,11 +203,13 @@ test6 <- test4 %>%
   filter(n == 194)
 
 RefShouldBeOk <- test %>%
-  filter(n < 5 & referenceTranslationScore > 80 & referenceTranslationScore <= 100)
+  filter(n < 5 &
+           referenceTranslationScore > 80 & referenceTranslationScore <= 100)
 
 ### analyzing how low we can go
 low70 <- test %>%
-  filter(n < 5 & referenceTranslationScore > 70 & referenceTranslationScore <= 80)
+  filter(n < 5 &
+           referenceTranslationScore > 70 & referenceTranslationScore <= 80)
 
 ## example
 ### Luesch, Hendrik; Yoshida, Wesley Y.; Moore, Richard E.; Paul, Valerie J.; Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439.

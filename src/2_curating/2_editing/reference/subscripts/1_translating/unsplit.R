@@ -115,6 +115,19 @@ for (i in 1:length(reflist)) {
 dataUnsplit <- dataUnsplit %>%
   mutate_all(as.character)
 
+dataUnsplit[] <-
+  lapply(dataUnsplit, function(x)
+    gsub("\r\n", " ", x))
+dataUnsplit[] <-
+  lapply(dataUnsplit, function(x)
+    gsub("\r", " ", x))
+dataUnsplit[] <-
+  lapply(dataUnsplit, function(x)
+    gsub("\n", " ", x))
+dataUnsplit[] <-
+  lapply(dataUnsplit, function(x)
+    gsub("\t", " ", x))
+
 # exporting
 ## creating directories if they do not exist
 ifelse(
@@ -138,7 +151,7 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )

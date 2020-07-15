@@ -40,11 +40,13 @@ translatedStructureTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-) %>% 
-  distinct(structureOriginalInchi,
-           structureOriginalSmiles,
-           structureOriginalNominal,
-           .keep_all = TRUE)
+) %>%
+  distinct(
+    structureOriginalInchi,
+    structureOriginalSmiles,
+    structureOriginalNominal,
+    .keep_all = TRUE
+  )
 
 #### cleaned
 cleanedStructureTable <- read_delim(
@@ -129,8 +131,8 @@ fullDb <- referenceOrganismStructureIntegratedTable %>%
 
 fullDbFiltered <- fullDb %>%
   filter(
-    referenceCleanedTranslationScore >= 90 &
-      referenceCleanedTranslationScore <= 110 &
+    referenceCleanedTranslationScore >= 70 &
+      referenceCleanedTranslationScore <= 150 &
       !is.na(organismCurated)
   ) %>%
   distinct(
@@ -153,8 +155,8 @@ fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
   filter(!is.na(organismCurated)) %>%
   distinct(inchikeySanitized, organismCurated, .keep_all = TRUE) %>%
   filter(database != "dnp_1") %>%
-  filter(referenceCleanedTranslationScore >= 90 &
-           referenceCleanedTranslationScore <= 110)
+  filter(referenceCleanedTranslationScore >= 70 &
+           referenceCleanedTranslationScore <= 150)
 
 stats <- fullDbFilteredOutsideDnp %>%
   group_by(database) %>%

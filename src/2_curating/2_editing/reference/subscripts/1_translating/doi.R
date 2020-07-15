@@ -111,6 +111,19 @@ for (i in 1:length(reflistDoi)) {
 dataDoi <- dataDoi %>%
   mutate_all(as.character)
 
+dataDoi[] <-
+  lapply(dataDoi, function(x)
+    gsub("\r\n", " ", x))
+dataDoi[] <-
+  lapply(dataDoi, function(x)
+    gsub("\r", " ", x))
+dataDoi[] <-
+  lapply(dataDoi, function(x)
+    gsub("\n", " ", x))
+dataDoi[] <-
+  lapply(dataDoi, function(x)
+    gsub("\t", " ", x))
+
 # exporting
 ## creating directories if they do not exist
 ifelse(
@@ -134,7 +147,7 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
