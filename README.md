@@ -15,113 +15,154 @@ B[[script]]
 end
 
 subgraph 1_gathering
-010([external/db/...]) -- n times --> 020[[db/.../standardizing.R]] -- n times --> 030([interim/db/...]) 
+subgraph db
+010([external/db/...]) -- x times --> 020[[db/.../standardizing.R]] -- x times --> 030([interim/db/...]) 
 end
+
+subgraph translation
+010([external/db/...]) -- y times --> 040[[translation/common.R]]
+011([external/translation/...]) -- z times --> 040[[translation/common.R]] --> 050([common/names])
+010([external/db/...]) -- y2 times --> 060[[translation/tcm.R]]
+011([external/translation/...]) -- z2 times --> 060[[translation/tcm.R]] --> 070([tcm/names])
+end
+
+end
+
+050([common/names]) --> 105[[2_translating.kt]]
+070([tcm/names]) --> 105[[2_translating.kt]]
 
 subgraph 2_curating
 subgraph 1_integrating
-030([interim/db/...]) --> 040[[integrating.R]]
-040[[integrating.R]] --> 100([0_original/organism/organism/*.tsv])
-040[[integrating.R]] --> 210([0_original/structure/inchi])
-040[[integrating.R]] --> 220([0_original/structure/smiles])
-040[[integrating.R]] --> 230([0_original/structure/nominal])
-040[[integrating.R]] --> 310([0_original/reference/full])
-040[[integrating.R]] --> 320([0_original/reference/doi])
-040[[integrating.R]] --> 330([0_original/reference/pubmed])
-040[[integrating.R]] --> 340([0_original/reference/title])
-040[[integrating.R]] --> 350([0_original/reference/unsplit])
-
-040[[integrating.R]] --> 400([0_original/table])
+030([interim/db/...]) --> 080[[integrating.R]]
+080[[integrating.R]] --> 100([organism/*.tsv])
+080[[integrating.R]] --> 210([inchi.tsv.gz])
+080[[integrating.R]] --> 220([smiles.tsv.gz])
+080[[integrating.R]] --> 230([nominal.tsv.gz])
+080[[integrating.R]] --> 310([full.tsv.gz])
+080[[integrating.R]] --> 320([doi.tsv.gz])
+080[[integrating.R]] --> 330([pubmed.tsv.gz])
+080[[integrating.R]] --> 340([title.tsv.gz])
+080[[integrating.R]] --> 350([unsplit.tsv.gz])
+080[[integrating.R]] --> 400([0_original/table])
 end
 
 subgraph 2_editing
 subgraph organism
 style organism fill:#E5F5E0
-100([0_original/organism/organism/*.tsv]) -->
+100([organism/*.tsv]) -->
     101[[1_cleaningOriginal.R]] --> 
-        102([2_cleaned/organism/original/*.json]) --> 
+        102([original/*.json]) --> 
             103[[1_cleaningOriginal.R]] --> 
-                104([2_cleaned/organism/original]) -->
+                104([original.tsv.gz]) -->
                     111[[4_cleaningTaxonomy.R]]
-        102([2_cleaned/organism/original/*.json]) -->
-            105[[2_translating.kotlin]] -->
-                106([1_translated/organism/*.tsv]) -->
+        102([original/*.json]) -->
+            105[[2_translating.kt]] -->
+                106([organism/*.tsv]) -->
                     107[[3_cleaningTranslated.R]] --> 
-                        108([2_cleaned/organism/translated/*.json]) --> 
+                        108([translated/*.json]) --> 
                             109[[3_cleaningTranslated.R]] -->  
-                                110([2_cleaned/organism/translated]) -->
+                                110([translated.tsv.gz]) -->
                                     111[[4_cleaningTaxonomy.R]] -->
-                                        120([2_cleaned/organism/cleaned])
+                                        120([cleaned.tsv.gz])
 end
 
 subgraph structure
 style structure fill:#FEE6CE
-210([0_original/structure/inchi]) -->
-            240[[2_integrating.R]]
-220([0_original/structure/smiles]) -->
-    221[[1_translating/smiles.py]] -->
-        222([1_translated/structure/smiles]) -->
-            240[[2_integrating.R]]
-230([0_original/structure/nominal]) -->
-    231[[1_translating/names.R]] -->
-        232([1_translated/structure/names]) -->
-            240[[2_integrating.R]] -->
-                250([1_translated/structure/unique]) -->
-                    260[[3_CleaningAndEnriching/chemosanitizer.py]] -->
-                        270([1_translated/structure/cleaned]) -->
-                            |external| 281[[classyfire]] -->
-                                |external| 291([structures enriched taxonomy]) -->
-                                    298[[integrating enrichment]]
-                        270([1_translated/structure/cleaned]) -->
-                            |external| 282[[chemGPS]] -->
-                                |external| 292([structures enriched chemGPS]) -->
-                                    298[[integrating enrichment]]
-                        270([1_translated/structure/cleaned]) -->
-                            |external| 283[[in silico]] -->
-                                |external| 293([structures enriched in silico spectra]) -->
-                                    298[[integrating enrichment]] -->
-                                        299([clean and enriched structures])
+subgraph str_1_translating
+style str_1_translating fill:#FEE6CE
+220([smiles.tsv.gz]) -->
+    221[[smiles.py]] -->
+        222([smiles.tsv.gz])
+230([nominal.tsv.gz]) -->
+    231[[names.R]] -->
+        232([names.tsv.gz])
+end
 
+subgraph str_2_integrating
+style str_2_integrating fill:#FEE6CE
+210([inchi.tsv.gz]) --> 240[[integrating.R]] 
+222([smiles.tsv.gz]) --> 240[[integrating.R]]
+232([names.tsv.gz]) --> 240[[integrating.R]]
+    --> 250([unique.tsv.gz]) 
+end
+
+subgraph str_3_sanitizing
+style str_3_sanitizing fill:#FEE6CE
+250([unique.tsv.gz]) --> 260[[chemosanitizer.py]] -->
+    270([cleaned.tsv.gz])
+end
+
+subgraph str_4_enriching
+style str_4_enriching fill:#FEE6CE
+270([cleaned.tsv.gz]) -->
+    |external| 281[[classyfire]] -->
+        |external| 291([enriched taxonomy])
+270([cleaned.tsv.gz]) -->
+    |external| 282[[chemGPS]] -->
+        |external| 292([enriched chemGPS])
+270([cleaned.tsv.gz]) -->
+    |external| 283[[in silico]] -->
+        |external| 293([enriched in silico spectra])
+end 
+
+subgraph str_5_integrating
+style str_5_integrating fill:#FEE6CE
+291([enriched taxonomy]) --> 298[[integrating enrichment]]
+292([enriched chemGPS]) --> 298[[integrating enrichment]]
+293([enriched in silico spectra]) --> 298[[integrating enrichment]]
+298[[integrating enrichment]] --> 299([clean and enriched structures])
+end
 classDef NotDone color:red
-class 281,291,282,292,283,293 NotDone
+class 281,291,282,292,283,293,298 NotDone
 
 end
 
 subgraph reference
 style reference fill:#EFEDF5
-320([0_original/reference/doi]) -->
-    321[[1_translating/doi.R]] -->
-        322([1_translated/reference/doi]) -->
-            360[[2_integrating/integrating.R]]
-330([0_original/reference/pubmed]) -->
-    331[[1_translating/pubmed.R]] -->
-        332([1_translated/reference/pubmed]) -->
-            360[[2_integrating/integrating.R]]
-340([0_original/reference/title]) -->
-    341[[1_translating/title.R]] -->
-        342([1_translated/reference/title]) -->
-            360[[2_integrating/integrating.R]]
-350([0_original/reference/unsplit]) -->
-    351[[1_translating/unsplit.R]] -->
-        352([1_translated/reference/unsplit]) -->
-            360[[2_integrating/integrating.R]] -->
-                370([1_translated/reference/reference]) -->
-                    380[[3_cleaning.R]] -->
-                        390([2_cleaned/reference/cleaned.tsv.zip])
+subgraph ref_1_translating
+style ref_1_translating fill:#EFEDF5
+320([doi.tsv.gz]) -->
+    321[[doi.R]] -->
+        322([doi.tsv.gz]) 
+330([pubmed.tsv.gz]) -->
+    331[[pubmed.R]] -->
+        332([pubmed.tsv.gz])
+340([title.tsv.gz]) -->
+    341[[title.R]] -->
+        342([title.tsv.gz])
+350([unsplit.tsv.gz]) -->
+    351[[unsplit.R]] -->
+        352([unsplit.tsv.gz])
+end
+subgraph ref_2_integrating
+style ref_2_integrating fill:#EFEDF5
+310([full.tsv.gz]) --> 360[[2_integrating/integrating.R]]
+322([doi.tsv.gz]) --> 360[[2_integrating/integrating.R]]
+332([pubmed.tsv.gz]) --> 360[[2_integrating/integrating.R]]
+342([title.tsv.gz]) --> 360[[2_integrating/integrating.R]]
+352([unsplit.tsv.gz]) --> 360[[2_integrating/integrating.R]] -->
+        370([reference.tsv.gz]) 
+end
+subgraph .
+style . fill:#EFEDF5
+370([reference.tsv.gz]) -->
+    380[[3_cleaning.R]] -->
+        390([cleaned.tsv.gz])
+end
 end
 
 subgraph 3_integrating
-120([2_cleaned/organism/cleaned.tsv.zip]) -->
+120([cleaned.tsv.gz]) -->
 998[[integrating.R]]
 
 299([clean and enriched structures]) -->
 998[[integrating.R]]
 
-390([2_cleaned/reference/cleaned.tsv.zip]) -->
+390([cleaned.tsv.gz]) -->
 998[[integrating.R]]
 
 400([0_original/table]) --> 
-    998[[integrating.R]] --> 999([2_cleaned/table])
+    998[[integrating.R]] --> 999([2_cleaned/table.tsv.gz])
 end
 end    
 end
