@@ -67,6 +67,19 @@ for (i in 1:nrow(reflistPubmedBound)) {
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)
 
+dataPubmed[] <-
+  lapply(dataPubmed, function(x)
+    gsub("\r\n", " ", x))
+dataPubmed[] <-
+  lapply(dataPubmed, function(x)
+    gsub("\r", " ", x))
+dataPubmed[] <-
+  lapply(dataPubmed, function(x)
+    gsub("\n", " ", x))
+dataPubmed[] <-
+  lapply(dataPubmed, function(x)
+    gsub("\t", " ", x))
+
 # exporting
 ## creating directories if they do not exist
 ifelse(
@@ -90,7 +103,7 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )

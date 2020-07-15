@@ -16,6 +16,10 @@ dataDoi <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+colnames(dataDoi)[2:ncol(dataDoi)] <-
+  paste(colnames(dataDoi)[2:ncol(dataDoi)], "doi", sep = "_")
+
+
 dataPubmed <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
   delim = "\t",
@@ -23,6 +27,9 @@ dataPubmed <- read_delim(
   trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
+
+colnames(dataPubmed)[2:ncol(dataPubmed)] <-
+  paste(colnames(dataPubmed)[2:ncol(dataPubmed)], "pubmed", sep = "_")
 
 dataTitle <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
@@ -32,6 +39,9 @@ dataTitle <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+colnames(dataTitle)[2:ncol(dataTitle)] <-
+  paste(colnames(dataTitle)[2:ncol(dataTitle)], "title", sep = "_")
+
 dataUnsplit <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceUnsplit),
   delim = "\t",
@@ -40,25 +50,48 @@ dataUnsplit <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+colnames(dataUnsplit)[2:ncol(dataUnsplit)] <-
+  paste(colnames(dataUnsplit)[2:ncol(dataUnsplit)], "unsplit", sep = "_")
+
 dataFull <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceFull),
+  file = gzfile(description = pathDataInterimTablesOriginalTable),
   delim = "\t",
+  col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  distinct(
+    referenceOriginalAuthors,
+    referenceOriginalDoi,
+    referenceOriginalExternal,
+    referenceOriginalIsbn,
+    referenceOriginalJournal,
+    referenceOriginalPubmed,
+    referenceOriginalTitle,
+    referenceOriginalUnsplit
+  ) %>%
   mutate_all(as.character)
 
 # joining all types together again
-dataFull <- full_join(dataFull, dataDoi)
-dataFull <- full_join(dataFull, dataPubmed)
-dataFull <- full_join(dataFull, dataTitle)
-dataFull <- full_join(dataFull, dataUnsplit)
+dataFullWide <- full_join(dataFull, dataDoi)
+dataFullWide <- full_join(dataFullWide, dataPubmed)
+dataFullWide <- full_join(dataFullWide, dataTitle)
+dataFullWide <- full_join(dataFullWide, dataUnsplit)
 
-### problematic reference field containing multiple references with no clear association ###
-### I also think we should output a "nonarticleref" column for external DB links etc ###
+dataFullLong <- dataFullWide %>%
+  pivot_longer(
+    cols = 9:ncol(.),
+    names_to = c(".value", "level"),
+    names_sep = "_",
+    values_to = "reference",
+    values_drop_na = TRUE
+  )
+
+dataFullLongFilled <- left_join(dataFull, dataFullLong)
+
 ### inconsistency of journal name depending on retrieval method (check JNP) ###
 
-dataReferencedSelected <- dataFull %>%
+dataReferencedSelected <- dataFullLongFilled %>%
   select(
     referenceOriginalAuthors,
     referenceOriginalDoi,

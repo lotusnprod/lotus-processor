@@ -44,6 +44,19 @@ if (mode == "min")
   inhouseDbSelected <- inhouseDbSelected %>%
   sample_n(2000)
 
+inhouseDbSelected[] <-
+  lapply(inhouseDbSelected, function(x)
+    gsub("\r\n", " ", x))
+inhouseDbSelected[] <-
+  lapply(inhouseDbSelected, function(x)
+    gsub("\r", " ", x))
+inhouseDbSelected[] <-
+  lapply(inhouseDbSelected, function(x)
+    gsub("\n", " ", x))
+inhouseDbSelected[] <-
+  lapply(inhouseDbSelected, function(x)
+    gsub("\t", " ", x))
+
 inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
                                   y = "n.a.")
 
@@ -62,6 +75,9 @@ inhouseDbReferenceAuthors <- inhouseDbSelected %>%
 inhouseDbReferenceDoi <- inhouseDbSelected %>%
   filter(!is.na(referenceOriginalDoi)) %>%
   distinct(referenceOriginalDoi)
+
+row.names(inhouseDbReferenceDoi) <-
+  inhouseDbReferenceDoi$referenceOriginalDoi
 
 # ### external
 # inhouseDbReferenceExternal <- inhouseDbSelected %>%
@@ -83,6 +99,9 @@ inhouseDbReferencePubmed <- inhouseDbSelected %>%
   filter(is.na(referenceOriginalDoi)) %>%
   filter(!is.na(referenceOriginalPubmed)) %>%
   distinct(referenceOriginalPubmed)
+
+row.names(inhouseDbReferencePubmed) <-
+  inhouseDbReferencePubmed$referenceOriginalPubmed
 
 ### title
 inhouseDbReferenceTitle <- inhouseDbSelected %>%
@@ -203,8 +222,8 @@ write.table(
     compression = 9,
     encoding = "UTF-8"
   ),
-  row.names = FALSE,
-  quote = FALSE,
+  row.names = TRUE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
@@ -259,8 +278,8 @@ write.table(
     compression = 9,
     encoding = "UTF-8"
   ),
-  row.names = FALSE,
-  quote = FALSE,
+  row.names = TRUE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
@@ -274,7 +293,7 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
@@ -288,12 +307,12 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
 
-#### unsplit
+#### full
 write.table(
   x = inhouseDbReferenceFull,
   file = gzfile(
@@ -302,7 +321,7 @@ write.table(
     encoding = "UTF-8"
   ),
   row.names = FALSE,
-  quote = FALSE,
+  quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
 )
