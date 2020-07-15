@@ -35,32 +35,32 @@ alkamid: ${INTERIM_DB_PATH}/alkamid.tsv.gz
 ${INTERIM_DB_PATH}/alkamid.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 
-alkamid-rescrape: #$(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
-# $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
+alkamid-rescrape: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
+$(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): # ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 
 biofacquim: ${INTERIM_DB_PATH}/biofacquim.tsv.gz
 ${INTERIM_DB_PATH}/biofacquim.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz ${SRC_GATHERING_DB_PATH}/biofacquim/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biofacquim/standardizing.R
 
-biofacquim-reconvert: # ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/BIOFACQUIM_V2.sdf ${SRC_GATHERING_DB_PATH}/biofacquim/converting.R
+biofacquim-reconvert: ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/BIOFACQUIM_V2.sdf ${SRC_GATHERING_DB_PATH}/biofacquim/converting.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biofacquim/converting.R
 
 biophytmol: ${INTERIM_DB_PATH}/biophytmol.tsv.gz
 ${INTERIM_DB_PATH}/biophytmol.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/biophytmol/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biophytmol/standardizing.R
 
-biophytmol-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
+biophytmol-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
 
 carotenoiddb: ${INTERIM_DB_PATH}/carotenoiddb.tsv.gz
 ${INTERIM_DB_PATH}/carotenoiddb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/carotenoiddb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/carotenoiddb/standardizing.R
 
-carotenoiddb-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv ${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
+carotenoiddb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv ${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
 
 cmaup: ${INTERIM_DB_PATH}/cmaup.tsv.gz
@@ -71,8 +71,8 @@ coconut: ${INTERIM_DB_PATH}/coconut.tsv.gz
 ${INTERIM_DB_PATH}/coconut.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz ${SRC_GATHERING_DB_PATH}/coconut/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/coconut/standardizing.R
 
-coconut-reconvert: # ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/coconut/COCONUT_DB.sdf ${SRC_GATHERING_DB_PATH}/coconut/converting.py
+coconut-reconvert: ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/coconut/COCONUT_DB.sdf ${SRC_GATHERING_DB_PATH}/coconut/converting.py
 	cd	${PWD}/src	&&	python	${SRC_GATHERING_DB_PATH}/coconut/converting.py
 
 cyanometdb: ${INTERIM_DB_PATH}/cyanometdb.tsv.gz
@@ -107,8 +107,8 @@ knapsack: ${INTERIM_DB_PATH}/knapsack.tsv.gz
 ${INTERIM_DB_PATH}/knapsack.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/knapsack/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/standardizing.R
 
-knapsack-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
+knapsack-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 
 # PROCESS DONE FOR METABOLIGHTS IS HORROR... my apologies I can't write it another way
@@ -118,12 +118,12 @@ metabolights: ${INTERIM_DB_PATH}/metabolights.tsv.gz
 ${INTERIM_DB_PATH}/metabolights.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
 
-metabolights-reconvert: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/metabolights/studiesScraped/*.json) ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml ${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R ${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
+metabolights-reconvert: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/metabolights/studiesScraped/*.json) ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml ${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R ${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
 
-metabolights-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml ${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
+metabolights-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz
+{EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml ${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
 
 mibig: ${INTERIM_DB_PATH}/mibig.tsv.gz
@@ -134,16 +134,16 @@ mitishamba: ${INTERIM_DB_PATH}/mitishamba.tsv.gz
 ${INTERIM_DB_PATH}/mitishamba.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/mitishamba/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/mitishamba/standardizing.R
 
-mitishamba-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
+mitishamba-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
 
 nanpdb: ${INTERIM_DB_PATH}/nanpdb.tsv.gz
 ${INTERIM_DB_PATH}/nanpdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
 
-nanpdb-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
+nanpdb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 
 napralert: ${INTERIM_DB_PATH}/napralert.tsv.gz
@@ -166,8 +166,8 @@ npedia: ${INTERIM_DB_PATH}/npedia.tsv.gz
 ${INTERIM_DB_PATH}/npedia.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/npedia/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npedia/standardizing.R
 
-npedia-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/npedia/scraping.R
+npedia-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/npedia/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npedia/scraping.R
 
 nubbe: ${INTERIM_DB_PATH}/nubbe.tsv.gz
@@ -194,24 +194,24 @@ phytohub: ${INTERIM_DB_PATH}/phytohub.tsv.gz
 ${INTERIM_DB_PATH}/phytohub.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/phytohub/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phytohub/standardizing.R
 
-phytohub-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
+phytohub-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 
 plantcyc: ${INTERIM_DB_PATH}/plantcyc.tsv.gz
 ${INTERIM_DB_PATH}/plantcyc.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
 
-plantcyc-reintegrate: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz)	
-# $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz): $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat) ${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
+plantcyc-reintegrate: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz)	
+$(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz): # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat) ${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
 
 procardb: ${INTERIM_DB_PATH}/procardb.tsv.gz
 ${INTERIM_DB_PATH}/procardb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/procardb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/procardb/standardizing.R
 
-procardb-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/procardb/scraping.R
+procardb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/procardb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/procardb/scraping.R
 
 respect: ${INTERIM_DB_PATH}/respect.tsv.gz
@@ -222,24 +222,24 @@ sancdb: ${INTERIM_DB_PATH}/sancdb.tsv.gz
 ${INTERIM_DB_PATH}/sancdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/sancdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/sancdb/standardizing.R
 
-sancdb-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
+sancdb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
 
 streptomedb: ${INTERIM_DB_PATH}/streptomedb.tsv.gz
 ${INTERIM_DB_PATH}/streptomedb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.tsv.gz ${SRC_GATHERING_DB_PATH}/streptomedb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/streptomedb/standardizing.R
 
-streptomedb-reconvert: # ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.sdf ${SRC_GATHERING_DB_PATH}/streptomedb/converting.R
+streptomedb-reconvert: ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/streptomedb/streptomedb.sdf ${SRC_GATHERING_DB_PATH}/streptomedb/converting.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/streptomedb/converting.R
 
 swmd: ${INTERIM_DB_PATH}/swmd.tsv.gz
 ${INTERIM_DB_PATH}/swmd.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/swmd/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/swmd/standardizing.R
 
-swmd-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
+swmd-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 
 symmap: ${INTERIM_DB_PATH}/symmap.tsv.gz
@@ -250,8 +250,8 @@ tmdb: ${INTERIM_DB_PATH}/tmdb.tsv.gz
 ${INTERIM_DB_PATH}/tmdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/tmdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/tmdb/standardizing.R
 
-tmdb-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz:	${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
+tmdb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
 
 tmmc: ${INTERIM_DB_PATH}/tmmc.tsv.gz
@@ -270,14 +270,14 @@ unpd: ${INTERIM_DB_PATH}/unpd.tsv.gz
 ${INTERIM_DB_PATH}/unpd.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz ${SRC_GATHERING_DB_PATH}/unpd/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/unpd/standardizing.R
 
-unpd-reintegrate: # ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/unpd/UNPD_DB.csv.zip ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpd_final.csv.zip ${SRC_GATHERING_DB_PATH}/unpd/integrating.R
+unpd-reintegrate: ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/unpd/UNPD_DB.csv.zip ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpd_final.csv.zip ${SRC_GATHERING_DB_PATH}/unpd/integrating.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/unpd/integrating.R
 
 wakankensaku: ${INTERIM_DB_PATH}/wakankensaku.tsv.gz
 ${INTERIM_DB_PATH}/wakankensaku.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/wakankensaku/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/wakankensaku/standardizing.R
 
-wakankensaku-rescrape: # ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz
-# ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
+wakankensaku-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
