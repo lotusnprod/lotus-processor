@@ -1,6 +1,6 @@
 include	../../../paths.mk
 
-.PHONY:	gathering-translation-full	gathering-translation-common	gathering-translation-tcm
+.PHONY:	gathering-translation-common	gathering-translation-tcm
 .PRECIOUS: %.tsv %.zip	%.json	%.gz
 
 gathering-translation-common:	${INTERIM_DICTIONARY_PATH}/common/names.tsv.gz
