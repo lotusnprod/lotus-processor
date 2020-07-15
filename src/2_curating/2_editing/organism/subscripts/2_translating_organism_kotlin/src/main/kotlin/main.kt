@@ -3,6 +3,7 @@ import com.univocity.parsers.tsv.TsvWriterSettings
 
 import java.io.File
 import java.text.DecimalFormat
+import java.util.concurrent.atomic.AtomicInteger
 import java.util.stream.Collectors
 import kotlin.system.exitProcess
 
@@ -16,6 +17,71 @@ fun usageExit() {
     println("If the last argument is min, it will run on tables if not on tables_min")
     println("If the last argument is full, it will run on tables")
     exitProcess(1)
+}
+
+lateinit var exclusionDic: List<Regex>
+lateinit var combinedDic: List<Pair<Regex, String>>
+
+inline fun processRecord(record: Map<String, String>): Map<String, String> {
+    val newRecord = record.toMutableMap()
+    newRecord["organismInterim"] = ""
+    var newTerm = newRecord["organismOriginal"] ?: return newRecord
+
+    exclusionDic.map {
+        newTerm = newTerm.replace(it, "")
+    }
+
+    if (newTerm == "") return newRecord
+
+    val orgCleaned = newRecord["organismCleaned"]
+    if (orgCleaned != null) {
+        if (orgCleaned == newTerm) newTerm = ""
+        newTerm = newTerm.replace(
+            Regex("\\b$orgCleaned\\b", RegexOption.IGNORE_CASE),
+            ""
+        )
+    }
+
+    // We try to clean up a bit
+
+    newTerm = newTerm.replace(Regex("[. _]"), " ").replace(Regex(" +"), " ").trim()
+    if (newTerm == "") return newRecord
+    val candidateList = mutableSetOf<String>()
+    // So this is a bit complicated
+    // We match each string only once and replace it from the initial string so it doesn't get matched again
+    //
+    // So for "foo bar bim" if we have in the dictionnary "foo bar" => ABC  and "bim" => XYZ
+    // it would process it like that: initialString = "foo bar"
+    // initialString = "bar" candidatesList=["ABC"]
+    // initialString = "" candidatesList=["ABC", "XYZ"]
+
+
+    // We need to make a loop we can exit from
+    run loop@{
+        combinedDic.forEach { pair ->
+            // If we have at least one match
+            pair.first.find(newTerm)?.let {
+                // We remove it
+                newTerm.replace(pair.first, "")
+                // And add the replacement to the candidateList
+                if (pair.second != "")
+                    candidateList.add(pair.second)
+                newTerm = newTerm.trim() // We remove eventual unnecessary space
+
+                if (newTerm == "") return@loop
+            }
+        }
+    }
+
+    // We likely don't need the second round as we are doing the cleaning ourselves in the dictionnary creation.
+    /*// Second round of TCM
+
+    tcmNamesDic.forEach {
+    newTerm = newTerm.replace(it.first, it.second)
+    }*/
+    // We combine both the new term and the eventual candidateList
+    newRecord["organismInterim"] = (listOf(newTerm) + candidateList).joinToString(" , ")
+    return newRecord
 }
 
 fun main(args: Array<String>) {
@@ -66,8 +132,16 @@ fun main(args: Array<String>) {
         val canonicalName = it.getValue("canonicalName", "")
         val newCanonicalName = it.getValue("newCanonicalName", "")
         val out = mutableListOf(
-            Pair(Regex("\\b${vernacularName}\\b", RegexOption.IGNORE_CASE), canonicalName)
+            Pair(
+                Regex("\\b${vernacularName}\\b", RegexOption.IGNORE_CASE),
+                if (newCanonicalName != "NA") {
+                    newCanonicalName
+                } else {
+                    canonicalName
+                }
+            )  // If we have a new canonical name, we replace it already
         )
+        // If we find out a canonicalName and we have a newCanonicalName, we will replace it by that
         if (newCanonicalName != "NA")
             out.add(Pair(Regex("\\b${canonicalName}\\b", RegexOption.IGNORE_CASE), newCanonicalName))
         out
@@ -85,50 +159,32 @@ fun main(args: Array<String>) {
     // Exclusion list
 
     logger.info("Loading and processing the exclusion list")
-    val exclusionDic = parseTSVFile(pathDataInterimDictionariesCommonBlackDic)?.map {
-        if (it.getString(0) == "Apple") println("Apple will become empty")
+    exclusionDic = parseTSVFile(pathDataInterimDictionariesCommonBlackDic)?.map {
         it.getValue<String>("blackName", null)
     }?.sortedByDescending { it.length }?.map { Regex("\\b$it\\b", RegexOption.IGNORE_CASE) }?.distinct()
         ?: throw Exception("Sorry can't read exclusion list")
 
     // Processing
+    logger.info("Creating combined Dic")
+    combinedDic = (commonNamesDic + tcmNamesDic)
+    val entriesNumber = dataCleanedOriginalOrganism.size
+    logger.info("Processing $entriesNumber entries")
+    val progress = AtomicInteger(0)
+    val startTime = System.nanoTime()
 
-    logger.info("Processing")
     val processedRecords =
-        dataCleanedOriginalOrganism.parallelStream().map { record -> // We remove the ones from the exclusion list
-
-            var newTerm = record["organismOriginal"] ?: ""
-            exclusionDic.map {
-                newTerm = newTerm.replace(it, "")
+        dataCleanedOriginalOrganism.parallelStream().map { record ->
+            val localProgress = progress.incrementAndGet()
+            if (localProgress % 1000 == 0) {
+                val ratio = localProgress.toFloat() / entriesNumber
+                val timeSpentSeconds = (System.nanoTime() - startTime) / 1_000_000_000
+                val rest = entriesNumber - localProgress
+                val eta = rest * timeSpentSeconds / localProgress
+                logger.info("Processed $localProgress/$entriesNumber ${(100 * ratio)}% ETA: $eta s")
             }
+            processRecord(record)
+        }.unordered().collect(Collectors.toList())
 
-            newTerm = newTerm.replace(
-                Regex("\\b${record.getOrDefault("organismCleaned", "")}\\b", RegexOption.IGNORE_CASE),
-                ""
-            )
-
-            // We try to clean up a bit
-
-            newTerm = newTerm.replace(".", "").trim().replace(" ", " ").replace("_", " ")
-                .replace(Regex(" +"), " ")
-
-            commonNamesDic.forEach {
-                newTerm = newTerm.replace(it.first, it.second)
-            }
-
-            tcmNamesDic.forEach {
-                newTerm = newTerm.replace(it.first, it.second)
-            }
-
-            // Second round of TCM
-
-            tcmNamesDic.forEach {
-                newTerm = newTerm.replace(it.first, it.second)
-            }
-
-            record["organismInterim"] = newTerm
-            record
-        }.collect(Collectors.toList())
 
     logger.info("Done processing")
 
