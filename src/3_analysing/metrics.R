@@ -1,13 +1,15 @@
-#title: "Unique pairs compileR"
+# title: "Unique pairs compileR"
 
-#loading functions
+# loading functions
 source("functions.R")
 source("paths.R")
 
-#loading files
-##fullDB
+# loading files
+print(x = "loading db, if running fullmode, this may take a while")
+
+## fullDB
 inhouseDb <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedTable),
+  file = gzfile(pathDataInterimTablesCuratedTable),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
@@ -15,66 +17,123 @@ inhouseDb <- read_delim(
 ) %>%
   data.frame()
 
-##openDB
+## openDB
 openDb <- inhouseDb %>%
   filter(database != "dnp_1")
 
-##DNP
+## DNP
 dnpDb <- inhouseDb %>%
   filter(database == "dnp_1")
 
-#unique
-##biological taxa
-###open NP DB
+fullDBDnpTop <- rbind(dnpDb, openDb)
+
+fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
+  filter(!is.na(organismCurated)) %>%
+  distinct(inchikeySanitized, organismCurated, .keep_all = TRUE) %>%
+  filter(database != "dnp_1") %>%
+  filter(
+    as.integer(referenceCleanedTranslationScore) >= 70 &
+      as.integer(referenceCleanedTranslationScore) <= 150
+  )
+
+stats <- fullDbFilteredOutsideDnp %>%
+  group_by(database) %>%
+  count()
+
+# unique
+print(x = "analysing unique organisms per db")
+## biological taxa
+### open NP DB
+print(x = "open")
 openDbOrganism <- distinct_biosources(x = openDb)
 
-###inhouseDB
+### inhouseDB
+print(x = "inhouse")
 inhouseDbOrganism <- distinct_biosources(x = inhouseDb)
 
-###DNP
+### DNP
+print(x = "dnp")
 dnpDbOrganism <- distinct_biosources(x = dnpDb)
 
-##structures
-###open NP DB
+## structures
+print(x = "analysing unique structures per db")
+### open NP DB
+print(x = "open")
 openDbStructure <- openDb %>%
   filter(!is.na(inchikeySanitized)) %>%
   distinct(inchikeySanitized, .keep_all = TRUE)
 
-###inhouseDB
+### inhouseDB
+print(x = "inhouse")
 inhouseDbStructure <- inhouseDb %>%
   filter(!is.na(inchikeySanitized)) %>%
   distinct(inchikeySanitized, .keep_all = TRUE)
 
-###DNP
+### DNP
+print(x = "dnp")
 dnpDbStructure <- dnpDb %>%
   filter(!is.na(inchikeySanitized)) %>%
   distinct(inchikeySanitized, .keep_all = TRUE)
 
-##triplets
+## references
+### open NP DB
+openDbReference <- openDb %>%
+  filter(!is.na(referenceOriginalExternal) |
+           !is.na(referenceCleanedDoi)) %>%
+  distinct(referenceOriginalExternal, referenceCleanedDoi, .keep_all = TRUE)
+
+### inhouseDB
+inhouseDbReference <- inhouseDb %>%
+  filter(!is.na(referenceOriginalExternal) |
+           !is.na(referenceCleanedDoi)) %>%
+  distinct(referenceOriginalExternal, referenceCleanedDoi, .keep_all = TRUE)
+
+### DNP
+dnpDbReference <- dnpDb %>%
+  filter(!is.na(referenceOriginalExternal) |
+           !is.na(referenceCleanedDoi)) %>%
+  distinct(referenceOriginalExternal, referenceCleanedDoi, .keep_all = TRUE)
+
+## triplets
+print(x = "analysing triplets, this may take a while")
+print(x = "open")
 ###open NP DB
 openDbTriplets <- distinct_triplets(x = openDb)
 
-###inhouseDB
+print(x = "inhouse")
+### inhouseDB
 inhouseDbTriplets <- distinct_triplets(x = inhouseDb)
 
-###DNP
+print(x = "dnp")
+### DNP
 dnpDbTriplets <- distinct_triplets(dnpDb)
 
-##pairs
-###open NP DB
+## pairs
+print(x = "analysing pairs, this should be faster")
+### open NP DB
+print(x = "open")
 openDbPairs <- openDbTriplets %>%
+  filter(referenceCleanedTranslationScore >= 30 |
+           !is.na(referenceOriginalExternal)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
-###inhouseDB
+### inhouseDB
+print(x = "inhouse")
 inhouseDbPairs <- inhouseDbTriplets %>%
+  filter(referenceCleanedTranslationScore >= 30 |
+           !is.na(referenceOriginalExternal)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
-###DNP
+### DNP
+print(x = "dnp")
 dnpDbPairs <- dnpDbTriplets %>%
+  filter(referenceCleanedTranslationScore >= 30 |
+           !is.na(referenceOriginalExternal)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
-#writing tabular stats
-##species by kingdom
+# writing tabular stats
+## species by kingdom
+print(x = "analysing species by kingdom")
 inhouseSpeciesByKingdom <- inhouseDbPairs %>%
   group_by(organism_1_kingdom) %>%
   distinct(organism_7_species, .keep_all = TRUE) %>%
@@ -87,20 +146,21 @@ inhouseSpeciesByKingdom <- inhouseDbPairs %>%
   arrange(desc(speciesPercent)) %>%
   head(10)
 
-##structures by class
-inhouseStructuresByClass <- inhouseDbPairs %>%
-  group_by(structure_03_class) %>%
-  distinct(inchikeySanitized, .keep_all = TRUE) %>%
-  count(structure_03_class) %>%
-  ungroup() %>%
-  mutate(structuresPercent = 100 * n / sum(n)) %>%
-  select(class = structure_03_class,
-         structures = n,
-         structuresPercent) %>%
-  arrange(desc(structuresPercent)) %>%
-  head(10)
+## structures by class
+# inhouseStructuresByClass <- inhouseDbPairs %>%
+#   group_by(structure_03_class) %>%
+#   distinct(inchikeySanitized, .keep_all = TRUE) %>%
+#   count(structure_03_class) %>%
+#   ungroup() %>%
+#   mutate(structuresPercent = 100 * n / sum(n)) %>%
+#   select(class = structure_03_class,
+#          structures = n,
+#          structuresPercent) %>%
+#   arrange(desc(structuresPercent)) %>%
+#   head(10)
 
-##structures by kingdom
+## structures by kingdom
+print(x = "analysing structures by kingdom")
 inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
   group_by(organism_1_kingdom) %>%
   distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
@@ -113,7 +173,8 @@ inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
   arrange(desc(structuresPercent)) %>%
   head(10)
 
-##unique structures per kingdom
+## unique structures per kingdom
+print(x = "analysing unique structures by kingdom")
 inhouseUniqueStructuresPerKingdom <- inhouseDbPairs %>%
   group_by(inchikeySanitized) %>%
   add_count(inchikeySanitized) %>%
@@ -129,7 +190,8 @@ inhouseUniqueStructuresPerKingdom <- inhouseDbPairs %>%
   arrange(desc(specificStructures)) %>%
   head(10)
 
-##structures by kingdom
+## structures by kingdom
+print(x = "joining")
 inhouseStructuresByKingdom <-
   full_join(inhouseSpeciesByKingdom,
             inhouseStructuresByOrganismKingdom) %>%
@@ -142,6 +204,7 @@ inhouseStructuresByKingdom <-
   select(1, 2, 3, 4, 7, 8, 5, 6)
 
 ##unique structures per species
+print(x = "analysing unique structures by species")
 inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
   group_by(inchikeySanitized) %>%
   add_count(inchikeySanitized) %>%
@@ -155,23 +218,27 @@ inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
   select(species = organism_7_species,
          specificStructures = n) %>%
   arrange(desc(specificStructures)) %>%
+  filter(!is.na(species)) %>%
   head(10)
 
 ##widespread metabolites
+print(x = "analysing widespread metabolites")
 openDbWidespread <- openDbPairs %>%
   group_by(inchikeySanitized) %>%
   filter(!is.na(organism_1_kingdom)) %>%
   distinct(organism_1_kingdom, .keep_all = TRUE) %>%
   add_count() %>%
   ungroup() %>%
-  filter(n == 7) %>%
+  filter(n >= 6) %>%
   arrange(inchikeySanitized)
 
 ##word(species,1) != genus
+print(x = "analysing mismatched genera")
 mismatchedGenera <- inhouseDbOrganism %>%
   filter(word(organism_7_species, 1) != organism_6_genus)
 
 ##redundancy table
+print(x = "analysing redundant entries")
 redundancydf  <- inhouseDb %>%
   filter(!is.na(organismCurated) &
            !is.na(inchikeySanitized) &
@@ -616,28 +683,28 @@ redundancydf  <- inhouseDb %>%
 ##at organism_7_species level: structure_04_subclass == "Terpene lactones"
 ###(almost no common structures except quassinoids -> led to ref issue discovery)
 
-organismFilterDf <- openDbPairs %>%
-  filter(!is.na(organism_7_species)) %>%
-  filter(structure_04_subclass == "Terpene lactones") %>%
-  group_by(organism_7_species) %>%
-  add_count() %>%
-  ungroup() %>%
-  arrange(desc(n)) %>%
-  distinct(organism_7_species) %>%
-  head(24)
+# organismFilterDf <- openDbPairs %>%
+#   filter(!is.na(organism_7_species)) %>%
+#   filter(structure_04_subclass == "Terpene lactones") %>%
+#   group_by(organism_7_species) %>%
+#   add_count() %>%
+#   ungroup() %>%
+#   arrange(desc(n)) %>%
+#   distinct(organism_7_species) %>%
+#   head(24)
 
-organismFilter <- organismFilterDf$organism_7_species
+# organismFilter <- organismFilterDf$organism_7_species
 
-structureFilterDf <- openDbPairs %>%
-  filter(!is.na(structure_04_subclass)) %>%
-  group_by(structure_04_subclass) %>%
-  add_count() %>%
-  ungroup() %>%
-  arrange(desc(n)) %>%
-  distinct(structure_04_subclass) %>%
-  filter(structure_04_subclass == "Terpene lactones")
+# structureFilterDf <- openDbPairs %>%
+#   filter(!is.na(structure_04_subclass)) %>%
+#   group_by(structure_04_subclass) %>%
+#   add_count() %>%
+#   ungroup() %>%
+#   arrange(desc(n)) %>%
+#   distinct(structure_04_subclass) %>%
+#   filter(structure_04_subclass == "Terpene lactones")
 
-structureFilter <- structureFilterDf$structure_04_subclass
+# structureFilter <- structureFilterDf$structure_04_subclass
 
 # stereolist <- get_stereo_ratio(
 #   data = open_db_pairs,
@@ -649,17 +716,18 @@ structureFilter <- structureFilterDf$structure_04_subclass
 # )
 
 #exporting
+print(x = "exporting, may take a while if running full mode")
 ## creating directories if they do not exist
 ifelse(
-  !dir.exists(pathDataProcessedTables),
-  dir.create(pathDataProcessedTables),
+  !dir.exists(pathDataInterimTablesAnalysed),
+  dir.create(pathDataInterimTablesAnalysed),
   FALSE
 )
 ##open
 write.table(
   x = openDbTriplets,
   file = gzfile(
-    description = pathDataProcessedTablesOpenDbTriplets,
+    description = pathDataInterimTablesAnalysedOpenDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -673,7 +741,7 @@ write.table(
 write.table(
   x = inhouseDbTriplets,
   file = gzfile(
-    description = pathDataProcessedTablesInhouseDbTriplets,
+    description = pathDataInterimTablesAnalysedInhouseDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -687,7 +755,7 @@ write.table(
 write.table(
   x = dnpDbTriplets,
   file = gzfile(
-    description = pathDataProcessedTablesDnpDbTriplets,
+    description = pathDataInterimTablesAnalysedDnpDbTriplets,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -701,7 +769,7 @@ write.table(
 ###structures by kingdom
 write.table(
   x = inhouseStructuresByKingdom,
-  file = pathDataProcessedTablesStructuresByKingdom,
+  file = pathDataInterimTablesAnalysedStructuresByKingdom,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -711,7 +779,7 @@ write.table(
 ###unique structures per species
 write.table(
   x = inhouseUniqueStructuresPerSpecies,
-  file = pathDataProcessedTablesUniqueStructuresBySpecies,
+  file = pathDataInterimTablesAnalysedUniqueStructuresBySpecies,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -721,7 +789,7 @@ write.table(
 ###widespread metabolites
 write.table(
   x = openDbWidespread,
-  file = pathDataProcessedTablesWidespreadStructures,
+  file = pathDataInterimTablesAnalysedWidespreadStructures,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
@@ -731,8 +799,8 @@ write.table(
 ###mismatched genera
 write.table(
   x = mismatchedGenera,
-  file = pathDataProcessedTablesMismatchedGenera,
-  row.names = FALSE,
+  file = pathDataInterimTablesAnalysedMismatchedGenera,
+  row.names = TRUE,
   quote = FALSE,
   sep = "\t",
   fileEncoding = "UTF-8"
@@ -741,7 +809,7 @@ write.table(
 ###redundancy table
 write.table(
   x = redundancydf,
-  file = pathDataProcessedTablesRedundancyTable,
+  file = pathDataInterimTablesAnalysedRedundancyTable,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
