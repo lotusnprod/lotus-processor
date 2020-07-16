@@ -111,14 +111,6 @@ fullDb <- referenceOrganismStructureIntegratedTable %>%
     -xlogpSanitized,
     -organismCleaned,
     -organismDbTaxoQuality,
-    -organism_1_kingdom,
-    -organism_2_phylum,
-    -organism_3_class,
-    -organism_4_order,
-    -organism_5_family,
-    -organism_6_genus,
-    -organism_7_species,
-    -organism_8_variety,
     -referenceTranslatedDoi,
     -referenceTranslatedJournal,
     -referenceTranslatedTitle,
@@ -143,30 +135,19 @@ fullDbFiltered <- fullDb %>%
     .keep_all = TRUE
   )
 
-fullDbFilteredDnp <- fullDb %>%
-  filter(database == "dnp_1")
-
-fullDbFilteredNoDnp <- fullDb %>%
-  filter(database != "dnp_1")
-
-fullDBDnpTop <- rbind(fullDbFilteredDnp, fullDbFilteredNoDnp)
-
-fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
-  filter(!is.na(organismCurated)) %>%
-  distinct(inchikeySanitized, organismCurated, .keep_all = TRUE) %>%
-  filter(database != "dnp_1") %>%
-  filter(referenceCleanedTranslationScore >= 70 &
-           referenceCleanedTranslationScore <= 150)
-
-stats <- fullDbFilteredOutsideDnp %>%
-  group_by(database) %>%
-  count()
+# export
+## creating directories if they do not exist
+ifelse(
+  !dir.exists(pathDataInterimTablesCurated),
+  dir.create(pathDataInterimTablesCurated),
+  FALSE
+)
 
 ## table
 write.table(
   x = fullDb,
   file = gzfile(
-    description = pathDataInterimTablesCleanedTable,
+    description = pathDataInterimTablesCuratedTable,
     compression = 9,
     encoding = "UTF-8"
   ),

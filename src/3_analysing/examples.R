@@ -4,7 +4,7 @@ library(readr)
 source("paths.R")
 
 inhouseDb <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedTable),
+  file = gzfile(pathDataInterimTablesCuratedTable),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
@@ -33,7 +33,7 @@ structureSearch_3 <- structure %>%
   distinct(structureOriginalInchi,
            inchikeySanitized, .keep_all = TRUE)
 
-structure_search <-
+structureSearch <-
   rbind(structureSearch_1, structureSearch_2, structureSearch_3)
 
 structureSearch <- structureSearch %>%

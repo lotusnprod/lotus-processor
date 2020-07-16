@@ -4,7 +4,7 @@
 
 source("functions/database.R")
 
-mode <- Sys.getenv("FULL", unset = "full")
+mode <- Sys.getenv("FULL", unset = "min")
 
 # root
 ## data
@@ -1021,9 +1021,59 @@ pathDataInterimTablesCleanedReference <-
 pathDataInterimTablesCleanedReferenceFile <-
   file.path(pathDataInterimTablesCleanedReference, "cleaned.tsv.gz")
 
+# curated fields
+pathDataInterimTablesCurated <-
+  file.path(pathDataInterimTables, "3_curated")
+
 ### final cleaned table
-pathDataInterimTablesCleanedTable <-
-  file.path(pathDataInterimTablesCleaned, "table.tsv.gz")
+pathDataInterimTablesCuratedTable <-
+  file.path(pathDataInterimTablesCurated, "table.tsv.gz")
+
+# analysed fields
+pathDataInterimTablesAnalysed <-
+  file.path(pathDataInterimTables, "4_analysed")
+
+## triplets
+### open
+pathDataInterimTablesAnalysedOpenDbTriplets <-
+  file.path(pathDataInterimTablesAnalysed,
+            "openDbTriplets.tsv.gz")
+
+### inhouse
+pathDataInterimTablesAnalysedInhouseDbTriplets <-
+  file.path(pathDataInterimTablesAnalysed,
+            "inhouseDbTriplets.tsv.gz")
+
+### DNP
+pathDataInterimTablesAnalysedDnpDbTriplets <-
+  file.path(pathDataInterimTablesAnalysed,
+            "dnpDbTriplets.tsv.gz")
+
+## structures by kingdom
+pathDataInterimTablesAnalysedStructuresByKingdom <-
+  file.path(pathDataInterimTablesAnalysed,
+            "structuresByKingdom.tsv")
+
+## unique structures by species
+pathDataInterimTablesAnalysedUniqueStructuresBySpecies <-
+  file.path(pathDataInterimTablesAnalysed,
+            "uniqueStructuresBySpecies.tsv")
+
+## widespread structures
+pathDataInterimTablesAnalysedWidespreadStructures <-
+  file.path(pathDataInterimTablesAnalysed,
+            "widespreadStructures.tsv")
+
+## mismatched genera
+pathDataInterimTablesAnalysedMismatchedGenera <-
+  file.path(pathDataInterimTablesAnalysed,
+            "mismatchedGenera.tsv")
+
+## redundancy table
+pathDataInterimTablesAnalysedRedundancyTable <-
+  file.path(pathDataInterimTablesAnalysed,
+            "redundancyTable.tsv")
+
 
 ## dirty for the moment
 if (mode == "full")
@@ -1041,44 +1091,3 @@ pathTranslatedGnfinderScript <-
 if (mode == "min")
   pathTranslatedGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_min.sh"
-
-### processed triplets
-#### open
-pathDataProcessedTablesOpenDbTriplets <-
-  file.path(pathDataProcessedTables,
-            "openDbTriplets.tsv.gz")
-
-#### inhouse
-pathDataProcessedTablesInhouseDbTriplets <-
-  file.path(pathDataProcessedTables,
-            "inhouseDbTriplets.tsv.gz")
-
-#### DNP
-pathDataProcessedTablesDnpDbTriplets <-
-  file.path(pathDataProcessedTables,
-            "dnpDbTriplets.tsv.gz")
-
-#### structures by kingdom
-pathDataProcessedTablesStructuresByKingdom <-
-  file.path(pathDataProcessedTables,
-            "structuresByKingdom.gz")
-
-#### unique structures by species
-pathDataProcessedTablesUniqueStructuresBySpecies <-
-  file.path(pathDataProcessedTables,
-            "uniqueStructuresBySpecies.gz")
-
-#### widespread structures
-pathDataProcessedTablesWidespreadStructures <-
-  file.path(pathDataProcessedTables,
-            "widespreadStructures.gz")
-
-#### mismatched genera
-pathDataProcessedTablesMismatchedGenera <-
-  file.path(pathDataProcessedTables,
-            "mismatchedGenera.gz")
-
-#### redundancy table
-pathDataProcessedTablesRedundancyTable <-
-  file.path(pathDataProcessedTables,
-            "redundancyTable.gz")

@@ -7,6 +7,7 @@ include paths.mk
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-unsplit curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing
+.PHONY: curating-and-analysing analysing analysing-metrics analysing-examples
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -49,6 +50,8 @@ gathering-translation-common:
 
 gathering-translation-tcm:
 	make	-C	${SRC_GATHERING_TRANSLATION_PATH}	gathering-translation-tcm
+
+curating-and-analysing: curating analysing
 
 curating: curating-1-integrating curating-editing curating-3-integrating
 
@@ -126,6 +129,15 @@ curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/c
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
 
-curating-3-integrating:	${INTERIM_TABLE_CLEANED_PATH}/table.tsv.gz
-${INTERIM_TABLE_CLEANED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
+curating-3-integrating:	${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
+${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R
+
+analysing: analysing-metrics analysing-examples
+
+analysing-metrics:	# $(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*)
+# $(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*): ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
+	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/metrics.R
+
+analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
+	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/examples.R
