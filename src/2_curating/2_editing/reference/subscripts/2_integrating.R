@@ -19,7 +19,6 @@ dataDoi <- read_delim(
 colnames(dataDoi)[2:ncol(dataDoi)] <-
   paste(colnames(dataDoi)[2:ncol(dataDoi)], "doi", sep = "_")
 
-
 dataPubmed <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
   delim = "\t",

@@ -15,6 +15,10 @@ inhouseDb <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  mutate(referenceCleanedTranslationScore = as.integer(referenceCleanedTranslationScore)) %>%
+  arrange(desc(referenceOriginalExternal)) %>%
+  arrange(desc(referenceCleanedTranslationScore)) %>%
+  arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
 
 ## openDB
@@ -27,14 +31,95 @@ dnpDb <- inhouseDb %>%
 
 fullDBDnpTop <- rbind(dnpDb, openDb)
 
-fullDbFilteredOutsideDnp <- fullDBDnpTop %>%
-  filter(!is.na(organismCurated)) %>%
-  distinct(inchikeySanitized, organismCurated, .keep_all = TRUE) %>%
-  filter(database != "dnp_1") %>%
+fullDBDnpDown <- rbind(openDb, dnpDb)
+
+pairsOutsideDnp <- fullDBDnpTop %>%
+  filter(!is.na(organismCurated) &
+           !is.na(inchikeySanitized)) %>%
+  distinct(inchikeySanitized,
+           organismCurated,
+           .keep_all = TRUE) %>%
+  filter(database != "dnp_1")
+
+pairsFull <- fullDBDnpDown %>%
+  filter(!is.na(organismCurated) &
+           !is.na(inchikeySanitized)) %>%
+  distinct(inchikeySanitized,
+           organismCurated,
+           .keep_all = TRUE)
+
+tripletsOutsideDnpStrict <- pairsOutsideDnp %>%
+  distinct(
+    inchikeySanitized,
+    organismCurated,
+    referenceCleanedDoi,
+    referenceOriginalExternal,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  ) %>%
+  filter(!is.na(referenceCleanedDoi) &
+           referenceCleanedTranslationScore == 100)
+
+tripletsOverlapDnpStrict <- pairsFull %>%
+  distinct(
+    inchikeySanitized,
+    organismCurated,
+    referenceCleanedDoi,
+    referenceOriginalExternal,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  ) %>%
+  filter(!is.na(referenceCleanedDoi) &
+           referenceCleanedTranslationScore == 100)
+
+tripletsWithDnpStrict <- pairsFull %>%
+  distinct(
+    inchikeySanitized,
+    organismCurated,
+    referenceCleanedDoi,
+    referenceOriginalExternal,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  ) %>%
   filter(
-    as.integer(referenceCleanedTranslationScore) >= 70 &
-      as.integer(referenceCleanedTranslationScore) <= 150
+    !is.na(referenceCleanedDoi) &
+      referenceCleanedTranslationScore == 100 |
+      referenceOriginalExternal == "DNP"
   )
+
+tripletsDNP <- dnpDb %>%
+  distinct(inchikeySanitized,
+           organismCurated,
+           .keep_all = TRUE)
+
+tripletsOverlapDnpMedium <- pairsFull %>%
+  distinct(
+    inchikeySanitized,
+    organismCurated,
+    referenceCleanedDoi,
+    referenceOriginalExternal,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  ) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedTitle) |
+      !is.na(referenceOriginalExternal)
+  ) %>%
+  filter(referenceOriginalExternal != "DNP" |
+           referenceCleanedTranslationScore == 100)
+
+# trueTripletsOutsideDnpStrict <-
+#   distinct_triplets(x = tripletsOutsideDnpStrict)
+
+# trueTripletsOverlapDnpStrict <-
+#   distinct_triplets(x = tripletsOverlapDnpStrict)
+
+# trueTripletsWithDnpStrict <-
+#   distinct_triplets(x = tripletsWithDnpStrict)
+
+# trueTripletsDnpStrict <-
+#   distinct_triplets(x = tripletsDNP)
 
 stats <- fullDbFilteredOutsideDnp %>%
   group_by(database) %>%
@@ -78,9 +163,8 @@ dnpDbStructure <- dnpDb %>%
 ## references
 ### open NP DB
 openDbReference <- openDb %>%
-  filter(!is.na(referenceOriginalExternal) |
-           !is.na(referenceCleanedDoi)) %>%
-  distinct(referenceOriginalExternal, referenceCleanedDoi, .keep_all = TRUE)
+  filter(!is.na(referenceCleanedDoi)) %>%
+  distinct(referenceCleanedDoi, .keep_all = TRUE)
 
 ### inhouseDB
 inhouseDbReference <- inhouseDb %>%

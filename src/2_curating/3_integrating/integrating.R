@@ -104,8 +104,6 @@ fullDb <- referenceOrganismStructureIntegratedTable %>%
     -nameCleaned,
     -structureTranslated,
     -validatorLog,
-    -smilesSanitized,
-    -inchiSanitized,
     -formulaSanitized,
     -exactmassSanitized,
     -xlogpSanitized,
@@ -119,20 +117,6 @@ fullDb <- referenceOrganismStructureIntegratedTable %>%
     -referenceTranslationScore,
     -referenceCleanedAuthor,
     -referenceCleanedDate
-  )
-
-fullDbFiltered <- fullDb %>%
-  filter(
-    referenceCleanedTranslationScore >= 70 &
-      referenceCleanedTranslationScore <= 150 &
-      !is.na(organismCurated)
-  ) %>%
-  distinct(
-    inchikeySanitized,
-    organismCurated,
-    referenceOriginalExternal,
-    referenceCleanedDoi,
-    .keep_all = TRUE
   )
 
 # export
