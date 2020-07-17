@@ -42,7 +42,10 @@ openDbTriplets <- inhouseDb %>%
     referenceOriginalTitle,
     referenceOriginalUnsplit,
     organismLowestTaxon,
+    organismDbTaxo,
+    organismTaxonId,
     inchikeySanitized,
+    inchiSanitized,
     smilesSanitized,
     referenceCleanedTitle,
     referenceCleanedDoi,
@@ -79,7 +82,10 @@ sampleWD <- openDbTriplets %>%
   sample_n(1000) %>%
   select(
     organismLowestTaxon,
+    organismDbTaxo,
+    organismTaxonId,
     inchikeySanitized,
+    inchiSanitized,
     smilesSanitized,
     referenceCleanedTitle,
     referenceCleanedDoi
