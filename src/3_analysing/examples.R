@@ -41,6 +41,19 @@ structureSearch <- structureSearch %>%
   add_count() %>%
   arrange(desc(n))
 
+saltSearch <- structureSearch_3 %>%
+  distinct(structureOriginalInchi, .keep_all = TRUE) %>%
+  group_by(inchikeySanitized) %>%
+  add_count() %>%
+  filter(grepl(pattern = "\\.", x = structureOriginalInchi)) %>%
+  arrange(desc(n))
+
+maybeHit_salt <- inhouseDb %>%
+  filter(!is.na(referenceCleanedDoi)) %>%
+  filter(!is.na(organismLowestTaxon)) %>%
+  filter(inchikeySanitized == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") %>%
+  distinct(structureOriginalInchi)
+
 maybeHit_str <- inhouseDb %>%
   filter(!is.na(referenceCleanedDoi)) %>%
   filter(!is.na(organismLowestTaxon)) %>%

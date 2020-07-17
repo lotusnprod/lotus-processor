@@ -1074,10 +1074,25 @@ pathDataInterimTablesAnalysedRedundancyTable <-
   file.path(pathDataInterimTablesAnalysed,
             "redundancyTable.tsv")
 
+## sample ONPDB triplets (all)
+pathDataInterimTablesAnalysedSampleAllONPDB <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleAllONPDB.tsv")
+
+## sample ONPDB triplets (gold)
+pathDataInterimTablesAnalysedSampleGoldONPDB <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleGoldONPDB.tsv")
+
+## sample knapsack triplets
+pathDataInterimTablesAnalysedSampleKnapsack <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleKnapsack.tsv")
+
 
 ## dirty for the moment
 if (mode == "full")
-pathOriginalGnfinderScript <-
+  pathOriginalGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_full.sh"
 
 if (mode == "min")
@@ -1085,7 +1100,7 @@ if (mode == "min")
   "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_min.sh"
 
 if (mode == "full")
-pathTranslatedGnfinderScript <-
+  pathTranslatedGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_full.sh"
 
 if (mode == "min")
