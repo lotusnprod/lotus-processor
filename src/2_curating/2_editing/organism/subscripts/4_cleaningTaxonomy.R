@@ -51,8 +51,7 @@ taxo_cleaning_auto <- function(dfsel) {
   variety <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     arrange(match(x = organismDbTaxo,
-                  table =  c("Catalogue of Life",
-                             "NCBI"))) %>%
+                  table =  c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_8_variety) %>%
     mutate(
@@ -109,8 +108,7 @@ taxo_cleaning_auto <- function(dfsel) {
   species <- test %>%
     filter(!is.na(organism_7_species)) %>%
     arrange(match(x = organismDbTaxo,
-                  table =  c("Catalogue of Life",
-                             "NCBI"))) %>%
+                  table =  c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_7_species) %>%
     mutate(
@@ -168,8 +166,7 @@ taxo_cleaning_auto <- function(dfsel) {
   genus <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_6_genus) %>%
     mutate(
@@ -226,8 +223,7 @@ taxo_cleaning_auto <- function(dfsel) {
   family <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_5_family) %>%
     mutate(
@@ -281,8 +277,7 @@ taxo_cleaning_auto <- function(dfsel) {
   order <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_4_order) %>%
     mutate(
@@ -334,8 +329,7 @@ taxo_cleaning_auto <- function(dfsel) {
   class <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_3_class) %>%
     mutate(organism_2_phylum = na.locf(
@@ -382,8 +376,7 @@ taxo_cleaning_auto <- function(dfsel) {
   phylum <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_2_phylum) %>%
     mutate(organism_1_kingdom = na.locf(
       object = organism_1_kingdom,
@@ -498,6 +491,7 @@ dataCleanedOrganismManipulated <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 )
+
 #curating taxonomy
 ##auto
 dataCuratedOrganismAuto <-
