@@ -71,24 +71,24 @@ hitInchi_str <- maybeHit_str %>%
 
 
 organism <- inhouseDb %>%
-  filter(!is.na(organismCurated))
+  filter(!is.na(organismLowestTaxon))
 
 organismSearch <- organism %>%
   distinct(organismOriginal,
-           organismCurated,
+           organismLowestTaxon,
            .keep_all = TRUE) %>%
-  group_by(organismCurated) %>%
+  group_by(organismLowestTaxon) %>%
   add_count() %>%
   arrange(desc(n)) %>%
   filter(
-    !grepl(pattern = "Streptomyces", x = organismCurated) &
-      !grepl(pattern = "Aspergillus", x = organismCurated) &
-      !grepl(pattern = "Fusarium", x = organismCurated) &
-      !grepl(pattern = ".*ae", x = organismCurated)
+    !grepl(pattern = "Streptomyces", x = organismLowestTaxon) &
+      !grepl(pattern = "Aspergillus", x = organismLowestTaxon) &
+      !grepl(pattern = "Fusarium", x = organismLowestTaxon) &
+      !grepl(pattern = ".*ae", x = organismLowestTaxon)
   )
 
 maybeHit_org <- inhouseDb %>%
-  filter(organismCurated == "Oryza sativa")
+  filter(organismLowestTaxon == "Oryza sativa")
 
 hitNames_org <- maybeHit_org %>%
   distinct(organismOriginal)

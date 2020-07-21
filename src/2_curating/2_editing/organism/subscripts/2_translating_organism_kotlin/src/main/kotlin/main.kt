@@ -106,7 +106,7 @@ fun main(args: Array<String>) {
 
     val pathDataInterimTablesCleaned = "$pathDataInterimTables/2_cleaned"
     val pathDataInterimTablesCleanedOrganism = "$pathDataInterimTablesCleaned/organism"
-    val pathDataInterimTablesCleanedOrganismOriginalTable = "$pathDataInterimTablesCleanedOrganism/original.tsv.gz"
+    val pathDataInterimTablesCleanedOrganismOriginalUniqueTable = "$pathDataInterimTablesCleanedOrganism/originalUnique.tsv.gz"
     val pathDataInterimTablesCleanedOrganismTranslatedInterim =
         "$pathDataInterimTablesCleanedOrganism/interim.tsv.gz"
 
@@ -119,7 +119,7 @@ fun main(args: Array<String>) {
     // Organism List
 
     logger.info("Loading and processing the organism list")
-    val dataCleanedOriginalOrganism = parseTSVZFile(pathDataInterimTablesCleanedOrganismOriginalTable)?.map {
+    val dataCleanedOriginalOrganism = parseTSVZFile(pathDataInterimTablesCleanedOrganismOriginalUniqueTable)?.map {
         it.toFieldMap()
     } ?: throw Exception("Sorry can't read organism list.")
 

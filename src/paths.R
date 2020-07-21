@@ -989,6 +989,9 @@ pathDataInterimTablesCleanedOrganismOriginal <-
 pathDataInterimTablesCleanedOrganismOriginalTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
 
+pathDataInterimTablesCleanedOrganismOriginalUniqueTable <-
+  file.path(pathDataInterimTablesCleanedOrganism, "originalUnique.tsv.gz")
+
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated/")
