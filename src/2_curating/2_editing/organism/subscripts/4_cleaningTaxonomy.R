@@ -494,32 +494,41 @@ dataCleanedOrganismManipulated <- read_delim(
 
 #curating taxonomy
 ##auto
-dataCuratedOrganismAuto <-
-  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
+# dataCuratedOrganismAuto <-
+#   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
 
 ##manual
-dataCuratedOrganism <-
-  taxo_cleaning_manual(dfsel = dataCuratedOrganismAuto)
+# dataCuratedOrganism <-
+#   taxo_cleaning_manual(dfsel = dataCleanedOrganismManipulated)
 
 #outputing lowest taxon
+dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
+  mutate(organismLowestTaxon =  as.character(apply(dataCleanedOrganismManipulated[6:13], 1, function(x)
+    tail(na.omit(x), 1))))
+
 dataCuratedOrganism$organismLowestTaxon <-
-  dataCuratedOrganism$organismCurated
+  y_as_na(x = dataCuratedOrganism$organismLowestTaxon,
+          y = "character(0)")
+
+dataCuratedOrganism$organismLowestTaxon <-
+  y_as_na(x = dataCuratedOrganism$organismLowestTaxon,
+          y = "NA")
 
 #outputing differences in species names
-diff <-
-  dataCuratedOrganism %>% filter(organismLowestTaxon != organismCurated)
+diff <- dataCuratedOrganism %>%
+  filter(organismLowestTaxon != organismCleaned)
 
-realDiff <-
-  dataCuratedOrganism %>% filter(organismLowestTaxon != organismCleaned &
-                                   !is.na(organism_6_genus)) %>%
+realDiff <- dataCuratedOrganism %>%
+  filter(organismLowestTaxon != organismCleaned &
+           !is.na(organism_6_genus)) %>%
   distinct(organismCleaned,
-           organismCurated,
+           organismLowestTaxon,
            .keep_all = TRUE) %>%
   group_by(organism_6_genus) %>%
   add_count() %>%
   ungroup() %>%
   select(organismCleaned,
-         organismCurated,
+         organismLowestTaxon,
          n)
 
 #selecting
@@ -527,13 +536,11 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
   select(
     organismOriginal,
     organismCleaned,
-    organismCurated,
     organismLowestTaxon,
-    #duplicate of organism curated, choose
     organismDbTaxo,
     organismDbTaxoQuality,
-    organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
-    organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
+    # organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
+    # organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
     organismTaxonId,
     organism_1_kingdom,
     organism_2_phylum,

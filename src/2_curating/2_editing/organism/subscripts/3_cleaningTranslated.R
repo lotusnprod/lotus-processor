@@ -93,12 +93,16 @@ dataCleanedTranslatedOrganism <-
 dataCleanedTranslatedOrganism2join <-
   dataInterimOrganismToFill %>%
   select(organismOriginal, organismInterim) %>%
-  mutate_all(as.character)
+  mutate_all(as.character) 
 
 dataCleanedTranslatedOrganismFull <-
   left_join(dataCleanedTranslatedOrganism2join,
             dataCleanedTranslatedOrganism) %>%
-  select(-organismInterim)
+  select(-organismInterim) %>% 
+  distinct(organismOriginal,
+           organismCleaned,
+           taxonId, 
+           .keep_all = TRUE)
 
 dataCleanedOrganism <-
   rbind(dataCleanedOriginalOrganism,
@@ -107,6 +111,7 @@ dataCleanedOrganism <-
 dataCleanedOrganism <- dataCleanedOrganism %>%
   distinct(organismOriginal,
            organismCleaned,
+           taxonId,
            .keep_all = TRUE) %>%
   group_by(organismOriginal) %>%
   add_count() %>%

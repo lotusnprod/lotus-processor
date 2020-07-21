@@ -12,8 +12,8 @@ library(tidyr)
 distinct_biosources <- function(x)
 {
   newdf  <- x %>%
-    filter(!is.na(organism_lowertaxon)) %>%
-    distinct(organism_lowertaxon,
+    filter(!is.na(organismLowestTaxon)) %>%
+    distinct(organismLowestTaxon,
              .keep_all = TRUE) %>%
     group_by(organism_7_species) %>%
     add_count() %>%
@@ -70,61 +70,61 @@ distinct_pairs <- function(x)
   newdf  <- x %>%
     filter(
       !is.na(structureCurated) &
-        !is.na(organism_lowertaxon) &
+        !is.na(organismLowestTaxon) &
         !is.na(referenceOriginal) |
         # this will have to be adapted later on
         database == "dnp_1"
     ) %>% # this will have to be adapted later on
     distinct(structureCurated,
-             organism_lowertaxon,
+             organismLowestTaxon,
              .keep_all = TRUE) %>%
     group_by(structureCurated,
              organism_7_species) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_6_genus) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_5_family) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_4_order) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_3_class) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_2_phylum) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
     group_by(structureCurated,
              organism_1_kingdom) %>%
     add_count() %>%
     ungroup() %>%
-    filter(!is.na(organism_lowertaxon) |
+    filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n)
   

@@ -8,8 +8,8 @@ source("paths.R")
 print(x = "loading db, if running fullmode, this may take a while")
 
 ## fullDB
-inhouseDb <- read_delim(
-  file = gzfile(pathDataInterimTablesCuratedTable),
+openDbTriplets <- read_delim(
+  file = gzfile(pathDataInterimTablesAnalysedOpenDbTriplets),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
@@ -21,7 +21,7 @@ inhouseDb <- read_delim(
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
 
-openDbTriplets <- inhouseDb %>%
+openDbTripletsClean <- openDbTriplets %>%
   filter(!is.na(inchikeySanitized)) %>%
   filter(!is.na(organismLowestTaxon)) %>%
   filter(
@@ -50,10 +50,18 @@ openDbTriplets <- inhouseDb %>%
     referenceCleanedTitle,
     referenceCleanedDoi,
     referenceCleanedTranslationScore
+  ) %>%
+  distinct(
+    inchikeySanitized,
+    organismLowestTaxon,
+    referenceOriginalExternal,
+    referenceCleanedDoi,
+    referenceCleanedTitle,
+    .keep_all = TRUE
   )
 
 set.seed(42)
-sampleONPDB <- openDbTriplets %>%
+sampleONPDB <- openDbTripletsClean %>%
   sample_n(150) %>%
   mutate(
     curator = sample(c("AR", "JB", "PMA"),
@@ -64,7 +72,7 @@ sampleONPDB <- openDbTriplets %>%
   )
 
 set.seed(42)
-sampleKnapsack <- openDbTriplets %>%
+sampleKnapsack <- openDbTripletsClean %>%
   filter(database == "kna_1") %>%
   sample_n(150) %>%
   mutate(
@@ -76,7 +84,7 @@ sampleKnapsack <- openDbTriplets %>%
   )
 
 set.seed(42)
-sampleWD <- openDbTriplets %>%
+sampleWD <- openDbTripletsClean %>%
   filter(!is.na(referenceCleanedDoi)) %>%
   filter(referenceCleanedTranslationScore == 100) %>%
   sample_n(1000) %>%
@@ -92,7 +100,6 @@ sampleWD <- openDbTriplets %>%
   )
 
 #exporting
-print(x = "exporting, may take a while if running full mode")
 ## creating directories if they do not exist
 ifelse(
   !dir.exists(pathDataInterimTablesAnalysed),

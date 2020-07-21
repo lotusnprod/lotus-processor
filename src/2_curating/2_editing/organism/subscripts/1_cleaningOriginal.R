@@ -89,11 +89,28 @@ dataCleanedOriginalOrganism <-
   ) %>%
   select(-nchar, -sum)
 
+dataCleanedOriginalOrganismUnique <-
+  dataCleanedOriginalOrganism %>%
+  distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
+
 # exporting
 write.table(
   x = dataCleanedOriginalOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismOriginalTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = dataCleanedOriginalOrganismUnique,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
     compression = 9,
     encoding = "UTF-8"
   ),

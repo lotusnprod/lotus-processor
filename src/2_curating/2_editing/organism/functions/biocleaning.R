@@ -112,7 +112,7 @@ biocleaning <- function(gnfound, names, organismCol)
   #the synonym part is there to avoid the (actually)
   ##non-optimal output from Catalogue of Life in GNFinder
   ###(explained in https://github.com/gnames/gnfinder/issues/48)
-  df5 <- df4 %>%
+  df5a <- df4 %>%
     mutate(n = rowSums(.[c("kingdom",
                            "phylum",
                            "class",
@@ -125,19 +125,38 @@ biocleaning <- function(gnfound, names, organismCol)
     group_by(id) %>%
     arrange(desc(n), !is.na(isSynonym)) %>%
     ungroup() %>%
-    # distinct(id,
-    #          .keep_all = TRUE) %>% ## "CHOOSE HERE WHAT TO DO"
+    distinct(id,
+             .keep_all = TRUE) %>% 
+    arrange(id) %>% 
+    select(id)
+  
+  df5b <- df4 %>%
+    mutate(n = rowSums(.[c("kingdom",
+                           "phylum",
+                           "class",
+                           "order",
+                           "family",
+                           "genus",
+                           "species",
+                           "variety")]),
+           id = as.integer(id)) %>%
+    group_by(id) %>%
+    arrange(desc(n), !is.na(isSynonym)) %>%
+    ungroup() %>%
     arrange(id)
+  
+  df6a <- cbind(df5a, rows)
+  df6b <- left_join(df6a,df5b)
   
   #adding row number
   df7 <- gnfound$names.start %>%
     data.table() %>%
-    mutate(id = row_number())
+    mutate(nrow = row_number())
   
   colnames(df7)[1] <- "sum"
   
   #joining
-  taxo <- right_join(df5, df7) %>%
+  taxo <- right_join(df6b, df7) %>%
     select(
       canonicalname = matchedCanonicalFull,
       taxonId,
@@ -155,7 +174,6 @@ biocleaning <- function(gnfound, names, organismCol)
     distinct(dbTaxo, .keep_all = TRUE)
   
   taxoEnhanced <- left_join(taxo, dfQuality)
-  
   
   #computing sum of characters to match with GNFinder results
   if (organismCol == "organismOriginal")
@@ -193,7 +211,6 @@ biocleaning <- function(gnfound, names, organismCol)
   #setting joining keys
   setkey(taxoEnhanced, value_min, value_max)
   setkey(y_2, value_min, value_max)
-  print(y_2)
   #joining
   pre_final_db <- foverlaps(taxoEnhanced,
                             na.omit(y_2))

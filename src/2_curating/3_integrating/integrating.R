@@ -30,7 +30,21 @@ organismTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  filter(!is.na(organismCleaned)) %>% # this step is new and should avoid useless too big files
+  select(
+    -organismCleaned,
+    -organismDbTaxoQuality,
+    -organism_1_kingdom,
+    -organism_2_phylum,
+    -organism_3_class,
+    -organism_4_order,
+    -organism_5_family,
+    -organism_6_genus,
+    -organism_7_species,
+    -organism_8_variety
+  ) %>%
+  filter(!is.na(organismLowestTaxon)) # some DBs propose a taxon ID but with no name
 
 ### structure
 #### translated
@@ -41,6 +55,10 @@ translatedStructureTable <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
+  select(-structureTranslatedSmiles,
+         -structureTranslatedNominal,
+         -nameCleaned,) %>%
   distinct(
     structureOriginalInchi,
     structureOriginalSmiles,
@@ -55,7 +73,12 @@ cleanedStructureTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
+  select(-validatorLog,
+         -formulaSanitized,
+         -exactmassSanitized,
+         -xlogpSanitized)
 
 ### reference table
 referenceTable <- read_delim(
@@ -64,20 +87,24 @@ referenceTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
-
-# selecting adequate minimal columns
-## structure
-# structureTable <- structureTable %>%
-#   select(...)
-
-# ## organism
-# organismTable <- organismTable %>%
-#   select(...)
-
-# ## organism
-# referenceTable <- referenceTable %>%
-#   select(...)
+) %>%
+  filter(
+    !is.na(referenceOriginalExternal) |
+      !is.na(referenceOriginalIsbn) |
+      !is.na(referenceCleanedTitle) |
+      !is.na(referenceCleanedJournal) |
+      !is.na(referenceCleanedDoi)
+  ) %>% # this step is new and should avoid useless too big files
+  select(
+    -referenceTranslatedDoi,
+    -referenceTranslatedJournal,
+    -referenceTranslatedTitle,
+    -referenceTranslatedDate,
+    -referenceTranslatedAuthor,
+    -referenceTranslationScore,
+    -referenceCleanedAuthor,
+    -referenceCleanedDate
+  )
 
 # integrating
 ## structure
@@ -96,28 +123,8 @@ referenceOrganismStructureIntegratedTable <-
   left_join(organismStructureIntegratedTable, referenceTable)
 
 # selecting minimal columns
-fullDb <- referenceOrganismStructureIntegratedTable %>%
-  mutate(referenceCleanedTranslationScore = as.numeric(referenceCleanedTranslationScore)) %>%
-  select(
-    -structureTranslatedSmiles,
-    -structureTranslatedNominal,
-    -nameCleaned,
-    -structureTranslated,
-    -validatorLog,
-    -formulaSanitized,
-    -exactmassSanitized,
-    -xlogpSanitized,
-    -organismCleaned,
-    -organismDbTaxoQuality,
-    -referenceTranslatedDoi,
-    -referenceTranslatedJournal,
-    -referenceTranslatedTitle,
-    -referenceTranslatedDate,
-    -referenceTranslatedAuthor,
-    -referenceTranslationScore,
-    -referenceCleanedAuthor,
-    -referenceCleanedDate
-  )
+inhouseDb <- referenceOrganismStructureIntegratedTable %>%
+  mutate(referenceCleanedTranslationScore = as.numeric(referenceCleanedTranslationScore))
 
 # export
 ## creating directories if they do not exist
@@ -129,7 +136,7 @@ ifelse(
 
 ## table
 write.table(
-  x = fullDb,
+  x = inhouseDb,
   file = gzfile(
     description = pathDataInterimTablesCuratedTable,
     compression = 9,
