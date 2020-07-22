@@ -71,8 +71,8 @@ dataSplit <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-colnames(dataUnsplit)[2:ncol(dataSplit)] <-
-  paste(colnames(dataUnsplit)[2:ncol(dataSplit)], "split", sep = "_")
+colnames(dataSplit)[2:ncol(dataSplit)] <-
+  paste(colnames(dataSplit)[2:ncol(dataSplit)], "split", sep = "_")
 
 dataFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalTable),
