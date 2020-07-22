@@ -60,7 +60,7 @@ data_manipulated <- data_selected %>%
   mutate_all(as.character) %>%
   mutate(
     reference_authors = reference_1,
-    reference_unsplittable = reference_2_1,
+    reference_original = reference_2_1,
     reference_pubmed = str_extract(string = reference_2_2, pattern = "[0-9]{6,9}")
   ) %>%
   data.frame()
@@ -73,7 +73,7 @@ data_standard <-
     structure_field = c("name", "smiles"),
     reference_field = c(
       "reference_authors",
-      "reference_unsplittable",
+      "reference_original",
       "reference_pubmed"
     )
   )

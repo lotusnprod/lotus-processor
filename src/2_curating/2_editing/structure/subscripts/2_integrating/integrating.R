@@ -22,9 +22,9 @@ originalTable <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  distinct(structureOriginalInchi,
-           structureOriginalSmiles,
-           structureOriginalNominal)
+  distinct(structureOriginal_inchi,
+           structureOriginal_smiles,
+           structureOriginal_nominal)
 
 ### structure table
 #### loading multiple old files, will be optimized later on
@@ -50,9 +50,9 @@ translatedStructureTable <-
 translatedStructureTable <-
   left_join(translatedStructureTable, nominalStructureTable) %>%
   select(
-    structureOriginalInchi,
-    structureTranslatedSmiles,
-    structureTranslatedNominal,
+    structureOriginal_inchi,
+    structureTranslated_smiles,
+    structureTranslated_nominal,
     everything()
   )
 

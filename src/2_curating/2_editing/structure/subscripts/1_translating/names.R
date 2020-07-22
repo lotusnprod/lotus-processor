@@ -48,7 +48,7 @@ dataTranslatedNominal$inchiNominal <- gsub(pattern = "^NCI.*",
                                            x = dataTranslatedNominal$inchiNominal)
 
 dataTranslated <- left_join(dataOriginal, dataTranslatedNominal) %>%
-  mutate(structureTranslatedNominal = ifelse(
+  mutate(structureTranslated_nominal = ifelse(
     test =  grepl(pattern = "^InChI=.*",
                   x = inchiNominal),
     yes = inchiNominal,

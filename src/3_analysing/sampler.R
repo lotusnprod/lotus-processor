@@ -16,7 +16,7 @@ openDbTriplets <- read_delim(
   trim_ws = TRUE
 ) %>%
   mutate(referenceCleanedTranslationScore = as.integer(referenceCleanedTranslationScore)) %>%
-  arrange(desc(referenceOriginalExternal)) %>%
+  arrange(desc(referenceOriginal_external)) %>%
   arrange(desc(referenceCleanedTranslationScore)) %>%
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
@@ -27,20 +27,22 @@ openDbTripletsClean <- openDbTriplets %>%
   filter(
     !is.na(referenceCleanedTitle) |
       !is.na(referenceCleanedDoi) |
-      referenceOriginalExternal == "PLANTCYC" |
-      referenceOriginalExternal == "Korean_Traditional_Knowledge_Portal_20140617"
+      referenceOriginal_external == "PLANTCYC" |
+      referenceOriginal_external == "Korean_Traditional_Knowledge_Portal_20140617"
   ) %>%
   select(
     database,
     organismOriginal,
-    structureOriginalInchi,
-    structureOriginalSmiles,
-    structureOriginalNominal,
-    referenceOriginalDoi,
-    referenceOriginalExternal,
-    referenceOriginalPubmed,
-    referenceOriginalTitle,
-    referenceOriginalUnsplit,
+    structureOriginal_inchi,
+    structureOriginal_smiles,
+    structureOriginal_nominal,
+    referenceOriginal_doi,
+    referenceOriginal_external,
+    referenceOriginal_original,
+    referenceOriginal_pubmed,
+    referenceOriginal_publishingDetails,
+    referenceOriginal_title,
+    referenceOriginal_split,
     organismLowestTaxon,
     organismDbTaxo,
     organismTaxonId,
@@ -54,7 +56,7 @@ openDbTripletsClean <- openDbTriplets %>%
   distinct(
     inchikeySanitized,
     organismLowestTaxon,
-    referenceOriginalExternal,
+    referenceOriginal_external,
     referenceCleanedDoi,
     referenceCleanedTitle,
     .keep_all = TRUE

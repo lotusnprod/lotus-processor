@@ -29,7 +29,7 @@ data_selected <- data_original %>%
                      `Origin Species`,
                      sep = " "),
     reference_doi = `Isolation Reference DOI`,
-    reference_unsplittable = `Isolation Reference Citation`
+    reference_original = `Isolation Reference Citation`
   ) %>%
   select(
     NPAID,
@@ -39,7 +39,7 @@ data_selected <- data_original %>%
     smiles = SMILES,
     biologicalsource = organism,
     reference_doi,
-    reference_unsplittable
+    reference_original
   )
 
 # standardizing
@@ -48,7 +48,7 @@ data_standard <-
     data_selected = data_selected,
     db = "npa_2",
     structure_field = c("name", "inchi", "smiles"),
-    reference_field = c("reference_doi", "reference_unsplittable")
+    reference_field = c("reference_doi", "reference_original")
   )
 
 # exporting

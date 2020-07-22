@@ -123,18 +123,21 @@ foodb <- compounds_contents_flavors %>%
       test = citation_type == "DATABASE" |
         citation_type == "UNKNOWN" |
         citation_type == "EXPERIMENTAL" |
-        citation_type == "PREDICTED",
+        citation_type == "PREDICTED" |
+        citation == "MANUAL",
       yes = citation,
       no = NA
     ),
     reference_pubmed = ifelse(
-      test = citation_type == "ARTICLE" | citation_type == "TEXTBOOK",
+      test = citation != "MANUAL" &
+        citation_type == "ARTICLE" | citation_type == "TEXTBOOK",
       yes = str_extract(string = citation, pattern = "[0-9]{6,9}"),
       no = NA
     ),
-    reference_unsplittable = ifelse(
+    reference_original = ifelse(
       test =
         !grepl(pattern = "[0-9]{6,9}", x = citation) &
+        citation != "MANUAL" &
         citation_type == "ARTICLE" |
         citation_type == "TEXTBOOK" |
         is.na(citation_type),
@@ -150,13 +153,19 @@ foodb <- compounds_contents_flavors %>%
     standard_content,
     reference_external,
     reference_pubmed,
-    reference_unsplittable,
+    reference_original,
     smiles = moldb_smiles,
     inchi = moldb_inchi,
     inchikey = moldb_inchikey,
     flavor_name,
     flavor_group
-  )
+  ) %>%
+  mutate(reference_doi = str_extract(
+    pattern = "10.*",
+    string = str_extract(pattern = "doi.*",
+                         string = reference_original)
+  )) %>%
+  data.frame()
 
 foodb$biologicalsource <- trimws(foodb$biologicalsource)
 foodb$biologicalsource <-
@@ -170,7 +179,8 @@ data_standard <- standardizing_original(
   reference_field = c(
     "reference_external",
     "reference_pubmed",
-    "reference_unsplittable"
+    "reference_original",
+    "reference_doi"
   )
 )
 

@@ -25,12 +25,12 @@ data_original <- read_delim(
 # selecting
 ## atomizing references
 data_selected <- data_original %>%
-  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref),) %>%
+  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref), ) %>%
   cSplit("reference", sep = "|", direction = "long") %>%
   mutate_all(as.character) %>%
   select(
     biologicalsource = ln_reduced,
-    reference_unsplittable = reference,
+    reference_original = reference,
     inchi = InChI,
     smiles = SMILES
   ) %>%
@@ -39,20 +39,73 @@ data_selected <- data_original %>%
 data_manipulated <- data_selected %>%
   mutate(
     reference_external = ifelse(
-      test = reference_unsplittable == "Retrieved from CNPD",
-      yes = reference_unsplittable,
+      test = reference_original == "Retrieved from CNPD",
+      yes = reference_original,
       no = NA
     ),
-    reference_unsplittable = gsub(
+    reference_original = gsub(
       pattern = "Retrieved from CNPD",
       replacement = "",
-      x = reference_unsplittable,
+      x = reference_original,
       fixed = TRUE
     )
-  )
+  ) %>%
+  mutate(reference_original = y_as_na(reference_original, y = "")) %>%
+  mutate(reference_original = ifelse(
+    test = !grepl(pattern = "[^ -~]", x = reference_original) ,
+    yes = reference_original,
+    no = NA
+  )) %>%
+  mutate(reference_split =
+           ifelse(
+             test = grepl(pattern = ".*et al.",
+                          x = reference_original),
+             yes = trimws(x = sub(
+               pattern = "^.;",
+               replacement = "",
+               x = sub(
+                 pattern = "^ \\\\",
+                 replacement = "",
+                 x = sub(
+                   pattern = "^\\\\",
+                   replacement = "",
+                   x = sub(
+                     pattern = "^ \\.",
+                     replacement = "",
+                     x = sub(
+                       pattern = "^;",
+                       replacement = "",
+                       x = sub(
+                         pattern = ".*et al.",
+                         replacement = "",
+                         x = reference_original
+                       )
+                     )
+                   )
+                 )
+               )
+             )),
+             no = NA
+           )) %>%
+  data.frame()
 
-data_manipulated$reference_unsplittable <-
-  y_as_na(x = data_manipulated$reference_unsplittable, y = "")
+# reverse_words <- function(string) {
+#   # split string by blank spaces
+#   string_split = strsplit(as.character(string), split = " ")
+#   # how many split terms?
+#   string_length = length(string_split[[1]])
+#   # decide what to do
+#   if (string_length == 1) {
+#     # one word (do nothing)
+#     reversed_string = string_split[[1]]
+#   } else {
+#     # more than one word (collapse them)
+#     reversed_split = string_split[[1]][string_length:1]
+#     reversed_string = paste(reversed_split, collapse = " ")
+#   }
+#   # output
+#   return(reversed_string)
+# }
 
 # standardizing
 data_standard <-
@@ -60,7 +113,11 @@ data_standard <-
     data_selected = data_manipulated,
     db = "unp_1",
     structure_field = c("inchi", "name", "smiles"),
-    reference_field = c("reference_unsplittable", "reference_external")
+    reference_field = c(
+      "reference_original",
+      "reference_external",
+      "reference_split"
+    )
   )
 
 # exporting

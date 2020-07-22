@@ -29,8 +29,33 @@ data_selected <- data_original %>%
     smiles,
     biologicalsource = plant_species,
     name = common_name,
-    reference_unsplittable = authors
-  ) %>% 
+    reference_original = authors
+  ) %>%
+  mutate(reference_test = sub(
+    pattern = "\\([0-9]{4}\\)",
+    replacement = "§",
+    x = reference_original
+  )) %>%
+  cSplit("reference_test", sep = "§") %>%
+  mutate(reference_test_2 = sub(
+    pattern = "^\\.",
+    replacement = "",
+    x = reference_test_2
+  )) %>%
+  mutate(reference_test_2 = sub(
+    pattern = "^\\,",
+    replacement = "",
+    x = reference_test_2
+  ))  %>%
+  mutate(reference_test_2 = trimws(x = reference_test_2)) %>%
+  select(
+    name,
+    biologicalsource,
+    smiles,
+    reference_authors = reference_test_1,
+    reference_original,
+    reference_split = reference_test_2
+  ) %>%
   data.frame()
 
 # standardizing
@@ -39,7 +64,9 @@ data_standard <-
     data_selected = data_selected,
     db = "mit_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_original",
+                        "reference_authors",
+                        "reference_split")
   )
 
 # exporting

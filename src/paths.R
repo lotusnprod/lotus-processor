@@ -897,17 +897,25 @@ pathDataInterimTablesOriginalReferenceDoi <-
 # pathDataInterimTablesOriginalReferenceJournal <-
 #   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.gz")
 
+### original
+pathDataInterimTablesOriginalReferenceOriginal <-
+  file.path(pathDataInterimTablesOriginalReference, "original.tsv.gz")
+
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
   file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.gz")
+
+### publishingDetails
+pathDataInterimTablesOriginalReferencePublishingDetails <-
+  file.path(pathDataInterimTablesOriginalReference, "publishingDetails.tsv.gz")
 
 ### title
 pathDataInterimTablesOriginalReferenceTitle <-
   file.path(pathDataInterimTablesOriginalReference, "title.tsv.gz")
 
-### title
-pathDataInterimTablesOriginalReferenceUnsplit <-
-  file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.gz")
+### split
+pathDataInterimTablesOriginalReferenceSplit <-
+  file.path(pathDataInterimTablesOriginalReference, "split.tsv.gz")
 
 ### full
 pathDataInterimTablesOriginalReferenceFull <-
@@ -937,14 +945,20 @@ pathDataInterimTablesTranslatedReference <-
 pathDataInterimTablesTranslatedReferenceDoi <-
   file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.gz")
 
+pathDataInterimTablesTranslatedReferenceOriginal <-
+  file.path(pathDataInterimTablesTranslatedReference, "original.tsv.gz")
+
 pathDataInterimTablesTranslatedReferencePubmed <-
   file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
+
+pathDataInterimTablesTranslatedReferencePublishingDetails <-
+  file.path(pathDataInterimTablesTranslatedReference, "publishingDetails.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")
 
-pathDataInterimTablesTranslatedReferenceUnsplit <-
-  file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.gz")
+pathDataInterimTablesTranslatedReferenceSplit <-
+  file.path(pathDataInterimTablesTranslatedReference, "split.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceFile <-
   file.path(pathDataInterimTablesTranslatedReference,
@@ -990,7 +1004,8 @@ pathDataInterimTablesCleanedOrganismOriginalTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
 
 pathDataInterimTablesCleanedOrganismOriginalUniqueTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "originalUnique.tsv.gz")
+  file.path(pathDataInterimTablesCleanedOrganism,
+            "originalUnique.tsv.gz")
 
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-

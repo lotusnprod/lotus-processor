@@ -8,8 +8,8 @@ source("paths.R")
 source("functions/reference.R")
 
 ## file
-dataUnsplit <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceUnsplit),
+dataPublishingDetails <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferencePublishingDetails),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -19,7 +19,7 @@ dataUnsplit <- read_delim(
 reflist <- invisible(
   pbmclapply(
     FUN = getref,
-    X = dataUnsplit$referenceOriginalUnsplit,
+    X = dataPublishingDetails$referenceOriginal_publishingDetails,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -34,7 +34,7 @@ print(x = "This may take several minutes")
 
 # joining with original dataframe
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslatedDoi"] <-
+  dataPublishingDetails[i, "referenceTranslatedDoi"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -47,7 +47,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslatedJournal"] <-
+  dataPublishingDetails[i, "referenceTranslatedJournal"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -60,7 +60,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslatedTitle"] <-
+  dataPublishingDetails[i, "referenceTranslatedTitle"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -73,7 +73,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslatedDate"] <-
+  dataPublishingDetails[i, "referenceTranslatedDate"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -86,7 +86,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslatedAuthor"] <-
+  dataPublishingDetails[i, "referenceTranslatedAuthor"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -100,7 +100,7 @@ for (i in 1:length(reflist)) {
 }
 
 for (i in 1:length(reflist)) {
-  dataUnsplit[i, "referenceTranslationScore"] <-
+  dataPublishingDetails[i, "referenceTranslationScore"] <-
     as.character(ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -112,20 +112,20 @@ for (i in 1:length(reflist)) {
     )[1])
 }
 
-dataUnsplit <- dataUnsplit %>%
+dataPublishingDetails <- dataPublishingDetails %>%
   mutate_all(as.character)
 
-dataUnsplit[] <-
-  lapply(dataUnsplit, function(x)
+dataPublishingDetails[] <-
+  lapply(dataPublishingDetails, function(x)
     gsub("\r\n", " ", x))
-dataUnsplit[] <-
-  lapply(dataUnsplit, function(x)
+dataPublishingDetails[] <-
+  lapply(dataPublishingDetails, function(x)
     gsub("\r", " ", x))
-dataUnsplit[] <-
-  lapply(dataUnsplit, function(x)
+dataPublishingDetails[] <-
+  lapply(dataPublishingDetails, function(x)
     gsub("\n", " ", x))
-dataUnsplit[] <-
-  lapply(dataUnsplit, function(x)
+dataPublishingDetails[] <-
+  lapply(dataPublishingDetails, function(x)
     gsub("\t", " ", x))
 
 # exporting
@@ -144,9 +144,9 @@ ifelse(
 
 ## exporting
 write.table(
-  x = dataUnsplit,
+  x = dataPublishingDetails,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceUnsplit,
+    description = pathDataInterimTablesTranslatedReferencePublishingDetails,
     compression = 9,
     encoding = "UTF-8"
   ),

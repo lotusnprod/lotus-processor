@@ -19,10 +19,10 @@ test <- dataTranslated %>%
   filter(!is.na(referenceTranslatedTitle)) %>%
   group_by(referenceTranslatedTitle) %>%
   distinct(
-    referenceOriginalDoi,
-    referenceOriginalPubmed,
-    referenceOriginalTitle,
-    referenceOriginalUnsplit,
+    referenceOriginal_doi,
+    referenceOriginal_pubmed,
+    referenceOriginal_title,
+    referenceOriginal_original,
     .keep_all = TRUE
   ) %>%
   add_count() %>%
@@ -35,13 +35,13 @@ test <- dataTranslated %>%
 test2 <- test %>%
   filter(grepl(
     "Harborne, The Handbook of Natural Flavonoids",
-    referenceOriginalUnsplit
+    referenceOriginal_original
   )) %>%
   mutate(
     referenceSplitNew = gsub(
       pattern = "Harborne, The Handbook of Natural Flavonoids, 2, (1999), 1,Anthocyanins",
       replacement = "",
-      x = referenceOriginalUnsplit,
+      x = referenceOriginal_original,
       fixed = TRUE
     ),
     referenceSplitNew = gsub(
@@ -178,7 +178,7 @@ test3 <- test %>%
     referenceSplitNew = gsub(
       pattern = "; Khimiya .*",
       replacement = "",
-      x = referenceOriginalUnsplit,
+      x = referenceOriginal_original,
       fixed = FALSE
     )
   )
@@ -188,7 +188,7 @@ test4 <- test %>%
     n != 631 &
       !grepl(
         "Harborne, The Handbook of Natural Flavonoids",
-        referenceOriginalUnsplit
+        referenceOriginal_original
       ) &
       n > 10
   )
@@ -204,12 +204,14 @@ test6 <- test4 %>%
 
 RefShouldBeOk <- test %>%
   filter(n < 5 &
-           referenceTranslationScore > 80 & referenceTranslationScore <= 100)
+           referenceTranslationScore > 80 &
+           referenceTranslationScore <= 100)
 
 ### analyzing how low we can go
 low70 <- test %>%
   filter(n < 5 &
-           referenceTranslationScore > 70 & referenceTranslationScore <= 80)
+           referenceTranslationScore > 70 &
+           referenceTranslationScore <= 80)
 
 ## example
 ### Luesch, Hendrik; Yoshida, Wesley Y.; Moore, Richard E.; Paul, Valerie J.; Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439.
