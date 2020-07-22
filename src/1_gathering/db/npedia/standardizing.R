@@ -30,7 +30,7 @@ data_selected <- data_original %>%
     biologicalsource = Source,
     inchi = InChI,
     cas = `CAS No.`,
-    reference_unsplittable = Reference
+    reference_original = Reference
   )
 
 # standardizing
@@ -39,7 +39,7 @@ data_standard <-
     data_selected = data_selected,
     db = "npe_1",
     structure_field = c("name", "inchi"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_original")
   )
 
 # exporting

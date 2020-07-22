@@ -28,7 +28,7 @@ data_manipulated <- data_original %>%
   select(
     name = Compound,
     biologicalsource = `Plant resources`,
-    reference_unsplittable = Literature
+    reference_original = Literature
   ) %>%
   data.frame()
 
@@ -38,7 +38,7 @@ data_standard <-
     data_selected = data_manipulated,
     db = "wak_1",
     structure_field = c("name"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_original")
   )
 
 # exporting

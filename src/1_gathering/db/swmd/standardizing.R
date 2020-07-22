@@ -34,7 +34,7 @@ data_selected <- data_original %>%
     extraction = 10,
     smiles = 14,
     inchi = 15,
-    reference_unsplittable = Reference
+    reference_original = Reference
   )
 
 # standardizing
@@ -43,7 +43,7 @@ data_standard <-
     data_selected = data_selected,
     db = "swm_1",
     structure_field = c("name", "smiles", "inchi"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_original")
   )
 
 # exporting

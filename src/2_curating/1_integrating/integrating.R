@@ -24,17 +24,19 @@ inhouseDbSelected <- inhouseDb %>%
     database,
     name,
     organismOriginal = biologicalsource,
-    structureOriginalInchi = inchi,
-    structureOriginalNominal = name,
-    structureOriginalSmiles = smiles,
-    referenceOriginalAuthors = reference_authors,
-    referenceOriginalDoi = reference_doi,
-    referenceOriginalExternal = reference_external,
-    referenceOriginalIsbn = reference_isbn,
-    referenceOriginalJournal = reference_journal,
-    referenceOriginalPubmed = reference_pubmed,
-    referenceOriginalTitle = reference_title,
-    referenceOriginalUnsplit = reference_unsplittable,
+    structureOriginal_inchi = inchi,
+    structureOriginal_nominal = name,
+    structureOriginal_smiles = smiles,
+    referenceOriginal_authors = reference_authors,
+    referenceOriginal_doi = reference_doi,
+    referenceOriginal_external = reference_external,
+    referenceOriginal_isbn = reference_isbn,
+    referenceOriginal_journal = reference_journal,
+    referenceOriginal_original = reference_original,
+    referenceOriginal_pubmed = reference_pubmed,
+    referenceOriginal_publishingDetails = reference_publishingDetails,
+    referenceOriginal_split = reference_split,
+    referenceOriginal_title = reference_title,
   )
 
 if (mode == "min")
@@ -66,93 +68,92 @@ inhouseDbOrganism <- inhouseDbSelected %>%
   distinct(organismOriginal)
 
 ## reference
-### authors
-inhouseDbReferenceAuthors <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginalAuthors)) %>%
-  distinct(referenceOriginalAuthors)
-
 ### DOI
-inhouseDbReferenceDoi <- inhouseDbSelected %>%
-  filter(!is.na(referenceOriginalDoi)) %>%
-  distinct(referenceOriginalDoi)
+inhouseDbReference_doi <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginal_doi)) %>%
+  distinct(referenceOriginal_doi)
 
-row.names(inhouseDbReferenceDoi) <-
-  inhouseDbReferenceDoi$referenceOriginalDoi
-
-# ### external
-# inhouseDbReferenceExternal <- inhouseDbSelected %>%
-#   filter(!is.na(referenceOriginalExternal)) %>%
-#   distinct(referenceOriginalExternal)
-
-# ### ISBN
-# inhouseDbReferenceIsbn <- inhouseDbSelected %>%
-#   filter(!is.na(referenceOriginalIsbn)) %>%
-#   distinct(referenceOriginalIsbn)
-
-# ### journal
-# inhouseDbReferenceJournal <- inhouseDbSelected %>%
-#   filter(!is.na(referenceOriginalJournal)) %>%
-#   distinct(referenceOriginalJournal)
+row.names(inhouseDbReference_doi) <-
+  inhouseDbReference_doi$referenceOriginal_doi
 
 ### pubmed
-inhouseDbReferencePubmed <- inhouseDbSelected %>%
-  filter(is.na(referenceOriginalDoi)) %>%
-  filter(!is.na(referenceOriginalPubmed)) %>%
-  distinct(referenceOriginalPubmed)
+inhouseDbReference_pubmed <- inhouseDbSelected %>%
+  filter(!is.na(referenceOriginal_pubmed)) %>%
+  distinct(referenceOriginal_pubmed)
 
-row.names(inhouseDbReferencePubmed) <-
-  inhouseDbReferencePubmed$referenceOriginalPubmed
+row.names(inhouseDbReference_pubmed) <-
+  inhouseDbReference_pubmed$referenceOriginal_pubmed
 
 ### title
-inhouseDbReferenceTitle <- inhouseDbSelected %>%
-  filter(is.na(referenceOriginalDoi)) %>%
-  filter(is.na(referenceOriginalPubmed)) %>%
-  filter(!is.na(referenceOriginalTitle)) %>%
-  distinct(referenceOriginalTitle)
+inhouseDbReference_title <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginal_doi)) %>%
+  filter(is.na(referenceOriginal_pubmed)) %>%
+  filter(!is.na(referenceOriginal_title)) %>%
+  distinct(referenceOriginal_title)
 
-### unsplit
-inhouseDbReferenceUnsplit <- inhouseDbSelected %>%
-  filter(is.na(referenceOriginalDoi)) %>%
-  filter(is.na(referenceOriginalPubmed)) %>%
-  filter(is.na(referenceOriginalTitle)) %>%
-  filter(!is.na(referenceOriginalUnsplit)) %>%
-  distinct(referenceOriginalUnsplit)
+### split
+inhouseDbReference_publishingDetails <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginal_doi)) %>%
+  filter(is.na(referenceOriginal_pubmed)) %>%
+  filter(is.na(referenceOriginal_title)) %>%
+  filter(!is.na(referenceOriginal_publishingDetails)) %>%
+  distinct(referenceOriginal_publishingDetails)
 
-### unsplit
-inhouseDbReferenceFull <- inhouseDbSelected %>%
+### split
+inhouseDbReference_split <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginal_doi)) %>%
+  filter(is.na(referenceOriginal_pubmed)) %>%
+  filter(is.na(referenceOriginal_title)) %>%
+  filter(is.na(referenceOriginal_publishingDetails)) %>%
+  filter(!is.na(referenceOriginal_split)) %>%
+  distinct(referenceOriginal_split)
+
+### original
+inhouseDbReference_original <- inhouseDbSelected %>%
+  filter(is.na(referenceOriginal_doi)) %>%
+  filter(is.na(referenceOriginal_pubmed)) %>%
+  filter(is.na(referenceOriginal_title)) %>%
+  filter(is.na(referenceOriginal_publishingDetails)) %>%
+  filter(is.na(referenceOriginal_split)) %>%
+  filter(!is.na(referenceOriginal_original)) %>%
+  distinct(referenceOriginal_original)
+
+### full
+inhouseDbReference_full <- inhouseDbSelected %>%
   distinct(
-    referenceOriginalAuthors,
-    referenceOriginalDoi,
-    referenceOriginalExternal,
-    referenceOriginalIsbn,
-    referenceOriginalJournal,
-    referenceOriginalPubmed,
-    referenceOriginalTitle,
-    referenceOriginalUnsplit
+    referenceOriginal_authors,
+    referenceOriginal_doi,
+    referenceOriginal_external,
+    referenceOriginal_isbn,
+    referenceOriginal_journal,
+    referenceOriginal_original,
+    referenceOriginal_pubmed,
+    referenceOriginal_title,
+    referenceOriginal_split
   ) %>%
   mutate_all(as.character)
 
 # structures
 ## with InChI
-inhouseDbStructureInchi <- inhouseDbSelected %>%
+inhouseDbStructure_inchi <- inhouseDbSelected %>%
   filter(grepl(pattern = "^InChI=.*",
-               x = structureOriginalInchi)) %>%
-  distinct(structureOriginalInchi)
-
-### without InChI nor SMILES but name
-inhouseDbStructureNominal <- inhouseDbSelected %>%
-  filter(!grepl(pattern = "^InChI=.*",
-                x = structureOriginalInchi)) %>%
-  filter(is.na(structureOriginalSmiles)) %>%
-  filter(!is.na(structureOriginalNominal)) %>%
-  distinct(structureOriginalNominal)
+               x = structureOriginal_inchi)) %>%
+  distinct(structureOriginal_inchi)
 
 ### without InChI but SMILES
-inhouseDbStructureSmiles <- inhouseDbSelected %>%
+inhouseDbStructure_smiles <- inhouseDbSelected %>%
   filter(!grepl(pattern = "^InChI=.*",
-                x = structureOriginalInchi)) %>%
-  filter(!is.na(structureOriginalSmiles)) %>%
-  distinct(structureOriginalSmiles)
+                x = structureOriginal_inchi)) %>%
+  filter(!is.na(structureOriginal_smiles)) %>%
+  distinct(structureOriginal_smiles)
+
+### without InChI nor SMILES but name
+inhouseDbStructure_nominal <- inhouseDbSelected %>%
+  filter(!grepl(pattern = "^InChI=.*",
+                x = structureOriginal_inchi)) %>%
+  filter(is.na(structureOriginal_smiles)) %>%
+  filter(!is.na(structureOriginal_nominal)) %>%
+  distinct(structureOriginal_nominal)
 
 # exporting
 ## creating directories if they do not exist
@@ -216,7 +217,7 @@ split_data_table(
 
 #### DOI
 write.table(
-  x = inhouseDbReferenceDoi,
+  x = inhouseDbReference_doi,
   file = gzfile(
     description = pathDataInterimTablesOriginalReferenceDoi,
     compression = 9,
@@ -228,51 +229,9 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-# #### external
-# write.table(
-#   x = inhouseDbReferenceExternal,
-#   file = gzfile(
-#     description = pathDataInterimTablesOriginalReferenceExternal,
-#     compression = 9,
-#     encoding = "UTF-8"
-#   ),
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-# #### ISBN
-# write.table(
-#   x = inhouseDbReferenceIsbn,
-#   file = gzfile(
-#     description = pathDataInterimTablesOriginalReferenceIsbn,
-#     compression = 9,
-#     encoding = "UTF-8"
-#   ),
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-# #### journal
-# write.table(
-#   x = inhouseDbReferenceJournal,
-#   file = gzfile(
-#     description = pathDataInterimTablesOriginalReferenceJournal,
-#     compression = 9,
-#     encoding = "UTF-8"
-#   ),
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
 #### pubmed
 write.table(
-  x = inhouseDbReferencePubmed,
+  x = inhouseDbReference_pubmed,
   file = gzfile(
     description = pathDataInterimTablesOriginalReferencePubmed,
     compression = 9,
@@ -286,7 +245,7 @@ write.table(
 
 #### title
 write.table(
-  x = inhouseDbReferenceTitle,
+  x = inhouseDbReference_title,
   file = gzfile(
     description = pathDataInterimTablesOriginalReferenceTitle,
     compression = 9,
@@ -298,11 +257,39 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### unsplit
+#### title
 write.table(
-  x = inhouseDbReferenceUnsplit,
+  x = inhouseDbReference_publishingDetails,
   file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceUnsplit,
+    description = pathDataInterimTablesOriginalReferencePublishingDetails,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = TRUE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### split
+write.table(
+  x = inhouseDbReference_split,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceSplit,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = TRUE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+#### original
+write.table(
+  x = inhouseDbReference_original,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalReferenceOriginal,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -314,7 +301,7 @@ write.table(
 
 #### full
 write.table(
-  x = inhouseDbReferenceFull,
+  x = inhouseDbReference_full,
   file = gzfile(
     description = pathDataInterimTablesOriginalReferenceFull,
     compression = 9,
@@ -329,7 +316,7 @@ write.table(
 ### structure
 #### inchi
 write.table(
-  x = inhouseDbStructureInchi,
+  x = inhouseDbStructure_inchi,
   file = gzfile(
     description = pathDataInterimTablesOriginalStructureInchi,
     compression = 9,
@@ -343,7 +330,7 @@ write.table(
 
 #### nominal
 write.table(
-  x = inhouseDbStructureNominal,
+  x = inhouseDbStructure_nominal,
   file = gzfile(
     description = pathDataInterimTablesOriginalStructureNominal,
     compression = 9,
@@ -357,7 +344,7 @@ write.table(
 
 #### smiles
 write.table(
-  x = inhouseDbStructureSmiles,
+  x = inhouseDbStructure_smiles,
   file = gzfile(
     description = pathDataInterimTablesOriginalStructureSmiles,
     compression = 9,

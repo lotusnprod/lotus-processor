@@ -19,7 +19,7 @@ dataDoi <- read_delim(
 reflistDoi <-
   pbmclapply(
     FUN = getrefDoi,
-    X = dataDoi$referenceOriginalDoi,
+    X = dataDoi$referenceOriginal_doi,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,

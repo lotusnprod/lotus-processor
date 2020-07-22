@@ -91,22 +91,78 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     refnum = str_extract(data_manipulated_long_ref$reference, "(Ref.\\d*)"),
     biorefnum = str_extract(data_manipulated_long_ref$biologicalsource, "(Ref.\\d*)")
   ) %>%
-  filter(refnum == biorefnum | is.na(refnum))
-
-data_manipulated_long_ref_unique$reference_unsplittable <-
-  gsub("(Ref.\\d* : )",
-       "",
-       data_manipulated_long_ref_unique$reference)
-
-data_manipulated_long_ref_unique$reference_title <-
-  gsub(
-    pattern = "\"",
+  filter(refnum == biorefnum |
+           is.na(refnum)) %>%
+  mutate(reference_unsplittable = gsub(
+    pattern = "(Ref.\\d* : )",
     replacement = "",
-    x = str_extract(
-      string = data_manipulated_long_ref_unique$reference_unsplittable,
-      pattern = "\".*\""
+    x = reference
+  )) %>%
+  mutate(
+    reference_title = gsub(
+      pattern = "\"",
+      replacement = "",
+      x = str_extract(string = reference_unsplittable,
+                      pattern = "\".*\"")
+    ),
+    reference_doi_1 =
+      gsub(
+        pattern = "\"",
+        replacement = "",
+        x = str_extract(string = reference_unsplittable,
+                        pattern = "doi:.*")
+      ),
+    reference_doi_2 =
+      gsub(
+        pattern = "\"",
+        replacement = "",
+        x = str_extract(string = reference_unsplittable,
+                        pattern = "DOI:.*")
+      )
+  ) %>%
+  mutate(reference_doi = ifelse(
+    test = !is.na(reference_doi_1),
+    yes = reference_doi_1,
+    no = reference_doi_2
+  )) %>%
+  cSplit("reference_doi", sep = ",") %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = "doi:",
+      replacement = "",
+      x = reference_doi_01,
+      ignore.case = TRUE
     )
-  )
+  ) %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = ". Epub .*",
+      replacement = "",
+      x = reference_doi,
+      ignore.case = TRUE
+    )
+  ) %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = " https://doi.org/",
+      replacement = "",
+      x = reference_doi,
+      fixed = TRUE
+    )
+  ) %>%
+  mutate(
+    reference_doi = gsub(
+      pattern = "http:/​/​dx.​doi.​org/",
+      replacement = "",
+      x = reference_doi,
+      fixed = TRUE
+    )
+  ) %>%
+  mutate(reference_doi = trimws(reference_doi)) %>%
+  data.frame()
+
+
+
 
 # standardizing
 data_standard <-
@@ -114,7 +170,7 @@ data_standard <-
     data_selected = data_manipulated_long_ref_unique,
     db = "car_1",
     structure_field = c("inchi", "name", "smiles"),
-    reference_field = c("reference_unsplittable", "reference_title")
+    reference_field = c("reference_original", "reference_title", "reference_doi")
   )
 
 # exporting

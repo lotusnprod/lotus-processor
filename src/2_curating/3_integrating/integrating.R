@@ -56,13 +56,13 @@ translatedStructureTable <- read_delim(
   trim_ws = TRUE
 ) %>%
   filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
-  select(-structureTranslatedSmiles,
-         -structureTranslatedNominal,
-         -nameCleaned,) %>%
+  select(-structureTranslated_smiles,
+         -structureTranslated_nominal,
+         -nameCleaned) %>%
   distinct(
-    structureOriginalInchi,
-    structureOriginalSmiles,
-    structureOriginalNominal,
+    structureOriginal_inchi,
+    structureOriginal_smiles,
+    structureOriginal_nominal,
     .keep_all = TRUE
   )
 
@@ -89,8 +89,8 @@ referenceTable <- read_delim(
   trim_ws = TRUE
 ) %>%
   filter(
-    !is.na(referenceOriginalExternal) |
-      !is.na(referenceOriginalIsbn) |
+    !is.na(referenceOriginal_external) |
+      !is.na(referenceOriginal_isbn) |
       !is.na(referenceCleanedTitle) |
       !is.na(referenceCleanedJournal) |
       !is.na(referenceCleanedDoi)

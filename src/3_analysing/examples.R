@@ -16,21 +16,21 @@ structure <- inhouseDb %>%
   filter(!is.na(inchikeySanitized))
 
 structureSearch_1 <- structure %>%
-  filter(is.na(structureOriginalInchi)) %>%
-  filter(is.na(structureOriginalSmiles)) %>%
-  filter(!is.na(structureOriginalNominal)) %>%
-  distinct(structureOriginalNominal,
+  filter(is.na(structureOriginal_inchi)) %>%
+  filter(is.na(structureOriginal_smiles)) %>%
+  filter(!is.na(structureOriginal_nominal)) %>%
+  distinct(structureOriginal_nominal,
            inchikeySanitized, .keep_all = TRUE)
 
 structureSearch_2 <- structure %>%
-  filter(is.na(structureOriginalInchi)) %>%
-  filter(!is.na(structureOriginalSmiles)) %>%
-  distinct(structureOriginalSmiles,
+  filter(is.na(structureOriginal_inchi)) %>%
+  filter(!is.na(structureOriginal_smiles)) %>%
+  distinct(structureOriginal_smiles,
            inchikeySanitized, .keep_all = TRUE)
 
 structureSearch_3 <- structure %>%
-  filter(!is.na(structureOriginalInchi)) %>%
-  distinct(structureOriginalInchi,
+  filter(!is.na(structureOriginal_inchi)) %>%
+  distinct(structureOriginal_inchi,
            inchikeySanitized, .keep_all = TRUE)
 
 structureSearch <-
@@ -42,17 +42,17 @@ structureSearch <- structureSearch %>%
   arrange(desc(n))
 
 saltSearch <- structureSearch_3 %>%
-  distinct(structureOriginalInchi, .keep_all = TRUE) %>%
+  distinct(structureOriginal_inchi, .keep_all = TRUE) %>%
   group_by(inchikeySanitized) %>%
   add_count() %>%
-  filter(grepl(pattern = "\\.", x = structureOriginalInchi)) %>%
+  filter(grepl(pattern = "\\.", x = structureOriginal_inchi)) %>%
   arrange(desc(n))
 
 maybeHit_salt <- inhouseDb %>%
   filter(!is.na(referenceCleanedDoi)) %>%
   filter(!is.na(organismLowestTaxon)) %>%
   filter(inchikeySanitized == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") %>%
-  distinct(structureOriginalInchi)
+  distinct(structureOriginal_inchi)
 
 maybeHit_str <- inhouseDb %>%
   filter(!is.na(referenceCleanedDoi)) %>%
@@ -60,15 +60,13 @@ maybeHit_str <- inhouseDb %>%
   filter(inchikeySanitized == "XMGQYMWWDOXHJM-UHFFFAOYSA-N")
 
 hitNames_str <- maybeHit_str %>%
-  distinct(structureOriginalNominal)
+  distinct(structureOriginal_nominal)
 
 hitSmiles_str <- maybeHit_str %>%
-  distinct(structureOriginalSmiles)
+  distinct(structureOriginal_smiles)
 
 hitInchi_str <- maybeHit_str %>%
-  distinct(structureOriginalInchi)
-
-
+  distinct(structureOriginal_inchi)
 
 organism <- inhouseDb %>%
   filter(!is.na(organismLowestTaxon))
@@ -93,17 +91,17 @@ maybeHit_org <- inhouseDb %>%
 hitNames_org <- maybeHit_org %>%
   distinct(organismOriginal)
 
-
-
 reference <- inhouseDb %>%
   filter(!is.na(referenceCleanedDoi))
 
 referenceSearch <- reference %>%
   distinct(
-    referenceOriginalDoi,
-    referenceOriginalPubmed,
-    referenceOriginalTitle,
-    referenceOriginalUnsplit,
+    referenceOriginal_doi,
+    referenceOriginal_original,
+    referenceOriginal_pubmed,
+    referenceOriginal_publishingDetails,
+    referenceOriginal_title,
+    referenceOriginal_split,
     referenceCleanedDoi,
     .keep_all = TRUE
   ) %>%

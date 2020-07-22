@@ -21,7 +21,7 @@ dataPubmed <- read_delim(
 reflistPubmed <- invisible(
   pbmclapply(
     FUN = getrefPubmed,
-    X = as.character(dataPubmed$referenceOriginalPubmed),
+    X = as.character(dataPubmed$referenceOriginal_pubmed),
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
