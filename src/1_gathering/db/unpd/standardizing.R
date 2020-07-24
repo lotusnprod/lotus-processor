@@ -25,8 +25,16 @@ data_original <- read_delim(
 # selecting
 ## atomizing references
 data_selected <- data_original %>%
-  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref), ) %>%
+  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref)) %>%
   cSplit("reference", sep = "|", direction = "long") %>%
+  mutate_all(as.character) %>%
+  cSplit(
+    "reference",
+    sep = "; ; ; ",
+    stripWhite = FALSE,
+    fixed = TRUE,
+    direction = "long"
+  ) %>%
   mutate_all(as.character) %>%
   select(
     biologicalsource = ln_reduced,
