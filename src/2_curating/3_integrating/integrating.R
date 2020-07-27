@@ -101,7 +101,8 @@ referenceTable <- read_delim(
     -referenceTranslatedTitle,
     -referenceTranslatedDate,
     -referenceTranslatedAuthor,
-    -referenceTranslationScore,
+    -referenceTranslationScoreCrossref,
+    -referenceTranslationScoreDistance,
     -referenceCleanedAuthor,
     -referenceCleanedDate
   )
@@ -124,7 +125,9 @@ referenceOrganismStructureIntegratedTable <-
 
 # selecting minimal columns
 inhouseDb <- referenceOrganismStructureIntegratedTable %>%
-  mutate(referenceCleanedTranslationScore = as.numeric(referenceCleanedTranslationScore))
+  mutate(
+    referenceCleanedTranslationScoreCrossref = as.numeric(referenceCleanedTranslationScoreCrossref)
+  )
 
 # export
 ## creating directories if they do not exist
@@ -147,3 +150,4 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+

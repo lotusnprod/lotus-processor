@@ -15,9 +15,15 @@ inhouseDb <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate(referenceCleanedTranslationScore = as.integer(referenceCleanedTranslationScore)) %>%
+  mutate(
+    referenceCleanedTranslationScoreCrossrefCrossref = as.integer(referenceCleanedTranslationScoreCrossrefCrossref),
+    referenceCleanedTranslationScoreCrossrefDistance = as.integer(referenceCleanedTranslationScoreCrossrefDistance),
+    referenceCleanedOrganismTitleScore = as.integer(referenceCleanedOrganismTitleScore)
+  ) %>%
   arrange(desc(referenceOriginal_external)) %>%
-  arrange(desc(referenceCleanedTranslationScore)) %>%
+  arrange(desc(referenceCleanedTranslationScoreCrossrefCrossref)) %>%
+  arrange(referenceCleanedTranslationScoreCrossrefDistance) %>%
+  arrange(desc(referenceCleanedOrganismTitleScore)) %>%
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
 
@@ -56,7 +62,7 @@ tripletsOutsideDnpStrict <- pairsOutsideDnp %>%
     .keep_all = TRUE
   ) %>%
   filter(!is.na(referenceCleanedDoi) &
-           referenceCleanedTranslationScore == 100)
+           referenceCleanedTranslationScoreCrossref == 100)
 
 tripletsOverlapDnpStrict <- pairsFull %>%
   distinct(
@@ -68,7 +74,7 @@ tripletsOverlapDnpStrict <- pairsFull %>%
     .keep_all = TRUE
   ) %>%
   filter(!is.na(referenceCleanedDoi) &
-           referenceCleanedTranslationScore == 100)
+           referenceCleanedTranslationScoreCrossref == 100)
 
 tripletsWithDnpStrict <- pairsFull %>%
   distinct(
@@ -81,7 +87,7 @@ tripletsWithDnpStrict <- pairsFull %>%
   ) %>%
   filter(
     !is.na(referenceCleanedDoi) &
-      referenceCleanedTranslationScore == 100 |
+      referenceCleanedTranslationScoreCrossref == 100 |
       referenceOriginal_external == "DNP"
   )
 
@@ -104,8 +110,10 @@ tripletsOverlapDnpMedium <- pairsFull %>%
       !is.na(referenceCleanedTitle) |
       !is.na(referenceOriginal_external)
   ) %>%
-  filter(referenceOriginal_external != "DNP" |
-           referenceCleanedTranslationScore == 100)
+  filter(
+    referenceOriginal_external != "DNP" |
+      referenceCleanedTranslationScoreCrossref == 100
+  )
 
 stats <- pairsOutsideDnp %>%
   group_by(database) %>%
@@ -230,22 +238,28 @@ print(x = "analysing pairs, this should be faster")
 ### open NP DB
 print(x = "open")
 openDbPairs <- openDbTriplets %>%
-  filter(referenceCleanedTranslationScore >= 30 |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    referenceCleanedTranslationScoreCrossref >= 30 |
+      !is.na(referenceOriginal_external)
+  ) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ### inhouseDB
 print(x = "inhouse")
 inhouseDbPairs <- inhouseDbTriplets %>%
-  filter(referenceCleanedTranslationScore >= 30 |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    referenceCleanedTranslationScoreCrossref >= 30 |
+      !is.na(referenceOriginal_external)
+  ) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ### DNP
 print(x = "dnp")
 dnpDbPairs <- dnpDbTriplets %>%
-  filter(referenceCleanedTranslationScore >= 30 |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    referenceCleanedTranslationScoreCrossref >= 30 |
+      !is.na(referenceOriginal_external)
+  ) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 # writing tabular stats

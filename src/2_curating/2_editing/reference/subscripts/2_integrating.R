@@ -82,6 +82,7 @@ dataFull <- read_delim(
   trim_ws = TRUE
 ) %>%
   distinct(
+    organismOriginal,
     referenceOriginal_authors,
     referenceOriginal_doi,
     referenceOriginal_external,
@@ -106,7 +107,7 @@ dataFullWide <- full_join(dataFullWide, dataOriginal)
 
 dataFullLong <- dataFullWide %>%
   pivot_longer(
-    cols = 11:ncol(.),
+    cols = 12:ncol(.),
     names_to = c(".value", "level"),
     names_sep = "_",
     values_to = "reference",
@@ -115,10 +116,9 @@ dataFullLong <- dataFullWide %>%
 
 dataFullLongFilled <- left_join(dataFull, dataFullLong)
 
-### inconsistency of journal name depending on retrieval method (check JNP) ###
-
 dataReferencedSelected <- dataFullLongFilled %>%
   select(
+    organismOriginal,
     referenceOriginal_authors,
     referenceOriginal_doi,
     referenceOriginal_external,
@@ -134,10 +134,11 @@ dataReferencedSelected <- dataFullLongFilled %>%
     referenceTranslatedTitle,
     referenceTranslatedDate,
     referenceTranslatedAuthor,
-    referenceTranslationScore
+    referenceTranslationScoreCrossref,
+    referenceTranslationScoreDistance
   ) %>%
-  mutate(referenceTranslationScore = replace_na(referenceTranslationScore, "0")) %>%
   distinct(
+    organismOriginal,
     referenceOriginal_authors,
     referenceOriginal_doi,
     referenceOriginal_external,
@@ -153,14 +154,18 @@ dataReferencedSelected <- dataFullLongFilled %>%
     referenceTranslatedDate,
     referenceTranslatedAuthor,
     referenceTranslatedDoi,
-    referenceTranslationScore,
+    referenceTranslationScoreCrossref,
+    referenceTranslationScoreDistance,
     .keep_all = TRUE
   )
 
-dataReferencedSelected$referenceTranslationScore <-
-  as.numeric(dataReferencedSelected$referenceTranslationScore)
+dataReferencedSelected$referenceTranslationScoreCrossref <-
+  as.numeric(dataReferencedSelected$referenceTranslationScoreCrossref)
 
-dataReferencedSelected$referenceTranslationScore[dataReferencedSelected$referenceTranslationScore == 1] <-
+dataReferencedSelected$referenceTranslationScoreDistance <-
+  as.numeric(dataReferencedSelected$referenceTranslationScoreDistance)
+
+dataReferencedSelected$referenceTranslationScoreCrossref[dataReferencedSelected$referenceTranslationScoreCrossref == 1] <-
   100
 
 ## exporting

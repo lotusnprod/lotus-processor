@@ -61,7 +61,8 @@ for (i in 1:nrow(reflistPubmedBound)) {
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslationScore"] <- 1
+  dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
+  dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
 }
 
 dataPubmed <- dataPubmed %>%
