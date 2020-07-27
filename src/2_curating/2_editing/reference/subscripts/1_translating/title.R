@@ -18,7 +18,7 @@ dataTitle <- read_delim(
 # getting references
 reflist <- invisible(
   pbmclapply(
-    FUN = getref,
+    FUN = getref_noLimit,
     X = dataTitle$referenceOriginal_title,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
@@ -30,104 +30,9 @@ reflist <- invisible(
   )
 )
 
-dataTitle <- dataTitle %>%
-  mutate_all(as.character)
-
-# joining with original dataframe
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslatedDoi"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["doi"]]),
-        yes = reflist[[i]][["data"]][["doi"]],
-        no = NA
-      ),
-      no = NA
-    )[1])
-}
-
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslatedJournal"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["container.title"]]),
-        yes = reflist[[i]][["data"]][["container.title"]],
-        no = NA
-      ),
-      no = NA
-    )[1])
-}
-
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslatedTitle"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["title"]]),
-        yes = reflist[[i]][["data"]][["title"]],
-        no = NA
-      ),
-      no = NA
-    )[1])
-}
-
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslatedDate"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["issued"]]),
-        yes = reflist[[i]][["data"]][["issued"]],
-        no = NA
-      ),
-      no = NA
-    )[1])
-}
-
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslatedAuthor"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["author"]][[1]][["family"]][1]),
-        yes = reflist[[i]][["data"]][["author"]][[1]][["family"]][1],
-        no = NA
-      ),
-      no = NA
-    )[1])
-  
-}
-
-for (i in 1:length(reflist)) {
-  dataTitle[i, "referenceTranslationScore"] <-
-    as.character(ifelse(
-      test = !is.na(reflist[[i]]),
-      yes = ifelse(
-        test = !is.null(reflist[[i]][["data"]][["score"]]),
-        yes = reflist[[i]][["data"]][["score"]],
-        no = 0
-      ),
-      no = 0
-    )[1])
-}
-
-dataTitle <- dataTitle %>%
-  mutate_all(as.character)
-
-dataTitle[] <-
-  lapply(dataTitle, function(x)
-    gsub("\r\n", " ", x))
-dataTitle[] <-
-  lapply(dataTitle, function(x)
-    gsub("\r", " ", x))
-dataTitle[] <-
-  lapply(dataTitle, function(x)
-    gsub("\n", " ", x))
-dataTitle[] <-
-  lapply(dataTitle, function(x)
-    gsub("\t", " ", x))
+dataTitle <- getBestReference(data = dataTitle,
+                              referenceType = "title",
+                              method = "osa")
 
 # exporting
 ## creating directories if they do not exist

@@ -10,6 +10,7 @@ source("functions/reference.R")
 dataTranslated <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
   delim = "\t",
+  col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 )
@@ -20,9 +21,11 @@ test <- dataTranslated %>%
   group_by(referenceTranslatedTitle) %>%
   distinct(
     referenceOriginal_doi,
-    referenceOriginal_pubmed,
-    referenceOriginal_title,
     referenceOriginal_original,
+    referenceOriginal_publishingDetails,
+    referenceOriginal_pubmed,
+    referenceOriginal_split,
+    referenceOriginal_title,
     .keep_all = TRUE
   ) %>%
   add_count() %>%
@@ -202,25 +205,11 @@ test6 <- test4 %>%
 test6 <- test4 %>%
   filter(n == 194)
 
-RefShouldBeOk <- test %>%
-  filter(n < 5 &
-           referenceTranslationScore > 80 &
-           referenceTranslationScore <= 100)
-
-### analyzing how low we can go
-low70 <- test %>%
-  filter(n < 5 &
-           referenceTranslationScore > 70 &
-           referenceTranslationScore <= 80)
-
 ## example
 ### Luesch, Hendrik; Yoshida, Wesley Y.; Moore, Richard E.; Paul, Valerie J.; Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439.
 #### returning erroneous result
 ##### Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439
 ###### test <- cr_works(query = "Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439") #returning right result (but very low score)
-
-
-### score above 100 seems to indicate multiple references in 1 row
 
 dataCleaned <- dataTranslated %>%
   mutate(
@@ -229,8 +218,34 @@ dataCleaned <- dataTranslated %>%
     referenceCleanedDoi = referenceTranslatedDoi,
     referenceCleanedAuthor = referenceTranslatedAuthor,
     referenceCleanedDate = referenceTranslatedDate,
-    referenceCleanedTranslationScore = referenceTranslationScore
-  )
+    referenceCleanedTranslationScoreCrossref = referenceTranslationScoreCrossref,
+    referenceCleanedTranslationScoreDistance = referenceTranslationScoreDistance
+  ) %>%
+  rowwise() %>%
+  mutate(referenceCleanedOrganismTitleScore = ifelse(
+    test = str_detect(
+      string = fixed(referenceTranslatedTitle),
+      pattern = fixed(organismOriginal)
+    ),
+    yes = 1,
+    no = 0
+  )) %>%
+  group_by(organismOriginal, referenceTranslatedTitle) %>%
+  arrange(desc(referenceCleanedTranslationScoreCrossref)) %>%
+  arrange(referenceCleanedTranslationScoreDistance) %>%
+  arrange(desc(referenceCleanedOrganismTitleScore)) %>%
+  ungroup() %>%
+  distinct(
+    referenceOriginal_doi,
+    referenceOriginal_original,
+    referenceOriginal_publishingDetails,
+    referenceOriginal_pubmed,
+    referenceOriginal_split,
+    referenceOriginal_title,
+    .keep_all = TRUE
+  ) %>%
+  select(-organismOriginal)
+
 
 # exporting
 ## creating directories if they do not exist
