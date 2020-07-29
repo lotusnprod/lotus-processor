@@ -118,7 +118,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
   joinedData <- joined$data
   
   joinedSelected <- joined %>%
-    select(referenceColumnName,
+    select(all_of(referenceColumnName),
            level)
   
   tableInterim <- cbind(joinedSelected, joinedData)
@@ -132,7 +132,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
   
   tableFinal <- tableInterim %>%
     select(
-      referenceColumnName,
+      all_of(referenceColumnName),
       referenceTranslatedDoi = doi,
       referenceTranslatedJournal = container.title,
       referenceTranslatedTitle = title,
@@ -147,7 +147,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
                               4)),
                 .keep_all = TRUE) %>%
     select(
-      referenceColumnName,
+      all_of(referenceColumnName),
       referenceTranslatedDoi,
       referenceTranslatedJournal,
       referenceTranslatedTitle,
@@ -199,7 +199,7 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   joinedData <- joined$data
   
   joinedSelected <- joined %>%
-    select(referenceColumnName,
+    select(all_of(referenceColumnName),
            level)
   
   tableInterim <- cbind(joinedSelected, joinedData)
@@ -213,7 +213,7 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   
   tableFinal <- tableInterim %>%
     select(
-      referenceColumnName,
+      all_of(referenceColumnName),
       referenceTranslatedDoi = doi,
       referenceTranslatedJournal = container.title,
       referenceTranslatedTitle = title,
@@ -228,7 +228,7 @@ getAllReferences <- function(data, referenceType, method = "osa") {
                               4)),
                 .keep_all = TRUE) %>%
     select(
-      referenceColumnName,
+      all_of(referenceColumnName),
       referenceTranslatedDoi,
       referenceTranslatedJournal,
       referenceTranslatedTitle,
