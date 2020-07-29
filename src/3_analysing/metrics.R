@@ -190,7 +190,7 @@ openDbReference <- openDb %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPcmid)
+      !is.na(referenceCleanedPmcid)
   ) %>%
   distinct(referenceCleanedDoi, .keep_all = TRUE)
 
