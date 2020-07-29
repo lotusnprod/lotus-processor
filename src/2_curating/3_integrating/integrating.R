@@ -93,7 +93,9 @@ referenceTable <- read_delim(
       !is.na(referenceOriginal_isbn) |
       !is.na(referenceCleanedTitle) |
       !is.na(referenceCleanedJournal) |
-      !is.na(referenceCleanedDoi)
+      !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
   ) %>% # this step is new and should avoid useless too big files
   select(
     -referenceTranslatedDoi,
@@ -150,4 +152,3 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
-

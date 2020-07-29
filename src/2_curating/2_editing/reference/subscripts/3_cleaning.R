@@ -15,6 +15,21 @@ dataTranslated <- read_delim(
   trim_ws = TRUE
 )
 
+print(x = "loading pmcid file, this may take a while")
+
+PMC_ids <- read_delim(
+  file = gzfile(pathDataExternalTranslationSourcePubmedFile),
+  delim = ",",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  filter(!is.na(DOI) | !is.na(PMID)) %>%
+  select(DOI,
+         PMCID,
+         PMID) %>%
+  mutate_all(as.character)
+
 ### Find something appropriate
 test <- dataTranslated %>%
   filter(!is.na(referenceTranslatedTitle)) %>%
@@ -246,6 +261,31 @@ dataCleaned <- dataTranslated %>%
   ) %>%
   select(-organismOriginal)
 
+subDataClean_doi <- dataCleaned %>%
+  filter(!is.na(referenceCleanedDoi)) %>%
+  distinct(referenceCleanedDoi)
+
+subDataClean_pmid <- dataCleaned %>%
+  filter(!is.na(referenceOriginal_pubmed)) %>%
+  distinct(referenceOriginal_pubmed)
+
+df_doi <- left_join(subDataClean_doi,
+                    PMC_ids,
+                    by = c("referenceCleanedDoi" = "DOI"))
+
+df_pubmed <- left_join(subDataClean_pmid,
+                       PMC_ids,
+                       by = c("referenceOriginal_pubmed" = "PMID"))
+
+dataPostCleaned <- left_join(dataCleaned, df_doi)
+
+dataPostCleaned <- left_join(dataPostCleaned, df_pubmed) %>%
+  mutate(referenceCleanedPmid = PMID,
+         referenceCleanedPmcid = PMCID) %>%
+  select(-DOI,
+         -PMID,
+         -PMCID)
+
 
 # exporting
 ## creating directories if they do not exist
@@ -262,7 +302,7 @@ ifelse(
 )
 
 write.table(
-  x = dataCleaned,
+  x = dataPostCleaned,
   file = gzfile(
     description = pathDataInterimTablesCleanedReferenceFile,
     compression = 9,

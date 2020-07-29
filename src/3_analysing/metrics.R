@@ -23,7 +23,8 @@ inhouseDb <- read_delim(
   arrange(desc(referenceOriginal_external)) %>%
   arrange(desc(referenceCleanedTranslationScoreCrossref)) %>%
   arrange(referenceCleanedTranslationScoreDistance) %>%
-  arrange(desc(referenceCleanedOrganismTitleScore)) %>%
+  arrange(desc(referenceCleanedPmid)) %>%
+  arrange(desc(referenceCleanedPmcid)) %>%
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
 
@@ -51,7 +52,6 @@ pairsFull <- rbind(openDb, dnpDb) %>%
            .keep_all = TRUE)
 
 # warning: keeping only one ref per triplet
-
 tripletsOutsideDnpStrict <- pairsOutsideDnp %>%
   distinct(
     inchikeySanitized,
@@ -61,8 +61,14 @@ tripletsOutsideDnpStrict <- pairsOutsideDnp %>%
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  filter(!is.na(referenceCleanedDoi) &
-           referenceCleanedTranslationScoreCrossref == 100)
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) &
+      referenceCleanedTranslationScoreCrossref == 100 |
+      referenceCleanedTranslationScoreDistance == 0 &
+      referenceCleanedOrganismTitleScore == 1
+  )
 
 tripletsOverlapDnpStrict <- pairsFull %>%
   distinct(
@@ -73,8 +79,14 @@ tripletsOverlapDnpStrict <- pairsFull %>%
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  filter(!is.na(referenceCleanedDoi) &
-           referenceCleanedTranslationScoreCrossref == 100)
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) &
+      referenceCleanedTranslationScoreCrossref == 100 |
+      referenceCleanedTranslationScoreDistance == 0 &
+      referenceCleanedOrganismTitleScore == 1
+  )
 
 tripletsWithDnpStrict <- pairsFull %>%
   distinct(
@@ -86,8 +98,12 @@ tripletsWithDnpStrict <- pairsFull %>%
     .keep_all = TRUE
   ) %>%
   filter(
-    !is.na(referenceCleanedDoi) &
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) &
       referenceCleanedTranslationScoreCrossref == 100 |
+      referenceCleanedTranslationScoreDistance == 0 &
+      referenceCleanedOrganismTitleScore == 1 |
       referenceOriginal_external == "DNP"
   )
 
@@ -101,18 +117,24 @@ tripletsOverlapDnpMedium <- pairsFull %>%
     inchikeySanitized,
     organismLowestTaxon,
     referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
     referenceOriginal_external,
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
   filter(
     !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedTitle) |
       !is.na(referenceOriginal_external)
   ) %>%
   filter(
     referenceOriginal_external != "DNP" |
-      referenceCleanedTranslationScoreCrossref == 100
+      referenceCleanedTranslationScoreCrossref == 100 |
+      referenceCleanedTranslationScoreDistance == 0 &
+      referenceCleanedOrganismTitleScore == 1
   )
 
 stats <- pairsOutsideDnp %>%
@@ -165,33 +187,63 @@ dnpDbStructure <- dnpDb %>%
 ## references
 ### open NP DB
 openDbReference <- openDb %>%
-  filter(!is.na(referenceCleanedDoi)) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPcmid)
+  ) %>%
   distinct(referenceCleanedDoi, .keep_all = TRUE)
 
 ### inhouseDB
 inhouseDbReference <- inhouseDb %>%
-  filter(!is.na(referenceOriginal_external) |
-           !is.na(referenceCleanedDoi)) %>%
-  distinct(referenceOriginal_external, referenceCleanedDoi, .keep_all = TRUE)
+  filter(
+    !is.na(referenceOriginal_external) |
+      !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
+  ) %>%
+  distinct(
+    referenceOriginal_external,
+    referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
+    .keep_all = TRUE
+  )
 
 ### DNP
 dnpDbReference <- dnpDb %>%
-  filter(!is.na(referenceOriginal_external) |
-           !is.na(referenceCleanedDoi)) %>%
-  distinct(referenceOriginal_external, referenceCleanedDoi, .keep_all = TRUE)
+  filter(
+    !is.na(referenceOriginal_external) |
+      !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
+  ) %>%
+  distinct(
+    referenceOriginal_external,
+    referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
+    .keep_all = TRUE
+  )
 
 ## triplets
 print(x = "analysing triplets, this may take a while")
 print(x = "open")
 ###open NP DB
 openDbTriplets <- openDb %>%
-  filter(!is.na(referenceCleanedDoi) |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceOriginal_external)
+  ) %>%
   filter(!is.na(inchikeySanitized) &
            !is.na(organismLowestTaxon)) %>%
   distinct(
     inchikeySanitized,
     referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
     referenceOriginal_external,
     organismLowestTaxon,
     organismTaxonId,
@@ -202,13 +254,19 @@ openDbTriplets <- openDb %>%
 print(x = "inhouse")
 ### inhouseDB
 inhouseDbTriplets <- inhouseDb %>%
-  filter(!is.na(referenceCleanedDoi) |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceOriginal_external)
+  ) %>%
   filter(!is.na(inchikeySanitized) &
            !is.na(organismLowestTaxon)) %>%
   distinct(
     inchikeySanitized,
     referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
     referenceOriginal_external,
     organismLowestTaxon,
     organismTaxonId,
@@ -219,13 +277,19 @@ inhouseDbTriplets <- inhouseDb %>%
 print(x = "dnp")
 ### DNP
 dnpDbTriplets <- dnpDb %>%
-  filter(!is.na(referenceCleanedDoi) |
-           !is.na(referenceOriginal_external)) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceOriginal_external)
+  ) %>%
   filter(!is.na(inchikeySanitized) &
            !is.na(organismLowestTaxon)) %>%
   distinct(
     inchikeySanitized,
     referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
     referenceOriginal_external,
     organismLowestTaxon,
     organismTaxonId,
