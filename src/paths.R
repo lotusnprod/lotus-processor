@@ -464,6 +464,16 @@ pathDataExternalTranslationSource <-
   file.path(pathDataExternal,
             "translationSource")
 
+##### pubmed
+pathDataExternalTranslationSourcePubmed <-
+  file.path(pathDataExternalTranslationSource,
+            "pubmed")
+
+###### file
+pathDataExternalTranslationSourcePubmedFile <-
+  file.path(pathDataExternalTranslationSourcePubmed,
+            "PMC-ids.csv.gz")
+
 ##### common
 pathDataExternalTranslationSourceCommon <-
   file.path(pathDataExternalTranslationSource,
@@ -907,7 +917,8 @@ pathDataInterimTablesOriginalReferencePubmed <-
 
 ### publishingDetails
 pathDataInterimTablesOriginalReferencePublishingDetails <-
-  file.path(pathDataInterimTablesOriginalReference, "publishingDetails.tsv.gz")
+  file.path(pathDataInterimTablesOriginalReference,
+            "publishingDetails.tsv.gz")
 
 ### title
 pathDataInterimTablesOriginalReferenceTitle <-
@@ -952,7 +963,8 @@ pathDataInterimTablesTranslatedReferencePubmed <-
   file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
 
 pathDataInterimTablesTranslatedReferencePublishingDetails <-
-  file.path(pathDataInterimTablesTranslatedReference, "publishingDetails.tsv.gz")
+  file.path(pathDataInterimTablesTranslatedReference,
+            "publishingDetails.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")

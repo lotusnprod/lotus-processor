@@ -15,9 +15,13 @@ openDbTriplets <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate(referenceCleanedTranslationScore = as.integer(referenceCleanedTranslationScore)) %>%
+  mutate(
+    referenceCleanedTranslationScoreCrossref = as.integer(referenceCleanedTranslationScoreCrossref)
+  ) %>%
   arrange(desc(referenceOriginal_external)) %>%
-  arrange(desc(referenceCleanedTranslationScore)) %>%
+  arrange(desc(referenceCleanedTranslationScoreCrossref)) %>%
+  arrange(desc(referenceCleanedPmid)) %>%
+  arrange(desc(referenceCleanedPmcid)) %>%
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()
 
@@ -27,8 +31,8 @@ openDbTripletsClean <- openDbTriplets %>%
   filter(
     !is.na(referenceCleanedTitle) |
       !is.na(referenceCleanedDoi) |
-      referenceOriginal_external == "PLANTCYC" |
-      referenceOriginal_external == "Korean_Traditional_Knowledge_Portal_20140617"
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
   ) %>%
   select(
     database,
@@ -51,13 +55,19 @@ openDbTripletsClean <- openDbTriplets %>%
     smilesSanitized,
     referenceCleanedTitle,
     referenceCleanedDoi,
-    referenceCleanedTranslationScore
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
+    referenceCleanedTranslationScoreCrossref,
+    referenceCleanedTranslationScoreDistance,
+    referenceCleanedOrganismTitleScore
   ) %>%
   distinct(
     inchikeySanitized,
     organismLowestTaxon,
     referenceOriginal_external,
     referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid,
     referenceCleanedTitle,
     .keep_all = TRUE
   )
@@ -87,9 +97,17 @@ sampleKnapsack <- openDbTripletsClean %>%
 
 set.seed(42)
 sampleWD <- openDbTripletsClean %>%
-  filter(!is.na(referenceCleanedDoi)) %>%
-  filter(referenceCleanedTranslationScore == 100) %>%
-  sample_n(1000) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
+  ) %>%
+  filter(
+    referenceCleanedTranslationScoreCrossref == 100 |
+      referenceCleanedTranslationScoreDistance <= 20 &
+      referenceCleanedOrganismTitleScore == 1
+  ) %>%
+  sample_n(500) %>%
   select(
     organismLowestTaxon,
     organismDbTaxo,
@@ -98,7 +116,9 @@ sampleWD <- openDbTripletsClean %>%
     inchiSanitized,
     smilesSanitized,
     referenceCleanedTitle,
-    referenceCleanedDoi
+    referenceCleanedDoi,
+    referenceCleanedPmid,
+    referenceCleanedPmcid
   )
 
 #exporting
