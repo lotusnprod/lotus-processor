@@ -200,21 +200,6 @@ split_data_table(
 )
 
 ### reference
-
-# #### authors
-# write.table(
-#   x = inhouseDbReferenceDoi,
-#   file = gzfile(
-#     description = pathDataInterimTablesOriginalReferenceAuthors,
-#     compression = 9,
-#     encoding = "UTF-8"
-#   ),
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
 #### DOI
 write.table(
   x = inhouseDbReference_doi,

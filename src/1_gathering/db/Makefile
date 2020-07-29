@@ -1,10 +1,10 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb cmaup coconut cyanometdb datawarrior dnp drduke etcm foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb pharmdbk phenolexplorer phytohub procardb plantcyc respect sancdb streptomedb swmd symmap tmdb tmmc tppt triforc unpd wakankensaku
+DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt triforc unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap
 
 DATABASES_RECONVERT = biofacquim-reconvert coconut-reconvert metabolights-reconvert streptomedb-reconvert
 
-DATABASES_REINTEGRATE = plantcyc-reintegrate unpd-reintegrate
+DATABASES_REINTEGRATE = unpd-reintegrate # plantcyc-reintegrate 
 
 DATABASES_RESCRAPE = alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape procardb-rescrape sancdb-rescrape swmd-rescrape tmdb-rescrape wakankensaku-rescrape # nubbe-rescrape pharmdbk-rescrape not done
 
@@ -63,9 +63,9 @@ carotenoiddb-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScrap
 ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv ${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
 
-cmaup: ${INTERIM_DB_PATH}/cmaup.tsv.gz
-${INTERIM_DB_PATH}/cmaup.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Ingredients_All.txt ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Plants.txt ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt ${SRC_GATHERING_DB_PATH}/cmaup/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/cmaup/standardizing.R
+# cmaup: ${INTERIM_DB_PATH}/cmaup.tsv.gz
+# ${INTERIM_DB_PATH}/cmaup.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Ingredients_All.txt ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Plants.txt ${EXTERNAL_DB_SOURCE_PATH}/cmaup/CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt ${SRC_GATHERING_DB_PATH}/cmaup/standardizing.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/cmaup/standardizing.R
 
 coconut: ${INTERIM_DB_PATH}/coconut.tsv.gz
 ${INTERIM_DB_PATH}/coconut.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz ${SRC_GATHERING_DB_PATH}/coconut/standardizing.R
@@ -91,9 +91,9 @@ drduke: ${INTERIM_DB_PATH}/drduke.tsv.gz
 ${INTERIM_DB_PATH}/drduke.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FARMACY_NEW.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/REFERENCES.csv ${SRC_GATHERING_DB_PATH}/drduke/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/drduke/standardizing.R
 
-etcm: ${INTERIM_DB_PATH}/etcm.tsv.gz
-${INTERIM_DB_PATH}/etcm.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/etcm/data.zip ${SRC_GATHERING_DB_PATH}/etcm/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/etcm/standardizing.R
+# etcm: ${INTERIM_DB_PATH}/etcm.tsv.gz
+# ${INTERIM_DB_PATH}/etcm.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/etcm/data.zip ${SRC_GATHERING_DB_PATH}/etcm/standardizing.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/etcm/standardizing.R
 
 foodb: ${INTERIM_DB_PATH}/foodb.tsv.gz
 ${INTERIM_DB_PATH}/foodb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/CompoundsFlavor_copy.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Compound_copy.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Content.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Flavor.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Food_copy.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Reference.csv ${SRC_GATHERING_DB_PATH}/foodb/standardizing.R
@@ -180,9 +180,9 @@ pamdb: ${INTERIM_DB_PATH}/pamdb.tsv.gz
 ${INTERIM_DB_PATH}/pamdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/pamdb/PaMet.xlsx ${SRC_GATHERING_DB_PATH}/pamdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/pamdb/standardizing.R
 
-pharmdbk: ${INTERIM_DB_PATH}/pharmdbk.tsv.gz
-${INTERIM_DB_PATH}/pharmdbk.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/pharmdbk/pharmdbk_raw/*.json.gz) ${SRC_GATHERING_DB_PATH}/pharmdbk/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/pharmdbk/standardizing.R
+# pharmdbk: ${INTERIM_DB_PATH}/pharmdbk.tsv.gz
+# ${INTERIM_DB_PATH}/pharmdbk.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/pharmdbk/pharmdbk_raw/*.json.gz) ${SRC_GATHERING_DB_PATH}/pharmdbk/standardizing.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/pharmdbk/standardizing.R
 
 # pharmdbk-rescrape not done
 
@@ -198,13 +198,13 @@ phytohub-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 
-plantcyc: ${INTERIM_DB_PATH}/plantcyc.tsv.gz
-${INTERIM_DB_PATH}/plantcyc.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
+# plantcyc: ${INTERIM_DB_PATH}/plantcyc.tsv.gz
+# ${INTERIM_DB_PATH}/plantcyc.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/standardizing.R
 
-plantcyc-reintegrate: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz)	
-$(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz): # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat) ${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
+# plantcyc-reintegrate: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz)	
+# $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/*.tsv.gz): # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/plantcyc/0_data/*/*/data/compounds.dat) ${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/plantcyc/integrating.R
 
 procardb: ${INTERIM_DB_PATH}/procardb.tsv.gz
 ${INTERIM_DB_PATH}/procardb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/procardb/standardizing.R
@@ -242,9 +242,9 @@ swmd-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 
-symmap: ${INTERIM_DB_PATH}/symmap.tsv.gz
-${INTERIM_DB_PATH}/symmap.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/symmap/data.zip ${SRC_GATHERING_DB_PATH}/symmap/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/symmap/standardizing.R
+# symmap: ${INTERIM_DB_PATH}/symmap.tsv.gz
+# ${INTERIM_DB_PATH}/symmap.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/symmap/data.zip ${SRC_GATHERING_DB_PATH}/symmap/standardizing.R
+# 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/symmap/standardizing.R
 
 tmdb: ${INTERIM_DB_PATH}/tmdb.tsv.gz
 ${INTERIM_DB_PATH}/tmdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/tmdb/standardizing.R
