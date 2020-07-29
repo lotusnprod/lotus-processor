@@ -16,13 +16,13 @@ inhouseDb <- read_delim(
   trim_ws = TRUE
 ) %>%
   mutate(
-    referenceCleanedTranslationScoreCrossrefCrossref = as.integer(referenceCleanedTranslationScoreCrossrefCrossref),
-    referenceCleanedTranslationScoreCrossrefDistance = as.integer(referenceCleanedTranslationScoreCrossrefDistance),
+    referenceCleanedTranslationScoreCrossref = as.integer(referenceCleanedTranslationScoreCrossref),
+    referenceCleanedTranslationScoreDistance = as.integer(referenceCleanedTranslationScoreDistance),
     referenceCleanedOrganismTitleScore = as.integer(referenceCleanedOrganismTitleScore)
   ) %>%
   arrange(desc(referenceOriginal_external)) %>%
-  arrange(desc(referenceCleanedTranslationScoreCrossrefCrossref)) %>%
-  arrange(referenceCleanedTranslationScoreCrossrefDistance) %>%
+  arrange(desc(referenceCleanedTranslationScoreCrossref)) %>%
+  arrange(referenceCleanedTranslationScoreDistance) %>%
   arrange(desc(referenceCleanedOrganismTitleScore)) %>%
   arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
   data.frame()

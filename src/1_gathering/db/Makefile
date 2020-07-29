@@ -1,6 +1,6 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt triforc unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap
+DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
 
 DATABASES_RECONVERT = biofacquim-reconvert coconut-reconvert metabolights-reconvert streptomedb-reconvert
 
@@ -262,9 +262,9 @@ tppt: ${INTERIM_DB_PATH}/tppt.tsv.gz
 ${INTERIM_DB_PATH}/tppt.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/tppt/TPPT_database.xlsx ${SRC_GATHERING_DB_PATH}/tppt/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/tppt/standardizing.R
 
-triforc: ${INTERIM_DB_PATH}/triforc.tsv.gz
-${INTERIM_DB_PATH}/triforc.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/triforc/triforcBis.tsv ${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
+# triforc: ${INTERIM_DB_PATH}/triforc.tsv.gz
+# ${INTERIM_DB_PATH}/triforc.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/triforc/triforcBis.tsv ${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
+#	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/triforc/standardizing.R
 
 unpd: ${INTERIM_DB_PATH}/unpd.tsv.gz
 ${INTERIM_DB_PATH}/unpd.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz ${SRC_GATHERING_DB_PATH}/unpd/standardizing.R
