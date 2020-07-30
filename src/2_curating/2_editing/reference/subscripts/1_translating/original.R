@@ -24,6 +24,8 @@ dataOriginal_1 <- dataOriginal %>%
 dataOriginal_2 <- dataOriginal %>%
   filter(row_number() %% 2 == 1)
 
+dataOriginal <- rbind(dataOriginal_1, dataOriginal_2)
+
 # getting references
 ## 1
 reflist_1 <- invisible(
