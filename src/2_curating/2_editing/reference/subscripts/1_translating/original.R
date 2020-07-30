@@ -15,11 +15,21 @@ dataOriginal <- read_delim(
   trim_ws = TRUE
 )
 
+# splitting because of too big results otherwise
+## 1
+dataOriginal_1 <- dataOriginal %>%
+  filter(row_number() %% 2 == 0)
+
+## 2
+dataOriginal_2 <- dataOriginal %>%
+  filter(row_number() %% 2 == 1)
+
 # getting references
-reflist <- invisible(
+## 1
+reflist_1 <- invisible(
   pbmclapply(
     FUN = getref_noLimit,
-    X = dataOriginal$referenceOriginal_original,
+    X = dataOriginal_1$referenceOriginal_original,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -29,6 +39,24 @@ reflist <- invisible(
     ignore.interactive = TRUE
   )
 )
+
+## 2
+reflist_2 <- invisible(
+  pbmclapply(
+    FUN = getref_noLimit,
+    X = dataOriginal_2$referenceOriginal_original,
+    mc.preschedule = TRUE,
+    mc.set.seed = TRUE,
+    mc.silent = TRUE,
+    mc.cores = (parallel::detectCores() - 2),
+    mc.cleanup = TRUE,
+    mc.allow.recursive = TRUE,
+    ignore.interactive = TRUE
+  )
+)
+
+## joining results
+reflist <- append(reflist_1, reflist_2)
 
 print(x = "This may take several minutes")
 
