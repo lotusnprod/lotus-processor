@@ -109,25 +109,32 @@ getBestReference <- function(data, referenceType, method = "osa") {
   tableIntial <- data %>%
     mutate(level = row.names(.))
   
-  names(reflist) <- 1:length(reflist)
+  dataList <- list()
+  for (i in 1:length(reflist)) {
+    ifelse(
+      test = !is.na(reflist[[i]]),
+      yes = ifelse(
+        test = !is.null(reflist[[i]][["data"]]),
+        yes = dataList[[i]] <- data.frame(reflist[[i]][["data"]]),
+        no = dataList[[i]] <- data.frame(NA)
+      ),
+      no = dataList[[i]] <- data.frame(NA)
+    )
+  }
   
-  bound <- bind_rows(reflist[!is.na(reflist)], .id = "level")
+  names(dataList) <- 1:length(dataList)
   
-  joined <- left_join(tableIntial, bound)
+  bound <- bind_rows(dataList[!is.na(dataList)], .id = "level")
   
-  joinedData <- joined$data
-  
-  joinedSelected <- joined %>%
-    select(all_of(referenceColumnName),
-           level)
-  
-  tableInterim <- cbind(joinedSelected, joinedData)
+  tableInterim <- left_join(tableIntial, bound)
   
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
-      stringdist(a = tableInterim[i, 1],
-                 b = tableInterim[i, "title"],
-                 method = method)
+      stringdist(
+        a = as.character(tableInterim[i, 1]),
+        b = as.character(tableInterim[i, "title"]),
+        method = method
+      )
   }
   
   tableFinal <- tableInterim %>%
@@ -190,25 +197,32 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   tableIntial <- data %>%
     mutate(level = row.names(.))
   
-  names(reflist) <- 1:length(reflist)
+  dataList <- list()
+  for (i in 1:length(reflist)) {
+    ifelse(
+      test = !is.na(reflist[[i]]),
+      yes = ifelse(
+        test = !is.null(reflist[[i]][["data"]]),
+        yes = dataList[[i]] <- data.frame(reflist[[i]][["data"]]),
+        no = dataList[[i]] <- data.frame(NA)
+      ),
+      no = dataList[[i]] <- data.frame(NA)
+    )
+  }
   
-  bound <- bind_rows(reflist[!is.na(reflist)], .id = "level")
+  names(dataList) <- 1:length(dataList)
   
-  joined <- left_join(tableIntial, bound)
+  bound <- bind_rows(dataList[!is.na(dataList)], .id = "level")
   
-  joinedData <- joined$data
-  
-  joinedSelected <- joined %>%
-    select(all_of(referenceColumnName),
-           level)
-  
-  tableInterim <- cbind(joinedSelected, joinedData)
+  tableInterim <- left_join(tableIntial, bound)
   
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
-      stringdist(a = tableInterim[i, 1],
-                 b = tableInterim[i, "title"],
-                 method = method)
+      stringdist(
+        a = as.character(tableInterim[i, 1]),
+        b = as.character(tableInterim[i, "title"]),
+        method = method
+      )
   }
   
   tableFinal <- tableInterim %>%
@@ -254,5 +268,22 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   
   return(tableFinal)
 }
+#######################################################
+#######################################################
+
+getref_top10 <- function(X) {
+  tryCatch({
+    cr_works(
+      flq = c(query.bibliographic = X),
+      sort = 'score',
+      order = "desc",
+      limit = 10
+    )
+  },
+  error = function(e) {
+    NA
+  })
+}
+
 #######################################################
 #######################################################

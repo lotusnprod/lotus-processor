@@ -56,6 +56,13 @@ translatedStructureTable <- read_delim(
   trim_ws = TRUE
 ) %>%
   filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
+  # mutate(
+  #   structureOriginal_inchi = structureOriginalInchi, # remove this once reran
+  #   structureOriginal_smiles = structureOriginalSmiles,
+  #   structureOriginal_nominal = structureOriginalNominal,
+  #   structureTranslated_smiles = structureTranslatedSmiles,
+  #   structureTranslated_nominal = structureTranslatedNominal
+  # ) %>%
   select(-structureTranslated_smiles,
          -structureTranslated_nominal,
          -nameCleaned) %>%

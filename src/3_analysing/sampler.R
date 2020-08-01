@@ -104,7 +104,7 @@ sampleWD <- openDbTripletsClean %>%
   ) %>%
   filter(
     referenceCleanedTranslationScoreCrossref == 100 |
-      referenceCleanedTranslationScoreDistance <= 20 &
+      referenceCleanedTranslationScoreDistance <= 10 &
       referenceCleanedOrganismTitleScore == 1
   ) %>%
   sample_n(500) %>%
@@ -139,7 +139,6 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-
 ## sampleKnapsack
 write.table(
   x = sampleKnapsack,
@@ -149,7 +148,6 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
-
 
 ## sampleWD
 write.table(

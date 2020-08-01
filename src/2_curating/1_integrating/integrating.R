@@ -183,6 +183,12 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalReferenceOriginalFolder),
+  dir.create(pathDataInterimTablesOriginalReferenceOriginalFolder),
+  FALSE
+)
+
 ##### structure
 ifelse(
   !dir.exists(pathDataInterimTablesOriginalStructure),
@@ -271,17 +277,11 @@ write.table(
 )
 
 #### original
-write.table(
+split_data_table(
   x = inhouseDbReference_original,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  no_rows_per_frame = 1000,
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalReferenceOriginalFolder
 )
 
 #### full
