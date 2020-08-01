@@ -7,66 +7,22 @@ source("paths.R")
 ## functions
 source("functions/reference.R")
 
+library(stringr)
+
 ## file
-dataOriginal <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceOriginal),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
-
-# splitting because of too big results otherwise
-## 1
-dataOriginal_1 <- dataOriginal %>%
-  filter(row_number() %% 2 == 0)
-
-## 2
-dataOriginal_2 <- dataOriginal %>%
-  filter(row_number() %% 2 == 1)
-
-dataOriginal <- rbind(dataOriginal_1, dataOriginal_2)
-
-# getting references
-## 1
-reflist_1 <- invisible(
-  pbmclapply(
-    FUN = getref_noLimit,
-    X = dataOriginal_1$referenceOriginal_original,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+length <-
+  length(
+    list.files(path = pathDataInterimTablesOriginalReferenceOriginalFolder,
+               pattern = 'tsv')
   )
-)
 
-## 2
-reflist_2 <- invisible(
-  pbmclapply(
-    FUN = getref_noLimit,
-    X = dataOriginal_2$referenceOriginal_original,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
-  )
-)
+cut <- 1000
 
-## joining results
-reflist <- append(reflist_1, reflist_2)
-
-print(x = "This may take several minutes")
-
-# joining with original dataframe
-dataOriginal <-
-  getAllReferences(data = dataOriginal,
-                   referenceType = "original",
-                   method = "osa")
+num <- as.integer(seq(
+  from = 1 * cut,
+  to = length * cut,
+  by = cut
+))
 
 # exporting
 ## creating directories if they do not exist
@@ -82,9 +38,106 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+  dir.create(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+  FALSE
+)
+
+for (i in num) {
+  inpath <- paste(
+    pathDataInterimTablesOriginalReferenceOriginalFolder,
+    str_pad(
+      string = i,
+      width = 6  ,
+      pad = "0"
+    ),
+    ".tsv",
+    sep = ""
+  )
+  
+  outpath <-
+    paste(
+      pathDataInterimTablesTranslatedReferenceOriginalFolder,
+      str_pad(
+        string = i,
+        width = 6  ,
+        pad = "0"
+      ),
+      ".tsv.gz",
+      sep = ""
+    )
+  
+  print(paste("step", i / cut, "of", length))
+  
+  dataOriginal <- read_delim(
+    file = inpath,
+    delim = "\t",
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
+  
+  # getting references
+  reflist <- invisible(
+    pbmclapply(
+      FUN = getref_noLimit,
+      X = dataOriginal$referenceOriginal_original,
+      mc.preschedule = FALSE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
+  )
+  
+  print("treating results, may take a while if full mode")
+  dataOriginal2 <-
+    getAllReferences(data = dataOriginal,
+                     referenceType = "original",
+                     method = "osa")
+  
+  ## exporting
+  write.table(
+    x = dataOriginal2,
+    file = gzfile(
+      description = outpath,
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    row.names = FALSE,
+    quote = TRUE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+  
+  ## cleaning memory
+  gc(verbose = TRUE,
+     reset = TRUE,
+     full = TRUE)
+}
+
+dataOriginal3 <- do.call("rbind",
+                         lapply(list.files(
+                           path = file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+                           pattern = "*.tsv.gz",
+                           full.names = FALSE
+                         ),
+                         function(x) {
+                           read_delim(
+                             file = gzfile(
+                               file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
+                             ),
+                             delim = "\t",
+                             escape_double = FALSE,
+                             trim_ws = TRUE
+                           ) %>%
+                             mutate_all(as.character)
+                         }))
 ## exporting
 write.table(
-  x = dataOriginal,
+  x = dataOriginal3,
   file = gzfile(
     description = pathDataInterimTablesTranslatedReferenceOriginal,
     compression = 9,

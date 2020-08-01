@@ -302,28 +302,19 @@ print(x = "analysing pairs, this should be faster")
 ### open NP DB
 print(x = "open")
 openDbPairs <- openDbTriplets %>%
-  filter(
-    referenceCleanedTranslationScoreCrossref >= 30 |
-      !is.na(referenceOriginal_external)
-  ) %>%
+  filter(!is.na(referenceOriginal_external)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ### inhouseDB
 print(x = "inhouse")
 inhouseDbPairs <- inhouseDbTriplets %>%
-  filter(
-    referenceCleanedTranslationScoreCrossref >= 30 |
-      !is.na(referenceOriginal_external)
-  ) %>%
+  filter(!is.na(referenceOriginal_external)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 ### DNP
 print(x = "dnp")
 dnpDbPairs <- dnpDbTriplets %>%
-  filter(
-    referenceCleanedTranslationScoreCrossref >= 30 |
-      !is.na(referenceOriginal_external)
-  ) %>%
+  filter(!is.na(referenceOriginal_external)) %>%
   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
 
 # writing tabular stats
@@ -432,29 +423,30 @@ dnpDbPairs <- dnpDbTriplets %>%
 # mismatchedGenera <- inhouseDbOrganism %>%
 #   filter(word(organism_7_species, 1) != organism_6_genus)
 
-##redundancy table
-print(x = "analysing redundant entries")
-redundancydf  <- inhouseDb %>%
-  filter(!is.na(organismLowestTaxon) &
-           !is.na(inchikeySanitized)) %>%
-  distinct(organismLowestTaxon,
-           inchikeySanitized,
-           database,
-           .keep_all = TRUE) %>%
-  group_by(organismLowestTaxon, inchikeySanitized) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(n >= 5) %>%
-  select(
-    database,
-    structureOriginal_inchi,
-    structureOriginal_smiles,
-    structureOriginal_nominal,
-    organismOriginal,
-    organismLowestTaxon,
-    inchikeySanitized,
-    n
-  )
+## redundancy table
+# heavy process not bringing much for now
+# print(x = "analysing redundant entries")
+# redundancydf  <- inhouseDb %>%
+#   filter(!is.na(organismLowestTaxon) &
+#            !is.na(inchikeySanitized)) %>%
+#   distinct(organismLowestTaxon,
+#            inchikeySanitized,
+#            database,
+#            .keep_all = TRUE) %>%
+#   group_by(organismLowestTaxon, inchikeySanitized) %>%
+#   add_count() %>%
+#   ungroup() %>%
+#   filter(n >= 5) %>%
+#   select(
+#     database,
+#     structureOriginal_inchi,
+#     structureOriginal_smiles,
+#     structureOriginal_nominal,
+#     organismOriginal,
+#     organismLowestTaxon,
+#     inchikeySanitized,
+#     n
+#   )
 
 #exporting
 print(x = "exporting, may take a while if running full mode")
@@ -549,11 +541,11 @@ write.table(
 # )
 
 ###redundancy table
-write.table(
-  x = redundancydf,
-  file = pathDataInterimTablesAnalysedRedundancyTable,
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+# write.table(
+#   x = redundancydf,
+#   file = pathDataInterimTablesAnalysedRedundancyTable,
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )

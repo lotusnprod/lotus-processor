@@ -217,14 +217,12 @@ test5 <- test4 %>%
 test6 <- test4 %>%
   filter(n == 194) # problematic too... DNP
 
-test6 <- test4 %>%
-  filter(n == 194)
-
 ## example
 ### Luesch, Hendrik; Yoshida, Wesley Y.; Moore, Richard E.; Paul, Valerie J.; Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439.
 #### returning erroneous result
 ##### Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439
 ###### test <- cr_works(query = "Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439") #returning right result (but very low score)
+print(x = "cleaning, this may take a while if running full mode")
 
 dataCleaned <- dataTranslated %>%
   mutate(

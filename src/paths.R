@@ -908,8 +908,8 @@ pathDataInterimTablesOriginalReferenceDoi <-
 #   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.gz")
 
 ### original
-pathDataInterimTablesOriginalReferenceOriginal <-
-  file.path(pathDataInterimTablesOriginalReference, "original.tsv.gz")
+pathDataInterimTablesOriginalReferenceOriginalFolder <-
+  file.path(pathDataInterimTablesOriginalReference, "original/")
 
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
@@ -955,6 +955,9 @@ pathDataInterimTablesTranslatedReference <-
 
 pathDataInterimTablesTranslatedReferenceDoi <-
   file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.gz")
+
+pathDataInterimTablesTranslatedReferenceOriginalFolder <-
+  file.path(pathDataInterimTablesTranslatedReference, "original/")
 
 pathDataInterimTablesTranslatedReferenceOriginal <-
   file.path(pathDataInterimTablesTranslatedReference, "original.tsv.gz")
