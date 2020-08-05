@@ -9,6 +9,7 @@
 graph TD
 
 subgraph 1_gathering
+style 1_gathering fill:#FFFFFF,stroke:#424242,stroke-width:2px
 subgraph legend
 style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
 A([file])
@@ -145,6 +146,7 @@ style ref_1_translating fill:#EFEDF5
 end
 subgraph ref_2_integrating
 style ref_2_integrating fill:#EFEDF5
+100([organism/*.tsv]) --> 360[[integrating.R]]
 322([doi.tsv.gz]) --> 360[[integrating.R]]
 332([pubmed.tsv.gz]) --> 360[[integrating.R]]
 342([title.tsv.gz]) --> 360[[integrating.R]]
@@ -153,8 +155,8 @@ style ref_2_integrating fill:#EFEDF5
 372([original.tsv.gz]) --> 360[[integrating.R]] -->
     380([reference.tsv.gz]) 
 end
-subgraph .
-style . fill:#EFEDF5
+subgraph ref_3_cleaning
+style ref_3_cleaning fill:#EFEDF5
 380([reference.tsv.gz]) -->
     385[[3_cleaning.R]] -->
         390([cleaned.tsv.gz])
