@@ -119,7 +119,11 @@ write.table(
 ## goldenSet
 write.table(
   x = goldenSet,
-  file = pathDataInterimTablesAnalysedGold,
+  file = gzfile(
+    description = pathDataInterimTablesAnalysedGold,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
