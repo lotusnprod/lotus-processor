@@ -7,6 +7,7 @@ source("functions/helpers.R")
 
 library(data.table)
 library(dplyr)
+library(tidyr)
 library(stringr)
 
 # loading files
@@ -19,10 +20,8 @@ inhouseDb <- rbindlist(l = dbs, fill = TRUE)
 
 # selecting
 inhouseDbSelected <- inhouseDb %>%
-  mutate(structureOriginalNominal = name) %>%
   select(
     database,
-    name,
     organismOriginal = biologicalsource,
     structureOriginal_inchi = inchi,
     structureOriginal_nominal = name,
@@ -58,9 +57,6 @@ inhouseDbSelected[] <-
 inhouseDbSelected[] <-
   lapply(inhouseDbSelected, function(x)
     gsub("\t", " ", x))
-
-inhouseDbSelected$name <- y_as_na(x = inhouseDbSelected$name,
-                                  y = "n.a.")
 
 ## organism
 inhouseDbOrganism <- inhouseDbSelected %>%
@@ -121,6 +117,7 @@ inhouseDbReference_original <- inhouseDbSelected %>%
 ### full
 inhouseDbReference_full <- inhouseDbSelected %>%
   distinct(
+    organismOriginal,
     referenceOriginal_authors,
     referenceOriginal_doi,
     referenceOriginal_external,
@@ -131,7 +128,17 @@ inhouseDbReference_full <- inhouseDbSelected %>%
     referenceOriginal_title,
     referenceOriginal_split
   ) %>%
-  mutate_all(as.character)
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 2:ncol(.),
+    names_to = c("drop", "referenceType"),
+    names_sep = "_",
+    values_to = "referenceValue",
+    values_drop_na = TRUE
+  ) %>%
+  select(organismOriginal,
+         referenceType,
+         referenceValue)
 
 # structures
 ## with InChI
@@ -154,6 +161,41 @@ inhouseDbStructure_nominal <- inhouseDbSelected %>%
   filter(is.na(structureOriginal_smiles)) %>%
   filter(!is.na(structureOriginal_nominal)) %>%
   distinct(structureOriginal_nominal)
+
+### full
+inhouseDbStructure_full <- inhouseDbSelected %>%
+  distinct(structureOriginal_inchi,
+           structureOriginal_smiles,
+           structureOriginal_nominal) %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 1:ncol(.),
+    names_to = c("drop", "structureType"),
+    names_sep = "_",
+    values_to = "structureValue",
+    values_drop_na = TRUE
+  ) %>%
+  select(structureType, structureValue)
+
+
+## full table
+originalTable <- inhouseDbSelected %>%
+  select(database, organismOriginal, everything()) %>%
+  pivot_longer(
+    cols = 6:ncol(.),
+    names_to = c("drop", "referenceType"),
+    names_sep = "_",
+    values_to = "referenceValue",
+    values_drop_na = TRUE
+  ) %>%
+  pivot_longer(
+    cols = 3:5,
+    names_to = c("drop2", "structureType"),
+    names_sep = "_",
+    values_to = "structureValue",
+    values_drop_na = TRUE
+  ) %>%
+  select(-drop, -drop2)
 
 # exporting
 ## creating directories if they do not exist
@@ -341,9 +383,23 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
+#### full
+write.table(
+  x = inhouseDbStructure_full,
+  file = gzfile(
+    description = pathDataInterimTablesOriginalStructureFull,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = TRUE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
 ## table
 write.table(
-  x = inhouseDbSelected,
+  x = originalTable,
   file = gzfile(
     description = pathDataInterimTablesOriginalTable,
     compression = 9,

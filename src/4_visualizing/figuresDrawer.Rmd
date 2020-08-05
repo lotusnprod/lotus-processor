@@ -77,11 +77,10 @@ dbnum <-
 ##structures
 ```{r}
 pdf(file = "outputs/figures/structures.pdf")
-inhouseDb_structures_2plot <- inhouseDb %>%
-  filter(!is.na(structureCurated)) %>%
-  distinct(structureCurated, database) %>%
+inhouseDb_structures_2plot <- openDbTripletsClean %>%
+  distinct(inchikeySanitized, database) %>%
   group_by(database) %>%
-  count(structureCurated) %>%
+  count(inchikeySanitized) %>%
   ungroup()
 
 inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
@@ -101,15 +100,15 @@ inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
             )) %>%
   data.frame()
 
-inhouseDb_structures_dis <- inhouseDb %>%
-  distinct(structureCurated,
+inhouseDb_structures_dis <- openDbTripletsClean %>%
+  distinct(inchikeySanitized,
            database,
            .keep_all = TRUE)
 
-inhouseDb_structures_2plot_wide <-
-  left_join(inhouseDb_structures_2plot_wide,
-            inhouseDb_structures_dis) %>%
-  distinct(structureCurated, .keep_all = TRUE)
+# inhouseDb_structures_2plot_wide <-
+#   left_join(inhouseDb_structures_2plot_wide,
+#             inhouseDb_structures_dis) %>%
+#   distinct(inchikeySanitized, .keep_all = TRUE)
 
 mostsuperclass <- inhouseDb_structures_2plot_wide %>%
   filter(!is.na(chemo_02_superclass)) %>%
@@ -295,11 +294,11 @@ upset(
 ##bio taxa
 ```{r}
 pdf(file = "outputs/figures/bio.pdf")
-inhouseDb_biologicalsource_2plot <- inhouseDb %>%
-  filter(!is.na(organismCurated)) %>%
-  distinct(organismCurated, database) %>%
+inhouseDb_biologicalsource_2plot <- openDbTripletsClean %>%
+  filter(!is.na(organismLowestTaxon)) %>%
+  distinct(organismLowestTaxon, database) %>%
   group_by(database) %>%
-  count(organismCurated) %>%
+  count(organismLowestTaxon) %>%
   ungroup()
 
 inhouseDb_biologicalsource_2plot_wide <-
@@ -320,16 +319,16 @@ inhouseDb_biologicalsource_2plot_wide <-
             )) %>%
   data.frame()
 
-inhouseDb_organism_dis <- inhouseDb %>%
-  filter(!is.na(organismCurated)) %>%
-  distinct(organismCurated,
+inhouseDb_organism_dis <- openDbTripletsClean %>%
+  filter(!is.na(organismLowestTaxon)) %>%
+  distinct(organismLowestTaxon,
            database, 
            .keep_all = TRUE)
 
-inhouseDb_biologicalsource_2plot_wide <-
-  left_join(inhouseDb_biologicalsource_2plot_wide,
-            inhouseDb_organism_dis) %>%
-  distinct(organismCurated, .keep_all = TRUE)
+# inhouseDb_biologicalsource_2plot_wide <-
+#   left_join(inhouseDb_biologicalsource_2plot_wide,
+#             inhouseDb_organism_dis) %>%
+#   distinct(organismLowestTaxon, .keep_all = TRUE)
 
 mostkingdom <- inhouseDb_biologicalsource_2plot_wide %>%
   filter(!is.na(organism_1_kingdom)) %>%
@@ -437,7 +436,7 @@ upset(
   mb.ratio = c(0.6, 0.4),
   order.by = "freq",
   nintersects = 15,
-  #empty.intersections = "on",
+  # empty.intersections = "on",
   number.angles = 30,
   point.size = 2.5,
   line.size = 1,
@@ -450,15 +449,15 @@ upset(
 ##pairs
 ```{r}
 pdf(file = "outputs/figures/pairs.pdf")
-inhouseDbPairs_2plot <- inhouseDb %>%
-  filter(!is.na(structureCurated) &
-           !is.na(organismCurated)) %>%
-  distinct(structureCurated,
-           organismCurated,
+inhouseDbPairs_2plot <- openDbTripletsClean %>%
+  filter(!is.na(inchikeySanitized) &
+           !is.na(organismLowestTaxon)) %>%
+  distinct(inchikeySanitized,
+           organismLowestTaxon,
            database,
            .keep_all = TRUE) %>%
   group_by(database) %>%
-  count(structureCurated, organismCurated) %>%
+  count(inchikeySanitized, organismLowestTaxon) %>%
   ungroup()
 
 inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
@@ -484,7 +483,7 @@ upset(
   mb.ratio = c(0.6, 0.4),
   order.by = "freq",
   nintersects = 15,
-  #empty.intersections = "on",
+  # empty.intersections = "on",
   number.angles = 30,
   point.size = 2.5,
   line.size = 1,
@@ -497,21 +496,21 @@ upset(
 ##most studied structures
 ```{r}
 pdf(file = "outputs/figures/b-sitosterol.pdf")
-inhouseDb_most_structures <- inhouseDbPairs %>%
-  filter(!is.na(structureCurated)) %>%
-  count(structureCurated) %>%
+inhouseDb_most_structures <- openDbTripletsClean %>%
+  filter(!is.na(inchikeySanitized)) %>%
+  count(inchikeySanitized) %>%
   arrange(desc(n))
 
 mostinchi <- as.character(inhouseDb_most_structures[1, 1])
 
-inhouseDb_most_structures_2plot <- inhouseDbPairs %>%
-  filter(structureCurated == mostinchi) %>%
-  distinct(structureCurated, 
-           organismCurated,
+inhouseDb_most_structures_2plot <- openDbTripletsClean %>%
+  filter(inchikeySanitized == mostinchi) %>%
+  distinct(inchikeySanitized, 
+           organismLowestTaxon,
            database, 
            .keep_all = TRUE) %>%
-  group_by(database, organismCurated) %>%
-  count(structureCurated) %>%
+  group_by(database, organismLowestTaxon) %>%
+  count(inchikeySanitized) %>%
   ungroup()
 
 inhouseDb_most_structures_2plot_wide <-
@@ -535,8 +534,8 @@ inhouseDb_most_structures_2plot_wide <-
 inhouseDb_most_structures_2plot_wide <-
   left_join(inhouseDb_most_structures_2plot_wide,
             inhouseDbPairs) %>%
-  distinct(structureCurated, 
-           organismCurated,
+  distinct(inchikeySanitized, 
+           organismLowestTaxon,
            .keep_all = TRUE)
 
 mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
@@ -546,7 +545,7 @@ mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
 
 dbnumostinchi <- as.numeric(nrow(
   inhouseDbPairs %>%
-    filter(structureCurated == mostinchi) %>%
+    filter(inchikeySanitized == mostinchi) %>%
     distinct(database)
 ))
 
@@ -665,21 +664,21 @@ upset(
 ```{r}
 pdf(file = "outputs/figures/Panax.pdf")
 
-inhouseDb_most_plant <- inhouseDb %>%
-  filter(!is.na(organismCurated)) %>%
+inhouseDb_most_plant <- openDbTripletsClean %>%
+  filter(!is.na(organismLowestTaxon)) %>%
   filter(organism_1_kingdom == "Plantae") %>%
-  count(organismCurated) %>%
+  count(organismLowestTaxon) %>%
   arrange(desc(n))
 
-mostplant <- as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCurated == "Panax ginseng", 1])
+mostplant <- as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismLowestTaxon == "Panax ginseng", 1])
 
 inhouseDb_most_biologicalsource_2plot <- inhouseDb %>%
-  filter(organismCurated == mostplant) %>%
-  distinct(structureCurated, organismCurated,
+  filter(organismLowestTaxon == mostplant) %>%
+  distinct(inchikeySanitized, organismLowestTaxon,
            database, 
            .keep_all = TRUE) %>%
-  group_by(organismCurated, database) %>%
-  count(structureCurated) %>%
+  group_by(organismLowestTaxon, database) %>%
+  count(inchikeySanitized) %>%
   ungroup()
 
 inhouseDb_most_biologicalsource_2plot_wide <-
@@ -703,13 +702,13 @@ inhouseDb_most_biologicalsource_2plot_wide <-
 inhouseDb_most_biologicalsource_2plot_wide <-
   left_join(inhouseDb_most_biologicalsource_2plot_wide,
             inhouseDb) %>%
-  distinct(structureCurated,
-           organismCurated,
+  distinct(inchikeySanitized,
+           organismLowestTaxon,
            .keep_all = TRUE)
 
 dbnumostbiologicalsource <- as.numeric(nrow(
   inhouseDb %>%
-    filter(organismCurated == mostplant) %>%
+    filter(organismLowestTaxon == mostplant) %>%
     distinct(database)
 ))
 
@@ -898,12 +897,12 @@ pdf(file = "outputs/figures/tropane_alkaloids.pdf")
 
 inhouseDb_most_chemical_class_2plot <- inhouseDb %>%
   filter(chemo_03_class == "Tropane alkaloids") %>%
-  distinct(structureCurated,
-           organismCurated,
+  distinct(inchikeySanitized,
+           organismLowestTaxon,
            database,
            .keep_all = TRUE) %>%
   group_by(organism_5_family, database) %>%
-  count(structureCurated) %>%
+  count(inchikeySanitized) %>%
   ungroup()
 
 inhouseDb_most_chemical_class_2plot_wide <-
@@ -927,8 +926,8 @@ inhouseDb_most_chemical_class_2plot_wide <-
 inhouseDb_most_chemical_class_2plot_wide <-
   left_join(inhouseDb_most_chemical_class_2plot_wide,
             inhouseDb) %>%
-  distinct(structureCurated,
-           organismCurated,
+  distinct(inchikeySanitized,
+           organismLowestTaxon,
            .keep_all = TRUE)
 
 dbnumostchemicalclass <- as.numeric(nrow(
@@ -1125,11 +1124,11 @@ upset(
 pdf(file = "outputs/figures/kingdoms.pdf")
 inhouseDb_kingdoms <- inhouseDbPairs %>%
   filter(!is.na(organism_1_kingdom)) %>%
-  distinct(structureCurated,
+  distinct(inchikeySanitized,
            organism_1_kingdom,
            .keep_all = TRUE) %>%
   group_by(organism_1_kingdom) %>%
-  count(structureCurated) %>%
+  count(inchikeySanitized) %>%
   ungroup()
 
 inhouseDb_kingdoms_wide <-
@@ -1151,12 +1150,12 @@ inhouseDb_kingdoms_wide <-
   data.frame()
 
 chemo <- inhouseDb %>%
-  distinct(structureCurated,
+  distinct(inchikeySanitized,
            chemo_02_superclass)
 
 inhouseDb_kingdoms_wide <-
   left_join(inhouseDb_kingdoms_wide, chemo) %>%
-  distinct(structureCurated, .keep_all = TRUE)
+  distinct(inchikeySanitized, .keep_all = TRUE)
 
 mostsuperclass <- inhouseDb_kingdoms_wide %>%
   count(chemo_02_superclass) %>%
@@ -1343,14 +1342,14 @@ upset(
 ```{r}
 pdf(file = "outputs/figures/Venn_structures.pdf")
 open_structures <- openDb %>%
-  filter(!is.na(structureCurated)) %>% 
-  distinct(structureCurated)
+  filter(!is.na(inchikeySanitized)) %>% 
+  distinct(inchikeySanitized)
 
 open_structures$database <- "open"
 
 dnp_structures <- dnpDb %>%
-  filter(!is.na(structureCurated)) %>% 
-  distinct(structureCurated, database)
+  filter(!is.na(inchikeySanitized)) %>% 
+  distinct(inchikeySanitized, database)
 
 full_structures <- full_join(open_structures,
                              dnp_structures) %>%
@@ -1450,14 +1449,14 @@ v2
 ```{r}
 pdf(file = "outputs/figures/Venn_pairs.pdf")
 open_pairs <- openDbPairs %>%
-  distinct(structureCurated, 
-           organismCurated)
+  distinct(inchikeySanitized, 
+           organismLowestTaxon)
 
 open_pairs$database <- "open"
 
 dnp_pairs <- dnpDbPairs %>%
-  distinct(structureCurated,
-           organismCurated, 
+  distinct(inchikeySanitized,
+           organismLowestTaxon, 
            database)
 
 full_pairs <-
@@ -1615,7 +1614,7 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 
 ```{r}
 # data4circle <- openDbPairs %>%
-#   distinct(structureCurated, organismCurated, .keep_all = TRUE) %>%
+#   distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE) %>%
 #   sample_n(1000)
 ```
 

@@ -14,6 +14,7 @@ manipulating_taxo <- function(dfsel, dic) {
       taxonomy,
       rank
     ) %>%
+    distinct(organismCleaned, .keep_all = TRUE) %>%
     cSplit(splitCols = "taxonomy",
            sep = "|") %>%
     cSplit(splitCols = "rank",
@@ -110,13 +111,14 @@ manipulating_taxo <- function(dfsel, dic) {
   #pivoting (wide)
   df5 <- df4 %>%
     group_by(organismCleaned) %>%
-    distinct(taxonId, level, .keep_all = TRUE) %>%
+    distinct(taxonId,
+             level,
+             .keep_all = TRUE) %>%
     pivot_wider(names_from = level,
                 values_from = bio) %>%
     select_if(
       names(.) %in%
         c(
-          "organismOriginal",
           "organismCleaned",
           "organismDbTaxo",
           "taxonId",

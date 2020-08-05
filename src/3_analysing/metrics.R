@@ -8,134 +8,135 @@ source("paths.R")
 print(x = "loading db, if running fullmode, this may take a while")
 
 ## inhouseDb
-inhouseDb <- read_delim(
+inhouseDbMinimal <- read_delim(
   file = gzfile(pathDataInterimTablesCuratedTable),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-) %>%
-  mutate(
-    referenceCleanedTranslationScoreCrossref = as.integer(referenceCleanedTranslationScoreCrossref),
-    referenceCleanedTranslationScoreDistance = as.integer(referenceCleanedTranslationScoreDistance),
-    referenceCleanedOrganismTitleScore = as.integer(referenceCleanedOrganismTitleScore)
+)
+
+openDbMinimalFiltered <- inhouseDbMinimal %>%
+  filter(!is.na(organismCleaned) &
+           !is.na(structureCleanedInchikey3D)) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedPmid)
   ) %>%
-  arrange(desc(referenceOriginal_external)) %>%
-  arrange(desc(referenceCleanedTranslationScoreCrossref)) %>%
-  arrange(referenceCleanedTranslationScoreDistance) %>%
+  distinct(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  )
+
+dnpDb <- inhouseDbMinimal %>%
+  filter(referenceValue == "DNP") %>%
+  filter(!is.na(organismCleaned) &
+           !is.na(structureCleanedInchikey3D)) %>%
+  distinct(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D
+  )
+
+rm(inhouseDbMinimal)
+
+openDbMinimalFilteredRef <- openDbMinimalFiltered %>%
+  distinct(referenceCleanedDoi,
+           referenceCleanedPmcid,
+           referenceCleanedPmid)
+
+
+## reference metadata
+referenceMetadata <- read_delim(
+  file = gzfile(pathDataInterimTablesCuratedReferenceMetadata),
+  col_types = cols(.default = "c"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+# selecting reference metadata
+referenceMetadataFiltered <- referenceMetadata %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedPmid)
+  ) %>%
+  select(
+    -referenceCleaned_title,
+    -referenceCleaned_journal,
+    -referenceCleaned_date,
+    -referenceCleaned_author
+  ) %>%
+  mutate(
+    referenceCleaned_score_crossref = as.integer(referenceCleaned_score_crossref),
+    referenceCleaned_score_distance = as.integer(referenceCleaned_score_distance),
+    referenceCleaned_score_titleOrganism = as.integer(referenceCleaned_score_titleOrganism)
+  )
+
+# joining inhousedb minimal and reference metadata
+openDbRef <- left_join(openDbMinimalFilteredRef,
+                       referenceMetadataFiltered) %>%
   arrange(desc(referenceCleanedPmid)) %>%
   arrange(desc(referenceCleanedPmcid)) %>%
-  arrange(desc(referenceCleanedDoi)) %>% #very important to keep references
-  data.frame()
+  arrange(desc(referenceCleanedDoi)) %>%
+  arrange(desc(referenceCleaned_score_crossref)) %>%
+  arrange(referenceCleaned_score_distance) %>%
+  arrange(desc(referenceCleaned_score_titleOrganism)) #very important to keep references
 
-## openDB
-openDb <- inhouseDb %>%
-  filter(database != "dnp_1")
+openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
+  distinct(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    .keep_all = TRUE
+  )
 
-## DNP
-dnpDb <- inhouseDb %>%
-  filter(database == "dnp_1")
+inhouseDb <- bind_rows(dnpDb, openDb)
 
-pairsOutsideDnp <- rbind(dnpDb, openDb) %>%
-  filter(!is.na(organismLowestTaxon) &
-           !is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized,
-           organismLowestTaxon,
+pairsOpenDb <- openDb %>%
+  filter(!is.na(organismCleaned) &
+           !is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned,
+           .keep_all = TRUE)
+
+pairsOutsideDnp <- inhouseDb %>%
+  filter(!is.na(organismCleaned) &
+           !is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned,
            .keep_all = TRUE) %>%
   filter(database != "dnp_1")
 
-pairsFull <- rbind(openDb, dnpDb) %>%
-  filter(!is.na(organismLowestTaxon) &
-           !is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized,
-           organismLowestTaxon,
+pairsFull <- bind_rows(openDb, dnpDb) %>%
+  filter(!is.na(organismCleaned) &
+           !is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned,
            .keep_all = TRUE)
 
-# warning: keeping only one ref per triplet
-tripletsOutsideDnpStrict <- pairsOutsideDnp %>%
-  distinct(
-    inchikeySanitized,
-    organismLowestTaxon,
-    referenceCleanedDoi,
-    referenceOriginal_external,
-    referenceCleanedTitle,
-    .keep_all = TRUE
-  ) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) &
-      referenceCleanedTranslationScoreCrossref == 100 |
-      referenceCleanedTranslationScoreDistance == 0 &
-      referenceCleanedOrganismTitleScore == 1
-  )
-
-tripletsOverlapDnpStrict <- pairsFull %>%
-  distinct(
-    inchikeySanitized,
-    organismLowestTaxon,
-    referenceCleanedDoi,
-    referenceOriginal_external,
-    referenceCleanedTitle,
-    .keep_all = TRUE
-  ) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) &
-      referenceCleanedTranslationScoreCrossref == 100 |
-      referenceCleanedTranslationScoreDistance == 0 &
-      referenceCleanedOrganismTitleScore == 1
-  )
-
-tripletsWithDnpStrict <- pairsFull %>%
-  distinct(
-    inchikeySanitized,
-    organismLowestTaxon,
-    referenceCleanedDoi,
-    referenceOriginal_external,
-    referenceCleanedTitle,
-    .keep_all = TRUE
-  ) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) &
-      referenceCleanedTranslationScoreCrossref == 100 |
-      referenceCleanedTranslationScoreDistance == 0 &
-      referenceCleanedOrganismTitleScore == 1 |
-      referenceOriginal_external == "DNP"
-  )
-
-tripletsDNP <- dnpDb %>%
-  distinct(inchikeySanitized,
-           organismLowestTaxon,
+pairsDNP <- dnpDb %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned,
            .keep_all = TRUE)
-
-tripletsOverlapDnpMedium <- pairsFull %>%
-  distinct(
-    inchikeySanitized,
-    organismLowestTaxon,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    referenceOriginal_external,
-    referenceCleanedTitle,
-    .keep_all = TRUE
-  ) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedTitle) |
-      !is.na(referenceOriginal_external)
-  ) %>%
-  filter(
-    referenceOriginal_external != "DNP" |
-      referenceCleanedTranslationScoreCrossref == 100 |
-      referenceCleanedTranslationScoreDistance == 0 &
-      referenceCleanedOrganismTitleScore == 1
-  )
 
 stats <- pairsOutsideDnp %>%
   group_by(database) %>%
@@ -145,177 +146,58 @@ stats <- pairsOutsideDnp %>%
 print(x = "analysing unique organisms per db")
 ## biological taxa
 ### open NP DB
-print(x = "open")
 openDbOrganism <- openDb %>%
-  filter(!is.na(organismLowestTaxon)) %>%
-  distinct(organismLowestTaxon)
+  filter(!is.na(organismCleaned)) %>%
+  distinct(organismCleaned)
+
+print(x = paste("open:", nrow(openDbOrganism), "distinct organisms", sep = " "))
 
 ### inhouseDB
-print(x = "inhouse")
 inhouseDbOrganism <- inhouseDb %>%
-  filter(!is.na(organismLowestTaxon)) %>%
-  
-  distinct(organismLowestTaxon)
+  filter(!is.na(organismCleaned)) %>%
+  distinct(organismCleaned)
+
+print(x = paste(
+  "inhouse:",
+  nrow(inhouseDbOrganism),
+  "distinct organisms",
+  sep = " "
+))
 
 ### DNP
-print(x = "dnp")
 dnpDbOrganism <- dnpDb %>%
-  filter(!is.na(organismLowestTaxon)) %>%
-  
-  distinct(organismLowestTaxon)
+  filter(!is.na(organismCleaned)) %>%
+  distinct(organismCleaned)
+
+print(x = paste("dnp:", nrow(dnpDbOrganism), "distinct organisms", sep = " "))
 
 ## structures
 print(x = "analysing unique structures per db")
 ### open NP DB
-print(x = "open")
 openDbStructure <- openDb %>%
-  filter(!is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+
+print(x = paste("open:", nrow(openDbStructure), "distinct structures", sep = " "))
 
 ### inhouseDB
-print(x = "inhouse")
 inhouseDbStructure <- inhouseDb %>%
-  filter(!is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+
+print(x = paste(
+  "inhouse:",
+  nrow(inhouseDbStructure),
+  "distinct structures",
+  sep = " "
+))
 
 ### DNP
-print(x = "dnp")
 dnpDbStructure <- dnpDb %>%
-  filter(!is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
 
-## references
-### open NP DB
-openDbReference <- openDb %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid)
-  ) %>%
-  distinct(referenceCleanedDoi, .keep_all = TRUE)
-
-### inhouseDB
-inhouseDbReference <- inhouseDb %>%
-  filter(
-    !is.na(referenceOriginal_external) |
-      !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid)
-  ) %>%
-  distinct(
-    referenceOriginal_external,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    .keep_all = TRUE
-  )
-
-### DNP
-dnpDbReference <- dnpDb %>%
-  filter(
-    !is.na(referenceOriginal_external) |
-      !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid)
-  ) %>%
-  distinct(
-    referenceOriginal_external,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    .keep_all = TRUE
-  )
-
-## triplets
-print(x = "analysing triplets, this may take a while")
-print(x = "open")
-###open NP DB
-openDbTriplets <- openDb %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceOriginal_external)
-  ) %>%
-  filter(!is.na(inchikeySanitized) &
-           !is.na(organismLowestTaxon)) %>%
-  distinct(
-    inchikeySanitized,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    referenceOriginal_external,
-    organismLowestTaxon,
-    organismTaxonId,
-    # here could be modif
-    .keep_all = TRUE
-  )
-
-print(x = "inhouse")
-### inhouseDB
-inhouseDbTriplets <- inhouseDb %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceOriginal_external)
-  ) %>%
-  filter(!is.na(inchikeySanitized) &
-           !is.na(organismLowestTaxon)) %>%
-  distinct(
-    inchikeySanitized,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    referenceOriginal_external,
-    organismLowestTaxon,
-    organismTaxonId,
-    # here could be modif
-    .keep_all = TRUE
-  )
-
-print(x = "dnp")
-### DNP
-dnpDbTriplets <- dnpDb %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceOriginal_external)
-  ) %>%
-  filter(!is.na(inchikeySanitized) &
-           !is.na(organismLowestTaxon)) %>%
-  distinct(
-    inchikeySanitized,
-    referenceCleanedDoi,
-    referenceCleanedPmid,
-    referenceCleanedPmcid,
-    referenceOriginal_external,
-    organismLowestTaxon,
-    organismTaxonId,
-    # here could be modif
-    .keep_all = TRUE
-  )
-
-## pairs
-print(x = "analysing pairs, this should be faster")
-### open NP DB
-print(x = "open")
-openDbPairs <- openDbTriplets %>%
-  filter(!is.na(referenceOriginal_external)) %>%
-  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
-
-### inhouseDB
-print(x = "inhouse")
-inhouseDbPairs <- inhouseDbTriplets %>%
-  filter(!is.na(referenceOriginal_external)) %>%
-  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
-
-### DNP
-print(x = "dnp")
-dnpDbPairs <- dnpDbTriplets %>%
-  filter(!is.na(referenceOriginal_external)) %>%
-  distinct(inchikeySanitized, organismLowestTaxon, .keep_all = TRUE)
+print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 
 # writing tabular stats
 ## species by kingdom
@@ -459,7 +341,7 @@ ifelse(
 
 ##open
 write.table(
-  x = openDbTriplets,
+  x = openDb,
   file = gzfile(
     description = pathDataInterimTablesAnalysedOpenDbTriplets,
     compression = 9,
@@ -473,7 +355,7 @@ write.table(
 
 ##inhouse
 write.table(
-  x = inhouseDbTriplets,
+  x = inhouseDb,
   file = gzfile(
     description = pathDataInterimTablesAnalysedInhouseDbTriplets,
     compression = 9,
@@ -487,7 +369,7 @@ write.table(
 
 ##dnp
 write.table(
-  x = dnpDbTriplets,
+  x = dnpDb,
   file = gzfile(
     description = pathDataInterimTablesAnalysedDnpDbTriplets,
     compression = 9,

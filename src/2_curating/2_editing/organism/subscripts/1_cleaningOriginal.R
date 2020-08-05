@@ -69,6 +69,7 @@ dataCleanOriginalOrganism <- list()
 # cleaning GNFinder output
 for (i in num) {
   j <- i / cut
+  print(paste("step", j, "of", length))
   tryCatch({
     dataCleanOriginalOrganism[[j]] <-
       gnfinder_cleaning(num = i,
