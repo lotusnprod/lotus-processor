@@ -1127,7 +1127,7 @@ pathDataInterimTablesAnalysedSampleAllONPDB <-
 ## sample ONPDB triplets (gold)
 pathDataInterimTablesAnalysedGold <-
   file.path(pathDataInterimTablesAnalysed,
-            "gold.tsv")
+            "gold.tsv.gz")
 
 ## sample ONPDB triplets (gold)
 pathDataInterimTablesAnalysedSampleGoldONPDB <-
