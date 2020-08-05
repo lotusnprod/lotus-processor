@@ -490,20 +490,21 @@ dataCleanedOrganismManipulated <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
-)
+) %>%
+  relocate(organismCleaned, .after = organismTaxonId)
 
-#curating taxonomy
-##auto
+# curating taxonomy
+## auto
 # dataCuratedOrganismAuto <-
 #   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
 
-##manual
+## manual
 # dataCuratedOrganism <-
 #   taxo_cleaning_manual(dfsel = dataCleanedOrganismManipulated)
 
-#outputing lowest taxon
+# outputing lowest taxon
 dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
-  mutate(organismLowestTaxon =  as.character(apply(dataCleanedOrganismManipulated[6:13], 1, function(x)
+  mutate(organismLowestTaxon =  as.character(apply(dataCleanedOrganismManipulated[5:13], 1, function(x)
     tail(na.omit(x), 1))))
 
 dataCuratedOrganism$organismLowestTaxon <-

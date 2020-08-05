@@ -879,6 +879,9 @@ pathDataInterimTablesOriginalStructureSmiles <-
 pathDataInterimTablesOriginalStructureNominal <-
   file.path(pathDataInterimTablesOriginalStructure, "nominal.tsv.gz")
 
+pathDataInterimTablesOriginalStructureFull <-
+  file.path(pathDataInterimTablesOriginalStructure, "full.tsv.gz")
+
 ## distinct organism
 pathDataInterimTablesOriginalOrganism <-
   file.path(pathDataInterimTablesOriginal, "organism/")
@@ -1061,6 +1064,15 @@ pathDataInterimTablesCurated <-
 ### final cleaned table
 pathDataInterimTablesCuratedTable <-
   file.path(pathDataInterimTablesCurated, "table.tsv.gz")
+
+pathDataInterimTablesCuratedStructureMetadata <-
+  file.path(pathDataInterimTablesCurated, "structureMetadata.tsv.gz")
+
+pathDataInterimTablesCuratedOrganismMetadata <-
+  file.path(pathDataInterimTablesCurated, "organismMetadata.tsv.gz")
+
+pathDataInterimTablesCuratedReferenceMetadata <-
+  file.path(pathDataInterimTablesCurated, "referenceMetadata.tsv.gz")
 
 # analysed fields
 pathDataInterimTablesAnalysed <-

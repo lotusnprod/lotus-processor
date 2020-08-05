@@ -24,27 +24,28 @@ originalTable <- read_delim(
 )
 
 ### organism
-organismTable <- read_delim(
+organismTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  filter(!is.na(organismCleaned)) %>% # this step is new and should avoid useless too big files
   select(
-    -organismCleaned,
-    -organismDbTaxoQuality,
-    -organism_1_kingdom,
-    -organism_2_phylum,
-    -organism_3_class,
-    -organism_4_order,
-    -organism_5_family,
-    -organism_6_genus,
-    -organism_7_species,
-    -organism_8_variety
-  ) %>%
-  filter(!is.na(organismLowestTaxon)) # some DBs propose a taxon ID but with no name
+    organismOriginal,
+    organismCleaned = organismLowestTaxon,
+    organismCleaned_dbTaxo = organismDbTaxo,
+    organismCleaned_dbTaxoQuality = organismDbTaxoQuality,
+    organismCleaned_dbTaxoTaxonId = organismTaxonId,
+    organismCleaned_dbTaxo_1kingdom = organism_1_kingdom,
+    organismCleaned_dbTaxo_2phylum = organism_2_phylum,
+    organismCleaned_dbTaxo_3class = organism_3_class,
+    organismCleaned_dbTaxo_4order = organism_4_order,
+    organismCleaned_dbTaxo_5family = organism_5_family,
+    organismCleaned_dbTaxo_6genus = organism_6_genus,
+    organismCleaned_dbTaxo_7species = organism_7_species,
+    organismCleaned_dbTaxo_8variety = organism_8_variety
+  )
 
 ### structure
 #### translated
@@ -54,89 +55,130 @@ translatedStructureTable <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-) %>%
-  filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
-  # mutate(
-  #   structureOriginal_inchi = structureOriginalInchi, # remove this once reran
-  #   structureOriginal_smiles = structureOriginalSmiles,
-  #   structureOriginal_nominal = structureOriginalNominal,
-  #   structureTranslated_smiles = structureTranslatedSmiles,
-  #   structureTranslated_nominal = structureTranslatedNominal
-  # ) %>%
-  select(-structureTranslated_smiles,
-         -structureTranslated_nominal,
-         -nameCleaned) %>%
-  distinct(
-    structureOriginal_inchi,
-    structureOriginal_smiles,
-    structureOriginal_nominal,
-    .keep_all = TRUE
-  )
+)
 
 #### cleaned
-cleanedStructureTable <- read_delim(
+cleanedStructureTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedStructureFile),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  filter(!is.na(structureTranslated)) %>% # this step is new and should avoid useless too big files
-  select(-validatorLog,
-         -formulaSanitized,
-         -exactmassSanitized,
-         -xlogpSanitized)
+  select(
+    structureTranslated,
+    structureCleanedSmiles = smilesSanitized,
+    structureCleanedInchi = inchiSanitized,
+    structureCleanedInchikey3D = inchikeySanitized,
+    structureCleaned_inchikey2D = shortikSanitized,
+    structureCleaned_validatorLog = validatorLog,
+    structureCleaned_molecularFormula = formulaSanitized,
+    structureCleaned_exactMass = exactmassSanitized,
+    structureCleaned_xlogp = xlogpSanitized
+  )
 
 ### reference table
-referenceTable <- read_delim(
+referenceTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedReferenceFile),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-) %>%
-  filter(
-    !is.na(referenceOriginal_external) |
-      !is.na(referenceOriginal_isbn) |
-      !is.na(referenceCleanedTitle) |
-      !is.na(referenceCleanedJournal) |
-      !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid)
-  ) %>% # this step is new and should avoid useless too big files
-  select(
-    -referenceTranslatedDoi,
-    -referenceTranslatedJournal,
-    -referenceTranslatedTitle,
-    -referenceTranslatedDate,
-    -referenceTranslatedAuthor,
-    -referenceTranslationScoreCrossref,
-    -referenceTranslationScoreDistance,
-    -referenceCleanedAuthor,
-    -referenceCleanedDate
+)
+
+# splitting minimal and metadata
+## structure
+structureFull <-
+  left_join(translatedStructureTable, cleanedStructureTableFull) %>%
+  select(-structureTranslated)
+
+structureMinimal <- structureFull %>%
+  distinct(
+    structureType,
+    structureValue,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles
   )
+
+structureMetadata <- structureFull %>%
+  distinct(
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    structureCleaned_inchikey2D,
+    structureCleaned_validatorLog,
+    structureCleaned_molecularFormula,
+    structureCleaned_exactMass,
+    structureCleaned_xlogp,
+  )
+
+## organism
+organismMinimal <- organismTableFull %>%
+  distinct(
+    organismOriginal,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId
+  )
+
+organismMetadata <- organismTableFull %>%
+  distinct(
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    organismCleaned_dbTaxoQuality,
+    organismCleaned_dbTaxo_1kingdom,
+    organismCleaned_dbTaxo_2phylum,
+    organismCleaned_dbTaxo_3class,
+    organismCleaned_dbTaxo_4order,
+    organismCleaned_dbTaxo_5family,
+    organismCleaned_dbTaxo_6genus,
+    organismCleaned_dbTaxo_7species,
+    organismCleaned_dbTaxo_8variety
+  )
+
+## reference
+referenceMinimal <- referenceTableFull %>%
+  distinct(
+    referenceType,
+    referenceValue,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  )
+
+referenceMetadata <- referenceTableFull %>%
+  distinct(
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid,
+    referenceCleaned_title,
+    referenceCleaned_journal,
+    referenceCleaned_date,
+    referenceCleaned_author,
+    referenceCleaned_score_crossref,
+    referenceCleaned_score_distance,
+    referenceCleaned_score_titleOrganism
+  )
+
+# cleaning memory
+gc(verbose = TRUE,
+   reset = TRUE,
+   full = TRUE)
 
 # integrating
 ## structure
-translatedStructureIntegratedTable <-
-  left_join(originalTable, translatedStructureTable)
-
-cleanedStructureIntegratedTable <-
-  left_join(translatedStructureIntegratedTable, cleanedStructureTable)
-
-## organism
-organismStructureIntegratedTable <-
-  left_join(cleanedStructureIntegratedTable, organismTable)
+inhouseDbMinimal <-
+  left_join(originalTable, structureMinimal)
 
 ## reference
-referenceOrganismStructureIntegratedTable <-
-  left_join(organismStructureIntegratedTable, referenceTable)
+inhouseDbMinimal <-
+  left_join(inhouseDbMinimal, referenceMinimal)
 
-# selecting minimal columns
-inhouseDb <- referenceOrganismStructureIntegratedTable %>%
-  mutate(
-    referenceCleanedTranslationScoreCrossref = as.numeric(referenceCleanedTranslationScoreCrossref)
-  )
+## organism
+inhouseDbMinimal <-
+  left_join(inhouseDbMinimal, organismMinimal)
 
 # export
 ## creating directories if they do not exist
@@ -146,11 +188,56 @@ ifelse(
   FALSE
 )
 
+print(x = "writing the monster table, if running fullmode, this may take a while")
+
 ## table
 write.table(
-  x = inhouseDb,
+  x = inhouseDbMinimal,
   file = gzfile(
     description = pathDataInterimTablesCuratedTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+## metadata
+## structure
+write.table(
+  x = structureMetadata,
+  file = gzfile(
+    description = pathDataInterimTablesCuratedStructureMetadata,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+## organism
+write.table(
+  x = organismMetadata,
+  file = gzfile(
+    description = pathDataInterimTablesCuratedOrganismMetadata,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### reference
+write.table(
+  x = referenceMetadata,
+  file = gzfile(
+    description = pathDataInterimTablesCuratedReferenceMetadata,
     compression = 9,
     encoding = "UTF-8"
   ),

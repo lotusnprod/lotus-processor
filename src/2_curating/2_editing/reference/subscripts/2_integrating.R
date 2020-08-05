@@ -1,4 +1,4 @@
-# title: "Ref translatoR"
+# title: "Ref integration"
 
 # loading
 ## paths
@@ -8,38 +8,89 @@ source("paths.R")
 source("functions/reference.R")
 
 ## files
+### doi
 dataDoi <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceDoi),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
+  select(
+    referenceOriginal = referenceOriginal_doi,
+    doi_doi = referenceTranslatedDoi,
+    journal_doi = referenceTranslatedJournal,
+    title_doi = referenceTranslatedTitle,
+    date_doi = referenceTranslatedDate,
+    author_doi = referenceTranslatedAuthor,
+    scoreCrossref_doi = referenceTranslationScoreCrossref,
+    scoreDistance_doi = referenceTranslationScoreDistance
+  ) %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 2:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  ) %>%
+  mutate(level = NA)
 
-colnames(dataDoi)[2:ncol(dataDoi)] <-
-  paste(colnames(dataDoi)[2:ncol(dataDoi)], "doi", sep = "_")
-
+### original
 dataOriginal <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
+  select(
+    referenceOriginal = referenceOriginal_original,
+    doi_original = referenceTranslatedDoi,
+    journal_original = referenceTranslatedJournal,
+    title_original = referenceTranslatedTitle,
+    date_original = referenceTranslatedDate,
+    author_original = referenceTranslatedAuthor,
+    scoreCrossref_original = referenceTranslationScoreCrossref,
+    scoreDistance_original = referenceTranslationScoreDistance
+  ) %>%
+  group_by(referenceOriginal) %>%
+  mutate(level = row_number()) %>%
+  relocate(level, .after = referenceOriginal) %>%
+  ungroup() %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 3:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  )
 
-colnames(dataOriginal)[2:ncol(dataOriginal)] <-
-  paste(colnames(dataOriginal)[2:ncol(dataOriginal)], "original", sep = "_")
-
+### pubmed
 dataPubmed <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
-
-colnames(dataPubmed)[2:ncol(dataPubmed)] <-
-  paste(colnames(dataPubmed)[2:ncol(dataPubmed)], "pubmed", sep = "_")
+  select(
+    referenceOriginal = referenceOriginal_pubmed,
+    doi_pubmed = referenceTranslatedDoi,
+    journal_pubmed = referenceTranslatedJournal,
+    title_pubmed = referenceTranslatedTitle,
+    date_pubmed = referenceTranslatedDate,
+    author_pubmed = referenceTranslatedAuthor,
+    scoreCrossref_pubmed = referenceTranslationScoreCrossref,
+    scoreDistance_pubmed = referenceTranslationScoreDistance
+  ) %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 2:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  ) %>%
+  mutate(level = NA)
 
 dataPublishingDetails <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePublishingDetails),
@@ -47,10 +98,28 @@ dataPublishingDetails <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
-
-colnames(dataPublishingDetails)[2:ncol(dataPublishingDetails)] <-
-  paste(colnames(dataPublishingDetails)[2:ncol(dataPublishingDetails)], "publishingDetails", sep = "_")
+  select(
+    referenceOriginal = referenceOriginal_publishingDetails,
+    doi_publishingDetails = referenceTranslatedDoi,
+    journal_publishingDetails = referenceTranslatedJournal,
+    title_publishingDetails = referenceTranslatedTitle,
+    date_publishingDetails = referenceTranslatedDate,
+    author_publishingDetails = referenceTranslatedAuthor,
+    scoreCrossref_publishingDetails = referenceTranslationScoreCrossref,
+    scoreDistance_publishingDetails = referenceTranslationScoreDistance
+  ) %>%
+  group_by(referenceOriginal) %>%
+  mutate(level = row_number()) %>%
+  relocate(level, .after = referenceOriginal) %>%
+  ungroup() %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 3:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  )
 
 dataTitle <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
@@ -58,10 +127,25 @@ dataTitle <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
-
-colnames(dataTitle)[2:ncol(dataTitle)] <-
-  paste(colnames(dataTitle)[2:ncol(dataTitle)], "title", sep = "_")
+  select(
+    referenceOriginal = referenceOriginal_title,
+    doi_title = referenceTranslatedDoi,
+    journal_title = referenceTranslatedJournal,
+    title_title = referenceTranslatedTitle,
+    date_title = referenceTranslatedDate,
+    author_title = referenceTranslatedAuthor,
+    scoreCrossref_title = referenceTranslationScoreCrossref,
+    scoreDistance_title = referenceTranslationScoreDistance
+  ) %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 2:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  ) %>%
+  mutate(level = NA)
 
 dataSplit <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceSplit),
@@ -69,108 +153,62 @@ dataSplit <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  mutate_all(as.character)
-
-colnames(dataSplit)[2:ncol(dataSplit)] <-
-  paste(colnames(dataSplit)[2:ncol(dataSplit)], "split", sep = "_")
+  select(
+    referenceOriginal = referenceOriginal_split,
+    doi_split = referenceTranslatedDoi,
+    journal_split = referenceTranslatedJournal,
+    title_split = referenceTranslatedTitle,
+    date_split = referenceTranslatedDate,
+    author_split = referenceTranslatedAuthor,
+    scoreCrossref_split = referenceTranslationScoreCrossref,
+    scoreDistance_split = referenceTranslationScoreDistance
+  ) %>%
+  group_by(referenceOriginal) %>%
+  mutate(level = row_number()) %>%
+  relocate(level, .after = referenceOriginal) %>%
+  ungroup() %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = 3:ncol(.),
+    names_to = c("referenceTranslatedType", "origin"),
+    names_sep = "_",
+    values_to = "referenceTranslatedValue",
+    values_drop_na = TRUE
+  )
 
 dataFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesOriginalTable),
+  file = gzfile(description = pathDataInterimTablesOriginalReferenceFull),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  distinct(
-    organismOriginal,
-    referenceOriginal_authors,
-    referenceOriginal_doi,
-    referenceOriginal_external,
-    referenceOriginal_isbn,
-    referenceOriginal_journal,
-    referenceOriginal_original,
-    referenceOriginal_pubmed,
-    referenceOriginal_publishingDetails,
-    referenceOriginal_title,
-    referenceOriginal_split
-  ) %>%
   mutate_all(as.character)
 
 # joining all types together again
-dataFullWide <- full_join(dataFull, dataDoi)
-dataFullWide <- full_join(dataFullWide, dataPubmed)
-dataFullWide <- full_join(dataFullWide, dataTitle)
-dataFullWide <- full_join(dataFullWide, dataPublishingDetails)
-dataFullWide <- full_join(dataFullWide, dataSplit)
-dataFullWide <- full_join(dataFullWide, dataOriginal)
+dataCrossref <-
+  rbind(dataDoi,
+        dataOriginal,
+        dataPublishingDetails,
+        dataPubmed,
+        dataSplit,
+        dataTitle)
 
-
-dataFullLong <- dataFullWide %>%
-  pivot_longer(
-    cols = 12:ncol(.),
-    names_to = c(".value", "level"),
-    names_sep = "_",
-    values_to = "reference",
-    values_drop_na = TRUE
-  )
-
-dataFullLongFilled <- left_join(dataFull, dataFullLong)
-
-dataReferencedSelected <- dataFullLongFilled %>%
-  select(
-    organismOriginal,
-    referenceOriginal_authors,
-    referenceOriginal_doi,
-    referenceOriginal_external,
-    referenceOriginal_isbn,
-    referenceOriginal_journal,
-    referenceOriginal_original,
-    referenceOriginal_pubmed,
-    referenceOriginal_publishingDetails,
-    referenceOriginal_title,
-    referenceOriginal_split,
-    referenceTranslatedDoi,
-    referenceTranslatedJournal,
-    referenceTranslatedTitle,
-    referenceTranslatedDate,
-    referenceTranslatedAuthor,
-    referenceTranslationScoreCrossref,
-    referenceTranslationScoreDistance
-  ) %>%
+dataTranslated <- left_join(dataFull,
+                            dataCrossref,
+                            by = c("referenceValue" = "referenceOriginal")) %>%
   distinct(
     organismOriginal,
-    referenceOriginal_authors,
-    referenceOriginal_doi,
-    referenceOriginal_external,
-    referenceOriginal_isbn,
-    referenceOriginal_journal,
-    referenceOriginal_original,
-    referenceOriginal_pubmed,
-    referenceOriginal_publishingDetails,
-    referenceOriginal_title,
-    referenceOriginal_split,
-    referenceTranslatedTitle,
-    referenceTranslatedJournal,
-    referenceTranslatedDate,
-    referenceTranslatedAuthor,
-    referenceTranslatedDoi,
-    referenceTranslationScoreCrossref,
-    referenceTranslationScoreDistance,
-    .keep_all = TRUE
+    referenceType,
+    referenceValue,
+    referenceTranslatedType,
+    referenceTranslatedValue,
+    level
   )
-
-dataReferencedSelected$referenceTranslationScoreCrossref <-
-  as.numeric(dataReferencedSelected$referenceTranslationScoreCrossref)
-
-dataReferencedSelected$referenceTranslationScoreDistance <-
-  as.numeric(dataReferencedSelected$referenceTranslationScoreDistance)
-
-dataReferencedSelected$referenceTranslationScoreCrossref[dataReferencedSelected$referenceTranslationScoreCrossref == 1] <-
-  100
 
 ## exporting
 write.table(
-  x = dataReferencedSelected,
+  x = dataTranslated,
   file = gzfile(
     description = pathDataInterimTablesTranslatedReferenceFile,
     compression = 9,
