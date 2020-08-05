@@ -39,18 +39,42 @@ sampleKnapsack <- openDbTriplets %>%
     comments = NA
   )
 
-set.seed(42)
-sampleWD <- openDbTriplets %>%
+goldenSet <- openDbTriplets %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmid) |
       !is.na(referenceCleanedPmcid)
   ) %>%
-  filter(
-    referenceCleaned_score_crossref == 100 |
-      referenceCleaned_score_distance <= 10 &
-      referenceCleaned_score_titleOrganism == 1
+  filter(referenceCleaned_score_crossref == 100 |
+           referenceCleaned_score_distance <= 10) %>%
+  filter(referenceCleaned_score_titleOrganism == 1) %>%
+  distinct(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    structureCleanedInchikey3D,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
   ) %>%
+  select(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonId,
+    structureCleanedInchikey3D,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  )
+
+set.seed(42)
+sampleWD <- goldenSet %>%
   sample_n(500) %>%
   select(
     organismCleaned,
@@ -86,6 +110,16 @@ write.table(
 write.table(
   x = sampleKnapsack,
   file = pathDataInterimTablesAnalysedSampleKnapsack,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+## goldenSet
+write.table(
+  x = goldenSet,
+  file = pathDataInterimTablesAnalysedGold,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
