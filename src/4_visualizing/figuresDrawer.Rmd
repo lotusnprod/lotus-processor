@@ -686,11 +686,28 @@ upset(
 ```
 
 # adding metadata
+## inhouse
 ```{r}
 inhouseDbTripletsGoldMeta <- left_join(inhouseDbTripletsGold, structureMetadata_2)
 
 inhouseDbTripletsGoldMeta <- 
   left_join(inhouseDbTripletsGoldMeta, organismMetadata) %>%
+  arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
+  arrange(desc(organismCleaned_dbTaxo_7species)) %>%
+  arrange(desc(organismCleaned_dbTaxo_6genus)) %>% 
+  arrange(desc(organismCleaned_dbTaxo_5family)) %>%
+  arrange(desc(organismCleaned_dbTaxo_4order)) %>%
+  arrange(desc(organismCleaned_dbTaxo_3class)) %>%
+  arrange(desc(organismCleaned_dbTaxo_2phylum)) %>%
+  arrange(desc(organismCleaned_dbTaxo_1kingdom))
+```
+
+## open
+```{r}
+openDbTripletsGoldMeta <- left_join(openDbTripletsGold, structureMetadata_2)
+
+openDbTripletsGoldMeta <- 
+  left_join(openDbTripletsGoldMeta, organismMetadata) %>%
   arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
   arrange(desc(organismCleaned_dbTaxo_7species)) %>%
   arrange(desc(organismCleaned_dbTaxo_6genus)) %>% 
@@ -1761,32 +1778,29 @@ upset(
 # v3
 ```
 
-# next steps here ###
-
-
 ##trees
 #bio
 ```{r}
-data4tree_bio <- openDbPairs %>%
+data4tree_bio <- openDbTripletsGoldMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_1kingdom) &
-      !is.na(organism_2_phylum) &
-      !is.na(organism_3_class) &
-      !is.na(organism_4_order) &
+      !is.na(organismCleaned_dbTaxo_2phylum) &
+      !is.na(organismCleaned_dbTaxo_3class) &
+      !is.na(organismCleaned_dbTaxo_4order) &
       !is.na(organismCleaned_dbTaxo_5family) &
-      !is.na(organism_6_genus) &
-      !is.na(organism_7_species)
+      !is.na(organismCleaned_dbTaxo_6genus) &
+      !is.na(organismCleaned_dbTaxo_7species)
   ) %>%
-  distinct(organism_7_species,
+  distinct(organismCleaned_dbTaxo_7species,
            .keep_all = TRUE) %>%
   group_by(
     organismCleaned_dbTaxo_1kingdom,
-    organism_2_phylum,
-    organism_3_class,
-    organism_4_order,
+    organismCleaned_dbTaxo_2phylum,
+    organismCleaned_dbTaxo_3class,
+    organismCleaned_dbTaxo_4order,
     organismCleaned_dbTaxo_5family,
-    organism_6_genus,
-    organism_7_species
+    organismCleaned_dbTaxo_6genus,
+    organismCleaned_dbTaxo_7species
   ) %>%
   summarize("percentage of parent" = n())
 ```
@@ -1796,18 +1810,18 @@ Tree_bio <- collapsibleTreeSummary(
   df = data4tree_bio,
   hierarchy = c(
     "organismCleaned_dbTaxo_1kingdom",
-    "organism_2_phylum",
-    "organism_3_class",
-    "organism_4_order",
+    "organismCleaned_dbTaxo_2phylum",
+    "organismCleaned_dbTaxo_3class",
+    "organismCleaned_dbTaxo_4order",
     "organismCleaned_dbTaxo_5family",
-    "organism_6_genus",
-    "organism_7_species"
+    "organismCleaned_dbTaxo_6genus",
+    "organismCleaned_dbTaxo_7species"
   ),
   root = "Open NP DB",
   nodeSize = NULL,
   attribute = "percentage of parent",
   collapsed = TRUE,
-  fillFun = viridis::viridis,
+  fillFun = grDevices::rainbow,
   maxPercent = 10,
   percentOfParent = TRUE,
   fontSize = 12,
@@ -1818,30 +1832,29 @@ Tree_bio
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
-
+setwd(dir = "../../data/processed/figures/html/")
 htmlwidgets::saveWidget(widget = as_widget(Tree_bio),
                         file = "Tree_bio.html")
 ```
 
 ##chemo
 ```{r}
-data4tree_chemo <- openDbPairs %>%
+data4tree_chemo <- openDbTripletsGoldMeta %>%
   filter(!is.na(structureCleaned_5directParent)) %>%
   filter(
-    !is.na(chemo_01_kingdom) &
+    !is.na(structureCleaned_1kingdom) &
       !is.na(structureCleaned_2superclass) &
       !is.na(structureCleaned_3class) &
-      !is.na(chemo_04_subclass) &
-      !is.na(chemo_05_parent)
+      !is.na(structureCleaned_4subclass) &
+      !is.na(structureCleaned_5directParent)
   ) %>%
-  distinct(chemo_05_parent, .keep_all = TRUE) %>%
+  distinct(structureCleaned_5directParent, .keep_all = TRUE) %>%
   group_by(
-    chemo_01_kingdom,
+    structureCleaned_1kingdom,
     structureCleaned_2superclass,
     structureCleaned_3class,
-    chemo_04_subclass,
-    chemo_05_parent
+    structureCleaned_4subclass,
+    structureCleaned_5directParent
   ) %>%
   summarize("percentage of parent" = n())
 ```
@@ -1850,17 +1863,17 @@ data4tree_chemo <- openDbPairs %>%
 Tree_chemo <-   collapsibleTreeSummary(
   df = data4tree_chemo,
   hierarchy = c(
-    "chemo_01_kingdom",
+    "structureCleaned_1kingdom",
     "structureCleaned_2superclass",
     "structureCleaned_3class",
-    "chemo_04_subclass",
-    "chemo_05_parent"
+    "structureCleaned_4subclass",
+    "structureCleaned_5directParent"
   ),
   root = "Open NP DB",
   nodeSize = NULL,
   attribute = "percentage of parent",
   collapsed = TRUE,
-  fillFun = viridis::viridis,
+  fillFun = grDevices::rainbow,
   maxPercent = 10,
   percentOfParent = TRUE,
   fontSize = 24,
@@ -1871,12 +1884,11 @@ Tree_chemo
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
                         file = "Tree_chemo.html")
 ```
-
 
 ```{r}
 # data4circle <- openDbPairs %>%
@@ -1896,45 +1908,45 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 #            level_bio = 1)
 #   
 #   label_intermediate_1 <- data %>%
-#     distinct(organism_2_phylum,
+#     distinct(organismCleaned_dbTaxo_2phylum,
 #              .keep_all = TRUE) %>%
 #     select(from = organismCleaned_dbTaxo_1kingdom,
-#            to = organism_2_phylum) %>%
+#            to = organismCleaned_dbTaxo_2phylum) %>%
 #     mutate(level_bio = 2)
 #   
 #   label_intermediate_2 <- data %>%
-#     distinct(organism_3_class,
+#     distinct(organismCleaned_dbTaxo_3class,
 #              .keep_all = TRUE) %>%
-#     select(from = organism_2_phylum,
-#            to = organism_3_class) %>%
+#     select(from = organismCleaned_dbTaxo_2phylum,
+#            to = organismCleaned_dbTaxo_3class) %>%
 #     mutate(level_bio = 3)
 #   
 #   label_intermediate_3 <- data %>%
-#     distinct(organism_4_order,
+#     distinct(organismCleaned_dbTaxo_4order,
 #              .keep_all = TRUE) %>%
-#     select(from = organism_3_class,
-#            to = organism_4_order) %>%
+#     select(from = organismCleaned_dbTaxo_3class,
+#            to = organismCleaned_dbTaxo_4order) %>%
 #     mutate(level_bio = 4)
 #   
 #   label_intermediate_4 <- data %>%
 #     distinct(organismCleaned_dbTaxo_5family,
 #              .keep_all = TRUE) %>%
-#     select(from = organism_4_order,
+#     select(from = organismCleaned_dbTaxo_4order,
 #            to = organismCleaned_dbTaxo_5family) %>%
 #     mutate(level_bio = 5)
 #   
 #   label_intermediate_5 <- data %>%
-#     distinct(organism_6_genus,
+#     distinct(organismCleaned_dbTaxo_6genus,
 #              .keep_all = TRUE) %>%
 #     select(from = organismCleaned_dbTaxo_5family,
-#            to = organism_6_genus) %>%
+#            to = organismCleaned_dbTaxo_6genus) %>%
 #     mutate(level_bio = 6)
 #   
 #   label_intermediate_6 <- data %>%
-#     distinct(organism_7_species,
+#     distinct(organismCleaned_dbTaxo_7species,
 #              .keep_all = TRUE) %>%
-#     select(from = organism_6_genus,
-#            to = organism_7_species) %>%
+#     select(from = organismCleaned_dbTaxo_6genus,
+#            to = organismCleaned_dbTaxo_7species) %>%
 #     mutate(level_bio = 7)
 #   
 #   labels_intermediate <- rbind(
@@ -1964,17 +1976,17 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 # labelling_intermediate_chemo <- function(data)
 # {
 #     label_initial <- data %>%
-#     distinct(chemo_01_kingdom,
+#     distinct(structureCleaned_1kingdom,
 #              .keep_all = TRUE) %>%
-#     select(from = chemo_01_kingdom,
-#            to = chemo_01_kingdom) %>%
+#     select(from = structureCleaned_1kingdom,
+#            to = structureCleaned_1kingdom) %>%
 #     mutate(from = "ONPDB",
 #            level_chemo = 1)
 #     
 #   label_intermediate_01 <- data %>%
 #     distinct(structureCleaned_2superclass,
 #              .keep_all = TRUE) %>%
-#     select(from = chemo_01_kingdom,
+#     select(from = structureCleaned_1kingdom,
 #            to = structureCleaned_2superclass) %>%
 #     mutate(level_chemo = 2)
 #   
@@ -1986,23 +1998,23 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 #     mutate(level_chemo = 3)
 #   
 #   label_intermediate_03 <- data %>%
-#     distinct(chemo_04_subclass,
+#     distinct(structureCleaned_4subclass,
 #              .keep_all = TRUE) %>%
 #     select(from = structureCleaned_3class,
-#            to = chemo_04_subclass) %>%
+#            to = structureCleaned_4subclass) %>%
 #     mutate(level_chemo = 4)
 #   
 #   label_intermediate_04 <- data %>%
-#     distinct(chemo_05_parent,
+#     distinct(structureCleaned_5directParent,
 #              .keep_all = TRUE) %>%
-#     select(from = chemo_04_subclass,
-#            to = chemo_05_parent) %>%
+#     select(from = structureCleaned_4subclass,
+#            to = structureCleaned_5directParent) %>%
 #     mutate(level_chemo = 5)
 #   
 #   label_intermediate_05 <- data %>%
 #     distinct(chemo_06_subparent_1,
 #              .keep_all = TRUE) %>%
-#     select(from = chemo_05_parent,
+#     select(from = structureCleaned_5directParent,
 #            to = chemo_06_subparent_1) %>%
 #     mutate(level_chemo = 6)
 #   
@@ -2097,19 +2109,19 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 #   
 #   label_intermediate_02_2 <- data %>%
 #     select(from = structureCleaned_2superclass,
-#            to = organism_2_phylum) %>%
+#            to = organismCleaned_dbTaxo_2phylum) %>%
 #     mutate(level_chemo = 2,
 #            level_bio = 2)
 #   
 #   label_intermediate_02_3 <- data %>%
 #     select(from = structureCleaned_2superclass,
-#            to = organism_3_class) %>%
+#            to = organismCleaned_dbTaxo_3class) %>%
 #     mutate(level_chemo = 2,
 #            level_bio = 3)
 #   
 #   label_intermediate_02_4 <- data %>%
 #     select(from = structureCleaned_2superclass,
-#            to = organism_4_order) %>%
+#            to = organismCleaned_dbTaxo_4order) %>%
 #     mutate(level_chemo = 2,
 #            level_bio = 4)
 #   
@@ -2121,13 +2133,13 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_chemo),
 #   
 #   label_intermediate_02_6 <- data %>%
 #     select(from = structureCleaned_2superclass,
-#            to = organism_6_genus) %>%
+#            to = organismCleaned_dbTaxo_6genus) %>%
 #     mutate(level_chemo = 2,
 #            level_bio = 6)
 #   
 #   label_intermediate_02_7 <- data %>%
 #     select(from = structureCleaned_2superclass,
-#            to = organism_7_species) %>%
+#            to = organismCleaned_dbTaxo_7species) %>%
 #     mutate(level_chemo = 2,
 #            level_bio = 7)
 #   
@@ -2365,7 +2377,7 @@ paired_palette <- c(
   "#e31a1c"
 )
 
-top_big_chord_bio <- openDbPairs %>%
+top_big_chord_bio <- openDbTripletsGoldMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom) & 
            !is.na(structureCleaned_2superclass)) %>% 
   group_by(organismCleaned_dbTaxo_1kingdom) %>%
@@ -2377,7 +2389,7 @@ top_big_chord_bio <- openDbPairs %>%
 
 top_big_chord_bio <- top_big_chord_bio$organismCleaned_dbTaxo_1kingdom
 
-top_big_chord_chemo <- openDbPairs %>%
+top_big_chord_chemo <- openDbTripletsGoldMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom) & 
            !is.na(structureCleaned_2superclass)) %>% 
   group_by(structureCleaned_2superclass) %>%
@@ -2392,7 +2404,7 @@ top_big_chord_chemo <- top_big_chord_chemo$structureCleaned_2superclass
 
 ```{r}
 chord_big <- draw_chord(
-  data = openDbPairs,
+  data = openDbTripletsGoldMeta,
   biological_level = "organismCleaned_dbTaxo_1kingdom",
   chemical_level = "structureCleaned_2superclass",
   chemical_filter_value = top_big_chord_chemo,
@@ -2405,7 +2417,7 @@ chord_big
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_big),
                         file = "Chord_big.html")
@@ -2440,7 +2452,7 @@ paired_palette <- c(
   "#e31a1c"
 )
 
-top_organism_med <- openDbPairs %>%
+top_organism_med <- openDbTripletsGoldMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
   filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
   group_by(organismCleaned_dbTaxo_5family) %>%
@@ -2452,7 +2464,7 @@ top_organism_med <- openDbPairs %>%
 
 top_organism_med <- top_organism_med$organismCleaned_dbTaxo_5family
 
-top_chemo_med <- openDbPairs %>%
+top_chemo_med <- openDbTripletsGoldMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
   filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
   filter(!is.na(structureCleaned_3class)) %>%
@@ -2469,7 +2481,7 @@ top_chemo_med <- top_chemo_med$structureCleaned_3class
 ```{r}
 chord_med <-
   draw_chord(
-    data = openDbPairs,
+    data = openDbTripletsGoldMeta,
     biological_level = "organismCleaned_dbTaxo_5family",
     chemical_level = "structureCleaned_3class",
     chemical_filter_value = top_chemo_med,
@@ -2482,7 +2494,7 @@ chord_med
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_med),
                         file = "Chord_med.html")
@@ -2490,53 +2502,153 @@ htmlwidgets::saveWidget(widget = as_widget(chord_med),
 
 ##small chord
 ```{r}
-top_organism_sma <- openDbPairs %>%
-  filter(!is.na(chemo_05_parent) & 
-           !is.na(organism_7_species)) %>% 
-  filter(organism_6_genus == "Erythroxylum") %>%
-  group_by(organism_7_species) %>%
+top_organism_sma <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organism_7_species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>% 
   head(12)
 
-top_organism_sma <- top_organism_sma$organism_7_species
+top_organism_sma <- top_organism_sma$organismCleaned_dbTaxo_7species
 
-top_chemo_sma <- openDbPairs %>%
-  filter(!is.na(chemo_05_parent) & 
-           !is.na(organism_7_species)) %>% 
-  filter(organism_6_genus == "Erythroxylum") %>%
-  filter(!is.na(chemo_05_parent)) %>%
-  group_by(chemo_05_parent) %>%
+top_chemo_sma <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
+  filter(!is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(chemo_05_parent) %>% 
+  distinct(structureCleaned_5directParent) %>% 
   head(12)
 
-top_chemo_sma <- top_chemo_sma$chemo_05_parent
+top_chemo_sma <- top_chemo_sma$structureCleaned_5directParent
 ```
 
 ```{r}
 chord_sma <-
   draw_chord(
-    data = openDbPairs,
-    biological_level = "organism_7_species",
-    chemical_level = "chemo_05_parent",
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
     chemical_filter_value = top_chemo_sma,
-    chemical_filter_level = "chemo_05_parent",
+    chemical_filter_level = "structureCleaned_5directParent",
     biological_filter_value = top_organism_sma,
-    biological_filter_level = "organism_7_species"
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
   )
 chord_sma
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_sma),
                         file = "Chord_sma.html")
+```
+
+```{r}
+top_organism_ranunculaceae <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organismCleaned_dbTaxo_7species) %>% 
+  head(12)
+
+top_organism_ranunculaceae <- top_organism_ranunculaceae$organismCleaned_dbTaxo_7species
+
+top_chemo_ranunculaceae <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
+  filter(!is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(structureCleaned_5directParent) %>% 
+  head(12)
+
+top_chemo_ranunculaceae <- top_chemo_ranunculaceae$structureCleaned_5directParent
+```
+
+```{r}
+chord_ranunculaceae <-
+  draw_chord(
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
+    chemical_filter_value = top_chemo_ranunculaceae,
+    chemical_filter_level = "structureCleaned_5directParent",
+    biological_filter_value = top_organism_ranunculaceae,
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
+  )
+chord_ranunculaceae
+```
+
+```{r}
+setwd(dir = "../../data/processed/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_ranunculaceae),
+                        file = "Chord_ranunculaceae.html")
+```
+
+```{r}
+top_organism_papaveraceae <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(organismCleaned_dbTaxo_7species) %>% 
+  head(12)
+
+top_organism_papaveraceae <- top_organism_papaveraceae$organismCleaned_dbTaxo_7species
+
+top_chemo_papaveraceae <- openDbTripletsGoldMeta %>%
+  filter(!is.na(structureCleaned_5directParent) & 
+           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
+  filter(!is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
+  add_count() %>%
+  ungroup() %>%
+  arrange(desc(n)) %>%
+  distinct(structureCleaned_5directParent) %>% 
+  head(12)
+
+top_chemo_papaveraceae <- top_chemo_papaveraceae$structureCleaned_5directParent
+```
+
+```{r}
+chord_papaveraceae <-
+  draw_chord(
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
+    chemical_filter_value = top_chemo_papaveraceae,
+    chemical_filter_level = "structureCleaned_5directParent",
+    biological_filter_value = top_organism_papaveraceae,
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
+  )
+chord_papaveraceae
+```
+
+```{r}
+setwd(dir = "../../data/processed/figures/html/")
+
+htmlwidgets::saveWidget(widget = as_widget(chord_papaveraceae),
+                        file = "Chord_papaveraceae.html")
 ```
 
 ##top chord
@@ -2557,51 +2669,51 @@ paired_palette <- c(
   "#e31a1c"
 )
 
-top_organism_06 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) & 
-           !is.na(chemo_05_parent) &
-           !is.na(organism_7_species)) %>%
-  group_by(organism_7_species) %>%
+top_organism_06 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) & 
+           !is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organism_7_species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>% 
   head(6)
 
-top_organism_06 <- top_organism_06$organism_7_species
+top_organism_06 <- top_organism_06$organismCleaned_dbTaxo_7species
 
-top_chemo_06 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) &
-           !is.na(chemo_05_parent) & 
-           !is.na(chemo_05_parent)) %>%
-  group_by(chemo_05_parent) %>%
+top_chemo_06 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) &
+           !is.na(structureCleaned_5directParent) & 
+           !is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(chemo_05_parent,
+  distinct(structureCleaned_5directParent,
            .keep_all = TRUE) %>% 
   head(6)
 
-top_chemo_06 <- top_chemo_06$chemo_05_parent
+top_chemo_06 <- top_chemo_06$structureCleaned_5directParent
 ```
 
 ```{r}
 chord_06 <-
   draw_chord(
-    data = openDbPairs,
-    biological_level = "organism_7_species",
-    chemical_level = "chemo_05_parent",
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
     chemical_filter_value = top_chemo_06,
-    chemical_filter_level = "chemo_05_parent",
+    chemical_filter_level = "structureCleaned_5directParent",
     biological_filter_value = top_organism_06,
-    biological_filter_level = "organism_7_species"
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
   )
 
 chord_06
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_06),
                         file = "Chord_06.html")
@@ -2636,51 +2748,51 @@ paired_palette <- c(
   "#e31a1c"
 )
 
-top_organism_12 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) &
-           !is.na(chemo_05_parent) &
-           !is.na(organism_7_species)) %>%
-  group_by(organism_7_species) %>%
+top_organism_12 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) &
+           !is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organism_7_species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>% 
   head(12)
 
-top_organism_12 <- top_organism_12$organism_7_species
+top_organism_12 <- top_organism_12$organismCleaned_dbTaxo_7species
 
-top_chemo_12 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) & 
-           !is.na(chemo_05_parent) & 
-           !is.na(chemo_05_parent)) %>%
-  group_by(chemo_05_parent) %>%
+top_chemo_12 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) & 
+           !is.na(structureCleaned_5directParent) & 
+           !is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(chemo_05_parent,
+  distinct(structureCleaned_5directParent,
            .keep_all = TRUE) %>% 
   head(12)
 
-top_chemo_12 <- top_chemo_12$chemo_05_parent
+top_chemo_12 <- top_chemo_12$structureCleaned_5directParent
 ```
 
 ```{r}
 chord_12 <-
   draw_chord(
-    data = openDbPairs,
-    biological_level = "organism_7_species",
-    chemical_level = "chemo_05_parent",
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
     chemical_filter_value = top_chemo_12,
-    chemical_filter_level = "chemo_05_parent",
+    chemical_filter_level = "structureCleaned_5directParent",
     biological_filter_value = top_organism_12,
-    biological_filter_level = "organism_7_species"
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
   )
 
 chord_12
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_12),
                         file = "Chord_12.html")
@@ -2739,51 +2851,51 @@ paired_palette <- c(
   "#e31a1c"
 )
 
-top_organism_24 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) & 
-           !is.na(chemo_05_parent) &
-           !is.na(organism_7_species)) %>%
-  group_by(organism_7_species) %>%
+top_organism_24 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) & 
+           !is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
+  group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organism_7_species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>% 
   head(24)
 
-top_organism_24 <- top_organism_24$organism_7_species
+top_organism_24 <- top_organism_24$organismCleaned_dbTaxo_7species
 
-top_chemo_24 <- openDbPairs %>%
-  filter(!is.na(organism_7_species) & 
-           !is.na(chemo_05_parent) & 
-           !is.na(chemo_05_parent)) %>%
-  group_by(chemo_05_parent) %>%
+top_chemo_24 <- openDbTripletsGoldMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_7species) & 
+           !is.na(structureCleaned_5directParent) & 
+           !is.na(structureCleaned_5directParent)) %>%
+  group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(chemo_05_parent,
+  distinct(structureCleaned_5directParent,
            .keep_all = TRUE) %>% 
   head(24)
 
-top_chemo_24 <- top_chemo_24$chemo_05_parent
+top_chemo_24 <- top_chemo_24$structureCleaned_5directParent
 ```
 
 ```{r}
 chord_24 <-
   draw_chord(
-    data = openDbPairs,
-    biological_level = "organism_7_species",
-    chemical_level = "chemo_05_parent",
+    data = openDbTripletsGoldMeta,
+    biological_level = "organismCleaned_dbTaxo_7species",
+    chemical_level = "structureCleaned_5directParent",
     chemical_filter_value = top_chemo_24,
-    chemical_filter_level = "chemo_05_parent",
+    chemical_filter_level = "structureCleaned_5directParent",
     biological_filter_value = top_organism_24,
-    biological_filter_level = "organism_7_species"
+    biological_filter_level = "organismCleaned_dbTaxo_7species"
   )
 
 chord_24
 ```
 
 ```{r}
-setwd(dir = "outputs/figures/html/")
+setwd(dir = "../../data/processed/figures/html/")
 
 htmlwidgets::saveWidget(widget = as_widget(chord_24),
                         file = "Chord_24.html")
