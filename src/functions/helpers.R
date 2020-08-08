@@ -2,14 +2,7 @@
 ####################   Functions   ####################
 #######################################################
 
-#library(data.table)
-#library(dplyr)
-#library(parallel)
-#library(pbmcapply)
-library(readr)
-#library(rvest)
-#library(stringr)
-#library(tidyr)
+library(tidyverse)
 
 #######################################################
 #######################################################

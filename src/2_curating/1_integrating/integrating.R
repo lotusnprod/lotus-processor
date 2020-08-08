@@ -6,9 +6,7 @@ source("paths.R")
 source("functions/helpers.R")
 
 library(data.table)
-library(dplyr)
-library(tidyr)
-library(stringr)
+library(tidyverse)
 
 # loading files
 dbs <- lapply(pathDataInterimDbDir, function(x) {

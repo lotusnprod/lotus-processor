@@ -9,8 +9,6 @@ source("functions/analysis.R")
 source("functions/helpers.R")
 
 ## libraries
-library(dplyr)
-library(readr)
 library(tidyverse)
 
 ## files

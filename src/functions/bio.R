@@ -4,16 +4,13 @@
 
 library(Hmisc)
 library(data.table)
-library(dplyr)
 library(jsonlite)
 library(parallel)
 library(pbmcapply)
-library(readr)
 library(splitstackshape)
 library(stringi)
-library(stringr)
 library(zoo)
-library(tidyr)
+library(tidyverse)
 
 #######################################################
 #######################################################

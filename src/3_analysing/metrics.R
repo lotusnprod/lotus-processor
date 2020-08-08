@@ -28,7 +28,9 @@ openDbMinimalFiltered <- inhouseDbMinimal %>%
     database,
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonId,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
     structureCleanedSmiles,
     structureCleanedInchi,
     structureCleanedInchikey3D,
@@ -45,7 +47,9 @@ dnpDb <- inhouseDbMinimal %>%
     database,
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonId,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
     structureCleanedSmiles,
     structureCleanedInchi,
     structureCleanedInchikey3D
@@ -102,7 +106,9 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     database,
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonId,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
     structureCleanedInchi,
     structureCleanedInchikey3D,
     structureCleanedSmiles,
@@ -381,8 +387,8 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-##stats
-###structures by kingdom
+# # stats
+# ## structures by kingdom
 # write.table(
 #   x = inhouseStructuresByKingdom,
 #   file = pathDataInterimTablesAnalysedStructuresByKingdom,
@@ -392,7 +398,7 @@ write.table(
 #   fileEncoding = "UTF-8"
 # )
 
-###unique structures per species
+# ## unique structures per species
 # write.table(
 #   x = inhouseUniqueStructuresPerSpecies,
 #   file = pathDataInterimTablesAnalysedUniqueStructuresBySpecies,

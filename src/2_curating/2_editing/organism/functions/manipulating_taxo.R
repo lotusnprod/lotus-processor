@@ -3,17 +3,36 @@ manipulating_taxo <- function(dfsel, dic) {
   a <- paste("\\b", dic$taxaRank, "\\b", sep = "")
   b <- dic$taxaRankStandard
   
+  dfsel$rank <- gsub(pattern = "[.]",
+                     replacement = "",
+                     x = dfsel$rank)
+  dfsel$rank <- stri_replace_all_regex(
+    str = dfsel$rank,
+    pattern = a,
+    replacement = b,
+    case_insensitive = FALSE,
+    vectorize_all = FALSE
+  )
+  
+  #removing false non-empty cells
+  dfsel$rank <- y_as_na(x = dfsel$rank,
+                        y = "")
+  
+  dfsel$taxonomy <- y_as_na(x = dfsel$taxonomy,
+                            y = "")
+  
+  dfsel$rank <- y_as_na(x = dfsel$rank,
+                        y = "")
+  
   #selecting and splitting taxonomy and ranks
   df1 <- dfsel %>%
-    select(
-      organismOriginal,
-      organismCleaned,
-      organismDbTaxo,
-      taxonId,
-      dbQuality,
-      taxonomy,
-      rank
-    ) %>%
+    select(organismOriginal,
+           organismCleaned,
+           organismDbTaxo,
+           dbQuality,
+           taxonomy,
+           rank,
+           ids) %>%
     distinct(organismCleaned, .keep_all = TRUE) %>%
     cSplit(splitCols = "taxonomy",
            sep = "|") %>%
@@ -34,32 +53,11 @@ manipulating_taxo <- function(dfsel, dic) {
     distinct(organismOriginal,
              organismCleaned,
              level,
-             taxonId,
              .keep_all = TRUE)
-  
-  df2$rank <- stri_replace_all_regex(
-    str = df2$rank,
-    pattern = a,
-    replacement = b,
-    case_insensitive = FALSE,
-    vectorize_all = FALSE
-  )
-  
-  #removing false non-empty cells
-  df2$rank <- y_as_na(x = df2$rank,
-                      y = "")
-  
-  df2$taxonomy <- y_as_na(x = df2$taxonomy,
-                          y = "")
-  
-  df2$rank <- y_as_na(x = df2$rank,
-                      y = "")
   
   df2$rank <- ifelse(test = is.na(df2$rank),
                      yes = "NA",
                      no = df2$rank)
-  
-  colnames(df2)[3] <- "dbTaxo"
   
   #manipulating taxa
   df3 <- df2 %>%
@@ -81,7 +79,7 @@ manipulating_taxo <- function(dfsel, dic) {
           "organismOriginal",
           "organismCleaned",
           "organismDbTaxo",
-          "taxonId",
+          "ids",
           "dbQuality",
           "kingdom",
           "phylum",
@@ -95,13 +93,13 @@ manipulating_taxo <- function(dfsel, dic) {
     )
   
   #pasting suffix to colnames to pivot then (the double pivot allows to tidy the data)
-  colnames(df3)[5:ncol(df3)] <-
-    paste("bio_", colnames(df3)[5:ncol(df3)], sep = "")
+  colnames(df3)[6:ncol(df3)] <-
+    paste("bio_", colnames(df3)[6:ncol(df3)], sep = "")
   
   #pivoting (long)
   df4 <- df3 %>%
     pivot_longer(
-      cols = 5:ncol(.),
+      cols = 6:ncol(.),
       names_to = c(".value", "level"),
       names_sep = "_",
       values_to = "taxonomy",
@@ -111,7 +109,7 @@ manipulating_taxo <- function(dfsel, dic) {
   #pivoting (wide)
   df5 <- df4 %>%
     group_by(organismCleaned) %>%
-    distinct(taxonId,
+    distinct(ids,
              level,
              .keep_all = TRUE) %>%
     pivot_wider(names_from = level,
@@ -121,7 +119,7 @@ manipulating_taxo <- function(dfsel, dic) {
         c(
           "organismCleaned",
           "organismDbTaxo",
-          "taxonId",
+          "ids",
           "dbQuality",
           "kingdom",
           "phylum",
@@ -132,6 +130,20 @@ manipulating_taxo <- function(dfsel, dic) {
           "species",
           "variety"
         )
+    ) %>%
+    select(
+      organismCleaned,
+      organismDbTaxo,
+      organismDbTaxoQuality = dbQuality,
+      organismTaxonId = ids,
+      organism_1_kingdom = kingdom,
+      organism_2_phylum = phylum,
+      organism_3_class = class,
+      organism_4_order = order,
+      organism_5_family = family,
+      organism_6_genus = genus,
+      organism_7_species = species,
+      organism_8_variety = variety
     )
   
   #adding taxa to initial df
@@ -141,17 +153,17 @@ manipulating_taxo <- function(dfsel, dic) {
       organismCleaned,
       organismDbTaxo,
       organismDbTaxoQuality = dbQuality,
-      organismTaxonId = taxonId,
-      organism_1_kingdom = kingdom,
-      organism_2_phylum = phylum,
-      organism_3_class = class,
-      organism_4_order = order,
-      organism_5_family = family,
-      organism_6_genus = genus,
-      organism_7_species = species,
-      organism_8_variety = variety,
-      rank,
-      taxonomy
+      organismTaxonIds = ids,
+      organismTaxonRanks = rank,
+      organismTaxonomy = taxonomy,
+      organism_1_kingdom,
+      organism_2_phylum,
+      organism_3_class,
+      organism_4_order,
+      organism_5_family,
+      organism_6_genus,
+      organism_7_species,
+      organism_8_variety
     )
   
   return(df6)

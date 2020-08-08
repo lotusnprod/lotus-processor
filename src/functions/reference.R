@@ -4,17 +4,14 @@
 
 library(Hmisc)
 library(data.table)
-library(dplyr)
 library(parallel)
 library(pbmcapply)
 library(rcrossref)
-library(readr)
 library(rentrez)
 library(splitstackshape)
 library(stringdist)
-library(stringr)
 library(stringi)
-library(tidyr)
+library(tidyverse)
 
 #######################################################
 #######################################################

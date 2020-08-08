@@ -86,6 +86,7 @@ dataCleanedTranslatedOrganism <-
   select(
     organismInterim,
     organismCleaned = canonicalname,
+    organismCleanedCurrent = canonicalnameCurrent,
     organismDbTaxo = dbTaxo,
     everything()
   ) %>%
@@ -125,8 +126,7 @@ print("manipulating taxonomic levels")
 
 dataCleanedOrganismManipulated <-
   manipulating_taxo(dfsel = dataCleanedOrganism,
-                    dic = taxaRanksDictionary) %>%
-  select(-rank, -taxonomy)
+                    dic = taxaRanksDictionary)
 
 # exporting
 write.table(

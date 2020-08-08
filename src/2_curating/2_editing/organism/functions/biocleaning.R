@@ -126,8 +126,8 @@ biocleaning <- function(gnfound, names, organismCol)
     arrange(desc(n), !is.na(isSynonym)) %>%
     ungroup() %>%
     distinct(id,
-             .keep_all = TRUE) %>% 
-    arrange(id) %>% 
+             .keep_all = TRUE) %>%
+    arrange(id) %>%
     select(id)
   
   df5b <- df4 %>%
@@ -146,7 +146,8 @@ biocleaning <- function(gnfound, names, organismCol)
     arrange(id)
   
   df6a <- cbind(df5a, rows)
-  df6b <- left_join(df6a,df5b)
+  df6b <- left_join(df6a, df5b) %>%
+    filter(!is.na(classificationIds))
   
   #adding row number
   df7 <- gnfound$names.start %>%
@@ -159,6 +160,7 @@ biocleaning <- function(gnfound, names, organismCol)
   taxo <- right_join(df6b, df7) %>%
     select(
       canonicalname = matchedCanonicalFull,
+      canonicalnameCurrent = currentCanonicalFull,
       taxonId,
       dbTaxo = dataSourceTitle,
       taxonomy = classificationPath,
