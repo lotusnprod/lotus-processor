@@ -6,8 +6,6 @@ source("paths.R")
 
 ## libraries
 library(tidyverse)
-library(dplyr)
-library(readr)
 
 ## functions
 source("functions/analysis.R")
@@ -33,10 +31,12 @@ organismTableFull <- read_delim(
 ) %>%
   select(
     organismOriginal,
-    organismCleaned = organismLowestTaxon,
+    organismCleaned,
     organismCleaned_dbTaxo = organismDbTaxo,
     organismCleaned_dbTaxoQuality = organismDbTaxoQuality,
-    organismCleaned_dbTaxoTaxonId = organismTaxonId,
+    organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy = organismTaxonomy,
     organismCleaned_dbTaxo_1kingdom = organism_1_kingdom,
     organismCleaned_dbTaxo_2phylum = organism_2_phylum,
     organismCleaned_dbTaxo_3class = organism_3_class,
@@ -119,14 +119,18 @@ organismMinimal <- organismTableFull %>%
     organismOriginal,
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonId
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy
   )
 
 organismMetadata <- organismTableFull %>%
   distinct(
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonId,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
     organismCleaned_dbTaxoQuality,
     organismCleaned_dbTaxo_1kingdom,
     organismCleaned_dbTaxo_2phylum,

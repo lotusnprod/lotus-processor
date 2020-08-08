@@ -491,7 +491,7 @@ dataCleanedOrganismManipulated <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 ) %>%
-  relocate(organismCleaned, .after = organismTaxonId)
+  relocate(organismCleaned, .after = organismTaxonomy)
 
 # curating taxonomy
 ## auto
@@ -504,45 +504,29 @@ dataCleanedOrganismManipulated <- read_delim(
 
 # outputing lowest taxon
 dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
-  mutate(organismLowestTaxon =  as.character(apply(dataCleanedOrganismManipulated[5:13], 1, function(x)
+  mutate(organismCleaned =  as.character(apply(dataCleanedOrganismManipulated[7:15], 1, function(x)
     tail(na.omit(x), 1))))
 
-dataCuratedOrganism$organismLowestTaxon <-
-  y_as_na(x = dataCuratedOrganism$organismLowestTaxon,
+dataCuratedOrganism$organismCleaned <-
+  y_as_na(x = dataCuratedOrganism$organismCleaned,
           y = "character(0)")
 
-dataCuratedOrganism$organismLowestTaxon <-
-  y_as_na(x = dataCuratedOrganism$organismLowestTaxon,
+dataCuratedOrganism$organismCleaned <-
+  y_as_na(x = dataCuratedOrganism$organismCleaned,
           y = "NA")
-
-#outputing differences in species names
-diff <- dataCuratedOrganism %>%
-  filter(organismLowestTaxon != organismCleaned)
-
-realDiff <- dataCuratedOrganism %>%
-  filter(organismLowestTaxon != organismCleaned &
-           !is.na(organism_6_genus)) %>%
-  distinct(organismCleaned,
-           organismLowestTaxon,
-           .keep_all = TRUE) %>%
-  group_by(organism_6_genus) %>%
-  add_count() %>%
-  ungroup() %>%
-  select(organismCleaned,
-         organismLowestTaxon,
-         n)
 
 #selecting
 dataCuratedOrganism <- dataCuratedOrganism %>%
   select(
     organismOriginal,
     organismCleaned,
-    organismLowestTaxon,
     organismDbTaxo,
     organismDbTaxoQuality,
     # organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
     # organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
-    organismTaxonId,
+    organismTaxonIds,
+    organismTaxonRanks,
+    organismTaxonomy,
     organism_1_kingdom,
     organism_2_phylum,
     organism_3_class,
@@ -559,20 +543,6 @@ write.table(
   x = dataCuratedOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismFinal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-##differences
-write.table(
-  x = realDiff,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismRealDiff,
     compression = 9,
     encoding = "UTF-8"
   ),

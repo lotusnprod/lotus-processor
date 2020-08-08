@@ -2,12 +2,11 @@
 ####################   Functions   ####################
 #######################################################
 
-library(dplyr)
 # library(ChemmineR)
 library(parallel)
 library(pbmcapply)
-library(readr)
 library(rvest)
+library(tidyverse)
 # library(webchem)
 
 #######################################################

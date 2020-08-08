@@ -13,12 +13,8 @@ source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R") # shouldnt
 
 ## libraries
 library(data.table)
-library(dplyr)
 library(jsonlite)
-library(readr)
-library(stringr)
 library(tidyverse)
-library(tidyr)
 
 log_debug("  Step 1")
 # writing path
@@ -85,6 +81,7 @@ dataCleanedOriginalOrganism <-
   select(
     organismOriginal,
     organismCleaned = canonicalname,
+    organismCleanedCurrent = canonicalnameCurrent,
     organismDbTaxo = dbTaxo,
     everything()
   ) %>%
