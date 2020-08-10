@@ -13,12 +13,8 @@ source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R") # shouldnt
 
 ## libraries
 library(data.table)
-library(dplyr)
 library(jsonlite)
-library(readr)
-library(stringr)
 library(tidyverse)
-library(tidyr)
 
 log_debug("  Step 1")
 # writing path
@@ -69,6 +65,7 @@ dataCleanOriginalOrganism <- list()
 # cleaning GNFinder output
 for (i in num) {
   j <- i / cut
+  print(paste("step", j, "of", length))
   tryCatch({
     dataCleanOriginalOrganism[[j]] <-
       gnfinder_cleaning(num = i,
@@ -84,16 +81,34 @@ dataCleanedOriginalOrganism <-
   select(
     organismOriginal,
     organismCleaned = canonicalname,
+    organismCleanedCurrent = canonicalnameCurrent,
     organismDbTaxo = dbTaxo,
     everything()
   ) %>%
   select(-nchar, -sum)
+
+dataCleanedOriginalOrganismUnique <-
+  dataCleanedOriginalOrganism %>%
+  distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
 # exporting
 write.table(
   x = dataCleanedOriginalOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismOriginalTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = dataCleanedOriginalOrganismUnique,
+  file = gzfile(
+    description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
     compression = 9,
     encoding = "UTF-8"
   ),

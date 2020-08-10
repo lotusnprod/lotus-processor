@@ -70,6 +70,7 @@ dataCleanTranslatedOrganism <- list()
 # cleaning GNFinder output
 for (i in num) {
   j <- i / cut
+  print(paste("step", j, "of", length))
   tryCatch({
     dataCleanTranslatedOrganism[[j]] <-
       gnfinder_cleaning(num = i,
@@ -85,6 +86,7 @@ dataCleanedTranslatedOrganism <-
   select(
     organismInterim,
     organismCleaned = canonicalname,
+    organismCleanedCurrent = canonicalnameCurrent,
     organismDbTaxo = dbTaxo,
     everything()
   ) %>%
@@ -98,7 +100,11 @@ dataCleanedTranslatedOrganism2join <-
 dataCleanedTranslatedOrganismFull <-
   left_join(dataCleanedTranslatedOrganism2join,
             dataCleanedTranslatedOrganism) %>%
-  select(-organismInterim)
+  select(-organismInterim) %>%
+  distinct(organismOriginal,
+           organismCleaned,
+           taxonId,
+           .keep_all = TRUE)
 
 dataCleanedOrganism <-
   rbind(dataCleanedOriginalOrganism,
@@ -107,6 +113,7 @@ dataCleanedOrganism <-
 dataCleanedOrganism <- dataCleanedOrganism %>%
   distinct(organismOriginal,
            organismCleaned,
+           taxonId,
            .keep_all = TRUE) %>%
   group_by(organismOriginal) %>%
   add_count() %>%
@@ -115,10 +122,11 @@ dataCleanedOrganism <- dataCleanedOrganism %>%
            !n > 1) %>%
   select(-n)
 
+print("manipulating taxonomic levels")
+
 dataCleanedOrganismManipulated <-
   manipulating_taxo(dfsel = dataCleanedOrganism,
-                    dic = taxaRanksDictionary) %>%
-  select(-rank, -taxonomy)
+                    dic = taxaRanksDictionary)
 
 # exporting
 write.table(

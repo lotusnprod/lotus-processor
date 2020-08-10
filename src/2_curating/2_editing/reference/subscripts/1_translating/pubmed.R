@@ -21,7 +21,7 @@ dataPubmed <- read_delim(
 reflistPubmed <- invisible(
   pbmclapply(
     FUN = getrefPubmed,
-    X = as.character(dataPubmed$referenceOriginalPubmed),
+    X = as.character(dataPubmed$referenceOriginal_pubmed),
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -61,7 +61,8 @@ for (i in 1:nrow(reflistPubmedBound)) {
 }
 
 for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslationScore"] <- 1
+  dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
+  dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
 }
 
 dataPubmed <- dataPubmed %>%

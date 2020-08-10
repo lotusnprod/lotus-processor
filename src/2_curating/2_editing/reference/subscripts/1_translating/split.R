@@ -8,8 +8,8 @@ source("paths.R")
 source("functions/reference.R")
 
 ## file
-dataTitle <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceTitle),
+dataSplit <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferenceSplit),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -19,7 +19,7 @@ dataTitle <- read_delim(
 reflist <- invisible(
   pbmclapply(
     FUN = getref_noLimit,
-    X = dataTitle$referenceOriginal_title,
+    X = dataSplit$referenceOriginal_split,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -30,8 +30,9 @@ reflist <- invisible(
   )
 )
 
-dataTitle <- getBestReference(data = dataTitle,
-                              referenceType = "title",
+print(x = "This may take several minutes")
+dataSplit <- getAllReferences(data = dataSplit,
+                              referenceType = "split",
                               method = "osa")
 
 # exporting
@@ -50,9 +51,9 @@ ifelse(
 
 ## exporting
 write.table(
-  x = dataTitle,
+  x = dataSplit,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceTitle,
+    description = pathDataInterimTablesTranslatedReferenceSplit,
     compression = 9,
     encoding = "UTF-8"
   ),

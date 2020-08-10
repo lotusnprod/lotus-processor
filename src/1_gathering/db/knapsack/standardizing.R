@@ -31,8 +31,31 @@ data_selected <- data_original %>%
     inchi = InChICode,
     smiles = SMILES,
     biologicalsource = Organism,
-    reference_unsplittable = Reference
-  ) %>% 
+    reference_original = Reference
+  ) %>%
+  mutate(reference_split = ifelse(
+    test = grepl(pattern = ".*et al",
+                 x = reference_original),
+    yes =
+      trimws(x = sub(
+        pattern = "^ /",
+        replacement = "",
+        x = sub(
+          pattern = "^,",
+          replacement = "",
+          x = sub(
+            pattern = "^\\.",
+            replacement = "",
+            x = sub(
+              pattern = ".*et al",
+              replacement = "",
+              x = reference_original
+            )
+          )
+        )
+      )),
+    no = NA
+  )) %>%
   data.frame()
 
 # standardizing
@@ -41,7 +64,7 @@ data_standard <-
     data_selected = data_selected,
     db = "kna_1",
     structure_field = c("name", "inchi", "smiles"),
-    reference_field = c("reference_unsplittable")
+    reference_field = c("reference_original", "reference_split")
   )
 
 # exporting

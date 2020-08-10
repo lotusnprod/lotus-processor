@@ -108,7 +108,7 @@ data_manipulated <- data_original %>%
     ),
     referenceUnsplittable_1 = reference_2_1_1_1,
     referenceDoi_1_temp = reference_2_1_2_1,
-    referencePubchem_1_temp = ifelse(
+    referencePubmed_1_temp = ifelse(
       test = !is.na(reference_2_1_2_2),
       yes = reference_2_1_2_2,
       no = reference_2_1_1_2
@@ -120,14 +120,14 @@ data_manipulated <- data_original %>%
       replacement = "§",
       x = referenceDoi_1_temp
     ),
-    referencePubchem_1_temp = sub(
+    referencePubmed_1_temp = sub(
       pattern = "  ]",
       replacement = "§",
-      x = referencePubchem_1_temp
+      x = referencePubmed_1_temp
     )
   ) %>%
   cSplit("referenceDoi_1_temp", sep = "§") %>%
-  cSplit("referencePubchem_1_temp", sep = "§") %>%
+  cSplit("referencePubmed_1_temp", sep = "§") %>%
   mutate_all(as.character) %>%
   select(
     name,
@@ -139,8 +139,8 @@ data_manipulated <- data_original %>%
     referenceAuthors_1,
     referenceUnsplittable_1,
     referenceDoi_1 = referenceDoi_1_temp_1,
-    referencePubchem_1 = referencePubchem_1_temp_1,
-    referenceNew = referencePubchem_1_temp_2,
+    referencePubmed_1 = referencePubmed_1_temp_1,
+    referenceNew = referencePubmed_1_temp_2,
     referenceIsbn_2
   ) %>%
   mutate(
@@ -220,7 +220,7 @@ data_manipulated <- data_original %>%
     ),
     referenceUnsplittable_2 = referenceNew_2_1_1_1,
     referenceDoi_2_temp = referenceNew_2_1_2_1,
-    referencePubchem_2_temp = ifelse(
+    referencePubmed_2_temp = ifelse(
       test = !is.na(referenceNew_2_1_2_2),
       yes = referenceNew_2_1_2_2,
       no = referenceNew_2_1_1_2
@@ -232,14 +232,14 @@ data_manipulated <- data_original %>%
       replacement = "§",
       x = referenceDoi_2_temp
     ),
-    referencePubchem_2_temp = sub(
+    referencePubmed_2_temp = sub(
       pattern = "  ]",
       replacement = "§",
-      x = referencePubchem_2_temp
+      x = referencePubmed_2_temp
     )
   ) %>%
   cSplit("referenceDoi_2_temp", sep = "§") %>%
-  cSplit("referencePubchem_2_temp", sep = "§") %>%
+  cSplit("referencePubmed_2_temp", sep = "§") %>%
   mutate_all(as.character) %>%
   select(
     name,
@@ -251,14 +251,14 @@ data_manipulated <- data_original %>%
     referenceAuthors_1,
     referenceUnsplittable_1,
     referenceDoi_1,
-    referencePubchem_1,
+    referencePubmed_1,
     referenceNew,
     referenceIsbn_2,
     referenceAuthors_2,
     referenceUnsplittable_2,
     referenceDoi_2 = referenceDoi_2_temp_1,
-    referencePubchem_2 = referencePubchem_2_temp_1,
-    referenceNewNew = referencePubchem_2_temp_2,
+    referencePubmed_2 = referencePubmed_2_temp_1,
+    referenceNewNew = referencePubmed_2_temp_2,
   ) %>%
   mutate(
     referenceNewNew = ifelse(
@@ -333,7 +333,7 @@ data_manipulated <- data_original %>%
     referenceAuthors_3 = referenceNewNew_1_1,
     referenceUnsplittable_3 = referenceNewNew_2_1_1_1,
     referenceDoi_3_temp = referenceNewNew_2_1_2_1,
-    referencePubchem_3_temp = ifelse(
+    referencePubmed_3_temp = ifelse(
       test = !is.na(referenceNewNew_2_1_2_2),
       yes = referenceNewNew_2_1_2_2,
       no = referenceNewNew_2_1_1_2
@@ -345,14 +345,14 @@ data_manipulated <- data_original %>%
       replacement = "§",
       x = referenceDoi_3_temp
     ),
-    referencePubchem_3_temp = sub(
+    referencePubmed_3_temp = sub(
       pattern = "  ]",
       replacement = "§",
-      x = referencePubchem_3_temp
+      x = referencePubmed_3_temp
     )
   ) %>%
   cSplit("referenceDoi_3_temp", sep = "§") %>%
-  cSplit("referencePubchem_3_temp", sep = "§") %>%
+  cSplit("referencePubmed_3_temp", sep = "§") %>%
   mutate_all(as.character) %>%
   select(
     name,
@@ -364,16 +364,16 @@ data_manipulated <- data_original %>%
     referenceAuthors_1,
     referenceUnsplittable_1,
     referenceDoi_1,
-    referencePubchem_1,
+    referencePubmed_1,
     referenceIsbn_2,
     referenceAuthors_2,
     referenceUnsplittable_2,
     referenceDoi_2,
-    referencePubchem_2,
+    referencePubmed_2,
     referenceAuthors_3,
     referenceUnsplittable_3,
     referenceDoi_3 = referenceDoi_3_temp_1,
-    referencePubchem_3 = referencePubchem_3_temp_1
+    referencePubmed_3 = referencePubmed_3_temp_1
   )
 
 data_pivoted <- data_manipulated %>%
@@ -391,9 +391,9 @@ data_pivoted <- data_manipulated %>%
     biologicalsource,
     reference_isbn = referenceIsbn,
     reference_authors = referenceAuthors,
-    reference_unsplittable = referenceUnsplittable,
+    reference_original = referenceUnsplittable,
     reference_doi = referenceDoi,
-    reference_pubchem = referencePubchem
+    reference_pubmed = referencePubmed
   ) %>%
   mutate(reference_external = ifelse(
     test = grepl(x = reference_authors, pattern = "[Link]", fixed = TRUE),
@@ -418,7 +418,8 @@ data_pivoted <- data_manipulated %>%
     pattern = " .*",
     replacement = "",
     x = reference_isbn
-  ))
+  )) %>%
+  data.frame()
 
 # standardizing
 data_standard <-
@@ -429,9 +430,9 @@ data_standard <-
     reference_field = c(
       "reference_isbn",
       "reference_authors",
-      "reference_unsplittable",
+      "reference_original",
       "reference_doi",
-      "reference_pubchem",
+      "reference_pubmed",
       "reference_external"
     )
   )

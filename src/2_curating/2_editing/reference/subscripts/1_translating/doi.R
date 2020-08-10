@@ -19,7 +19,7 @@ dataDoi <- read_delim(
 reflistDoi <-
   pbmclapply(
     FUN = getrefDoi,
-    X = dataDoi$referenceOriginalDoi,
+    X = dataDoi$referenceOriginal_doi,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -96,15 +96,28 @@ for (i in 1:length(reflistDoi)) {
 }
 
 for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslationScore"] <-
+  dataDoi[i, "referenceTranslationScoreCrossref"] <-
     as.character(ifelse(
       test = !is.na(reflistDoi[[i]]),
       yes = ifelse(
         test = !is.null(reflistDoi[[i]][["data"]][["score"]]),
         yes = reflistDoi[[i]][["data"]][["score"]],
-        no = 0
+        no = NA
       ),
-      no = 0
+      no = NA
+    )[1])
+}
+
+for (i in 1:length(reflistDoi)) {
+  dataDoi[i, "referenceTranslationScoreDistance"] <-
+    as.character(ifelse(
+      test = !is.na(reflistDoi[[i]]),
+      yes = ifelse(
+        test = !is.null(reflistDoi[[i]][["data"]][["doi"]]),
+        yes = 0,
+        no = NA
+      ),
+      no = NA
     )[1])
 }
 

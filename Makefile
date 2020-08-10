@@ -5,7 +5,7 @@ include paths.mk
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
-.PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-unsplit curating-editing-reference-integrating curating-editing-reference-cleaning
+.PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing
 .PHONY: curating-and-analysing analysing analysing-metrics analysing-examples
 .PRECIOUS: %.tsv %.zip %.json %.gz
@@ -83,7 +83,7 @@ ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz: ${INTERIM_TABLE_CLEANED_O
 
 curating-editing-reference: curating-editing-reference-translating curating-editing-reference-integrating curating-editing-reference-cleaning
 
-curating-editing-reference-translating: curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-unsplit
+curating-editing-reference-translating: curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original
 
 curating-editing-reference-translating-doi: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.gz
 ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/doi.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/doi.tsv.gz
@@ -97,16 +97,24 @@ curating-editing-reference-translating-title: ${INTERIM_TABLE_TRANSLATED_REFEREN
 ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/title.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/title.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/title.R
 
-curating-editing-reference-translating-unsplit: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.gz
-${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/unsplit.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/unsplit.tsv.gz
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/unsplit.R
+curating-editing-reference-translating-split: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/split.tsv.gz
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/split.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/split.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/split.tsv.gz
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/split.R
+
+curating-editing-reference-translating-publishingDetails: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/publishingDetails.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/publishingDetails.tsv.gz
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/publishingDetails.R
+
+curating-editing-reference-translating-original: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/original.tsv.gz
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/original.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/original.R $(wildcard ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/original/*.tsv.gz)
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_TRANSLATING_PATH}/original.R
 
 curating-editing-reference-integrating: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz
-${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.gz  ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/unsplit.tsv.gz ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/full.tsv.gz
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.gz  ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/split.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/original.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/full.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/2_integrating.R
 
 curating-editing-reference-cleaning: ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
-${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz
+${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R
 
 curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing
@@ -119,7 +127,7 @@ ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz: ${SRC_CURATING_EDITIN
 
 curating-editing-structure-translating-smiles: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz
 ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz
-	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz structureOriginalSmiles
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz structureOriginal_smiles
 
 curating-editing-structure-integrating: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
 ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
@@ -135,8 +143,8 @@ ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/i
 
 analysing: analysing-metrics analysing-examples
 
-analysing-metrics:	# $(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*)
-# $(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*): ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
+analysing-metrics:	$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*)
+$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*): ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/metrics.R
 
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R

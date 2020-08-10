@@ -64,7 +64,7 @@ df['inchi'] = df['ROMol'].map(Chem.MolToInchi)
 # renaming
 # naming not OK checkz with Adriano 
 
-df['structureTranslatedSmiles'] = df['inchi']
+df['structureTranslated_smiles'] = df['inchi']
 
 # dropping old columns
 df = df.drop(['inchi', 'ROMol'], axis=1)

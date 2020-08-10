@@ -159,5 +159,6 @@ dependencies:
   - r-jsonlite
   - r-glue
   - r-progress
+  - r-stringdist
   - dvc
 prefix: /home/EPGL.UNIGE.LOCAL/allardp/anaconda3/envs/onpdb_dev_env
