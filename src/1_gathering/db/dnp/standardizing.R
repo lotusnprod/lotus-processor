@@ -5,10 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("dnp")
@@ -30,9 +28,9 @@ data_selected <- data_original %>%
     inchi = MolfileName,
     biologicalsource = Biological_Source
   ) %>%
-  distinct(uniqueid, .keep_all = TRUE) %>% 
-  mutate(reference_external = "DNP")
-  data.frame()
+  distinct(uniqueid, .keep_all = TRUE) %>%
+  mutate(reference_external = "DNP") %>% 
+data.frame()
 
 ## standardizing
 data_standard <-

@@ -5,10 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("biophytmol")
@@ -57,7 +55,8 @@ data_standard <-
       "reference_authors",
       "reference_journal",
       "reference_pubmed",
-      "reference_title")
+      "reference_title"
+    )
   )
 
 # exporting

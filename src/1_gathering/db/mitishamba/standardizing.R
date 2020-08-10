@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
-library(readxl)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("mitishamba")

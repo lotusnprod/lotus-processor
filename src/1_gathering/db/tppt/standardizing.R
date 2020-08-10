@@ -5,12 +5,9 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(readxl)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("tppt")

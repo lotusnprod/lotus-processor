@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("procardb")
@@ -54,14 +51,26 @@ data_manipulated <- data_selected %>%
   mutate(reference = sub(pattern = ":", replacement = "§", reference)) %>%
   cSplit("reference", sep = "§") %>%
   cSplit("reference_2",
-         sep = "(PMID",
+         sep = "PMID",
          fixed = TRUE,
          stripWhite = FALSE) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_authors = reference_1,
-    reference_original = reference_2_1,
+    reference_split = reference_2_1,
     reference_pubmed = str_extract(string = reference_2_2, pattern = "[0-9]{6,9}")
+  ) %>%
+  mutate(reference_split = ifelse(
+    test = !grepl(pattern = "[A-Za-z]", x = reference_split),
+    yes = reference_authors,
+    no = reference_split
+  )) %>%
+  mutate(
+    reference_authors = ifelse(
+      test = reference_authors == reference_split,
+      yes = NA,
+      no = reference_authors
+    )
   ) %>%
   data.frame()
 
@@ -71,11 +80,9 @@ data_standard <-
     data_selected = data_manipulated,
     db = "pro_1",
     structure_field = c("name", "smiles"),
-    reference_field = c(
-      "reference_authors",
-      "reference_original",
-      "reference_pubmed"
-    )
+    reference_field = c("reference_authors",
+                        "reference_split",
+                        "reference_pubmed")
   )
 
 # exporting

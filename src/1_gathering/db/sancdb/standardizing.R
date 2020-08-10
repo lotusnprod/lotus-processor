@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("sancdb")
@@ -753,15 +750,17 @@ data_manipulated$referenceAuthors <-
 data_manipulated$referenceTitle <-
   trimws(data_manipulated$referenceTitle)
 
-data_manipulated <- data_manipulated %>% 
-  select(uniqueid,
-        name,
-        smiles,
-        biologicalsource,
-        cas,
-        pubchem,
-        reference_authors = referenceAuthors,
-        reference_title = referenceTitle) %>% 
+data_manipulated <- data_manipulated %>%
+  select(
+    uniqueid,
+    name,
+    smiles,
+    biologicalsource,
+    cas,
+    pubchem,
+    reference_authors = referenceAuthors,
+    reference_title = referenceTitle
+  ) %>%
   data.frame()
 
 # standardizing

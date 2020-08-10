@@ -5,10 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("biofacquim")
@@ -32,7 +30,13 @@ data_selected <- data_original %>%
     reference_journal = Journal,
     reference_doi = DOI,
     reference_publishingDetails = Reference
-  )
+  ) %>%
+  mutate(biologicalsource = gsub(
+    pattern = "_",
+    replacement = " ",
+    x = biologicalsource,
+    fixed = TRUE
+  ))
 
 ## standardizing
 data_standard <-
@@ -40,7 +44,11 @@ data_standard <-
     data_selected = data_selected,
     db = "bio_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_doi", "reference_journal", "reference_publishingDetails")
+    reference_field = c(
+      "reference_doi",
+      "reference_journal",
+      "reference_publishingDetails"
+    )
   )
 
 # exporting

@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("carotenoiddb")
@@ -126,6 +123,14 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     no = reference_doi_2
   )) %>%
   cSplit("reference_doi", sep = ",") %>%
+  cSplit(
+    "biologicalsource",
+    sep = " (Ref.",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
+  select(biologicalsource = biologicalsource_1,
+         everything()) %>%
   mutate(
     reference_doi = gsub(
       pattern = "doi:",

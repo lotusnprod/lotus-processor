@@ -6,13 +6,10 @@ source("functions/helpers.R")
 source("functions/standardizing.R")
 source("functions/parallel.R")
 
-library(dplyr)
 library(jsonlite)
 library(pbmcapply)
-library(readr)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("mibig")

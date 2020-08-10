@@ -5,11 +5,9 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
 library(Hmisc) #neeed for capitalize()
-library(readr)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("metabolights")

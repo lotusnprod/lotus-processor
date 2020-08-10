@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
 library(splitstackshape)
-library(stringr)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("datawarrior")
@@ -26,15 +23,26 @@ data_original <- read_delim(
 # manipulating
 data_manipulated <- data_original %>%
   cSplit("reference", sep = "; ") %>%
+  cSplit("remarks", sep = "; ", direction = "long") %>%
+  cSplit("remarks", sep = "<NL>", direction = "wide") %>%
   select(
     name,
     smiles = Smiles,
     inchi = InChI,
-    biologicalsource = remarks,
+    biologicalsource = remarks_1,
     reference_authors = reference_1,
     reference_title = reference_2
   ) %>%
+  mutate(
+    biologicalsource = gsub(
+      pattern = "Origin: ",
+      replacement = " ",
+      x = biologicalsource,
+      fixed = TRUE
+    )
+  ) %>%
   mutate_all(as.character) %>%
+  mutate_all(trimws) %>%
   mutate(
     reference_title = ifelse(
       test = reference_title == "Giftpflanzen Pflanzengifte4. ?berarbeitete Aufl.",
