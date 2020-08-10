@@ -8,8 +8,8 @@
 ```mermaid
 graph TD
 
-subgraph 1_gathering
-style 1_gathering fill:#FFFFFF,stroke:#424242,stroke-width:2px
+subgraph collection
+style collection fill:#FFFFFF,stroke:#424242,stroke-width:2px
 subgraph legend
 style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
 A([file])
@@ -34,7 +34,7 @@ end
 050([common/names]) --> 105[[2_translating.kt]]
 070([tcm/names]) --> 105[[2_translating.kt]]
 
-subgraph 2_curating
+subgraph curation
 subgraph 1_integrating
 030([interim/db/...])  --> 080[[integrating.R]]
 end
