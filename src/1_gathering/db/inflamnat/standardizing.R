@@ -82,7 +82,7 @@ data_manipulated <- data_selected %>%
   mutate(reference_title_2_2 = gsub("\\([0-9]{4}\\)", "", reference_authors_2_2)) %>%
   mutate(
     reference_authors_3 = reference_authors_2_1,
-    reference_unsplittable = ifelse(
+    reference_original = ifelse(
       test = !is.na(reference_title_2_2),
       yes = reference_title_2_2,
       no = reference_title_2
@@ -94,12 +94,12 @@ data_manipulated <- data_selected %>%
       yes = reference_authors_2_1,
       no = reference_authors_1
     ),
-    reference_unsplittable = ifelse(
+    reference_original = ifelse(
       test = !is.na(reference_title_2_2),
       yes = reference_title_2_2,
       no = reference_title_2
     )
-  ) %>% 
+  ) %>%
   data.frame()
 
 
@@ -112,7 +112,7 @@ data_standard <-
     reference_field = c(
       "reference_authors",
       "reference_title",
-      "reference_unsplittable",
+      "reference_original",
       "reference_publishingDetails"
     )
   )

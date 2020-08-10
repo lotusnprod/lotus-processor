@@ -2,14 +2,7 @@
 ####################   Functions   ####################
 #######################################################
 
-#library(data.table)
-#library(dplyr)
-#library(parallel)
-#library(pbmcapply)
-library(readr)
-#library(rvest)
-#library(stringr)
-#library(tidyr)
+library(tidyverse)
 
 #######################################################
 #######################################################
@@ -34,6 +27,10 @@ split_data_table <-
     
     for (split_cut in split_vec) {
       sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
+      
+      sample <- sample %>%
+        filter(!is.na(sample[, 1]))
+      
       write.table(
         sample,
         paste(

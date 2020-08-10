@@ -9,31 +9,27 @@ library(chorddiag)
 library(collapsibleTree)
 library(data.table)
 library(digest)
-library(dplyr)
 library(eulerr)
 library(ggraph)
 library(igraph)
 library(jsonlite)
 library(parallel)
 library(pbmcapply)
-library(purrr)
 library(RColorBrewer)
 library(rcrossref)
-library(readr)
 library(readxl)
 library(rentrez)
 library(reticulate)
 library(rvest)
 library(splitstackshape)
 library(stringi)
-library(stringr)
 library(taxize)
 library(tidyverse)
 library(UpSetR)
 library(webchem)
 library(XML)
 library(zoo)
-library(tidyr)
+library(tidyverse)
 
 #######################################################
 #######################################################
@@ -257,8 +253,7 @@ biocleaning <- function(x, y)
   #selecting
   final_db <- left_join(y,
                         pre_final_db) %>%
-    select(# -namesverbatim,-nchar,-sum,-value_max,-value_min,-i.sum,
-      -i.value_max,
+    select(# -namesverbatim,-nchar,-sum,-value_max,-value_min,-i.sum,-i.value_max,
       -i.value_min)
   
   return(final_db)
@@ -5025,69 +5020,85 @@ distinct_triplets <- function(x)
              !is.na(referenceOriginalExternal)) %>%
     filter(!is.na(inchikeySanitized) &
              !is.na(organismLowestTaxon)) %>%
-    distinct(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organismLowestTaxon,
-             .keep_all = TRUE) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_7_species) %>%
+    distinct(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organismLowestTaxon,
+      .keep_all = TRUE
+    ) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_7_species
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_6_genus) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_6_genus
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_5_family) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_5_family
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_4_order) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_4_order
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_3_class) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_3_class
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_2_phylum) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_2_phylum
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |
              !n > 1) %>%
     select(-n) %>%
-    group_by(inchikeySanitized,
-             referenceCleanedDoi,
-             referenceOriginalExternal,
-             organism_1_kingdom) %>%
+    group_by(
+      inchikeySanitized,
+      referenceCleanedDoi,
+      referenceOriginalExternal,
+      organism_1_kingdom
+    ) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismLowestTaxon) |

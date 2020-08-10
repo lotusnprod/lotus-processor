@@ -40,7 +40,7 @@ data_manipulated <- data_selected %>%
   mutate_all(as.character) %>%
   mutate(
     reference_title = str_extract(string = reference_1, pattern = "\".*\""),
-    reference_unsplittable = ifelse(
+    reference_original = ifelse(
       test = !is.na(reference_title),
       yes = NA,
       no = reference_1
@@ -58,7 +58,7 @@ data_manipulated <- data_selected %>%
     inchi,
     smiles,
     cas,
-    reference_unsplittable,
+    reference_original,
     reference_title,
     reference_pubmed = reference_2_02
   ) %>%
@@ -70,11 +70,9 @@ data_standard <-
     data_selected = data_manipulated,
     db = "pam_1",
     structure_field = c("name", "inchi", "smiles"),
-    reference_field = c(
-      "reference_unsplittable",
-      "reference_pubmed",
-      "reference_title"
-    )
+    reference_field = c("reference_original",
+                        "reference_pubmed",
+                        "reference_title")
   )
 
 # exporting

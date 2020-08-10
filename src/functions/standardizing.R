@@ -1,11 +1,11 @@
-library(dplyr)
+library(tidyverse)
 
 standardizing_original <- function(data_selected,
                                    db,
                                    structure_field,
                                    # possibilities: c("inchi","smiles","name")
                                    reference_field)
-  # possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal","reference_publishingDetails","reference_pubmed","reference_title", "reference_unsplittable")
+  # possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal", "reference_original","reference_publishingDetails","reference_pubmed","reference_split","reference_title")
 {
   data_selected[setdiff(
     c(
@@ -18,10 +18,11 @@ standardizing_original <- function(data_selected,
       "reference_external",
       "reference_isbn",
       "reference_journal",
+      "reference_original",
       "reference_publishingDetails",
       "reference_pubmed",
-      "reference_title",
-      "reference_unsplittable"
+      "reference_split",
+      "reference_title"
     ),
     names(data_selected)
   )] <- NA

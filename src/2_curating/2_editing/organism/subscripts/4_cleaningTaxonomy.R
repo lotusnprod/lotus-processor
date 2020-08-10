@@ -51,8 +51,7 @@ taxo_cleaning_auto <- function(dfsel) {
   variety <- test %>%
     filter(!is.na(organism_8_variety)) %>%
     arrange(match(x = organismDbTaxo,
-                  table =  c("Catalogue of Life",
-                             "NCBI"))) %>%
+                  table =  c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_8_variety) %>%
     mutate(
@@ -109,8 +108,7 @@ taxo_cleaning_auto <- function(dfsel) {
   species <- test %>%
     filter(!is.na(organism_7_species)) %>%
     arrange(match(x = organismDbTaxo,
-                  table =  c("Catalogue of Life",
-                             "NCBI"))) %>%
+                  table =  c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_7_species) %>%
     mutate(
@@ -168,8 +166,7 @@ taxo_cleaning_auto <- function(dfsel) {
   genus <- genus_1 %>%
     filter(!is.na(organism_6_genus)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_6_genus) %>%
     mutate(
@@ -226,8 +223,7 @@ taxo_cleaning_auto <- function(dfsel) {
   family <- family_1 %>%
     filter(!is.na(organism_5_family)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_5_family) %>%
     mutate(
@@ -281,8 +277,7 @@ taxo_cleaning_auto <- function(dfsel) {
   order <- order_1 %>%
     filter(!is.na(organism_4_order)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_4_order) %>%
     mutate(
@@ -334,8 +329,7 @@ taxo_cleaning_auto <- function(dfsel) {
   class <- class_1 %>%
     filter(!is.na(organism_3_class)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_1_kingdom,
              organism_3_class) %>%
     mutate(organism_2_phylum = na.locf(
@@ -382,8 +376,7 @@ taxo_cleaning_auto <- function(dfsel) {
   phylum <- phylum_1 %>%
     filter(!is.na(organism_2_phylum)) %>%
     arrange(match(x = organismDbTaxo,
-                  table = c("Catalogue of Life",
-                            "NCBI"))) %>%
+                  table = c("NCBI"))) %>%
     group_by(organism_2_phylum) %>%
     mutate(organism_1_kingdom = na.locf(
       object = organism_1_kingdom,
@@ -497,50 +490,43 @@ dataCleanedOrganismManipulated <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
-)
-#curating taxonomy
-##auto
-dataCuratedOrganismAuto <-
-  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
+) %>%
+  relocate(organismCleaned, .after = organismTaxonomy)
 
-##manual
-dataCuratedOrganism <-
-  taxo_cleaning_manual(dfsel = dataCuratedOrganismAuto)
+# curating taxonomy
+## auto
+# dataCuratedOrganismAuto <-
+#   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
 
-#outputing lowest taxon
-dataCuratedOrganism$organismLowestTaxon <-
-  dataCuratedOrganism$organismCurated
+## manual
+# dataCuratedOrganism <-
+#   taxo_cleaning_manual(dfsel = dataCleanedOrganismManipulated)
 
-#outputing differences in species names
-diff <-
-  dataCuratedOrganism %>% filter(organismLowestTaxon != organismCurated)
+# outputing lowest taxon
+dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
+  mutate(organismCleaned =  as.character(apply(dataCleanedOrganismManipulated[7:15], 1, function(x)
+    tail(na.omit(x), 1))))
 
-realDiff <-
-  dataCuratedOrganism %>% filter(organismLowestTaxon != organismCleaned &
-                                   !is.na(organism_6_genus)) %>%
-  distinct(organismCleaned,
-           organismCurated,
-           .keep_all = TRUE) %>%
-  group_by(organism_6_genus) %>%
-  add_count() %>%
-  ungroup() %>%
-  select(organismCleaned,
-         organismCurated,
-         n)
+dataCuratedOrganism$organismCleaned <-
+  y_as_na(x = dataCuratedOrganism$organismCleaned,
+          y = "character(0)")
+
+dataCuratedOrganism$organismCleaned <-
+  y_as_na(x = dataCuratedOrganism$organismCleaned,
+          y = "NA")
 
 #selecting
 dataCuratedOrganism <- dataCuratedOrganism %>%
   select(
     organismOriginal,
     organismCleaned,
-    organismCurated,
-    organismLowestTaxon,
-    #duplicate of organism curated, choose
     organismDbTaxo,
     organismDbTaxoQuality,
-    organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
-    organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
-    organismTaxonId,
+    # organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
+    # organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
+    organismTaxonIds,
+    organismTaxonRanks,
+    organismTaxonomy,
     organism_1_kingdom,
     organism_2_phylum,
     organism_3_class,
@@ -557,20 +543,6 @@ write.table(
   x = dataCuratedOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismFinal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-##differences
-write.table(
-  x = realDiff,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismRealDiff,
     compression = 9,
     encoding = "UTF-8"
   ),

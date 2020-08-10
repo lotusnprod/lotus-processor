@@ -8,7 +8,8 @@
 ```mermaid
 graph TD
 
-subgraph 1_gathering
+subgraph collection
+style collection fill:#FFFFFF,stroke:#424242,stroke-width:2px
 subgraph legend
 style legend fill:#FFFFFF,stroke:#424242,stroke-width:2px
 A([file])
@@ -33,7 +34,7 @@ end
 050([common/names]) --> 105[[2_translating.kt]]
 070([tcm/names]) --> 105[[2_translating.kt]]
 
-subgraph 2_curating
+subgraph curation
 subgraph 1_integrating
 030([interim/db/...])  --> 080[[integrating.R]]
 end
@@ -118,7 +119,10 @@ style reference fill:#EFEDF5
 080[[integrating.R]] --> 320([doi.tsv.gz])
 080[[integrating.R]] --> 330([pubmed.tsv.gz])
 080[[integrating.R]] --> 340([title.tsv.gz])
-080[[integrating.R]] --> 350([unsplit.tsv.gz])
+080[[integrating.R]] --> 350([split.tsv.gz])
+080[[integrating.R]] --> 361([pubDetails.tsv.gz])
+080[[integrating.R]] --> 370([original.tsv.gz])
+
 subgraph ref_1_translating
 style ref_1_translating fill:#EFEDF5
 320([doi.tsv.gz]) -->
@@ -130,22 +134,31 @@ style ref_1_translating fill:#EFEDF5
 340([title.tsv.gz]) -->
     341[[title.R]] -->
         342([title.tsv.gz])
-350([unsplit.tsv.gz]) -->
-    351[[unsplit.R]] -->
-        352([unsplit.tsv.gz])
+350([split.tsv.gz]) -->
+    351[[split.R]] -->
+        352([split.tsv.gz])
+361([pubDetails.tsv.gz]) -->
+    363[[pubDetails.R]] -->
+        362([pubDetails.tsv.gz])
+370([original.tsv.gz]) -->
+    371[[original.R]] -->
+        372([original.tsv.gz])
 end
 subgraph ref_2_integrating
 style ref_2_integrating fill:#EFEDF5
+100([organism/*.tsv]) --> 360[[integrating.R]]
 322([doi.tsv.gz]) --> 360[[integrating.R]]
 332([pubmed.tsv.gz]) --> 360[[integrating.R]]
 342([title.tsv.gz]) --> 360[[integrating.R]]
-352([unsplit.tsv.gz]) --> 360[[integrating.R]] -->
-        370([reference.tsv.gz]) 
+352([split.tsv.gz]) --> 360[[integrating.R]]
+362([pubDetails.tsv.gz]) --> 360[[integrating.R]]
+372([original.tsv.gz]) --> 360[[integrating.R]] -->
+    380([reference.tsv.gz]) 
 end
-subgraph .
-style . fill:#EFEDF5
-370([reference.tsv.gz]) -->
-    380[[3_cleaning.R]] -->
+subgraph ref_3_cleaning
+style ref_3_cleaning fill:#EFEDF5
+380([reference.tsv.gz]) -->
+    385[[3_cleaning.R]] -->
         390([cleaned.tsv.gz])
 end
 end

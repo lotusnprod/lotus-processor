@@ -464,6 +464,16 @@ pathDataExternalTranslationSource <-
   file.path(pathDataExternal,
             "translationSource")
 
+##### pubmed
+pathDataExternalTranslationSourcePubmed <-
+  file.path(pathDataExternalTranslationSource,
+            "pubmed")
+
+###### file
+pathDataExternalTranslationSourcePubmedFile <-
+  file.path(pathDataExternalTranslationSourcePubmed,
+            "PMC-ids.csv.gz")
+
 ##### common
 pathDataExternalTranslationSourceCommon <-
   file.path(pathDataExternalTranslationSource,
@@ -869,6 +879,9 @@ pathDataInterimTablesOriginalStructureSmiles <-
 pathDataInterimTablesOriginalStructureNominal <-
   file.path(pathDataInterimTablesOriginalStructure, "nominal.tsv.gz")
 
+pathDataInterimTablesOriginalStructureFull <-
+  file.path(pathDataInterimTablesOriginalStructure, "full.tsv.gz")
+
 ## distinct organism
 pathDataInterimTablesOriginalOrganism <-
   file.path(pathDataInterimTablesOriginal, "organism/")
@@ -897,17 +910,26 @@ pathDataInterimTablesOriginalReferenceDoi <-
 # pathDataInterimTablesOriginalReferenceJournal <-
 #   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.gz")
 
+### original
+pathDataInterimTablesOriginalReferenceOriginalFolder <-
+  file.path(pathDataInterimTablesOriginalReference, "original/")
+
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
   file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.gz")
+
+### publishingDetails
+pathDataInterimTablesOriginalReferencePublishingDetails <-
+  file.path(pathDataInterimTablesOriginalReference,
+            "publishingDetails.tsv.gz")
 
 ### title
 pathDataInterimTablesOriginalReferenceTitle <-
   file.path(pathDataInterimTablesOriginalReference, "title.tsv.gz")
 
-### title
-pathDataInterimTablesOriginalReferenceUnsplit <-
-  file.path(pathDataInterimTablesOriginalReference, "unsplit.tsv.gz")
+### split
+pathDataInterimTablesOriginalReferenceSplit <-
+  file.path(pathDataInterimTablesOriginalReference, "split.tsv.gz")
 
 ### full
 pathDataInterimTablesOriginalReferenceFull <-
@@ -937,14 +959,24 @@ pathDataInterimTablesTranslatedReference <-
 pathDataInterimTablesTranslatedReferenceDoi <-
   file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.gz")
 
+pathDataInterimTablesTranslatedReferenceOriginalFolder <-
+  file.path(pathDataInterimTablesTranslatedReference, "original/")
+
+pathDataInterimTablesTranslatedReferenceOriginal <-
+  file.path(pathDataInterimTablesTranslatedReference, "original.tsv.gz")
+
 pathDataInterimTablesTranslatedReferencePubmed <-
   file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
+
+pathDataInterimTablesTranslatedReferencePublishingDetails <-
+  file.path(pathDataInterimTablesTranslatedReference,
+            "publishingDetails.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")
 
-pathDataInterimTablesTranslatedReferenceUnsplit <-
-  file.path(pathDataInterimTablesTranslatedReference, "unsplit.tsv.gz")
+pathDataInterimTablesTranslatedReferenceSplit <-
+  file.path(pathDataInterimTablesTranslatedReference, "split.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceFile <-
   file.path(pathDataInterimTablesTranslatedReference,
@@ -989,6 +1021,10 @@ pathDataInterimTablesCleanedOrganismOriginal <-
 pathDataInterimTablesCleanedOrganismOriginalTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
 
+pathDataInterimTablesCleanedOrganismOriginalUniqueTable <-
+  file.path(pathDataInterimTablesCleanedOrganism,
+            "originalUnique.tsv.gz")
+
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-
   file.path(pathDataInterimTablesCleanedOrganism, "translated/")
@@ -1028,6 +1064,15 @@ pathDataInterimTablesCurated <-
 ### final cleaned table
 pathDataInterimTablesCuratedTable <-
   file.path(pathDataInterimTablesCurated, "table.tsv.gz")
+
+pathDataInterimTablesCuratedStructureMetadata <-
+  file.path(pathDataInterimTablesCurated, "structureMetadata.tsv.gz")
+
+pathDataInterimTablesCuratedOrganismMetadata <-
+  file.path(pathDataInterimTablesCurated, "organismMetadata.tsv.gz")
+
+pathDataInterimTablesCuratedReferenceMetadata <-
+  file.path(pathDataInterimTablesCurated, "referenceMetadata.tsv.gz")
 
 # analysed fields
 pathDataInterimTablesAnalysed <-
@@ -1074,10 +1119,30 @@ pathDataInterimTablesAnalysedRedundancyTable <-
   file.path(pathDataInterimTablesAnalysed,
             "redundancyTable.tsv")
 
+## sample ONPDB triplets (all)
+pathDataInterimTablesAnalysedSampleAllONPDB <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleAllONPDB.tsv")
+
+## sample ONPDB triplets (gold)
+pathDataInterimTablesAnalysedGold <-
+  file.path(pathDataInterimTablesAnalysed,
+            "gold.tsv.gz")
+
+## sample ONPDB triplets (gold)
+pathDataInterimTablesAnalysedSampleGoldONPDB <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleGoldONPDB.tsv")
+
+## sample knapsack triplets
+pathDataInterimTablesAnalysedSampleKnapsack <-
+  file.path(pathDataInterimTablesAnalysed,
+            "sampleKnapsack.tsv")
+
 
 ## dirty for the moment
 if (mode == "full")
-pathOriginalGnfinderScript <-
+  pathOriginalGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_full.sh"
 
 if (mode == "min")
@@ -1085,7 +1150,7 @@ if (mode == "min")
   "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_min.sh"
 
 if (mode == "full")
-pathTranslatedGnfinderScript <-
+  pathTranslatedGnfinderScript <-
   "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_full.sh"
 
 if (mode == "min")

@@ -2,12 +2,11 @@
 ####################   Functions   ####################
 #######################################################
 
-library(dplyr)
 # library(ChemmineR)
 library(parallel)
 library(pbmcapply)
-library(readr)
 library(rvest)
+library(tidyverse)
 # library(webchem)
 
 #######################################################
@@ -78,7 +77,7 @@ name2inchi <- function(i)
 #######################################################
 
 preparing_name <- function(x) {
-  x$nameCleaned <- x$structureOriginalNominal
+  x$nameCleaned <- x$structureOriginal_nominal
   x$nameCleaned <- gsub("\\u03b1", "alpha", x$nameCleaned,
                         fixed = TRUE)
   x$nameCleaned <- gsub("\\u03b2", "beta", x$nameCleaned,

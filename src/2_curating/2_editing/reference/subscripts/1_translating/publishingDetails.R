@@ -8,8 +8,8 @@ source("paths.R")
 source("functions/reference.R")
 
 ## file
-dataTitle <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceTitle),
+dataPublishingDetails <- read_delim(
+  file = gzfile(pathDataInterimTablesOriginalReferencePublishingDetails),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -19,7 +19,7 @@ dataTitle <- read_delim(
 reflist <- invisible(
   pbmclapply(
     FUN = getref_noLimit,
-    X = dataTitle$referenceOriginal_title,
+    X = dataPublishingDetails$referenceOriginal_publishingDetails,
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
@@ -30,9 +30,13 @@ reflist <- invisible(
   )
 )
 
-dataTitle <- getBestReference(data = dataTitle,
-                              referenceType = "title",
-                              method = "osa")
+print(x = "This may take several minutes")
+
+# joining with original dataframe
+dataPublishingDetails <-
+  getAllReferences(data = dataPublishingDetails,
+                   referenceType = "publishingDetails",
+                   method = "osa")
 
 # exporting
 ## creating directories if they do not exist
@@ -50,9 +54,9 @@ ifelse(
 
 ## exporting
 write.table(
-  x = dataTitle,
+  x = dataPublishingDetails,
   file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceTitle,
+    description = pathDataInterimTablesTranslatedReferencePublishingDetails,
     compression = 9,
     encoding = "UTF-8"
   ),
