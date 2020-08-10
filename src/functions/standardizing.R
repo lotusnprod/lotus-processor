@@ -36,6 +36,9 @@ standardizing_original <- function(data_selected,
       biologicalsource,
       all_of(reference_field)
     ) %>%
+    filter_at(vars(all_of(structure_field)), any_vars(!is.na(.))) %>%
+    filter(!is.na(biologicalsource)) %>%
+    filter_at(vars(all_of(reference_field)), any_vars(!is.na(.))) %>%
     distinct_at(vars(
       all_of(structure_field),
       biologicalsource,

@@ -49,7 +49,7 @@ PROCARDB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )
@@ -96,7 +96,7 @@ PROCARDB_3 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )
@@ -129,7 +129,7 @@ PROCARDB_5 <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )
@@ -153,6 +153,19 @@ PROCARDB_final <- full_join(PROCARDB_6, PROCARDB_4) %>%
 
 PROCARDB_final <- full_join(PROCARDB_final, PROCARDB_2) %>%
   distinct(biologicalsource, `CAROTENOID NAME`, .keep_all = TRUE)
+
+PROCARDB_final[] <-
+  lapply(PROCARDB_final, function(x)
+    gsub("\r\n", " ", x))
+PROCARDB_final[] <-
+  lapply(PROCARDB_final, function(x)
+    gsub("\r", " ", x))
+PROCARDB_final[] <-
+  lapply(PROCARDB_final, function(x)
+    gsub("\n", " ", x))
+PROCARDB_final[] <-
+  lapply(PROCARDB_final, function(x)
+    gsub("\t", " ", x))
 
 # exporting
 database$writeFile(database$sourceFiles$tsv, PROCARDB_final)

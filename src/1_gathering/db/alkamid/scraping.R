@@ -4,7 +4,7 @@
 source("paths.R")
 source("functions/parallel.R")
 
-library(dplyr)
+library(tidyverse)
 library(pbmcapply)
 library(parallel)
 library(data.table)

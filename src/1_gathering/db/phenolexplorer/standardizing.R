@@ -5,11 +5,8 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(dplyr)
-library(readr)
-library(readxl)
 library(splitstackshape)
-library(tidyr)
+library(tidyverse)
 
 # get paths
 database <- databases$get("phenolexplorer")
@@ -113,6 +110,13 @@ data_referenced <-
     reference_pubmed = pubmedids,
     reference_journal = journal_name,
     reference_authors = authors
+  ) %>%
+  cSplit(
+    "biologicalsource",
+    sep = " and ",
+    fixed = TRUE,
+    stripWhite = FALSE,
+    direction = "long"
   ) %>%
   mutate_all(as.character) %>%
   data.frame()
