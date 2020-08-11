@@ -45,9 +45,12 @@ goldenSet <- openDbTriplets %>%
       !is.na(referenceCleanedPmid) |
       !is.na(referenceCleanedPmcid)
   ) %>%
-  filter(referenceCleaned_score_crossref == 100 |
-           referenceCleaned_score_distance <= 10) %>%
-  filter(referenceCleaned_score_titleOrganism == 1) %>%
+  filter(
+    referenceCleaned_score_crossref == 100 |
+      referenceCleaned_score_distance <= 10 |
+      #here is a discussion about | or &
+      referenceCleaned_score_titleOrganism == 1
+  ) %>%
   distinct(
     database,
     organismCleaned,
