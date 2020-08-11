@@ -230,6 +230,8 @@ dataCleaned <- dataTranslated %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
          referenceCleanedType = referenceTranslatedType)
 
+rm(dataTranslated)
+
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismOriginal) &
@@ -242,9 +244,7 @@ dataCleanedScore <- dataCleaned %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
     test = str_detect(
       string = fixed(referenceCleanedValue),
-      pattern = paste(word(organismOriginal, 1),
-                      word(organismCleaned, 1),
-                      sep = "|")
+      pattern = fixed(word(organismCleaned, 1))
     ),
     yes = 1,
     no = 0
@@ -274,8 +274,8 @@ dataCleanedJoinedWide <- dataCleanedJoined %>%
   ) %>%
   group_by(organismOriginal, referenceValue) %>%
   arrange(desc(referenceCleaned_scoreCrossref)) %>%
-  arrange(referenceCleaned_scoreDistance) %>%
   arrange(desc(referenceCleaned_scoreTitleOrganism)) %>%
+  arrange(referenceCleaned_scoreDistance) %>%
   ungroup() %>%
   distinct(organismOriginal,
            referenceValue,

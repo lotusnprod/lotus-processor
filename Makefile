@@ -4,9 +4,9 @@ include paths.mk
 .PHONY: help docker-build docker-bash 
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
+.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
-.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing
 .PHONY: curating-and-analysing analysing analysing-metrics analysing-examples
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
@@ -59,7 +59,27 @@ curating-1-integrating: ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
 ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/paths.R ${SRC_CURATING_1_INTEGRATING_PATH}/integrating.R
 	cd	src	&&	Rscript	${SRC_CURATING_1_INTEGRATING_PATH}/integrating.R
 
-curating-editing: curating-editing-organism curating-editing-reference curating-editing-structure
+curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
+
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing
+
+curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
+
+curating-editing-structure-translating-name: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz
+${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/names.R ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/nominal.tsv.gz
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/names.R
+
+curating-editing-structure-translating-smiles: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz
+${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz structureOriginal_smiles
+
+curating-editing-structure-integrating: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
+${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R
+
+curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
+${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
 
 curating-editing-organism: curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 
@@ -116,26 +136,6 @@ ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz: ${SRC_CURATING_EDI
 curating-editing-reference-cleaning: ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
 ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_SUBSCRIPTS_PATH}/3_cleaning.R
-
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing
-
-curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
-
-curating-editing-structure-translating-name: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz
-${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/names.R ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/nominal.tsv.gz
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/names.R
-
-curating-editing-structure-translating-smiles: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz
-${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz
-	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz structureOriginal_smiles
-
-curating-editing-structure-integrating: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
-${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_INTEGRATING_PATH}/integrating.R
-
-curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
-${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
-	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
 
 curating-3-integrating:	${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz

@@ -50,12 +50,43 @@ dnpDbTriplets <- read_delim(
 ### organism
 ```{r}
 organismMetadata <- read_delim(
-  file = gzfile("../../data/interim/tables/3_curated/organismMetadata.tsv.gz"),
+  file = gzfile(
+    "../../data/interim/tables/3_curated/organismMetadata.tsv.gz"
+  ),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-  ) %>% 
-  data.frame()
+) %>%
+  data.frame() %>%
+  mutate(
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Viridiplantae",
+      yes = "Plantae",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Metazoa",
+      yes = "Animalia",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Proteobacteria",
+      yes = "Bacteria",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Protozoa",
+      yes = "Protista",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_2phylum = ifelse(
+      test = organismCleaned_dbTaxo_2phylum == "Streptophyta" |
+        organismCleaned_dbTaxo_2phylum == "Magnoliophyta" |
+        organismCleaned_dbTaxo_2phylum == "Gymnospermophyta",
+      yes = "Tracheophyta",
+      no = organismCleaned_dbTaxo_2phylum
+    ),
+  )
 ```
 
 ### structure
@@ -1606,7 +1637,7 @@ upset(
   ),
   mb.ratio = c(0.7, 0.3),
   order.by = "freq",
-  nintersects = 38,
+  nintersects = 35,
   #empty.intersections = "on",
   number.angles = 30,
   point.size = 2.5,
@@ -1817,7 +1848,7 @@ Tree_bio <- collapsibleTreeSummary(
     "organismCleaned_dbTaxo_6genus",
     "organismCleaned_dbTaxo_7species"
   ),
-  root = "Open NP DB",
+  root = "root",
   nodeSize = NULL,
   attribute = "percentage of parent",
   collapsed = TRUE,
@@ -1869,7 +1900,7 @@ Tree_chemo <-   collapsibleTreeSummary(
     "structureCleaned_4subclass",
     "structureCleaned_5directParent"
   ),
-  root = "Open NP DB",
+  root = "root",
   nodeSize = NULL,
   attribute = "percentage of parent",
   collapsed = TRUE,
