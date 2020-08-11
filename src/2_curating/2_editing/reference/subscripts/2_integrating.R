@@ -185,6 +185,17 @@ dataFull <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+dataCleanedOrganismManipulated <- read_delim(
+  file = gzfile(description = pathDataInterimTablesCleanedOrganismTranslatedTable),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  select(organismOriginal,
+         organismCleaned) %>%
+  mutate_all(as.character)
+
 # joining all types together again
 dataCrossref <-
   rbind(dataDoi,
@@ -194,11 +205,15 @@ dataCrossref <-
         dataSplit,
         dataTitle)
 
-dataTranslated <- left_join(dataFull,
+# joining full and cleaned organisms
+dataJoined <- left_join(dataFull, dataCleanedOrganismManipulated)
+
+dataTranslated <- left_join(dataJoined,
                             dataCrossref,
                             by = c("referenceValue" = "referenceOriginal")) %>%
   distinct(
     organismOriginal,
+    organismCleaned,
     referenceType,
     referenceValue,
     referenceTranslatedType,
