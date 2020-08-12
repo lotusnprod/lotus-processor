@@ -2,7 +2,6 @@
 ####################   Functions   ####################
 #######################################################
 
-library(Hmisc)
 library(data.table)
 library(parallel)
 library(pbmcapply)

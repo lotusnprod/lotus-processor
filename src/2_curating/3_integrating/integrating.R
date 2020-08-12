@@ -21,6 +21,44 @@ originalTable <- read_delim(
   trim_ws = TRUE
 )
 
+### dictionaries
+#### structure
+structureDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+#### organism
+organismDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+### metadata
+#### structure
+structureMetadata <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesStructureMetadata),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+#### organism
+organismMetadata <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesOrganismMetadata),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
 ### organism
 organismTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
@@ -33,7 +71,6 @@ organismTableFull <- read_delim(
     organismOriginal,
     organismCleaned,
     organismCleaned_dbTaxo = organismDbTaxo,
-    organismCleaned_dbTaxoQuality = organismDbTaxoQuality,
     organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
     organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
     organismCleaned_dbTaxoTaxonomy = organismTaxonomy,
@@ -86,12 +123,30 @@ referenceTableFull <- read_delim(
   trim_ws = TRUE
 )
 
-# splitting minimal and metadata
+# joining previous dictionaries with metadata
+## organism
+organismOld <-
+  left_join(organismDictionary, organismMetadata)
+
+## structure
+structureOld <-
+  left_join(structureDictionary, structureMetadata)
+
+# joining previous results with new ones
+## organism
+organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
+  distinct()
+
 ## structure
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
 
+structureFull <- bind_rows(structureFull, structureOld) %>%
+  distinct()
+
+# splitting minimal and metadata
+## structure
 structureMinimal <- structureFull %>%
   distinct(
     structureType,
@@ -131,7 +186,6 @@ organismMetadata <- organismTableFull %>%
     organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
-    organismCleaned_dbTaxoQuality,
     organismCleaned_dbTaxo_1kingdom,
     organismCleaned_dbTaxo_2phylum,
     organismCleaned_dbTaxo_3class,
@@ -208,12 +262,18 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-## metadata
-## structure
+## dictionaries
+### structure
+ifelse(
+  !dir.exists(pathDataInterimDictionariesStructure),
+  dir.create(pathDataInterimDictionariesStructure),
+  FALSE
+)
+
 write.table(
-  x = structureMetadata,
+  x = structureMinimal,
   file = gzfile(
-    description = pathDataInterimTablesCuratedStructureMetadata,
+    description = pathDataInterimDictionariesStructureDictionary,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -223,11 +283,26 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-## organism
+## metadata
+### structure
+write.table(
+  x = structureMetadata,
+  file = gzfile(
+    description = pathDataInterimDictionariesStructureMetadata,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### organism
 write.table(
   x = organismMetadata,
   file = gzfile(
-    description = pathDataInterimTablesCuratedOrganismMetadata,
+    description = pathDataInterimDictionariesOrganismMetadata,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -241,7 +316,7 @@ write.table(
 write.table(
   x = referenceMetadata,
   file = gzfile(
-    description = pathDataInterimTablesCuratedReferenceMetadata,
+    description = pathDataInterimDictionariesReferenceMetadata,
     compression = 9,
     encoding = "UTF-8"
   ),

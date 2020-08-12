@@ -92,6 +92,7 @@ dataPubmed <- read_delim(
   ) %>%
   mutate(level = NA)
 
+### publishing details
 dataPublishingDetails <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePublishingDetails),
   delim = "\t",
@@ -121,6 +122,7 @@ dataPublishingDetails <- read_delim(
     values_drop_na = TRUE
   )
 
+### title
 dataTitle <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
   delim = "\t",
@@ -147,6 +149,7 @@ dataTitle <- read_delim(
   ) %>%
   mutate(level = NA)
 
+### split
 dataSplit <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceSplit),
   delim = "\t",
@@ -176,6 +179,7 @@ dataSplit <- read_delim(
     values_drop_na = TRUE
   )
 
+### full
 dataFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalReferenceFull),
   delim = "\t",
@@ -185,6 +189,7 @@ dataFull <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+### cleaned
 dataCleanedOrganismManipulated <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedOrganismTranslatedTable),
   delim = "\t",
@@ -196,14 +201,33 @@ dataCleanedOrganismManipulated <- read_delim(
          organismCleaned) %>%
   mutate_all(as.character)
 
+### dictionary
+referenceDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
 # joining all types together again
 dataCrossref <-
-  rbind(dataDoi,
-        dataOriginal,
-        dataPublishingDetails,
-        dataPubmed,
-        dataSplit,
-        dataTitle)
+  rbind(
+    dataDoi,
+    dataOriginal,
+    dataPublishingDetails,
+    dataPubmed,
+    dataSplit,
+    dataTitle,
+    referenceDictionary
+  ) %>%
+  distinct(
+    referenceOriginal,
+    referenceTranslatedType,
+    origin,
+    referenceTranslatedValue,
+    level
+  )
 
 # joining full and cleaned organisms
 dataJoined <- left_join(dataFull, dataCleanedOrganismManipulated)
@@ -226,6 +250,26 @@ write.table(
   x = dataTranslated,
   file = gzfile(
     description = pathDataInterimTablesTranslatedReferenceFile,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### dictionary
+ifelse(
+  !dir.exists(pathDataInterimDictionariesStructure),
+  dir.create(pathDataInterimDictionariesStructure),
+  FALSE
+)
+
+write.table(
+  x = dataCrossref,
+  file = gzfile(
+    description = pathDataInterimDictionariesReferenceDictionary,
     compression = 9,
     encoding = "UTF-8"
   ),

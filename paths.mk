@@ -1,7 +1,6 @@
 
 export INTERIM_PATH = ${DATA_PATH}/interim
 export INTERIM_DB_PATH = ${INTERIM_PATH}/db
-export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries
 export EXTERNAL_PATH = ${DATA_PATH}/external
 export EXTERNAL_DB_SOURCE_PATH = ${EXTERNAL_PATH}/dbSource
 export EXTERNAL_TRANSLATION_SOURCE_PATH = ${EXTERNAL_PATH}/translationSource
@@ -10,6 +9,12 @@ ifeq (FULL,full)
 	export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables
 else
     export INTERIM_TABLE_PATH = ${DATA_PATH}/interim/tables_min
+endif
+
+ifeq (FULL,full)
+	export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries
+else
+    export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries_min
 endif
 
 export INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original

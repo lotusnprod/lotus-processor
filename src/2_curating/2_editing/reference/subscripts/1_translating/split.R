@@ -16,24 +16,42 @@ dataSplit <- read_delim(
 )
 
 # getting references
-reflist <- invisible(
-  pbmclapply(
-    FUN = getref_noLimit,
-    X = dataSplit$referenceOriginal_split,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+if (nrow(dataSplit) != 1)
+  reflist <- invisible(
+    pbmclapply(
+      FUN = getref_noLimit,
+      X = dataSplit$referenceOriginal_split,
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
   )
-)
+
+if (nrow(dataSplit) != 1)
+  dataSplit
 
 print(x = "This may take several minutes")
-dataSplit <- getAllReferences(data = dataSplit,
-                              referenceType = "split",
-                              method = "osa")
+if (nrow(dataSplit) != 1)
+  dataSplit <- getAllReferences(data = dataSplit,
+                                referenceType = "split",
+                                method = "osa")
+
+if (nrow(dataSplit) == 1)
+  dataSplit <- data.frame() %>%
+  mutate(
+    referenceOriginal_split = NA,
+    referenceTranslatedDoi = NA,
+    referenceTranslatedJournal = NA,
+    referenceTranslatedTitle = NA,
+    referenceTranslatedDate = NA,
+    referenceTranslatedAuthor = NA,
+    referenceTranslationScoreCrossref = NA,
+    referenceTranslationScoreDistance = NA
+  )
 
 # exporting
 ## creating directories if they do not exist

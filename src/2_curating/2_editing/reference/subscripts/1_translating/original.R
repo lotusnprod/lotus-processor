@@ -7,7 +7,7 @@ source("paths.R")
 ## functions
 source("functions/reference.R")
 
-library(stringr)
+library(tidyverse)
 
 ## file
 length <-
@@ -78,25 +78,40 @@ for (i in num) {
   )
   
   # getting references
-  reflist <- invisible(
-    pbmclapply(
-      FUN = getref_noLimit,
-      X = dataOriginal$referenceOriginal_original,
-      mc.preschedule = FALSE,
-      mc.set.seed = TRUE,
-      mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
+  if (nrow(dataOriginal) != 1)
+    reflist <- invisible(
+      pbmclapply(
+        FUN = getref_noLimit,
+        X = dataOriginal$referenceOriginal_original,
+        mc.preschedule = FALSE,
+        mc.set.seed = TRUE,
+        mc.silent = TRUE,
+        mc.cores = (parallel::detectCores() - 2),
+        mc.cleanup = TRUE,
+        mc.allow.recursive = TRUE,
+        ignore.interactive = TRUE
+      )
     )
-  )
   
   print("treating results, may take a while if full mode")
-  dataOriginal2 <-
+  if (nrow(dataOriginal) != 0)
+    dataOriginal2 <-
     getAllReferences(data = dataOriginal,
                      referenceType = "original",
                      method = "osa")
+  
+  if (nrow(dataOriginal) == 0)
+    dataOriginal2 <- data.frame() %>%
+    mutate(
+      referenceOriginal_original = NA,
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA
+    )
   
   ## exporting
   write.table(
