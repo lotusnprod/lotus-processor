@@ -7,38 +7,76 @@ source("functions/standardizing.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(Hmisc)
 
 # get paths
 database <- databases$get("napralert")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
+dataOriginal <- read_delim(
+  file = gzfile(database$sourceFiles$tsvOriginal),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  mutate(
+    biologicalsource = paste(
+      capitalize(string = tolower(`?genus`)),
+      tolower(`?species`),
+      capitalize(string = tolower(`?family`))
+    ),
+    inchi =  NA,
+    reference_doi = NA
+  ) %>%
+  select(
+    name = `?compound_name`,
+    inchi,
+    biologicalsource,
+    reference_title = `?title`,
+    reference_authors = `?authors`,
+    reference_doi,
+    reference_journal = `?journal`
+  ) %>%
+  mutate_all(as.character)
+
+dataMatched <- read_delim(
+  file = gzfile(database$sourceFiles$tsvMatched),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate(
+    name = NA,
+    reference_title = NA,
+    reference_authors = NA,
+    reference_journal = NA,
+  ) %>%
+  select(
+    name,
+    inchi = InChI,
+    biologicalsource = TaxonName,
+    reference_title,
+    reference_authors,
+    reference_journal,
+    reference_doi = DOI
+  ) %>%
   mutate_all(as.character)
 
 # manipulating
-data_manipulated <- data_original %>%
-  select(
-    inchi = InChI,
-    inchikey = InChIKey,
-    biologicalsource = TaxonName,
-    reference_doi = DOI
-  ) %>%
-  data.frame()
-
-data_manipulated$name <- NA
+dataJoined <- bind_rows(dataMatched, dataOriginal)
 
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_manipulated,
+    data_selected = dataJoined,
     db = "nap_1",
-    structure_field = c("inchi"),
-    reference_field = c("reference_doi")
+    structure_field = c("name", "inchi"),
+    reference_field = c(
+      "reference_doi",
+      "reference_authors",
+      "reference_title",
+      "reference_journal"
+    )
   )
 
 # exporting

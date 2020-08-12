@@ -194,7 +194,8 @@ databases$add(
 
 databases$add(
   name = "napralert",
-  sourceFiles = list(tsv = "napralert_matched_final_unified.tsv.gz"),
+  sourceFiles = list(tsvMatched = "napralert_matched_final_unified.tsv.gz",
+                     tsvOriginal = "napralert.tsv.gz"),
   interimFile = "napralert.tsv.gz"
 )
 
@@ -211,7 +212,7 @@ databases$add(
 
 databases$add(
   name = "npatlas",
-  sourceFiles = list(tsv = "np_atlas_2019_12.tsv"),
+  sourceFiles = list(tsv = "NPAtlas_download.tsv"),
   interimFile = "npatlas.tsv.gz"
 )
 
