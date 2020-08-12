@@ -147,7 +147,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PAT
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 
 napralert: ${INTERIM_DB_PATH}/napralert.tsv.gz
-${INTERIM_DB_PATH}/napralert.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz ${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
+${INTERIM_DB_PATH}/napralert.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert.tsv.gz ${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
 
 npass: ${INTERIM_DB_PATH}/npass.tsv.gz
@@ -155,7 +155,7 @@ ${INTERIM_DB_PATH}/npass.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_down
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npass/standardizing.R
 
 npatlas: ${INTERIM_DB_PATH}/npatlas.tsv.gz
-${INTERIM_DB_PATH}/npatlas.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npatlas/np_atlas_2019_12.tsv ${SRC_GATHERING_DB_PATH}/npatlas/standardizing.R
+${INTERIM_DB_PATH}/npatlas.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npatlas/NPAtlas_download.tsv ${SRC_GATHERING_DB_PATH}/npatlas/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npatlas/standardizing.R
 
 npcare: ${INTERIM_DB_PATH}/npcare.tsv.gz
