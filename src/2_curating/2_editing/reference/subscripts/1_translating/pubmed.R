@@ -18,52 +18,72 @@ dataPubmed <- read_delim(
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 ## 2
 # mc cores set to 2 because fails otherwise (entrez limitation probably)
-reflistPubmed <- invisible(
-  pbmclapply(
-    FUN = getrefPubmed,
-    X = as.character(dataPubmed$referenceOriginal_pubmed),
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = 2,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+if (nrow(dataPubmed) != 1)
+  reflistPubmed <- invisible(
+    pbmclapply(
+      FUN = getrefPubmed,
+      X = as.character(dataPubmed$referenceOriginal_pubmed),
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = 2,
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
   )
-)
-
-reflistPubmedBound <- bind_rows(reflistPubmed)
+if (nrow(dataPubmed) != 1)
+  reflistPubmedBound <- bind_rows(reflistPubmed)
 
 # joining with original dataframe
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslatedDoi"] <-
-    reflistPubmedBound[i, "translatedDoi"]
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslatedDoi"] <-
+      reflistPubmedBound[i, "translatedDoi"]
+  }
 
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslatedJournal"] <-
-    reflistPubmedBound[i, "translatedJournal"]
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslatedJournal"] <-
+      reflistPubmedBound[i, "translatedJournal"]
+  }
 
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslatedTitle"] <-
-    reflistPubmedBound[i, "translatedTitle"]
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslatedTitle"] <-
+      reflistPubmedBound[i, "translatedTitle"]
+  }
 
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslatedAuthor"] <-
-    reflistPubmedBound[i, "translatedAuthor"]
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslatedAuthor"] <-
+      reflistPubmedBound[i, "translatedAuthor"]
+  }
 
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslatedDate"] <-
-    reflistPubmedBound[i, "translatedDate"]
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslatedDate"] <-
+      reflistPubmedBound[i, "translatedDate"]
+  }
 
-for (i in 1:nrow(reflistPubmedBound)) {
-  dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
-  dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
-}
+if (nrow(dataPubmed) != 1)
+  for (i in 1:nrow(reflistPubmedBound)) {
+    dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
+    dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
+  }
+
+if (nrow(dataPubmed) == 1)
+  dataPubmed <- data.frame() %>%
+  mutate(
+    referenceOriginal_pubmed = NA,
+    referenceTranslatedDoi = NA,
+    referenceTranslatedJournal = NA,
+    referenceTranslatedTitle = NA,
+    referenceTranslatedDate = NA,
+    referenceTranslatedAuthor = NA,
+    referenceTranslationScoreCrossref = NA,
+    referenceTranslationScoreDistance = NA
+  )
 
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)

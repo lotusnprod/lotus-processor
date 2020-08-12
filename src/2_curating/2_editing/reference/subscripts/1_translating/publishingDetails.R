@@ -16,27 +16,42 @@ dataPublishingDetails <- read_delim(
 )
 
 # getting references
-reflist <- invisible(
-  pbmclapply(
-    FUN = getref_noLimit,
-    X = dataPublishingDetails$referenceOriginal_publishingDetails,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+if (nrow(dataPublishingDetails) != 1)
+  reflist <- invisible(
+    pbmclapply(
+      FUN = getref_noLimit,
+      X = dataPublishingDetails$referenceOriginal_publishingDetails,
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
   )
-)
 
 print(x = "This may take several minutes")
 
 # joining with original dataframe
-dataPublishingDetails <-
+if (nrow(dataPublishingDetails) != 1)
+  dataPublishingDetails <-
   getAllReferences(data = dataPublishingDetails,
                    referenceType = "publishingDetails",
                    method = "osa")
+
+if (nrow(dataPublishingDetails) == 1)
+  dataPublishingDetails <- data.frame() %>%
+  mutate(
+    referenceOriginal_publishingDetails = NA,
+    referenceTranslatedDoi = NA,
+    referenceTranslatedJournal = NA,
+    referenceTranslatedTitle = NA,
+    referenceTranslatedDate = NA,
+    referenceTranslatedAuthor = NA,
+    referenceTranslationScoreCrossref = NA,
+    referenceTranslationScoreDistance = NA
+  )
 
 # exporting
 ## creating directories if they do not exist

@@ -65,7 +65,7 @@ openDbMinimalFilteredRef <- openDbMinimalFiltered %>%
 
 ## reference metadata
 referenceMetadata <- read_delim(
-  file = gzfile(pathDataInterimTablesCuratedReferenceMetadata),
+  file = gzfile(pathDataInterimDictionariesReferenceMetadata),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,

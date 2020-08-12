@@ -51,7 +51,7 @@ dnpDbTriplets <- read_delim(
 ```{r}
 organismMetadata <- read_delim(
   file = gzfile(
-    "../../data/interim/tables/3_curated/organismMetadata.tsv.gz"
+    "../../data/interim/dictionaries/organism/metadata.tsv.gz"
   ),
   delim = "\t",
   escape_double = FALSE,
@@ -93,7 +93,7 @@ organismMetadata <- read_delim(
 #### 1
 ```{r}
 structureMetadata_1 <- read_delim(
-  file = gzfile("../../data/interim/tables/3_curated/structureMetadata.tsv.gz"),
+  file = gzfile("../../data/interim/dictionaries/structure/metadata.tsv.gz"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
@@ -115,7 +115,7 @@ structureMetadata_2 <- read_delim(
 ### reference
 ```{r}
 referenceMetadata <- read_delim(
-  file = gzfile("../../data/interim/tables/3_curated/referenceMetadata.tsv.gz"),
+  file = gzfile("../../data/interim/dictionaries/reference/metadata.tsv.gz"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE

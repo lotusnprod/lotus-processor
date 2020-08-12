@@ -728,69 +728,113 @@ pathDataInterimDbUnpd <-
             "unpd.tsv.gz")
 
 #### dictionaries
-pathDataInterimDictionaries <-
+if (mode == "full")
+  pathDataInterimDictionaries <-
   file.path(pathDataInterim,
             "dictionaries")
 
-###### common
+if (mode == "min")
+  pathDataInterimDictionaries <-
+  file.path(pathDataInterim,
+            "dictionaries_min")
+
+##### common
 pathDataInterimDictionariesCommon <-
   file.path(pathDataInterimDictionaries,
             "common")
 
-####### black
+###### black
 pathDataInterimDictionariesCommonBlackDic <-
   file.path(pathDataInterimDictionariesCommon,
             "black.tsv")
 
-####### manual subtraction
+###### manual subtraction
 pathDataInterimDictionariesCommonManualSubtraction <-
   file.path(pathDataInterimDictionariesCommon,
             "manualSubtraction.tsv")
 
-####### names
+###### names
 pathDataInterimDictionariesCommonNames <-
   file.path(pathDataInterimDictionariesCommon,
             "names.tsv.gz")
 
-###### latin
+##### latin
 pathDataInterimDictionariesLatin <-
   file.path(pathDataInterimDictionaries,
             "latin")
 
-####### genitive
+###### genitive
 pathDataInterimDictionariesLatinGenitive <-
   file.path(pathDataInterimDictionariesLatin,
             "genitive")
 
-######## I
+####### I
 pathDataInterimDictionariesLatinGenitiveI <-
   file.path(pathDataInterimDictionariesLatinGenitive,
             "i.tsv")
 
-######## Is
+####### Is
 pathDataInterimDictionariesLatinGenitiveIs <-
   file.path(pathDataInterimDictionariesLatinGenitive,
             "is.tsv")
 
-####### plant parts
+###### plant parts
 pathDataInterimDictionariesLatinPlantParts <-
   file.path(pathDataInterimDictionariesLatin,
             "plantParts.tsv")
 
-###### taxa
+##### taxa
 pathDataInterimDictionariesTaxa <-
   file.path(pathDataInterimDictionaries,
             "taxa")
 
-####### family
+###### family
 pathDataInterimDictionariesTaxaFamily <-
   file.path(pathDataInterimDictionariesTaxa,
             "family.tsv")
 
-####### kingdom
+###### kingdom
 pathDataInterimDictionariesTaxaKingdom <-
   file.path(pathDataInterimDictionariesTaxa,
             "kingdom.tsv")
+
+##### organism
+pathDataInterimDictionariesOrganism <-
+  file.path(pathDataInterimDictionaries,
+            "organism")
+
+pathDataInterimDictionariesOrganismDictionary <-
+  file.path(pathDataInterimDictionariesOrganism,
+            "dictionary.tsv.gz")
+
+pathDataInterimDictionariesOrganismMetadata <-
+  file.path(pathDataInterimDictionariesOrganism, "metadata.tsv.gz")
+
+##### structure
+pathDataInterimDictionariesStructure <-
+  file.path(pathDataInterimDictionaries,
+            "structure")
+
+pathDataInterimDictionariesStructureDictionary <-
+  file.path(pathDataInterimDictionariesStructure,
+            "dictionary.tsv.gz")
+
+pathDataInterimDictionariesStructureMetadata <-
+  file.path(pathDataInterimDictionariesStructure, "metadata.tsv.gz")
+
+
+##### reference
+pathDataInterimDictionariesReference <-
+  file.path(pathDataInterimDictionaries,
+            "reference")
+
+pathDataInterimDictionariesReferenceDictionary <-
+  file.path(pathDataInterimDictionariesReference,
+            "dictionary.tsv.gz")
+
+pathDataInterimDictionariesReferenceMetadata <-
+  file.path(pathDataInterimDictionariesReference, "metadata.tsv.gz")
+
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
 ####### manual subtraction
@@ -1065,15 +1109,6 @@ pathDataInterimTablesCurated <-
 ### final cleaned table
 pathDataInterimTablesCuratedTable <-
   file.path(pathDataInterimTablesCurated, "table.tsv.gz")
-
-pathDataInterimTablesCuratedStructureMetadata <-
-  file.path(pathDataInterimTablesCurated, "structureMetadata.tsv.gz")
-
-pathDataInterimTablesCuratedOrganismMetadata <-
-  file.path(pathDataInterimTablesCurated, "organismMetadata.tsv.gz")
-
-pathDataInterimTablesCuratedReferenceMetadata <-
-  file.path(pathDataInterimTablesCurated, "referenceMetadata.tsv.gz")
 
 # analysed fields
 pathDataInterimTablesAnalysed <-

@@ -11,7 +11,37 @@ library(data.table)
 library(tidyverse)
 
 ## files
+print(x = "loading DBs")
 dbList <- lapply(pathDataInterimDbDir, db_loader)
+
+## dictionaries
+print(x = "loading dictionaries")
+### structure
+structureDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+### organism
+organismDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
+### reference
+referenceDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
 
 # selecting
 dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
@@ -51,16 +81,26 @@ dbTable[] <- lapply(dbTable, function(x)
   gsub("\t", " ", x))
 
 # sub-setting
+print(x = "keeping new data only")
 ## organism
 organismTable <- dbTable %>%
   filter(!is.na(organismOriginal)) %>%
   distinct(organismOriginal)
 
+organismTable <- anti_join(x = organismTable,
+                           y = organismDictionary)
+
 ## reference
 ### DOI
 referenceTable_doi <- dbTable %>%
   filter(!is.na(referenceOriginal_doi)) %>%
-  distinct(referenceOriginal_doi)
+  distinct(referenceOriginal_doi) %>%
+  select(referenceOriginal = referenceOriginal_doi)
+
+referenceTable_doi <- anti_join(x = referenceTable_doi,
+                                y = referenceDictionary) %>%
+  select(referenceOriginal_doi = referenceOriginal)
+
 
 row.names(referenceTable_doi) <-
   referenceTable_doi$referenceOriginal_doi
@@ -68,9 +108,18 @@ row.names(referenceTable_doi) <-
 ### pubmed
 referenceTable_pubmed <- dbTable %>%
   filter(!is.na(referenceOriginal_pubmed)) %>%
-  distinct(referenceOriginal_pubmed)
+  distinct(referenceOriginal_pubmed) %>%
+  select(referenceOriginal = referenceOriginal_pubmed)
 
-row.names(referenceTable_pubmed) <-
+referenceTable_pubmed <- anti_join(x = referenceTable_pubmed,
+                                   y = referenceDictionary) %>%
+  select(referenceOriginal_pubmed = referenceOriginal)
+
+if (nrow(referenceTable_pubmed) == 0)
+  referenceTable_pubmed <- rbind(referenceTable_pubmed, list(NA))
+
+if (nrow(referenceTable_pubmed) != 1)
+  row.names(referenceTable_pubmed) <-
   referenceTable_pubmed$referenceOriginal_pubmed
 
 ### title
@@ -78,7 +127,12 @@ referenceTable_title <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
   filter(!is.na(referenceOriginal_title)) %>%
-  distinct(referenceOriginal_title)
+  distinct(referenceOriginal_title) %>%
+  select(referenceOriginal = referenceOriginal_title)
+
+referenceTable_title <- anti_join(x = referenceTable_title,
+                                  y = referenceDictionary) %>%
+  select(referenceOriginal_title = referenceOriginal)
 
 ### publishing details
 referenceTable_publishingDetails <- dbTable %>%
@@ -86,7 +140,17 @@ referenceTable_publishingDetails <- dbTable %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
   filter(is.na(referenceOriginal_title)) %>%
   filter(!is.na(referenceOriginal_publishingDetails)) %>%
-  distinct(referenceOriginal_publishingDetails)
+  distinct(referenceOriginal_publishingDetails) %>%
+  select(referenceOriginal = referenceOriginal_publishingDetails)
+
+referenceTable_publishingDetails <-
+  anti_join(x = referenceTable_publishingDetails,
+            y = referenceDictionary) %>%
+  select(referenceOriginal_publishingDetails = referenceOriginal)
+
+if (nrow(referenceTable_publishingDetails) == 0)
+  referenceTable_publishingDetails <-
+  rbind(referenceTable_publishingDetails, list(NA))
 
 ### split
 referenceTable_split <- dbTable %>%
@@ -95,7 +159,17 @@ referenceTable_split <- dbTable %>%
   filter(is.na(referenceOriginal_title)) %>%
   filter(is.na(referenceOriginal_publishingDetails)) %>%
   filter(!is.na(referenceOriginal_split)) %>%
-  distinct(referenceOriginal_split)
+  distinct(referenceOriginal_split) %>%
+  select(referenceOriginal = referenceOriginal_split)
+
+referenceTable_split <-
+  anti_join(x = referenceTable_split,
+            y = referenceDictionary) %>%
+  select(referenceOriginal_split = referenceOriginal)
+
+if (nrow(referenceTable_split) == 0)
+  referenceTable_split <-
+  rbind(referenceTable_split, list(NA))
 
 ### original
 referenceTable_original <- dbTable %>%
@@ -105,7 +179,17 @@ referenceTable_original <- dbTable %>%
   filter(is.na(referenceOriginal_publishingDetails)) %>%
   filter(is.na(referenceOriginal_split)) %>%
   filter(!is.na(referenceOriginal_original)) %>%
-  distinct(referenceOriginal_original)
+  distinct(referenceOriginal_original) %>%
+  select(referenceOriginal = referenceOriginal_original)
+
+referenceTable_original <-
+  anti_join(x = referenceTable_original,
+            y = referenceDictionary) %>%
+  select(referenceOriginal_original = referenceOriginal)
+
+if (nrow(referenceTable_original) == 0)
+  referenceTable_original <-
+  rbind(referenceTable_original, list(NA))
 
 ### full
 referenceTable_full <- dbTable %>%
@@ -138,14 +222,26 @@ referenceTable_full <- dbTable %>%
 structureTable_inchi <- dbTable %>%
   filter(grepl(pattern = "^InChI=.*",
                x = structureOriginal_inchi)) %>%
-  distinct(structureOriginal_inchi)
+  distinct(structureOriginal_inchi) %>%
+  select(structureValue = structureOriginal_inchi)
+
+structureTable_inchi <-
+  anti_join(x = structureTable_inchi,
+            y = structureDictionary) %>%
+  select(structureOriginal_inchi = structureValue)
 
 ### without InChI but SMILES
 structureTable_smiles <- dbTable %>%
   filter(!grepl(pattern = "^InChI=.*",
                 x = structureOriginal_inchi)) %>%
   filter(!is.na(structureOriginal_smiles)) %>%
-  distinct(structureOriginal_smiles)
+  distinct(structureOriginal_smiles) %>%
+  select(structureValue = structureOriginal_smiles)
+
+structureTable_smiles <-
+  anti_join(x = structureTable_smiles,
+            y = structureDictionary) %>%
+  select(structureOriginal_smiles = structureValue)
 
 ### without InChI nor SMILES but name
 structureTable_nominal <- dbTable %>%
@@ -153,7 +249,13 @@ structureTable_nominal <- dbTable %>%
                 x = structureOriginal_inchi)) %>%
   filter(is.na(structureOriginal_smiles)) %>%
   filter(!is.na(structureOriginal_nominal)) %>%
-  distinct(structureOriginal_nominal)
+  distinct(structureOriginal_nominal) %>%
+  select(structureValue = structureOriginal_nominal)
+
+structureTable_nominal <-
+  anti_join(x = structureTable_nominal,
+            y = structureDictionary) %>%
+  select(structureOriginal_nominal = structureValue)
 
 ### full
 structureTable_full <- dbTable %>%
@@ -191,6 +293,7 @@ originalTable <- dbTable %>%
   select(-drop, -drop2)
 
 # exporting
+print(x = "exporting")
 ## creating directories if they do not exist
 ### interim tables
 ifelse(!dir.exists(pathDataInterimTables),

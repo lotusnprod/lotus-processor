@@ -16,7 +16,8 @@ dataDoi <- read_delim(
 )
 
 # getting references
-reflistDoi <-
+if (nrow(dataDoi) != 1)
+  reflistDoi <-
   pbmclapply(
     FUN = getrefDoi,
     X = dataDoi$referenceOriginal_doi,
@@ -30,96 +31,116 @@ reflistDoi <-
   )
 
 # joining with original dataframe
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslatedDoi"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["doi"]]),
-        yes = reflistDoi[[i]][["data"]][["doi"]],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslatedDoi"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["doi"]]),
+          yes = reflistDoi[[i]][["data"]][["doi"]],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslatedJournal"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["container.title"]]),
-        yes = reflistDoi[[i]][["data"]][["container.title"]],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslatedJournal"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["container.title"]]),
+          yes = reflistDoi[[i]][["data"]][["container.title"]],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslatedTitle"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["title"]]),
-        yes = reflistDoi[[i]][["data"]][["title"]],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslatedTitle"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["title"]]),
+          yes = reflistDoi[[i]][["data"]][["title"]],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslatedDate"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["issued"]]),
-        yes = reflistDoi[[i]][["data"]][["issued"]],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslatedDate"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["issued"]]),
+          yes = reflistDoi[[i]][["data"]][["issued"]],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslatedAuthor"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1]),
-        yes = reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslatedAuthor"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1]),
+          yes = reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslationScoreCrossref"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["score"]]),
-        yes = reflistDoi[[i]][["data"]][["score"]],
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslationScoreCrossref"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["score"]]),
+          yes = reflistDoi[[i]][["data"]][["score"]],
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
 
-for (i in 1:length(reflistDoi)) {
-  dataDoi[i, "referenceTranslationScoreDistance"] <-
-    as.character(ifelse(
-      test = !is.na(reflistDoi[[i]]),
-      yes = ifelse(
-        test = !is.null(reflistDoi[[i]][["data"]][["doi"]]),
-        yes = 0,
+if (nrow(dataDoi) != 1)
+  for (i in 1:length(reflistDoi)) {
+    dataDoi[i, "referenceTranslationScoreDistance"] <-
+      as.character(ifelse(
+        test = !is.na(reflistDoi[[i]]),
+        yes = ifelse(
+          test = !is.null(reflistDoi[[i]][["data"]][["doi"]]),
+          yes = 0,
+          no = NA
+        ),
         no = NA
-      ),
-      no = NA
-    )[1])
-}
+      )[1])
+  }
+
+if (nrow(dataDoi) == 1)
+  dataDoi <- data.frame() %>%
+  mutate(
+    referenceOriginal_doi = NA,
+    referenceTranslatedDoi = NA,
+    referenceTranslatedJournal = NA,
+    referenceTranslatedTitle = NA,
+    referenceTranslatedDate = NA,
+    referenceTranslatedAuthor = NA,
+    referenceTranslationScoreCrossref = NA,
+    referenceTranslationScoreDistance = NA
+  )
 
 dataDoi <- dataDoi %>%
   mutate_all(as.character)

@@ -16,23 +16,38 @@ dataTitle <- read_delim(
 )
 
 # getting references
-reflist <- invisible(
-  pbmclapply(
-    FUN = getref_noLimit,
-    X = dataTitle$referenceOriginal_title,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+if (nrow(dataTitle) != 1)
+  reflist <- invisible(
+    pbmclapply(
+      FUN = getref_noLimit,
+      X = dataTitle$referenceOriginal_title,
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
   )
-)
 
-dataTitle <- getBestReference(data = dataTitle,
-                              referenceType = "title",
-                              method = "osa")
+if (nrow(dataTitle) != 1)
+  dataTitle <- getBestReference(data = dataTitle,
+                                referenceType = "title",
+                                method = "osa")
+
+if (nrow(dataTitle) == 1)
+  dataTitle <- data.frame() %>%
+  mutate(
+    referenceOriginal_title = NA,
+    referenceTranslatedDoi = NA,
+    referenceTranslatedJournal = NA,
+    referenceTranslatedTitle = NA,
+    referenceTranslatedDate = NA,
+    referenceTranslatedAuthor = NA,
+    referenceTranslationScoreCrossref = NA,
+    referenceTranslationScoreDistance = NA
+  )
 
 # exporting
 ## creating directories if they do not exist
