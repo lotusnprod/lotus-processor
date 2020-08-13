@@ -48,7 +48,7 @@ def SMILES_to_PCID_fun(smiles):
     m = get_compounds(smiles, 'smiles')
     if m:
         return m
-    return Non
+    return None
 
 
 # the full df is splitted and each subdf are treated sequentially as df > 900000 rows retruned errors 
@@ -59,7 +59,7 @@ def SMILES_to_PCID_fun(smiles):
 
 # timer is started
 start_time = time.time()
-cpus = 1
+cpus = 5
 
 
 if __name__ == "__main__":
