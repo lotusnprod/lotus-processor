@@ -222,6 +222,7 @@ referenceMinimal <- referenceTableFull %>%
       !is.na(referenceCleanedPmid)
   ) %>%
   distinct(
+    organismCleaned,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
@@ -260,6 +261,11 @@ inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
   filter(!is.na(structureCleanedInchikey3D))
 
+## organism
+inhouseDbMinimal <-
+  left_join(inhouseDbMinimal, organismMinimal) %>%
+  filter(!is.na(organismCleaned))
+
 ## reference
 inhouseDbMinimal <-
   left_join(inhouseDbMinimal, referenceMinimal) %>%
@@ -269,11 +275,6 @@ inhouseDbMinimal <-
       !is.na(referenceCleanedPmid) |
       database == "dnp_1"
   )
-
-## organism
-inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, organismMinimal) %>%
-  filter(!is.na(organismCleaned))
 
 # export
 ## creating directories if they do not exist

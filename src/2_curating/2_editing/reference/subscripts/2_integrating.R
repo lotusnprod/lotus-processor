@@ -197,7 +197,7 @@ dataFull <- read_delim(
 
 ### cleaned
 dataCleanedOrganismManipulated <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedOrganismTranslatedTable),
+  file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,

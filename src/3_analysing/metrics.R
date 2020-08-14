@@ -36,7 +36,8 @@ openDbMinimalFiltered <- inhouseDbMinimal %>%
     structureCleanedInchikey3D,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    .keep_all = TRUE
   )
 
 dnpDb <- inhouseDbMinimal %>%
@@ -52,7 +53,13 @@ dnpDb <- inhouseDbMinimal %>%
     organismCleaned_dbTaxoTaxonomy,
     structureCleanedSmiles,
     structureCleanedInchi,
-    structureCleanedInchikey3D
+    structureCleanedInchikey3D,
+    .keep_all = TRUE
+  ) %>%
+  mutate(
+    referenceCleanedDoi = NA,
+    referenceCleanedPmcid = NA,
+    referenceCleanedPmid = NA
   )
 
 rm(inhouseDbMinimal)
@@ -117,7 +124,30 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     organismCleaned_dbTaxoTaxonomy,
     structureCleanedInchi,
     structureCleanedInchikey3D,
-    structureCleanedSmiles
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid, 
+    .keep_all = TRUE
+  ) %>%
+  select(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
   )
 
 inhouseDb <- bind_rows(dnpDb, openDb)
@@ -395,6 +425,7 @@ write.table(
 
 # # stats
 # ## structures by kingdom
+
 # write.table(
 #   x = inhouseStructuresByKingdom,
 #   file = pathDataInterimTablesAnalysedStructuresByKingdom,
