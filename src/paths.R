@@ -832,6 +832,10 @@ pathDataInterimDictionariesReferenceDictionary <-
   file.path(pathDataInterimDictionariesReference,
             "dictionary.tsv.gz")
 
+pathDataInterimDictionariesReferenceOrganismDictionary <-
+  file.path(pathDataInterimDictionariesReference,
+            "dictionaryOrganism.tsv.gz")
+
 pathDataInterimDictionariesReferenceMetadata <-
   file.path(pathDataInterimDictionariesReference, "metadata.tsv.gz")
 
@@ -969,8 +973,8 @@ pathDataInterimTablesOriginalReferencePublishingDetails <-
             "publishingDetails.tsv.gz")
 
 ### title
-pathDataInterimTablesOriginalReferenceTitle <-
-  file.path(pathDataInterimTablesOriginalReference, "title.tsv.gz")
+pathDataInterimTablesOriginalReferenceTitleFolder <-
+  file.path(pathDataInterimTablesOriginalReference, "title/")
 
 ### split
 pathDataInterimTablesOriginalReferenceSplit <-
@@ -1016,6 +1020,9 @@ pathDataInterimTablesTranslatedReferencePubmed <-
 pathDataInterimTablesTranslatedReferencePublishingDetails <-
   file.path(pathDataInterimTablesTranslatedReference,
             "publishingDetails.tsv.gz")
+
+pathDataInterimTablesTranslatedReferenceTitleFolder <-
+  file.path(pathDataInterimTablesTranslatedReference, "title/")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")

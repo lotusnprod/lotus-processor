@@ -41,7 +41,14 @@ ifelse(
 ifelse(
   !dir.exists(pathDataInterimTablesTranslatedReferenceOriginalFolder),
   dir.create(pathDataInterimTablesTranslatedReferenceOriginalFolder),
-  FALSE
+  no = file.remove(
+    list.files(path = pathDataInterimTablesTranslatedReferenceOriginalFolder,
+               full.names = TRUE)
+  ) &
+    dir.create(
+      pathDataInterimTablesTranslatedReferenceOriginalFolder,
+      showWarnings = FALSE
+    )
 )
 
 for (i in num) {

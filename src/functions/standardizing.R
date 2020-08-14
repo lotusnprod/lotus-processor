@@ -59,5 +59,8 @@ standardizing_original <- function(data_selected,
     lapply(data_standard, function(x)
       gsub("\t", " ", x))
   
+  data_standard <- data_standard %>%
+    mutate_all(trimws)
+  
   return(data_standard)
 }

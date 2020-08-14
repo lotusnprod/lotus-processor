@@ -43,7 +43,12 @@ ifelse(
 ifelse(
   !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
   dir.create(pathDataInterimTablesCleanedOrganismOriginal),
-  FALSE
+  no = file.remove(
+    list.files(path = pathDataInterimTablesCleanedOrganismOriginal,
+               full.names = TRUE)
+  ) &
+    dir.create(pathDataInterimTablesCleanedOrganismOriginal,
+               showWarnings = FALSE)
 )
 
 system(command = paste("bash", pathOriginalGnfinderScript))
@@ -54,29 +59,32 @@ length <-
 
 cut <- 10000
 
-num <- as.integer(seq(
-  from = 1 * cut,
-  to = length * cut,
-  by = cut
-))
+if (length != 0)
+  num <- as.integer(seq(
+    from = 1 * cut,
+    to = length * cut,
+    by = cut
+  ))
 
 dataCleanOriginalOrganism <- list()
 
 # cleaning GNFinder output
-for (i in num) {
-  j <- i / cut
-  print(paste("step", j, "of", length))
-  tryCatch({
-    dataCleanOriginalOrganism[[j]] <-
-      gnfinder_cleaning(num = i,
-                        organismCol = "organismOriginal")
-  }, error = function(e) {
-    cat("ERROR :", conditionMessage(e), "\n")
-  })
-}
+if (length != 0)
+  for (i in num) {
+    j <- i / cut
+    print(paste("step", j, "of", length))
+    tryCatch({
+      dataCleanOriginalOrganism[[j]] <-
+        gnfinder_cleaning(num = i,
+                          organismCol = "organismOriginal")
+    }, error = function(e) {
+      cat("ERROR :", conditionMessage(e), "\n")
+    })
+  }
 
 # selecting and reordering
-dataCleanedOriginalOrganism <-
+if (length != 0)
+  dataCleanedOriginalOrganism <-
   bind_rows(dataCleanOriginalOrganism) %>%
   select(
     organismOriginal,
@@ -87,33 +95,36 @@ dataCleanedOriginalOrganism <-
   ) %>%
   select(-nchar, -sum)
 
-dataCleanedOriginalOrganismUnique <-
+if (length != 0)
+  dataCleanedOriginalOrganismUnique <-
   dataCleanedOriginalOrganism %>%
   distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
 # exporting
-write.table(
-  x = dataCleanedOriginalOrganism,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismOriginalTable,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (length != 0)
+  write.table(
+    x = dataCleanedOriginalOrganism,
+    file = gzfile(
+      description = pathDataInterimTablesCleanedOrganismOriginalTable,
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
-write.table(
-  x = dataCleanedOriginalOrganismUnique,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (length != 0)
+  write.table(
+    x = dataCleanedOriginalOrganismUnique,
+    file = gzfile(
+      description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )

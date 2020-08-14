@@ -214,14 +214,44 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
-      stringdist(
-        a = as.character(tableInterim[i, 1]),
-        b = as.character(tableInterim[i, "title"]),
-        method = method
+      ifelse(
+        test = "title" %in% colnames(tableInterim),
+        yes =
+          stringdist(
+            a = as.character(tableInterim[i, 1]),
+            b = as.character(tableInterim[i, "title"]),
+            method = method
+          ),
+        no = NA
       )
   }
   
-  tableFinal <- tableInterim %>%
+  
+  if (!"title" %in% colnames(tableInterim))
+    tableFinal <- tableInterim %>%
+    mutate(
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA,
+    ) %>%
+    select(
+      all_of(referenceColumnName),
+      referenceTranslatedDoi,
+      referenceTranslatedJournal,
+      referenceTranslatedTitle,
+      referenceTranslatedDate,
+      referenceTranslatedAuthor,
+      referenceTranslationScoreCrossref,
+      referenceTranslationScoreDistance
+    ) %>%
+    mutate_all(as.character)
+  
+  if ("title" %in% colnames(tableInterim))
+    tableFinal <- tableInterim %>%
     select(
       all_of(referenceColumnName),
       referenceTranslatedDoi = doi,
@@ -230,7 +260,7 @@ getAllReferences <- function(data, referenceType, method = "osa") {
       referenceTranslatedDate = issued,
       referenceTranslatedAuthor = author,
       referenceTranslationScoreCrossref = score,
-      referenceTranslationScoreDistance = distScore
+      referenceTranslationScoreDistance = distScore,
     ) %>%
     unnest(cols = c(referenceTranslatedAuthor),
            keep_empty = TRUE) %>%
