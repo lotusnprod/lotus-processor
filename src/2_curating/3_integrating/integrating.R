@@ -40,6 +40,15 @@ organismDictionary <- read_delim(
   trim_ws = TRUE
 )
 
+#### reference
+referenceOrganismDictionary <- read_delim(
+  file = gzfile(description = pathDataInterimDictionariesReferenceOrganismDictionary),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
+
 ### metadata
 #### structure
 structureMetadata <- read_delim(
@@ -145,9 +154,15 @@ structureFull <-
 structureFull <- bind_rows(structureFull, structureOld) %>%
   distinct()
 
+## reference
+referenceTableFull <-
+  bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
+  distinct()
+
 # splitting minimal and metadata
 ## structure
 structureMinimal <- structureFull %>%
+  filter(!is.na(structureCleanedInchi)) %>%
   distinct(
     structureType,
     structureValue,
@@ -157,6 +172,7 @@ structureMinimal <- structureFull %>%
   )
 
 structureMetadata <- structureFull %>%
+  filter(!is.na(structureCleanedInchi)) %>%
   distinct(
     structureCleanedInchi,
     structureCleanedInchikey3D,
@@ -170,6 +186,7 @@ structureMetadata <- structureFull %>%
 
 ## organism
 organismMinimal <- organismTableFull %>%
+  filter(!is.na(organismCleaned)) %>%
   distinct(
     organismOriginal,
     organismCleaned,
@@ -180,6 +197,7 @@ organismMinimal <- organismTableFull %>%
   )
 
 organismMetadata <- organismTableFull %>%
+  filter(!is.na(organismCleaned)) %>%
   distinct(
     organismCleaned,
     organismCleaned_dbTaxo,
@@ -198,6 +216,11 @@ organismMetadata <- organismTableFull %>%
 
 ## reference
 referenceMinimal <- referenceTableFull %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedPmid)
+  ) %>%
   distinct(
     referenceType,
     referenceValue,
@@ -207,7 +230,13 @@ referenceMinimal <- referenceTableFull %>%
   )
 
 referenceMetadata <- referenceTableFull %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedPmid)
+  ) %>%
   distinct(
+    organismCleaned,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -228,15 +257,23 @@ gc(verbose = TRUE,
 # integrating
 ## structure
 inhouseDbMinimal <-
-  left_join(originalTable, structureMinimal)
+  left_join(originalTable, structureMinimal) %>%
+  filter(!is.na(structureCleanedInchikey3D))
 
 ## reference
 inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, referenceMinimal)
+  left_join(inhouseDbMinimal, referenceMinimal) %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedPmid) |
+      database == "dnp_1"
+  )
 
 ## organism
 inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, organismMinimal)
+  left_join(inhouseDbMinimal, organismMinimal) %>%
+  filter(!is.na(organismCleaned))
 
 # export
 ## creating directories if they do not exist
@@ -274,6 +311,20 @@ write.table(
   x = structureMinimal,
   file = gzfile(
     description = pathDataInterimDictionariesStructureDictionary,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### reference
+write.table(
+  x = referenceTableFull,
+  file = gzfile(
+    description = pathDataInterimDictionariesReferenceOrganismDictionary,
     compression = 9,
     encoding = "UTF-8"
   ),

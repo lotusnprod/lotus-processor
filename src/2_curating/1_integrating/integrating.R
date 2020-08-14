@@ -296,36 +296,61 @@ originalTable <- dbTable %>%
 print(x = "exporting")
 ## creating directories if they do not exist
 ### interim tables
-ifelse(!dir.exists(pathDataInterimTables),
-       dir.create(pathDataInterimTables),
-       FALSE)
+ifelse(
+  test = !dir.exists(pathDataInterimTables),
+  yes = dir.create(pathDataInterimTables),
+  no = FALSE
+)
 
 #### original
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginal),
-  dir.create(pathDataInterimTablesOriginal),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesOriginal),
+  yes = dir.create(pathDataInterimTablesOriginal),
+  no = FALSE
 )
 
 ##### organism
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalOrganism),
-  dir.create(pathDataInterimTablesOriginalOrganism),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesOriginalOrganism),
+  yes = dir.create(pathDataInterimTablesOriginalOrganism),
+  no = file.remove(
+    list.files(path = pathDataInterimTablesOriginalOrganism,
+               full.names = TRUE)
+  ) &
+    dir.create(pathDataInterimTablesOriginalOrganism,
+               showWarnings = FALSE)
 )
 
 ##### reference
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalReference),
-  dir.create(pathDataInterimTablesOriginalReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesOriginalReference),
+  yes = dir.create(pathDataInterimTablesOriginalReference),
+  no = FALSE
 )
 
-##### reference folder
+##### reference folders
+###### original
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalReferenceOriginalFolder),
-  dir.create(pathDataInterimTablesOriginalReferenceOriginalFolder),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesOriginalReferenceOriginalFolder),
+  yes = dir.create(pathDataInterimTablesOriginalReferenceOriginalFolder),
+  no = file.remove(
+    list.files(path = pathDataInterimTablesOriginalReferenceOriginalFolder,
+               full.names = TRUE)
+  )  &
+    dir.create(pathDataInterimTablesOriginalOrganism,
+               showWarnings = FALSE)
+)
+
+###### title
+ifelse(
+  !dir.exists(pathDataInterimTablesOriginalReferenceTitleFolder),
+  dir.create(pathDataInterimTablesOriginalReferenceTitleFolder),
+  no = file.remove(
+    list.files(path = pathDataInterimTablesOriginalReferenceTitleFolder,
+               full.names = TRUE)
+  )  &
+    dir.create(pathDataInterimTablesOriginalOrganism,
+               showWarnings = FALSE)
 )
 
 ##### structure
@@ -337,6 +362,7 @@ ifelse(
 
 ## writing files
 ### organism
+if (nrow(organismTable)!=0)
 split_data_table(
   x = organismTable,
   no_rows_per_frame = 10000,
@@ -353,7 +379,7 @@ write.table(
     compression = 9,
     encoding = "UTF-8"
   ),
-  row.names = TRUE,
+  row.names = FALSE,
   quote = TRUE,
   sep = "\t",
   fileEncoding = "UTF-8"
@@ -374,20 +400,14 @@ write.table(
 )
 
 #### title
-write.table(
+split_data_table(
   x = referenceTable_title,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceTitle,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  no_rows_per_frame = 1000,
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
-#### title
+#### publishingDetails
 write.table(
   x = referenceTable_publishingDetails,
   file = gzfile(

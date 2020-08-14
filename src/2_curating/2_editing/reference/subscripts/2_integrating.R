@@ -33,7 +33,8 @@ dataDoi <- read_delim(
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA)
+  mutate(level = NA) %>%
+  mutate_all(as.character)
 
 ### original
 dataOriginal <- read_delim(
@@ -63,7 +64,8 @@ dataOriginal <- read_delim(
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
-  )
+  ) %>%
+  mutate_all(as.character)
 
 ### pubmed
 dataPubmed <- read_delim(
@@ -90,7 +92,8 @@ dataPubmed <- read_delim(
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA)
+  mutate(level = NA) %>%
+  mutate_all(as.character)
 
 ### publishing details
 dataPublishingDetails <- read_delim(
@@ -120,7 +123,8 @@ dataPublishingDetails <- read_delim(
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
-  )
+  ) %>%
+  mutate_all(as.character)
 
 ### title
 dataTitle <- read_delim(
@@ -147,7 +151,8 @@ dataTitle <- read_delim(
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA)
+  mutate(level = NA) %>%
+  mutate_all(as.character)
 
 ### split
 dataSplit <- read_delim(
@@ -177,7 +182,8 @@ dataSplit <- read_delim(
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
-  )
+  ) %>%
+  mutate_all(as.character)
 
 ### full
 dataFull <- read_delim(
@@ -201,6 +207,8 @@ dataCleanedOrganismManipulated <- read_delim(
          organismCleaned) %>%
   mutate_all(as.character)
 
+print(x = "loading reference dictionary, this may take a while")
+
 ### dictionary
 referenceDictionary <- read_delim(
   file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
@@ -212,7 +220,7 @@ referenceDictionary <- read_delim(
 
 # joining all types together again
 dataCrossref <-
-  rbind(
+  bind_rows(
     dataDoi,
     dataOriginal,
     dataPublishingDetails,
@@ -221,6 +229,7 @@ dataCrossref <-
     dataTitle,
     referenceDictionary
   ) %>%
+  filter(!is.na(referenceOriginal)) %>%
   distinct(
     referenceOriginal,
     referenceTranslatedType,
@@ -230,7 +239,25 @@ dataCrossref <-
   )
 
 # joining full and cleaned organisms
-dataJoined <- left_join(dataFull, dataCleanedOrganismManipulated)
+dataJoined <-
+  left_join(dataFull, dataCleanedOrganismManipulated) %>%
+  filter(!is.na(referenceValue)) %>%
+  distinct(organismOriginal,
+           referenceType,
+           referenceValue,
+           organismCleaned)
+
+rm(
+  dataDoi,
+  dataOriginal,
+  dataPublishingDetails,
+  dataPubmed,
+  dataSplit,
+  dataTitle,
+  dataFull,
+  referenceDictionary,
+  dataCleanedOrganismManipulated
+)
 
 dataTranslated <- left_join(dataJoined,
                             dataCrossref,
@@ -246,6 +273,8 @@ dataTranslated <- left_join(dataJoined,
   )
 
 ## exporting
+print(x = "exporting, this may take a while if running full mode")
+
 write.table(
   x = dataTranslated,
   file = gzfile(
@@ -261,8 +290,8 @@ write.table(
 
 ### dictionary
 ifelse(
-  !dir.exists(pathDataInterimDictionariesStructure),
-  dir.create(pathDataInterimDictionariesStructure),
+  !dir.exists(pathDataInterimDictionariesReference),
+  dir.create(pathDataInterimDictionariesReference),
   FALSE
 )
 

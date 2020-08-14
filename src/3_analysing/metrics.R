@@ -40,7 +40,7 @@ openDbMinimalFiltered <- inhouseDbMinimal %>%
   )
 
 dnpDb <- inhouseDbMinimal %>%
-  filter(referenceValue == "DNP") %>%
+  filter(database == "dnp_1") %>%
   filter(!is.na(organismCleaned) &
            !is.na(structureCleanedInchikey3D)) %>%
   distinct(
@@ -58,14 +58,15 @@ dnpDb <- inhouseDbMinimal %>%
 rm(inhouseDbMinimal)
 
 openDbMinimalFilteredRef <- openDbMinimalFiltered %>%
-  distinct(referenceCleanedDoi,
+  distinct(organismCleaned,
+           referenceCleanedDoi,
            referenceCleanedPmcid,
            referenceCleanedPmid)
 
 
 ## reference metadata
-referenceMetadata <- read_delim(
-  file = gzfile(pathDataInterimDictionariesReferenceMetadata),
+referenceTableFull <- read_delim(
+  file = gzfile(pathDataInterimDictionariesReferenceOrganismDictionary),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
@@ -73,7 +74,7 @@ referenceMetadata <- read_delim(
 )
 
 # selecting reference metadata
-referenceMetadataFiltered <- referenceMetadata %>%
+referenceMetadataFiltered <- referenceTableFull %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
@@ -94,6 +95,11 @@ referenceMetadataFiltered <- referenceMetadata %>%
 # joining inhousedb minimal and reference metadata
 openDbRef <- left_join(openDbMinimalFilteredRef,
                        referenceMetadataFiltered) %>%
+  filter(
+    !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedDoi)
+  ) %>%
   arrange(desc(referenceCleanedPmid)) %>%
   arrange(desc(referenceCleanedPmcid)) %>%
   arrange(desc(referenceCleanedDoi)) %>%
@@ -111,8 +117,7 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     organismCleaned_dbTaxoTaxonomy,
     structureCleanedInchi,
     structureCleanedInchikey3D,
-    structureCleanedSmiles,
-    .keep_all = TRUE
+    structureCleanedSmiles
   )
 
 inhouseDb <- bind_rows(dnpDb, openDb)
@@ -146,7 +151,8 @@ pairsDNP <- dnpDb %>%
 
 stats <- pairsOutsideDnp %>%
   group_by(database) %>%
-  count()
+  count() %>%
+  arrange(desc(n))
 
 # unique
 print(x = "analysing unique organisms per db")

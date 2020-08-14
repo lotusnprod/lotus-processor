@@ -5,6 +5,7 @@ source("paths.R")
 
 # loading functions
 source("functions/reference.R")
+source("functions/helpers.R")
 
 # loading files
 print(x = "loading crossref translations file, this may take a while")
@@ -15,21 +16,6 @@ dataTranslated <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 )
-
-print(x = "loading pmcid file, this may take a while")
-
-PMC_ids <- read_delim(
-  file = gzfile(pathDataExternalTranslationSourcePubmedFile),
-  delim = ",",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  filter(!is.na(DOI) | !is.na(PMID)) %>%
-  select(DOI,
-         PMCID,
-         PMID) %>%
-  mutate_all(as.character)
 
 ### Find something appropriate
 # test <- dataTranslated %>%
@@ -253,6 +239,10 @@ dataCleanedScore <- dataCleaned %>%
 
 dataCleanedJoined <- left_join(dataCleaned, dataCleanedScore)
 
+rm(dataCleaned)
+
+gc()
+
 dataCleanedJoinedWide <- dataCleanedJoined %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
@@ -281,35 +271,98 @@ dataCleanedJoinedWide <- dataCleanedJoined %>%
            referenceValue,
            referenceTranslatedType,
            .keep_all = TRUE) %>%
-  select(-organismOriginal, -organismCleaned) %>%
   mutate_all(as.character)
+
+rm(dataCleanedJoined)
 
 dataCleanedJoinedLong <- dataCleanedJoinedWide %>%
   pivot_longer(
-    cols = 6:ncol(.),
+    cols = 8:ncol(.),
     names_to = c("drop", "referenceCleanedType"),
     names_sep = "_",
     values_to = "referenceCleanedValue",
     values_drop_na = TRUE
   ) %>%
-  distinct(referenceType,
-           referenceValue,
-           level,
-           referenceCleanedType,
-           referenceCleanedValue)
+  distinct(
+    organismOriginal,
+    organismCleaned,
+    referenceType,
+    referenceValue,
+    level,
+    referenceCleanedType,
+    referenceCleanedValue
+  )
 
-dataCleanedJoinedLongWide <- dataCleanedJoinedLong %>%
+print(x = "loading crossref translations file, this may take a while")
+
+dataCleaned <- read_delim(
+  file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  mutate(referenceCleanedValue = referenceTranslatedValue,
+         referenceCleanedType = referenceTranslatedType) %>%
+  select(-referenceTranslatedValue,
+         -referenceTranslatedType)
+
+subsetJoin <- dataCleaned %>%
+  filter(referenceType == "journal" |
+           referenceType == "external" |
+           referenceType == "isbn") %>%
+  distinct(
+    organismOriginal,
+    organismCleaned,
+    referenceType,
+    referenceValue,
+    level,
+    referenceCleanedType,
+    referenceCleanedValue
+  )
+
+dataJoinedLongFilled <- bind_rows(dataCleanedJoinedLong,
+                                  subsetJoin) %>%
+  distinct(
+    organismOriginal,
+    organismCleaned,
+    referenceType,
+    referenceValue,
+    level,
+    referenceCleanedType,
+    referenceCleanedValue
+  )
+
+dataCleanedJoinedLongWide <- dataJoinedLongFilled %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
-              values_from = referenceCleanedValue)
+              values_from = referenceCleanedValue) %>%
+  mutate_all(as.character)
 
 subDataClean_doi <- dataCleanedJoinedLongWide %>%
   filter(!is.na(referenceCleaned_doi)) %>%
-  distinct(referenceCleaned_doi)
+  distinct(referenceCleaned_doi) %>%
+  mutate_all(as.character)
 
 subDataClean_pmid <- dataCleaned %>%
   filter(referenceType == "pubmed") %>%
-  distinct(referenceValue)
+  distinct(referenceValue) %>%
+  mutate_all(as.character)
+
+print(x = "loading pmcid file, this may take a while") #here because of memory
+
+PMC_ids <- read_delim(
+  file = gzfile(pathDataExternalTranslationSourcePubmedFile),
+  delim = ",",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  filter(!is.na(DOI) | !is.na(PMID)) %>%
+  select(DOI,
+         PMCID,
+         PMID) %>%
+  mutate_all(as.character)
 
 df_doi <- left_join(subDataClean_doi,
                     PMC_ids,
@@ -348,6 +401,8 @@ referenceTable <-
     )
   ) %>%
   select(
+    organismOriginal,
+    organismCleaned,
     referenceType,
     referenceValue,
     referenceCleanedDoi = referenceCleaned_doi,
@@ -362,6 +417,8 @@ referenceTable <-
     referenceCleaned_score_titleOrganism = referenceCleaned_scoreTitleOrganism,
   ) %>%
   distinct(
+    organismOriginal,
+    organismCleaned,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
@@ -374,7 +431,8 @@ referenceTable <-
     referenceCleaned_score_crossref,
     referenceCleaned_score_distance,
     referenceCleaned_score_titleOrganism,
-  )
+  ) %>%
+  mutate(across(everything(), ~ y_as_na(.x, "NULL")))
 
 # exporting
 ## creating directories if they do not exist

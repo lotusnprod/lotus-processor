@@ -95,10 +95,14 @@ data_manipulated <- data_selected %>%
       test = !is.na(reference_title_2_2),
       yes = reference_title_2_2,
       no = reference_title_2
+    ),
+    reference_original = gsub(
+      pattern = "\"",
+      replacement = "",
+      x = reference_original
     )
   ) %>%
   data.frame()
-
 
 # standardizing
 data_standard <-
@@ -113,6 +117,7 @@ data_standard <-
       "reference_publishingDetails"
     )
   )
+
 
 # exporting
 database$writeInterim(data_standard)

@@ -13,12 +13,8 @@ source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R")
 
 ## libraries
 library(data.table)
-library(dplyr)
 library(jsonlite)
-library(readr)
-library(stringr)
 library(tidyverse)
-library(tidyr)
 
 log_debug("  Step 3")
 
@@ -50,7 +46,14 @@ taxaRanksDictionary <- read_delim(
 ifelse(
   !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
   dir.create(pathDataInterimTablesCleanedOrganismTranslated),
-  FALSE
+  no = file.remove(
+    list.files(path = pathDataInterimTablesCleanedOrganismTranslated,
+               full.names = TRUE)
+  ) &
+    dir.create(
+      pathDataInterimTablesCleanedOrganismTranslated,
+      showWarnings = FALSE
+    )
 )
 
 system(command = paste("bash", pathTranslatedGnfinderScript))
@@ -92,9 +95,14 @@ dataCleanedTranslatedOrganism <-
   ) %>%
   select(-nchar, -sum)
 
-dataCleanedTranslatedOrganism2join <-
-  dataInterimOrganismToFill %>%
-  select(organismOriginal, organismInterim) %>%
+dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
+  mutate(organismInterim = ifelse(
+    test = organismInterim == word(organismOriginal, 3),
+    yes = NA,
+    no = organismInterim
+  )) %>% # this is to avoid too big family groups because of some "Asteraceae" etc making caluclations too big
+  filter(!is.na(organismInterim)) %>%
+  distinct(organismOriginal, organismInterim) %>%
   mutate_all(as.character)
 
 dataCleanedTranslatedOrganismFull <-
