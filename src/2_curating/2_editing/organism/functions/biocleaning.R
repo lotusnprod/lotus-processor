@@ -163,7 +163,7 @@ biocleaning <- function(gnfound, names, organismCol)
       "classificationRank",
       "classificationIds"
     ),
-    y = names(taxo)
+    y = colnames(taxo)
   )] <- NA
   
   taxo <- taxo %>%
@@ -177,7 +177,9 @@ biocleaning <- function(gnfound, names, organismCol)
       ids = classificationIds,
       sum
     )
+  
   log_debug("Biocleaning: finished joining")
+  
   dbQuality <- gnfound$names.verification$dataSourceQuality
   dbTaxo <- gnfound$names.verification$bestResult$dataSourceTitle
   
