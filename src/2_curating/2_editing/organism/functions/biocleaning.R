@@ -161,8 +161,7 @@ biocleaning <- function(gnfound, names, organismCol)
       "dataSourceTitle",
       "classificationPath",
       "classificationRank",
-      "classificationIds",
-      "sum"
+      "classificationIds"
     ),
     y = names(taxo)
   )] <- NA
