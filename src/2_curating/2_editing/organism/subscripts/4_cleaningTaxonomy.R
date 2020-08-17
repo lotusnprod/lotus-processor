@@ -516,6 +516,27 @@ dataCuratedOrganism$organismCleaned <-
           y = "NA")
 
 #selecting
+dataCuratedOrganism[setdiff(
+  x = c(
+    "organismOriginal",
+    "organismCleaned",
+    "organismDbTaxo",
+    "organismDbTaxoQuality",
+    "organismTaxonIds",
+    "organismTaxonRanks",
+    "organismTaxonomy",
+    "organism_1_kingdom",
+    "organism_2_phylum",
+    "organism_3_class",
+    "organism_4_order",
+    "organism_5_family",
+    "organism_6_genus",
+    "organism_7_species",
+    "organism_8_quality"
+  ),
+  y = names(dataCuratedOrganism)
+)] <- NA
+
 dataCuratedOrganism <- dataCuratedOrganism %>%
   select(
     organismOriginal,
