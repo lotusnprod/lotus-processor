@@ -86,7 +86,7 @@ if (length != 0)
   }
 
 # selecting and reordering
-if (length != 0)
+if (nrow(dataCleanTranslatedOrganism[[1]]) != 0)
   dataCleanedTranslatedOrganism <-
   bind_rows(dataCleanTranslatedOrganism) %>%
   select(
@@ -97,6 +97,22 @@ if (length != 0)
     everything()
   ) %>%
   select(-nchar, -sum)
+
+if (nrow(dataCleanTranslatedOrganism[[1]]) == 0)
+  dataCleanedTranslatedOrganism <- data.frame() %>%
+  mutate(
+    organismInterim = NA,
+    organismCleaned = NA,
+    organismCleanedCurrent = NA,
+    organismDbTaxon = NA,
+    value_min = NA,
+    value_max = NA,
+    taxonId = NA,
+    taxonomy = NA,
+    rank = NA,
+    ids = NA,
+    dbQuality = NA
+  )
 
 dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
   mutate(organismInterim = ifelse(
