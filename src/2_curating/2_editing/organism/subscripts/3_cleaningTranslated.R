@@ -112,10 +112,12 @@ if (length(dataCleanTranslatedOrganism) == 0)
     rank = NA,
     ids = NA,
     dbQuality = NA
-  )
+  ) %>%
+  mutate_all(as.character)
 
 if (nrow(dataInterimOrganismToFill) != 0)
-  dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
+  dataCleanedTranslatedOrganism2join <-
+  dataInterimOrganismToFill %>%
   mutate(organismInterim = ifelse(
     test = organismInterim == word(organismOriginal, 3),
     yes = NA,
