@@ -2330,7 +2330,9 @@ paired_palette <- c(
   "#ffff99",
   "#b15928"
 )
+```
 
+```{r}
 draw_chord <-
   function(data,
            biological_level,
@@ -2422,28 +2424,31 @@ paired_palette <- c(
 )
 
 top_big_chord_bio <- openDbTripletsGoldMeta %>%
-  filter(!is.na(organismCleaned_dbTaxo_1kingdom) & 
-           !is.na(structureCleaned_2superclass)) %>% 
+  filter(!is.na(organismCleaned_dbTaxo_1kingdom) &
+           !is.na(structureCleaned_2superclass)) %>%
   group_by(organismCleaned_dbTaxo_1kingdom) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organismCleaned_dbTaxo_1kingdom) %>% 
+  distinct(organismCleaned_dbTaxo_1kingdom) %>%
   head(6)
 
-top_big_chord_bio <- top_big_chord_bio$organismCleaned_dbTaxo_1kingdom
+top_big_chord_bio <-
+  top_big_chord_bio$organismCleaned_dbTaxo_1kingdom
 
 top_big_chord_chemo <- openDbTripletsGoldMeta %>%
-  filter(!is.na(organismCleaned_dbTaxo_1kingdom) & 
-           !is.na(structureCleaned_2superclass)) %>% 
+  filter(!is.na(organismCleaned_dbTaxo_1kingdom) &
+           !is.na(structureCleaned_2superclass)) %>%
+  filter(organismCleaned_dbTaxo_1kingdom %in% top_big_chord_bio) %>%
   group_by(structureCleaned_2superclass) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structureCleaned_2superclass) %>% 
+  distinct(structureCleaned_2superclass) %>%
   head(12)
 
-top_big_chord_chemo <- top_big_chord_chemo$structureCleaned_2superclass
+top_big_chord_chemo <-
+  top_big_chord_chemo$structureCleaned_2superclass
 ```
 
 ```{r}
@@ -2512,6 +2517,7 @@ top_chemo_med <- openDbTripletsGoldMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
   filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
   filter(!is.na(structureCleaned_3class)) %>%
+  filter(organismCleaned_dbTaxo_5family %in% top_organism_med) %>%
   group_by(structureCleaned_3class) %>%
   add_count() %>%
   ungroup() %>%
@@ -2547,28 +2553,29 @@ htmlwidgets::saveWidget(widget = as_widget(chord_med),
 ##small chord
 ```{r}
 top_organism_sma <- openDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleaned_5directParent) & 
-           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(!is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
   group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organismCleaned_dbTaxo_7species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>%
   head(12)
 
 top_organism_sma <- top_organism_sma$organismCleaned_dbTaxo_7species
 
 top_chemo_sma <- openDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleaned_5directParent) & 
-           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(!is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
+  filter(organismCleaned_dbTaxo_7species %in% top_organism_sma) %>%
   filter(!is.na(structureCleaned_5directParent)) %>%
   group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structureCleaned_5directParent) %>% 
+  distinct(structureCleaned_5directParent) %>%
   head(12)
 
 top_chemo_sma <- top_chemo_sma$structureCleaned_5directParent
@@ -2605,7 +2612,7 @@ top_organism_ranunculaceae <- openDbTripletsGoldMeta %>%
   ungroup() %>%
   arrange(desc(n)) %>%
   distinct(organismCleaned_dbTaxo_7species) %>% 
-  head(12)
+  head(12) 
 
 top_organism_ranunculaceae <- top_organism_ranunculaceae$organismCleaned_dbTaxo_7species
 
@@ -2613,6 +2620,7 @@ top_chemo_ranunculaceae <- openDbTripletsGoldMeta %>%
   filter(!is.na(structureCleaned_5directParent) & 
            !is.na(organismCleaned_dbTaxo_7species)) %>% 
   filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
+  filter(organismCleaned_dbTaxo_7species %in% top_organism_ranunculaceae) %>%
   filter(!is.na(structureCleaned_5directParent)) %>%
   group_by(structureCleaned_5directParent) %>%
   add_count() %>%
@@ -2647,31 +2655,34 @@ htmlwidgets::saveWidget(widget = as_widget(chord_ranunculaceae),
 
 ```{r}
 top_organism_papaveraceae <- openDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleaned_5directParent) & 
-           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(!is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
   group_by(organismCleaned_dbTaxo_7species) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(organismCleaned_dbTaxo_7species) %>% 
+  distinct(organismCleaned_dbTaxo_7species) %>%
   head(12)
 
-top_organism_papaveraceae <- top_organism_papaveraceae$organismCleaned_dbTaxo_7species
+top_organism_papaveraceae <-
+  top_organism_papaveraceae$organismCleaned_dbTaxo_7species
 
 top_chemo_papaveraceae <- openDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleaned_5directParent) & 
-           !is.na(organismCleaned_dbTaxo_7species)) %>% 
+  filter(!is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
+  filter(organismCleaned_dbTaxo_7species %in% top_organism_papaveraceae) %>%
   filter(!is.na(structureCleaned_5directParent)) %>%
   group_by(structureCleaned_5directParent) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structureCleaned_5directParent) %>% 
+  distinct(structureCleaned_5directParent) %>%
   head(12)
 
-top_chemo_papaveraceae <- top_chemo_papaveraceae$structureCleaned_5directParent
+top_chemo_papaveraceae <-
+  top_chemo_papaveraceae$structureCleaned_5directParent
 ```
 
 ```{r}
@@ -2707,22 +2718,25 @@ top_organism_gentianaceae <- openDbTripletsGoldMeta %>%
   distinct(organismCleaned_dbTaxo_7species) %>%
   head(36)
 
-top_organism_gentianaceae <- top_organism_gentianaceae$organismCleaned_dbTaxo_7species
+top_organism_gentianaceae <-
+  top_organism_gentianaceae$organismCleaned_dbTaxo_7species
 
 top_chemo_gentianaceae <- openDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleaned_5directParent) & 
-           !is.na(organismCleaned_dbTaxo_7species)) %>% 
-  filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>% 
-filter(structureCleaned_5directParent == "Xanthones") %>%
+  filter(!is.na(structureCleaned_5directParent) &
+           !is.na(organismCleaned_dbTaxo_7species)) %>%
+  filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
+  filter(structureCleaned_5directParent == "Xanthones") %>%
+  filter(organismCleaned_dbTaxo_7species %in% top_organism_gentianaceae) %>%
   filter(!is.na(structureCleanedInchikey3D)) %>%
   group_by(structureCleanedInchikey3D) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structureCleanedInchikey3D) %>% 
+  distinct(structureCleanedInchikey3D) %>%
   head(144)
 
-top_chemo_gentianaceae <- top_chemo_gentianaceae$structureCleanedInchikey3D
+top_chemo_gentianaceae <-
+  top_chemo_gentianaceae$structureCleanedInchikey3D
 ```
 
 ```{r}
