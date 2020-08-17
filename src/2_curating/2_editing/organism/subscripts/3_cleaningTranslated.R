@@ -114,7 +114,8 @@ if (length(dataCleanTranslatedOrganism) == 0)
     dbQuality = NA
   )
 
-dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
+if (nrow(dataInterimOrganismToFill) != 0)
+  dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
   mutate(organismInterim = ifelse(
     test = organismInterim == word(organismOriginal, 3),
     yes = NA,
@@ -122,6 +123,12 @@ dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
   )) %>% # this is to avoid too big family groups because of some "Asteraceae" etc making caluclations too big
   filter(!is.na(organismInterim)) %>%
   distinct(organismOriginal, organismInterim) %>%
+  mutate_all(as.character)
+
+if (nrow(dataInterimOrganismToFill) == 0)
+  dataCleanedTranslatedOrganism2join <- data.frame() %>%
+  mutate(organismOriginal = NA,
+         organismInterim = NA) %>%
   mutate_all(as.character)
 
 if (length != 0)
