@@ -83,7 +83,7 @@ if (length != 0)
   }
 
 # selecting and reordering
-if (length != 0)
+if (length(dataCleanOriginalOrganism) != 0)
   dataCleanedOriginalOrganism <-
   bind_rows(dataCleanOriginalOrganism) %>%
   select(
@@ -95,8 +95,23 @@ if (length != 0)
   ) %>%
   select(-nchar, -sum)
 
-if (length != 0)
-  dataCleanedOriginalOrganismUnique <-
+if (length(dataCleanOriginalOrganism) == 0)
+  dataCleanedOriginalOrganism <- data.frame() %>%
+  mutate(
+    organismOriginal = NA,
+    organismCleaned = NA,
+    organismCleanedCurrent = NA,
+    organismDbTaxo = NA,
+    value_min = NA,
+    value_max = NA,
+    taxonId = NA,
+    taxonomy = NA,
+    rank = NA,
+    ids = NA,
+    dbQuality = NA
+  )
+
+dataCleanedOriginalOrganismUnique <-
   dataCleanedOriginalOrganism %>%
   distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
