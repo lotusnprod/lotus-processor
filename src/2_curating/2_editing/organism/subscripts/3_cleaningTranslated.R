@@ -86,7 +86,7 @@ if (length != 0)
   }
 
 # selecting and reordering
-if (nrow(dataCleanTranslatedOrganism[[1]]) != 0)
+if (length(dataCleanTranslatedOrganism) != 0)
   dataCleanedTranslatedOrganism <-
   bind_rows(dataCleanTranslatedOrganism) %>%
   select(
@@ -98,7 +98,7 @@ if (nrow(dataCleanTranslatedOrganism[[1]]) != 0)
   ) %>%
   select(-nchar, -sum)
 
-if (nrow(dataCleanTranslatedOrganism[[1]]) == 0)
+if (length(dataCleanTranslatedOrganism) == 0)
   dataCleanedTranslatedOrganism <- data.frame() %>%
   mutate(
     organismInterim = NA,
