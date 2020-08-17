@@ -193,3 +193,20 @@ for i in range(0, len(list_df)):
     header = False
 	)
 
+
+## checking the ratio of pcided smiles 
+
+input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/3_curated/pcided_smiles.txt.gz'
+
+myZip = gzip.open(input_file_path)
+
+df = pd.read_csv(
+	myZip,
+    header = None,
+	sep = '\t')
+
+
+df.info()
+pd.set_option('display.width', 1000)
+
+df[0][793409]
