@@ -62,29 +62,32 @@ length <-
   length(list.files(path = pathDataInterimTablesTranslatedOrganism,
                     pattern = 'tsv'))
 
-num <- as.integer(seq(
-  from = 1 * cut,
-  to = length * cut,
-  by = cut
-))
+if (length != 0)
+  num <- as.integer(seq(
+    from = 1 * cut,
+    to = length * cut,
+    by = cut
+  ))
 
 dataCleanTranslatedOrganism <- list()
 
 # cleaning GNFinder output
-for (i in num) {
-  j <- i / cut
-  print(paste("step", j, "of", length))
-  tryCatch({
-    dataCleanTranslatedOrganism[[j]] <-
-      gnfinder_cleaning(num = i,
-                        organismCol = "organismInterim")
-  }, error = function(e) {
-    cat("ERROR :", conditionMessage(e), "\n")
-  })
-}
+if (length != 0)
+  for (i in num) {
+    j <- i / cut
+    print(paste("step", j, "of", length))
+    tryCatch({
+      dataCleanTranslatedOrganism[[j]] <-
+        gnfinder_cleaning(num = i,
+                          organismCol = "organismInterim")
+    }, error = function(e) {
+      cat("ERROR :", conditionMessage(e), "\n")
+    })
+  }
 
 # selecting and reordering
-dataCleanedTranslatedOrganism <-
+if (length != 0)
+  dataCleanedTranslatedOrganism <-
   bind_rows(dataCleanTranslatedOrganism) %>%
   select(
     organismInterim,
@@ -105,7 +108,8 @@ dataCleanedTranslatedOrganism2join <- dataInterimOrganismToFill %>%
   distinct(organismOriginal, organismInterim) %>%
   mutate_all(as.character)
 
-dataCleanedTranslatedOrganismFull <-
+if (length != 0)
+  dataCleanedTranslatedOrganismFull <-
   left_join(dataCleanedTranslatedOrganism2join,
             dataCleanedTranslatedOrganism) %>%
   select(-organismInterim) %>%
@@ -114,11 +118,13 @@ dataCleanedTranslatedOrganismFull <-
            taxonId,
            .keep_all = TRUE)
 
-dataCleanedOrganism <-
+if (length != 0)
+  dataCleanedOrganism <-
   rbind(dataCleanedOriginalOrganism,
         dataCleanedTranslatedOrganismFull)
 
-dataCleanedOrganism <- dataCleanedOrganism %>%
+if (length != 0)
+  dataCleanedOrganism <- dataCleanedOrganism %>%
   distinct(organismOriginal,
            organismCleaned,
            taxonId,
@@ -132,9 +138,30 @@ dataCleanedOrganism <- dataCleanedOrganism %>%
 
 print("manipulating taxonomic levels")
 
-dataCleanedOrganismManipulated <-
+if (length != 0)
+  dataCleanedOrganismManipulated <-
   manipulating_taxo(dfsel = dataCleanedOrganism,
                     dic = taxaRanksDictionary)
+
+if (length == 0)
+  dataCleanedOrganismManipulated <- data.frame() %>%
+  mutate(
+    organismOriginal = NA,
+    organismCleaned = NA,
+    organismDbTaxo = NA,
+    organsimDbTaxoQuality = NA,
+    organismTaxonIds = NA,
+    organismTaxonRanks = NA,
+    organismTaxonomy = NA,
+    organism_1_kingdom = NA,
+    organism_2_phylum = NA,
+    organism_3_class = NA,
+    organism_4_order = NA,
+    organism_5_family = NA,
+    organism_6_genus = NA,
+    organism_7_species = NA,
+    organism_8_variety = NA
+  )
 
 # exporting
 write.table(

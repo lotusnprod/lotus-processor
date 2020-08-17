@@ -98,7 +98,7 @@ for (i in num) {
       )
     )
   
-  if (nrow(dataTitle == 1))
+  if (nrow(dataTitle) == 1)
     reflist <- list(NA)
   
   print("treating results, may take a while if full mode")

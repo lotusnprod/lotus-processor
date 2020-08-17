@@ -321,6 +321,27 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
+
+## dictionary
+ifelse(
+  !dir.exists(pathDataInterimDictionariesOrganism),
+  dir.create(pathDataInterimDictionariesOrganism),
+  FALSE
+)
+
+write.table(
+  x = organismMinimal,
+  file = gzfile(
+    description = pathDataInterimDictionariesOrganismDictionary,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
 ### reference
 write.table(
   x = referenceTableFull,

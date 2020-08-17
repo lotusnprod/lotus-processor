@@ -362,13 +362,13 @@ ifelse(
 
 ## writing files
 ### organism
-if (nrow(organismTable)!=0)
-split_data_table(
-  x = organismTable,
-  no_rows_per_frame = 10000,
-  text = "",
-  path_to_store = pathDataInterimTablesOriginalOrganism
-)
+if (nrow(organismTable) != 0)
+  split_data_table(
+    x = organismTable,
+    no_rows_per_frame = 10000,
+    text = "",
+    path_to_store = pathDataInterimTablesOriginalOrganism
+  )
 
 ### reference
 #### DOI

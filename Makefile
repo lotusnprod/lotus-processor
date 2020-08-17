@@ -8,6 +8,7 @@ include paths.mk
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-metrics analysing-examples
+.PHONY : cleaning-organism-interim 
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -81,11 +82,14 @@ curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/c
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
 
-curating-editing-organism: curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
+curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 
 curating-editing-organism-cleaning-original: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz
 ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv) ${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
+
+cleaning-organism-interim :
+	-rm edit ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
 
 curating-editing-organism-translating: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/src/main/kotlin/*.kt)
