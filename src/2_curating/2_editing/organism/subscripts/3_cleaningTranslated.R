@@ -163,12 +163,14 @@ if (length != 0)
 
 print("manipulating taxonomic levels")
 
-if (length != 0)
+if (length != 0 &
+    nrow(dataCleanedOrganism) != 0)
   dataCleanedOrganismManipulated <-
   manipulating_taxo(dfsel = dataCleanedOrganism,
                     dic = taxaRanksDictionary)
 
-if (length == 0)
+if (length == 0 |
+    nrow(dataCleanedOrganism) == 0)
   dataCleanedOrganismManipulated <- data.frame() %>%
   mutate(
     organismOriginal = NA,
