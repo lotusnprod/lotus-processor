@@ -537,71 +537,12 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
     organism_8_variety
   )
 
-dataCuratedOrganism <- dataCuratedOrganism %>%
-  select(
-    organismOriginal,
-    organismCleaned,
-    organismDbTaxo,
-    # organismDbTaxoQuality,
-    # organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
-    # organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
-    organismTaxonIds,
-    organismTaxonRanks,
-    organismTaxonomy,
-    organism_1_kingdom,
-    organism_2_phylum,
-    organism_3_class,
-    organism_4_order,
-    organism_5_family,
-    organism_6_genus,
-    organism_7_species,
-    organism_8_variety
-  )
-
-organismMinimal <- dataCuratedOrganism %>%
-  select(
-    organismOriginal,
-    organismCleaned,
-    organismCleaned_dbTaxo = organismDbTaxo,
-    organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy = organismTaxonomy
-  ) %>%
-  distinct(
-    organismOriginal,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy
-  )
-
 # exporting
 ## curated
 write.table(
   x = dataCuratedOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismFinal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-## dictionary
-ifelse(
-  !dir.exists(pathDataInterimDictionariesOrganism),
-  dir.create(pathDataInterimDictionariesOrganism),
-  FALSE
-)
-
-write.table(
-  x = organismMinimal,
-  file = gzfile(
-    description = pathDataInterimDictionariesOrganismDictionary,
     compression = 9,
     encoding = "UTF-8"
   ),

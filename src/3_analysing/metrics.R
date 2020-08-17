@@ -60,7 +60,7 @@ dnpDb <- inhouseDbMinimal %>%
     referenceCleanedDoi = NA,
     referenceCleanedPmcid = NA,
     referenceCleanedPmid = NA
-  )
+  ) %>% mutate_all(as.character)
 
 rm(inhouseDbMinimal)
 
@@ -127,7 +127,7 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid, 
+    referenceCleanedPmid,
     .keep_all = TRUE
   ) %>%
   select(

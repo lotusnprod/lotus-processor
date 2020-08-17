@@ -97,7 +97,8 @@ manipulating_taxo <- function(dfsel, dic) {
     paste("bio_", colnames(df3)[6:ncol(df3)], sep = "")
   
   #pivoting (long)
-  df4 <- df3 %>%
+  if (nrow(df3) != 0)
+    df4 <- df3 %>%
     pivot_longer(
       cols = 6:ncol(.),
       names_to = c(".value", "level"),
@@ -107,7 +108,8 @@ manipulating_taxo <- function(dfsel, dic) {
     )
   
   #pivoting (wide)
-  df5 <- df4 %>%
+  if (nrow(df3) != 0)
+    df5 <- df4 %>%
     group_by(organismCleaned) %>%
     distinct(ids,
              level,
@@ -130,7 +132,29 @@ manipulating_taxo <- function(dfsel, dic) {
           "species",
           "variety"
         )
-    ) %>%
+    )
+  
+  if (nrow(df3) != 0)
+    df5[setdiff(
+      x = c(
+        "organismCleaned",
+        "organismDbTaxo",
+        "ids",
+        "dbQuality",
+        "kingdom",
+        "phylum",
+        "class",
+        "order",
+        "family",
+        "genus",
+        "species",
+        "variety"
+      ),
+      y = names(df5)
+    )] <- NA
+  
+  if (nrow(df3) != 0)
+    df5 <- df5 %>%
     select(
       organismCleaned,
       organismDbTaxo,
@@ -147,7 +171,8 @@ manipulating_taxo <- function(dfsel, dic) {
     )
   
   #adding taxa to initial df
-  df6 <- left_join(dfsel, df5) %>%
+  if (nrow(df3) != 0)
+    df6 <- left_join(dfsel, df5) %>%
     select(
       organismOriginal,
       organismCleaned,
@@ -164,6 +189,26 @@ manipulating_taxo <- function(dfsel, dic) {
       organism_6_genus,
       organism_7_species,
       organism_8_variety
+    )
+  
+  if (nrow(df3) == 0)
+    df6 <- data.frame() %>%
+    mutate(
+      organismOriginal = NA,
+      organismCleaned = NA,
+      organismDbTaxo = NA,
+      organismDbTaxoQuality = NA,
+      organismTaxonIds = NA,
+      organismTaxonRanks = NA,
+      organismTaxonomy = NA,
+      organism_1_kingdom = NA,
+      organism_2_phylum = NA,
+      organism_3_class = NA,
+      organism_4_order = NA,
+      organism_5_family = NA,
+      organism_6_genus = NA,
+      organism_7_species = NA,
+      organism_8_variety = NA
     )
   
   return(df6)

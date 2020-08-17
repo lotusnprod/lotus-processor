@@ -4,22 +4,7 @@ homemadeShift <- function(x, n) {
 
 biocleaning <- function(gnfound, names, organismCol)
 {
-  #selecting and adding row number
-  
   log_debug("Biocleaning")
-  df <- gnfound %>%
-    select(names.verbatim,
-           names.verification) %>%
-    data.table() %>%
-    select(
-      names.verbatim,
-      names.verification.bestResult.dataSourceTitle,
-      names.verification.bestResult.matchedCanonicalSimple,
-      names.verification.bestResult.classificationRank,
-      names.verification.bestResult.classificationPath,
-      names.verification.bestResult.isSynonym
-    ) %>%
-    mutate(nrow = row_number())
   log_debug("Biocleaning: finished creating dataframe")
   #extracting preferred results data table
   ##as list of dataframes
@@ -109,6 +94,9 @@ biocleaning <- function(gnfound, names, organismCol)
   df4$species[df4$species >= 1] <- 1
   df4$variety[df4$variety >= 1] <- 1
   
+  df4[setdiff(x = c("isSynonym"),
+              y = names(df4))] <- NA
+  
   #the synonym part is there to avoid the (actually)
   ##non-optimal output from Catalogue of Life in GNFinder
   ###(explained in https://github.com/gnames/gnfinder/issues/48)
@@ -145,9 +133,15 @@ biocleaning <- function(gnfound, names, organismCol)
     ungroup() %>%
     arrange(id)
   
+  df5b[setdiff(x = c("classificationIds"),
+               y = names(df5b))] <- NA
+  
   df6a <- cbind(df5a, rows)
   df6b <- left_join(df6a, df5b) %>%
     filter(!is.na(classificationIds))
+  
+  if (nrow(df6b) == 0)
+    df6b[1, colnames(df6b)] <- NA
   
   #adding row number
   df7 <- gnfound$names.start %>%
@@ -157,7 +151,22 @@ biocleaning <- function(gnfound, names, organismCol)
   colnames(df7)[1] <- "sum"
   
   #joining
-  taxo <- right_join(df6b, df7) %>%
+  taxo <- right_join(df6b, df7)
+  
+  taxo[setdiff(
+    x = c(
+      "matchedCanonicalFull",
+      "currentCanonicalFull",
+      "taxonId",
+      "dataSourceTitle",
+      "classificationPath",
+      "classificationRank",
+      "classificationIds"
+    ),
+    y = names(taxo)
+  )] <- NA
+  
+  taxo <- taxo %>%
     select(
       canonicalname = matchedCanonicalFull,
       canonicalnameCurrent = currentCanonicalFull,
