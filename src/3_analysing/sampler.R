@@ -24,7 +24,9 @@ referenceTableFull <- read_delim(
   trim_ws = TRUE
 )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_doi_AR <- openDb %>%
   filter(referenceType == "doi") %>%
   sample_n(10) %>%
@@ -32,7 +34,9 @@ sampleONPDB_doi_AR <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_original_AR <- openDb %>%
   filter(referenceType == "original")  %>%
   sample_n(10) %>%
@@ -52,7 +56,9 @@ sampleONPDB_original_AR <- openDb %>%
 #     comments = NA
 #   )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_pubmed_AR <- openDb %>%
   filter(referenceType == "pubmed") %>%
   sample_n(10) %>%
@@ -60,7 +66,9 @@ sampleONPDB_pubmed_AR <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_split_AR <- openDb %>%
   filter(referenceType == "split")  %>%
   sample_n(10) %>%
@@ -68,7 +76,9 @@ sampleONPDB_split_AR <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_title_AR <- openDb %>%
   filter(referenceType == "title")  %>%
   sample_n(10) %>%
@@ -76,7 +86,9 @@ sampleONPDB_title_AR <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_doi_JB <- openDb %>%
   filter(referenceType == "doi") %>%
   sample_n(10) %>%
@@ -84,7 +96,9 @@ sampleONPDB_doi_JB <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_original_JB <- openDb %>%
   filter(referenceType == "original")  %>%
   sample_n(10) %>%
@@ -104,7 +118,9 @@ sampleONPDB_original_JB <- openDb %>%
 #     comments = NA
 #   )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_pubmed_JB <- openDb %>%
   filter(referenceType == "pubmed") %>%
   sample_n(10) %>%
@@ -112,7 +128,9 @@ sampleONPDB_pubmed_JB <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_split_JB <- openDb %>%
   filter(referenceType == "split")  %>%
   sample_n(10) %>%
@@ -120,7 +138,9 @@ sampleONPDB_split_JB <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_title_JB <- openDb %>%
   filter(referenceType == "title")  %>%
   sample_n(10) %>%
@@ -128,7 +148,9 @@ sampleONPDB_title_JB <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_doi_PMA <- openDb %>%
   filter(referenceType == "doi") %>%
   sample_n(10) %>%
@@ -136,7 +158,9 @@ sampleONPDB_doi_PMA <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_original_PMA <- openDb %>%
   filter(referenceType == "original")  %>%
   sample_n(10) %>%
@@ -156,7 +180,9 @@ sampleONPDB_original_PMA <- openDb %>%
 #     comments = NA
 #   )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_pubmed_PMA <- openDb %>%
   filter(referenceType == "pubmed") %>%
   sample_n(10) %>%
@@ -164,7 +190,9 @@ sampleONPDB_pubmed_PMA <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_split_PMA <- openDb %>%
   filter(referenceType == "split")  %>%
   sample_n(10) %>%
@@ -172,7 +200,9 @@ sampleONPDB_split_PMA <- openDb %>%
          validated = NA,
          comments = NA)
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleONPDB_title_PMA <- openDb %>%
   filter(referenceType == "title")  %>%
   sample_n(10) %>%
@@ -199,7 +229,9 @@ sampleONPDB <- bind_rows(
   sampleONPDB_title_PMA
 )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleKnapsack <- openDb %>%
   filter(database == "kna_1") %>%
   sample_n(150) %>%
@@ -254,7 +286,9 @@ goldenSet <- openDbFull %>%
     referenceCleanedPmid
   )
 
-set.seed(42)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
 sampleWD <- goldenSet %>%
   sample_n(500) %>%
   select(

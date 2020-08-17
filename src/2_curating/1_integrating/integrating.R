@@ -65,7 +65,9 @@ dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
 
 # sampling rows for minimal mode
 if (mode == "min")
-  set.seed(seed = 42)
+  set.seed(seed = 42,
+           kind = "Mersenne-Twister",
+           normal.kind = "Inversion")
 if (mode == "min")
   dbTable <- dbTable %>%
   sample_n(size = 2000)
