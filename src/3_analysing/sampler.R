@@ -27,31 +27,31 @@ referenceTableFull <- read_delim(
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_doi_AR <- openDb %>%
+sampleONPDB_doi <- openDb %>%
   filter(referenceType == "doi") %>%
-  sample_n(10) %>%
-  mutate(curator = "AR",
+  sample_n(30) %>%
+  mutate(curator = NA,
          validated = NA,
          comments = NA)
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_original_AR <- openDb %>%
+sampleONPDB_original <- openDb %>%
   filter(referenceType == "original")  %>%
-  sample_n(10) %>%
-  mutate(curator = "AR",
+  sample_n(30) %>%
+  mutate(curator = NA,
          validated = NA,
          comments = NA)
 
-# set.seed(42) # 0 entries
+# set.seed(seed = 42,
+#          kind = "Mersenne-Twister",
+#          normal.kind = "Inversion") # 0 entries
 # sampleONPDB_publishingDetails <- openDb %>%
 #   filter(referenceType == "publishingDetails") %>%
 #   sample_n(30) %>%
 #   mutate(
-#     curator = sample(c("AR", "JB", "PMA"),
-#                      size = nrow(.),
-#                      replace = TRUE),
+#     curator = NA,
 #     validated = NA,
 #     comments = NA
 #   )
@@ -59,175 +59,54 @@ sampleONPDB_original_AR <- openDb %>%
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_pubmed_AR <- openDb %>%
+sampleONPDB_pubmed <- openDb %>%
   filter(referenceType == "pubmed") %>%
-  sample_n(10) %>%
-  mutate(curator = "AR",
+  sample_n(30) %>%
+  mutate(curator = NA,
          validated = NA,
          comments = NA)
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_split_AR <- openDb %>%
+sampleONPDB_split <- openDb %>%
   filter(referenceType == "split")  %>%
-  sample_n(10) %>%
-  mutate(curator = "AR",
+  sample_n(30) %>%
+  mutate(curator = NA,
          validated = NA,
          comments = NA)
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_title_AR <- openDb %>%
+sampleONPDB_title <- openDb %>%
   filter(referenceType == "title")  %>%
-  sample_n(10) %>%
-  mutate(curator = "AR",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_doi_JB <- openDb %>%
-  filter(referenceType == "doi") %>%
-  sample_n(10) %>%
-  mutate(curator = "JB",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_original_JB <- openDb %>%
-  filter(referenceType == "original")  %>%
-  sample_n(10) %>%
-  mutate(curator = "JB",
-         validated = NA,
-         comments = NA)
-
-# set.seed(42) # 0 entries
-# sampleONPDB_publishingDetails <- openDb %>%
-#   filter(referenceType == "publishingDetails") %>%
-#   sample_n(30) %>%
-#   mutate(
-#     curator = sample(c("AR", "JB", "PMA"),
-#                      size = nrow(.),
-#                      replace = TRUE),
-#     validated = NA,
-#     comments = NA
-#   )
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_pubmed_JB <- openDb %>%
-  filter(referenceType == "pubmed") %>%
-  sample_n(10) %>%
-  mutate(curator = "JB",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_split_JB <- openDb %>%
-  filter(referenceType == "split")  %>%
-  sample_n(10) %>%
-  mutate(curator = "JB",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_title_JB <- openDb %>%
-  filter(referenceType == "title")  %>%
-  sample_n(10) %>%
-  mutate(curator = "JB",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_doi_PMA <- openDb %>%
-  filter(referenceType == "doi") %>%
-  sample_n(10) %>%
-  mutate(curator = "PMA",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_original_PMA <- openDb %>%
-  filter(referenceType == "original")  %>%
-  sample_n(10) %>%
-  mutate(curator = "PMA",
-         validated = NA,
-         comments = NA)
-
-# set.seed(42) # 0 entries
-# sampleONPDB_publishingDetails <- openDb %>%
-#   filter(referenceType == "publishingDetails") %>%
-#   sample_n(30) %>%
-#   mutate(
-#     curator = sample(c("AR", "JB", "PMA"),
-#                      size = nrow(.),
-#                      replace = TRUE),
-#     validated = NA,
-#     comments = NA
-#   )
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_pubmed_PMA <- openDb %>%
-  filter(referenceType == "pubmed") %>%
-  sample_n(10) %>%
-  mutate(curator = "PMA",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_split_PMA <- openDb %>%
-  filter(referenceType == "split")  %>%
-  sample_n(10) %>%
-  mutate(curator = "PMA",
-         validated = NA,
-         comments = NA)
-
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleONPDB_title_PMA <- openDb %>%
-  filter(referenceType == "title")  %>%
-  sample_n(10) %>%
-  mutate(curator = "PMA",
+  sample_n(30) %>%
+  mutate(curator = NA,
          validated = NA,
          comments = NA)
 
 sampleONPDB <- bind_rows(
-  sampleONPDB_doi_AR,
-  sampleONPDB_doi_JB,
-  sampleONPDB_doi_PMA,
-  sampleONPDB_original_AR,
-  sampleONPDB_original_JB,
-  sampleONPDB_original_PMA,
+  sampleONPDB_doi,
+  sampleONPDB_original,
   # sampleONPDB_publishingDetails,
-  sampleONPDB_pubmed_AR,
-  sampleONPDB_pubmed_JB,
-  sampleONPDB_pubmed_PMA,
-  sampleONPDB_split_AR,
-  sampleONPDB_split_JB,
-  sampleONPDB_split_PMA,
-  sampleONPDB_title_AR,
-  sampleONPDB_title_JB,
-  sampleONPDB_title_PMA
-)
+  sampleONPDB_pubmed,
+  sampleONPDB_split,
+  sampleONPDB_title
+) %>% 
+  mutate_all(as.character)
+
+
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
+
+sampleONPDB[1:50,"curator"] <- "AR"
+
+sampleONPDB[51:100,"curator"] <- "JB"
+
+sampleONPDB[101:150,"curator"] <- "PMA"
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
