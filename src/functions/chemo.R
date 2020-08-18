@@ -2,58 +2,42 @@
 ####################   Functions   ####################
 #######################################################
 
-# library(ChemmineR)
 library(parallel)
 library(pbmcapply)
 library(rvest)
 library(tidyverse)
-# library(webchem)
+library(webchem)
 
 #######################################################
 #######################################################
 
-pubchem2inchi <- function(i)
-{
-  tryCatch({
-    cpd <-
-      data_translated_pubchem[i, "structure_original_numerical_pubchem"]
-    url <-
-      paste(
-        "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/",
-        cpd,
-        "/property/InChI/txt",
-        sep = ""
-      )
-    url <- gsub(pattern = "\\s",
-                replacement = "%20",
-                x = url)
-    read_html(url) %>%
-      html_text()
-  }
-  , error = function(e) {
-    NA
-  })
-}
-
-#######################################################
-#######################################################
-
-name2inchi <- function(i)
-  # {
-  #   tryCatch({
-  #     x <- cts_convert(
-  #       query = dataTranslatedNominal[i, "nameCleaned"],
-  #       from = "Chemical Name",
-  #       to = "InChI Code",
-  #       verbose = FALSE,
-  #       choices = 1
-  #     )
-  #     return(x)
-  #   }
+# pubchem2inchi <- function(i)
+# {
+#   tryCatch({
+#     cpd <-
+#       data_translated_pubchem[i, "structure_original_numerical_pubchem"]
+#     url <-
+#       paste(
+#         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/",
+#         cpd,
+#         "/property/InChI/txt",
+#         sep = ""
+#       )
+#     url <- gsub(pattern = "\\s",
+#                 replacement = "%20",
+#                 x = url)
+#     read_html(url) %>%
+#       html_text()
+#   }
 #   , error = function(e) {
 #     NA
 #   })
 # }
+
+#######################################################
+#######################################################
+
+name2inchi_cactus <- function(i)
 {
   tryCatch({
     cpd <- dataTranslatedNominal[i, "nameCleaned"]
@@ -117,12 +101,22 @@ preparing_name <- function(x) {
 #######################################################
 #######################################################
 
-
-y_as_na <- function(x, y)
+name2inchi_cts <- function(i)
 {
-  if ("factor" %in% class(x))
-    x <- as.character(x) ## since ifelse wont work with factors
-  ifelse(test = as.character(x) != y,
-         yes = x,
-         no = NA)
+  tryCatch({
+    x <- cts_convert(
+      query = dataTranslatedNominal_cts[i, "nameCleaned"],
+      from = "Chemical Name",
+      to = "InChI Code",
+      verbose = FALSE,
+      choices = 1
+    )
+    return(x)
+  }
+  , error = function(e) {
+    NA
+  })
 }
+
+#######################################################
+#######################################################
