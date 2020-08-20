@@ -15,7 +15,8 @@ dataTranslated <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  data.frame()
 
 ### Find something appropriate
 # test <- dataTranslated %>%
@@ -214,7 +215,9 @@ print(x = "cleaning, this may take a while if running full mode")
 
 dataCleaned <- dataTranslated %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
-         referenceCleanedType = referenceTranslatedType)
+         referenceCleanedType = referenceTranslatedType) %>%
+  select(-referenceTranslatedValue,
+         -referenceTranslatedType)
 
 rm(dataTranslated)
 
@@ -225,7 +228,8 @@ dataCleanedScore <- dataCleaned %>%
   distinct(organismOriginal,
            organismCleaned,
            referenceCleanedValue,
-           level) %>%
+           level,
+           .keep_all = TRUE) %>%
   rowwise() %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
     test = str_detect(
@@ -235,9 +239,23 @@ dataCleanedScore <- dataCleaned %>%
     yes = 1,
     no = 0
   )) %>%
-  filter(referenceCleaned_scoreTitleOrganism == 1)
+  ungroup() %>%
+  filter(referenceCleaned_scoreTitleOrganism == 1) %>%
+  pivot_wider(names_from = referenceCleanedType,
+              names_prefix = "referenceCleaned_",
+              values_from = referenceCleanedValue) %>%
+  mutate_all(as.character) %>%
+  pivot_longer(
+    cols = (ncol(.) - 1):ncol(.),
+    names_to = c("drop", "referenceCleanedType"),
+    names_sep = "_",
+    values_to = "referenceCleanedValue",
+    values_drop_na = TRUE
+  ) %>%
+  filter(referenceCleanedType == "scoreTitleOrganism") %>%
+  select(-drop)
 
-dataCleanedJoined <- left_join(dataCleaned, dataCleanedScore)
+dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore)
 
 rm(dataCleaned)
 
@@ -269,82 +287,18 @@ dataCleanedJoinedWide <- dataCleanedJoined %>%
   ungroup() %>%
   distinct(organismOriginal,
            referenceValue,
-           referenceTranslatedType,
            .keep_all = TRUE) %>%
+  select(-level) %>%
   mutate_all(as.character)
 
 rm(dataCleanedJoined)
 
-dataCleanedJoinedLong <- dataCleanedJoinedWide %>%
-  pivot_longer(
-    cols = 8:ncol(.),
-    names_to = c("drop", "referenceCleanedType"),
-    names_sep = "_",
-    values_to = "referenceCleanedValue",
-    values_drop_na = TRUE
-  ) %>%
-  distinct(
-    organismOriginal,
-    organismCleaned,
-    referenceType,
-    referenceValue,
-    level,
-    referenceCleanedType,
-    referenceCleanedValue
-  )
-
-print(x = "loading crossref translations file, this may take a while")
-
-dataCleaned <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate(referenceCleanedValue = referenceTranslatedValue,
-         referenceCleanedType = referenceTranslatedType) %>%
-  select(-referenceTranslatedValue,
-         -referenceTranslatedType)
-
-subsetJoin <- dataCleaned %>%
-  filter(referenceType == "journal" |
-           referenceType == "external" |
-           referenceType == "isbn") %>%
-  distinct(
-    organismOriginal,
-    organismCleaned,
-    referenceType,
-    referenceValue,
-    level,
-    referenceCleanedType,
-    referenceCleanedValue
-  )
-
-dataJoinedLongFilled <- bind_rows(dataCleanedJoinedLong,
-                                  subsetJoin) %>%
-  distinct(
-    organismOriginal,
-    organismCleaned,
-    referenceType,
-    referenceValue,
-    level,
-    referenceCleanedType,
-    referenceCleanedValue
-  )
-
-dataCleanedJoinedLongWide <- dataJoinedLongFilled %>%
-  pivot_wider(names_from = referenceCleanedType,
-              names_prefix = "referenceCleaned_",
-              values_from = referenceCleanedValue) %>%
-  mutate_all(as.character)
-
-subDataClean_doi <- dataCleanedJoinedLongWide %>%
+subDataClean_doi <- dataCleanedJoinedWide %>%
   filter(!is.na(referenceCleaned_doi)) %>%
   distinct(referenceCleaned_doi) %>%
   mutate_all(as.character)
 
-subDataClean_pmid <- dataCleaned %>%
+subDataClean_pmid <- dataCleanedJoinedWide %>%
   filter(referenceType == "pubmed") %>%
   distinct(referenceValue) %>%
   mutate_all(as.character)
@@ -382,7 +336,7 @@ df_pubmed <- left_join(subDataClean_pmid,
          referenceCleaned_pmcid = PMCID) %>%
   mutate(referenceCleaned_pmid = referenceValue)
 
-tableJoined <- left_join(dataCleanedJoinedLongWide, df_doi)
+tableJoined <- left_join(dataCleanedJoinedWide, df_doi)
 
 referenceTable <-
   left_join(tableJoined,

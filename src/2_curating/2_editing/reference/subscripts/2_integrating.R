@@ -33,7 +33,7 @@ dataDoi <- read_delim(
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA) %>%
+  mutate(level = 1) %>%
   mutate_all(as.character)
 
 ### original
@@ -92,7 +92,7 @@ dataPubmed <- read_delim(
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA) %>%
+  mutate(level = 1) %>%
   mutate_all(as.character)
 
 ### publishing details
@@ -143,15 +143,18 @@ dataTitle <- read_delim(
     scoreCrossref_title = referenceTranslationScoreCrossref,
     scoreDistance_title = referenceTranslationScoreDistance
   ) %>%
+  group_by(referenceOriginal) %>%
+  mutate(level = row_number()) %>%
+  relocate(level, .after = referenceOriginal) %>%
   mutate_all(as.character) %>%
+  ungroup() %>%
   pivot_longer(
-    cols = 2:ncol(.),
+    cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate(level = NA) %>%
   mutate_all(as.character)
 
 ### split
@@ -196,39 +199,55 @@ dataFull <- read_delim(
   mutate_all(as.character)
 
 ### cleaned
-dataCleanedOrganismManipulated <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+  dataCleanedOrganismManipulated <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   select(organismOriginal,
          organismCleaned) %>%
   mutate_all(as.character)
 
+if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
+  dataCleanedOrganismManipulated <- read_delim(
+    file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+  select(organismOriginal,
+         organismCleaned) %>%
+  mutate_all(as.character)
+
+
 print(x = "loading reference dictionary, this may take a while")
 
 ### dictionary
-referenceDictionary <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesReferenceDictionary))
+  referenceDictionary <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 # joining all types together again
-dataCrossref <-
-  bind_rows(
-    dataDoi,
-    dataOriginal,
-    dataPublishingDetails,
-    dataPubmed,
-    dataSplit,
-    dataTitle,
-    referenceDictionary
-  ) %>%
+dataCrossref <- bind_rows(dataDoi,
+                          dataOriginal,
+                          dataPublishingDetails,
+                          dataPubmed,
+                          dataSplit,
+                          dataTitle)
+
+if (file.exists(pathDataInterimDictionariesReferenceDictionary))
+  dataCrossref <-  bind_rows(dataCrossref, referenceDictionary)
+
+dataCrossref <- dataCrossref %>%
   filter(!is.na(referenceOriginal)) %>%
   distinct(
     referenceOriginal,
@@ -262,6 +281,13 @@ rm(
 dataTranslated <- left_join(dataJoined,
                             dataCrossref,
                             by = c("referenceValue" = "referenceOriginal")) %>%
+  filter(
+    !is.na(referenceTranslatedValue) |
+      referenceType == "external" |
+      referenceType == "journal" |
+      referenceType == "authors" |
+      referenceType == "isbn"
+  ) %>%
   distinct(
     organismOriginal,
     organismCleaned,
