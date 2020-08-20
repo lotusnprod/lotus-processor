@@ -23,50 +23,55 @@ originalTable <- read_delim(
 
 ### dictionaries
 #### structure
-structureDictionary <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesStructureDictionary))
+  structureDictionary <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 #### organism
-organismDictionary <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+  organismDictionary <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 #### reference
-referenceOrganismDictionary <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesReferenceOrganismDictionary),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+  referenceOrganismDictionary <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesReferenceOrganismDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 ### metadata
 #### structure
-structureMetadata <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesStructureMetadata),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesStructureMetadata))
+  structureMetadata <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesStructureMetadata),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 #### organism
-organismMetadata <- read_delim(
-  file = gzfile(description = pathDataInterimDictionariesOrganismMetadata),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+if (file.exists(pathDataInterimDictionariesOrganismMetadata))
+  organismMetadata <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesOrganismMetadata),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 ### organism
 organismTableFull <- read_delim(
@@ -134,16 +139,22 @@ referenceTableFull <- read_delim(
 
 # joining previous dictionaries with metadata
 ## organism
-organismOld <-
+if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  organismOld <-
   left_join(organismDictionary, organismMetadata)
 
 ## structure
-structureOld <-
+if (file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata))
+  structureOld <-
   left_join(structureDictionary, structureMetadata)
 
 # joining previous results with new ones
 ## organism
-organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
+if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
   distinct()
 
 ## structure
@@ -151,11 +162,14 @@ structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
 
-structureFull <- bind_rows(structureFull, structureOld) %>%
+if (file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata))
+  structureFull <- bind_rows(structureFull, structureOld) %>%
   distinct()
 
 ## reference
-referenceTableFull <-
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+  referenceTableFull <-
   bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
   distinct()
 
@@ -308,6 +322,12 @@ ifelse(
   FALSE
 )
 
+ifelse(
+  !dir.exists(pathDataInterimDictionariesOrganism),
+  dir.create(pathDataInterimDictionariesOrganism),
+  FALSE
+)
+
 write.table(
   x = structureMinimal,
   file = gzfile(
@@ -319,14 +339,6 @@ write.table(
   quote = FALSE,
   sep = "\t",
   fileEncoding = "UTF-8"
-)
-
-
-## dictionary
-ifelse(
-  !dir.exists(pathDataInterimDictionariesOrganism),
-  dir.create(pathDataInterimDictionariesOrganism),
-  FALSE
 )
 
 write.table(
