@@ -93,20 +93,20 @@ sampleONPDB <- bind_rows(
   sampleONPDB_pubmed,
   sampleONPDB_split,
   sampleONPDB_title
-) %>% 
+) %>%
   mutate_all(as.character)
 
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
 
-sampleONPDB[1:50,"curator"] <- "AR"
+sampleONPDB[1:50, "curator"] <- "AR"
 
-sampleONPDB[51:100,"curator"] <- "JB"
+sampleONPDB[51:100, "curator"] <- "JB"
 
-sampleONPDB[101:150,"curator"] <- "PMA"
+sampleONPDB[101:150, "curator"] <- "PMA"
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
@@ -131,11 +131,49 @@ goldenSet <- openDbFull %>%
       !is.na(referenceCleanedPmcid)
   ) %>%
   filter(
-    referenceCleaned_score_crossref == 100 |
+    referenceCleaned_score_crossref == 1 |
       referenceCleaned_score_distance <= 10 |
       # here is a discussion about | or &
       referenceCleaned_score_titleOrganism == 1
   ) %>%
+  distinct(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
+    structureCleanedInchikey3D,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  ) %>%
+  select(
+    database,
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy,
+    structureCleanedInchikey3D,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  )
+
+platinumSet <- openDbFull %>%
+  filter(
+    !is.na(referenceCleanedDoi) |
+      !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid)
+  ) %>%
+  filter(referenceCleaned_score_crossref == 1 |
+           referenceCleaned_score_distance <= 10) %>%
+  filter(referenceCleaned_score_titleOrganism == 1) %>%
   distinct(
     database,
     organismCleaned,
@@ -230,6 +268,16 @@ write.table(
 write.table(
   x = sampleWD,
   file = pathDataInterimTablesAnalysedSampleGoldONPDB,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+## platinumSet
+write.table(
+  x = platinumSet,
+  file = pathDataInterimTablesAnalysedPlatinum,
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",

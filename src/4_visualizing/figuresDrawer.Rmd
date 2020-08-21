@@ -1822,6 +1822,10 @@ upset(
 # v3
 ```
 
+```{r}
+detach("package:Hmisc", unload = TRUE)
+```
+
 ##trees
 #bio
 ```{r}
