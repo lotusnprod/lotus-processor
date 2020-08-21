@@ -88,7 +88,7 @@ curating-editing-organism-cleaning-original: ${INTERIM_TABLE_CLEANED_ORGANISM_PA
 ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv) ${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/1_cleaningOriginal.R
 
-cleaning-organism-interim :
+cleaning-organism-interim:
 	-rm edit ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
 
 curating-editing-organism-translating: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
