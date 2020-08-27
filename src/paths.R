@@ -819,6 +819,10 @@ pathDataInterimDictionariesStructureDictionary <-
   file.path(pathDataInterimDictionariesStructure,
             "dictionary.tsv.gz")
 
+pathDataInterimDictionariesStructureAntiDictionary <-
+  file.path(pathDataInterimDictionariesStructure,
+            "antiDictionary.tsv.gz")
+
 pathDataInterimDictionariesStructureMetadata <-
   file.path(pathDataInterimDictionariesStructure, "metadata.tsv.gz")
 

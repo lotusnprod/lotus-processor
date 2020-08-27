@@ -17,9 +17,20 @@ dbList <- lapply(pathDataInterimDbDir, db_loader)
 ## dictionaries
 print(x = "loading dictionaries")
 ### structure
+#### normal
 if (file.exists(pathDataInterimDictionariesStructureDictionary))
   structureDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
+
+#### anti
+if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
+  structureAntiDictionary <- read_delim(
+    file = gzfile(description = pathDataInterimDictionariesStructureAntiDictionary),
     delim = "\t",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
@@ -101,6 +112,11 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
   anti_join(x = structureTable_inchi,
             y = structureDictionary)
 
+if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
+  structureTable_inchi <-
+  anti_join(x = structureTable_inchi,
+            y = structureAntiDictionary)
+
 structureTable_inchi <- structureTable_inchi %>%
   select(structureOriginal_inchi = structureValue)
 
@@ -116,6 +132,11 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
   structureTable_smiles <-
   anti_join(x = structureTable_smiles,
             y = structureDictionary)
+
+if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
+  structureTable_smiles <-
+  anti_join(x = structureTable_smiles,
+            y = structureAntiDictionary)
 
 structureTable_smiles <- structureTable_smiles %>%
   select(structureOriginal_smiles = structureValue)
@@ -133,6 +154,11 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
   structureTable_nominal <-
   anti_join(x = structureTable_nominal,
             y = structureDictionary)
+
+if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
+  structureTable_nominal <-
+  anti_join(x = structureTable_nominal,
+            y = structureAntiDictionary)
 
 structureTable_nominal <- structureTable_nominal %>%
   select(structureOriginal_nominal = structureValue)

@@ -290,6 +290,20 @@ inhouseDbMinimal <-
       database == "dnp_1"
   )
 
+# to avoid too long names translation, in case
+structureNA <- anti_join(x = originalTable,
+                         y = structureFull)
+
+structureNA <- left_join(structureNA, structureFull) %>%
+  filter(is.na(structureCleanedInchi)) %>%
+  distinct(
+    structureType,
+    structureValue,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles
+  )
+
 # export
 ## creating directories if they do not exist
 ifelse(
@@ -322,12 +336,6 @@ ifelse(
   FALSE
 )
 
-ifelse(
-  !dir.exists(pathDataInterimDictionariesOrganism),
-  dir.create(pathDataInterimDictionariesOrganism),
-  FALSE
-)
-
 write.table(
   x = structureMinimal,
   file = gzfile(
@@ -339,6 +347,26 @@ write.table(
   quote = FALSE,
   sep = "\t",
   fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = structureNA,
+  file = gzfile(
+    description = pathDataInterimDictionariesStructureAntiDictionary,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+### organisms
+ifelse(
+  !dir.exists(pathDataInterimDictionariesOrganism),
+  dir.create(pathDataInterimDictionariesOrganism),
+  FALSE
 )
 
 write.table(
