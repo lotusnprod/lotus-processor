@@ -22,7 +22,12 @@ referenceTableFull <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  mutate(
+    referenceCleaned_score_crossref = as.numeric(referenceCleaned_score_crossref),
+    referenceCleaned_score_distance = as.numeric(referenceCleaned_score_distance),
+    referenceCleaned_score_titleOrganism = as.numeric(referenceCleaned_score_titleOrganism)
+  )
 
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
@@ -100,7 +105,7 @@ sampleONPDB <- bind_rows(
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
 
 sampleONPDB[1:50, "curator"] <- "AR"
 
@@ -132,7 +137,7 @@ goldenSet <- openDbFull %>%
   ) %>%
   filter(
     referenceCleaned_score_crossref == 1 |
-      referenceCleaned_score_distance <= 10 |
+      referenceCleaned_score_distance <= 5 |
       # here is a discussion about | or &
       referenceCleaned_score_titleOrganism == 1
   ) %>%
@@ -148,10 +153,16 @@ goldenSet <- openDbFull %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    .keep_all = TRUE
   ) %>%
   select(
     database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
     organismCleaned,
     organismCleaned_dbTaxo,
     organismCleaned_dbTaxoTaxonIds,
@@ -172,7 +183,7 @@ platinumSet <- openDbFull %>%
       !is.na(referenceCleanedPmcid)
   ) %>%
   filter(referenceCleaned_score_crossref == 1 |
-           referenceCleaned_score_distance <= 10) %>%
+           referenceCleaned_score_distance <= 5) %>%
   filter(referenceCleaned_score_titleOrganism == 1) %>%
   distinct(
     database,
@@ -186,10 +197,16 @@ platinumSet <- openDbFull %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    .keep_all = TRUE
   ) %>%
   select(
     database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
     organismCleaned,
     organismCleaned_dbTaxo,
     organismCleaned_dbTaxoTaxonIds,
