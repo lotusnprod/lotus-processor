@@ -19,12 +19,12 @@ from rdkit.Chem import rdMolDescriptors
 import molvs
 from molvs import Standardizer
 from molvs import Validator
-from molvs.fragment import LargestFragmentChooser
-from molvs.fragment import FragmentRemover
+# from molvs.fragment import LargestFragmentChooser
+# from molvs.fragment import FragmentRemover
 # or eventually load the local (modified) fragment.py
-# import fragment
-# from fragment import LargestFragmentChooser
-# from fragment import FragmentRemover
+import fragment
+from fragment import LargestFragmentChooser
+from fragment import FragmentRemover
 from molvs.charge import Uncharger
 
 
