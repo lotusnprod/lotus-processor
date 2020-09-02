@@ -151,8 +151,8 @@ ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/i
 
 analysing: analysing-metrics analysing-examples
 
-analysing-metrics:	$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*)
-$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*): ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
+analysing-metrics:	${INTERIM_TABLE_ANALYSED_PATH}/openDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/inhouseDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/dnpDbTriplets.tsv.gz
+${INTERIM_TABLE_ANALYSED_PATH}/openDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/inhouseDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/dnpDbTriplets.tsv.gz: ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/metrics.R
 
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
