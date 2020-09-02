@@ -482,7 +482,7 @@ taxo_cleaning_auto <- function(dfsel) {
   return(newdf)
 }
 
-print("  Step 4")
+cat("Step 4 \n")
 
 ## cleaned original names
 dataCleanedOrganismManipulated <- read_delim(

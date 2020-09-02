@@ -8,7 +8,7 @@ source("functions/reference.R")
 source("functions/helpers.R")
 
 # loading files
-print(x = "loading crossref translations file, this may take a while")
+cat("loading crossref translations file, this may take a while \n")
 dataTranslated <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
   delim = "\t",
@@ -211,7 +211,7 @@ dataTranslated <- read_delim(
 ##### Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439
 ###### test <- cr_works(query = "Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439") #returning right result (but very low score)
 
-print(x = "cleaning, this may take a while if running full mode")
+cat("cleaning, this may take a while if running full mode \n")
 
 dataCleaned <- dataTranslated %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
@@ -303,7 +303,8 @@ subDataClean_pmid <- dataCleanedJoinedWide %>%
   distinct(referenceValue) %>%
   mutate_all(as.character)
 
-print(x = "loading pmcid file, this may take a while") #here because of memory
+cat("loading pmcid file, this may take a while \n")
+#here because of memory
 
 PMC_ids <- read_delim(
   file = gzfile(pathDataExternalTranslationSourcePubmedFile),

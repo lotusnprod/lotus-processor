@@ -75,7 +75,7 @@ for (i in num) {
       sep = ""
     )
   
-  print(paste("step", i / cut, "of", length))
+  cat(paste("step", i / cut, "of", length))
   
   dataOriginal <- read_delim(
     file = inpath,
@@ -100,7 +100,7 @@ for (i in num) {
       )
     )
   
-  print("treating results, may take a while if full mode")
+  cat("treating results, may take a while if full mode")
   if (nrow(dataOriginal) != 0)
     dataOriginal2 <-
     getAllReferences(data = dataOriginal,
