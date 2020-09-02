@@ -1106,6 +1106,9 @@ pathDataInterimTablesCleanedStructure <-
 pathDataInterimTablesCleanedStructureFile <-
   file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.gz")
 
+pathDataInterimTablesCleanedStructureFileClassified <-
+  file.path(pathDataInterimTablesCleanedStructure, "classified.tsv.gz")
+
 ## ref
 pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference")
