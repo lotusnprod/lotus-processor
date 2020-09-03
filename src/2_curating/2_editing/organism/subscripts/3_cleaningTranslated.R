@@ -145,8 +145,8 @@ if (length != 0)
 
 if (length != 0)
   dataCleanedOrganism <-
-  rbind(dataCleanedOriginalOrganism,
-        dataCleanedTranslatedOrganismFull)
+  bind_rows(dataCleanedOriginalOrganism,
+            dataCleanedTranslatedOrganismFull)
 
 if (length != 0)
   dataCleanedOrganism <- dataCleanedOrganism %>%
