@@ -73,7 +73,7 @@ for (i in num) {
       sep = ""
     )
   
-  print(paste("step", i / cut, "of", length))
+  cat(paste("step", i / cut, "of", length))
   
   dataTitle <- read_delim(
     file = inpath,
@@ -101,7 +101,7 @@ for (i in num) {
   if (nrow(dataTitle) == 1)
     reflist <- list(NA)
   
-  print("treating results, may take a while if full mode")
+  cat("treating results, may take a while if full mode")
   if (nrow(dataTitle) != 0)
     dataTitle2 <-
     getAllReferences(data = dataTitle,

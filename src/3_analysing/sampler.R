@@ -5,7 +5,7 @@ source("functions.R")
 source("paths.R")
 
 # loading files
-print(x = "loading db, if running fullmode, this may take a while")
+cat("loading db, if running fullmode, this may take a while \n")
 
 ## fullDB
 openDb <- read_delim(

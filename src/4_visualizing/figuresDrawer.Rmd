@@ -100,6 +100,26 @@ organismMetadata <- read_delim(
       yes = "Tracheophyta",
       no = organismCleaned_dbTaxo_2phylum
     ),
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Hepaticae",
+      yes = "Plantae",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_2phylum = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Hepaticae",
+      yes = "Marchantiophyta",
+      no = organismCleaned_dbTaxo_2phylum
+    ),
+    organismCleaned_dbTaxo_1kingdom = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Cyanobacteria",
+      yes = "Bacteria",
+      no = organismCleaned_dbTaxo_1kingdom
+    ),
+    organismCleaned_dbTaxo_2phylum = ifelse(
+      test = organismCleaned_dbTaxo_1kingdom == "Cyanobacteria",
+      yes = "Cyanobacteria",
+      no = organismCleaned_dbTaxo_2phylum
+    )
   )
 ```
 
@@ -1185,13 +1205,13 @@ getGraphStudiedPlant(plant = "Tripterygium wilfordii")
 
 ### Camellia sinensis
 ```{r}
-pdf(file = "../../data/processed/figures/camelliaSinensis")
+pdf(file = "../../data/processed/figures/camelliaSinensis.pdf")
 getGraphStudiedPlant(plant = "Camellia sinensis")
 ```
 
 ### Panax ginseng
 ```{r}
-pdf(file = "../../data/processed/figures/panaxGinseng")
+pdf(file = "../../data/processed/figures/panaxGinseng.pdf")
 getGraphStudiedPlant(plant = "Panax ginseng")
 ```
 

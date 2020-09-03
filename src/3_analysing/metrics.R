@@ -5,7 +5,7 @@ source("functions.R")
 source("paths.R")
 
 # loading files
-print(x = "loading db, if running fullmode, this may take a while")
+print("loading db, if running fullmode, this may take a while \n")
 
 ## inhouseDb
 inhouseDbMinimal <- read_delim(
@@ -185,24 +185,24 @@ stats <- pairsOutsideDnp %>%
   arrange(desc(n))
 
 # unique
-print(x = "analysing unique organisms per db")
+cat("analysing unique organisms per db \n")
 ## biological taxa
 ### open NP DB
 openDbOrganism <- openDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-print(x = paste("open:", nrow(openDbOrganism), "distinct organisms", sep = " "))
+cat(paste("open:", nrow(openDbOrganism), "distinct organisms \n", sep = " "))
 
 ### inhouseDB
 inhouseDbOrganism <- inhouseDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-print(x = paste(
+cat(paste(
   "inhouse:",
   nrow(inhouseDbOrganism),
-  "distinct organisms",
+  "distinct organisms \n",
   sep = " "
 ))
 
@@ -211,26 +211,26 @@ dnpDbOrganism <- dnpDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-print(x = paste("dnp:", nrow(dnpDbOrganism), "distinct organisms", sep = " "))
+cat(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms \n", sep = " "))
 
 ## structures
-print(x = "analysing unique structures per db")
+cat("analysing unique structures per db \n")
 ### open NP DB
 openDbStructure <- openDb %>%
   filter(!is.na(structureCleanedInchikey3D)) %>%
   distinct(structureCleanedInchikey3D, .keep_all = TRUE)
 
-print(x = paste("open:", nrow(openDbStructure), "distinct structures", sep = " "))
+cat(paste("open:", nrow(openDbStructure), "distinct structures \n", sep = " "))
 
 ### inhouseDB
 inhouseDbStructure <- inhouseDb %>%
   filter(!is.na(structureCleanedInchikey3D)) %>%
   distinct(structureCleanedInchikey3D, .keep_all = TRUE)
 
-print(x = paste(
+cat(paste(
   "inhouse:",
   nrow(inhouseDbStructure),
-  "distinct structures",
+  "distinct structures \n",
   sep = " "
 ))
 
@@ -239,11 +239,11 @@ dnpDbStructure <- dnpDb %>%
   filter(!is.na(structureCleanedInchikey3D)) %>%
   distinct(structureCleanedInchikey3D, .keep_all = TRUE)
 
-print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
+cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 
 # writing tabular stats
 ## species by kingdom
-# print(x = "analysing species by kingdom")
+# cat("analysing species by kingdom \n")
 # inhouseSpeciesByKingdom <- inhouseDbPairs %>%
 #   group_by(organism_1_kingdom) %>%
 #   distinct(organism_7_species, .keep_all = TRUE) %>%
@@ -270,7 +270,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   head(10)
 
 ## structures by kingdom
-# print(x = "analysing structures by kingdom")
+# cat("analysing structures by kingdom \n")
 # inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
 #   group_by(organism_1_kingdom) %>%
 #   distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
@@ -284,7 +284,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   head(10)
 
 ## unique structures per kingdom
-# print(x = "analysing unique structures by kingdom")
+# cat("analysing unique structures by kingdom \n")
 # inhouseUniqueStructuresPerKingdom <- inhouseDbPairs %>%
 #   group_by(inchikeySanitized) %>%
 #   add_count(inchikeySanitized) %>%
@@ -301,7 +301,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   head(10)
 
 ## structures by kingdom
-# print(x = "joining")
+# cat("joining \n")
 # inhouseStructuresByKingdom <-
 #   full_join(inhouseSpeciesByKingdom,
 #             inhouseStructuresByOrganismKingdom) %>%
@@ -314,7 +314,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   select(1, 2, 3, 4, 7, 8, 5, 6)
 
 ##unique structures per species
-# print(x = "analysing unique structures by species")
+# cat("analysing unique structures by species \n")
 # inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
 #   group_by(inchikeySanitized) %>%
 #   add_count(inchikeySanitized) %>%
@@ -332,7 +332,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   head(10)
 
 ##widespread metabolites
-# print(x = "analysing widespread metabolites")
+# cat("analysing widespread metabolites \n")
 # openDbWidespread <- openDbPairs %>%
 #   group_by(inchikeySanitized) %>%
 #   filter(!is.na(organism_1_kingdom)) %>%
@@ -343,13 +343,13 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   arrange(inchikeySanitized)
 
 ##word(species,1) != genus
-# print(x = "analysing mismatched genera")
+# cat("analysing mismatched genera \n")
 # mismatchedGenera <- inhouseDbOrganism %>%
 #   filter(word(organism_7_species, 1) != organism_6_genus)
 
 ## redundancy table
 # heavy process not bringing much for now
-# print(x = "analysing redundant entries")
+# cat("analysing redundant entries \n")
 # redundancydf  <- inhouseDb %>%
 #   filter(!is.na(organismLowestTaxon) &
 #            !is.na(inchikeySanitized)) %>%
@@ -373,7 +373,7 @@ print(x = paste("dnp:", nrow(dnpDbStructure), "distinct structures", sep = " "))
 #   )
 
 #exporting
-print(x = "exporting, may take a while if running full mode")
+cat("exporting, may take a while if running full mode \n")
 ## creating directories if they do not exist
 ifelse(
   !dir.exists(pathDataInterimTablesAnalysed),

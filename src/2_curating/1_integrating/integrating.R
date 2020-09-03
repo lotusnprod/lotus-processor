@@ -11,11 +11,11 @@ library(data.table)
 library(tidyverse)
 
 ## files
-print(x = "loading DBs")
+cat("loading DBs \n")
 dbList <- lapply(pathDataInterimDbDir, db_loader)
 
 ## dictionaries
-print(x = "loading dictionaries")
+cat("loading dictionaries \n")
 ### structure
 #### normal
 if (file.exists(pathDataInterimDictionariesStructureDictionary))
@@ -97,8 +97,7 @@ dbTable[] <- lapply(dbTable, function(x)
   gsub("\t", " ", x))
 
 # sub-setting
-print(x = "keeping new data only")
-
+cat("keeping new data only \n")
 # structures
 ## with InChI
 structureTable_inchi <- dbTable %>%
@@ -120,6 +119,9 @@ if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
 structureTable_inchi <- structureTable_inchi %>%
   select(structureOriginal_inchi = structureValue)
 
+if (nrow(structureTable_inchi) == 0)
+  structureTable_inchi <- rbind(structureTable_inchi, list(NA))
+
 ### without InChI but SMILES
 structureTable_smiles <- dbTable %>%
   filter(!grepl(pattern = "^InChI=.*",
@@ -140,6 +142,9 @@ if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
 
 structureTable_smiles <- structureTable_smiles %>%
   select(structureOriginal_smiles = structureValue)
+
+if (nrow(structureTable_smiles) == 0)
+  structureTable_smiles <- rbind(structureTable_smiles, list(NA))
 
 ### without InChI nor SMILES but name
 structureTable_nominal <- dbTable %>%
@@ -163,8 +168,17 @@ if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
 structureTable_nominal <- structureTable_nominal %>%
   select(structureOriginal_nominal = structureValue)
 
+if (nrow(structureTable_nominal) == 0)
+  structureTable_nominal <- rbind(structureTable_nominal, list(NA))
+
 ### full
 structureTable_full <- dbTable %>%
+  filter(!structureOriginal_inchi %in% structureAntiDictionary$structureValue) %>%
+  filter(!structureOriginal_smiles %in% structureAntiDictionary$structureValue) %>%
+  filter(!structureOriginal_nominal %in% structureAntiDictionary$structureValue) %>%
+  filter(!structureOriginal_inchi %in% structureDictionary$structureValue) %>%
+  filter(!structureOriginal_smiles %in% structureDictionary$structureValue) %>%
+  filter(!structureOriginal_nominal %in% structureDictionary$structureValue) %>%
   distinct(structureOriginal_inchi,
            structureOriginal_smiles,
            structureOriginal_nominal) %>%
@@ -177,6 +191,9 @@ structureTable_full <- dbTable %>%
     values_drop_na = TRUE
   ) %>%
   select(structureType, structureValue)
+
+if (nrow(structureTable_full) == 0)
+  structureTable_full[1, ] <- NA
 
 ## organism
 organismTable <- dbTable %>%
@@ -353,7 +370,7 @@ originalTable <- dbTable %>%
   select(-drop, -drop2)
 
 # exporting
-print(x = "exporting")
+cat("exporting \n")
 ## creating directories if they do not exist
 ### interim tables
 ifelse(

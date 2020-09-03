@@ -128,6 +128,24 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_xlogp = xlogpSanitized
   )
 
+#### classified
+classifiedStructureTableFull <- read_delim(
+  file = gzfile(description = pathDataInterimTablesCleanedStructureFileClassified),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  select(
+    structureCleanedSmiles = smiles,
+    structureCleaned_class = class_results,
+    structureCleaned_superclass = superclass_results,
+    structureCleaned_pathway = pathway_results,
+    structureCleaned_glycoside = isglycoside,
+    structureCleaned_fp1 = fp1,
+    structureCleaned_fp2 = fp2
+  )
+
 ### reference table
 referenceTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedReferenceFile),
@@ -161,6 +179,9 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
+
+structureFull <-
+  left_join(structureFull, classifiedStructureTableFull)
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
     file.exists(pathDataInterimDictionariesStructureMetadata))
@@ -196,6 +217,12 @@ structureMetadata <- structureFull %>%
     structureCleaned_molecularFormula,
     structureCleaned_exactMass,
     structureCleaned_xlogp,
+    structureCleaned_class,
+    structureCleaned_superclass,
+    structureCleaned_pathway,
+    structureCleaned_glycoside,
+    structureCleaned_fp1,
+    structureCleaned_fp2
   )
 
 ## organism

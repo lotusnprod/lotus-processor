@@ -75,7 +75,7 @@ dataCleanTranslatedOrganism <- list()
 if (length != 0)
   for (i in num) {
     j <- i / cut
-    print(paste("step", j, "of", length))
+    cat(paste("step", j, "of", length))
     tryCatch({
       dataCleanTranslatedOrganism[[j]] <-
         gnfinder_cleaning(num = i,
@@ -145,8 +145,8 @@ if (length != 0)
 
 if (length != 0)
   dataCleanedOrganism <-
-  rbind(dataCleanedOriginalOrganism,
-        dataCleanedTranslatedOrganismFull)
+  bind_rows(dataCleanedOriginalOrganism,
+            dataCleanedTranslatedOrganismFull)
 
 if (length != 0)
   dataCleanedOrganism <- dataCleanedOrganism %>%
@@ -161,7 +161,7 @@ if (length != 0)
            !n > 1) %>%
   select(-n)
 
-print("manipulating taxonomic levels")
+cat("manipulating taxonomic levels \n")
 
 if (length != 0 &
     nrow(dataCleanedOrganism) != 0)

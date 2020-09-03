@@ -69,10 +69,16 @@ translatedStructureTable <- translatedStructureTable %>%
   distinct(structureType, structureValue, structureTranslated) %>%
   filter(!is.na(structureTranslated))
 
+if (nrow(translatedStructureTable) == 0)
+  translatedStructureTable[1,] <- NA
+
 # unique structures
 translatedStructureTableUnique <- translatedStructureTable %>%
   filter(!is.na(structureTranslated)) %>%
   distinct(structureTranslated)
+
+if (nrow(translatedStructureTableUnique) == 0)
+  translatedStructureTableUnique[1,] <- NA
 
 # exporting
 write.table(
