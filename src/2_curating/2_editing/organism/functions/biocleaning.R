@@ -136,7 +136,7 @@ biocleaning <- function(gnfound, names, organismCol)
   df5b[setdiff(x = c("classificationIds"),
                y = names(df5b))] <- NA
   
-  df6a <- cbind(df5a, rows)
+  df6a <- bind_cols(df5a, rows)
   df6b <- left_join(df6a, df5b) %>%
     filter(!is.na(classificationIds))
   

@@ -224,7 +224,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
   mutate_all(as.character)
 
 
-print(x = "loading reference dictionary, this may take a while")
+cat("loading reference dictionary, this may take a while \n")
 
 ### dictionary
 if (file.exists(pathDataInterimDictionariesReferenceDictionary))
@@ -299,7 +299,7 @@ dataTranslated <- left_join(dataJoined,
   )
 
 ## exporting
-print(x = "exporting, this may take a while if running full mode")
+cat("exporting, this may take a while if running full mode \n")
 
 write.table(
   x = dataTranslated,

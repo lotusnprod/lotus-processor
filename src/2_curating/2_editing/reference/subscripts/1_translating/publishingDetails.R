@@ -31,7 +31,7 @@ if (nrow(dataPublishingDetails) != 1)
     )
   )
 
-print(x = "This may take several minutes")
+cat("This may take several minutes \n")
 
 # joining with original dataframe
 if (nrow(dataPublishingDetails) != 1)

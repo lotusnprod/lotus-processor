@@ -9,6 +9,7 @@ dependencies:
   - pandas
   - cirpy
   - requests
+  - grequests
   - r-pacman
   - r-curl
   - r-data.table

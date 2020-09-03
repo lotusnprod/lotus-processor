@@ -31,7 +31,8 @@ if (nrow(dataSplit) != 1)
     )
   )
 
-print(x = "This may take several minutes")
+cat("This may take several minutes \n")
+
 if (nrow(dataSplit) != 1)
   dataSplit <- getAllReferences(data = dataSplit,
                                 referenceType = "split",

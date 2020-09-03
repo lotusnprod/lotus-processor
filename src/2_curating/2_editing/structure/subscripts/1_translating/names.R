@@ -13,13 +13,14 @@ dataOriginal <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  mutate_all(as.character)
 
 # preparing names
 dataTranslatedNominal <- preparing_name(x = dataOriginal)
 
 # translating structures (cactus) (fast)
-print(x = "translating structures with cactus (fast)")
+cat("translating structures with cactus (fast) \n")
 dataTranslatedNominal_cactus <- dataTranslatedNominal %>%
   mutate(inchiNominal_cactus = invisible(
     pbmclapply(
@@ -61,9 +62,12 @@ dataTranslated <- left_join(dataOriginal,
   select(-inchiNominal_cactus)
 
 # translating structures (cts) (slow but more results)
-print(x = "translating structures with CTS (slow but more results)")
+cat("translating structures with CTS (slow but more results) \n")
 dataTranslatedNominal_cts <- dataTranslated %>%
   filter(is.na(structureTranslatedNominal_cactus))
+
+if (nrow(dataTranslatedNominal_cts) == 0)
+  dataTranslatedNominal_cts[1, ] <- NA
 
 dataTranslatedNominal_cts <- dataTranslatedNominal_cts %>%
   mutate(inchiNominal_cts = invisible(

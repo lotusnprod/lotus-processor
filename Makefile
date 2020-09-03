@@ -4,7 +4,7 @@ include paths.mk
 .PHONY: help docker-build docker-bash 
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
-.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing
+.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-metrics analysing-examples
@@ -62,7 +62,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/p
 
 curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
 
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-classifying
 
 curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
 
@@ -81,6 +81,10 @@ ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING
 curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
+
+curating-editing-structure-classifying: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/classified.tsv.gz
+${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/classified.tsv.gz: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_ENRICHING_PATH}/classifying.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz smilesSanitized ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/classified.tsv.gz
 
 curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 
@@ -147,8 +151,8 @@ ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_3_INTEGRATING_PATH}/i
 
 analysing: analysing-metrics analysing-examples
 
-analysing-metrics:	$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*)
-$(wildcard ${INTERIM_TABLE_ANALYSED_PATH}/*): ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
+analysing-metrics:	${INTERIM_TABLE_ANALYSED_PATH}/openDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/inhouseDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/dnpDbTriplets.tsv.gz
+${INTERIM_TABLE_ANALYSED_PATH}/openDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/inhouseDbTriplets.tsv.gz ${INTERIM_TABLE_ANALYSED_PATH}/dnpDbTriplets.tsv.gz: ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/metrics.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/metrics.R
 
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
