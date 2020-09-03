@@ -17,13 +17,10 @@ HISTORY:
 
 
 # importing packages
-
-
 import chemosanitizer_functions
 from chemosanitizer_functions import *
 
 # defining the command line arguments
-
 try:
     input_file_path = sys.argv[1]
     ouput_file_path = sys.argv[2]
@@ -47,22 +44,23 @@ except:
         python chemosanitizer.py ~/translatedStructureRdkit.tsv ./test.tsv structureTranslated 6''')
 
 # Loading the df with inchi columns
-#df = pd.read_csv(input_file_path, sep='\t')
-
-#input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
-
-
-
-
+# df = pd.read_csv(input_file_path, sep='\t')
+# input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
 	myZip,
 	sep = '\t')
 
+if len(df) == 1:
+    df['structureTranslated'] = 'InChI=1S/Pu'
+    print('your dataframe is empty, plutonium loaded')
+else:
+	print('your dataframe is not empty :)')
+
 # eventually filter display some info, comment according to your needs
 # df = df[df['originaldb'] == 'tcm']
-#df = df.head(50000)
+# df = df.head(50000)
 df.columns
 df.info()
 
@@ -71,16 +69,13 @@ df = df[df[inchi_column_header].astype(str).str.startswith('InChI')]
 df.columns
 df.info()
 
-
 # the full df is splitted and each subdf are treated sequentially as df > 900000 rows retruned errors 
 # (parralel treatment of these subdf should improve performance)
-
-n = 20000  #chunk row size
+n = 20000  # chunk row size
 list_df = [df[i:i+n] for i in range(0,df.shape[0],n)]
 
 # timer is started
 start_time = time.time()
-
 
 for i in range(0, len(list_df)):
 
@@ -138,30 +133,22 @@ print(" Above command executed in --- %s seconds ---" %
       (time.time() - start_time))
 
 # we merge the previously obtained df
-
 df = pd.concat(list_df)
 
-
-
 # # dropping some irrelevant columns prior to export
-
-
 # colstodrop = ['ROMol',
 #               'ROMolSanitized',
 #               'ROMolSanitizedLargestFragment',
 #               'ROMolSanitizedLargestFragmentUncharged'
 #               ]
-
-#colstodrop = ['ROMolSanitizedLargestFragmentUncharged']
-
-#df.drop(colstodrop, axis=1, inplace=True)
+# colstodrop = ['ROMolSanitizedLargestFragmentUncharged']
+# df.drop(colstodrop, axis=1, inplace=True)
 
 df.info()
-# exporting df
 
+# exporting df
 import os
 import errno
-
 filename = ouput_file_path
 if not os.path.exists(os.path.dirname(filename)):
     try:
@@ -170,12 +157,10 @@ if not os.path.exists(os.path.dirname(filename)):
         if exc.errno != errno.EEXIST:
             raise
             
-#df.to_csv(ouput_file_path, sep='\t', index=False)
-
+# df.to_csv(ouput_file_path, sep='\t', index=False)
 df.to_csv(
 	ouput_file_path, 
 	sep = '\t', 
 	index = False,
 	compression = 'gzip'
 	)
-
