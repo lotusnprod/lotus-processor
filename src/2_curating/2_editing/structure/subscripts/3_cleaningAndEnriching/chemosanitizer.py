@@ -63,7 +63,9 @@ else:
 # df = df.head(50000)
 df.columns
 df.info()
-df = df[df['structureTranslated'].astype(str).str.startswith('InChI')]
+
+df = df[df[inchi_column_header].astype(str).str.startswith('InChI')]
+
 df.columns
 df.info()
 
