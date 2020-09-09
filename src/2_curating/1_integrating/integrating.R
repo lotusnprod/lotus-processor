@@ -1,23 +1,28 @@
-# title: "integrating DBs"
+cat(
+  "This script aligns all DBs with previous results and outputs files \n",
+  "containing new entries for editing \n"
+)
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
+cat("... functions \n")
 source("functions/helpers.R")
 
-## libraries
+cat("loading ... \n")
+cat("... libraries \n")
 library(data.table)
 library(tidyverse)
 
-## files
-cat("loading DBs \n")
+cat("... files ... \n")
+cat("... DBs \n")
 dbList <- lapply(pathDataInterimDbDir, db_loader)
 
-## dictionaries
-cat("loading dictionaries \n")
-### structure
-#### normal
+cat("... dictionaries ... \n")
+cat("... structures \n")
 if (file.exists(pathDataInterimDictionariesStructureDictionary))
   structureDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
@@ -27,7 +32,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
     trim_ws = TRUE
   )
 
-#### anti
+cat("... previously unsucessfully querried structures \n")
 if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
   structureAntiDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureAntiDictionary),
@@ -37,7 +42,7 @@ if (file.exists(pathDataInterimDictionariesStructureAntiDictionary))
     trim_ws = TRUE
   )
 
-### organism
+cat("... organisms \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   organismDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
@@ -47,7 +52,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
     trim_ws = TRUE
   )
 
-### reference
+cat("... references \n")
 if (file.exists(pathDataInterimDictionariesReferenceDictionary))
   referenceDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
@@ -57,7 +62,7 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary))
     trim_ws = TRUE
   )
 
-# selecting
+cat("renaming and selecting columns \n")
 dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
   select(
     database,
@@ -77,7 +82,8 @@ dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
     referenceOriginal_title = reference_title,
   )
 
-# sampling rows for minimal mode
+if (mode == "min")
+  cat("sampling rows for min mode \n")
 if (mode == "min")
   set.seed(seed = 42,
            kind = "Mersenne-Twister",
@@ -86,7 +92,7 @@ if (mode == "min")
   dbTable <- dbTable %>%
   sample_n(size = 2000)
 
-# removing unfriendly characters
+cat("removing unfriendly characters \n")
 dbTable[] <- lapply(dbTable, function(x)
   gsub("\r\n", " ", x))
 dbTable[] <- lapply(dbTable, function(x)
@@ -96,10 +102,8 @@ dbTable[] <- lapply(dbTable, function(x)
 dbTable[] <- lapply(dbTable, function(x)
   gsub("\t", " ", x))
 
-# sub-setting
-cat("keeping new data only \n")
-# structures
-## with InChI
+cat("keeping entries not previously curated only ... \n")
+cat("... inchi table \n")
 structureTable_inchi <- dbTable %>%
   filter(grepl(pattern = "^InChI=.*",
                x = structureOriginal_inchi)) %>%
@@ -122,7 +126,7 @@ structureTable_inchi <- structureTable_inchi %>%
 if (nrow(structureTable_inchi) == 0)
   structureTable_inchi <- rbind(structureTable_inchi, list(NA))
 
-### without InChI but SMILES
+cat("... smiles table \n")
 structureTable_smiles <- dbTable %>%
   filter(!grepl(pattern = "^InChI=.*",
                 x = structureOriginal_inchi)) %>%
@@ -146,7 +150,7 @@ structureTable_smiles <- structureTable_smiles %>%
 if (nrow(structureTable_smiles) == 0)
   structureTable_smiles <- rbind(structureTable_smiles, list(NA))
 
-### without InChI nor SMILES but name
+cat("... chemical names table \n")
 structureTable_nominal <- dbTable %>%
   filter(!grepl(pattern = "^InChI=.*",
                 x = structureOriginal_inchi)) %>%
@@ -171,7 +175,7 @@ structureTable_nominal <- structureTable_nominal %>%
 if (nrow(structureTable_nominal) == 0)
   structureTable_nominal <- rbind(structureTable_nominal, list(NA))
 
-### full
+cat("... structures table \n")
 structureTable_full <- dbTable %>%
   filter(!structureOriginal_inchi %in% structureAntiDictionary$structureValue) %>%
   filter(!structureOriginal_smiles %in% structureAntiDictionary$structureValue) %>%
@@ -193,9 +197,9 @@ structureTable_full <- dbTable %>%
   select(structureType, structureValue)
 
 if (nrow(structureTable_full) == 0)
-  structureTable_full[1, ] <- NA
+  structureTable_full[1,] <- NA
 
-## organism
+cat("... organisms table \n")
 organismTable <- dbTable %>%
   filter(!is.na(organismOriginal)) %>%
   distinct(organismOriginal)
@@ -204,8 +208,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   organismTable <- anti_join(x = organismTable,
                              y = organismDictionary)
 
-## reference
-### DOI
+cat("... references tables ... \n")
+cat("... DOI table \n")
 referenceTable_doi <- dbTable %>%
   filter(!is.na(referenceOriginal_doi)) %>%
   distinct(referenceOriginal_doi) %>%
@@ -218,11 +222,10 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary))
 referenceTable_doi <- referenceTable_doi %>%
   select(referenceOriginal_doi = referenceOriginal)
 
-
 row.names(referenceTable_doi) <-
   referenceTable_doi$referenceOriginal_doi
 
-### pubmed
+cat("... PMID table \n")
 referenceTable_pubmed <- dbTable %>%
   filter(!is.na(referenceOriginal_pubmed)) %>%
   distinct(referenceOriginal_pubmed) %>%
@@ -242,7 +245,7 @@ if (nrow(referenceTable_pubmed) != 1)
   row.names(referenceTable_pubmed) <-
   referenceTable_pubmed$referenceOriginal_pubmed
 
-### title
+cat("... reference title table \n")
 referenceTable_title <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -257,7 +260,7 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary))
 referenceTable_title  <- referenceTable_title %>%
   select(referenceOriginal_title = referenceOriginal)
 
-### publishing details
+cat(".. reference publishing details table \n")
 referenceTable_publishingDetails <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -279,7 +282,7 @@ if (nrow(referenceTable_publishingDetails) == 0)
   referenceTable_publishingDetails <-
   rbind(referenceTable_publishingDetails, list(NA))
 
-### split
+cat("... reference split table \n")
 referenceTable_split <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -301,7 +304,7 @@ if (nrow(referenceTable_split) == 0)
   referenceTable_split <-
   rbind(referenceTable_split, list(NA))
 
-### original
+cat("... original references table \n")
 referenceTable_original <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -324,7 +327,7 @@ if (nrow(referenceTable_original) == 0)
   referenceTable_original <-
   rbind(referenceTable_original, list(NA))
 
-### full
+cat("... full references table \n")
 referenceTable_full <- dbTable %>%
   distinct(
     organismOriginal,
@@ -350,7 +353,7 @@ referenceTable_full <- dbTable %>%
          referenceType,
          referenceValue)
 
-## full table
+cat("... full original table \n")
 originalTable <- dbTable %>%
   select(database, organismOriginal, everything()) %>%
   pivot_longer(
@@ -369,21 +372,19 @@ originalTable <- dbTable %>%
   ) %>%
   select(-drop, -drop2)
 
-# exporting
-cat("exporting \n")
-## creating directories if they do not exist
-### interim tables
+cat("ensuring directories exist ... \n")
 ifelse(
   test = !dir.exists(pathDataInterimTables),
   yes = dir.create(pathDataInterimTables),
-  no = FALSE
+  no = paste(pathDataInterimTables, "exists")
+  
 )
 
 #### original
 ifelse(
   test = !dir.exists(pathDataInterimTablesOriginal),
   yes = dir.create(pathDataInterimTablesOriginal),
-  no = FALSE
+  no = paste(pathDataInterimTablesOriginal, "exists")
 )
 
 ##### organism
@@ -402,7 +403,7 @@ ifelse(
 ifelse(
   test = !dir.exists(pathDataInterimTablesOriginalReference),
   yes = dir.create(pathDataInterimTablesOriginalReference),
-  no = FALSE
+  no = paste(pathDataInterimTablesOriginalReference, "exists")
 )
 
 ##### reference folders
@@ -420,8 +421,8 @@ ifelse(
 
 ###### title
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalReferenceTitleFolder),
-  dir.create(pathDataInterimTablesOriginalReferenceTitleFolder),
+  test = !dir.exists(pathDataInterimTablesOriginalReferenceTitleFolder),
+  yes = dir.create(pathDataInterimTablesOriginalReferenceTitleFolder),
   no = file.remove(
     list.files(path = pathDataInterimTablesOriginalReferenceTitleFolder,
                full.names = TRUE)
@@ -432,13 +433,13 @@ ifelse(
 
 ##### structure
 ifelse(
-  !dir.exists(pathDataInterimTablesOriginalStructure),
-  dir.create(pathDataInterimTablesOriginalStructure),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesOriginalStructure),
+  yes = dir.create(pathDataInterimTablesOriginalStructure),
+  no = paste(pathDataInterimTablesOriginalStructure, "exists")
 )
 
-## writing files
-### organism
+cat("exporting ... \n")
+cat(pathDataInterimTablesOriginalOrganism, "\n")
 if (nrow(organismTable) != 0)
   split_data_table(
     x = organismTable,
@@ -447,8 +448,7 @@ if (nrow(organismTable) != 0)
     path_to_store = pathDataInterimTablesOriginalOrganism
   )
 
-### reference
-#### DOI
+cat(pathDataInterimTablesOriginalReferenceDoi, "\n")
 write.table(
   x = referenceTable_doi,
   file = gzfile(
@@ -462,7 +462,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### pubmed
+cat(pathDataInterimTablesOriginalReferencePubmed, "\n")
 write.table(
   x = referenceTable_pubmed,
   file = gzfile(
@@ -476,7 +476,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### title
+cat(pathDataInterimTablesOriginalReferenceTitleFolder, "\n")
 split_data_table(
   x = referenceTable_title,
   no_rows_per_frame = 1000,
@@ -484,7 +484,8 @@ split_data_table(
   path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
-#### publishingDetails
+cat(pathDataInterimTablesOriginalReferencePublishingDetails,
+    "\n")
 write.table(
   x = referenceTable_publishingDetails,
   file = gzfile(
@@ -498,7 +499,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### split
+cat(pathDataInterimTablesOriginalReferenceSplit, "\n")
 write.table(
   x = referenceTable_split,
   file = gzfile(
@@ -512,7 +513,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### original
+cat(pathDataInterimTablesOriginalReferenceOriginalFolder, "\n")
 split_data_table(
   x = referenceTable_original,
   no_rows_per_frame = 1000,
@@ -520,7 +521,7 @@ split_data_table(
   path_to_store = pathDataInterimTablesOriginalReferenceOriginalFolder
 )
 
-#### full
+cat(pathDataInterimTablesOriginalReferenceFull, "\n")
 write.table(
   x = referenceTable_full,
   file = gzfile(
@@ -534,8 +535,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### structure
-#### inchi
+cat(pathDataInterimTablesOriginalStructureInchi, "\n")
 write.table(
   x = structureTable_inchi,
   file = gzfile(
@@ -549,7 +549,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### nominal
+cat(pathDataInterimTablesOriginalStructureNominal, "\n")
 write.table(
   x = structureTable_nominal,
   file = gzfile(
@@ -563,7 +563,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### smiles
+cat(pathDataInterimTablesOriginalStructureSmiles, "\n")
 write.table(
   x = structureTable_smiles,
   file = gzfile(
@@ -577,7 +577,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-#### full
+cat(pathDataInterimTablesOriginalStructureFull, "\n")
 write.table(
   x = structureTable_full,
   file = gzfile(
@@ -591,7 +591,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-## table
+cat(pathDataInterimTablesOriginalTable, "\n")
 write.table(
   x = originalTable,
   file = gzfile(
@@ -604,3 +604,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

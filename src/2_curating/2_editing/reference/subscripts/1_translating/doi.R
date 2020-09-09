@@ -1,13 +1,15 @@
-# title: "Ref translatoR"
+cat("This script performs DOI translation from crossRef \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-## file
+cat("loading DOI list \n")
 dataDoi <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalReferenceDoi),
   delim = "\t",
@@ -15,7 +17,7 @@ dataDoi <- read_delim(
   trim_ws = TRUE
 )
 
-# getting references
+cat("submitting to crossRef \n")
 if (nrow(dataDoi) != 1)
   reflistDoi <-
   pbmclapply(
@@ -30,7 +32,7 @@ if (nrow(dataDoi) != 1)
     ignore.interactive = TRUE
   )
 
-# joining with original dataframe
+cat("joining results with original list \n")
 if (nrow(dataDoi) != 1)
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDoi"] <-
@@ -142,6 +144,7 @@ if (nrow(dataDoi) == 1)
     referenceTranslationScoreDistance = NA
   )
 
+cat("removing unfriendly characters \n")
 dataDoi <- dataDoi %>%
   mutate_all(as.character)
 
@@ -158,21 +161,21 @@ dataDoi[] <-
   lapply(dataDoi, function(x)
     gsub("\t", " ", x))
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedReference),
+  yes = dir.create(pathDataInterimTablesTranslatedReference),
+  no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-## exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedReferenceDoi, "\n")
 write.table(
   x = dataDoi,
   file = gzfile(
@@ -185,3 +188,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

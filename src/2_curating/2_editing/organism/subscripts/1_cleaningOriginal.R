@@ -1,25 +1,26 @@
-# title: "cleaning original organism"
+cat("This script performs canonical name recognition on the original organism field. \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("...paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/bio.R")
 source("functions/helpers.R")
 source("functions/log.R")
 source("2_curating/2_editing/organism/functions/manipulating_taxo.R") # shouldnt these path be in the path.R ???
 source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R") # shouldnt these path be in the path.R ???
 
-## libraries
+cat("loading ... \n")
+cat("... libraries \n")
 library(data.table)
 library(jsonlite)
 library(tidyverse)
 
 log_debug("  Step 1")
-# writing path
-## dictionaries
-### taxa levels
+cat("... taxa ranks dictionary \n")
 taxaRanksDictionary <- read_delim(
   file = pathDataInterimDictionariesTaxaRanks,
   delim = "\t",
@@ -27,22 +28,22 @@ taxaRanksDictionary <- read_delim(
   trim_ws = TRUE
 )
 
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesCleaned),
-  dir.create(pathDataInterimTablesCleaned),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesCleaned),
+  yes = dir.create(pathDataInterimTablesCleaned),
+  no = paste(pathDataInterimTablesCleaned, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedOrganism),
-  dir.create(pathDataInterimTablesCleanedOrganism),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesCleanedOrganism),
+  yes = dir.create(pathDataInterimTablesCleanedOrganism),
+  no = paste(pathDataInterimTablesCleanedOrganism, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
-  dir.create(pathDataInterimTablesCleanedOrganismOriginal),
+  test = !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
+  yes = dir.create(pathDataInterimTablesCleanedOrganismOriginal),
   no = file.remove(
     list.files(path = pathDataInterimTablesCleanedOrganismOriginal,
                full.names = TRUE)
@@ -51,6 +52,7 @@ ifelse(
                showWarnings = FALSE)
 )
 
+cat("submitting to GNFinder \n")
 system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <-
@@ -68,7 +70,7 @@ if (length != 0)
 
 dataCleanOriginalOrganism <- list()
 
-# cleaning GNFinder output
+cat("cleaning GNFinder output \n")
 if (length != 0)
   for (i in num) {
     j <- i / cut
@@ -82,7 +84,7 @@ if (length != 0)
     })
   }
 
-# selecting and reordering
+cat("selecting and reordering \n")
 if (length(dataCleanOriginalOrganism) != 0)
   dataCleanedOriginalOrganism <-
   bind_rows(dataCleanOriginalOrganism) %>%
@@ -115,7 +117,10 @@ dataCleanedOriginalOrganismUnique <-
   dataCleanedOriginalOrganism %>%
   distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
-# exporting
+cat("exporting ... \n")
+if (length != 0)
+  cat(pathDataInterimTablesCleanedOrganismOriginalTable, "\n")
+
 if (length != 0)
   write.table(
     x = dataCleanedOriginalOrganism,
@@ -131,6 +136,10 @@ if (length != 0)
   )
 
 if (length != 0)
+  cat(pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
+      "\n")
+
+if (length != 0)
   write.table(
     x = dataCleanedOriginalOrganismUnique,
     file = gzfile(
@@ -143,3 +152,7 @@ if (length != 0)
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

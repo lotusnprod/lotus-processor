@@ -1,13 +1,16 @@
-# title: "Structure (nominal) translatoR"
+cat("This script performs chemical name translation. \n")
 
-# loading paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-# loading functions
+cat("... functions \n")
 source("functions/helpers.R")
 source("functions/chemo.R")
 
-# loading files
+cat("loading chemical names lists \n")
 dataOriginal <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalStructureNominal),
   delim = "\t",
@@ -16,10 +19,9 @@ dataOriginal <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-# preparing names
+cat("preparing names \n")
 dataTranslatedNominal <- preparing_name(x = dataOriginal)
 
-# translating structures (cactus) (fast)
 cat("translating structures with cactus (fast) \n")
 dataTranslatedNominal_cactus <- dataTranslatedNominal %>%
   mutate(inchiNominal_cactus = invisible(
@@ -61,7 +63,6 @@ dataTranslated <- left_join(dataOriginal,
   )) %>%
   select(-inchiNominal_cactus)
 
-# translating structures (cts) (slow but more results)
 cat("translating structures with CTS (slow but more results) \n")
 dataTranslatedNominal_cts <- dataTranslated %>%
   filter(is.na(structureTranslatedNominal_cactus))
@@ -116,20 +117,21 @@ dataTranslated <- left_join(dataTranslated,
     )
   )
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedStructure),
-  dir.create(pathDataInterimTablesTranslatedStructure),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedStructure),
+  yes = dir.create(pathDataInterimTablesTranslatedStructure),
+  no = paste(pathDataInterimTablesTranslatedStructure, "exists")
 )
 
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
 write.table(
   x = dataTranslated,
   file = gzfile(
@@ -142,3 +144,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

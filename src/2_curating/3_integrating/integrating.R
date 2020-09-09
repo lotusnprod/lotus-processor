@@ -1,18 +1,17 @@
-# title: "integrating bio chemo ref"
+cat("This script integrates all results together. \n")
 
-# loading
-##paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## libraries
-library(tidyverse)
-
-## functions
+cat("... functions \n")
 source("functions/analysis.R")
 source("functions/helpers.R")
 
-## files
-### original table
+cat("loading files ... \n")
+cat("... original table \n")
 originalTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalTable),
   delim = "\t",
@@ -21,8 +20,10 @@ originalTable <- read_delim(
   trim_ws = TRUE
 )
 
-### dictionaries
-#### structure
+cat("loading dictionaries ... \n")
+if (file.exists(pathDataInterimDictionariesStructureDictionary))
+  cat("... structures \n")
+
 if (file.exists(pathDataInterimDictionariesStructureDictionary))
   structureDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
@@ -32,7 +33,9 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
     trim_ws = TRUE
   )
 
-#### organism
+if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+  cat("... organisms \n")
+
 if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   organismDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
@@ -42,7 +45,9 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
     trim_ws = TRUE
   )
 
-#### reference
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+  cat("... references \n")
+
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
   referenceOrganismDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesReferenceOrganismDictionary),
@@ -52,8 +57,9 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
     trim_ws = TRUE
   )
 
-### metadata
-#### structure
+if (file.exists(pathDataInterimDictionariesStructureMetadata))
+  cat("... structures metadata \n")
+
 if (file.exists(pathDataInterimDictionariesStructureMetadata))
   structureMetadata <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureMetadata),
@@ -63,7 +69,9 @@ if (file.exists(pathDataInterimDictionariesStructureMetadata))
     trim_ws = TRUE
   )
 
-#### organism
+if (file.exists(pathDataInterimDictionariesOrganismMetadata))
+  cat("... organisms metadata \n")
+
 if (file.exists(pathDataInterimDictionariesOrganismMetadata))
   organismMetadata <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismMetadata),
@@ -73,7 +81,7 @@ if (file.exists(pathDataInterimDictionariesOrganismMetadata))
     trim_ws = TRUE
   )
 
-### organism
+cat("... cleaned organisms \n")
 organismTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
   delim = "\t",
@@ -98,8 +106,7 @@ organismTableFull <- read_delim(
     organismCleaned_dbTaxo_8variety = organism_8_variety
   )
 
-### structure
-#### translated
+cat("... translated structures \n")
 translatedStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesTranslatedStructureFinal),
   delim = "\t",
@@ -108,7 +115,7 @@ translatedStructureTable <- read_delim(
   trim_ws = TRUE
 )
 
-#### cleaned
+cat("... cleaned structures \n")
 cleanedStructureTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedStructureFile),
   delim = "\t",
@@ -128,7 +135,7 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_xlogp = xlogpSanitized
   )
 
-#### classified
+cat("... classified structures \n")
 classifiedStructureTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedStructureFileClassified),
   delim = "\t",
@@ -146,7 +153,7 @@ classifiedStructureTableFull <- read_delim(
     structureCleaned_fp2 = fp2
   )
 
-### reference table
+cat("... cleaned references \n")
 referenceTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesCleanedReferenceFile),
   delim = "\t",
@@ -155,47 +162,62 @@ referenceTableFull <- read_delim(
   trim_ws = TRUE
 )
 
-# joining previous dictionaries with metadata
-## organism
+cat("joining ... \n")
+if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  cat("... previously cleaned organisms with metadata \n")
+
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
     file.exists(pathDataInterimDictionariesOrganismMetadata))
   organismOld <-
   left_join(organismDictionary, organismMetadata)
 
-## structure
+if (file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata))
+  cat("... previously cleaned structures with metadata \n")
+
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
     file.exists(pathDataInterimDictionariesStructureMetadata))
   structureOld <-
   left_join(structureDictionary, structureMetadata)
 
-# joining previous results with new ones
-## organism
+if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  cat("... previously cleaned organism with new ones \n")
+
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
     file.exists(pathDataInterimDictionariesOrganismMetadata))
   organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
   distinct()
 
-## structure
+cat("... translated structures with cleaned ones ... \n")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
 
+cat("... with their classification \n")
 structureFull <-
   left_join(structureFull, classifiedStructureTableFull)
+
+if (file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata))
+  cat("... previously cleaned and classified structures \n")
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
     file.exists(pathDataInterimDictionariesStructureMetadata))
   structureFull <- bind_rows(structureFull, structureOld) %>%
   distinct()
 
-## reference
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+  cat("... previously cleaned references \n")
+
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
   referenceTableFull <-
   bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
   distinct()
 
-# splitting minimal and metadata
-## structure
+cat("splitting metadata from minimal columns ... \n")
+cat("... structures \n")
 structureMinimal <- structureFull %>%
   filter(!is.na(structureCleanedInchi)) %>%
   distinct(
@@ -225,7 +247,7 @@ structureMetadata <- structureFull %>%
     structureCleaned_fp2
   )
 
-## organism
+cat("... organisms \n")
 organismMinimal <- organismTableFull %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(
@@ -255,7 +277,7 @@ organismMetadata <- organismTableFull %>%
     organismCleaned_dbTaxo_8variety
   )
 
-## reference
+cat("... references \n")
 referenceMinimal <- referenceTableFull %>%
   filter(
     !is.na(referenceCleanedDoi) |
@@ -296,18 +318,18 @@ gc(verbose = TRUE,
    reset = TRUE,
    full = TRUE)
 
-# integrating
-## structure
+cat("joining minimal table ... \n")
+cat("... structures \n")
 inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
   filter(!is.na(structureCleanedInchikey3D))
 
-## organism
+cat("... organisms \n")
 inhouseDbMinimal <-
   left_join(inhouseDbMinimal, organismMinimal) %>%
   filter(!is.na(organismCleaned))
 
-## reference
+cat("... references \n")
 inhouseDbMinimal <-
   left_join(inhouseDbMinimal, referenceMinimal) %>%
   filter(
@@ -317,7 +339,64 @@ inhouseDbMinimal <-
       database == "dnp_1"
   )
 
-# to avoid too long names translation, in case
+cat("joining table with missing empty translations (for later on) ... \n")
+cat("... structures \n")
+inhouseDbMaximal <- left_join(originalTable, structureMinimal) %>%
+  distinct(
+    database,
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    structureType,
+    structureValue,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D
+  )
+
+cat("... organisms \n")
+inhouseDbMaximal <-
+  left_join(inhouseDbMaximal, organismMinimal) %>%
+  distinct(
+    database,
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    structureType,
+    structureValue,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    organismCleaned
+  )
+
+cat("... references \n")
+inhouseDbMaximal <-
+  left_join(inhouseDbMaximal, referenceMinimal) %>%
+  distinct(
+    database,
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    structureType,
+    structureValue,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    organismCleaned,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid
+  ) %>%
+  filter(referenceType != "authors") %>%
+  filter(referenceType != "journal") %>%
+  filter(referenceType != "external") %>%
+  filter(referenceType != "isbn")
+
+cat(
+  "generating list with chemical names having no translation \n",
+  "to avoid translating them again (since process is long) \n"
+)
 structureNA <- anti_join(x = originalTable,
                          y = structureFull)
 
@@ -331,17 +410,27 @@ structureNA <- left_join(structureNA, structureFull) %>%
     structureCleanedSmiles
   )
 
-# export
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesCurated),
-  dir.create(pathDataInterimTablesCurated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesCurated),
+  yes = dir.create(pathDataInterimTablesCurated),
+  no = paste(pathDataInterimTablesCurated, "exists")
 )
 
-print(x = "writing the monster table, if running fullmode, this may take a while")
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesStructure),
+  yes = dir.create(pathDataInterimDictionariesStructure),
+  no = paste(pathDataInterimDictionariesStructure, "exists")
+)
 
-## table
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesOrganism),
+  yes = dir.create(pathDataInterimDictionariesOrganism),
+  no = paste(pathDataInterimDictionariesOrganism, "exists")
+)
+
+cat("writing the monster table, if running fullmode, this may take a while \n")
+cat(pathDataInterimTablesCuratedTable, "\n")
 write.table(
   x = inhouseDbMinimal,
   file = gzfile(
@@ -355,14 +444,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-## dictionaries
-### structure
-ifelse(
-  !dir.exists(pathDataInterimDictionariesStructure),
-  dir.create(pathDataInterimDictionariesStructure),
-  FALSE
-)
-
+cat(pathDataInterimDictionariesStructureDictionary, "\n")
 write.table(
   x = structureMinimal,
   file = gzfile(
@@ -376,6 +458,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
+cat(pathDataInterimDictionariesStructureAntiDictionary, "\n")
 write.table(
   x = structureNA,
   file = gzfile(
@@ -389,13 +472,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### organisms
-ifelse(
-  !dir.exists(pathDataInterimDictionariesOrganism),
-  dir.create(pathDataInterimDictionariesOrganism),
-  FALSE
-)
-
+cat(pathDataInterimDictionariesOrganismDictionary, "\n")
 write.table(
   x = organismMinimal,
   file = gzfile(
@@ -409,7 +486,8 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### reference
+cat(pathDataInterimDictionariesReferenceOrganismDictionary,
+    "\n")
 write.table(
   x = referenceTableFull,
   file = gzfile(
@@ -423,8 +501,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-## metadata
-### structure
+cat(pathDataInterimDictionariesStructureMetadata, "\n")
 write.table(
   x = structureMetadata,
   file = gzfile(
@@ -438,7 +515,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### organism
+cat(pathDataInterimDictionariesOrganismMetadata, "\n")
 write.table(
   x = organismMetadata,
   file = gzfile(
@@ -452,7 +529,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### reference
+cat(pathDataInterimDictionariesReferenceMetadata, "\n")
 write.table(
   x = referenceMetadata,
   file = gzfile(
@@ -465,3 +542,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

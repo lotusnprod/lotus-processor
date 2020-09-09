@@ -1,24 +1,27 @@
-# title: "cleaning translated organism"
+cat("This script performs canonical name recognition on the translated organism field. \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/bio.R")
 source("functions/helpers.R")
 source("functions/log.R")
 source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R")
 
-## libraries
+cat("loading ... \n")
+cat("... libraries \n")
 library(data.table)
 library(jsonlite)
 library(tidyverse)
 
 log_debug("  Step 3")
-
-## interim
+cat("... files ... \n")
+cat("... translated organisms \n")
 dataInterimOrganismToFill <- read_delim(
   file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedInterim),
   delim = "\t",
@@ -26,7 +29,7 @@ dataInterimOrganismToFill <- read_delim(
   trim_ws = FALSE
 )
 
-## cleaned original names
+cat("... cleaned original organisms \n")
 dataCleanedOriginalOrganism <- read_delim(
   file = gzfile(pathDataInterimTablesCleanedOrganismOriginalTable),
   delim = "\t",
@@ -34,7 +37,7 @@ dataCleanedOriginalOrganism <- read_delim(
   trim_ws = FALSE
 )
 
-### taxa levels
+cat(" ... taxa ranks dictionary \n")
 taxaRanksDictionary <- read_delim(
   file = pathDataInterimDictionariesTaxaRanks,
   delim = "\t",
@@ -42,10 +45,10 @@ taxaRanksDictionary <- read_delim(
   trim_ws = TRUE
 )
 
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
-  dir.create(pathDataInterimTablesCleanedOrganismTranslated),
+  test = !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
+  yes = dir.create(pathDataInterimTablesCleanedOrganismTranslated),
   no = file.remove(
     list.files(path = pathDataInterimTablesCleanedOrganismTranslated,
                full.names = TRUE)
@@ -56,6 +59,7 @@ ifelse(
     )
 )
 
+cat("submitting to GNFinder \n")
 system(command = paste("bash", pathTranslatedGnfinderScript))
 
 length <-
@@ -71,7 +75,7 @@ if (length != 0)
 
 dataCleanTranslatedOrganism <- list()
 
-# cleaning GNFinder output
+cat("cleaning GNFinder output \n")
 if (length != 0)
   for (i in num) {
     j <- i / cut
@@ -85,7 +89,7 @@ if (length != 0)
     })
   }
 
-# selecting and reordering
+cat("selecting and reordering \n")
 if (length(dataCleanTranslatedOrganism) != 0)
   dataCleanedTranslatedOrganism <-
   bind_rows(dataCleanTranslatedOrganism) %>%
@@ -162,7 +166,6 @@ if (length != 0)
   select(-n)
 
 cat("manipulating taxonomic levels \n")
-
 if (length != 0 &
     nrow(dataCleanedOrganism) != 0)
   dataCleanedOrganismManipulated <-
@@ -190,7 +193,8 @@ if (length == 0 |
     organism_8_variety = NA
   )
 
-# exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesCleanedOrganismTranslatedTable, "\n")
 write.table(
   x = dataCleanedOrganismManipulated,
   file = gzfile(
@@ -203,3 +207,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

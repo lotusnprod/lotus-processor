@@ -1,14 +1,16 @@
-# title: "Ref integration"
+cat("This script integrates all reference translations together \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-## files
-### doi
+cat("... files ... \n")
+cat("... DOI \n")
 dataDoi <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceDoi),
   delim = "\t",
@@ -36,7 +38,7 @@ dataDoi <- read_delim(
   mutate(level = 1) %>%
   mutate_all(as.character)
 
-### original
+cat("... original references \n")
 dataOriginal <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceOriginal),
   delim = "\t",
@@ -67,7 +69,7 @@ dataOriginal <- read_delim(
   ) %>%
   mutate_all(as.character)
 
-### pubmed
+cat("... PMID \n")
 dataPubmed <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
   delim = "\t",
@@ -95,7 +97,7 @@ dataPubmed <- read_delim(
   mutate(level = 1) %>%
   mutate_all(as.character)
 
-### publishing details
+cat("... publishing details \n")
 dataPublishingDetails <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferencePublishingDetails),
   delim = "\t",
@@ -126,7 +128,7 @@ dataPublishingDetails <- read_delim(
   ) %>%
   mutate_all(as.character)
 
-### title
+cat("... titles \n")
 dataTitle <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
   delim = "\t",
@@ -157,7 +159,7 @@ dataTitle <- read_delim(
   ) %>%
   mutate_all(as.character)
 
-### split
+cat("... split references \n")
 dataSplit <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceSplit),
   delim = "\t",
@@ -188,7 +190,7 @@ dataSplit <- read_delim(
   ) %>%
   mutate_all(as.character)
 
-### full
+cat("... full references \n")
 dataFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalReferenceFull),
   delim = "\t",
@@ -198,7 +200,9 @@ dataFull <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-### cleaned
+
+if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+  cat("...  cleaned organisms \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   dataCleanedOrganismManipulated <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
@@ -212,6 +216,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   mutate_all(as.character)
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
+  cat("... cleaned organisms \n")
+if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
   dataCleanedOrganismManipulated <- read_delim(
     file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
     delim = "\t",
@@ -223,10 +229,8 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
          organismCleaned) %>%
   mutate_all(as.character)
 
-
-cat("loading reference dictionary, this may take a while \n")
-
-### dictionary
+if (file.exists(pathDataInterimDictionariesReferenceDictionary))
+  cat("... reference dictionary, this may take a while \n")
 if (file.exists(pathDataInterimDictionariesReferenceDictionary))
   referenceDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
@@ -236,7 +240,9 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary))
     trim_ws = TRUE
   )
 
-# joining all types together again
+cat("joining ... \n")
+cat("... all reference types \n")
+
 dataCrossref <- bind_rows(dataDoi,
                           dataOriginal,
                           dataPublishingDetails,
@@ -257,7 +263,7 @@ dataCrossref <- dataCrossref %>%
     level
   )
 
-# joining full and cleaned organisms
+cat("... with organisms \n")
 dataJoined <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
@@ -278,6 +284,7 @@ rm(
   dataCleanedOrganismManipulated
 )
 
+cat("... with reference dictionary \n")
 dataTranslated <- left_join(dataJoined,
                             dataCrossref,
                             by = c("referenceValue" = "referenceOriginal")) %>%
@@ -298,9 +305,15 @@ dataTranslated <- left_join(dataJoined,
     level
   )
 
-## exporting
-cat("exporting, this may take a while if running full mode \n")
+cat("ensuring directories exist \n")
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesReference),
+  yes = dir.create(pathDataInterimDictionariesReference),
+  no = paste(pathDataInterimDictionariesReference, "exists")
+)
 
+cat("exporting, this may take a while if running full mode \n")
+cat(pathDataInterimTablesTranslatedReferenceFile, "\n")
 write.table(
   x = dataTranslated,
   file = gzfile(
@@ -314,13 +327,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-### dictionary
-ifelse(
-  !dir.exists(pathDataInterimDictionariesReference),
-  dir.create(pathDataInterimDictionariesReference),
-  FALSE
-)
-
+cat(pathDataInterimDictionariesReferenceDictionary, "\n")
 write.table(
   x = dataCrossref,
   file = gzfile(
@@ -333,3 +340,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

@@ -1,15 +1,15 @@
-# title: "Ref translatoR"
+cat("This script performs original reference translation from crossRef \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-library(tidyverse)
-
-## file
+cat("loading original references lists \n")
 length <-
   length(
     list.files(path = pathDataInterimTablesOriginalReferenceOriginalFolder,
@@ -24,23 +24,22 @@ num <- as.integer(seq(
   by = cut
 ))
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedReference),
+  yes = dir.create(pathDataInterimTablesTranslatedReference),
+  no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReferenceOriginalFolder),
-  dir.create(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+  test = !dir.exists(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+  yes = dir.create(pathDataInterimTablesTranslatedReferenceOriginalFolder),
   no = file.remove(
     list.files(path = pathDataInterimTablesTranslatedReferenceOriginalFolder,
                full.names = TRUE)
@@ -84,7 +83,7 @@ for (i in num) {
     trim_ws = TRUE
   )
   
-  # getting references
+  cat("submitting to crossRef \n")
   if (nrow(dataOriginal) != 1)
     reflist <- invisible(
       pbmclapply(
@@ -120,7 +119,7 @@ for (i in num) {
       referenceTranslationScoreDistance = NA
     )
   
-  ## exporting
+  cat("exporting ... \n")
   write.table(
     x = dataOriginal2,
     file = gzfile(
@@ -140,6 +139,7 @@ for (i in num) {
      full = TRUE)
 }
 
+cat("joining results with original lists \n")
 dataOriginal3 <- do.call("rbind",
                          lapply(list.files(
                            path = file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder),
@@ -157,7 +157,9 @@ dataOriginal3 <- do.call("rbind",
                            ) %>%
                              mutate_all(as.character)
                          }))
-## exporting
+
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedReferenceOriginal, "\n")
 write.table(
   x = dataOriginal3,
   file = gzfile(
@@ -170,3 +172,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")
