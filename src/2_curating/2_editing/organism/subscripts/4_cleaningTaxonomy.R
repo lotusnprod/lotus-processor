@@ -1,14 +1,19 @@
-# title: "cleaning taxonomy"
+cat("This script performs taxonomy alignment. \n")
 
-# loading paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
+
+cat("... functions \n")
 source("functions/log.R")
 source("functions/helpers.R")
 source("functions/bio.R")
 source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 
 log_debug(" Step 4")
-
+cat("defining function \n")
 taxo_cleaning_auto <- function(dfsel) {
   test <- dfsel %>%
     filter(!is.na(organismCleaned)) %>%
@@ -483,8 +488,7 @@ taxo_cleaning_auto <- function(dfsel) {
 }
 
 cat("Step 4 \n")
-
-## cleaned original names
+cat("loading cleaned organisms \n")
 dataCleanedOrganismManipulated <- read_delim(
   file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedTable),
   delim = "\t",
@@ -502,7 +506,7 @@ dataCleanedOrganismManipulated <- read_delim(
 # dataCuratedOrganism <-
 #   taxo_cleaning_manual(dfsel = dataCleanedOrganismManipulated)
 
-# outputing lowest taxon
+cat("keeping lowest taxon \n")
 dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
   mutate(organismCleaned =  as.character(apply(dataCleanedOrganismManipulated[7:15], 1, function(x)
     tail(na.omit(x), 1))))
@@ -515,7 +519,7 @@ dataCuratedOrganism$organismCleaned <-
   y_as_na(x = dataCuratedOrganism$organismCleaned,
           y = "NA")
 
-#selecting
+cat("selecting \n")
 dataCuratedOrganism[setdiff(
   x = c(
     "organismOriginal",
@@ -558,8 +562,8 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
     organism_8_variety
   )
 
-# exporting
-## curated
+cat("exporting ... \n")
+cat("pathDataInterimTablesCleanedOrganismFinal \n")
 write.table(
   x = dataCuratedOrganism,
   file = gzfile(
@@ -572,3 +576,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

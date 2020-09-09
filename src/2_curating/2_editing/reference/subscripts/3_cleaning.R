@@ -1,13 +1,15 @@
-# title: "Reference cleaner"
+cat("This script checks for organism presence in cleaned reference title \n")
 
-# loading paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-# loading functions
+cat("... functions \n")
 source("functions/reference.R")
 source("functions/helpers.R")
 
-# loading files
 cat("loading crossref translations file, this may take a while \n")
 dataTranslated <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
@@ -212,7 +214,6 @@ dataTranslated <- read_delim(
 ###### test <- cr_works(query = "Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439") #returning right result (but very low score)
 
 cat("cleaning, this may take a while if running full mode \n")
-
 dataCleaned <- dataTranslated %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
          referenceCleanedType = referenceTranslatedType) %>%
@@ -221,6 +222,7 @@ dataCleaned <- dataTranslated %>%
 
 rm(dataTranslated)
 
+cat("checking for organism in title \n")
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismOriginal) &
@@ -261,6 +263,7 @@ rm(dataCleaned)
 
 gc()
 
+cat("manipulating \n")
 dataCleanedJoinedWide <- dataCleanedJoined %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
@@ -304,8 +307,7 @@ subDataClean_pmid <- dataCleanedJoinedWide %>%
   mutate_all(as.character)
 
 cat("loading pmcid file, this may take a while \n")
-#here because of memory
-
+# here because of memory
 PMC_ids <- read_delim(
   file = gzfile(pathDataExternalTranslationSourcePubmedFile),
   delim = ",",
@@ -319,6 +321,7 @@ PMC_ids <- read_delim(
          PMID) %>%
   mutate_all(as.character)
 
+cat("adding PMID and PMCID \n")
 df_doi <- left_join(subDataClean_doi,
                     PMC_ids,
                     by = c("referenceCleaned_doi" = "DOI")) %>%
@@ -389,20 +392,21 @@ referenceTable <-
   ) %>%
   mutate(across(everything(), ~ y_as_na(.x, "NULL")))
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesCleaned),
-  dir.create(pathDataInterimTablesCleaned),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesCleaned),
+  yes = dir.create(pathDataInterimTablesCleaned),
+  no = paste(pathDataInterimTablesCleaned, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesCleanedReference),
-  dir.create(pathDataInterimTablesCleanedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesCleanedReference),
+  yes = dir.create(pathDataInterimTablesCleanedReference),
+  no = paste(pathDataInterimTablesCleanedReference, "exists")
 )
 
+cat("exporting ... \n")
+cat(pathDataInterimTablesCleanedReferenceFile, "\n")
 write.table(
   x = referenceTable,
   file = gzfile(
@@ -415,3 +419,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

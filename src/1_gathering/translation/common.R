@@ -1,13 +1,14 @@
 # title: "Common to scientific name translatoR"
 
-# loading paths
+# loading
+## paths
 source("paths.R")
 
-# loading functions
+## functions
 source("functions.R")
 
-# loading files
-## common names from PhenolExplorer
+##  files
+### common names from PhenolExplorer
 commonSciPhe <- read_delim(
   file = pathDataExternalTranslationSourceCommonPhenolexplorer,
   delim = ",",
@@ -18,7 +19,7 @@ commonSciPhe <- read_delim(
          canonicalName = food_source_scientific_name) %>%
   filter(!is.na(vernacularName))
 
-## common names from FooDB
+### common names from FooDB
 commonSciFoo <- read_delim(
   file = pathDataExternalTranslationSourceCommonFoodb,
   delim = ",",
@@ -29,7 +30,7 @@ commonSciFoo <- read_delim(
          canonicalName = name_scientific) %>%
   filter(!is.na(vernacularName))
 
-## common names from DrDuke
+### common names from DrDuke
 commonDuk <- read_delim(
   file = pathDataExternalTranslationSourceCommonDrdukeCommon,
   delim = ",",
@@ -39,6 +40,7 @@ commonDuk <- read_delim(
   select(vernacularName = CNNAM,
          FNFNUM)
 
+### scientific names from DrDuke
 sciDuk <- read_delim(
   file = pathDataExternalTranslationSourceCommonDrdukeScientific,
   delim = ",",
@@ -52,7 +54,8 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
   select(-FNFNUM) %>%
   filter(!is.na(vernacularName))
 
-# GBIF
+### GBIF
+#### taxa
 taxa <- read_delim(
   file = pathDataExternalTranslationSourceCommonGbifScientific,
   delim = "\t",
@@ -68,6 +71,7 @@ taxa <- read_delim(
   filter(!grepl(pattern = "\\?",
                 x = canonicalName))
 
+#### taxa
 vernacular <- read_delim(
   file = pathDataExternalTranslationSourceCommonGbifVernacular,
   delim = "\t",
@@ -80,7 +84,7 @@ vernacular <- read_delim(
   filter(!grepl(pattern = "\\?",
                 x = vernacularName))
 
-# manually subtracted entries
+### manually subtracted entries
 manualSubtraction <- read_delim(
   file = pathDataInterimDictionariesCommonManualSubtraction,
   delim = "\t",
@@ -230,6 +234,10 @@ commonSci$vernacularName <- gsub(
 commonSci <- commonSci %>%
   filter(vernacularName != word(string = canonicalName,
                                 start =  1))
+## explanation
+explanation <- commonSci %>%
+  filter(vernacularName == word(string = canonicalName,
+                                start =  1))
 
 # filtering only results with canonical name
 commonSci$canonicalName <- y_as_na(x = commonSci$canonicalName,
@@ -329,8 +337,8 @@ commonSciSub <- commonSciJoined %>%
 ## sorting in appropriate order
 common2Sci <- commonSciSub %>%
   mutate(n = str_count(string = vernacularName)) %>%
-  arrange(desc(n)) %>%  #sorting for replacements like "sea cucumber" and so on...
-  filter(n >= 4) %>% #names with 3 char are not enough
+  arrange(desc(n)) %>%  # sorting for replacements like "sea cucumber" and so on...
+  filter(n >= 4) %>% # names with 3 char are not enough
   select(vernacularName,
          canonicalName) %>%
   filter(!grepl("\\?", canonicalName)) %>%

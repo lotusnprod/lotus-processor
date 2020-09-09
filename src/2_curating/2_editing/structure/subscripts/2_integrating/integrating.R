@@ -1,18 +1,17 @@
-# title: "integrating chemo"
+cat("This script integrates all chemical translations. \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/analysis.R")
 source("functions/helpers.R")
 
-## libraries
-library(tidyverse)
-
-## files
-### original table
+cat("loading files ... \n")
+cat("... whole chemicals list \n")
 originalTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalStructureFull),
   delim = "\t",
@@ -21,8 +20,7 @@ originalTable <- read_delim(
   trim_ws = TRUE
 )
 
-### structure table
-#### loading multiple old files, will be optimized later on
+cat("... chemical names list \n")
 nominalStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesTranslatedStructureNominal),
   delim = "\t",
@@ -31,6 +29,7 @@ nominalStructureTable <- read_delim(
   trim_ws = TRUE
 )
 
+cat("... SMILES list \n")
 smilesStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesTranslatedStructureSmiles),
   delim = "\t",
@@ -39,7 +38,7 @@ smilesStructureTable <- read_delim(
   trim_ws = TRUE
 )
 
-# joining
+cat("joining \n")
 translatedStructureTable <-
   left_join(
     originalTable,
@@ -72,7 +71,7 @@ translatedStructureTable <- translatedStructureTable %>%
 if (nrow(translatedStructureTable) == 0)
   translatedStructureTable[1,] <- NA
 
-# unique structures
+cat("outputing unique structures \n")
 translatedStructureTableUnique <- translatedStructureTable %>%
   filter(!is.na(structureTranslated)) %>%
   distinct(structureTranslated)
@@ -80,7 +79,8 @@ translatedStructureTableUnique <- translatedStructureTable %>%
 if (nrow(translatedStructureTableUnique) == 0)
   translatedStructureTableUnique[1,] <- NA
 
-# exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedStructureFinal, "\n")
 write.table(
   x = translatedStructureTable,
   file = gzfile(
@@ -94,6 +94,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
+cat(pathDataInterimTablesTranslatedStructureUnique, "\n")
 write.table(
   x = translatedStructureTableUnique,
   file = gzfile(
@@ -106,3 +107,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

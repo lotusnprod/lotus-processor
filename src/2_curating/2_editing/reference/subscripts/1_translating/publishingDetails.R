@@ -1,13 +1,15 @@
-# title: "Ref translatoR"
+cat("This script performs publishing details translation from crossRef \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-## file
+cat("loading publishing details list \n")
 dataPublishingDetails <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalReferencePublishingDetails),
   delim = "\t",
@@ -15,7 +17,7 @@ dataPublishingDetails <- read_delim(
   trim_ws = TRUE
 )
 
-# getting references
+cat("submitting to crossRef \n")
 if (nrow(dataPublishingDetails) != 1)
   reflist <- invisible(
     pbmclapply(
@@ -33,7 +35,7 @@ if (nrow(dataPublishingDetails) != 1)
 
 cat("This may take several minutes \n")
 
-# joining with original dataframe
+cat("joining results with original list \n")
 if (nrow(dataPublishingDetails) != 1)
   dataPublishingDetails <-
   getAllReferences(data = dataPublishingDetails,
@@ -53,21 +55,22 @@ if (nrow(dataPublishingDetails) == 1)
     referenceTranslationScoreDistance = NA
   )
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedReference),
+  yes = dir.create(pathDataInterimTablesTranslatedReference),
+  no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-## exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedReferencePublishingDetails,
+    "\n")
 write.table(
   x = dataPublishingDetails,
   file = gzfile(
@@ -80,3 +83,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

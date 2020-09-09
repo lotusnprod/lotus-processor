@@ -1,13 +1,15 @@
-# title: "Ref translatoR"
+cat("This script performs PMID translation from pubmed API \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-## file
+cat("loading PMID list \n")
 dataPubmed <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalReferencePubmed),
   delim = "\t",
@@ -18,6 +20,7 @@ dataPubmed <- read_delim(
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 ## 2
 # mc cores set to 2 because fails otherwise (entrez limitation probably)
+cat("submitting to entrez \n")
 if (nrow(dataPubmed) != 1)
   reflistPubmed <- invisible(
     pbmclapply(
@@ -35,7 +38,7 @@ if (nrow(dataPubmed) != 1)
 if (nrow(dataPubmed) != 1)
   reflistPubmedBound <- bind_rows(reflistPubmed)
 
-# joining with original dataframe
+cat("joining results with original list \n")
 if (nrow(dataPubmed) != 1)
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedDoi"] <-
@@ -85,6 +88,7 @@ if (nrow(dataPubmed) == 1)
     referenceTranslationScoreDistance = NA
   )
 
+cat("removing unfriendly characters \n")
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)
 
@@ -101,21 +105,21 @@ dataPubmed[] <-
   lapply(dataPubmed, function(x)
     gsub("\t", " ", x))
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedReference),
+  yes = dir.create(pathDataInterimTablesTranslatedReference),
+  no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-## exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedReferencePubmed, "\n")
 write.table(
   x = dataPubmed,
   file = gzfile(
@@ -128,3 +132,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

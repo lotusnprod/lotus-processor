@@ -1,13 +1,15 @@
-# title: "Ref translatoR"
+cat("This script performs split references translation from crossRef \n")
 
-# loading
-## paths
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-## functions
+cat("... functions \n")
 source("functions/reference.R")
 
-## file
+cat("loading split references list \n")
 dataSplit <- read_delim(
   file = gzfile(pathDataInterimTablesOriginalReferenceSplit),
   delim = "\t",
@@ -15,7 +17,7 @@ dataSplit <- read_delim(
   trim_ws = TRUE
 )
 
-# getting references
+cat("submitting to crossRef \n")
 if (nrow(dataSplit) != 1)
   reflist <- invisible(
     pbmclapply(
@@ -51,21 +53,21 @@ if (nrow(dataSplit) == 1)
     referenceTranslationScoreDistance = NA
   )
 
-# exporting
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslated),
-  dir.create(pathDataInterimTablesTranslated),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
 )
 
 ifelse(
-  !dir.exists(pathDataInterimTablesTranslatedReference),
-  dir.create(pathDataInterimTablesTranslatedReference),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesTranslatedReference),
+  yes = dir.create(pathDataInterimTablesTranslatedReference),
+  no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-## exporting
+cat("exporting ... \n")
+cat(pathDataInterimTablesTranslatedReferenceSplit, "\n")
 write.table(
   x = dataSplit,
   file = gzfile(
@@ -78,3 +80,7 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+end <- Sys.time()
+
+cat("Script finished in", end - start , "seconds \n")

@@ -1,14 +1,15 @@
 # title: "TCM to scientific name translatoR"
 
-# loading paths
+# loading
+## paths
 source("paths.R")
 
-# loading functions
+## functions
 source("functions.R")
 
-database <- databases$get("tmmc")
-
 ## files
+### dictionary from TMMC
+database <- databases$get("tmmc")
 tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
                             sheet = 1) %>%
   mutate_all(as.character) %>%
@@ -17,7 +18,7 @@ tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
          biologicalsource = SCIENCE) %>%
   distinct(biologicalsource, .keep_all = TRUE)
 
-## tcm names list from TCMID
+### dictionary from TCMID
 tcmNamesDic_2 <- read_delim(
   file = pathDataExternalTranslationSourceTcmTcmid,
   delim = "\t",
@@ -30,7 +31,7 @@ tcmNamesDic_2 <- read_delim(
            !is.na(latin)) %>%
   mutate(biologicalsource = latin)
 
-## tcm names list from Chinese Medicine Board of Australia
+## dictionary from Chinese Medicine Board of Australia
 tcmNamesDic_3 <-
   read_excel(path = pathDataExternalTranslationSourceTcmCmba,
              sheet = 1) %>%
