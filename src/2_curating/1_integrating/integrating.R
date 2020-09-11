@@ -197,7 +197,7 @@ structureTable_full <- dbTable %>%
   select(structureType, structureValue)
 
 if (nrow(structureTable_full) == 0)
-  structureTable_full[1,] <- NA
+  structureTable_full[1, ] <- NA
 
 cat("... organisms table \n")
 organismTable <- dbTable %>%
@@ -607,4 +607,4 @@ write.table(
 
 end <- Sys.time()
 
-cat("Script finished in", end - start , "seconds \n")
+cat("Script finished in", format(end - start), "\n")
