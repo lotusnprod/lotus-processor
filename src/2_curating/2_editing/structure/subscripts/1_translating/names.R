@@ -68,7 +68,7 @@ dataTranslatedNominal_cts <- dataTranslated %>%
   filter(is.na(structureTranslatedNominal_cactus))
 
 if (nrow(dataTranslatedNominal_cts) == 0)
-  dataTranslatedNominal_cts[1, ] <- NA
+  dataTranslatedNominal_cts[1,] <- NA
 
 dataTranslatedNominal_cts <- dataTranslatedNominal_cts %>%
   mutate(inchiNominal_cts = invisible(
@@ -147,4 +147,4 @@ write.table(
 
 end <- Sys.time()
 
-cat("Script finished in", end - start , "seconds \n")
+cat("Script finished in", format(end - start), "\n")

@@ -69,7 +69,7 @@ translatedStructureTable <- translatedStructureTable %>%
   filter(!is.na(structureTranslated))
 
 if (nrow(translatedStructureTable) == 0)
-  translatedStructureTable[1,] <- NA
+  translatedStructureTable[1, ] <- NA
 
 cat("outputing unique structures \n")
 translatedStructureTableUnique <- translatedStructureTable %>%
@@ -77,7 +77,7 @@ translatedStructureTableUnique <- translatedStructureTable %>%
   distinct(structureTranslated)
 
 if (nrow(translatedStructureTableUnique) == 0)
-  translatedStructureTableUnique[1,] <- NA
+  translatedStructureTableUnique[1, ] <- NA
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedStructureFinal, "\n")
@@ -110,4 +110,4 @@ write.table(
 
 end <- Sys.time()
 
-cat("Script finished in", end - start , "seconds \n")
+cat("Script finished in", format(end - start), "\n")

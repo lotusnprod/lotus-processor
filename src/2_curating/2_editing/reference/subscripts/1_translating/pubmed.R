@@ -135,4 +135,4 @@ write.table(
 
 end <- Sys.time()
 
-cat("Script finished in", end - start , "seconds \n")
+cat("Script finished in", format(end - start), "\n")
