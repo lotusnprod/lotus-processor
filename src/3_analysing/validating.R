@@ -75,7 +75,6 @@ table_old <- sampleAllONPDB_old %>%
     comments
   )
 
-
 sampleAllONPDB_AR <-
   read_delim(file = "../data/validation/new/AR.tsv",
              delim = "\t") %>%
@@ -92,10 +91,16 @@ sampleAllONPDB_PMA <-
              delim = "\t") %>%
   filter(curator == "PMA")
 
+sampleCondifent_PMA <-
+  read_delim(file = "../data/validation/confident/100confidentPMAChecked.tsv",
+             delim = "\t") %>%
+  filter(curator == "PMA") %>%
+  mutate(curator = "PMA2")
 
 sampleAllONPDB <- bind_rows(sampleAllONPDB_AR,
                             sampleAllONPDB_JB,
-                            sampleAllONPDB_PMA)
+                            sampleAllONPDB_PMA,
+                            sampleCondifent_PMA)
 
 table <- sampleAllONPDB %>%
   mutate_all(as.character) %>%
@@ -234,9 +239,38 @@ myDirtyF <- function(table) {
   return (table_full)
 }
 
+myDirtyC <- function(table) {
+  table_tot <- table %>%
+    count(name = "tot")
+  
+  table_y <- table %>%
+    filter(validated == "Y") %>%
+    count(name = "y")
+  
+  table_n <- table %>%
+    filter(validated == "N") %>%
+    count(name =  "n")
+  
+  table_mix <- table %>%
+    filter(validated == "Y/N") %>%
+    count(name = "mix")
+  
+  table_full <-
+    bind_cols(table_tot, table_y, table_n, table_mix)  %>%
+    replace(is.na(.), 0) %>%
+    mutate(ratio =  y / tot)
+  
+  return (table_full)
+}
+
 table_count <- myDirtyF(table = realSample)
 
+table_count_global <- myDirtyC(table = realSample)
+
 tableFiltered_count <- myDirtyF(table = realSampleFilteredBioTitle)
+
+tableFiltered_count_global <-
+  myDirtyC(table = realSampleFilteredBioTitle %>% filter(curator == "PMA2"))
 
 myDirtyP <- function(table, title, yaxismax) {
   fig <-
@@ -268,14 +302,53 @@ myDirtyP <- function(table, title, yaxismax) {
   return(fig)
 }
 
+myDirtyQ <- function(table, title, yaxismax) {
+  fig <-
+    plot_ly(
+      data = table,
+      y = ~ y,
+      type = 'bar',
+      name = 'correct',
+      color = I('green')
+    ) %>%
+    add_trace(y = ~ mix,
+              name = 'ambiguous',
+              color = I("orange")) %>%
+    add_trace(
+      y = ~ n,
+      name = 'uncorrect',
+      color = I('red'),
+      text = ~ round(x = ratio, digits = 2),
+      textposition = 'outside',
+      textfont = list(color = I('black'), size = 20)
+    ) %>%
+    layout(
+      title = title,
+      yaxis = list(title = 'Count',
+                   range = c(0, yaxismax)),
+      barmode = 'stack'
+    )
+  return(fig)
+}
 fig_full <-
   myDirtyP(table = table_count,
-           yaxismax = 60,
+           yaxismax = 150,
            title = "full version")
 fig_full
 
 fig_filtered <-
   myDirtyP(table = tableFiltered_count,
-           yaxismax = 35,
+           yaxismax = 100,
            title = "filtered version")
 fig_filtered
+
+
+newfull <- myDirtyQ(table = table_count_global,
+                    yaxismax = 350,
+                    title = "new filtered version")
+newfull
+
+newfiltered <- myDirtyQ(table = tableFiltered_count_global,
+                        yaxismax = 100,
+                        title = "new filtered version")
+newfiltered
