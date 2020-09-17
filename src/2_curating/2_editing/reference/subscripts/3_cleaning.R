@@ -213,35 +213,34 @@ dataTranslated <- read_delim(
 ##### Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439
 ###### test <- cr_works(query = "Journal of Natural Products; vol. 63; 10; (2000); p. 1437 - 1439") #returning right result (but very low score)
 
-cat("cleaning, this may take a while if running full mode \n")
+cat("cleaning \n")
 dataCleaned <- dataTranslated %>%
+  filter(!is.na(referenceTranslatedType)) %>%
+  filter(!is.na(referenceTranslatedValue)) %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
          referenceCleanedType = referenceTranslatedType) %>%
   select(-referenceTranslatedValue,
-         -referenceTranslatedType)
+         -referenceTranslatedType) %>%
+  data.frame() %>%
+  distinct()
 
 rm(dataTranslated)
 
-cat("checking for organism in title \n")
+cat("checking for organism in title, may take a while if running full mode \n")
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismOriginal) &
            !is.na(referenceCleanedValue)) %>%
-  distinct(organismOriginal,
-           organismCleaned,
-           referenceCleanedValue,
-           level,
-           .keep_all = TRUE) %>%
-  rowwise() %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
-    test = str_detect(
-      string = fixed(referenceCleanedValue),
-      pattern = fixed(word(organismCleaned, 1))
-    ),
+    test = str_detect(string = fixed(tolower(
+      referenceCleanedValue
+    )),
+    pattern = fixed(tolower(
+      word(organismCleaned, 1)
+    ))),
     yes = 1,
     no = 0
   )) %>%
-  ungroup() %>%
   filter(referenceCleaned_scoreTitleOrganism == 1) %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
@@ -255,46 +254,57 @@ dataCleanedScore <- dataCleaned %>%
     values_drop_na = TRUE
   ) %>%
   filter(referenceCleanedType == "scoreTitleOrganism") %>%
-  select(-drop)
+  select(-drop) %>%
+  data.frame() %>%
+  distinct()
 
-dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore)
+dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore) %>%
+  data.frame() %>%
+  filter(!is.na(organismOriginal))
 
 rm(dataCleaned)
 
+# this is because sadly crossref does not always give the same score, therefore
+## we do not have unique values ...
+subDataCleanedJoined_1 <- dataCleanedJoined %>%
+  filter(referenceCleanedType == "scoreCrossref") %>%
+  distinct(organismOriginal,
+           referenceType,
+           referenceValue,
+           organismCleaned,
+           level,
+           .keep_all = TRUE)
+
+subDataCleanedJoined_2 <- dataCleanedJoined %>%
+  filter(referenceCleanedType != "scoreCrossref")
+
+dataCleanedJoinedUnique <-
+  bind_rows(subDataCleanedJoined_1, subDataCleanedJoined_2)
+
+rm(dataCleanedJoined)
+rm(subDataCleanedJoined_1)
+rm(subDataCleanedJoined_2)
+
 gc()
 
-cat("manipulating \n")
-dataCleanedJoinedWide <- dataCleanedJoined %>%
+cat("manipulating and keeping best result only (long step) \n")
+dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
               values_from = referenceCleanedValue) %>%
-  select(-referenceCleaned_NA) %>%
-  distinct(
-    organismOriginal,
-    level,
-    referenceValue,
-    referenceCleaned_doi,
-    referenceCleaned_journal,
-    referenceCleaned_title,
-    referenceCleaned_date,
-    referenceCleaned_author,
-    referenceCleaned_scoreCrossref,
-    referenceCleaned_scoreDistance,
-    referenceCleaned_scoreTitleOrganism,
-    .keep_all = TRUE
-  ) %>%
-  group_by(organismOriginal, referenceValue) %>%
-  arrange(desc(referenceCleaned_scoreCrossref)) %>%
-  arrange(desc(referenceCleaned_scoreTitleOrganism)) %>%
-  arrange(referenceCleaned_scoreDistance) %>%
+  group_by(organismOriginal, organismCleaned, referenceValue) %>%
+  arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
+  arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
+  arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
+  data.frame() %>%
   distinct(organismOriginal,
+           organismCleaned,
            referenceValue,
            .keep_all = TRUE) %>%
-  select(-level) %>%
-  mutate_all(as.character)
+  select(-level)
 
-rm(dataCleanedJoined)
+rm(dataCleanedJoinedUnique)
 
 subDataClean_doi <- dataCleanedJoinedWide %>%
   filter(!is.na(referenceCleaned_doi)) %>%
@@ -366,7 +376,7 @@ referenceTable <-
     referenceCleanedDoi = referenceCleaned_doi,
     referenceCleanedPmcid = referenceCleaned_pmcid,
     referenceCleanedPmid = referenceCleaned_pmid,
-    referenceCleaned_title,
+    referenceCleanedTitle = referenceCleaned_title,
     referenceCleaned_journal,
     referenceCleaned_date,
     referenceCleaned_author,
@@ -374,22 +384,7 @@ referenceTable <-
     referenceCleaned_score_distance = referenceCleaned_scoreDistance,
     referenceCleaned_score_titleOrganism = referenceCleaned_scoreTitleOrganism,
   ) %>%
-  distinct(
-    organismOriginal,
-    organismCleaned,
-    referenceType,
-    referenceValue,
-    referenceCleanedDoi,
-    referenceCleanedPmcid,
-    referenceCleanedPmid,
-    referenceCleaned_title,
-    referenceCleaned_journal,
-    referenceCleaned_date,
-    referenceCleaned_author,
-    referenceCleaned_score_crossref,
-    referenceCleaned_score_distance,
-    referenceCleaned_score_titleOrganism,
-  ) %>%
+  distinct() %>%
   mutate(across(everything(), ~ y_as_na(.x, "NULL")))
 
 cat("ensuring directories exist \n")

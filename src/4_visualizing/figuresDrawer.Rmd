@@ -782,7 +782,8 @@ openDbTripletsGoldMeta <-
            .keep_all = TRUE)
 ```
 
-##most studied structures
+## most studied structures
+### stigmastenol
 ```{r}
 pdf(file = "../../data/processed/figures/stigmastenol.pdf")
 inhouseDb_most_structures <- inhouseDbTripletsGoldMeta %>%
@@ -836,6 +837,170 @@ mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
 dbnumostinchi <- as.numeric(nrow(
   inhouseDbTripletsGoldMeta %>%
     filter(structureCleanedInchikey3D == mostinchi) %>%
+    distinct(database)
+))
+
+upset(
+  inhouseDb_most_structures_2plot_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "organismCleaned_dbTaxo_1kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1],
+          mostkingdom[6, 1],
+          mostkingdom[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostkingdom[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organismCleaned_dbTaxo_1kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1],
+          mostkingdom[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostkingdom[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organismCleaned_dbTaxo_1kingdom",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1],
+          mostkingdom[5, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostkingdom[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "organismCleaned_dbTaxo_1kingdom",
+        c(mostkingdom[1, 1],
+          mostkingdom[2, 1],
+          mostkingdom[3, 1],
+          mostkingdom[4, 1])
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostkingdom[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organismCleaned_dbTaxo_1kingdom",
+                    c(mostkingdom[1, 1],
+                      mostkingdom[2, 1],
+                      mostkingdom[3, 1])),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostkingdom[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organismCleaned_dbTaxo_1kingdom",
+                    c(mostkingdom[1, 1],
+                      mostkingdom[2, 1])),
+      
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostkingdom[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("organismCleaned_dbTaxo_1kingdom",
+                    c(mostkingdom[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostkingdom[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 20,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique sources per intersection",
+  sets.x.label = "Unique source per database",
+  set_size.show = TRUE
+)
+```
+
+### quercetin
+```{r}
+pdf(file = "../../data/processed/figures/quercetin.pdf")
+
+mostinchi2 <- as.character(inhouseDb_most_structures[2, 1])
+
+inhouseDb_most_structures_2plot <- inhouseDbTripletsGoldMeta %>%
+  filter(structureCleanedInchikey3D == mostinchi2) %>%
+  filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned,
+           database,
+           .keep_all = TRUE) %>%
+  group_by(database, organismCleaned) %>%
+  count(structureCleanedInchikey3D) %>%
+  ungroup()
+
+inhouseDb_most_structures_2plot_wide <-
+  inhouseDb_most_structures_2plot %>%
+  pivot_wider(names_from = database,
+              values_from = n) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(3:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_most_structures_2plot_wide <-
+  left_join(inhouseDb_most_structures_2plot_wide,
+            inhouseDbTripletsGoldMeta) %>%
+  distinct(structureCleanedInchikey3D, 
+           organismCleaned,
+           .keep_all = TRUE)
+
+mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
+  filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
+  count(organismCleaned_dbTaxo_1kingdom) %>%
+  arrange(desc(n))
+
+dbnumostinchi <- as.numeric(nrow(
+  inhouseDbTripletsGoldMeta %>%
+    filter(structureCleanedInchikey3D == mostinchi2) %>%
     distinct(database)
 ))
 
@@ -1215,6 +1380,36 @@ pdf(file = "../../data/processed/figures/panaxGinseng.pdf")
 getGraphStudiedPlant(plant = "Panax ginseng")
 ```
 
+### Vitis vinifera
+```{r}
+pdf(file = "../../data/processed/figures/vitisVinifera.pdf")
+getGraphStudiedPlant(plant = "Vitis vinifera")
+```
+
+### Lyngbya majuscula
+```{r}
+pdf(file = "../../data/processed/figures/LyngbyaMajuscula.pdf")
+getGraphStudiedPlant(plant = "Lyngbya majuscula")
+```
+
+### Zingiber officinale
+```{r}
+pdf(file = "../../data/processed/figures/zingiberOfficinale.pdf")
+getGraphStudiedPlant(plant = "Zingiber officinale")
+```
+
+### Capsicum annuum
+```{r}
+pdf(file = "../../data/processed/figures/capsicumAnnuum.pdf")
+getGraphStudiedPlant(plant = "Capsicum annuum annuum")
+```
+
+### Arabidopsis thaliana
+```{r}
+pdf(file = "../../data/processed/figures/arabidopsisThaliana.pdf")
+getGraphStudiedPlant(plant = "Arabidopsis thaliana")
+```
+
 ## chosen chemical subclass
 ### exploratory
 ```{r}
@@ -1463,7 +1658,7 @@ pdf(file = "../../data/processed/figures/furanocoumarins.pdf")
 getGraphChemicalClass(subclass = "Furanocoumarins")
 ```
 
-##chemical superclasses by biological kingdom
+## chemical superclasses by biological kingdom
 ```{r}
 pdf(file = "../../data/processed/figures/kingdoms.pdf")
 inhouseDb_kingdoms <- inhouseDbTripletsGoldMeta %>%
@@ -1670,13 +1865,443 @@ upset(
   ),
   mb.ratio = c(0.7, 0.3),
   order.by = "freq",
-  nintersects = 35,
+  nintersects = 58,
   #empty.intersections = "on",
   number.angles = 30,
   point.size = 2.5,
   line.size = 1,
   mainbar.y.label = "Unique structures per intersection",
   sets.x.label = "Unique structures per kingdom",
+  set_size.show = TRUE
+)
+```
+
+## chemical superclasses by biological phylum inside plants
+```{r}
+pdf(file = "../../data/processed/figures/phyla.pdf")
+inhouseDb_phyla <- inhouseDbTripletsGoldMeta %>%
+  filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
+  filter(!is.na(organismCleaned_dbTaxo_2phylum)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned_dbTaxo_2phylum,
+           .keep_all = TRUE) %>%
+  group_by(organismCleaned_dbTaxo_2phylum) %>%
+  count(structureCleanedInchikey3D) %>%
+  ungroup()
+
+inhouseDb_phyla_wide <-
+  inhouseDb_phyla %>%
+  pivot_wider(names_from = organismCleaned_dbTaxo_2phylum,
+              values_from = n) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_phyla_wide <-
+  left_join(inhouseDb_phyla_wide, chemo) %>%
+  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+
+mostsuperclass2 <- inhouseDb_phyla_wide %>%
+  count(structureCleaned_2superclass) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+upset(
+  inhouseDb_phyla_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1],
+          mostsuperclass2[6, 1],
+          mostsuperclass2[7, 1],
+          mostsuperclass2[8, 1],
+          mostsuperclass2[9, 1],
+          mostsuperclass2[10, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#6a3d9a",
+      query.name = mostsuperclass2[10, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1],
+          mostsuperclass2[6, 1],
+          mostsuperclass2[7, 1],
+          mostsuperclass2[8, 1],
+          mostsuperclass2[9, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#cab2d6",
+      query.name = mostsuperclass2[9, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1],
+          mostsuperclass2[6, 1],
+          mostsuperclass2[7, 1],
+          mostsuperclass2[8, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#ff7f00",
+      query.name = mostsuperclass2[8, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1],
+          mostsuperclass2[6, 1],
+          mostsuperclass2[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostsuperclass2[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1],
+          mostsuperclass2[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostsuperclass2[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1],
+          mostsuperclass2[5, 1]
+        )
+      ),
+      
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostsuperclass2[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1],
+          mostsuperclass2[4, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostsuperclass2[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(mostsuperclass2[1, 1],
+          mostsuperclass2[2, 1],
+          mostsuperclass2[3, 1])
+      ),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostsuperclass2[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("structureCleaned_2superclass",
+                    c(mostsuperclass2[1, 1],
+                      mostsuperclass2[2, 1])),
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostsuperclass2[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("structureCleaned_2superclass",
+                    c(mostsuperclass2[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostsuperclass2[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 30,
+  #empty.intersections = "on",
+  number.angles = 29,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per phylum",
+  set_size.show = TRUE
+)
+```
+
+## chemical superclasses by biological class inside tracheophyta
+```{r}
+pdf(file = "../../data/processed/figures/classes.pdf")
+inhouseDb_classes <- inhouseDbTripletsGoldMeta %>%
+  filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
+  filter(!is.na(organismCleaned_dbTaxo_3class)) %>%
+  distinct(structureCleanedInchikey3D,
+           organismCleaned_dbTaxo_3class,
+           .keep_all = TRUE) %>%
+  group_by(organismCleaned_dbTaxo_3class) %>%
+  count(structureCleanedInchikey3D) %>%
+  ungroup()
+
+inhouseDb_classes_wide <-
+  inhouseDb_classes %>%
+  pivot_wider(names_from = organismCleaned_dbTaxo_3class,
+              values_from = n) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = is.na(.),
+              values = 0
+            )) %>%
+  mutate_at(.vars = c(2:ncol(.)),
+            ~ replace(
+              x = .,
+              list = . >= 1,
+              values = 1
+            )) %>%
+  data.frame()
+
+inhouseDb_classes_wide <-
+  left_join(inhouseDb_classes_wide, chemo) %>%
+  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+
+mostsuperclass3 <- inhouseDb_classes_wide %>%
+  count(structureCleaned_2superclass) %>%
+  arrange(desc(n)) %>%
+  head(10)
+
+upset(
+  inhouseDb_classes_wide,
+  nsets = 10,
+  query.legend = "top",
+  queries = list(
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1],
+          mostsuperclass3[6, 1],
+          mostsuperclass3[7, 1],
+          mostsuperclass3[8, 1],
+          mostsuperclass3[9, 1],
+          mostsuperclass3[10, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#6a3d9a",
+      query.name = mostsuperclass3[10, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1],
+          mostsuperclass3[6, 1],
+          mostsuperclass3[7, 1],
+          mostsuperclass3[8, 1],
+          mostsuperclass3[9, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#cab2d6",
+      query.name = mostsuperclass3[9, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1],
+          mostsuperclass3[6, 1],
+          mostsuperclass3[7, 1],
+          mostsuperclass3[8, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#ff7f00",
+      query.name = mostsuperclass3[8, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1],
+          mostsuperclass3[6, 1],
+          mostsuperclass3[7, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#fdbf6f",
+      query.name = mostsuperclass3[7, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1],
+          mostsuperclass3[6, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#e31a1c",
+      query.name = mostsuperclass3[6, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1],
+          mostsuperclass3[5, 1]
+        )
+      ),
+      
+      active = TRUE,
+      color = "#fb9a99",
+      query.name = mostsuperclass3[5, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(
+          mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1],
+          mostsuperclass3[4, 1]
+        )
+      ),
+      active = TRUE,
+      color = "#33a02c",
+      query.name = mostsuperclass3[4, 1]
+    ),
+    list(
+      query = elements,
+      params = list(
+        "structureCleaned_2superclass",
+        c(mostsuperclass3[1, 1],
+          mostsuperclass3[2, 1],
+          mostsuperclass3[3, 1])
+      ),
+      active = TRUE,
+      color = "#b2df8a",
+      query.name = mostsuperclass3[3, 1]
+    ),
+    list(
+      query = elements,
+      params = list("structureCleaned_2superclass",
+                    c(mostsuperclass3[1, 1],
+                      mostsuperclass3[2, 1])),
+      active = TRUE,
+      color = "#1f78b4",
+      query.name = mostsuperclass3[2, 1]
+    ),
+    list(
+      query = elements,
+      params = list("structureCleaned_2superclass",
+                    c(mostsuperclass3[1, 1])),
+      active = TRUE,
+      color = "#a6cee3",
+      query.name = mostsuperclass3[1, 1]
+    )
+  ),
+  mb.ratio = c(0.7, 0.3),
+  order.by = "freq",
+  nintersects = 100,
+  #empty.intersections = "on",
+  number.angles = 30,
+  point.size = 2.5,
+  line.size = 1,
+  mainbar.y.label = "Unique structures per intersection",
+  sets.x.label = "Unique structures per class",
   set_size.show = TRUE
 )
 ```

@@ -250,6 +250,7 @@ structureMetadata <- structureFull %>%
 cat("... organisms \n")
 organismMinimal <- organismTableFull %>%
   filter(!is.na(organismCleaned)) %>%
+  filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(
     organismOriginal,
     organismCleaned,
@@ -261,6 +262,7 @@ organismMinimal <- organismTableFull %>%
 
 organismMetadata <- organismTableFull %>%
   filter(!is.na(organismCleaned)) %>%
+  filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(
     organismCleaned,
     organismCleaned_dbTaxo,
@@ -284,13 +286,15 @@ referenceMinimal <- referenceTableFull %>%
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
   ) %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
     organismCleaned,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    referenceCleanedTitle
   )
 
 referenceMetadata <- referenceTableFull %>%
@@ -299,12 +303,13 @@ referenceMetadata <- referenceTableFull %>%
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
   ) %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
     organismCleaned,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
-    referenceCleaned_title,
+    referenceCleanedTitle,
     referenceCleaned_journal,
     referenceCleaned_date,
     referenceCleaned_author,
@@ -332,6 +337,8 @@ inhouseDbMinimal <-
 cat("... references \n")
 inhouseDbMinimal <-
   left_join(inhouseDbMinimal, referenceMinimal) %>%
+  filter(!is.na(referenceCleanedTitle) |
+           database == "dnp_1") %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
@@ -341,7 +348,8 @@ inhouseDbMinimal <-
 
 cat("joining table with missing empty translations (for later on) ... \n")
 cat("... structures \n")
-inhouseDbMaximal <- left_join(originalTable, structureMinimal) %>%
+inhouseDbMaximal <-
+  left_join(originalTable, structureMinimal) %>%
   distinct(
     database,
     organismOriginal,

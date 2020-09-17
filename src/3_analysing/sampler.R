@@ -105,7 +105,7 @@ sampleONPDB <- bind_rows(
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
 
 sampleONPDB[1:50, "curator"] <- "AR"
 
@@ -130,6 +130,7 @@ sampleKnapsack <- openDb %>%
 openDbFull <- left_join(openDb, referenceTableFull)
 
 goldenSet <- openDbFull %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmid) |
@@ -154,6 +155,7 @@ goldenSet <- openDbFull %>%
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
+    referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
   select(
@@ -173,10 +175,12 @@ goldenSet <- openDbFull %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    referenceCleanedTitle
   )
 
 platinumSet <- openDbFull %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmid) |
@@ -198,6 +202,7 @@ platinumSet <- openDbFull %>%
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
+    referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
   select(
@@ -217,7 +222,8 @@ platinumSet <- openDbFull %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    referenceCleanedTitle
   )
 
 set.seed(seed = 42,
@@ -236,7 +242,8 @@ sampleWD <- goldenSet %>%
     structureCleanedInchikey3D,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    referenceCleanedTitle
   )
 
 #exporting
@@ -294,7 +301,11 @@ write.table(
 ## platinumSet
 write.table(
   x = platinumSet,
-  file = pathDataInterimTablesAnalysedPlatinum,
+  file = gzfile(
+    description = pathDataInterimTablesAnalysedPlatinum,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
   row.names = FALSE,
   quote = FALSE,
   sep = "\t",
