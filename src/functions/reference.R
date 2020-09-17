@@ -126,11 +126,11 @@ getBestReference <- function(data, referenceType, method = "osa") {
   
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
-      stringdist(
-        a = as.character(tableInterim[i, 1]),
-        b = as.character(tableInterim[i, "title"]),
-        method = method
-      )
+      stringdist(a = as.character(tolower(tableInterim[i, 1])),
+                 # method is case sensitive
+                 b = as.character(tolower(tableInterim[i, "title"])),
+                 # method is case sensitive
+                 method = method)
   }
   
   tableFinal <- tableInterim %>%
@@ -218,8 +218,10 @@ getAllReferences <- function(data, referenceType, method = "osa") {
         test = "title" %in% colnames(tableInterim),
         yes =
           stringdist(
-            a = as.character(tableInterim[i, 1]),
-            b = as.character(tableInterim[i, "title"]),
+            a = as.character(tolower(tableInterim[i, 1])),
+            # method is case sensitive
+            b = as.character(tolower(tableInterim[i, "title"])),
+            # method is case sensitive
             method = method
           ),
         no = NA

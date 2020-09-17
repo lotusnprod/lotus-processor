@@ -211,8 +211,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  select(organismOriginal,
-         organismCleaned) %>%
+  distinct(organismOriginal,
+           organismCleaned) %>%
   mutate_all(as.character)
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
@@ -225,8 +225,8 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  select(organismOriginal,
-         organismCleaned) %>%
+  distinct(organismOriginal,
+           organismCleaned) %>%
   mutate_all(as.character)
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary))

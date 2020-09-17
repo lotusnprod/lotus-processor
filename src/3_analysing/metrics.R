@@ -17,8 +17,11 @@ inhouseDbMinimal <- read_delim(
 )
 
 openDbMinimalFiltered <- inhouseDbMinimal %>%
-  filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey3D)) %>%
+  filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleanedInchikey3D) &
+      !is.na(referenceCleanedTitle)
+  ) %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
@@ -62,8 +65,6 @@ dnpDb <- inhouseDbMinimal %>%
     referenceCleanedPmid = NA
   ) %>% mutate_all(as.character)
 
-rm(inhouseDbMinimal)
-
 openDbMinimalFilteredRef <- openDbMinimalFiltered %>%
   distinct(organismCleaned,
            referenceCleanedDoi,
@@ -82,17 +83,15 @@ referenceTableFull <- read_delim(
 
 # selecting reference metadata
 referenceMetadataFiltered <- referenceTableFull %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
   ) %>%
-  select(
-    -referenceCleaned_title,
-    -referenceCleaned_journal,
-    -referenceCleaned_date,
-    -referenceCleaned_author
-  ) %>%
+  select(-referenceCleaned_journal,
+         -referenceCleaned_date,
+         -referenceCleaned_author) %>%
   mutate(
     referenceCleaned_score_crossref = as.integer(referenceCleaned_score_crossref),
     referenceCleaned_score_distance = as.integer(referenceCleaned_score_distance),
@@ -128,6 +127,7 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
+    referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
   select(
@@ -147,7 +147,8 @@ openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
-    referenceCleanedPmid
+    referenceCleanedPmid,
+    referenceCleanedTitle
   )
 
 inhouseDb <- bind_rows(dnpDb, openDb)
@@ -244,26 +245,26 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 # writing tabular stats
 ## species by kingdom
 # cat("analysing species by kingdom \n")
-# inhouseSpeciesByKingdom <- inhouseDbPairs %>%
-#   group_by(organism_1_kingdom) %>%
-#   distinct(organism_7_species, .keep_all = TRUE) %>%
-#   count(organism_1_kingdom) %>%
+# inhouseSpeciesByKingdom <- openDbTripletsGoldMeta %>%
+#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
+#   distinct(organismCleaned_dbTaxo_7species, .keep_all = TRUE) %>%
+#   count(organismCleaned_dbTaxo_1kingdom) %>%
 #   ungroup() %>%
 #   mutate(speciesPercent = 100 * n / sum(n)) %>%
-#   select(kingdom = organism_1_kingdom,
+#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
 #          species = n,
 #          speciesPercent) %>%
 #   arrange(desc(speciesPercent)) %>%
 #   head(10)
 
 ## structures by class
-# inhouseStructuresByClass <- inhouseDbPairs %>%
-#   group_by(structure_03_class) %>%
-#   distinct(inchikeySanitized, .keep_all = TRUE) %>%
-#   count(structure_03_class) %>%
+# inhouseStructuresByClass <- openDbTripletsGoldMeta %>%
+#   group_by(structureCleaned_3class) %>%
+#   distinct(structureCleanedInchikey3D, .keep_all = TRUE) %>%
+#   count(structureCleaned_3class) %>%
 #   ungroup() %>%
 #   mutate(structuresPercent = 100 * n / sum(n)) %>%
-#   select(class = structure_03_class,
+#   select(class = structureCleaned_3class,
 #          structures = n,
 #          structuresPercent) %>%
 #   arrange(desc(structuresPercent)) %>%
@@ -271,13 +272,13 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 
 ## structures by kingdom
 # cat("analysing structures by kingdom \n")
-# inhouseStructuresByOrganismKingdom <- inhouseDbPairs %>%
-#   group_by(organism_1_kingdom) %>%
-#   distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
-#   count(organism_1_kingdom) %>%
+# inhouseStructuresByOrganismKingdom <- openDbTripletsGoldMeta %>%
+#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
+#   distinct(structureCleanedInchikey3D, organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
+#   count(organismCleaned_dbTaxo_1kingdom) %>%
 #   ungroup() %>%
 #   mutate(structuresPercent = 100 * n / sum(n)) %>%
-#   select(kingdom = organism_1_kingdom,
+#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
 #          structures = n,
 #          structuresPercent) %>%
 #   arrange(desc(structuresPercent)) %>%
@@ -285,17 +286,17 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 
 ## unique structures per kingdom
 # cat("analysing unique structures by kingdom \n")
-# inhouseUniqueStructuresPerKingdom <- inhouseDbPairs %>%
-#   group_by(inchikeySanitized) %>%
-#   add_count(inchikeySanitized) %>%
+# inhouseUniqueStructuresPerKingdom <- openDbTripletsGoldMeta %>%
+#   group_by(structureCleanedInchikey3D) %>%
+#   add_count(structureCleanedInchikey3D) %>%
 #   ungroup() %>%
 #   filter(n == 1) %>%
 #   select(-n) %>%
-#   group_by(organism_1_kingdom) %>%
-#   distinct(inchikeySanitized, organism_1_kingdom, .keep_all = TRUE) %>%
-#   count(organism_1_kingdom) %>%
+#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
+#   distinct(structureCleanedInchikey3D, organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
+#   count(organismCleaned_dbTaxo_1kingdom) %>%
 #   ungroup() %>%
-#   select(kingdom = organism_1_kingdom,
+#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
 #          specificStructures = n) %>%
 #   arrange(desc(specificStructures)) %>%
 #   head(10)
@@ -313,36 +314,36 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 #   mutate(structuresSpecificity = 100 * specificStructures / structures) %>%
 #   select(1, 2, 3, 4, 7, 8, 5, 6)
 
-##unique structures per species
+## unique structures per species
 # cat("analysing unique structures by species \n")
-# inhouseUniqueStructuresPerSpecies <- inhouseDbPairs %>%
-#   group_by(inchikeySanitized) %>%
-#   add_count(inchikeySanitized) %>%
+# inhouseUniqueStructuresPerSpecies <- openDbTripletsGoldMeta %>%
+#   group_by(structureCleanedInchikey3D) %>%
+#   add_count(structureCleanedInchikey3D) %>%
 #   ungroup() %>%
 #   filter(n == 1) %>%
 #   select(-n) %>%
-#   group_by(organism_7_species) %>%
-#   distinct(inchikeySanitized, organism_7_species, .keep_all = TRUE) %>%
-#   count(organism_7_species) %>%
+#   group_by(organismCleaned_dbTaxo_7species) %>%
+#   distinct(structureCleanedInchikey3D, organismCleaned_dbTaxo_7species, .keep_all = TRUE) %>%
+#   count(organismCleaned_dbTaxo_7species) %>%
 #   ungroup() %>%
-#   select(species = organism_7_species,
+#   select(species = organismCleaned_dbTaxo_7species,
 #          specificStructures = n) %>%
 #   arrange(desc(specificStructures)) %>%
 #   filter(!is.na(species)) %>%
 #   head(10)
 
-##widespread metabolites
+## widespread metabolites
 # cat("analysing widespread metabolites \n")
-# openDbWidespread <- openDbPairs %>%
-#   group_by(inchikeySanitized) %>%
-#   filter(!is.na(organism_1_kingdom)) %>%
-#   distinct(organism_1_kingdom, .keep_all = TRUE) %>%
+# openDbWidespread <- inhouseDbTripletsGoldMeta %>%
+#   group_by(structureCleanedInchikey3D) %>%
+#   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
+#   distinct(organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
 #   add_count() %>%
 #   ungroup() %>%
 #   filter(n >= 6) %>%
-#   arrange(inchikeySanitized)
+#   arrange(structureCleanedInchikey3D)
 
-##word(species,1) != genus
+## word(species,1) != genus
 # cat("analysing mismatched genera \n")
 # mismatchedGenera <- inhouseDbOrganism %>%
 #   filter(word(organism_7_species, 1) != organism_6_genus)
@@ -435,7 +436,7 @@ write.table(
 #   fileEncoding = "UTF-8"
 # )
 
-# ## unique structures per species
+### unique structures per species
 # write.table(
 #   x = inhouseUniqueStructuresPerSpecies,
 #   file = pathDataInterimTablesAnalysedUniqueStructuresBySpecies,
@@ -445,7 +446,7 @@ write.table(
 #   fileEncoding = "UTF-8"
 # )
 
-###widespread metabolites
+### widespread metabolites
 # write.table(
 #   x = openDbWidespread,
 #   file = pathDataInterimTablesAnalysedWidespreadStructures,
@@ -455,7 +456,7 @@ write.table(
 #   fileEncoding = "UTF-8"
 # )
 
-###mismatched genera
+### mismatched genera
 # write.table(
 #   x = mismatchedGenera,
 #   file = pathDataInterimTablesAnalysedMismatchedGenera,
@@ -465,7 +466,7 @@ write.table(
 #   fileEncoding = "UTF-8"
 # )
 
-###redundancy table
+### redundancy table
 # write.table(
 #   x = redundancydf,
 #   file = pathDataInterimTablesAnalysedRedundancyTable,

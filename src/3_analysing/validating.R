@@ -70,6 +70,7 @@ table_old <- sampleAllONPDB_old %>%
     structureCleanedInchikey3D = inchikeySanitized,
     structureCleanedSmiles = smilesSanitized,
     referenceCleanedDoi,
+    referenceCleanedTitle,
     curator,
     validated,
     comments
@@ -163,7 +164,7 @@ globalSample <- bind_rows(table_old, table) %>%
   ) %>%
   relocate(c(referenceCleanedPmcid, referenceCleanedPmid), .after = referenceCleanedDoi)
 
-openDbTriplets <- read_delim(
+openDb <- read_delim(
   file = gzfile("../data/interim/tables/4_analysed/openDbTriplets.tsv.gz"),
   col_types = cols(.default = "c"),
   delim = "\t",
@@ -187,7 +188,7 @@ openDbTriplets <- read_delim(
   ) %>%
   data.frame()
 
-refMeta <-
+referenceMetadata <-
   read_delim(
     file = gzfile("../data/interim/dictionaries/reference/metadata.tsv.gz"),
     delim = "\t"
@@ -201,9 +202,9 @@ refMeta <-
   ) %>%
   distinct(organismCleaned, referenceCleanedDoi, .keep_all = TRUE)
 
-realSample <- inner_join(globalSample, openDbTriplets)
+realSample <- inner_join(globalSample, openDb)
 
-realMetaSample <- left_join(realSample, refMeta)
+realMetaSample <- left_join(realSample, referenceMetadata)
 
 realSampleFilteredBioTitle <- realMetaSample %>%
   filter(referenceCleaned_score_distance <= 5 |
@@ -330,25 +331,25 @@ myDirtyQ <- function(table, title, yaxismax) {
     )
   return(fig)
 }
+
 fig_full <-
   myDirtyP(table = table_count,
-           yaxismax = 150,
+           yaxismax = 140,
            title = "full version")
 fig_full
 
 fig_filtered <-
   myDirtyP(table = tableFiltered_count,
-           yaxismax = 100,
+           yaxismax = 120,
            title = "filtered version")
 fig_filtered
 
-
 newfull <- myDirtyQ(table = table_count_global,
                     yaxismax = 350,
-                    title = "new filtered version")
+                    title = "new full version")
 newfull
 
 newfiltered <- myDirtyQ(table = tableFiltered_count_global,
-                        yaxismax = 100,
+                        yaxismax = 120,
                         title = "new filtered version")
 newfiltered
