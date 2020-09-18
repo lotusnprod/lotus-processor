@@ -105,7 +105,7 @@ sampleONPDB <- bind_rows(
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
 
 sampleONPDB[1:50, "curator"] <- "AR"
 
@@ -139,6 +139,7 @@ goldenSet <- openDbFull %>%
   filter(
     referenceCleaned_score_crossref == 1 |
       referenceCleaned_score_distance <= 5 |
+      referenceCleaned_score_complementTotal >= 2 |
       # here is a discussion about | or &
       referenceCleaned_score_titleOrganism == 1
   ) %>%
@@ -186,8 +187,11 @@ platinumSet <- openDbFull %>%
       !is.na(referenceCleanedPmid) |
       !is.na(referenceCleanedPmcid)
   ) %>%
-  filter(referenceCleaned_score_crossref == 1 |
-           referenceCleaned_score_distance <= 5) %>%
+  filter(
+    referenceCleaned_score_crossref == 1 |
+      referenceCleaned_score_distance <= 5 |
+      referenceCleaned_score_complementTotal == 3
+  ) %>%
   filter(referenceCleaned_score_titleOrganism == 1) %>%
   distinct(
     database,

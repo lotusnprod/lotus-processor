@@ -291,7 +291,14 @@ cat("manipulating and keeping best result only (long step) \n")
 dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
   pivot_wider(names_from = referenceCleanedType,
               names_prefix = "referenceCleaned_",
-              values_from = referenceCleanedValue) %>%
+              values_from = referenceCleanedValue)
+
+rm(dataCleanedJoinedUnique)
+
+dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
+  filter(referenceType == "doi" |
+           referenceType == "pubmed" |
+           referenceType == "title") %>%
   group_by(organismOriginal, organismCleaned, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
@@ -302,16 +309,80 @@ dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
            organismCleaned,
            referenceValue,
            .keep_all = TRUE) %>%
+  select(-level) %>%
+  mutate(
+    referenceCleaned_scoreComplement_date = NA,
+    referenceCleaned_scoreComplement_author = NA,
+    referenceCleaned_scoreComplement_journal = NA,
+    referenceCleaned_scoreComplement_total = NA
+  )
+
+dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
+  filter(
+    referenceType == "original" |
+      referenceType == "publishingDetails" |
+      referenceType == "split"
+  ) %>%
+  mutate(
+    referenceCleaned_scoreComplement_date = ifelse(
+      str_detect(
+        string = referenceValue,
+        pattern = substr(x = referenceCleaned_date, start = 1, stop = 4)
+      ),
+      yes = 1,
+      no = 0
+    ),
+    referenceCleaned_scoreComplement_author = ifelse(
+      str_detect(
+        string = tolower(referenceValue),
+        pattern = fixed(tolower(word(
+          referenceCleaned_author, 1
+        )))
+      ),
+      yes = 1,
+      no = 0
+    ),
+    referenceCleaned_scoreComplement_journal = ifelse(
+      str_detect(
+        string = tolower(referenceValue),
+        pattern = fixed(tolower(referenceCleaned_journal))
+      ),
+      yes = 1,
+      no = 0
+    )
+  ) %>%
+  mutate(
+    referenceCleaned_scoreComplement_total =
+      referenceCleaned_scoreComplement_date +
+      referenceCleaned_scoreComplement_author +
+      referenceCleaned_scoreComplement_journal
+  ) %>%
+  group_by(organismOriginal, organismCleaned, referenceValue) %>%
+  arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
+  arrange(desc(as.numeric(referenceCleaned_scoreComplement_total))) %>%
+  arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
+  ungroup() %>%
+  data.frame() %>%
+  distinct(organismOriginal,
+           organismCleaned,
+           referenceValue,
+           .keep_all = TRUE) %>%
   select(-level)
 
-rm(dataCleanedJoinedUnique)
+rm(dataCleanedJoinedWide)
 
-subDataClean_doi <- dataCleanedJoinedWide %>%
+dataCleanedJoinedWideScore <- bind_rows(dataCleanedJoinedWide_1,
+                                        dataCleanedJoinedWide_2)
+
+rm(dataCleanedJoinedWide_1,
+   dataCleanedJoinedWide_2)
+
+subDataClean_doi <- dataCleanedJoinedWideScore %>%
   filter(!is.na(referenceCleaned_doi)) %>%
   distinct(referenceCleaned_doi) %>%
   mutate_all(as.character)
 
-subDataClean_pmid <- dataCleanedJoinedWide %>%
+subDataClean_pmid <- dataCleanedJoinedWideScore %>%
   filter(referenceType == "pubmed") %>%
   distinct(referenceValue) %>%
   mutate_all(as.character)
@@ -350,7 +421,7 @@ df_pubmed <- left_join(subDataClean_pmid,
          referenceCleaned_pmcid = PMCID) %>%
   mutate(referenceCleaned_pmid = referenceValue)
 
-tableJoined <- left_join(dataCleanedJoinedWide, df_doi)
+tableJoined <- left_join(dataCleanedJoinedWideScore, df_doi)
 
 referenceTable <-
   left_join(tableJoined,
@@ -383,6 +454,10 @@ referenceTable <-
     referenceCleaned_score_crossref = referenceCleaned_scoreCrossref,
     referenceCleaned_score_distance = referenceCleaned_scoreDistance,
     referenceCleaned_score_titleOrganism = referenceCleaned_scoreTitleOrganism,
+    referenceCleaned_score_complementDate = referenceCleaned_scoreComplement_date,
+    referenceCleaned_score_complementAuthor = referenceCleaned_scoreComplement_author,
+    referenceCleaned_score_complementJournal =  referenceCleaned_scoreComplement_journal,
+    referenceCleaned_score_complementTotal = referenceCleaned_scoreComplement_total
   ) %>%
   distinct() %>%
   mutate(across(everything(), ~ y_as_na(.x, "NULL")))
