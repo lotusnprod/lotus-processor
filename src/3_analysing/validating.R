@@ -162,7 +162,10 @@ globalSample <- bind_rows(table_old, table) %>%
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
   ) %>%
-  relocate(c(referenceCleanedPmcid, referenceCleanedPmid), .after = referenceCleanedDoi)
+  relocate(c(referenceCleanedPmcid, referenceCleanedPmid), .after = referenceCleanedDoi) %>%
+  select(-referenceCleanedPmcid,
+         -referenceCleanedPmid,
+         -referenceCleanedTitle)
 
 openDb <- read_delim(
   file = gzfile("../data/interim/tables/4_analysed/openDbTriplets.tsv.gz"),
@@ -202,7 +205,27 @@ referenceMetadata <-
   ) %>%
   distinct(organismCleaned, referenceCleanedDoi, .keep_all = TRUE)
 
-realSample <- inner_join(globalSample, openDb)
+realSample <- inner_join(globalSample, openDb) %>%
+  distinct(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid,
+    referenceCleanedTitle,
+    curator,
+    validated,
+    comments,
+    .keep_all = TRUE
+  )
 
 realMetaSample <- left_join(realSample, referenceMetadata)
 

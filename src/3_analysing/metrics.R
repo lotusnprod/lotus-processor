@@ -95,23 +95,50 @@ referenceMetadataFiltered <- referenceTableFull %>%
   mutate(
     referenceCleaned_score_crossref = as.integer(referenceCleaned_score_crossref),
     referenceCleaned_score_distance = as.integer(referenceCleaned_score_distance),
-    referenceCleaned_score_titleOrganism = as.integer(referenceCleaned_score_titleOrganism)
+    referenceCleaned_score_titleOrganism = as.integer(referenceCleaned_score_titleOrganism),
+    referenceCleaned_score_complementTotal = as.integer(referenceCleaned_score_complementTotal)
   )
 
 # joining inhousedb minimal and reference metadata
-openDbRef <- left_join(openDbMinimalFilteredRef,
-                       referenceMetadataFiltered) %>%
+openDbRef_1 <- left_join(openDbMinimalFilteredRef,
+                         referenceMetadataFiltered) %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
   filter(
     !is.na(referenceCleanedPmid) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedDoi)
   ) %>%
+  filter(referenceType == "doi" |
+           referenceType == "pubmed" |
+           referenceType == "title") %>%
   arrange(desc(referenceCleanedPmid)) %>%
   arrange(desc(referenceCleanedPmcid)) %>%
   arrange(desc(referenceCleanedDoi)) %>%
   arrange(desc(referenceCleaned_score_crossref)) %>%
   arrange(referenceCleaned_score_distance) %>%
   arrange(desc(referenceCleaned_score_titleOrganism)) #very important to keep references
+
+openDbRef_2 <- left_join(openDbMinimalFilteredRef,
+                         referenceMetadataFiltered) %>%
+  filter(!is.na(referenceCleanedTitle)) %>%
+  filter(
+    !is.na(referenceCleanedPmid) |
+      !is.na(referenceCleanedPmcid) |
+      !is.na(referenceCleanedDoi)
+  ) %>%
+  filter(
+    referenceType == "original" |
+      referenceType == "publishingDetails" |
+      referenceType == "split"
+  ) %>%
+  arrange(desc(referenceCleanedPmid)) %>%
+  arrange(desc(referenceCleanedPmcid)) %>%
+  arrange(desc(referenceCleanedDoi)) %>%
+  arrange(desc(referenceCleaned_score_crossref)) %>%
+  arrange(desc(referenceCleaned_score_complementTotal)) %>%
+  arrange(desc(referenceCleaned_score_titleOrganism)) #very important to keep references
+
+openDbRef <- bind_rows(openDbRef_1, openDbRef_2)
 
 openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
   distinct(

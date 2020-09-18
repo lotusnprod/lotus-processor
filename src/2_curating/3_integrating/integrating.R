@@ -239,12 +239,12 @@ structureMetadata <- structureFull %>%
     structureCleaned_molecularFormula,
     structureCleaned_exactMass,
     structureCleaned_xlogp,
-    structureCleaned_class,
-    structureCleaned_superclass,
-    structureCleaned_pathway,
-    structureCleaned_glycoside,
-    structureCleaned_fp1,
-    structureCleaned_fp2
+    # structureCleaned_class,
+    # structureCleaned_superclass,
+    # structureCleaned_pathway,
+    # structureCleaned_glycoside,
+    # structureCleaned_fp1,
+    # structureCleaned_fp2
   )
 
 cat("... organisms \n")
@@ -315,7 +315,11 @@ referenceMetadata <- referenceTableFull %>%
     referenceCleaned_author,
     referenceCleaned_score_crossref,
     referenceCleaned_score_distance,
-    referenceCleaned_score_titleOrganism
+    referenceCleaned_score_titleOrganism,
+    referenceCleaned_score_complementDate,
+    referenceCleaned_score_complementAuthor,
+    referenceCleaned_score_complementJournal,
+    referenceCleaned_score_complementTotal
   )
 
 # cleaning memory
