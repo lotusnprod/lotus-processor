@@ -377,7 +377,6 @@ ifelse(
   test = !dir.exists(pathDataInterimTables),
   yes = dir.create(pathDataInterimTables),
   no = paste(pathDataInterimTables, "exists")
-  
 )
 
 #### original
