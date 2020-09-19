@@ -168,7 +168,9 @@ globalSample <- bind_rows(table_old, table) %>%
          -referenceCleanedTitle)
 
 openDb <- read_delim(
-  file = gzfile("../data/interim/tables/4_analysed/openDbTriplets.tsv.gz"),
+  file = gzfile(
+    file.path(pathDataInterimTablesAnalysed, "openDbTriplets.tsv.gz")
+  ),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
@@ -192,10 +194,8 @@ openDb <- read_delim(
   data.frame()
 
 referenceMetadata <-
-  read_delim(
-    file = gzfile("../data/interim/dictionaries/reference/metadata.tsv.gz"),
-    delim = "\t"
-  ) %>%
+  read_delim(file = gzfile(pathDataInterimDictionariesReferenceMetadata),
+             delim = "\t") %>%
   select(
     organismCleaned,
     referenceCleanedDoi,
@@ -291,7 +291,8 @@ table_count <- myDirtyF(table = realSample)
 
 table_count_global <- myDirtyC(table = realSample)
 
-tableFiltered_count <- myDirtyF(table = realSampleFilteredBioTitle)
+tableFiltered_count <-
+  myDirtyF(table = realSampleFilteredBioTitle)
 
 tableFiltered_count_global <-
   myDirtyC(table = realSampleFilteredBioTitle %>% filter(curator == "PMA2"))

@@ -903,9 +903,15 @@ if (mode == "min")
             "tables_min")
 
 #### figures
-pathDataProcessedFigures <-
+if (mode == "full")
+  pathDataProcessedFigures <-
   file.path(pathDataProcessed,
             "figures")
+
+if (mode == "min")
+  pathDataProcessedFigures <-
+  file.path(pathDataProcessed,
+            "figures_min")
 
 ##### html
 pathDataProcessedFiguresHtml <-
