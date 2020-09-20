@@ -1,5 +1,6 @@
 # this is very dirty for now, I'll be cleaning it later on
 
+source("paths.R")
 library(tidyverse)
 library(plotly)
 
@@ -92,16 +93,23 @@ sampleAllONPDB_PMA <-
              delim = "\t") %>%
   filter(curator == "PMA")
 
+sampleAllONPDB_publishingDetails <-
+  read_delim(file = "../data/validation/new/publishingDetails.tsv",
+             delim = "\t")
+
 sampleCondifent_PMA <-
   read_delim(file = "../data/validation/confident/100confidentPMAChecked.tsv",
              delim = "\t") %>%
   filter(curator == "PMA") %>%
   mutate(curator = "PMA2")
 
-sampleAllONPDB <- bind_rows(sampleAllONPDB_AR,
-                            sampleAllONPDB_JB,
-                            sampleAllONPDB_PMA,
-                            sampleCondifent_PMA)
+sampleAllONPDB <- bind_rows(
+  sampleAllONPDB_AR,
+  sampleAllONPDB_JB,
+  sampleAllONPDB_PMA,
+  sampleAllONPDB_publishingDetails,
+  sampleCondifent_PMA
+)
 
 table <- sampleAllONPDB %>%
   mutate_all(as.character) %>%
@@ -190,6 +198,7 @@ openDb <- read_delim(
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
+    referenceCleanedTitle
   ) %>%
   data.frame()
 
@@ -201,7 +210,11 @@ referenceMetadata <-
     referenceCleanedDoi,
     referenceCleaned_score_crossref,
     referenceCleaned_score_distance,
-    referenceCleaned_score_titleOrganism
+    referenceCleaned_score_titleOrganism,
+    referenceCleaned_score_complementTotal,
+    referenceCleaned_score_complementDate,
+    referenceCleaned_score_complementAuthor,
+    referenceCleaned_score_complementJournal
   ) %>%
   distinct(organismCleaned, referenceCleanedDoi, .keep_all = TRUE)
 
@@ -229,9 +242,7 @@ realSample <- inner_join(globalSample, openDb) %>%
 
 realMetaSample <- left_join(realSample, referenceMetadata)
 
-realSampleFilteredBioTitle <- realMetaSample %>%
-  filter(referenceCleaned_score_distance <= 5 |
-           referenceType != "title") %>%
+filteredLoose <- realMetaSample %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
 myDirtyF <- function(table) {
@@ -258,7 +269,11 @@ myDirtyF <- function(table) {
   table_full <- left_join(table_full, table_n)
   table_full <- left_join(table_full, table_mix) %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot)
+    mutate(ratio =  y / tot,
+           f1 = 2 * ((y / (y + tot - n) * y / (y + n)) /
+                       (y / (y + tot - n) + (y / (
+                         y + n
+                       )))))
   
   return (table_full)
 }
@@ -282,7 +297,11 @@ myDirtyC <- function(table) {
   table_full <-
     bind_cols(table_tot, table_y, table_n, table_mix)  %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot)
+    mutate(ratio =  y / tot,
+           f1 = 2 * ((y / (y + tot - n) * y / (y + n)) /
+                       (y / (y + tot - n) + (y / (
+                         y + n
+                       )))))
   
   return (table_full)
 }
@@ -296,6 +315,12 @@ tableFiltered_count <-
 
 tableFiltered_count_global <-
   myDirtyC(table = realSampleFilteredBioTitle %>% filter(curator == "PMA2"))
+
+tableFilteredLoose_count <-
+  myDirtyF(table = filteredLoose)
+
+tableFilteredLoose_count_global <-
+  myDirtyC(table = filteredLoose %>% filter(curator == "PMA2"))
 
 myDirtyP <- function(table, title, yaxismax) {
   fig <-
@@ -368,6 +393,12 @@ fig_filtered <-
            title = "filtered version")
 fig_filtered
 
+fig_loose <-
+  myDirtyP(table = tableFilteredLoose_count,
+           yaxismax = 120,
+           title = "filtered version")
+fig_loose
+
 newfull <- myDirtyQ(table = table_count_global,
                     yaxismax = 350,
                     title = "new full version")
@@ -377,3 +408,9 @@ newfiltered <- myDirtyQ(table = tableFiltered_count_global,
                         yaxismax = 120,
                         title = "new filtered version")
 newfiltered
+
+loosefull <- myDirtyQ(table = tableFilteredLoose_count_global,
+                    yaxismax = 350,
+                    title = "new full version")
+loosefull
+

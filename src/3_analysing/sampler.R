@@ -49,18 +49,6 @@ sampleONPDB_original <- openDb %>%
          validated = NA,
          comments = NA)
 
-# set.seed(seed = 42,
-#          kind = "Mersenne-Twister",
-#          normal.kind = "Inversion") # 0 entries
-# sampleONPDB_publishingDetails <- openDb %>%
-#   filter(referenceType == "publishingDetails") %>%
-#   sample_n(30) %>%
-#   mutate(
-#     curator = NA,
-#     validated = NA,
-#     comments = NA
-#   )
-
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
@@ -91,6 +79,17 @@ sampleONPDB_title <- openDb %>%
          validated = NA,
          comments = NA)
 
+
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+sampleONPDB_publishingDetails <- openDb %>%
+  filter(referenceType == "publishingDetails")  %>%
+  sample_n(30) %>%
+  mutate(curator = "AR",
+         validated = NA,
+         comments = NA)
+
 sampleONPDB <- bind_rows(
   sampleONPDB_doi,
   sampleONPDB_original,
@@ -105,7 +104,7 @@ sampleONPDB <- bind_rows(
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
 
 sampleONPDB[1:50, "curator"] <- "AR"
 
@@ -190,7 +189,7 @@ platinumSet <- openDbFull %>%
   filter(
     referenceCleaned_score_crossref == 1 |
       referenceCleaned_score_distance <= 5 |
-      referenceCleaned_score_complementTotal == 3
+      referenceCleaned_score_complementTotal >= 2
   ) %>%
   filter(referenceCleaned_score_titleOrganism == 1) %>%
   distinct(
@@ -309,6 +308,19 @@ write.table(
     description = pathDataInterimTablesAnalysedPlatinum,
     compression = 9,
     encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+## publishing Details
+write.table(
+  x = sampleONPDB_publishingDetails,
+  file = file.path(
+    pathDataInterimTablesAnalysed,
+    "samplePublishingDetails.tsv"
   ),
   row.names = FALSE,
   quote = FALSE,

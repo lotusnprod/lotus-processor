@@ -275,15 +275,27 @@ subDataCleanedJoined_1 <- dataCleanedJoined %>%
            level,
            .keep_all = TRUE)
 
+# this is because sadly crossref does not always give the same DOI, therefore
+## we do not have unique values ...
 subDataCleanedJoined_2 <- dataCleanedJoined %>%
-  filter(referenceCleanedType != "scoreCrossref")
+  filter(referenceCleanedType != "scoreCrossref") %>%
+  distinct(
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    level,
+    referenceCleanedType,
+    .keep_all = TRUE
+  )
 
 dataCleanedJoinedUnique <-
-  bind_rows(subDataCleanedJoined_1, subDataCleanedJoined_2)
+  bind_rows(subDataCleanedJoined_1,
+            subDataCleanedJoined_2)
 
-rm(dataCleanedJoined)
-rm(subDataCleanedJoined_1)
-rm(subDataCleanedJoined_2)
+rm(dataCleanedJoined,
+   subDataCleanedJoined_1,
+   subDataCleanedJoined_2)
 
 gc()
 

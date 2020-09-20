@@ -21,7 +21,7 @@ cat("submitting to crossRef \n")
 if (nrow(dataPublishingDetails) != 1)
   reflist <- invisible(
     pbmclapply(
-      FUN = getref_noLimit,
+      FUN = getref_noLimit_publishingDetails,
       X = dataPublishingDetails$referenceOriginal_publishingDetails,
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
