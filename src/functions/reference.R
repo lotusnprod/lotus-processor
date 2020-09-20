@@ -48,6 +48,20 @@ getref_noLimit <- function(X) {
 #######################################################
 #######################################################
 
+getref_noLimit_publishingDetails <- function(X) {
+  tryCatch({
+    cr_works(query = X,
+             sort = 'score',
+             order = "desc")
+  },
+  error = function(e) {
+    NA
+  })
+}
+
+#######################################################
+#######################################################
+
 getrefPubmed <- function(X) {
   tryCatch({
     df <- entrez_summary(db = "pubmed", id = X)

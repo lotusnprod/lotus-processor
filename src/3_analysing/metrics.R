@@ -5,7 +5,7 @@ source("functions.R")
 source("paths.R")
 
 # loading files
-print("loading db, if running fullmode, this may take a while \n")
+cat("loading db, if running fullmode, this may take a while \n")
 
 ## inhouseDb
 inhouseDbMinimal <- read_delim(
@@ -401,15 +401,15 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 #   )
 
 #exporting
-cat("exporting, may take a while if running full mode \n")
-## creating directories if they do not exist
+cat("ensuring directories exist \n")
 ifelse(
-  !dir.exists(pathDataInterimTablesAnalysed),
-  dir.create(pathDataInterimTablesAnalysed),
-  FALSE
+  test = !dir.exists(pathDataInterimTablesAnalysed),
+  yes = dir.create(pathDataInterimTablesAnalysed),
+  no = paste(pathDataInterimTablesAnalysed, "exists")
 )
 
-##open
+cat("exporting, may take a while if running full mode ... \n")
+cat(pathDataInterimTablesAnalysedOpenDbTriplets, "\n")
 write.table(
   x = openDb,
   file = gzfile(
@@ -423,7 +423,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-##inhouse
+cat(pathDataInterimTablesAnalysedInhouseDbTriplets, "\n")
 write.table(
   x = inhouseDb,
   file = gzfile(
@@ -437,7 +437,7 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-##dnp
+cat(pathDataInterimTablesAnalysedDnpDbTriplets, "\n")
 write.table(
   x = dnpDb,
   file = gzfile(
