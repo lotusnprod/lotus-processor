@@ -242,8 +242,15 @@ realSample <- inner_join(globalSample, openDb) %>%
 
 realMetaSample <- left_join(realSample, referenceMetadata)
 
-filteredLoose <- realMetaSample %>%
+realSampleFilteredBioTitle <- realMetaSample %>%
+  filter(
+    referenceCleaned_score_crossref == 1 |
+      referenceCleaned_score_distance <= 5 |
+      referenceCleaned_score_complementTotal >= 2
+  ) %>%
   filter(referenceCleaned_score_titleOrganism == 1)
+
+antiFilter <- anti_join(realMetaSample, realSampleFilteredBioTitle)
 
 myDirtyF <- function(table) {
   table_tot <- table %>%
@@ -269,11 +276,7 @@ myDirtyF <- function(table) {
   table_full <- left_join(table_full, table_n)
   table_full <- left_join(table_full, table_mix) %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot,
-           f1 = 2 * ((y / (y + tot - n) * y / (y + n)) /
-                       (y / (y + tot - n) + (y / (
-                         y + n
-                       )))))
+    mutate(ratio =  y / tot)
   
   return (table_full)
 }
@@ -297,11 +300,7 @@ myDirtyC <- function(table) {
   table_full <-
     bind_cols(table_tot, table_y, table_n, table_mix)  %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot,
-           f1 = 2 * ((y / (y + tot - n) * y / (y + n)) /
-                       (y / (y + tot - n) + (y / (
-                         y + n
-                       )))))
+    mutate(ratio =  y / tot)
   
   return (table_full)
 }
@@ -316,11 +315,11 @@ tableFiltered_count <-
 tableFiltered_count_global <-
   myDirtyC(table = realSampleFilteredBioTitle %>% filter(curator == "PMA2"))
 
-tableFilteredLoose_count <-
-  myDirtyF(table = filteredLoose)
+tableAntiFiltered_count <-
+  myDirtyF(table = antiFilter)
 
-tableFilteredLoose_count_global <-
-  myDirtyC(table = filteredLoose %>% filter(curator == "PMA2"))
+tableAntiFiltered_count_global <-
+  myDirtyC(table = antiFilter)
 
 myDirtyP <- function(table, title, yaxismax) {
   fig <-
@@ -393,11 +392,11 @@ fig_filtered <-
            title = "filtered version")
 fig_filtered
 
-fig_loose <-
-  myDirtyP(table = tableFilteredLoose_count,
+fig_anti <-
+  myDirtyP(table = tableAntiFiltered_count,
            yaxismax = 120,
-           title = "filtered version")
-fig_loose
+           title = "anti version")
+fig_anti
 
 newfull <- myDirtyQ(table = table_count_global,
                     yaxismax = 350,
@@ -409,8 +408,48 @@ newfiltered <- myDirtyQ(table = tableFiltered_count_global,
                         title = "new filtered version")
 newfiltered
 
-loosefull <- myDirtyQ(table = tableFilteredLoose_count_global,
-                    yaxismax = 350,
-                    title = "new full version")
-loosefull
+antifull <- myDirtyQ(table = tableAntiFiltered_count_global,
+                     yaxismax = 350,
+                     title = "new full version")
+antifull
 
+old <- table_count %>%
+  select(
+    referenceType,
+    n = tot,
+    tp1 = y,
+    fp1 = n,
+    ambiguous1 = mix,
+    ratio1 = ratio
+  )
+
+new <- tableFiltered_count %>%
+  select(
+    referenceType,
+    fil = tot,
+    tp2 = y,
+    fp2 = n,
+    ambiguous2 = mix,
+    ratio2 = ratio
+  )
+
+anti <- tableAntiFiltered_count %>%
+  select(
+    referenceType,
+    anti = tot,
+    fn1 = y,
+    tn1 = n,
+    ambiguousAnti = mix,
+    ratioAnti = ratio
+  )
+
+f1Table <- full_join(old, new)
+
+f1Table <- full_join(f1Table, anti) %>%
+  mutate(tpfn = tp2 + fn1,
+         tpfp = tp2 + fp2) %>%
+  mutate(recall = tp2 / tpfn,
+         precision = tp2 / tpfp) %>%
+  mutate(rxp = recall * precision,
+         rpp = recall + precision) %>%
+  mutate(f1 = 2 * rxp / rpp)
