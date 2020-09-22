@@ -1,8 +1,8 @@
 # Curating natural products data: establishment of an open living repository
 
 *Curating natural products data:* establishment of an open living repository. 
-Actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 35 open databases (DB). 
-It represents the most exhaustive open DB for natural products (NP) dereplication. 
+Actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB). 
+It represents the most exhaustive open DB of natural products (NP).
 It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
 
 Additionally, both chemical and biological taxonomy are given for each pair. 
