@@ -306,6 +306,8 @@ referenceMetadata <- referenceTableFull %>%
   filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
     organismCleaned,
+    referenceType,
+    referenceValue,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -348,57 +350,30 @@ inhouseDbMinimal <-
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid) |
       database == "dnp_1"
-  )
-
-cat("joining table with missing empty translations (for later on) ... \n")
-cat("... structures \n")
-inhouseDbMaximal <-
-  left_join(originalTable, structureMinimal) %>%
+  ) %>%
   distinct(
     database,
     organismOriginal,
-    referenceType,
-    referenceValue,
     structureType,
     structureValue,
-    structureCleanedSmiles,
-    structureCleanedInchi,
-    structureCleanedInchikey3D
-  )
-
-cat("... organisms \n")
-inhouseDbMaximal <-
-  left_join(inhouseDbMaximal, organismMinimal) %>%
-  distinct(
-    database,
-    organismOriginal,
     referenceType,
     referenceValue,
-    structureType,
-    structureValue,
-    structureCleanedSmiles,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
-    organismCleaned
-  )
-
-cat("... references \n")
-inhouseDbMaximal <-
-  left_join(inhouseDbMaximal, referenceMinimal) %>%
-  distinct(
-    database,
-    organismOriginal,
-    referenceType,
-    referenceValue,
-    structureType,
-    structureValue,
-    structureCleanedSmiles,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
     organismCleaned,
-    referenceCleanedDoi,
-    referenceCleanedPmcid,
-    referenceCleanedPmid
+    structureCleanedInchikey3D,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedTitle
+  )
+
+cat("outputting table with missing empty translations (for later on) ... \n")
+openDbMaximal <- originalTable %>%
+  distinct(
+    database,
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    structureType,
+    structureValue
   ) %>%
   filter(referenceType != "authors") %>%
   filter(referenceType != "journal") %>%
@@ -546,6 +521,20 @@ write.table(
   x = referenceMetadata,
   file = gzfile(
     description = pathDataInterimDictionariesReferenceMetadata,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+cat(pathDataInterimTablesCuratedTableMaximal, "\n")
+write.table(
+  x = openDbMaximal,
+  file = gzfile(
+    description = pathDataInterimTablesCuratedTableMaximal,
     compression = 9,
     encoding = "UTF-8"
   ),

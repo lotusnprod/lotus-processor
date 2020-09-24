@@ -1130,6 +1130,10 @@ pathDataInterimTablesCurated <-
 pathDataInterimTablesCuratedTable <-
   file.path(pathDataInterimTablesCurated, "table.tsv.gz")
 
+### final cleaned table
+pathDataInterimTablesCuratedTableMaximal <-
+  file.path(pathDataInterimTablesCurated, "tableMaximal.tsv.gz")
+
 # analysed fields
 pathDataInterimTablesAnalysed <-
   file.path(pathDataInterimTables, "4_analysed")

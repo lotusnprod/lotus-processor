@@ -1,209 +1,63 @@
-# title: "Unique pairs compileR"
+cat("This script outputs some metrics related to the DB \n")
 
-# loading functions
-source("functions.R")
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
 source("paths.R")
 
-# loading files
-cat("loading db, if running fullmode, this may take a while \n")
+cat("... functions \n")
+source("functions.R")
 
-## inhouseDb
-inhouseDbMinimal <- read_delim(
-  file = gzfile(pathDataInterimTablesCuratedTable),
+cat("loading ... \n")
+cat("... validated db, if running fullmode, this may take a while \n")
+openDb <- read_delim(
+  file = gzfile(pathDataInterimTablesAnalysedPlatinum),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  data.frame()
 
-openDbMinimalFiltered <- inhouseDbMinimal %>%
-  filter(
-    !is.na(organismCleaned) &
-      !is.na(structureCleanedInchikey3D) &
-      !is.na(referenceCleanedTitle)
-  ) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedPmid)
-  ) %>%
-  distinct(
-    database,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy,
-    structureCleanedSmiles,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
-    referenceCleanedDoi,
-    referenceCleanedPmcid,
-    referenceCleanedPmid,
-    .keep_all = TRUE
-  )
-
-dnpDb <- inhouseDbMinimal %>%
-  filter(database == "dnp_1") %>%
-  filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey3D)) %>%
-  distinct(
-    database,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy,
-    structureCleanedSmiles,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
-    .keep_all = TRUE
-  ) %>%
-  mutate(
-    referenceCleanedDoi = NA,
-    referenceCleanedPmcid = NA,
-    referenceCleanedPmid = NA
-  ) %>% mutate_all(as.character)
-
-openDbMinimalFilteredRef <- openDbMinimalFiltered %>%
-  distinct(organismCleaned,
-           referenceCleanedDoi,
-           referenceCleanedPmcid,
-           referenceCleanedPmid)
-
-
-## reference metadata
-referenceTableFull <- read_delim(
-  file = gzfile(pathDataInterimDictionariesReferenceOrganismDictionary),
+cat("... dnp db \n")
+dnpDb <- read_delim(
+  file = gzfile(file.path(
+    pathDataInterimTablesAnalysed, "dnp.tsv.gz"
+  )),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-)
-
-# selecting reference metadata
-referenceMetadataFiltered <- referenceTableFull %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedPmid)
-  ) %>%
-  select(-referenceCleaned_journal,
-         -referenceCleaned_date,
-         -referenceCleaned_author) %>%
-  mutate(
-    referenceCleaned_score_crossref = as.integer(referenceCleaned_score_crossref),
-    referenceCleaned_score_distance = as.integer(referenceCleaned_score_distance),
-    referenceCleaned_score_titleOrganism = as.integer(referenceCleaned_score_titleOrganism),
-    referenceCleaned_score_complementTotal = as.integer(referenceCleaned_score_complementTotal)
-  )
-
-# joining inhousedb minimal and reference metadata
-openDbRef_1 <- left_join(openDbMinimalFilteredRef,
-                         referenceMetadataFiltered) %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
-  filter(
-    !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedDoi)
-  ) %>%
-  filter(referenceType == "doi" |
-           referenceType == "pubmed" |
-           referenceType == "title") %>%
-  arrange(desc(referenceCleanedPmid)) %>%
-  arrange(desc(referenceCleanedPmcid)) %>%
-  arrange(desc(referenceCleanedDoi)) %>%
-  arrange(desc(referenceCleaned_score_crossref)) %>%
-  arrange(referenceCleaned_score_distance) %>%
-  arrange(desc(referenceCleaned_score_titleOrganism)) #very important to keep references
-
-openDbRef_2 <- left_join(openDbMinimalFilteredRef,
-                         referenceMetadataFiltered) %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
-  filter(
-    !is.na(referenceCleanedPmid) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedDoi)
-  ) %>%
-  filter(
-    referenceType == "original" |
-      referenceType == "publishingDetails" |
-      referenceType == "split"
-  ) %>%
-  arrange(desc(referenceCleanedPmid)) %>%
-  arrange(desc(referenceCleanedPmcid)) %>%
-  arrange(desc(referenceCleanedDoi)) %>%
-  arrange(desc(referenceCleaned_score_crossref)) %>%
-  arrange(desc(referenceCleaned_score_complementTotal)) %>%
-  arrange(desc(referenceCleaned_score_titleOrganism)) #very important to keep references
-
-openDbRef <- bind_rows(openDbRef_1, openDbRef_2)
-
-openDb <- right_join(openDbRef, openDbMinimalFiltered) %>%
-  distinct(
-    database,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
-    structureCleanedSmiles,
-    referenceCleanedDoi,
-    referenceCleanedPmcid,
-    referenceCleanedPmid,
-    referenceCleanedTitle,
-    .keep_all = TRUE
-  ) %>%
-  select(
-    database,
-    organismOriginal,
-    structureType,
-    structureValue,
-    referenceType,
-    referenceValue,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchi,
-    structureCleanedInchikey3D,
-    structureCleanedSmiles,
-    referenceCleanedDoi,
-    referenceCleanedPmcid,
-    referenceCleanedPmid,
-    referenceCleanedTitle
-  )
+) %>%
+  data.frame()
 
 inhouseDb <- bind_rows(dnpDb, openDb)
 
 pairsOpenDb <- openDb %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D,
+           !is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE)
 
 pairsOutsideDnp <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D,
+           !is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE) %>%
   filter(database != "dnp_1")
 
 pairsFull <- bind_rows(openDb, dnpDb) %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D,
+           !is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE)
 
 pairsDNP <- dnpDb %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE)
 
@@ -245,15 +99,15 @@ cat(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms \n", sep = " "))
 cat("analysing unique structures per db \n")
 ### open NP DB
 openDbStructure <- openDb %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 cat(paste("open:", nrow(openDbStructure), "distinct structures \n", sep = " "))
 
 ### inhouseDB
 inhouseDbStructure <- inhouseDb %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 cat(paste(
   "inhouse:",
@@ -264,10 +118,46 @@ cat(paste(
 
 ### DNP
 dnpDbStructure <- dnpDb %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchikey2D)) %>%
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
+
+structuresPerOrganism <- pairsOpenDb %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  distinct(organismCleaned, structureCleanedInchikey2D) %>%
+  group_by(organismCleaned) %>%
+  count()
+
+tableStructures <-
+  c(
+    "only001_structure" = sum(structuresPerOrganism$n == 1),
+    "between001and010_structures" = sum(structuresPerOrganism$n >= 1 &
+                                          structuresPerOrganism$n <= 9),
+    "between010and100_structures" = sum(structuresPerOrganism$n >= 10 &
+                                          structuresPerOrganism$n <= 99),
+    "above100_structures" = sum(structuresPerOrganism$n >= 100)
+  ) %>%
+  data.frame()
+colnames(tableStructures)[1] <- "organisms"
+
+organismsPerStructure <- pairsOpenDb %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  distinct(organismCleaned, structureCleanedInchikey2D) %>%
+  group_by(structureCleanedInchikey2D) %>%
+  count()
+
+tableOrganisms <-
+  c(
+    "only001_organism" = sum(organismsPerStructure$n == 1),
+    "between001and010_organisms" = sum(organismsPerStructure$n >= 1 &
+                                         organismsPerStructure$n  <= 9),
+    "between010and100_organisms" = sum(organismsPerStructure$n >= 10 &
+                                         organismsPerStructure$n  <= 99),
+    "above100_organisms" = sum(organismsPerStructure$n >= 100)
+  ) %>%
+  data.frame()
+colnames(tableOrganisms)[1] <- "structures"
 
 # writing tabular stats
 ## species by kingdom
@@ -401,56 +291,6 @@ cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
 #   )
 
 #exporting
-cat("ensuring directories exist \n")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesAnalysed),
-  yes = dir.create(pathDataInterimTablesAnalysed),
-  no = paste(pathDataInterimTablesAnalysed, "exists")
-)
-
-cat("exporting, may take a while if running full mode ... \n")
-cat(pathDataInterimTablesAnalysedOpenDbTriplets, "\n")
-write.table(
-  x = openDb,
-  file = gzfile(
-    description = pathDataInterimTablesAnalysedOpenDbTriplets,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-cat(pathDataInterimTablesAnalysedInhouseDbTriplets, "\n")
-write.table(
-  x = inhouseDb,
-  file = gzfile(
-    description = pathDataInterimTablesAnalysedInhouseDbTriplets,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
-cat(pathDataInterimTablesAnalysedDnpDbTriplets, "\n")
-write.table(
-  x = dnpDb,
-  file = gzfile(
-    description = pathDataInterimTablesAnalysedDnpDbTriplets,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
 # # stats
 # ## structures by kingdom
 
@@ -502,3 +342,7 @@ write.table(
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
+
+end <- Sys.time()
+
+cat("Script finished in", format(end - start), "\n")

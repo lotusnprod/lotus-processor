@@ -9,44 +9,50 @@ cat("... functions \n")
 source("functions.R")
 
 cat("loading files, if running fullmode, this may take a while ... \n")
-cat("... open DB triplets \n")
-openDbTriplets <- read_delim(
-  file = gzfile(pathDataInterimTablesAnalysedOpenDbTriplets),
+cat("... open DB \n")
+openDb <- read_delim(
+  file = gzfile(pathDataInterimTablesAnalysedPlatinum),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  distinct(database,
-           organismCleaned,
-           structureCleanedInchikey3D) %>%
+  distinct(
+    database,
+    organismCleaned,
+    structureCleanedInchikey3D,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  ) %>%
   data.frame()
 
-cat("... open DB triplets (gold) \n")
-openDbTripletsGold <- read_delim(
-  file = gzfile(pathDataInterimTablesAnalysedGold),
-  col_types = cols(.default = "c"),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)  %>%
-  distinct(database,
-           organismCleaned,
-           structureCleanedInchikey3D) %>%
-  data.frame()
-
-cat("... DNP DB triplets \n")
-dnpDbTriplets <- read_delim(
-  file = gzfile(pathDataInterimTablesAnalysedDnpDbTriplets),
+cat("... open DB \n")
+openDbMaximal <- read_delim(
+  file = gzfile(pathDataInterimTablesCuratedTableMaximal),
   col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame() %>%
-  distinct(database,
-           organismCleaned,
-           structureCleanedInchikey3D) %>%
+  data.frame()
+
+cat("... DNP DB \n")
+dnpDb <- read_delim(
+  file = gzfile(file.path(
+    pathDataInterimTablesAnalysed, "dnp.tsv.gz"
+  )),
+  col_types = cols(.default = "c"),
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  distinct(
+    database,
+    organismCleaned,
+    structureCleanedInchikey3D,
+    structureCleanedInchikey2D,
+    .keep_all = TRUE
+  ) %>%
   data.frame()
 
 cat("... metadata ... \n")
@@ -127,24 +133,24 @@ structureMetadata_2 <- read_delim(
 ) %>%
   data.frame()
 
-cat("joining DNP and openDB \n")
-inhouseDbTriplets <- bind_rows(dnpDbTriplets, openDbTriplets)
+cat("... references \n")
+referenceMetadata <-
+  read_delim(
+    file = gzfile(pathDataInterimDictionariesReferenceMetadata),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
-cat("joining gold version \n")
-inhouseDbTripletsGold <-
-  bind_rows(dnpDbTriplets, openDbTripletsGold)
+cat("joining DNP and openDB \n")
+inhouseDb <-
+  bind_rows(dnpDb, openDb)
 
 cat("counting sub-DBs \n")
 dbNum <-
-  as.numeric(nrow(inhouseDbTriplets %>%
-                    distinct(inhouseDbTriplets$database)))
-
-cat("counting sub-DBs (gold) \n")
-dbNumGold <-
-  as.numeric(nrow(
-    inhouseDbTripletsGold %>%
-      distinct(inhouseDbTripletsGold$database)
-  ))
+  as.numeric(nrow(inhouseDb %>%
+                    distinct(inhouseDb$database)))
 
 cat("ensuring directories exist ... \n")
 ifelse(
@@ -172,10 +178,10 @@ pdf(
   height = 9
 )
 
-inhouseDb_structures_2plot <- inhouseDbTriplets %>%
-  distinct(structureCleanedInchikey3D, database) %>%
+inhouseDb_structures_2plot <- inhouseDb %>%
+  distinct(structureCleanedInchikey2D, database) %>%
   group_by(database) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
@@ -195,230 +201,8 @@ inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
             )) %>%
   data.frame()
 
-inhouseDb_structures_dis <- inhouseDbTriplets %>%
-  distinct(structureCleanedInchikey3D,
-           database,
-           .keep_all = TRUE)
-
-# inhouseDb_structures_2plot_wide <-
-#   left_join(inhouseDb_structures_2plot_wide,
-#             inhouseDb_structures_dis) %>%
-#   distinct(structureCleanedInchikey3D, .keep_all = TRUE)
-
-# mostsuperclass <- inhouseDb_structures_2plot_wide %>%
-#   filter(!is.na(structureCleaned_2superclass)) %>%
-#   count(structureCleaned_2superclass) %>%
-#   arrange(desc(n)) %>%
-#   head(10)
-
-upset(
-  inhouseDb_structures_2plot_wide,
-  nsets = 10,
-  # query.legend = "top",
-  # queries = list(
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1],
-  #         mostsuperclass[6, 1],
-  #         mostsuperclass[7, 1],
-  #         mostsuperclass[8, 1],
-  #         mostsuperclass[9, 1],
-  #         mostsuperclass[10, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#6a3d9a",
-  #     query.name = mostsuperclass[1, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1],
-  #         mostsuperclass[6, 1],
-  #         mostsuperclass[7, 1],
-  #         mostsuperclass[8, 1],
-  #         mostsuperclass[9, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#cab2d6",
-  #     query.name = mostsuperclass[2, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1],
-  #         mostsuperclass[6, 1],
-  #         mostsuperclass[7, 1],
-  #         mostsuperclass[8, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#ff7f00",
-  #     query.name = mostsuperclass[3, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1],
-  #         mostsuperclass[6, 1],
-  #         mostsuperclass[7, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#fdbf6f",
-  #     query.name = mostsuperclass[4, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1],
-  #         mostsuperclass[6, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#e31a1c",
-  #     query.name = mostsuperclass[5, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1],
-  #         mostsuperclass[5, 1]
-  #       )
-  #     ),
-  #
-  #     active = TRUE,
-  #     color = "#fb9a99",
-  #     query.name = mostsuperclass[6, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(
-  #         mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1],
-  #         mostsuperclass[4, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#33a02c",
-  #     query.name = mostsuperclass[7, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "structureCleaned_2superclass",
-  #       c(mostsuperclass[1, 1],
-  #         mostsuperclass[2, 1],
-  #         mostsuperclass[3, 1])
-  #     ),
-  #     active = TRUE,
-  #     color = "#b2df8a",
-  #     query.name = mostsuperclass[8, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list("structureCleaned_2superclass",
-  #                   c(mostsuperclass[1, 1],
-  #                     mostsuperclass[2, 1])),
-  #     active = TRUE,
-  #     color = "#1f78b4",
-  #     query.name = mostsuperclass[9, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list("structureCleaned_2superclass",
-  #                   c(mostsuperclass[1, 1])),
-  #     active = TRUE,
-  #     color = "#a6cee3",
-  #     query.name = mostsuperclass[10, 1]
-  #   )
-  # ),
-  # mb.ratio = c(0.7, 0.3),
-  order.by = "freq",
-  nintersects = 20,
-  # empty.intersections = "on",
-  number.angles = 30,
-  point.size = 5,
-  line.size = 2,
-  text.scale = 2,
-  mainbar.y.label = "Unique structures per intersection",
-  sets.x.label = "Unique structures per database",
-  set_size.show = TRUE
-)
-dev.off()
-
-cat("drawing upset plot of structures repartition in sub-DBs (gold) \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "structuresGold.pdf"),
-  width = 16,
-  height = 9
-)
-
-inhouseDb_structures_2plot <- inhouseDbTripletsGold %>%
-  distinct(structureCleanedInchikey3D, database) %>%
-  group_by(database) %>%
-  count(structureCleanedInchikey3D) %>%
-  ungroup()
-
-inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
-  pivot_wider(names_from = database,
-              values_from = n) %>%
-  mutate_at(.vars = c(2:ncol(.)),
-            ~ replace(
-              x = .,
-              list = is.na(.),
-              values = 0
-            )) %>%
-  mutate_at(.vars = c(2:ncol(.)),
-            ~ replace(
-              x = .,
-              list = . >= 1,
-              values = 1
-            )) %>%
-  data.frame()
-
-inhouseDb_structures_dis <- inhouseDbTripletsGold %>%
-  distinct(structureCleanedInchikey3D,
+inhouseDb_structures_dis <- inhouseDb %>%
+  distinct(structureCleanedInchikey2D,
            database,
            .keep_all = TRUE)
 
@@ -446,7 +230,7 @@ pdf(
   height = 9
 )
 
-inhouseDb_organism_2plot <- inhouseDbTriplets %>%
+inhouseDb_organism_2plot <- inhouseDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned, database) %>%
   group_by(database) %>%
@@ -471,167 +255,7 @@ inhouseDb_organism_2plot_wide <-
             )) %>%
   data.frame()
 
-inhouseDb_organism_dis <- inhouseDbTriplets %>%
-  filter(!is.na(organismCleaned)) %>%
-  distinct(organismCleaned,
-           database,
-           .keep_all = TRUE)
-
-# inhouseDb_organism_2plot_wide <-
-#   left_join(inhouseDb_organism_2plot_wide,
-#             inhouseDb_organism_dis) %>%
-#   distinct(organismCleaned, .keep_all = TRUE)
-
-# mostkingdom <- inhouseDb_organism_2plot_wide %>%
-#   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-#   count(organismCleaned_dbTaxo_1kingdom) %>%
-#   arrange(desc(n))
-
-upset(
-  inhouseDb_organism_2plot_wide,
-  nsets = 10,
-  # query.legend = "top",
-  # queries = list(
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "organismCleaned_dbTaxo_1kingdom",
-  #       c(
-  #         mostkingdom[1, 1],
-  #         mostkingdom[2, 1],
-  #         mostkingdom[3, 1],
-  #         mostkingdom[4, 1],
-  #         mostkingdom[5, 1],
-  #         mostkingdom[6, 1],
-  #         mostkingdom[7, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#fdbf6f",
-  #     query.name = mostkingdom[7, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "organismCleaned_dbTaxo_1kingdom",
-  #       c(
-  #         mostkingdom[1, 1],
-  #         mostkingdom[2, 1],
-  #         mostkingdom[3, 1],
-  #         mostkingdom[4, 1],
-  #         mostkingdom[5, 1],
-  #         mostkingdom[6, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#e31a1c",
-  #     query.name = mostkingdom[6, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "organismCleaned_dbTaxo_1kingdom",
-  #       c(
-  #         mostkingdom[1, 1],
-  #         mostkingdom[2, 1],
-  #         mostkingdom[3, 1],
-  #         mostkingdom[4, 1],
-  #         mostkingdom[5, 1]
-  #       )
-  #     ),
-  #     active = TRUE,
-  #     color = "#fb9a99",
-  #     query.name = mostkingdom[5, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list(
-  #       "organismCleaned_dbTaxo_1kingdom",
-  #       c(mostkingdom[1, 1],
-  #         mostkingdom[2, 1],
-  #         mostkingdom[3, 1],
-  #         mostkingdom[4, 1])
-  #     ),
-  #     active = TRUE,
-  #     color = "#33a02c",
-  #     query.name = mostkingdom[4, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list("organismCleaned_dbTaxo_1kingdom",
-  #                   c(mostkingdom[1, 1],
-  #                     mostkingdom[2, 1],
-  #                     mostkingdom[3, 1])),
-  #     active = TRUE,
-  #     color = "#b2df8a",
-  #     query.name = mostkingdom[3, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list("organismCleaned_dbTaxo_1kingdom",
-  #                   c(mostkingdom[1, 1],
-  #                     mostkingdom[2, 1])),
-  #
-  #     active = TRUE,
-  #     color = "#1f78b4",
-  #     query.name = mostkingdom[2, 1]
-  #   ),
-  #   list(
-  #     query = elements,
-  #     params = list("organismCleaned_dbTaxo_1kingdom",
-  #                   c(mostkingdom[1, 1])),
-  #     active = TRUE,
-  #     color = "#a6cee3",
-  #     query.name = mostkingdom[1, 1]
-  #   )
-  # ),
-  # mb.ratio = c(0.7, 0.3),
-  order.by = "freq",
-  nintersects = 20,
-  # empty.intersections = "on",
-  number.angles = 30,
-  point.size = 5,
-  line.size = 2,
-  text.scale = 2,
-  mainbar.y.label = "Unique biological sources per intersection",
-  sets.x.label = "Unique sources per database",
-  set_size.show = TRUE
-)
-dev.off()
-
-cat("drawing upset plot of organisms repartition in sub-DBs (gold) \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "organismsGold.pdf"),
-  width = 16,
-  height = 9
-)
-
-inhouseDb_organism_2plot <- inhouseDbTripletsGold %>%
-  filter(!is.na(organismCleaned)) %>%
-  distinct(organismCleaned, database) %>%
-  group_by(database) %>%
-  count(organismCleaned) %>%
-  ungroup()
-
-inhouseDb_organism_2plot_wide <-
-  inhouseDb_organism_2plot %>%
-  pivot_wider(names_from = database,
-              values_from = n) %>%
-  mutate_at(.vars = c(2:ncol(.)),
-            ~ replace(
-              x = .,
-              list = is.na(.),
-              values = 0
-            )) %>%
-  mutate_at(.vars = c(2:ncol(.)),
-            ~ replace(
-              x = .,
-              list = . >= 1,
-              values = 1
-            )) %>%
-  data.frame()
-
-inhouseDb_organism_dis <- inhouseDbTripletsGold %>%
+inhouseDb_organism_dis <- inhouseDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned,
            database,
@@ -661,67 +285,15 @@ pdf(
   height = 9
 )
 
-inhouseDbPairs_2plot <- inhouseDbTriplets %>%
-  filter(!is.na(structureCleanedInchikey3D) &
+inhouseDbPairs_2plot <- inhouseDb %>%
+  filter(!is.na(structureCleanedInchikey2D) &
            !is.na(organismCleaned)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            database,
            .keep_all = TRUE) %>%
   group_by(database) %>%
-  count(structureCleanedInchikey3D, organismCleaned) %>%
-  ungroup()
-
-inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
-  pivot_wider(names_from = database,
-              values_from = n) %>%
-  mutate_at(.vars = c(3:ncol(.)),
-            ~ replace(
-              x = .,
-              list = is.na(.),
-              values = 0
-            )) %>%
-  mutate_at(.vars = c(3:ncol(.)),
-            ~ replace(
-              x = .,
-              list = . >= 1,
-              values = 1
-            )) %>%
-  data.frame()
-
-upset(
-  inhouseDbPairs_2plot_wide,
-  nsets = 10,
-  # mb.ratio = c(0.7, 0.3),
-  order.by = "freq",
-  nintersects = 20,
-  # empty.intersections = "on",
-  number.angles = 30,
-  point.size = 5,
-  line.size = 2,
-  text.scale = 2,
-  mainbar.y.label = "Unique pairs per intersection",
-  sets.x.label = "Unique pairs per database",
-  set_size.show = TRUE
-)
-dev.off()
-
-cat("drawing upset plot of pairs repartition in sub-DBs (gold) \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "pairsGold.pdf"),
-  width = 16,
-  height = 9
-)
-
-inhouseDbPairs_2plot <- inhouseDbTripletsGold %>%
-  filter(!is.na(structureCleanedInchikey3D) &
-           !is.na(organismCleaned)) %>%
-  distinct(structureCleanedInchikey3D,
-           organismCleaned,
-           database,
-           .keep_all = TRUE) %>%
-  group_by(database) %>%
-  count(structureCleanedInchikey3D, organismCleaned) %>%
+  count(structureCleanedInchikey2D, organismCleaned) %>%
   ungroup()
 
 inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
@@ -760,11 +332,11 @@ dev.off()
 
 cat("adding metadata for more detailed analysis ... \n")
 cat("... inhouse DB \n")
-inhouseDbTripletsGoldMeta <-
-  left_join(inhouseDbTripletsGold, structureMetadata_2)
+inhouseDbMeta <- left_join(inhouseDb, structureMetadata_2)
 
-inhouseDbTripletsGoldMeta <-
-  left_join(inhouseDbTripletsGoldMeta, organismMetadata) %>%
+inhouseDbMeta <- left_join(inhouseDbMeta, organismMetadata)
+
+inhouseDbMeta <- left_join(inhouseDbMeta, referenceMetadata) %>%
   arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
   arrange(desc(organismCleaned_dbTaxo_7species)) %>%
   arrange(desc(organismCleaned_dbTaxo_6genus)) %>%
@@ -773,17 +345,20 @@ inhouseDbTripletsGoldMeta <-
   arrange(desc(organismCleaned_dbTaxo_3class)) %>%
   arrange(desc(organismCleaned_dbTaxo_2phylum)) %>%
   arrange(desc(organismCleaned_dbTaxo_1kingdom)) %>%
-  distinct(database,
-           organismCleaned,
-           structureCleanedInchikey3D,
-           .keep_all = TRUE)
+  distinct(
+    database,
+    organismCleaned,
+    structureCleanedInchikey2D,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  )
 
 cat("... open DB \n")
-openDbTripletsGoldMeta <-
-  left_join(openDbTripletsGold, structureMetadata_2)
+openDbMeta <- left_join(openDb, structureMetadata_2)
 
-openDbTripletsGoldMeta <-
-  left_join(openDbTripletsGoldMeta, organismMetadata) %>%
+openDbMeta <- left_join(openDbMeta, organismMetadata)
+
+openDbMeta <- left_join(openDbMeta, referenceMetadata) %>%
   arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
   arrange(desc(organismCleaned_dbTaxo_7species)) %>%
   arrange(desc(organismCleaned_dbTaxo_6genus)) %>%
@@ -792,10 +367,28 @@ openDbTripletsGoldMeta <-
   arrange(desc(organismCleaned_dbTaxo_3class)) %>%
   arrange(desc(organismCleaned_dbTaxo_2phylum)) %>%
   arrange(desc(organismCleaned_dbTaxo_1kingdom)) %>%
-  distinct(database,
-           organismCleaned,
-           structureCleanedInchikey3D,
-           .keep_all = TRUE)
+  distinct(
+    database,
+    organismCleaned,
+    structureCleanedInchikey2D,
+    referenceCleanedTitle,
+    .keep_all = TRUE
+  )
+
+chemo <- inhouseDbMeta %>%
+  filter(!is.na(structureCleaned_2superclass)) %>%
+  distinct(structureCleanedInchikey2D,
+           structureCleaned_2superclass)
+
+chemo3D <- inhouseDbMeta %>%
+  filter(!is.na(structureCleaned_2superclass)) %>%
+  distinct(structureCleanedInchikey3D,
+           structureCleaned_2superclass)
+
+bio <- inhouseDbMeta %>%
+  filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
+  distinct(organismCleaned,
+           organismCleaned_dbTaxo_1kingdom)
 
 cat("drawing upset plot of stigmastenol repartition in sub-DBs \n")
 pdf(
@@ -803,22 +396,23 @@ pdf(
   width = 16,
   height = 9
 )
-inhouseDb_most_structures <- inhouseDbTripletsGoldMeta %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
-  count(structureCleanedInchikey3D) %>%
+inhouseDb_most_structures <- inhouseDbMeta %>%
+  filter(!is.na(structureCleanedInchikey2D)) %>%
+  count(structureCleanedInchikey2D) %>%
   arrange(desc(n))
 
 mostinchi <- as.character(inhouseDb_most_structures[1, 1])
 
-inhouseDb_most_structures_2plot <- inhouseDbTripletsGoldMeta %>%
-  filter(structureCleanedInchikey3D == mostinchi) %>%
+inhouseDb_most_structures_2plot <-
+  inhouseDbMeta %>%
+  filter(structureCleanedInchikey2D == mostinchi) %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            database,
            .keep_all = TRUE) %>%
   group_by(database, organismCleaned) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_most_structures_2plot_wide <-
@@ -841,8 +435,8 @@ inhouseDb_most_structures_2plot_wide <-
 
 inhouseDb_most_structures_2plot_wide <-
   left_join(inhouseDb_most_structures_2plot_wide,
-            inhouseDbTripletsGoldMeta) %>%
-  distinct(structureCleanedInchikey3D,
+            bio) %>%
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE)
 
@@ -852,8 +446,8 @@ mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
   arrange(desc(n))
 
 dbnumostinchi <- as.numeric(nrow(
-  inhouseDbTripletsGoldMeta %>%
-    filter(structureCleanedInchikey3D == mostinchi) %>%
+  inhouseDbMeta %>%
+    filter(structureCleanedInchikey2D == mostinchi) %>%
     distinct(database)
 ))
 
@@ -917,15 +511,16 @@ pdf(
 )
 mostinchi2 <- as.character(inhouseDb_most_structures[2, 1])
 
-inhouseDb_most_structures_2plot <- inhouseDbTripletsGoldMeta %>%
-  filter(structureCleanedInchikey3D == mostinchi2) %>%
+inhouseDb_most_structures_2plot <-
+  inhouseDbMeta %>%
+  filter(structureCleanedInchikey2D == mostinchi2) %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            database,
            .keep_all = TRUE) %>%
   group_by(database, organismCleaned) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_most_structures_2plot_wide <-
@@ -948,8 +543,8 @@ inhouseDb_most_structures_2plot_wide <-
 
 inhouseDb_most_structures_2plot_wide <-
   left_join(inhouseDb_most_structures_2plot_wide,
-            inhouseDbTripletsGoldMeta) %>%
-  distinct(structureCleanedInchikey3D,
+            bio) %>%
+  distinct(structureCleanedInchikey2D,
            organismCleaned,
            .keep_all = TRUE)
 
@@ -959,8 +554,8 @@ mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
   arrange(desc(n))
 
 dbnumostinchi <- as.numeric(nrow(
-  inhouseDbTripletsGoldMeta %>%
-    filter(structureCleanedInchikey3D == mostinchi2) %>%
+  inhouseDbMeta %>%
+    filter(structureCleanedInchikey2D == mostinchi2) %>%
     distinct(database)
 ))
 
@@ -982,7 +577,7 @@ upset(
 dev.off()
 
 cat("getting list of most studied plants for exploration \n")
-inhouseDb_most_plant <- inhouseDbTripletsGoldMeta %>%
+inhouseDb_most_plant <- inhouseDbMeta %>%
   filter(!is.na(organismCleaned)) %>%
   filter(
     organismCleaned_dbTaxo_1kingdom == "Plantae" |
@@ -996,14 +591,15 @@ getGraphStudiedPlant <- function(plant) {
   mostplant <-
     as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCleaned == plant, 1])
   
-  inhouseDb_most_organism_2plot <- inhouseDbTripletsGoldMeta %>%
+  inhouseDb_most_organism_2plot <-
+    inhouseDbMeta %>%
     filter(organismCleaned == mostplant) %>%
-    distinct(structureCleanedInchikey3D,
+    distinct(structureCleanedInchikey2D,
              organismCleaned,
              database,
              .keep_all = TRUE) %>%
     group_by(organismCleaned, database) %>%
-    count(structureCleanedInchikey3D) %>%
+    count(structureCleanedInchikey2D) %>%
     ungroup()
   
   inhouseDb_most_organism_2plot_wide <-
@@ -1026,13 +622,13 @@ getGraphStudiedPlant <- function(plant) {
   
   inhouseDb_most_organism_2plot_wide <-
     left_join(inhouseDb_most_organism_2plot_wide,
-              inhouseDbTripletsGoldMeta) %>%
-    distinct(structureCleanedInchikey3D,
+              chemo) %>%
+    distinct(structureCleanedInchikey2D,
              organismCleaned,
              .keep_all = TRUE)
   
   dbnumostorganism <- as.numeric(nrow(
-    inhouseDbTripletsGoldMeta %>%
+    inhouseDbMeta %>%
       filter(organismCleaned == mostplant) %>%
       distinct(database)
   ))
@@ -1281,16 +877,6 @@ pdf(
 getGraphStudiedPlant(plant = "Vitis vinifera")
 dev.off()
 
-cat("... drawing Lyngbya majuscula metabolites repartition \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "LyngbyaMajuscula.pdf"),
-  width = 16,
-  height = 9
-)
-
-getGraphStudiedPlant(plant = "Lyngbya majuscula")
-dev.off()
-
 cat("... drawing Zingiber officinale metabolites repartition \n")
 pdf(
   file = file.path(pathDataProcessedFigures, "zingiberOfficinale.pdf"),
@@ -1322,21 +908,23 @@ getGraphStudiedPlant(plant = "Arabidopsis thaliana")
 dev.off()
 
 cat("getting list of most studied chemical subclasses for exploration \n")
-inhouseDb_most_chemical_subclass <- inhouseDbTripletsGoldMeta %>%
+inhouseDb_most_chemical_subclass <-
+  inhouseDbMeta %>%
   filter(!is.na(structureCleaned_4subclass)) %>%
   count(structureCleaned_4subclass) %>%
   arrange(desc(n))
 
 cat("defining drawing function for most chemical subclasses ... \n")
 getGraphChemicalClass <- function(subclass) {
-  inhouseDb_most_chemical_class_2plot <- inhouseDbTripletsGoldMeta %>%
+  inhouseDb_most_chemical_class_2plot <-
+    inhouseDbMeta %>%
     filter(structureCleaned_4subclass == subclass) %>%
-    distinct(structureCleanedInchikey3D,
+    distinct(structureCleanedInchikey2D,
              organismCleaned,
              database,
              .keep_all = TRUE) %>%
     group_by(organismCleaned_dbTaxo_5family, database) %>%
-    count(structureCleanedInchikey3D) %>%
+    count(structureCleanedInchikey2D) %>%
     ungroup()
   
   inhouseDb_most_chemical_class_2plot_wide <-
@@ -1357,15 +945,8 @@ getGraphChemicalClass <- function(subclass) {
               )) %>%
     data.frame()
   
-  inhouseDb_most_chemical_class_2plot_wide <-
-    left_join(inhouseDb_most_chemical_class_2plot_wide,
-              inhouseDbTripletsGoldMeta) %>%
-    distinct(structureCleanedInchikey3D,
-             organismCleaned,
-             .keep_all = TRUE)
-  
   dbnumostchemicalclass <- as.numeric(nrow(
-    inhouseDbTripletsGoldMeta %>%
+    inhouseDbMeta %>%
       filter(structureCleaned_4subclass == subclass) %>%
       distinct(database)
   ))
@@ -1580,13 +1161,13 @@ pdf(
   width = 16,
   height = 9
 )
-inhouseDb_kingdoms <- inhouseDbTripletsGoldMeta %>%
+inhouseDb_kingdoms <- inhouseDbMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned_dbTaxo_1kingdom,
            .keep_all = TRUE) %>%
   group_by(organismCleaned_dbTaxo_1kingdom) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_kingdoms_wide <-
@@ -1607,13 +1188,9 @@ inhouseDb_kingdoms_wide <-
             )) %>%
   data.frame()
 
-chemo <- inhouseDbTripletsGoldMeta %>%
-  distinct(structureCleanedInchikey3D,
-           structureCleaned_2superclass)
-
 inhouseDb_kingdoms_wide <-
   left_join(inhouseDb_kingdoms_wide, chemo) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 mostsuperclass <- inhouseDb_kingdoms_wide %>%
   count(structureCleaned_2superclass) %>%
@@ -1786,7 +1363,7 @@ upset(
   ),
   # mb.ratio = c(0.7, 0.3),
   order.by = "freq",
-  nintersects = 58,
+  nintersects = 60,
   # empty.intersections = "on",
   number.angles = 30,
   point.size = 5,
@@ -1805,14 +1382,14 @@ pdf(
   height = 9
 )
 
-inhouseDb_phyla <- inhouseDbTripletsGoldMeta %>%
+inhouseDb_phyla <- inhouseDbMeta %>%
   filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
   filter(!is.na(organismCleaned_dbTaxo_2phylum)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned_dbTaxo_2phylum,
            .keep_all = TRUE) %>%
   group_by(organismCleaned_dbTaxo_2phylum) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_phyla_wide <-
@@ -1835,7 +1412,7 @@ inhouseDb_phyla_wide <-
 
 inhouseDb_phyla_wide <-
   left_join(inhouseDb_phyla_wide, chemo) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 mostsuperclass2 <- inhouseDb_phyla_wide %>%
   count(structureCleaned_2superclass) %>%
@@ -2027,14 +1604,14 @@ pdf(
   height = 9
 )
 
-inhouseDb_classes <- inhouseDbTripletsGoldMeta %>%
+inhouseDb_classes <- inhouseDbMeta %>%
   filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
   filter(!is.na(organismCleaned_dbTaxo_3class)) %>%
-  distinct(structureCleanedInchikey3D,
+  distinct(structureCleanedInchikey2D,
            organismCleaned_dbTaxo_3class,
            .keep_all = TRUE) %>%
   group_by(organismCleaned_dbTaxo_3class) %>%
-  count(structureCleanedInchikey3D) %>%
+  count(structureCleanedInchikey2D) %>%
   ungroup()
 
 inhouseDb_classes_wide <-
@@ -2057,7 +1634,7 @@ inhouseDb_classes_wide <-
 
 inhouseDb_classes_wide <-
   left_join(inhouseDb_classes_wide, chemo) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE)
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
 mostsuperclass3 <- inhouseDb_classes_wide %>%
   count(structureCleaned_2superclass) %>%
@@ -2242,10 +1819,321 @@ upset(
 )
 dev.off()
 
+cat("preparing alluvial plot ... \n")
+openDbMeta <- openDbMeta %>%
+  mutate(validation = "validated")
+
+full <- left_join(openDbMaximal, openDbMeta) %>%
+  mutate(
+    validation = ifelse(
+      test = !is.na(validation),
+      yes = validation,
+      no = "not_validated"
+    ),
+    cleaned_reference = ifelse(
+      test = !is.na(referenceCleanedDoi) |
+        !is.na(referenceCleanedPmcid) |
+        !is.na(referenceCleanedPmid),
+      yes = "reference_Yes",
+      no = "reference_No"
+    ),
+    cleaned_organism = ifelse(
+      test = !is.na(organismCleaned),
+      yes = "organism_Yes",
+      no = "organism_No"
+    ),
+    cleaned_structure = ifelse(
+      test = !is.na(structureCleanedSmiles) |
+        !is.na(structureCleanedInchi) |
+        !is.na(structureCleanedInchikey3D),
+      yes = "structure_Yes",
+      no = "structure_No"
+    ),
+  ) %>%
+  distinct(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchikey3D,
+    referenceCleanedDoi,
+    cleaned_structure,
+    cleaned_organism,
+    cleaned_reference,
+    validation,
+  ) %>%
+  pivot_longer(cols = 11:13,
+               values_drop_na = TRUE) %>%
+  mutate(organism_originalType = "organism") %>%
+  select(
+    database,
+    structure_originalValue = structureValue,
+    structure_originalType = structureType,
+    organism_originalValue = organismOriginal,
+    organism_originalType,
+    reference_originalValue = referenceValue,
+    reference_originalType = referenceType,
+    cleanedType = name,
+    cleanedValue = value,
+    validation
+  ) %>%
+  distinct() %>%
+  data.frame()
+
+ready_1 <- full %>%
+  pivot_wider(
+    names_from = reference_originalType,
+    names_prefix = "reference_",
+    values_from = reference_originalValue,
+    values_fn = first
+  ) %>%
+  pivot_wider(
+    names_from = structure_originalType,
+    names_prefix = "structure_",
+    values_from = structure_originalValue,
+    values_fn = first
+  ) %>%
+  select(
+    database,
+    organism_organism = organism_originalValue,
+    structure_structureSmiles = structure_smiles,
+    structure_structureInchi = structure_inchi,
+    structure_structureNominal = structure_nominal,
+    reference_referenceDoi = reference_doi,
+    reference_referencePmid = reference_pubmed,
+    reference_referencePublishingDetails = reference_publishingDetails,
+    reference_referenceTitle = reference_title,
+    reference_referenceOriginal = reference_original,
+    reference_referenceSplit = reference_split,
+    cleanedType,
+    cleanedValue,
+    validation
+  )
+
+ready_2 <- ready_1 %>%
+  pivot_longer(
+    cols = 2:11,
+    names_to = c("origin", "originalType"),
+    names_sep = "_",
+    values_to = "originalValue"
+  ) %>%
+  select(database,
+         originalType,
+         originalValue,
+         cleanedType,
+         cleanedValue,
+         validation) %>%
+  distinct() %>%
+  filter(!is.na(originalValue))
+
+ready_3 <- ready_2 %>%
+  filter(validation == "validated") %>%
+  group_by(database,
+           validation) %>%
+  count(name = "count") %>%
+  arrange(desc(count))
+
+
+ggplot(
+  as.data.frame(sunk),
+  aes(
+    y = count,
+    axis1 = database,
+    axis2 = originalType,
+    axis3 = cleanedType
+  )
+) +
+  geom_stratum(decreasing = TRUE) +
+  geom_alluvium(
+    aes(fill = legend_v),
+    aes.bind = "alluvia",
+    lode.guidance = "forward",
+    decreasing = TRUE
+  ) +
+  geom_flow(
+    aes(fill = legend_v,
+        colour = legend_v),
+    aes.bind = "alluvia",
+    aes.flow = "forward",
+    stat = after_stat("alluvium"),
+    decreasing = TRUE
+  ) +
+  geom_fit_text(
+    stat = "stratum",
+    min.size = 0,
+    grow = TRUE,
+    width = 1 / 4,
+    aes(label = after_stat(stratum)),
+    decreasing = TRUE
+  ) +
+  scale_x_discrete(limits = c("database", "original", "cleaned")) +
+  # scale_y_continuous(trans = 'log10', name = "log10(count)") +
+  scale_fill_manual(values = c("#fb9a99", "#1f78b4")) +
+  scale_colour_manual(values = c("#fb9a99", "#1f78b4")) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # axis.text.y = element_blank(),
+    axis.text.y = element_text(size = rel(7)),
+    axis.title.y = element_text(size = rel(1)),
+    # axis.ticks = element_blank(),
+    axis.text.x = element_text(size = rel(7)),
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    legend.text = element_text(size = rel(5)),
+  )
+
+sunk <- ready_2 %>%
+  filter(database %in% ready_3$database) %>%
+  group_by(database,
+           originalType,
+           cleanedType,
+           validation) %>%
+  count(name = "count") %>%
+  filter(
+    gsub(
+      pattern = ".*_",
+      replacement = "",
+      x = cleanedType
+    ) %in% substr(x = originalType, start = 1, stop = 9)
+  ) %>%
+  ungroup() %>%
+  arrange(desc(count, validation, database)) %>%
+  mutate(
+    validation = gsub(
+      pattern = "notValidated",
+      replacement = "not_validated",
+      x = validation
+    ),
+    originalType = gsub(
+      pattern = "organismOriginal",
+      replacement = "organism_original",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "structureSmiles",
+      replacement = "structure_smiles",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "structureInchi",
+      replacement = "structure_inchi",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "structureNominal",
+      replacement = "structure_name",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referenceDoi",
+      replacement = "reference_doi",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referencePmid",
+      replacement = "reference_pmid",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referencePublishingDetails",
+      replacement = "reference_publishing_details",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referenceOriginal",
+      replacement = "reference_original",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referenceSplit",
+      replacement = "reference_split",
+      x = originalType
+    ),
+    originalType = gsub(
+      pattern = "referenceTitle",
+      replacement = "reference_title",
+      x = originalType
+    ),
+    cleanedType = gsub(
+      pattern = "cleaned_",
+      replacement = "",
+      x = cleanedType
+    ),
+  )
+
+revival <- sunk %>%
+  filter(validation != "not_validated")
+
+legend <- with(sunk, reorder(database, count))
+
+legend_v <- with(sunk, reorder(validation, desc(count)))
+
+cat("drawing alluvial \n")
+pdf(
+  file = file.path(pathDataProcessedFigures, "alluvial.pdf"),
+  width = 96,
+  height = 54
+)
+ggplot(
+  as.data.frame(sunk),
+  aes(
+    y = count,
+    axis1 = database,
+    axis2 = originalType,
+    axis3 = cleanedType
+  )
+) +
+  geom_stratum(decreasing = TRUE) +
+  geom_alluvium(
+    aes(fill = legend_v),
+    aes.bind = "alluvia",
+    lode.guidance = "forward",
+    decreasing = TRUE
+  ) +
+  geom_flow(
+    aes(fill = legend_v,
+        colour = legend_v),
+    aes.bind = "alluvia",
+    aes.flow = "forward",
+    stat = after_stat("alluvium"),
+    decreasing = TRUE
+  ) +
+  geom_fit_text(
+    stat = "stratum",
+    min.size = 0,
+    grow = TRUE,
+    width = 1 / 4,
+    aes(label = after_stat(stratum)),
+    decreasing = TRUE
+  ) +
+  scale_x_discrete(limits = c("database", "original", "cleaned")) +
+  # scale_y_continuous(trans = 'log10', name = "log10(count)") +
+  scale_fill_manual(values = c("#fb9a99", "#1f78b4")) +
+  scale_colour_manual(values = c("#fb9a99", "#1f78b4")) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    # axis.text.y = element_blank(),
+    axis.text.y = element_text(size = rel(7)),
+    axis.title.y = element_text(size = rel(1)),
+    # axis.ticks = element_blank(),
+    axis.text.x = element_text(size = rel(7)),
+    axis.title.x = element_blank(),
+    legend.title = element_blank(),
+    legend.text = element_text(size = rel(5)),
+  )
+dev.off()
+
 detach("package:Hmisc", unload = TRUE)
 
 cat("drawing interactive biological tree \n")
-data4tree_bio <- openDbTripletsGoldMeta %>%
+data4tree_bio <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_1kingdom) &
       !is.na(organismCleaned_dbTaxo_2phylum) &
@@ -2296,7 +2184,7 @@ htmlwidgets::saveWidget(widget = as_widget(Tree_bio),
                         file = "Tree_bio.html")
 
 cat("drawing interactive chemical tree \n")
-data4tree_chemo <- openDbTripletsGoldMeta %>%
+data4tree_chemo <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent)) %>%
   filter(
     !is.na(structureCleaned_1kingdom) &
@@ -2468,21 +2356,21 @@ draw_chord <-
            palette = paired_palette_med)
   {
     table <- data.frame(data)
-    table <- table[!is.na(table[, biological_level]),]
-    table <- table[!is.na(table[, chemical_level]),]
+    table <- table[!is.na(table[, biological_level]), ]
+    table <- table[!is.na(table[, chemical_level]), ]
     
     if (!is.null(biological_filter_value))
       table <-
-      table[table[, biological_filter_level] %in% biological_filter_value,]
+      table[table[, biological_filter_level] %in% biological_filter_value, ]
     
     if (!is.null(chemical_filter_value))
       table <-
-      table[table[, chemical_filter_level] %in% chemical_filter_value,]
+      table[table[, chemical_filter_level] %in% chemical_filter_value, ]
     
     m1 <-
       as.data.table(table(table[, c(biological_level, chemical_level)]))
     
-    m1 <-   m1 %>%
+    m1 <- m1 %>%
       pivot_wider(names_from = 2, values_from = N) %>%
       unnest() %>%
       column_to_rownames(var = biological_level) %>%
@@ -2505,7 +2393,6 @@ draw_chord <-
     
     test_3 <- test_3 %>% select(-name)
     
-    
     test_4 <- as.matrix(test_3)
     
     test_5 <- test_4[colnames(test_4), colnames(test_4)]
@@ -2527,7 +2414,7 @@ draw_chord <-
   }
 
 cat("... drawing big chord diagram \n")
-top_big_chord_bio <- openDbTripletsGoldMeta %>%
+top_big_chord_bio <- openDbMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom) &
            !is.na(structureCleaned_2superclass)) %>%
   group_by(organismCleaned_dbTaxo_1kingdom) %>%
@@ -2540,7 +2427,7 @@ top_big_chord_bio <- openDbTripletsGoldMeta %>%
 top_big_chord_bio <-
   top_big_chord_bio$organismCleaned_dbTaxo_1kingdom
 
-top_big_chord_chemo <- openDbTripletsGoldMeta %>%
+top_big_chord_chemo <- openDbMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_1kingdom) &
            !is.na(structureCleaned_2superclass)) %>%
   filter(organismCleaned_dbTaxo_1kingdom %in% top_big_chord_bio) %>%
@@ -2555,7 +2442,7 @@ top_big_chord_chemo <-
   top_big_chord_chemo$structureCleaned_2superclass
 
 chord_big <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_1kingdom",
   chemical_level = "structureCleaned_2superclass",
   chemical_filter_value = top_big_chord_chemo,
@@ -2568,7 +2455,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_big),
                         file = "Chord_big.html")
 
 cat("... drawing medium chord diagram \n")
-top_organism_med <- openDbTripletsGoldMeta %>%
+top_organism_med <- openDbMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
   filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
   group_by(organismCleaned_dbTaxo_5family) %>%
@@ -2580,7 +2467,7 @@ top_organism_med <- openDbTripletsGoldMeta %>%
 
 top_organism_med <- top_organism_med$organismCleaned_dbTaxo_5family
 
-top_chemo_med <- openDbTripletsGoldMeta %>%
+top_chemo_med <- openDbMeta %>%
   filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
   filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
   filter(!is.na(structureCleaned_3class)) %>%
@@ -2595,7 +2482,7 @@ top_chemo_med <- openDbTripletsGoldMeta %>%
 top_chemo_med <- top_chemo_med$structureCleaned_3class
 
 chord_med <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_5family",
   chemical_level = "structureCleaned_3class",
   chemical_filter_value = top_chemo_med,
@@ -2608,7 +2495,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_med),
                         file = "Chord_med.html")
 
 cat("... drawing small chord diagram \n")
-top_organism_sma <- openDbTripletsGoldMeta %>%
+top_organism_sma <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
@@ -2621,7 +2508,7 @@ top_organism_sma <- openDbTripletsGoldMeta %>%
 
 top_organism_sma <- top_organism_sma$organismCleaned_dbTaxo_7species
 
-top_chemo_sma <- openDbTripletsGoldMeta %>%
+top_chemo_sma <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
@@ -2637,7 +2524,7 @@ top_chemo_sma <- openDbTripletsGoldMeta %>%
 top_chemo_sma <- top_chemo_sma$structureCleaned_5directParent
 
 chord_sma <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_sma,
@@ -2651,7 +2538,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_sma),
                         file = "Chord_sma.html")
 
 cat("... drawing Ranunculaceae chord diagram \n")
-top_organism_ranunculaceae <- openDbTripletsGoldMeta %>%
+top_organism_ranunculaceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
@@ -2665,7 +2552,7 @@ top_organism_ranunculaceae <- openDbTripletsGoldMeta %>%
 top_organism_ranunculaceae <-
   top_organism_ranunculaceae$organismCleaned_dbTaxo_7species
 
-top_chemo_ranunculaceae <- openDbTripletsGoldMeta %>%
+top_chemo_ranunculaceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
@@ -2682,7 +2569,7 @@ top_chemo_ranunculaceae <-
   top_chemo_ranunculaceae$structureCleaned_5directParent
 
 chord_ranunculaceae <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_ranunculaceae,
@@ -2695,7 +2582,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_ranunculaceae),
                         file = "Chord_ranunculaceae.html")
 
 cat("... drawing Papaveraceae chord diagram \n")
-top_organism_papaveraceae <- openDbTripletsGoldMeta %>%
+top_organism_papaveraceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
@@ -2709,7 +2596,7 @@ top_organism_papaveraceae <- openDbTripletsGoldMeta %>%
 top_organism_papaveraceae <-
   top_organism_papaveraceae$organismCleaned_dbTaxo_7species
 
-top_chemo_papaveraceae <- openDbTripletsGoldMeta %>%
+top_chemo_papaveraceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
@@ -2726,7 +2613,7 @@ top_chemo_papaveraceae <-
   top_chemo_papaveraceae$structureCleaned_5directParent
 
 chord_papaveraceae <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_papaveraceae,
@@ -2739,7 +2626,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_papaveraceae),
                         file = "Chord_papaveraceae.html")
 
 cat("... drawing Gentianaceae chord diagram \n")
-top_organism_gentianaceae <- openDbTripletsGoldMeta %>%
+top_organism_gentianaceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
@@ -2753,29 +2640,29 @@ top_organism_gentianaceae <- openDbTripletsGoldMeta %>%
 top_organism_gentianaceae <-
   top_organism_gentianaceae$organismCleaned_dbTaxo_7species
 
-top_chemo_gentianaceae <- openDbTripletsGoldMeta %>%
+top_chemo_gentianaceae <- openDbMeta %>%
   filter(!is.na(structureCleaned_5directParent) &
            !is.na(organismCleaned_dbTaxo_7species)) %>%
   filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
   filter(structureCleaned_5directParent == "Xanthones") %>%
   filter(organismCleaned_dbTaxo_7species %in% top_organism_gentianaceae) %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
-  group_by(structureCleanedInchikey3D) %>%
+  filter(!is.na(structureCleanedInchikey2D)) %>%
+  group_by(structureCleanedInchikey2D) %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structureCleanedInchikey3D) %>%
+  distinct(structureCleanedInchikey2D) %>%
   head(144)
 
 top_chemo_gentianaceae <-
-  top_chemo_gentianaceae$structureCleanedInchikey3D
+  top_chemo_gentianaceae$structureCleanedInchikey2D
 
 chord_gentianaceae <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
-  chemical_level = "structureCleanedInchikey3D",
+  chemical_level = "structureCleanedInchikey2D",
   chemical_filter_value = top_chemo_gentianaceae,
-  chemical_filter_level = "structureCleanedInchikey3D",
+  chemical_filter_level = "structureCleanedInchikey2D",
   biological_filter_value = top_organism_gentianaceae,
   biological_filter_level = "organismCleaned_dbTaxo_7species",
   palette = paired_palette_big
@@ -2786,7 +2673,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_gentianaceae),
 
 cat("... drawing top N chord diagrams ... \n")
 cat("... top 06 \n")
-top_organism_06 <- openDbTripletsGoldMeta %>%
+top_organism_06 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2801,7 +2688,7 @@ top_organism_06 <- openDbTripletsGoldMeta %>%
 
 top_organism_06 <- top_organism_06$organismCleaned_dbTaxo_7species
 
-top_chemo_06 <- openDbTripletsGoldMeta %>%
+top_chemo_06 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2819,7 +2706,7 @@ top_chemo_06 <- openDbTripletsGoldMeta %>%
 top_chemo_06 <- top_chemo_06$structureCleaned_5directParent
 
 chord_06 <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_06,
@@ -2832,7 +2719,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_06),
                         file = "Chord_06.html")
 
 cat("... top 12 \n")
-top_organism_12 <- openDbTripletsGoldMeta %>%
+top_organism_12 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2847,7 +2734,7 @@ top_organism_12 <- openDbTripletsGoldMeta %>%
 
 top_organism_12 <- top_organism_12$organismCleaned_dbTaxo_7species
 
-top_chemo_12 <- openDbTripletsGoldMeta %>%
+top_chemo_12 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2865,7 +2752,7 @@ top_chemo_12 <- openDbTripletsGoldMeta %>%
 top_chemo_12 <- top_chemo_12$structureCleaned_5directParent
 
 chord_12 <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_12,
@@ -2878,7 +2765,7 @@ htmlwidgets::saveWidget(widget = as_widget(chord_12),
                         file = "Chord_12.html")
 
 cat("... top 24 \n")
-top_organism_24 <- openDbTripletsGoldMeta %>%
+top_organism_24 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2893,7 +2780,7 @@ top_organism_24 <- openDbTripletsGoldMeta %>%
 
 top_organism_24 <- top_organism_24$organismCleaned_dbTaxo_7species
 
-top_chemo_24 <- openDbTripletsGoldMeta %>%
+top_chemo_24 <- openDbMeta %>%
   filter(
     !is.na(organismCleaned_dbTaxo_7species) &
       !is.na(structureCleaned_5directParent) &
@@ -2911,7 +2798,7 @@ top_chemo_24 <- openDbTripletsGoldMeta %>%
 top_chemo_24 <- top_chemo_24$structureCleaned_5directParent
 
 chord_24 <- draw_chord(
-  data = openDbTripletsGoldMeta,
+  data = openDbMeta,
   biological_level = "organismCleaned_dbTaxo_7species",
   chemical_level = "structureCleaned_5directParent",
   chemical_filter_value = top_chemo_24,
