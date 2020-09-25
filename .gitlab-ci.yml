@@ -6,6 +6,7 @@ stages:
   - build-translation
   - build-curating
   - build-analysing
+  - build-visualizing
 
 build_docker_image:
   stage: docker
@@ -59,3 +60,13 @@ build-analysing:
     - changes:
       - data/*.dvc
       - src/3_analysing/*
+
+build-visualizing:
+  stage: build-visualizing
+  script:
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make visualizing"
+  rules:
+    - changes:
+      - data/*.dvc
+      - src/4_visualizing/*
+

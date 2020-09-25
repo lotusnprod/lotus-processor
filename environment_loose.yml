@@ -11,6 +11,8 @@ dependencies:
   - requests
   - grequests
   - r-pacman
+  - r-ggalluvial
+  - r-ggfittext
   - r-curl
   - r-data.table
   - r-zeallot
