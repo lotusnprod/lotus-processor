@@ -21,7 +21,7 @@ validate_docker_image:
 dvc-pull:
   stage: pull-data
   script:
-    - docker run --rm -v /home/gitlab-runner/.aws:/home/user/.aws -v $PWD:/srv/onpdb -v /srv/onpdb-data/dvc_tmp:/srv/onpdb/.dvc/tmp -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed onpdb-environment bash -c "cd /srv/onpdb && dvc cache dir /srv/dvc && dvc pull -f"
+    - docker run --rm -v /home/gitlab-runner/.aws:/home/user/.aws -v $PWD:/srv/onpdb -v /srv/onpdb-data/dvc_tmp:/srv/onpdb/.dvc/tmp -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation onpdb-environment bash -c "cd /srv/onpdb && dvc cache dir /srv/dvc && dvc pull -f"
   rules:
     - changes:
       - data/*.dvc
@@ -29,7 +29,7 @@ dvc-pull:
 build-databases:
   stage: build-databases
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make gathering-databases"
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make gathering-databases"
   rules:
     - changes:
       - data/*.dvc
@@ -38,7 +38,7 @@ build-databases:
 build-translation:
   stage: build-translation
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make gathering-translation-full"
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make gathering-translation-full"
   rules:
     - changes:
       - data/*.dvc
@@ -47,7 +47,7 @@ build-translation:
 build-curating:
   stage: build-curating
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make curating"
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make curating"
   # rules:
   #   - changes:
   #     - data/*.dvc
@@ -55,7 +55,7 @@ build-curating:
 build-analysing:
   stage: build-analysing
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make analysing"
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make analysing"
   rules:
     - changes:
       - data/*.dvc
@@ -64,7 +64,7 @@ build-analysing:
 build-visualizing:
   stage: build-visualizing
   script:
-    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make visualizing"
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/interim:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make visualizing"
   rules:
     - changes:
       - data/*.dvc
