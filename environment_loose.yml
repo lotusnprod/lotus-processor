@@ -10,7 +10,7 @@ dependencies:
   - cirpy
   - requests
   - grequests
-  - urllib.parse
+  - urllib
   - tdqm
   - sys
   - gzip
