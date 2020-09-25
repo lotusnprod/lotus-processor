@@ -65,7 +65,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/p
 
 curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
 
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-classifying
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing # curating-editing-structure-classifying
 
 curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
 
