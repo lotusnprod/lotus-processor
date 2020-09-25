@@ -17,7 +17,6 @@ openDbMinimal <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  filter(database != dnp_1) %>%
   data.frame()
 
 cat("sampling ... \n")
@@ -25,7 +24,9 @@ cat("... DOI \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_doi <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "doi")) >= 30)
+  sampleONPDB_doi <- openDbMinimal %>%
   filter(referenceType == "doi") %>%
   sample_n(30) %>%
   mutate(curator = NA,
@@ -36,7 +37,9 @@ cat("... original \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_original <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "original")) >= 30)
+  sampleONPDB_original <- openDbMinimal %>%
   filter(referenceType == "original")  %>%
   sample_n(30) %>%
   mutate(curator = NA,
@@ -47,7 +50,9 @@ cat("... PMID \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_pubmed <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "pubmed")) >= 30)
+  sampleONPDB_pubmed <- openDbMinimal %>%
   filter(referenceType == "pubmed") %>%
   sample_n(30) %>%
   mutate(curator = NA,
@@ -58,7 +63,9 @@ cat("... split \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_split <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "split")) >= 30)
+  sampleONPDB_split <- openDbMinimal %>%
   filter(referenceType == "split")  %>%
   sample_n(30) %>%
   mutate(curator = NA,
@@ -69,7 +76,9 @@ cat("... title \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_title <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "title")) >= 30)
+  sampleONPDB_title <- openDbMinimal %>%
   filter(referenceType == "title")  %>%
   sample_n(30) %>%
   mutate(curator = NA,
@@ -80,7 +89,9 @@ cat("... publishing details \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB_publishingDetails <- openDbMinimal %>%
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "publishingDetails")) >= 30)
+  sampleONPDB_publishingDetails <- openDbMinimal %>%
   filter(referenceType == "publishingDetails")  %>%
   sample_n(30) %>%
   mutate(curator = "AR",
@@ -128,7 +139,15 @@ cat("... additional entries \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-additionalSet <-
+if (nrow(openDbMinimal %>%
+         filter(referenceType == "title")) >= 85 &
+    nrow(openDbMinimal %>%
+         filter(referenceType == "publishingDetails")) >= 25 &
+    nrow(openDbMinimal %>%
+         filter(referenceType == "split")) >= 41 &
+    nrow(openDbMinimal %>%
+         filter(referenceType == "publishingDetails")) >= 58)
+  additionalSet <-
   bind_rows(
     A <- openDbMinimal %>%
       filter(referenceType == "title")  %>%
@@ -197,27 +216,29 @@ cat(file.path(
   "samplePublishingDetails.tsv"
 ),
 "\n")
-write.table(
-  x = sampleONPDB_publishingDetails,
-  file = file.path(
-    pathDataInterimTablesAnalysed,
-    "samplePublishingDetails.tsv"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (exists("sampleONPDB_publishingDetails"))
+  write.table(
+    x = sampleONPDB_publishingDetails,
+    file = file.path(
+      pathDataInterimTablesAnalysed,
+      "samplePublishingDetails.tsv"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 cat(file.path(pathDataInterimTablesAnalysed,
               "additionalSet.tsv"),
     "\n")
-write.table(
-  x = additionalSet,
-  file = file.path(pathDataInterimTablesAnalysed,
-                   "additionalSet.tsv"),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (exists("additionalSet"))
+  write.table(
+    x = additionalSet,
+    file = file.path(pathDataInterimTablesAnalysed,
+                     "additionalSet.tsv"),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
