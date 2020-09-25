@@ -397,10 +397,12 @@ try({
     width = 16,
     height = 9
   )
+  
   inhouseDb_most_structures <- inhouseDbMeta %>%
     filter(!is.na(structureCleanedInchikey2D)) %>%
     count(structureCleanedInchikey2D) %>%
     arrange(desc(n))
+  
   mostinchi <- as.character(inhouseDb_most_structures[1, 1])
   inhouseDb_most_structures_2plot <-
     inhouseDbMeta %>%
@@ -413,6 +415,7 @@ try({
     group_by(database, organismCleaned) %>%
     count(structureCleanedInchikey2D) %>%
     ungroup()
+  
   inhouseDb_most_structures_2plot_wide <-
     inhouseDb_most_structures_2plot %>%
     pivot_wider(names_from = database,
@@ -430,21 +433,25 @@ try({
                 values = 1
               )) %>%
     data.frame()
+  
   inhouseDb_most_structures_2plot_wide <-
     left_join(inhouseDb_most_structures_2plot_wide,
               bio) %>%
     distinct(structureCleanedInchikey2D,
              organismCleaned,
              .keep_all = TRUE)
+  
   mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
     filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
     count(organismCleaned_dbTaxo_1kingdom) %>%
     arrange(desc(n))
+  
   dbnumostinchi <- as.numeric(nrow(
     inhouseDbMeta %>%
       filter(structureCleanedInchikey2D == mostinchi) %>%
       distinct(database)
   ))
+  
   upset(
     inhouseDb_most_structures_2plot_wide,
     nsets = 10,
@@ -504,6 +511,7 @@ try({
     width = 16,
     height = 9
   )
+  
   mostinchi2 <- as.character(inhouseDb_most_structures[2, 1])
   
   inhouseDb_most_structures_2plot <-
@@ -1819,10 +1827,10 @@ dev.off()
 
 try({
   cat("preparing alluvial plot ... \n")
-  openDbMeta <- openDbMeta %>%
+  openDbMetaValidated <- openDbMeta %>%
     mutate(validation = "validated")
   
-  full <- left_join(openDbMaximal, openDbMeta) %>%
+  full <- left_join(openDbMaximal, openDbMetaValidated) %>%
     mutate(
       validation = ifelse(
         test = !is.na(validation),
@@ -1935,57 +1943,6 @@ try({
     count(name = "count") %>%
     arrange(desc(count))
   
-  
-  ggplot(
-    as.data.frame(sunk),
-    aes(
-      y = count,
-      axis1 = database,
-      axis2 = originalType,
-      axis3 = cleanedType
-    )
-  ) +
-    geom_stratum(decreasing = TRUE) +
-    geom_alluvium(
-      aes(fill = legend_v),
-      aes.bind = "alluvia",
-      lode.guidance = "forward",
-      decreasing = TRUE
-    ) +
-    geom_flow(
-      aes(fill = legend_v,
-          colour = legend_v),
-      aes.bind = "alluvia",
-      aes.flow = "forward",
-      stat = after_stat("alluvium"),
-      decreasing = TRUE
-    ) +
-    geom_fit_text(
-      stat = "stratum",
-      min.size = 0,
-      grow = TRUE,
-      width = 1 / 4,
-      aes(label = after_stat(stratum)),
-      decreasing = TRUE
-    ) +
-    scale_x_discrete(limits = c("database", "original", "cleaned")) +
-    # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-    scale_fill_manual(values = c("#fb9a99", "#1f78b4")) +
-    scale_colour_manual(values = c("#fb9a99", "#1f78b4")) +
-    theme(
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      # axis.text.y = element_blank(),
-      axis.text.y = element_text(size = rel(7)),
-      axis.title.y = element_text(size = rel(1)),
-      # axis.ticks = element_blank(),
-      axis.text.x = element_text(size = rel(7)),
-      axis.title.x = element_blank(),
-      legend.title = element_blank(),
-      legend.text = element_text(size = rel(5)),
-    )
-  
   sunk <- ready_2 %>%
     filter(database %in% ready_3$database) %>%
     group_by(database,
@@ -2064,9 +2021,6 @@ try({
         x = cleanedType
       ),
     )
-  
-  revival <- sunk %>%
-    filter(validation != "not_validated")
   
   legend <- with(sunk, reorder(database, count))
   
@@ -2255,6 +2209,40 @@ paired_palette_med <- c(
   "#6a3d9a",
   "#ffff99",
   "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c"
+)
+
+cat("... 30 \n")
+paired_palette_30 <- c(
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#fdbf6f",
+  "#ff7f00",
+  "#cab2d6",
+  "#6a3d9a",
+  "#ffff99",
+  "#b15928",
+  "#a6cee3",
+  "#1f78b4",
+  "#b2df8a",
+  "#33a02c",
+  "#fb9a99",
+  "#e31a1c",
   "#a6cee3",
   "#1f78b4",
   "#b2df8a",
@@ -2487,7 +2475,7 @@ try({
     ungroup() %>%
     arrange(desc(n)) %>%
     distinct(structureCleaned_3class) %>%
-    head(12)
+    head(18)
   
   top_chemo_med <- top_chemo_med$structureCleaned_3class
   
@@ -2499,7 +2487,7 @@ try({
     chemical_filter_level = "structureCleaned_3class",
     biological_filter_value = top_organism_med,
     biological_filter_level = "organismCleaned_dbTaxo_5family",
-    palette = paired_palette_big
+    palette = paired_palette_30
   )
   htmlwidgets::saveWidget(widget = as_widget(chord_med),
                           file = "Chord_med.html")

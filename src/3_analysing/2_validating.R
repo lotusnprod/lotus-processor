@@ -602,6 +602,8 @@ cat("outputing incorrect entries from validated set \n")
 manuallyRemovedEntries <- realSampleFilteredBioTitle %>%
   filter(validated != "Y")
 
+openDbClean <- anti_join(openDb, manuallyRemovedEntries)
+
 cat("exporting \n")
 cat("../data/validation/manuallyValidated.tsv.gz", "\n")
 write.table(
@@ -633,7 +635,7 @@ write.table(
 
 cat(pathDataInterimTablesAnalysedPlatinum, "\n")
 write.table(
-  x = openDb,
+  x = openDbClean,
   file = gzfile(
     description = pathDataInterimTablesAnalysedPlatinum,
     compression = 9,
