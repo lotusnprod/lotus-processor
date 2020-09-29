@@ -25,7 +25,7 @@ fig1 <- plot_ly(type = 'violin')  %>%
     color = I("#1f78b4")
   ) %>%
   layout(yaxis = list(
-    range = c(0, 500),
+    range = c(0, 100),
     title = "",
     zeroline = F
   ))

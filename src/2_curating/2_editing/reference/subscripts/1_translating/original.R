@@ -99,7 +99,7 @@ for (i in num) {
       )
     )
   
-  cat("treating results, may take a while if full mode")
+  cat("treating results, may take a while if full mode \n")
   if (nrow(dataOriginal) != 0)
     dataOriginal2 <-
     getAllReferences(data = dataOriginal,
