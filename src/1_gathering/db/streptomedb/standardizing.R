@@ -26,9 +26,9 @@ data_selected <- data_original %>%
          name,
          smiles,
          pubchem,
-         reference_pubchem = pubmedid,
+         reference_pubmed = pubmedid,
          biologicalsource) %>%
-  cSplit("reference_pubchem", sep = ";", direction = "long") %>%
+  cSplit("reference_pubmed", sep = ";", direction = "long") %>%
   cSplit("biologicalsource", sep = ";", direction = "long") %>%
   data.frame()
 
@@ -38,7 +38,7 @@ data_standard <-
     data_selected = data_selected,
     db = "str_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_pubchem")
+    reference_field = c("reference_pubmed")
   )
 
 # exporting
