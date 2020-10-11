@@ -129,42 +129,82 @@ library(plotly)
 
 cat("loading files ... \n")
 sampleAllONPDB_AR_old <-
-  read_delim(file = "../data/validation/old/AR.tsv",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/validation/old/AR.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "AR")
 
 sampleAllONPDB_PMA_old <-
-  read_delim(file = "../data/validation/old/PMA.tsv",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/validation/old/PMA.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "PMA")
 
 sampleAllONPDB_AR <-
-  read_delim(file = "../data/validation/new/AR.tsv",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/validation/new/AR.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "AR")
 
 sampleAllONPDB_JB <-
-  read_delim(file = "../data/validation/new/JB.csv",
-             delim = ",") %>%
+  read_delim(
+    file = "../data/validation/new/JB.csv",
+    delim = ",",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "JB") %>%
   select(1:20)
 
 sampleAllONPDB_PMA <-
-  read_delim(file = "../data/validation/new/PM.tsv",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/validation/new/PM.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "PMA")
 
 sampleAllONPDB_publishingDetails <-
-  read_delim(file = "../data/validation/new/publishingDetails.tsv",
-             delim = "\t")
+  read_delim(
+    file = "../data/validation/new/publishingDetails.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 sampleAllONPDB_additionalSet <-
-  read_delim(file = "../data/validation/new/additionalSet.tsv",
-             delim = "\t")
+  read_delim(
+    file = "../data/validation/new/additionalSet.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
 
 sampleCondifent_PMA <-
-  read_delim(file = "../data/validation/confident/100confidentPMAChecked.tsv",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/validation/confident/100confidentPMAChecked.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   filter(curator == "PMA") %>%
   mutate(curator = "PMA2")
 
@@ -175,8 +215,7 @@ inhouseDbMinimal <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-) %>%
-  data.frame()
+)
 
 cat("... organism metadata \n")
 organismMetadata <-
@@ -367,11 +406,11 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
 
 cat("filtering results ... \n")
 cat("... validated set \n")
-realSampleFilteredBioTitle <-
+realSampleFiltered <-
   filter_dirty(dataframe = realMetaSample)
 
 cat("... rejected set \n")
-antiFilter <- anti_join(realMetaSample, realSampleFilteredBioTitle)
+antiFilter <- anti_join(realMetaSample, realSampleFiltered)
 
 cat("counting results ... \n")
 cat("... per category on validation set \n")
@@ -382,11 +421,11 @@ table_count_global <- myDirtyC(table = realMetaSample)
 
 cat("... per category on validated set \n")
 tableFiltered_count <-
-  myDirtyF(table = realSampleFilteredBioTitle)
+  myDirtyF(table = realSampleFiltered)
 
 cat("... global on validated set \n")
 tableFiltered_count_global <-
-  myDirtyC(table = realSampleFilteredBioTitle)
+  myDirtyC(table = realSampleFiltered)
 
 cat("... per category on rejected set \n")
 tableAntiFiltered_count <-
@@ -420,19 +459,19 @@ fig_anti
 
 cat("... validation set global \n")
 newfull <- myDirtyQ(table = table_count_global,
-                    yaxismax = 500,
+                    yaxismax = 550,
                     title = "new full version")
 newfull
 
 cat("... validated set global \n")
 newfiltered <- myDirtyQ(table = tableFiltered_count_global,
-                        yaxismax = 500,
+                        yaxismax = 550,
                         title = "new filtered version")
 newfiltered
 
 cat("... rejected set global \n")
 antifull <- myDirtyQ(table = tableAntiFiltered_count_global,
-                     yaxismax = 500,
+                     yaxismax = 550,
                      title = "anti full version")
 antifull
 
@@ -544,6 +583,8 @@ openDb <- inhouseDbFull %>%
     structureCleanedInchikey2D,
     structureCleanedInchi,
     structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -588,6 +629,8 @@ dnpDb <- inhouseDbFull %>%
     structureCleanedInchikey2D,
     structureCleanedInchi,
     structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -595,19 +638,78 @@ dnpDb <- inhouseDbFull %>%
   )
 
 cat("outputing correct entries from manually validated set \n")
-manuallyValidatedSet <- realSampleFilteredBioTitle %>%
+manuallyValidatedSet <- realMetaSample %>%
   filter(validated == "Y")
 
 cat("outputing incorrect entries from validated set \n")
-manuallyRemovedEntries <- realSampleFilteredBioTitle %>%
+manuallyRemovedEntries <- realMetaSample %>%
   filter(validated != "Y")
 
 openDbClean <- anti_join(openDb, manuallyRemovedEntries)
 
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+validationSet <- anti_join(openDbClean, realMetaSample) %>%
+  sample_n(100)
+
+cat("loading validation set \n")
+validationSetFilled <-
+  read_delim(
+    file = "../data/validation/validationSet.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+  filter(!is.na(validated))
+
+realValidationSetFilled <-
+  inner_join(validationSetFilled, openDbClean) %>%
+  distinct(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid,
+    referenceCleanedTitle,
+    curator,
+    validated,
+    comments,
+    .keep_all = TRUE
+  )
+
+finalStats <- realValidationSetFilled %>%
+  group_by(referenceType) %>% count(validated == "Y")
+
+cat("outputing correct entries from manually validated set \n")
+manuallyValidatedSet2 <- realValidationSetFilled %>%
+  filter(validated == "Y")
+
+manuallyValidatedSet3 <-
+  bind_rows(manuallyValidatedSet, manuallyValidatedSet2)
+
+cat("outputing incorrect entries from validated set \n")
+manuallyRemovedEntries2 <- realValidationSetFilled %>%
+  filter(validated != "Y")
+
+manuallyRemovedEntries3 <-
+  bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2)
+
+openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3)
+
 cat("exporting \n")
 cat("../data/validation/manuallyValidated.tsv.gz", "\n")
 write.table(
-  x = manuallyValidatedSet,
+  x = manuallyValidatedSet3,
   file = gzfile(
     description = "../data/validation/manuallyValidated.tsv.gz",
     compression = 9,
@@ -621,7 +723,7 @@ write.table(
 
 cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
 write.table(
-  x = manuallyRemovedEntries,
+  x = manuallyRemovedEntries3,
   file = gzfile(
     description = "../data/validation/manuallyRemoved.tsv.gz",
     compression = 9,
@@ -635,7 +737,7 @@ write.table(
 
 cat(pathDataInterimTablesAnalysedPlatinum, "\n")
 write.table(
-  x = openDbClean,
+  x = openDbClean2,
   file = gzfile(
     description = pathDataInterimTablesAnalysedPlatinum,
     compression = 9,
@@ -660,6 +762,20 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+cat(file.path(pathDataInterimTablesAnalysed,
+              "validationSet.tsv"),
+    "\n")
+if (exists("validationSet"))
+  write.table(
+    x = validationSet,
+    file = file.path(pathDataInterimTablesAnalysed,
+                     "validationSet.tsv"),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 end <- Sys.time()
 
