@@ -1,4 +1,4 @@
-# title: "wakakensaku cleaneR"
+# title: "wakankensaku cleaneR"
 
 # loading paths
 source("paths.R")
