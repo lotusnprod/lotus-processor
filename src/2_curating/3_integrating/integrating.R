@@ -225,7 +225,9 @@ structureMinimal <- structureFull %>%
     structureValue,
     structureCleanedInchi,
     structureCleanedInchikey3D,
-    structureCleanedSmiles
+    structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac
   )
 
 structureMetadata <- structureFull %>%
@@ -362,6 +364,8 @@ inhouseDbMinimal <-
     structureCleanedInchikey3D,
     structureCleanedInchi,
     structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac,
     referenceCleanedTitle
   )
 
@@ -394,7 +398,9 @@ structureNA <- left_join(structureNA, structureFull) %>%
     structureValue,
     structureCleanedInchi,
     structureCleanedInchikey3D,
-    structureCleanedSmiles
+    structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac
   )
 
 cat("ensuring directories exist \n")
