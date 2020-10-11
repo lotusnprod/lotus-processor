@@ -1,4 +1,4 @@
-# title: "wakakensaku scrapeR"
+# title: "wakankensaku scrapeR"
 
 # loading paths
 source("paths.R")
