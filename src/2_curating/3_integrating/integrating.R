@@ -135,14 +135,16 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_xlogp = xlogpSanitized
   )
 
-cat("... classified structures \n")
-classifiedStructureTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureFileClassified),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+  cat("... classified structures \n")
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+  classifiedStructureTableFull <- read_delim(
+    file = gzfile(description = pathDataInterimTablesCleanedStructureFileClassified),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   select(
     structureCleanedSmiles = smiles,
     structureCleaned_class = class_results,
@@ -195,8 +197,10 @@ structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
 
-cat("... with their classification \n")
-structureFull <-
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+  cat("... with their classification \n")
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+  structureFull <-
   left_join(structureFull, classifiedStructureTableFull)
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &

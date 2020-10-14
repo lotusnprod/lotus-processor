@@ -109,8 +109,8 @@ name2inchi_cts <- function(i)
       from = "Chemical Name",
       to = "InChI Code",
       verbose = FALSE,
-      choices = 1
-    )
+      match = "first"
+    )[[1]]
     return(x)
   }
   , error = function(e) {
