@@ -24,7 +24,7 @@ openDb <- read_delim(
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  data.frame()
+  tibble()
 
 cat("... open DB \n")
 openDbMaximal <- read_delim(
@@ -34,7 +34,7 @@ openDbMaximal <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame()
+  tibble()
 
 cat("... DNP DB \n")
 dnpDb <- read_delim(
@@ -53,7 +53,7 @@ dnpDb <- read_delim(
     structureCleanedInchikey2D,
     .keep_all = TRUE
   ) %>%
-  data.frame()
+  tibble()
 
 cat("... metadata ... \n")
 cat("... organisms \n")
@@ -63,7 +63,7 @@ organismMetadata <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame() %>%
+  tibble() %>%
   mutate(
     organismCleaned_dbTaxo_1kingdom = ifelse(
       test = organismCleaned_dbTaxo_1kingdom == "Viridiplantae",
@@ -121,7 +121,7 @@ structureMetadata_1 <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame()
+  tibble()
 
 cat("... structures classification \n")
 structureMetadata_2 <- read_delim(
@@ -131,7 +131,7 @@ structureMetadata_2 <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame()
+  tibble()
 
 cat("... references \n")
 referenceMetadata <-
@@ -141,7 +141,8 @@ referenceMetadata <-
     col_types = cols(.default = "c"),
     escape_double = FALSE,
     trim_ws = TRUE
-  )
+  ) %>%
+  tibble()
 
 cat("joining DNP and openDB \n")
 inhouseDb <-
@@ -199,6 +200,7 @@ inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
               list = . >= 1,
               values = 1
             )) %>%
+  distinct(structureCleanedInchikey2D, .keep_all = TRUE) %>%
   data.frame()
 
 inhouseDb_structures_dis <- inhouseDb %>%
@@ -253,6 +255,7 @@ inhouseDb_organism_2plot_wide <-
               list = . >= 1,
               values = 1
             )) %>%
+  distinct(organismCleaned, .keep_all = TRUE) %>%
   data.frame()
 
 inhouseDb_organism_dis <- inhouseDb %>%
@@ -311,6 +314,7 @@ inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
               list = . >= 1,
               values = 1
             )) %>%
+  distinct(structureCleanedInchikey2D, organismCleaned, .keep_all = TRUE) %>%
   data.frame()
 
 upset(
@@ -432,6 +436,7 @@ try({
                 list = . >= 1,
                 values = 1
               )) %>%
+    distinct(organismCleaned, .keep_all = TRUE) %>%
     data.frame()
   
   inhouseDb_most_structures_2plot_wide <-
@@ -851,6 +856,16 @@ pdf(
 )
 
 getGraphStudiedPlant(plant = "Tripterygium wilfordii")
+dev.off()
+
+cat("... drawing Citrus aurantium metabolites repartition \n")
+pdf(
+  file = file.path(pathDataProcessedFigures, "citrusAurantium.pdf"),
+  width = 16,
+  height = 9
+)
+
+getGraphStudiedPlant(plant = "Citrus aurantium")
 dev.off()
 
 cat("... drawing Camellia sinensis metabolites repartition \n")
@@ -2349,16 +2364,16 @@ draw_chord <-
   {
     try({
       table <- data.frame(data)
-      table <- table[!is.na(table[, biological_level]),]
-      table <- table[!is.na(table[, chemical_level]),]
+      table <- table[!is.na(table[, biological_level]), ]
+      table <- table[!is.na(table[, chemical_level]), ]
       
       if (!is.null(biological_filter_value))
         table <-
-        table[table[, biological_filter_level] %in% biological_filter_value,]
+        table[table[, biological_filter_level] %in% biological_filter_value, ]
       
       if (!is.null(chemical_filter_value))
         table <-
-        table[table[, chemical_filter_level] %in% chemical_filter_value,]
+        table[table[, chemical_filter_level] %in% chemical_filter_value, ]
       
       m1 <-
         as.data.table(table(table[, c(biological_level, chemical_level)]))
