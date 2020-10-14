@@ -98,14 +98,12 @@ if (nrow(openDbMinimal %>%
          validated = NA,
          comments = NA)
 
-sampleONPDB <- bind_rows(
-  sampleONPDB_doi,
-  sampleONPDB_original,
-  # sampleONPDB_publishingDetails,
-  sampleONPDB_pubmed,
-  sampleONPDB_split,
-  sampleONPDB_title
-) %>%
+sampleONPDB <- bind_rows(sampleONPDB_doi,
+                         sampleONPDB_original,
+                         # sampleONPDB_publishingDetails,
+                         # sampleONPDB_pubmed,
+                         sampleONPDB_split,
+                         sampleONPDB_title) %>%
   mutate_all(as.character)
 
 cat("... attributing curator \n")
@@ -121,19 +119,19 @@ sampleONPDB[51:100, "curator"] <- "JB"
 sampleONPDB[101:150, "curator"] <- "PMA"
 
 cat("... knapsack entries \n")
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-sampleKnapsack <- openDbMinimal %>%
-  filter(database == "kna_1") %>%
-  sample_n(150) %>%
-  mutate(
-    curator = sample(c("AR", "JB", "PMA"),
-                     size = nrow(.),
-                     replace = TRUE),
-    validated = NA,
-    comments = NA
-  )
+# set.seed(seed = 42,
+#          kind = "Mersenne-Twister",
+#          normal.kind = "Inversion")
+# sampleKnapsack <- openDbMinimal %>%
+#   filter(database == "kna_1") %>%
+#   sample_n(150) %>%
+#   mutate(
+#     curator = sample(c("AR", "JB", "PMA"),
+#                      size = nrow(.),
+#                      replace = TRUE),
+#     validated = NA,
+#     comments = NA
+#   )
 
 cat("... additional entries \n")
 set.seed(seed = 42,
@@ -192,24 +190,26 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesAnalysedSampleAllONPDB, "\n")
-write.table(
-  x = sampleONPDB,
-  file = pathDataInterimTablesAnalysedSampleAllONPDB,
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (exists("sampleONPDB"))
+  write.table(
+    x = sampleONPDB,
+    file = pathDataInterimTablesAnalysedSampleAllONPDB,
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 cat(pathDataInterimTablesAnalysedSampleKnapsack, "\n")
-write.table(
-  x = sampleKnapsack,
-  file = pathDataInterimTablesAnalysedSampleKnapsack,
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+if (exists("sampleKnapsack"))
+  write.table(
+    x = sampleKnapsack,
+    file = pathDataInterimTablesAnalysedSampleKnapsack,
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 cat(file.path(
   pathDataInterimTablesAnalysed,
