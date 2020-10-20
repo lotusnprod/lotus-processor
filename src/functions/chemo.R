@@ -40,7 +40,7 @@ library(webchem)
 name2inchi_cactus <- function(i)
 {
   tryCatch({
-    cpd <- dataTranslatedNominal[i, "nameCleaned"]
+    cpd <- dataForCactus[i, "nameCleaned"]
     url <-
       paste("https://cactus.nci.nih.gov/chemical/structure/",
             cpd,
@@ -94,6 +94,27 @@ preparing_name <- function(x) {
   x$nameCleaned <- gsub("–", "-", x$nameCleaned)
   x$nameCleaned <- gsub("\\) ", "\\)", x$nameCleaned)
   x$nameCleaned <- trimws(x$nameCleaned)
+  x$nameCleaned <- tolower(x$nameCleaned)
+  x$nameCleaned <-
+    gsub(
+      pattern = "-NA$",
+      replacement = "",
+      x = gsub(
+        pattern = ",$",
+        replacement = "",
+        x = (paste(
+          sep = "",
+          gsub(
+            pattern = ".*,([^.]+)\\:.*",
+            replacement =  "\\1",
+            x = x$nameCleaned
+          ),
+          "-",
+          str_extract(pattern = ".*,",
+                      string = x$nameCleaned)
+        ))
+      )
+    )
   
   return(x)
 }
@@ -105,7 +126,7 @@ name2inchi_cts <- function(i)
 {
   tryCatch({
     x <- cts_convert(
-      query = dataTranslatedNominal_cts[i, "nameCleaned"],
+      query = dataForCTS[i, "nameCleaned"],
       from = "Chemical Name",
       to = "InChI Code",
       verbose = FALSE,

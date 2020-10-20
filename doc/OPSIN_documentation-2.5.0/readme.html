@@ -1,0 +1,209 @@
+<h1>OPSIN - Open Parser for Systematic IUPAC Nomenclature</h1>
+
+<p><strong>Version 2.5.0 (see ReleaseNotes.txt for what's new in this version)</strong> <br />
+<strong>Source code: <a href="https://github.com/dan2097/opsin">https://github.com/dan2097/opsin</a></strong> <br />
+<strong>Web interface and informational site: <a href="http://opsin.ch.cam.ac.uk/">http://opsin.ch.cam.ac.uk/</a></strong> <br />
+<strong>License: <a href="https://opensource.org/licenses/MIT">MIT License</a></strong>  </p>
+
+<p>OPSIN is a Java(1.6+) library for IUPAC name-to-structure conversion offering high recall and precision on organic chemical nomenclature. <br />
+Supported outputs are SMILES, CML (Chemical Markup Language) and InChI (IUPAC International Chemical Identifier)</p>
+
+<h3>Simple Usage Examples</h3>
+
+<h4>Convert a chemical name to SMILES</h4>
+
+<p><code>java -jar opsin-2.5.0-jar-with-dependencies.jar -osmi input.txt output.txt</code> <br />
+where input.txt contains chemical name/s, one per line</p>
+
+<pre><code>NameToStructure nts = NameToStructure.getInstance();
+String smiles = nts.parseToSmiles("acetonitrile");
+</code></pre>
+
+<h4>Convert a chemical name to CML</h4>
+
+<p><code>java -jar opsin-2.5.0-jar-with-dependencies.jar -ocml input.txt output.txt</code> <br />
+where input.txt contains chemical name/s, one per line</p>
+
+<pre><code>NameToStructure nts = NameToStructure.getInstance();
+String cml = nts.parseToCML("acetonitrile");
+</code></pre>
+
+<h4>Convert a chemical name to StdInChI/StdInChIKey/InChI with FixedH</h4>
+
+<p><code>java -jar opsin-2.5.0-jar-with-dependencies.jar -ostdinchi input.txt output.txt</code> <br />
+<code>java -jar opsin-2.5.0-jar-with-dependencies.jar -ostdinchikey input.txt output.txt</code> <br />
+<code>java -jar opsin-2.5.0-jar-with-dependencies.jar -oinchi input.txt output.txt</code> <br />
+where input.txt contains chemical name/s, one per line</p>
+
+<pre><code>NameToInchi nti = new NameToInchi()
+String stdinchi = nti.parseToStdInchi("acetonitrile");
+String stdinchikey = nti.parseToStdInchiKey("acetonitrile");
+String inchi = nti.parseToInchi("acetonitrile");
+</code></pre>
+
+<p>NOTE: OPSIN's non-standard InChI includes an additional layer (FixedH) that indicates which tautomer the chemical name described. StdInChI aims to be tautomer independent.</p>
+
+<h3>Advanced Usage</h3>
+
+<p>OPSIN 2.5.0 allows enabling of the following options:</p>
+
+<ul>
+<li>allowRadicals: Allows substituents to be interpretable e.g. allows interpretation of "ethyl"</li>
+<li>wildcardRadicals: If allowRadicals is enabled, this option uses atoms in the output to represent radicals: 'R' in CML and '*' in SMILES e.g. changes the output of ethyl from C[CH2] to CC*</li>
+<li>detailedFailureAnalysis: Provides a potentially more accurate reason as to why a chemical name could not be parsed. This is done by parsing the chemical name from right to left. The trade-off for enabling this is slightly increased memory usage.</li>
+<li>allowAcidsWithoutAcid: Allows interpretation of acids without the word acid e.g. "acetic"</li>
+<li>allowUninterpretableStereo: Allows stereochemistry uninterpretable by OPSIN to be ignored (When used as a library the OpsinResult has a status of WARNING if stereochemistry was ignored)</li>
+<li>verbose: Enables debugging output*</li>
+</ul>
+
+<p>*When used as a library this is done by modifying Log4J's logging level e.g. <code>Logger.getLogger("uk.ac.cam.ch.wwmm.opsin").setLevel(Level.DEBUG);</code></p>
+
+<p>The usage of these options on the command line is described in the command line's help dialog accessible via:
+<code>java -jar opsin-2.5.0-jar-with-dependencies.jar -h</code></p>
+
+<p>These options may be controlled using the following code:</p>
+
+<pre><code>NameToStructure nts = NameToStructure.getInstance();
+NameToStructureConfig ntsconfig = new NameToStructureConfig();
+//a new NameToStructureConfig starts as a copy of OPSIN's default configuration
+ntsconfig.setAllowRadicals(true);
+OpsinResult result = nts.parseChemicalName("acetonitrile", ntsconfig);
+String cml = result.getCml();
+String smiles = result.getSmiles();
+String stdinchi = NameToInchi.convertResultToStdInChI(result);
+</code></pre>
+
+<p><code>result.getStatus()</code> may be checked to see if the conversion was successful.
+If a structure was generated but OPSIN believes there may be a problem a status of WARNING is returned. Currently this may occur if the name appeared to be ambiguous or stereochemistry was ignored.
+By default only optical rotation specification is ignored (this cannot be converted to stereo-configuration algorithmically).</p>
+
+<p>Convenience methods like <code>result.nameAppearsToBeAmbiguous()</code> may be used to check the cause of the warning.</p>
+
+<p>NOTE: (Std)InChI cannot be generated for polymers or radicals generated in combination with the wildcardRadicals option</p>
+
+<h3>Availability</h3>
+
+<p>OPSIN is available as a standalone JAR from GitHub, <a href="https://github.com/dan2097/opsin/releases">https://github.com/dan2097/opsin/releases</a> <br />
+<code>opsin-2.5.0-jar-with-dependencies.jar</code> can be executed as a commandline application or added to the classpath for library usage.
+OPSIN is also available from the Maven Central Repository for users of Apache Maven.  </p>
+
+<p>If you are using Maven then add the following to your pom.xml:</p>
+
+<pre><code>&lt;dependency&gt;
+   &lt;groupId&gt;uk.ac.cam.ch.opsin&lt;/groupId&gt;
+   &lt;artifactId&gt;opsin-core&lt;/artifactId&gt;
+   &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>If you need just CML or SMILES output support</p>
+
+<p>or</p>
+
+<pre><code>&lt;dependency&gt;
+   &lt;groupId&gt;uk.ac.cam.ch.opsin&lt;/groupId&gt;
+   &lt;artifactId&gt;opsin-inchi&lt;/artifactId&gt;
+   &lt;version&gt;2.5.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+
+<p>if you also need InChI output support.</p>
+
+<h4>Building from source</h4>
+
+<p>To build OPSIN from source, download Maven 3 and download OPSIN's source code.</p>
+
+<p>Running <code>mvn package assembly:assembly</code> in the root of OPSIN's source will build the jar with dependencies</p>
+
+<p>Running <code>mvn assembly:assembly</code> in the opsin-core folder will build the "excludingInChI-jar-with-dependencies"</p>
+
+<h3>About OPSIN</h3>
+
+<p>The workings of OPSIN are more fully described in:</p>
+
+<pre><code>Chemical Name to Structure: OPSIN, an Open Source Solution
+Daniel M. Lowe, Peter T. Corbett, Peter Murray-Rust, Robert C. Glen
+Journal of Chemical Information and Modeling 2011 51 (3), 739-753
+</code></pre>
+
+<p>If you use OPSIN in your work, then it would be great if you could cite us.</p>
+
+<p>The following list broadly summarises what OPSIN can currently do and what will be worked on in the future.</p>
+
+<h4>Supported nomenclature includes:</h4>
+
+<ul>
+<li>alkanes/alkenes/alkynes/heteroatom chains e.g. hexane, hex-1-ene, tetrasiloxane and their cyclic analogues e.g. cyclopropane</li>
+<li>All IUPAC 1993 recommended rings</li>
+<li>Trivial acids</li>
+<li>Hantzsch-Widman e.g. 1,3-oxazole</li>
+<li>Spiro systems</li>
+<li>All von Baeyer rings e.g. bicyclo[2.2.2]octane</li>
+<li>Hydro e.g. 2,3-dihydropyridine</li>
+<li>Indicated hydrogen e.g. 1H-benzoimidazole</li>
+<li>Heteroatom replacement</li>
+<li>Specification of charge e.g. ium/ide/ylium/uide</li>
+<li>Multiplicative nomenclature e.g. ethylenediaminetetraacetic acid</li>
+<li>Conjunctive nomenclature e.g. cyclohexaneethanol</li>
+<li>Fused ring systems e.g. imidazo[4,5-d]pyridine</li>
+<li>Ring assemblies e.g. biphenyl</li>
+<li>Most prefix and infix functional replacement nomenclature</li>
+<li>The following functional classes: acetals, acids, alcohols, amides, anhydrides, anilides, azetidides, azides, bromides, chlorides,
+cyanates, cyanides, esters, di/tri/tetra esters, ethers, fluorides, fulminates, glycol ethers, glycols, hemiacetals, hemiketal,
+hydrazides, hydrazones, hydrides, hydroperoxides, hydroxides, imides, iodides, isocyanates, isocyanides, isoselenocyanates, isothiocyanates,
+ketals, ketones, lactams, lactims, lactones, mercaptans, morpholides, oxides, oximes, peroxides, piperazides, piperidides, pyrrolidides,
+selenides, selenocyanates, selenoketones, selenolsselenosemicarbazones, selenones, selenoxides, selones, semicarbazones, sulfides, sulfones,
+sulfoxides, sultams, sultims, sultines, sultones, tellurides, telluroketones, tellurones, tellurosemicarbazones, telluroxides, thiocyanates,
+thioketones, thiols, thiosemicarbazones</li>
+<li>Greek letters</li>
+<li>Lambda convention</li>
+<li>Amino Acids and derivatives</li>
+<li>Structure-based polymer names e.g. poly(2,2'-diamino-5-hexadecylbiphenyl-3,3'-diyl)</li>
+<li>Bridge prefixes e.g. methano</li>
+<li>Specification of oxidation numbers and charge on elements</li>
+<li>Perhalogeno terms</li>
+<li>Subtractive prefixes: deoxy, dehydro, anhydro, demethyl, deamino</li>
+<li>Stoichiometry ratios and mixture indicators</li>
+<li>Nucleosides, (oligo)nucleotides and their esters</li>
+<li>Carbohydrate nomenclature</li>
+<li>Simple CAS names including inverted CAS names</li>
+<li>Steroids including alpha/beta stereochemistry</li>
+<li>Isotopic labelling</li>
+<li>E/Z/R/S stereochemistry</li>
+<li>cis/trans indicating relative stereochemistry on rings and as a synonym of E/Z</li>
+</ul>
+
+<h4>Currently UNsupported nomenclature includes:</h4>
+
+<ul>
+<li>Other less common stereochemical terms</li>
+<li>Most alkaloids/terpenoids</li>
+<li>Natural product specific nomenclature operations</li>
+</ul>
+
+<h3>Developers and Contributors</h3>
+
+<ul>
+<li>Rich Apodaca</li>
+<li>Albina Asadulina</li>
+<li>Peter Corbett</li>
+<li>Daniel Lowe (Current maintainer)</li>
+<li>John Mayfield</li>
+<li>Peter Murray-Rust</li>
+<li>Noel O'Boyle</li>
+<li>Mark Williamson</li>
+</ul>
+
+<p>Thanks also to the many users who have contributed through suggestions and bug reporting.</p>
+
+<p><img src="https://www.yourkit.com/images/yklogo.png" alt="YourKit Logo" title="" /></p>
+
+<p>OPSIN's developers use YourKit to profile and optimise code.</p>
+
+<p>YourKit supports open source projects with its full-featured Java Profiler.
+YourKit, LLC is the creator of <a href="https://www.yourkit.com/java/profiler/index.jsp">YourKit Java Profiler</a> and <a href="https://www.yourkit.com/.net/profiler/index.jsp">YourKit .NET Profiler</a>, innovative and intelligent tools for profiling Java and .NET applications.</p>
+
+<p>Good Luck and let us know if you have problems, comments or suggestions!
+Bugs may be reported on the project's <a href="https://github.com/dan2097/opsin/issues">issue tracker</a>.</p>
+
+<p><a href="https://travis-ci.com/dan2097/opsin"><img src="https://travis-ci.com/dan2097/opsin.svg?branch=master" alt="Build Status" title="" /></a></p>
