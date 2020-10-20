@@ -25,6 +25,19 @@ dataPreparedNames <- preparing_name(x = dataOriginal)
 dataPreparedNamesDistinct <- dataPreparedNames %>%
   distinct(nameCleaned)
 
+cat("ensuring directories exist \n")
+ifelse(
+  test = !dir.exists(pathDataInterimTablesTranslated),
+  yes = dir.create(pathDataInterimTablesTranslated),
+  no = paste(pathDataInterimTablesTranslated, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimTablesTranslatedStructure),
+  yes = dir.create(pathDataInterimTablesTranslatedStructure),
+  no = paste(pathDataInterimTablesTranslatedStructure, "exists")
+)
+
 cat("exporting prepared names ... \n")
 cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
 write.table(
@@ -114,7 +127,7 @@ dataForCTS <- dataInterim_2 %>%
 
 cat("translating structures with CTS (slow but more results) \n")
 if (nrow(dataForCTS) == 0)
-  dataForCTS[1,] <- NA
+  dataForCTS[1, ] <- NA
 
 dataTranslatedNominal_cts <- dataForCTS %>%
   mutate(inchiNominal_cts = invisible(
@@ -160,19 +173,6 @@ dataTranslated <- left_join(dataInterim_2,
       no = inchiNominal_cts
     )
   ))
-
-cat("ensuring directories exist \n")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedStructure),
-  yes = dir.create(pathDataInterimTablesTranslatedStructure),
-  no = paste(pathDataInterimTablesTranslatedStructure, "exists")
-)
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedStructureNominal, "\n")

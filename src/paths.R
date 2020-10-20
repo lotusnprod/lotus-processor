@@ -8,7 +8,7 @@ mode <- Sys.getenv("FULL", unset = "min")
 
 # root
 ## bin
-pathBin <- Sys.getenv("DATA_PATH",
+pathBin <- Sys.getenv("BIN_PATH",
                       unset = "../bin")
 
 ## opsin
