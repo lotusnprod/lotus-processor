@@ -62,39 +62,123 @@ name2inchi_cactus <- function(i)
 
 preparing_name <- function(x) {
   x$nameCleaned <- x$structureOriginal_nominal
-  x$nameCleaned <- gsub("\\u03b1", "alpha", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u03b2", "beta", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u03b3", "gamma", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u03b4", "delta", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u03b5", "epsilon", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u03c9", "omega", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("(\\u00b1)-", "", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u00f6", "ö", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("\\u2192", "->", x$nameCleaned,
-                        fixed = TRUE)
-  x$nameCleaned <- gsub("α", "alpha", x$nameCleaned)
-  x$nameCleaned <- gsub("Α", "alpha", x$nameCleaned)
-  x$nameCleaned <- gsub("β", "beta", x$nameCleaned)
-  x$nameCleaned <- gsub("Β", "beta", x$nameCleaned)
-  x$nameCleaned <- gsub("γ", "gamma", x$nameCleaned)
-  x$nameCleaned <- gsub("Γ", "gamma", x$nameCleaned)
-  x$nameCleaned <- gsub("δ", "delta", x$nameCleaned)
-  x$nameCleaned <- gsub("Δ", "delta", x$nameCleaned)
-  x$nameCleaned <- gsub("ε", "epsilon", x$nameCleaned)
-  x$nameCleaned <- gsub("Ε", "epsilon", x$nameCleaned)
-  x$nameCleaned <- gsub("- ", "-", x$nameCleaned)
-  x$nameCleaned <- gsub("–", "-", x$nameCleaned)
-  x$nameCleaned <- gsub("\\) ", "\\)", x$nameCleaned)
-  x$nameCleaned <- trimws(x$nameCleaned)
-  x$nameCleaned <- tolower(x$nameCleaned)
+  x$nameCleaned <-
+    gsub(
+      pattern = "\\u03b1",
+      replacement =  "alpha",
+      x = x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      "\\u03b2",
+      replacement = "beta",
+      x =  x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      "\\u03b3",
+      replacement = "gamma",
+      x = x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      "\\u03b4",
+      replacement = "delta",
+      x =  x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      pattern = "\\u03b5",
+      replacement = "epsilon",
+      x = x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      pattern = "\\u03c9",
+      replacement = "omega",
+      x =  x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      pattern = "(\\u00b1)-",
+      replacement = "",
+      x = x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      pattern = "\\u00f6",
+      replacement = "ö",
+      x = x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(
+      pattern = "\\u2192",
+      replacement =  "->",
+      x =  x$nameCleaned,
+      fixed = TRUE
+    )
+  x$nameCleaned <-
+    gsub(pattern = "α",
+         replacement = "alpha",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "Α",
+         replacement = "alpha",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "β",
+         replacement = "beta",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "Β",
+         replacement = "beta",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "γ",
+         replacement = "gamma",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "Γ",
+         replacement =  "gamma",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "δ",
+         replacement = "delta",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "Δ",
+         replacement = "delta",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "ε",
+         replacement =  "epsilon",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "Ε",
+         replacement = "epsilon",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "- ",
+         replacement =  "-",
+         x =  x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "–",
+         replacement = "-",
+         x = x$nameCleaned)
+  x$nameCleaned <-
+    gsub(pattern = "\\) ",
+         replacement =  "\\)",
+         x = x$nameCleaned)
+  x$nameCleaned <- trimws(x = x$nameCleaned)
+  x$nameCleaned <- tolower(x = x$nameCleaned)
   x$nameCleaned <-
     gsub(
       pattern = "-NA$",
