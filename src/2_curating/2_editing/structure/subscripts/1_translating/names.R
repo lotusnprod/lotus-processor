@@ -19,6 +19,9 @@ dataOriginal <- read_delim(
 ) %>%
   mutate_all(as.character)
 
+if (nrow(dataOriginal) == 0)
+  dataOriginal[1, "structureOriginal_nominal"] <- NA
+
 cat("preparing names \n")
 dataPreparedNames <- preparing_name(x = dataOriginal)
 
@@ -127,7 +130,7 @@ dataForCTS <- dataInterim_2 %>%
 
 cat("translating structures with CTS (slow but more results) \n")
 if (nrow(dataForCTS) == 0)
-  dataForCTS[1, ] <- NA
+  dataForCTS[1, "nameCleaned"] <- NA
 
 dataTranslatedNominal_cts <- dataForCTS %>%
   mutate(inchiNominal_cts = invisible(
