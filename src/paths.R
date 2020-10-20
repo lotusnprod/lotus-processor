@@ -7,6 +7,14 @@ source("functions/database.R")
 mode <- Sys.getenv("FULL", unset = "min")
 
 # root
+## bin
+pathBin <- Sys.getenv("DATA_PATH",
+                      unset = "../bin")
+
+## opsin
+pathBinOpsin <- file.path(pathBin,
+                          "opsin-2.5.0-jar-with-dependencies.jar")
+
 ## data
 pathData <- Sys.getenv("DATA_PATH",
                        unset = "../data")
@@ -1055,6 +1063,16 @@ pathDataInterimTablesTranslatedStructureSmiles <-
 ### nominal
 pathDataInterimTablesTranslatedStructureNominal <-
   file.path(pathDataInterimTablesTranslatedStructure, "nominal.tsv.gz")
+
+### prepared_1
+pathDataInterimTablesTranslatedStructurePrepared_1 <-
+  file.path(pathDataInterimTablesTranslatedStructure,
+            "prepared_1.txt")
+
+### opsin
+pathDataInterimTablesTranslatedStructureOpsin <-
+  file.path(pathDataInterimTablesTranslatedStructure,
+            "opsin.txt")
 
 ### both
 pathDataInterimTablesTranslatedStructureFinal <-
