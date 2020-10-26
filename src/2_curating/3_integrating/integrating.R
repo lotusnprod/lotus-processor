@@ -162,7 +162,8 @@ referenceTableFull <- read_delim(
   col_types = cols(.default = "c"),
   escape_double = FALSE,
   trim_ws = TRUE
-)
+) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 cat("joining ... \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
