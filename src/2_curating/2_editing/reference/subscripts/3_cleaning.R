@@ -18,7 +18,7 @@ dataTranslated <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  data.frame()
+  tibble()
 
 ### Find something appropriate
 # test <- dataTranslated %>%
@@ -220,9 +220,7 @@ dataCleaned <- dataTranslated %>%
   mutate(referenceCleanedValue = referenceTranslatedValue,
          referenceCleanedType = referenceTranslatedType) %>%
   select(-referenceTranslatedValue,
-         -referenceTranslatedType) %>%
-  data.frame() %>%
-  distinct()
+         -referenceTranslatedType)
 
 rm(dataTranslated)
 
@@ -255,11 +253,11 @@ dataCleanedScore <- dataCleaned %>%
   ) %>%
   filter(referenceCleanedType == "scoreTitleOrganism") %>%
   select(-drop) %>%
-  data.frame() %>%
+  tibble() %>%
   distinct()
 
 dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore) %>%
-  data.frame() %>%
+  tibble() %>%
   filter(!is.na(organismOriginal))
 
 rm(dataCleaned)
@@ -316,7 +314,6 @@ dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
-  data.frame() %>%
   distinct(organismOriginal,
            organismCleaned,
            referenceValue,
@@ -374,7 +371,6 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
   arrange(desc(as.numeric(referenceCleaned_scoreComplement_total))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   ungroup() %>%
-  data.frame() %>%
   distinct(organismOriginal,
            organismCleaned,
            referenceValue,
@@ -384,7 +380,8 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
 rm(dataCleanedJoinedWide)
 
 dataCleanedJoinedWideScore <- bind_rows(dataCleanedJoinedWide_1,
-                                        dataCleanedJoinedWide_2)
+                                        dataCleanedJoinedWide_2) %>%
+  mutate(referenceCleaned_doi = toupper(referenceCleaned_doi))
 
 rm(dataCleanedJoinedWide_1,
    dataCleanedJoinedWide_2)
@@ -412,7 +409,9 @@ PMC_ids <- read_delim(
   select(DOI,
          PMCID,
          PMID) %>%
-  mutate_all(as.character)
+  mutate(DOI = toupper(DOI)) %>%
+  mutate_all(as.character) %>%
+  tibble()
 
 cat("adding PMID and PMCID \n")
 df_doi <- left_join(subDataClean_doi,

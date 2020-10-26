@@ -373,7 +373,8 @@ globalSample <- bind_rows(table_old, table) %>%
   select(-referenceCleanedPmcid,
          -referenceCleanedPmid,
          -referenceCleanedTitle) %>%
-  filter(!is.na(validated))
+  filter(!is.na(validated)) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 cat("adding metadata \n")
 cat("... organisms \n")
