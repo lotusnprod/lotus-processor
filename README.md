@@ -257,7 +257,10 @@ You need to have access to the metabomaps server to be able to pull the data, if
 from scratch.
 
 ### Access to metabomaps
-Add this to your ~/.ssh/config
+Add this to your
+```
+ ~/.ssh/config
+```
 
 ```
 Host metabomaps
