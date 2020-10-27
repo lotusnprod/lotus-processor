@@ -6,3 +6,4 @@
 **/.DS_Store
 /backup
 /validation
+/dvc_pipeline_outputs
