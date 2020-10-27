@@ -25,6 +25,7 @@ dependencies:
   - r-dplyr
   - r-forcats
   - r-formula
+  - r-gdata
   - r-ggalluvial
   - r-ggfittext
   - r-ggplot2
