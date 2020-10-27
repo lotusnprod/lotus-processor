@@ -32,8 +32,8 @@ split_data_table <-
         filter(!is.na(sample[, 1]))
       
       write.table(
-        sample,
-        paste(
+        x = sample,
+        file = paste(
           path_to_store,
           text,
           str_pad(
@@ -45,7 +45,7 @@ split_data_table <-
           sep = ""
         ),
         row.names = FALSE,
-        quote = FALSE,
+        quote = TRUE,
         sep = "\t",
         fileEncoding = "UTF-8"
       )
