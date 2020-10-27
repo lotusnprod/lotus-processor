@@ -22,7 +22,7 @@ data_original <- read_delim(
 
 # selecting
 data_selected <- data_original %>%
-  mutate(biologicalsource = paste(genus, origin_species, sep = " ")) %>% 
+  mutate(biologicalsource = paste(genus, origin_species, sep = " ")) %>%
   select(
     npaid,
     name = compound_names,
@@ -42,11 +42,13 @@ data_standard <-
     data_selected = data_selected,
     db = "npa_2",
     structure_field = c("name", "inchi", "smiles"),
-    reference_field = c("reference_authors",
-                        "reference_doi", 
-                        "reference_journal",
-                        "reference_pubmed",
-                        "reference_title")
+    reference_field = c(
+      "reference_authors",
+      "reference_doi",
+      "reference_journal",
+      "reference_pubmed",
+      "reference_title"
+    )
   )
 
 # exporting

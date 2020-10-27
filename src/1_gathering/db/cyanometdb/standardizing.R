@@ -51,7 +51,6 @@ data_selected <- data_manipulated %>%
   ) %>%
   data.frame()
 
-
 # standardizing
 data_standard <-
   standardizing_original(

@@ -29,14 +29,14 @@ data_transposed <- t(data_standard) %>%
 RESPECT_clean <- function(dfsel)
 {
   df_2 <- dfsel %>%
-    select_if(~ sum(!is.na(.)) > 0) %>%
+    select_if( ~ sum(!is.na(.)) > 0) %>%
     mutate_all(as.character) %>%
     filter_at(vars(-V1_1), any_vars(. == "SP$SAMPLE")) %>%
     tibble()
   
   for (i in 1:nrow(df_2)) {
     df_2[i, "biologicalsource_col"] <-
-      which(sapply(df_2[i,], function(x)
+      which(sapply(df_2[i, ], function(x)
         any(x == "SP$SAMPLE")))
   }
   
@@ -47,7 +47,7 @@ RESPECT_clean <- function(dfsel)
   
   for (i in 1:nrow(df_2)) {
     df_2[i, "inchi_col"] <-
-      which(sapply(df_2[i,], function(x)
+      which(sapply(df_2[i, ], function(x)
         any(x == "CH$INCHI")))
   }
   
@@ -58,7 +58,7 @@ RESPECT_clean <- function(dfsel)
   
   for (i in 1:nrow(df_2)) {
     df_2[i, "smiles_col"] <-
-      which(sapply(df_2[i,], function(x)
+      which(sapply(df_2[i, ], function(x)
         any(x == "CH$SMILES")))
   }
   
