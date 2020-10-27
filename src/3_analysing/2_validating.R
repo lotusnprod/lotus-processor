@@ -76,9 +76,6 @@ myDirtyP <- function(table, title, yaxismax) {
       name = 'correct',
       color = I('green')
     ) %>%
-    add_trace(y = ~ mix,
-              name = 'ambiguous',
-              color = I("orange")) %>%
     add_trace(
       y = ~ n,
       name = 'uncorrect',
@@ -104,9 +101,6 @@ myDirtyQ <- function(table, title, yaxismax) {
       name = 'correct',
       color = I('green')
     ) %>%
-    add_trace(y = ~ mix,
-              name = 'ambiguous',
-              color = I("orange")) %>%
     add_trace(
       y = ~ n,
       name = 'uncorrect',

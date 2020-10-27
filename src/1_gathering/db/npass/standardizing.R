@@ -41,6 +41,7 @@ data_original_3 <- read_delim(
 
 data_original_4 <- read_delim(
   file = database$sourceFiles$tsvSpeciesPair,
+  col_types = cols(.default = "c"),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE

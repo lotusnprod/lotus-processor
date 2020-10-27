@@ -245,20 +245,18 @@ end
 end
 ```
 
-
 ## Getting Started
-
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
-
-You need Git, [DVC](https://www.dvc.org).
+You need:
+- Git
+- [DVC](https://www.dvc.org).
 
 You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
 from scratch.
 
 ### Access to metabomaps
-
 Add this to your ~/.ssh/config
 
 ```
@@ -270,7 +268,6 @@ Host metabomaps
 ```
 
 ### Pull the repository
-
 ```console
 git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
 
@@ -279,16 +276,12 @@ dvc pull  # This will take a while
 ```
 
 ### Having the data in a different place
-
 If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
 
 ### If you want to build only a simple DB
-
 make -C src/1_gathering/db -B alkamid 
 
-
 ### Use docker to build
-
 Install docker on your machine, make sure it is on your path
 
 then
@@ -300,16 +293,15 @@ make docker-bash
 
 This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
 
-
 ### Packages
-
 #### Conda environement
 
-A "loose" environment_loose.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install.
-Install it by running in the home directory. Else use the environment_notloose.yml for strict mirroring of the installed packages.
+A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory. 
+
+We will also create another environment for strict mirroring of the installed packages. (TO DO)
 
 ````
-conda env create -f environment_loose.yml
+conda env create -f environment.yml
 ````
 
 If your environement is not directly sources by your default bash run the following lines
@@ -329,7 +321,6 @@ $ cd src
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
 
 ## Minimal working example
-
 A minimal working example containing XXX entries coming from various DB's is proposed.
 Use this example to check if all steps are running correctly on your machine.
 
@@ -342,10 +333,7 @@ gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
 
 ```
 
-
-
 ### Description
-
 The minimal working example file contains following columns:
 
 # TO UPDATE
@@ -355,7 +343,6 @@ Give an example
 ```
 
 ### Final output
-
 If everything went well, the output of the minimal working example should be:
 
 # TO UPDATE
@@ -365,15 +352,12 @@ Give an example
 ```
 
 ## Explanations
-
 Add additional notes 
 
 ## Contributing
-
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
-
 * **Adriano Rutz** - *Initial work* - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
 * **Pierre-Marie Allard** - *Investigator* - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
 * **Jonathan Bisson** - *Hacker in Chief* - [bjo](https://gitlab.unige.ch/bjo)
@@ -381,6 +365,4 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 See also the list of [contributors](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members) who participated in this project.
 
 ## License
-
 This project is licensed under the GNU GPLv3 license - see the [LICENSE.md](LICENSE.md) file for details
-
