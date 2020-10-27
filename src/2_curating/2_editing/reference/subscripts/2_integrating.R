@@ -200,7 +200,6 @@ dataFull <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-
 if (file.exists(pathDataInterimDictionariesOrganismDictionary))
   cat("...  cleaned organisms \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary))

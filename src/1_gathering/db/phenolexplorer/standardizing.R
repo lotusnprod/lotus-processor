@@ -7,6 +7,7 @@ source("functions/standardizing.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(readxl)
 
 # get paths
 database <- databases$get("phenolexplorer")
