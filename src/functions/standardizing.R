@@ -60,7 +60,9 @@ standardizing_original <- function(data_selected,
       gsub("\t", " ", x))
   
   data_standard <- data_standard %>%
-    mutate_all(trimws)
+    mutate_all( ~ gsub('[^ -~]', '', .)) %>%
+    mutate_all(.tbl = .,
+               .funs = trimws)
   
   return(data_standard)
 }

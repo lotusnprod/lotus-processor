@@ -58,23 +58,32 @@ data_selected <- data_original %>%
   data.frame()
 
 data_corrected <- data_selected %>%
+  mutate(reference_publishingDetails = reference_doi,
+         reference_authors = reference_doi) %>%
+  mutate(n = nchar(reference_doi)) %>%
   mutate(
-    reference_publishingDetails = reference_doi,
-    reference_authors = reference_doi
-  ) %>%
-  mutate(
-    reference_doi = str_extract(string = reference_doi, pattern = "^10.*"),
+    reference_pubmed = ifelse(
+      test = n == 8,
+      yes = str_extract(string = reference_doi, pattern = "[0-9]{8}"),
+      no = NA
+    ),
+    reference_doi = ifelse(
+      test = n >= 9,
+      yes = str_extract(string = reference_doi, pattern = "^10.*"),
+      no = NA
+    ),
     reference_publishingDetails = ifelse(
-      test = str_count(string = reference_publishingDetails) >= 20,
+      test = n >= 20,
       yes = str_extract(string = reference_publishingDetails, pattern = "^[A-Z].*"),
       no = NA
     ),
     reference_authors = ifelse(
-      test = str_count(string = reference_authors) < 20,
+      test = n < 20,
       yes = str_extract(string = reference_authors, pattern = "^[A-Z].*"),
       no = NA
     )
-  )
+  ) %>%
+  select(-n)
 
 data_corrected$name <- y_as_na(data_corrected$name, "")
 data_corrected$inchi <- y_as_na(data_corrected$inchi, "")
@@ -98,7 +107,13 @@ data_standard <-
     data_selected = data_corrected,
     db = "coc_1",
     structure_field = c("inchi", "smiles", "name"),
-    reference_field = c("reference_doi", "reference_authors", "reference_publishingDetails" ,"reference_external")
+    reference_field = c(
+      "reference_doi",
+      "reference_pubmed",
+      "reference_authors",
+      "reference_publishingDetails" ,
+      "reference_external"
+    )
   )
 
 # exporting

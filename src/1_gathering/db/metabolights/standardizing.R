@@ -40,8 +40,8 @@ data_selected$biologicalsource <-
   y_as_na(data_selected$biologicalsource, "reference compound")
 
 data_selected <- data_selected %>%
-  filter(!is.na(biologicalsource)) %>% 
-  mutate(reference_external = reference) %>% 
+  filter(!is.na(biologicalsource)) %>%
+  mutate(reference_external = reference) %>%
   data.frame()
 
 # standardizing

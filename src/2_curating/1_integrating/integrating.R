@@ -208,7 +208,7 @@ structureTable_full <- structureTable_full %>%
   select(structureType, structureValue)
 
 if (nrow(structureTable_full) == 0)
-  structureTable_full[1, ] <- NA
+  structureTable_full[1,] <- NA
 
 cat("... organisms table \n")
 organismTable <- dbTable %>%

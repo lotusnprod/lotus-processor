@@ -29,8 +29,8 @@ data_selected <- data_original %>%
     biologicalsource = Biological_Source
   ) %>%
   distinct(uniqueid, .keep_all = TRUE) %>%
-  mutate(reference_external = "DNP") %>% 
-data.frame()
+  mutate(reference_external = "DNP") %>%
+  data.frame()
 
 ## standardizing
 data_standard <-

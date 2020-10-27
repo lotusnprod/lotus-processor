@@ -166,9 +166,6 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
   mutate(reference_doi = trimws(reference_doi)) %>%
   data.frame()
 
-
-
-
 # standardizing
 data_standard <-
   standardizing_original(
