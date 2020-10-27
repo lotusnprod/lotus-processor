@@ -69,7 +69,9 @@ translatedStructureTable <- translatedStructureTable %>%
   filter(!is.na(structureTranslated))
 
 if (nrow(translatedStructureTable) == 0)
-  translatedStructureTable[1, ] <- NA
+  translatedStructureTable[1, c("structureType",
+                                "structureValue",
+                                "structureTranslated")] <- NA
 
 cat("outputing unique structures \n")
 translatedStructureTableUnique <- translatedStructureTable %>%
@@ -77,7 +79,7 @@ translatedStructureTableUnique <- translatedStructureTable %>%
   distinct(structureTranslated)
 
 if (nrow(translatedStructureTableUnique) == 0)
-  translatedStructureTableUnique[1, ] <- NA
+  translatedStructureTableUnique[1, "structureTranslated"] <- NA
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedStructureFinal, "\n")
