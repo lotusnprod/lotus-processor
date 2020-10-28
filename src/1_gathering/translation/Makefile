@@ -4,7 +4,7 @@ include	../../../paths.mk
 .PRECIOUS: %.tsv %.zip	%.json	%.gz
 
 gathering-translation-common:	${INTERIM_DICTIONARY_PATH}/common/names.tsv.gz
-${INTERIM_DICTIONARY_PATH}/common/names.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv	${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Food_copy.csv	${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv	${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv	${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current/Taxon.tsv.zip	${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current/VernacularName.tsv.zip	${SRC_GATHERING_TRANSLATION_PATH}/common.R # ${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv
+${INTERIM_DICTIONARY_PATH}/common/names.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv	${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Food_copy.csv	${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv	${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv	${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current/Taxon.tsv.zip	${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current/VernacularName.tsv.zip	${SRC_GATHERING_TRANSLATION_PATH}/common.R ${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_TRANSLATION_PATH}/common.R
 
 gathering-translation-tcm:	${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.gz
