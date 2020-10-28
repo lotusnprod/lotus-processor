@@ -36,6 +36,12 @@ df = pd.read_csv(
 	myZip,
 	sep = '\t') 
 
+if len(df) == 1:
+    df[smiles_column_header] = '[Pu]'
+    print('your dataframe is empty, plutonium loaded')
+else:
+  print('your dataframe is not empty :)')
+
 # df.head()
 # df.info()
 

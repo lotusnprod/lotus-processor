@@ -21,7 +21,12 @@ help:
 	@echo "databases: build the databases (no scraping)"
 	@echo "databases-rescrape: rescrape the databases (when possible)"
 	@echo ""
+	@echo "gathering-full: Run the 1_gathering scripts"
 	@echo "curating: Run the 2_curating scripts"
+	@echo "analysing: Run the 3_analysing scripts"
+	@echo "visualizing: Run the 4_visualizing scripts"
+		
+
 
 docker-build:
 	docker build -t onpdb-environment --build-arg USER_ID=$(shell id -u) --build-arg GROUP_ID=$(shell id -g) .
