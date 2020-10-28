@@ -148,8 +148,8 @@ dataTitle <- read_delim(
   group_by(referenceOriginal) %>%
   mutate(level = row_number()) %>%
   relocate(level, .after = referenceOriginal) %>%
-  mutate_all(as.character) %>%
   ungroup() %>%
+  mutate_all(as.character) %>%
   pivot_longer(
     cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
@@ -159,7 +159,7 @@ dataTitle <- read_delim(
   ) %>%
   mutate_all(as.character)
 
-cat("... split references \n")
+cat("... split \n")
 dataSplit <- read_delim(
   file = gzfile(pathDataInterimTablesTranslatedReferenceSplit),
   delim = "\t",

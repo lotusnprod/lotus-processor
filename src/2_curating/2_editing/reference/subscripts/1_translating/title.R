@@ -102,7 +102,7 @@ for (i in num) {
   if (nrow(dataTitle) == 1)
     reflist <- list(NA)
   
-  cat("treating results, may take a while if full mode")
+  cat("treating results, may take a while if full mode \n")
   if (nrow(dataTitle) != 0)
     dataTitle2 <-
     getAllReferences(data = dataTitle,
