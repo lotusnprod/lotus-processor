@@ -657,7 +657,8 @@ validationSetFilled <-
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  filter(!is.na(validated))
+  filter(!is.na(validated)) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 realValidationSetFilled <-
   inner_join(validationSetFilled, openDbClean) %>%
