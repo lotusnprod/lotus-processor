@@ -703,7 +703,9 @@ manuallyRemovedEntries3 <-
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3)
 
 cat("exporting \n")
+if (mode == "full")
 cat("../data/validation/manuallyValidated.tsv.gz", "\n")
+if (mode == "full")
 write.table(
   x = manuallyValidatedSet3,
   file = gzfile(
@@ -717,7 +719,9 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
+if (mode == "full")
 cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
+if (mode == "full")
 write.table(
   x = manuallyRemovedEntries3,
   file = gzfile(
