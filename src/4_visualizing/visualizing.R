@@ -401,12 +401,10 @@ try({
     width = 16,
     height = 9
   )
-  
   inhouseDb_most_structures <- inhouseDbMeta %>%
     filter(!is.na(structureCleanedInchikey2D)) %>%
     count(structureCleanedInchikey2D) %>%
     arrange(desc(n))
-  
   mostinchi <- as.character(inhouseDb_most_structures[1, 1])
   inhouseDb_most_structures_2plot <-
     inhouseDbMeta %>%
@@ -419,7 +417,6 @@ try({
     group_by(database, organismCleaned) %>%
     count(structureCleanedInchikey2D) %>%
     ungroup()
-  
   inhouseDb_most_structures_2plot_wide <-
     inhouseDb_most_structures_2plot %>%
     pivot_wider(names_from = database,
@@ -438,25 +435,21 @@ try({
               )) %>%
     distinct(organismCleaned, .keep_all = TRUE) %>%
     data.frame()
-  
   inhouseDb_most_structures_2plot_wide <-
     left_join(inhouseDb_most_structures_2plot_wide,
               bio) %>%
     distinct(structureCleanedInchikey2D,
              organismCleaned,
              .keep_all = TRUE)
-  
   mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
     filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
     count(organismCleaned_dbTaxo_1kingdom) %>%
     arrange(desc(n))
-  
   dbnumostinchi <- as.numeric(nrow(
     inhouseDbMeta %>%
       filter(structureCleanedInchikey2D == mostinchi) %>%
       distinct(database)
   ))
-  
   upset(
     inhouseDb_most_structures_2plot_wide,
     nsets = 10,
@@ -516,9 +509,7 @@ try({
     width = 16,
     height = 9
   )
-  
   mostinchi2 <- as.character(inhouseDb_most_structures[2, 1])
-  
   inhouseDb_most_structures_2plot <-
     inhouseDbMeta %>%
     filter(structureCleanedInchikey2D == mostinchi2) %>%
@@ -530,7 +521,6 @@ try({
     group_by(database, organismCleaned) %>%
     count(structureCleanedInchikey2D) %>%
     ungroup()
-  
   inhouseDb_most_structures_2plot_wide <-
     inhouseDb_most_structures_2plot %>%
     pivot_wider(names_from = database,
@@ -548,25 +538,21 @@ try({
                 values = 1
               )) %>%
     data.frame()
-  
   inhouseDb_most_structures_2plot_wide <-
     left_join(inhouseDb_most_structures_2plot_wide,
               bio) %>%
     distinct(structureCleanedInchikey2D,
              organismCleaned,
              .keep_all = TRUE)
-  
   mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
     filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
     count(organismCleaned_dbTaxo_1kingdom) %>%
     arrange(desc(n))
-  
   dbnumostinchi <- as.numeric(nrow(
     inhouseDbMeta %>%
       filter(structureCleanedInchikey2D == mostinchi2) %>%
       distinct(database)
   ))
-  
   upset(
     inhouseDb_most_structures_2plot_wide,
     nsets = 10,
@@ -600,7 +586,6 @@ getGraphStudiedPlant <- function(plant) {
   try({
     mostplant <-
       as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCleaned == plant, 1])
-    
     inhouseDb_most_organism_2plot <-
       inhouseDbMeta %>%
       filter(organismCleaned == mostplant) %>%
@@ -611,7 +596,6 @@ getGraphStudiedPlant <- function(plant) {
       group_by(organismCleaned, database) %>%
       count(structureCleanedInchikey2D) %>%
       ungroup()
-    
     inhouseDb_most_organism_2plot_wide <-
       inhouseDb_most_organism_2plot %>%
       pivot_wider(names_from = database,
@@ -629,26 +613,22 @@ getGraphStudiedPlant <- function(plant) {
                   values = 1
                 )) %>%
       data.frame()
-    
     inhouseDb_most_organism_2plot_wide <-
       left_join(inhouseDb_most_organism_2plot_wide,
                 chemo) %>%
       distinct(structureCleanedInchikey2D,
                organismCleaned,
                .keep_all = TRUE)
-    
     dbnumostorganism <- as.numeric(nrow(
       inhouseDbMeta %>%
         filter(organismCleaned == mostplant) %>%
         distinct(database)
     ))
-    
     mostsuperclasses <- inhouseDb_most_organism_2plot_wide %>%
       filter(!is.na(structureCleaned_2superclass)) %>%
       count(structureCleaned_2superclass) %>%
       arrange(desc(n)) %>%
       head(10)
-    
     upset(
       inhouseDb_most_organism_2plot_wide,
       nsets = 10,
@@ -1157,24 +1137,26 @@ getGraphChemicalClass <- function(subclass) {
 }
 
 cat("... drawing Terpene lactones repartition \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "terpeneLactones.pdf"),
-  width = 16,
-  height = 9
-)
-
-getGraphChemicalClass(subclass = "Terpene lactones")
-dev.off()
+try({
+  pdf(
+    file = file.path(pathDataProcessedFigures, "terpeneLactones.pdf"),
+    width = 16,
+    height = 9
+  )
+  getGraphChemicalClass(subclass = "Terpene lactones")
+  dev.off()
+})
 
 cat("... drawing Furanocoumarins repartition \n")
-pdf(
-  file = file.path(pathDataProcessedFigures, "furanocoumarins.pdf"),
-  width = 16,
-  height = 9
-)
-
-getGraphChemicalClass(subclass = "Furanocoumarins")
-dev.off()
+try({
+  pdf(
+    file = file.path(pathDataProcessedFigures, "furanocoumarins.pdf"),
+    width = 16,
+    height = 9
+  )
+  getGraphChemicalClass(subclass = "Furanocoumarins")
+  dev.off()
+})
 
 cat("drawing repartition of metabolites among biological kingdoms \n")
 pdf(
@@ -1844,7 +1826,6 @@ try({
   cat("preparing alluvial plot ... \n")
   openDbMetaValidated <- openDbMeta %>%
     mutate(validation = "validated")
-  
   full <- left_join(openDbMaximal, openDbMetaValidated) %>%
     mutate(
       validation = ifelse(
@@ -1904,7 +1885,6 @@ try({
     ) %>%
     distinct() %>%
     data.frame()
-  
   ready_1 <- full %>%
     pivot_wider(
       names_from = reference_originalType,
@@ -1934,7 +1914,6 @@ try({
       cleanedValue,
       validation
     )
-  
   ready_2 <- ready_1 %>%
     pivot_longer(
       cols = 2:11,
@@ -1950,14 +1929,12 @@ try({
            validation) %>%
     distinct() %>%
     filter(!is.na(originalValue))
-  
   ready_3 <- ready_2 %>%
     filter(validation == "validated") %>%
     group_by(database,
              validation) %>%
     count(name = "count") %>%
     arrange(desc(count))
-  
   sunk <- ready_2 %>%
     filter(database %in% ready_3$database) %>%
     group_by(database,
@@ -2036,11 +2013,8 @@ try({
         x = cleanedType
       ),
     )
-  
   legend <- with(sunk, reorder(database, count))
-  
   legend_v <- with(sunk, reorder(validation, desc(count)))
-  
   cat("drawing alluvial \n")
   pdf(
     file = file.path(pathDataProcessedFigures, "alluvial.pdf"),
@@ -2125,7 +2099,6 @@ try({
       organismCleaned_dbTaxo_7species
     ) %>%
     summarize("percentage of parent" = n())
-  
   Tree_bio <- collapsibleTreeSummary(
     df = data4tree_bio,
     hierarchy = c(
@@ -2148,7 +2121,6 @@ try({
     width = 4800,
     height = 9600
   )
-  
   setwd(dir = pathDataProcessedFiguresHtml)
   htmlwidgets::saveWidget(widget = as_widget(Tree_bio),
                           file = "Tree_bio.html")
@@ -2174,7 +2146,6 @@ try({
       structureCleaned_5directParent
     ) %>%
     summarize("percentage of parent" = n())
-  
   Tree_chemo <- collapsibleTreeSummary(
     df = data4tree_chemo,
     hierarchy = c(
@@ -2366,45 +2337,32 @@ draw_chord <-
       table <- data.frame(data)
       table <- table[!is.na(table[, biological_level]), ]
       table <- table[!is.na(table[, chemical_level]), ]
-      
       if (!is.null(biological_filter_value))
         table <-
         table[table[, biological_filter_level] %in% biological_filter_value, ]
-      
       if (!is.null(chemical_filter_value))
         table <-
         table[table[, chemical_filter_level] %in% chemical_filter_value, ]
-      
       m1 <-
         as.data.table(table(table[, c(biological_level, chemical_level)]))
-      
       m1 <- m1 %>%
         pivot_wider(names_from = 2, values_from = N) %>%
         unnest() %>%
         column_to_rownames(var = biological_level) %>%
         select(order(colSums(-.)))
-      
       m2 <- t(m1) %>%
         as.data.frame() %>%
         select(order(colSums(-.)))
-      
       m2$name <- colnames(m1)
       #colnames(m1) <- paste("chemo", colnames(m1), sep = "_")
       m1$name <- sort(colnames(m2[, 1:ncol(m2) - 1]))
       #colnames(m2)[1:ncol(m2)-1] <- paste("bio", colnames(m2[1:ncol(m2)-1]), sep = "_")
-      
       test_3 <- full_join(m2, m1)
-      
       test_3[is.na(test_3)] <- 0
-      
       rownames(test_3) <- test_3$name
-      
       test_3 <- test_3 %>% select(-name)
-      
       test_4 <- as.matrix(test_3)
-      
       test_5 <- test_4[colnames(test_4), colnames(test_4)]
-      
       chord <- chorddiag(
         data = test_5,
         groupColors = palette,
@@ -2433,10 +2391,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_1kingdom) %>%
     head(6)
-  
   top_big_chord_bio <-
     top_big_chord_bio$organismCleaned_dbTaxo_1kingdom
-  
   top_big_chord_chemo <- openDbMeta %>%
     filter(!is.na(organismCleaned_dbTaxo_1kingdom) &
              !is.na(structureCleaned_2superclass)) %>%
@@ -2447,10 +2403,8 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleaned_2superclass) %>%
     head(12)
-  
   top_big_chord_chemo <-
     top_big_chord_chemo$structureCleaned_2superclass
-  
   chord_big <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_1kingdom",
@@ -2476,10 +2430,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_5family) %>%
     head(12)
-  
   top_organism_med <-
     top_organism_med$organismCleaned_dbTaxo_5family
-  
   top_chemo_med <- openDbMeta %>%
     filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
     filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
@@ -2491,9 +2443,7 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleaned_3class) %>%
     head(18)
-  
   top_chemo_med <- top_chemo_med$structureCleaned_3class
-  
   chord_med <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_5family",
@@ -2522,10 +2472,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(12)
-  
   top_organism_sma <-
     top_organism_sma$organismCleaned_dbTaxo_7species
-  
   top_chemo_sma <- openDbMeta %>%
     filter(
       !is.na(structureCleaned_5directParent) &
@@ -2540,9 +2488,7 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleaned_5directParent) %>%
     head(12)
-  
   top_chemo_sma <- top_chemo_sma$structureCleaned_5directParent
-  
   chord_sma <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2553,7 +2499,6 @@ try({
     biological_filter_level = "organismCleaned_dbTaxo_7species",
     palette = paired_palette_big
   )
-  
   htmlwidgets::saveWidget(widget = as_widget(chord_sma),
                           file = "Chord_sma.html")
 })
@@ -2572,10 +2517,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(12)
-  
   top_organism_ranunculaceae <-
     top_organism_ranunculaceae$organismCleaned_dbTaxo_7species
-  
   top_chemo_ranunculaceae <- openDbMeta %>%
     filter(
       !is.na(structureCleaned_5directParent) &
@@ -2590,10 +2533,8 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleaned_5directParent) %>%
     head(12)
-  
   top_chemo_ranunculaceae <-
     top_chemo_ranunculaceae$structureCleaned_5directParent
-  
   chord_ranunculaceae <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2622,10 +2563,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(12)
-  
   top_organism_papaveraceae <-
     top_organism_papaveraceae$organismCleaned_dbTaxo_7species
-  
   top_chemo_papaveraceae <- openDbMeta %>%
     filter(
       !is.na(structureCleaned_5directParent) &
@@ -2640,10 +2579,8 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleaned_5directParent) %>%
     head(12)
-  
   top_chemo_papaveraceae <-
     top_chemo_papaveraceae$structureCleaned_5directParent
-  
   chord_papaveraceae <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2672,10 +2609,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(36)
-  
   top_organism_gentianaceae <-
     top_organism_gentianaceae$organismCleaned_dbTaxo_7species
-  
   top_chemo_gentianaceae <- openDbMeta %>%
     filter(
       !is.na(structureCleaned_5directParent) &
@@ -2691,10 +2626,8 @@ try({
     arrange(desc(n)) %>%
     distinct(structureCleanedInchikey2D) %>%
     head(144)
-  
   top_chemo_gentianaceae <-
     top_chemo_gentianaceae$structureCleanedInchikey2D
-  
   chord_gentianaceae <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2705,7 +2638,6 @@ try({
     biological_filter_level = "organismCleaned_dbTaxo_7species",
     palette = paired_palette_big
   )
-  
   htmlwidgets::saveWidget(widget = as_widget(chord_gentianaceae),
                           file = "Chord_gentianaceae.html")
 })
@@ -2725,10 +2657,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(6)
-  
   top_organism_06 <-
     top_organism_06$organismCleaned_dbTaxo_7species
-  
   top_chemo_06 <- openDbMeta %>%
     filter(
       !is.na(organismCleaned_dbTaxo_7species) &
@@ -2743,9 +2673,7 @@ try({
     distinct(structureCleaned_5directParent,
              .keep_all = TRUE) %>%
     head(6)
-  
   top_chemo_06 <- top_chemo_06$structureCleaned_5directParent
-  
   chord_06 <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2774,10 +2702,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(12)
-  
   top_organism_12 <-
     top_organism_12$organismCleaned_dbTaxo_7species
-  
   top_chemo_12 <- openDbMeta %>%
     filter(
       !is.na(organismCleaned_dbTaxo_7species) &
@@ -2792,9 +2718,7 @@ try({
     distinct(structureCleaned_5directParent,
              .keep_all = TRUE) %>%
     head(12)
-  
   top_chemo_12 <- top_chemo_12$structureCleaned_5directParent
-  
   chord_12 <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
@@ -2823,10 +2747,8 @@ try({
     arrange(desc(n)) %>%
     distinct(organismCleaned_dbTaxo_7species) %>%
     head(24)
-  
   top_organism_24 <-
     top_organism_24$organismCleaned_dbTaxo_7species
-  
   top_chemo_24 <- openDbMeta %>%
     filter(
       !is.na(organismCleaned_dbTaxo_7species) &
@@ -2841,9 +2763,7 @@ try({
     distinct(structureCleaned_5directParent,
              .keep_all = TRUE) %>%
     head(24)
-  
   top_chemo_24 <- top_chemo_24$structureCleaned_5directParent
-  
   chord_24 <- draw_chord(
     data = openDbMeta,
     biological_level = "organismCleaned_dbTaxo_7species",
