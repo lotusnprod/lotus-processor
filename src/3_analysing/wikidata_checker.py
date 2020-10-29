@@ -35,7 +35,8 @@ df_wd_inchi = pd.read_csv(
 # %%
 # We start by adding a sik column to the wd table
 
-df_wd_inchi["shortik"] = df_wd_inchi["inchikey"].str.split("-", n=1, expand=True)[0]
+df_wd_inchi["shortik"] = df_wd_inchi["inchikey"].str.split(
+    "-", n=1, expand=True)[0]
 df_wd_inchi.info()
 
 # %%
@@ -64,7 +65,6 @@ df_onpdb_table_wded.info()
 
 # %%
 
-import plotly.express as px
 
 df = px.data.gapminder().query("year == 2007").query("continent == 'Europe'")
 df.loc[

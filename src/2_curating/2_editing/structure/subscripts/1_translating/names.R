@@ -22,6 +22,9 @@ dataOriginal <- read_delim(
 if (nrow(dataOriginal) == 0)
   dataOriginal[1, "structureOriginal_nominal"] <- NA
 
+# to avoid errors if dataframe not empty at the begining but filled with NA
+colnames(dataOriginal)[1] <- "structureOriginal_nominal"
+
 cat("preparing names \n")
 dataPreparedNames <- preparing_name(x = dataOriginal)
 

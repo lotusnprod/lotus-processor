@@ -31,11 +31,11 @@ except:
 myZip = gzip.open(input_file_path)
 
 dfFull = pd.read_csv(
-	myZip,
-	sep = '\t')
+    myZip,
+    sep='\t')
 
 # keeping smiles column only
-dfFull.rename(columns = {smiles_column_header:'smiles'}, inplace = True)
+dfFull.rename(columns={smiles_column_header: 'smiles'}, inplace=True)
 dfSmiles = dfFull[['smiles']]
 df = dfSmiles.drop_duplicates()
 df = df.reset_index(drop=True)
@@ -49,7 +49,8 @@ all_urls = []
 for entry in tqdm(df.to_dict(orient="records")):
     smiles = str(entry["smiles"])
     # if len(smiles) > 5:
-    request_url = "{}/classify?smiles={}".format(SERVER_URL, urllib.parse.quote(smiles))
+    request_url = "{}/classify?smiles={}".format(
+        SERVER_URL, urllib.parse.quote(smiles))
     all_urls.append(request_url)
 
 rs = (grequests.get(u) for u in all_urls)
@@ -65,7 +66,7 @@ finalDf = pd.concat([df, classes], axis=1)
 # exporting
 finalDf.to_csv(
     ouput_file_path,
-    sep = '\t',
-    index = False,
-    compression = 'gzip'
+    sep='\t',
+    index=False,
+    compression='gzip'
 )

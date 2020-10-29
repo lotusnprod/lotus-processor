@@ -6,17 +6,20 @@ Created on Fri Feb 14 16:08:34 2020
 @author: pma
 """
 
-## importing packages 
+# importing packages
 from rdkit import Chem
 import pandas as pd
 import numpy as np
 from rdkit.Chem import Descriptors
 from rdkit.Chem import rdMolDescriptors
 from molvs import Standardizer
-from molvs import LargestFragmentChooser #requires to modify __init__.py in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ accordingly
-from molvs import FragmentRemover #requires to modify __init__.py in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ accordingly
+# requires to modify __init__.py in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ accordingly
+from molvs import LargestFragmentChooser
+# requires to modify __init__.py in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ accordingly
+from molvs import FragmentRemover
 from molvs import Validator
-from molvs import Uncharger ## add this to init.py see above from .fragment import LargestFragmentChooser from .charge import Uncharger
+# add this to init.py see above from .fragment import LargestFragmentChooser from .charge import Uncharger
+from molvs import Uncharger
 import sys
 import gzip
 import yaml
@@ -27,7 +30,7 @@ try:
     inchi_column_header = sys.argv[3]
 
     print('Parsing tab separated file'
-          + input_file_path 
+          + input_file_path
           + 'with column: '
           + inchi_column_header
           + 'as InChI column.'
@@ -45,14 +48,14 @@ except:
 
 # head_lenght = params['head_lenght']
 
-## Loading the df with inchi columns 
+# Loading the df with inchi columns
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
-	myZip,
-	sep = '\t')
+    myZip,
+    sep='\t')
 
-## eventually filter display some info, comment according to your needs
+# eventually filter display some info, comment according to your needs
 #df = df[df['originaldb'] == 'tcm']
 # df = df.head(head_lenght)
 df.columns
@@ -62,13 +65,13 @@ df.info()
 fmt = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
 
 # save the Standardizer and LargestFragmentChooser classes as variables
-validator = Validator(log_format = fmt)
+validator = Validator(log_format=fmt)
 s = Standardizer()
 #lf = LargestFragmentChooser()
 lf = FragmentRemover()
 uc = Uncharger()
 
-#we make sure we have inchi for each row
+# we make sure we have inchi for each row
 df = df[~df[inchi_column_header].isnull()]
 
 # we generate ROMol object from smiles and or inchi
@@ -77,26 +80,34 @@ df['ROMol'] = df[inchi_column_header].map(Chem.MolFromInchi)
 # we eventually remove rows were no ROMol pobject was generated
 df = df[~df['ROMol'].isnull()]
 
-## and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
+# and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
 # Note that these are sequentially applied
 df['validatorLog'] = df['ROMol'].apply(validator.validate)
 df['ROMolSanitized'] = df['ROMol'].apply(s.standardize)
 #df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.choose)
 df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.remove)
-df['ROMolSanitizedLargestFragmentUncharged'] = df['ROMolSanitizedLargestFragment'].apply(uc.uncharge)
+df['ROMolSanitizedLargestFragmentUncharged'] = df['ROMolSanitizedLargestFragment'].apply(
+    uc.uncharge)
 
 # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
-df['smilesSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToSmiles)
+df['smilesSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(
+    Chem.MolToSmiles)
 print(df['ROMolSanitized'])
-df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchi)
-df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(Chem.MolToInchiKey)
-df['shortikSanitized'] = df['inchikeySanitized'].str.split("-", n = 1, expand = True)[0]
+df['inchiSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(
+    Chem.MolToInchi)
+df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(
+    Chem.MolToInchiKey)
+df['shortikSanitized'] = df['inchikeySanitized'].str.split(
+    "-", n=1, expand=True)[0]
 
-df['formulaSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(rdMolDescriptors.CalcMolFormula)
+df['formulaSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
+    rdMolDescriptors.CalcMolFormula)
 
-df['exactmassSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Descriptors.ExactMolWt)
+df['exactmassSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
+    Descriptors.ExactMolWt)
 
-df['xlogpSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(Chem.Crippen.MolLogP)
+df['xlogpSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
+    Chem.Crippen.MolLogP)
 
 # outputing final df inofs
 df.info()
@@ -114,12 +125,12 @@ colstodrop = ['ROMol',
 #               'ROMol_largest_fragment_sanitized_uncharged'
 #               ]
 
-df = df.drop(colstodrop, axis = 1)
+df = df.drop(colstodrop, axis=1)
 
 # exporting df
 df.to_csv(
-	ouput_file_path, 
-	sep = '\t', 
-	index = False,
-	compression = 'gzip'
-	)
+    ouput_file_path,
+    sep='\t',
+    index=False,
+    compression='gzip'
+)

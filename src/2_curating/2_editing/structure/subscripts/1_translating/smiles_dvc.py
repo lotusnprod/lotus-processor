@@ -19,7 +19,7 @@ try:
     smiles_column_header = sys.argv[3]
 
     print('Parsing gziped tab separated file'
-          + input_file_path 
+          + input_file_path
           + 'with column: '
           + smiles_column_header
           + 'as SMILES column.'
@@ -33,8 +33,8 @@ except:
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
-	myZip,
-	sep = '\t') 
+    myZip,
+    sep='\t')
 
 # df.head()
 # df.info()
@@ -43,11 +43,11 @@ df = pd.read_csv(
 df = df[df[smiles_column_header].notnull()]
 
 # replacing unwanted characters
-df[smiles_column_header].replace(regex = True,
-										inplace = True,
-										to_replace = r'"',
-										value = r''
-										)
+df[smiles_column_header].replace(regex=True,
+                                 inplace=True,
+                                 to_replace=r'"',
+                                 value=r''
+                                 )
 
 ##
 
@@ -62,7 +62,7 @@ df = df[~df['ROMol'].isnull()]
 df['inchi'] = df['ROMol'].map(Chem.MolToInchi)
 
 # renaming
-# naming not OK checkz with Adriano 
+# naming not OK checkz with Adriano
 
 df['structureTranslatedSmiles'] = df['inchi']
 
@@ -72,8 +72,7 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 # exporting
 df.to_csv(
     ouput_file_path,
-    sep = '\t',
-    index = False,
-    compression = 'gzip'
+    sep='\t',
+    index=False,
+    compression='gzip'
 )
-
