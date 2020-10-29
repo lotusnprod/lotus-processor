@@ -704,36 +704,36 @@ openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3)
 
 cat("exporting \n")
 if (mode == "full")
-cat("../data/validation/manuallyValidated.tsv.gz", "\n")
+  cat("../data/validation/manuallyValidated.tsv.gz", "\n")
 if (mode == "full")
-write.table(
-  x = manuallyValidatedSet3,
-  file = gzfile(
-    description = "../data/validation/manuallyValidated.tsv.gz",
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+  write.table(
+    x = manuallyValidatedSet3,
+    file = gzfile(
+      description = "../data/validation/manuallyValidated.tsv.gz",
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 if (mode == "full")
-cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
+  cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
 if (mode == "full")
-write.table(
-  x = manuallyRemovedEntries3,
-  file = gzfile(
-    description = "../data/validation/manuallyRemoved.tsv.gz",
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
+  write.table(
+    x = manuallyRemovedEntries3,
+    file = gzfile(
+      description = "../data/validation/manuallyRemoved.tsv.gz",
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
 
 cat(pathDataInterimTablesAnalysedPlatinum, "\n")
 write.table(
