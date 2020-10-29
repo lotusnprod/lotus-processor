@@ -9,21 +9,20 @@ from functools import reduce
 import gzip
 
 
-
 # loading the input dataframes
 
 # %%
-opennpdb_table_path = gzip.open('/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/3_curated/table.tsv.gz')
+opennpdb_table_path = gzip.open(
+    '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/3_curated/table.tsv.gz')
 
 wikidata_inchilist_path = "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/external/query.tsv"
 
 
-
 # %%
 df_onpdb_table = pd.read_csv(opennpdb_table_path,
-                                     sep='\t', error_bad_lines=False, low_memory=False)
+                             sep='\t', error_bad_lines=False, low_memory=False)
 df_wd_inchi = pd.read_csv(wikidata_inchilist_path,
-                                         sep='\t', error_bad_lines=False, low_memory=False)
+                          sep='\t', error_bad_lines=False, low_memory=False)
 # df_GNPS_output = pd.read_csv(GNPS_output_path,
 #                              sep='\t', error_bad_lines=False, usecols=['cluster index', 'componentindex'],
 #                              low_memory=False)
@@ -31,7 +30,8 @@ df_wd_inchi = pd.read_csv(wikidata_inchilist_path,
 # %%
 # We start by adding a sik column to the wd table
 
-df_wd_inchi['shortik'] = df_wd_inchi['inchikey'].str.split("-", n=1, expand=True)[0]
+df_wd_inchi['shortik'] = df_wd_inchi['inchikey'].str.split(
+    "-", n=1, expand=True)[0]
 df_wd_inchi.info()
 
 # %%
@@ -50,18 +50,19 @@ df_onpdb_table.info()
 # Now we will append the wd compound field to the opnnpdb table after merging on the ik column
 
 df_onpdb_table_wded = pd.merge(df_onpdb_table,
-                       df_wd_inchi,
-                       left_on='inchikeySanitized',
-                       right_on='inchikey',
-                        how='left')
+                               df_wd_inchi,
+                               left_on='inchikeySanitized',
+                               right_on='inchikey',
+                               how='left')
 df_onpdb_table_wded.info()
 
 # %%
 
-import plotly.express as px
 df = px.data.gapminder().query("year == 2007").query("continent == 'Europe'")
-df.loc[df['pop'] < 2.e6, 'country'] = 'Other countries' # Represent only large countries
-fig = px.pie(df, values='pop', names='country', title='Population of European continent')
+# Represent only large countries
+df.loc[df['pop'] < 2.e6, 'country'] = 'Other countries'
+fig = px.pie(df, values='pop', names='country',
+             title='Population of European continent')
 fig.show()
 
 # %%

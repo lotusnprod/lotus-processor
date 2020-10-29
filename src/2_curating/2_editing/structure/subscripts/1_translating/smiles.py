@@ -4,6 +4,8 @@
 # # RDKIT to generate InChIs
 
 # loading packages
+import errno
+import os
 import sys
 from rdkit import Chem
 import pandas as pd
@@ -19,7 +21,7 @@ try:
     smiles_column_header = sys.argv[3]
 
     print('Parsing gziped tab separated file'
-          + input_file_path 
+          + input_file_path
           + 'with column: '
           + smiles_column_header
           + 'as SMILES column.'
@@ -33,14 +35,14 @@ except:
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
-	myZip,
-	sep = '\t') 
+    myZip,
+    sep='\t')
 
 if len(df) == 1:
     df[smiles_column_header] = '[Pu]'
     print('your dataframe is empty, plutonium loaded')
 else:
-  print('your dataframe is not empty :)')
+    print('your dataframe is not empty :)')
 
 # df.head()
 # df.info()
@@ -49,11 +51,11 @@ else:
 df = df[df[smiles_column_header].notnull()]
 
 # replacing unwanted characters
-df[smiles_column_header].replace(regex = True,
-										inplace = True,
-										to_replace = r'"',
-										value = r''
-										)
+df[smiles_column_header].replace(regex=True,
+                                 inplace=True,
+                                 to_replace=r'"',
+                                 value=r''
+                                 )
 
 ##
 
@@ -68,7 +70,7 @@ df = df[~df['ROMol'].isnull()]
 df['inchi'] = df['ROMol'].map(Chem.MolToInchi)
 
 # renaming
-# naming not OK checkz with Adriano 
+# naming not OK checkz with Adriano
 
 df['structureTranslated_smiles'] = df['inchi']
 
@@ -77,21 +79,18 @@ df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
 
-import os
-import errno
 
 filename = ouput_file_path
 if not os.path.exists(os.path.dirname(filename)):
     try:
         os.makedirs(os.path.dirname(filename))
-    except OSError as exc: # Guard against race condition
+    except OSError as exc:  # Guard against race condition
         if exc.errno != errno.EEXIST:
             raise
-            
+
 df.to_csv(
     ouput_file_path,
-    sep = '\t',
-    index = False,
-    compression = 'gzip'
+    sep='\t',
+    index=False,
+    compression='gzip'
 )
-

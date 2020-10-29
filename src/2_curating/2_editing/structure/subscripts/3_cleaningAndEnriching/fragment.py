@@ -48,7 +48,7 @@ class FragmentPattern(object):
 #: The default list of :class:`FragmentPatterns <molvs.fragment.FragmentPattern>` to be used by
 #: :class:`~molvs.fragment.FragmentRemover`.
 REMOVE_FRAGMENTS = (
-	FragmentPattern('hydrogen', '[H]'),
+    FragmentPattern('hydrogen', '[H]'),
     FragmentPattern('fluorine', '[F]'),
     FragmentPattern('chlorine', '[Cl]'),
     FragmentPattern('bromine', '[Br]'),
@@ -64,24 +64,28 @@ REMOVE_FRAGMENTS = (
     FragmentPattern('silver', '[Ag]'),
     FragmentPattern('strontium', '[Sr]'),
     FragmentPattern('zinc', '[Zn]'),
-    FragmentPattern('iron', '[Fe]'), #added pma
-    FragmentPattern('nickel', '[Ni]'), #added pma
-    FragmentPattern('copper', '[Cu]'), #added pma
+    FragmentPattern('iron', '[Fe]'),  # added pma
+    FragmentPattern('nickel', '[Ni]'),  # added pma
+    FragmentPattern('copper', '[Cu]'),  # added pma
     FragmentPattern('ammonia/ammonium', '[#7]'),
     FragmentPattern('water/hydroxide', '[#8]'),
     FragmentPattern('methyl amine', '[#6]-[#7]'),
     FragmentPattern('sulfide', 'S'),
     FragmentPattern('nitrate', '[#7](=[#8])(-[#8])-[#8]'),
     FragmentPattern('phosphate', '[P](=[#8])(-[#8])(-[#8])-[#8]'),
-    FragmentPattern('hexafluorophosphate', '[P](-[#9])(-[#9])(-[#9])(-[#9])(-[#9])-[#9]'),
+    FragmentPattern('hexafluorophosphate',
+                    '[P](-[#9])(-[#9])(-[#9])(-[#9])(-[#9])-[#9]'),
     FragmentPattern('sulfate', '[S](=[#8])(=[#8])(-[#8])-[#8]'),
     FragmentPattern('methyl sulfonate', '[#6]-[S](=[#8])(=[#8])(-[#8])'),
-    FragmentPattern('trifluoromethanesulfonic acid', '[#8]-[S](=[#8])(=[#8])-[#6](-[#9])(-[#9])-[#9]'),
-    FragmentPattern('trifluoroacetic acid', '[#9]-[#6](-[#9])(-[#9])-[#6](=[#8])-[#8]'),
+    FragmentPattern('trifluoromethanesulfonic acid',
+                    '[#8]-[S](=[#8])(=[#8])-[#6](-[#9])(-[#9])-[#9]'),
+    FragmentPattern('trifluoroacetic acid',
+                    '[#9]-[#6](-[#9])(-[#9])-[#6](=[#8])-[#8]'),
     FragmentPattern('1,2-dichloroethane', '[Cl]-[#6]-[#6]-[Cl]'),
     FragmentPattern('1,2-dimethoxyethane', '[#6]-[#8]-[#6]-[#6]-[#8]-[#6]'),
     FragmentPattern('1,4-dioxane', '[#6]-1-[#6]-[#8]-[#6]-[#6]-[#8]-1'),
-    FragmentPattern('1-methyl-2-pyrrolidinone', '[#6]-[#7]-1-[#6]-[#6]-[#6]-[#6]-1=[#8]'),
+    FragmentPattern('1-methyl-2-pyrrolidinone',
+                    '[#6]-[#7]-1-[#6]-[#6]-[#6]-[#6]-1=[#8]'),
     FragmentPattern('2-butanone', '[#6]-[#6]-[#6](-[#6])=[#8]'),
     FragmentPattern('acetate/acetic acid', '[#8]-[#6](-[#6])=[#8]'),
     FragmentPattern('acetone', '[#6]-[#6](-[#6])=[#8]'),
@@ -94,7 +98,8 @@ REMOVE_FRAGMENTS = (
     FragmentPattern('cyclohexane', '[#6]-1-[#6]-[#6]-[#6]-[#6]-[#6]-1'),
     FragmentPattern('dichloromethane', '[Cl]-[#6]-[Cl]'),
     FragmentPattern('diethyl ether', '[#6]-[#6]-[#8]-[#6]-[#6]'),
-    FragmentPattern('diisopropyl ether', '[#6]-[#6](-[#6])-[#8]-[#6](-[#6])-[#6]'),
+    FragmentPattern('diisopropyl ether',
+                    '[#6]-[#6](-[#6])-[#8]-[#6](-[#6])-[#6]'),
     FragmentPattern('dimethyl formamide', '[#6]-[#7](-[#6])-[#6]=[#8]'),
     FragmentPattern('dimethyl sulfoxide', '[#6]-[S](-[#6])=[#8]'),
     FragmentPattern('ethanol', '[#8]-[#6]-[#6]'),
@@ -104,27 +109,36 @@ REMOVE_FRAGMENTS = (
     FragmentPattern('hexane', '[#6]-[#6]-[#6]-[#6]-[#6]-[#6]'),
     FragmentPattern('isopropanol', '[#8]-[#6](-[#6])-[#6]'),
     FragmentPattern('methanol', '[#8]-[#6]'),
-    FragmentPattern('N,N-dimethylacetamide', '[#6]-[#7](-[#6])-[#6](-[#6])=[#8]'),
+    FragmentPattern('N,N-dimethylacetamide',
+                    '[#6]-[#7](-[#6])-[#6](-[#6])=[#8]'),
     FragmentPattern('pentane', '[#6]-[#6]-[#6]-[#6]-[#6]'),
     FragmentPattern('propanol', '[#8]-[#6]-[#6]-[#6]'),
     FragmentPattern('pyridine', '[#6]-1=[#6]-[#6]=[#7]-[#6]=[#6]-1'),
-    FragmentPattern('t-butyl methyl ether', '[#6]-[#8]-[#6](-[#6])(-[#6])-[#6]'),
+    FragmentPattern('t-butyl methyl ether',
+                    '[#6]-[#8]-[#6](-[#6])(-[#6])-[#6]'),
     FragmentPattern('tetrahydrofurane', '[#6]-1-[#6]-[#6]-[#8]-[#6]-1'),
     FragmentPattern('toluene', '[#6]-[#6]~1~[#6]~[#6]~[#6]~[#6]~[#6]~1'),
     FragmentPattern('xylene', '[#6]-[#6]~1~[#6](-[#6])~[#6]~[#6]~[#6]~[#6]~1'),
-    FragmentPattern('perchloric acid', '[#8]-[Cl](=[#8])(=[#8])=[#8]'), #added pma
-    FragmentPattern('perchlorate', '[#8-]-[Cl](=[#8])(=[#8])=[#8]'), #added pma
-    FragmentPattern('perchlorate related ion', '[#8]-[Cl+3](-[#8-])(-[#8-])-[#8-]'), #added pma
-    FragmentPattern('iodomethane', '[#6]-[I]'), #added pma
-    FragmentPattern('methane', '[#6]'), #added pma
-    FragmentPattern('cyanide ion', '[#6-]#[#7]'), #added pma
-    FragmentPattern('cobalt ion 2+', '[Co++]'), #added pma
-    FragmentPattern('cobalt ion 1+', '[Co+]'), #added pma
-    FragmentPattern('acetaldehyde', '[#6]-[#6]=[#8]'), #added pma
-    FragmentPattern('2-Methyl-2-butene', '[#6]-[#6]=[#6](-[#6])-[#6]'), #added pma
-    FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol', '[#6]-[#6]-1=[#6](-[#6](=[#8])-[#7](-[#7]-1)-c2ccc(cc2)-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]'), #added pma
-    FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol ion', '[#6]-c1nn(c(c1-[#7+](-[#8-])=[#8])-[#8])-c2ccc(cc2)-[#7+](-[#8-])=[#8]'), #added pma
-    FragmentPattern('picric acid', 'c1c(cc(c(c1-[#7+](=[#8])-[#8-])-[#8])-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]') #added pma
+    FragmentPattern('perchloric acid',
+                    '[#8]-[Cl](=[#8])(=[#8])=[#8]'),  # added pma
+    FragmentPattern(
+        'perchlorate', '[#8-]-[Cl](=[#8])(=[#8])=[#8]'),  # added pma
+    FragmentPattern('perchlorate related ion',
+                    '[#8]-[Cl+3](-[#8-])(-[#8-])-[#8-]'),  # added pma
+    FragmentPattern('iodomethane', '[#6]-[I]'),  # added pma
+    FragmentPattern('methane', '[#6]'),  # added pma
+    FragmentPattern('cyanide ion', '[#6-]#[#7]'),  # added pma
+    FragmentPattern('cobalt ion 2+', '[Co++]'),  # added pma
+    FragmentPattern('cobalt ion 1+', '[Co+]'),  # added pma
+    FragmentPattern('acetaldehyde', '[#6]-[#6]=[#8]'),  # added pma
+    FragmentPattern('2-Methyl-2-butene',
+                    '[#6]-[#6]=[#6](-[#6])-[#6]'),  # added pma
+    FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol',
+                    '[#6]-[#6]-1=[#6](-[#6](=[#8])-[#7](-[#7]-1)-c2ccc(cc2)-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]'),  # added pma
+    FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol ion',
+                    '[#6]-c1nn(c(c1-[#7+](-[#8-])=[#8])-[#8])-c2ccc(cc2)-[#7+](-[#8-])=[#8]'),  # added pma
+    FragmentPattern(
+        'picric acid', 'c1c(cc(c(c1-[#7+](=[#8])-[#8-])-[#8])-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]')  # added pma
 )
 
 #: The default value for whether to ensure at least one fragment is left after FragmentRemover is applied.
@@ -254,5 +268,6 @@ class LargestFragmentChooser(object):
                 continue
             # Otherwise this is the largest so far
             log.debug('New largest fragment: %s (%s)', smiles, atoms)
-            largest = {'smiles': smiles, 'fragment': f, 'atoms': atoms, 'weight': weight, 'organic': organic}
+            largest = {'smiles': smiles, 'fragment': f,
+                       'atoms': atoms, 'weight': weight, 'organic': organic}
         return largest['fragment']
