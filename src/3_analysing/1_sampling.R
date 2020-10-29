@@ -98,19 +98,22 @@ if (nrow(openDbMinimal %>%
          validated = NA,
          comments = NA)
 
-sampleONPDB <- bind_rows(sampleONPDB_doi,
-                         sampleONPDB_original,
-                         # sampleONPDB_publishingDetails,
-                         # sampleONPDB_pubmed,
-                         sampleONPDB_split,
-                         sampleONPDB_title) %>%
+#get0 if to avoid error in minimal mode if df not present
+sampleONPDB <- bind_rows(
+  get0(x = "sampleONPDB_doi"),
+  get0(x = "sampleONPDB_original"),
+  get0(x = "sampleONPDB_publishingDetails"),
+  get0(x = "sampleONPDB_pubmed"),
+  get0(x = "sampleONPDB_split"),
+  get0(x = "sampleONPDB_title")
+) %>%
   mutate_all(as.character)
 
 cat("... attributing curator \n")
 set.seed(seed = 42,
          kind = "Mersenne-Twister",
          normal.kind = "Inversion")
-sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)),]
+sampleONPDB <- sampleONPDB[sample(nrow(sampleONPDB)), ]
 
 sampleONPDB[1:50, "curator"] <- "AR"
 
