@@ -1,13 +1,13 @@
 # LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
 ## Abstract
-*LOTUS* actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB). 
+*LOTUS* actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
 It represents the most exhaustive open DB of natural products (NP).
 It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
 Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
 ## Data Availability Statements
-The data used to support the findings of this study have been deposited in the XXX Dataverse repository ([DOI or OTHER PERSISTENT IDENTIFIER]). 
+The data used to support the findings of this study have been deposited in the XXX Dataverse repository ([DOI or OTHER PERSISTENT IDENTIFIER]).
 An snapshot of the repository at the time of publication is also available.
 
 ## Dataset list
@@ -23,7 +23,7 @@ An snapshot of the repository at the time of publication is also available.
 | datawarrior | 599 | 589 | [datawarrior_website](http://www.openmolecules.org/datawarrior/index.html) | [datawarrior_article](https://doi.org/10.1021/ci500588j)| [datawarrior_download](http://www.openmolecules.org/datawarrior/download.html) | © [idorsia](https://www.idorsia.com/index) | [thomas.sander@idorsia.com](thomas.sander@idorsia.com) | no real link to the dataset inside it |
 | dnp | 299173 | 206829 |  |  |  | maybe to | remove from | here ? |
 | drduke | 104388 | 90675 |[drduke_website](https://phytochem.nal.usda.gov/phytochem/help/index/about) || [drduke_download](https://data.nal.usda.gov/system/files/Duke-Source-CSV.zip) | How to Cite the Database Contents of this database are made available under a [Creative Commons CC0](https://creativecommons.org/publicdomain/zero/1.0/) public domain dedication. The suggested citation is: U.S. Department of Agriculture, Agricultural Research Service. 1992-2016. Dr. Duke's Phytochemical and Ethnobotanical Databases. Home Page, http://phytochem.nal.usda.gov/ http://dx.doi.org/10.15482/USDA.ADC/1239279 | [agref@usda.gov](agref@usda.gov) | not sure about contact |
-| foodb | 99568 | 82415 | [foodb_website](https://foodb.ca/about#cite) | | [foodb_download](https://foodb.ca/public/system/downloads/foodb_2020_4_7_csv.tar.gz) | FooDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (FooDB) and the original publication (see below). We ask that users who download significant portions of the database cite the FooDB paper in any resulting publications. For commerical licence, please consult with jreid3@ualberta.ca (Jennifer). Please cite: www.foodb.ca | jreid3@ualberta.ca (Jennifer) |  | 
+| foodb | 99568 | 82415 | [foodb_website](https://foodb.ca/about#cite) | | [foodb_download](https://foodb.ca/public/system/downloads/foodb_2020_4_7_csv.tar.gz) | FooDB is offered to the public as a freely available resource. Use and re-distribution of the data, in whole or in part, for commercial purposes requires explicit permission of the authors and explicit acknowledgment of the source material (FooDB) and the original publication (see below). We ask that users who download significant portions of the database cite the FooDB paper in any resulting publications. For commerical licence, please consult with jreid3@ualberta.ca (Jennifer). Please cite: www.foodb.ca | jreid3@ualberta.ca (Jennifer) |  |
 | inflamnat | 665 | 665 |  | [inflamnat_article](https://pubs.acs.org/doi/10.1021/acs.jcim.8b00560) | [inflamnat_download](https://pubs.acs.org/doi/suppl/10.1021/acs.jcim.8b00560/suppl_file/ci8b00560_si_001.xlsx) | Rights and permissions: [here](https://s100.copyright.com/AppDispatchServlet?startPage=66&pageCount=8&copyright=American+Chemical+Society&author=Ruihan+Zhang%2C+Jing+Lin%2C+Yan+Zou%2C+et+al&orderBeanReset=true&imprint=American+Chemical+Society&volumeNum=59&issueNum=1&contentID=acs.jcim.8b00560&title=Chemical+Space+and+Biological+Target+Network+of+Anti-Inflammatory+Natural+Products&numPages=8&pa=&issn=1549-9596&publisherName=acs&publication=jcisd8&rpt=n&endPage=73&publicationDate=January+2019) | xiaoweilie@ynu.edu.cn | |
 | knapsack | 117742 | 116292 | [knapsack_website](http://www.knapsackfamily.com/knapsack_core/top.php) | [knapsack_article](https://link.springer.com/chapter/10.1007/3-540-29782-0_13)| [knapsack_script](/src/1_gathering/db/knapsack/scraping.R) | CAUTION: (C) Any content included in KNApSAcK database cannot be re-distributed or used for commercial purposes by any user without contacting with KNApSAcK DB group (skanaya@gtc.naist.jp). All rights reserved. © 2007 NARA INSTITUTE of SCIENCE and TECHNOLOGY | skanaya@gtc.naist.jp | |
 | metabolights | 8367 | 8258 | [metabolights_website](https://www.ebi.ac.uk/metabolights/about) | [metabolights_article](https://doi.org/10.1093/nar/gkz1019)| [metabolights_script](/src/1_gathering/db/metabolights/scraping.R) (an API exists, maybe use it if time) | Citing MetaboLights Kenneth Haug, Keeva Cochrane, Venkata Chandrasekhar Nainala, Mark Williams, Jiakang Chang, Kalai Vanii Jayaseelan, Claire O’Donovan. MetaboLights: a resource evolving in response to the needs of its scientific community. Nucleic Acids Research, gkz1019, doi:10.1093/nar/gkz1019, PMID:31691833. Licensing All data is governed by the EMBL-EBI's [Terms of use](http://www.ebi.ac.uk/about/terms-of-use) and all [code](https://github.com/EBI-Metabolights) is licensed under [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0). | ??? |  |
@@ -47,16 +47,21 @@ An snapshot of the repository at the time of publication is also available.
 | tmdb | 2273 | 2145 | [tmdb_website](http://pcsb.ahau.edu.cn:8080/TCDB/index.jsp) | [tmdb_article](https://bmcplantbiol.biomedcentral.com/articles/10.1186/s12870-014-0243-1) | [tmdb_script](/src/1_gathering/db/tmdb/scraping.R) | [reuse permission](https://s100.copyright.com/AppDispatchServlet?title=TMDB%3A%20A%20literature-curated%20database%20for%20small%20molecular%20compounds%20found%20from%20tea&author=Yi%20Yue%20et%20al&contentID=10.1186%2Fs12870-014-0243-1&publication=1471-2229&publicationDate=2014-09-16&publisherName=SpringerNature&orderBeanReset=true) | [Xiao-Chun Wan](https://bmcplantbiol.biomedcentral.com/articles/10.1186/s12870-014-0243-1/email/correspondent/c1/new) [Guan-Hu Bao](https://bmcplantbiol.biomedcentral.com/articles/10.1186/s12870-014-0243-1/email/correspondent/c2/new) | currently down |
 | tmmc | 15079 | 15033 | [tmmc_website](http://informatics.kiom.re.kr/compound/index.jsp) | [tmmc_article](https://bmccomplementmedtherapies.biomedcentral.com/articles/10.1186/s12906-015-0758-5) | [tmmc_download](http://informatics.kiom.re.kr/compound/download/compound.xlsx) | [reuse permission](https://s100.copyright.com/AppDispatchServlet?title=TM-MC%3A%20a%20database%20of%20medicinal%20materials%20and%20chemical%20compounds%20in%20Northeast%20Asian%20traditional%20medicine&author=Sang-Kyun%20Kim%20et%20al&contentID=10.1186%2Fs12906-015-0758-5&publication=1472-6882&publicationDate=2015-07-09&publisherName=SpringerNature&orderBeanReset=true) no other info | [Jeong-Ju Lee](https://bmccomplementmedtherapies.biomedcentral.com/articles/10.1186/s12906-015-0758-5/email/correspondent/c1/new) |  |
 | tppt | 27487 | 27182 | [tppt_website](https://www.agroscope.admin.ch/agroscope/en/home/publications/apps/tppt.html) | [tppt_article](https://pubs.acs.org/doi/10.1021/acs.jafc.8b01639) | [tppt_download](https://www.agroscope.admin.ch/dam/agroscope/de/dokumente/publikationen/tppt-xls.xlsx.download.xlsx/TPPT_database.xlsx) | [reuse permission](https://pubs.acs.org/page/copyright/permissions.html) | thomas.bucheli@agroscope.admin.ch | |
-| unpd | 423432 | 340319 | [unpd_website](https://web.archive.org/web/20160314180639/http://pkuxxj.pku.edu.cn/UNPD/introduction.php) | [unpd_article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062839) | [NICE_QUESTION](NO_IDEA) | Jiangyong Gu, Yuanshen Gui, Lirong Chen, Gu Yuan, Hui-Zhe Lu, Xiaojie Xu. Use of Natural Products as Chemical Library for Drug Discovery and Network Pharmacology. PLoS ONE. 2013, 8(4): e62839. doi:10.1371/journal.pone.0062839. | lirongc@pku.edu.cn xiaojxu@pku.edu.cn |  | 
+| unpd | 423432 | 340319 | [unpd_website](https://web.archive.org/web/20160314180639/http://pkuxxj.pku.edu.cn/UNPD/introduction.php) | [unpd_article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0062839) | [NICE_QUESTION](NO_IDEA) | Jiangyong Gu, Yuanshen Gui, Lirong Chen, Gu Yuan, Hui-Zhe Lu, Xiaojie Xu. Use of Natural Products as Chemical Library for Drug Discovery and Network Pharmacology. PLoS ONE. 2013, 8(4): e62839. doi:10.1371/journal.pone.0062839. | lirongc@pku.edu.cn xiaojxu@pku.edu.cn |  |
 | wakankensaku | 367 | 367 | [wakankensaku_website](https://wakankensaku.inm.u-toyama.ac.jp/wiki/Main_Page) | ??? | [wakankensaku_script](/src/1_gathering/db/wakankensaku/scraping.R) | ??? | ??? | |
 
 ## Computational requirements
-see https://social-science-data-editors.github.io/guidance/template-README.html
+
+see <https://social-science-data-editors.github.io/guidance/template-README.html>
+
 ### Software Requirements
+
 ### Description of programs
+
 ### Memory and Runtime Requirements
 
 ## Instructions
+
 ### Details
 
 ## List of tables and programs
@@ -64,9 +69,10 @@ see https://social-science-data-editors.github.io/guidance/template-README.html
 ## References
 
 ## Acknowledgments
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc.
+
+-   Hat tip to anyone whose code was used
+-   Inspiration
+-   etc.
 
 
 ## Flowchart
@@ -83,7 +89,7 @@ end
 
 subgraph db
 style db fill:#ffffcc
-010([external/db/...]) -- x times --> 020[[db/.../standardizing.R]] -- x times --> 030([interim/db/...]) 
+010([external/db/...]) -- x times --> 020[[db/.../standardizing.R]] -- x times --> 030([interim/db/...])
 end
 
 subgraph translation
@@ -109,17 +115,17 @@ subgraph organism
 080[[integrating.R]] --> 100([organism/*.tsv])
 style organism fill:#E5F5E0
 100([organism/*.tsv]) -->
-    101[[cleaningOriginal.R]] --> 
-        102([original/*.json]) --> 
-            103[[cleaningOriginal.R]] --> 
+    101[[cleaningOriginal.R]] -->
+        102([original/*.json]) -->
+            103[[cleaningOriginal.R]] -->
                 104([original.tsv.gz]) -->
                     111[[cleaningTaxonomy.R]]
         102([original/*.json]) -->
             105[[translating.kt]] -->
                 106([organism/*.tsv]) -->
-                    107[[cleaningTranslated.R]] --> 
-                        108([translated/*.json]) --> 
-                            109[[cleaningTranslated.R]] -->  
+                    107[[cleaningTranslated.R]] -->
+                        108([translated/*.json]) -->
+                            109[[cleaningTranslated.R]] -->
                                 110([translated.tsv.gz]) -->
                                     111[[cleaningTaxonomy.R]] -->
                                         120([cleaned.tsv.gz])
@@ -142,10 +148,10 @@ end
 
 subgraph str_2_integrating
 style str_2_integrating fill:#FEE6CE
-210([inchi.tsv.gz]) --> 240[[integrating.R]] 
+210([inchi.tsv.gz]) --> 240[[integrating.R]]
 222([smiles.tsv.gz]) --> 240[[integrating.R]]
 232([names.tsv.gz]) --> 240[[integrating.R]]
-    --> 250([unique.tsv.gz]) 
+    --> 250([unique.tsv.gz])
 end
 
 subgraph str_3_sanitizing
@@ -165,7 +171,7 @@ style str_4_enriching fill:#FEE6CE
 270([cleaned.tsv.gz]) -->
     |external| 283[[in silico]] -->
         |external| 293([enriched in silico spectra])
-end 
+end
 
 subgraph str_5_integrating
 style str_5_integrating fill:#FEE6CE
@@ -192,7 +198,7 @@ subgraph ref_1_translating
 style ref_1_translating fill:#EFEDF5
 320([doi.tsv.gz]) -->
     321[[doi.R]] -->
-        322([doi.tsv.gz]) 
+        322([doi.tsv.gz])
 330([pubmed.tsv.gz]) -->
     331[[pubmed.R]] -->
         332([pubmed.tsv.gz])
@@ -218,7 +224,7 @@ style ref_2_integrating fill:#EFEDF5
 352([split.tsv.gz]) --> 360[[integrating.R]]
 362([pubDetails.tsv.gz]) --> 360[[integrating.R]]
 372([original.tsv.gz]) --> 360[[integrating.R]] -->
-    380([reference.tsv.gz]) 
+    380([reference.tsv.gz])
 end
 subgraph ref_3_cleaning
 style ref_3_cleaning fill:#EFEDF5
@@ -239,38 +245,41 @@ subgraph 3_integrating
 390([cleaned.tsv.gz]) -->
 998[[integrating.R]]
 
-400([0_original/table]) --> 
+400([0_original/table]) -->
     998[[integrating.R]] --> 999([table.tsv.gz])
-end    
+end
 end
 ```
 
+
 ## Getting Started
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ### Prerequisites
+
 You need:
-- Git
-- [DVC](https://www.dvc.org).
+
+-   Git
+-   [DVC](https://www.dvc.org).
 
 You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
 from scratch.
 
 ### Access to metabomaps
-Add this to your
-```
- ~/.ssh/config
-```
 
-```
-Host metabomaps
-  IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
-  User <user_remote>
-  HostName metabomaps.nprod.net
-  Port 10311
-```
+Add this to your
+
+     ~/.ssh/config
+
+    Host metabomaps
+      IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
+      User <user_remote>
+      HostName metabomaps.nprod.net
+      Port 10311
 
 ### Pull the repository
+
 ```console
 git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
 
@@ -279,93 +288,92 @@ dvc pull  # This will take a while
 ```
 
 ### Having the data in a different place
+
 If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
 
 ### If you want to build only a simple DB
-make -C src/1_gathering/db -B alkamid 
+
+make -C src/1_gathering/db -B alkamid
 
 ### Use docker to build
+
 Install docker on your machine, make sure it is on your path
 
 then
 
-````console
+```console
 make docker-build
 make docker-bash
-````
+```
 
 This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
 
 ### Packages
+
 #### Conda environement
 
-A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory. 
+A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory.
 
 We will also create another environment for strict mirroring of the installed packages. (TO DO)
 
-````
-conda env create -f environment.yml
-````
+    conda env create -f environment.yml
 
 If your environement is not directly sources by your default bash run the following lines
 
-````
-$ source ~/anaconda3/etc/profile.d/conda.sh
+    $ source ~/anaconda3/etc/profile.d/conda.sh
 
-$ conda activate your_env
-````
+    $ conda activate your_env
 
 Your R working directory should be src
 
-````
-$ cd src
-````
+    $ cd src
 
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
 
 ## Minimal working example
+
 A minimal working example containing XXX entries coming from various DB's is proposed.
 Use this example to check if all steps are running correctly on your machine.
 
 ## To build a graph from the make
-(Requires remake and gprof2dot https://github.com/jrfonseca/gprof2dot)
 
-```
-remake --profile -B curating
-gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
+(Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>)
 
-```
+    remake --profile -B curating
+    gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
 
 ### Description
+
 The minimal working example file contains following columns:
 
 # TO UPDATE
 
-```
-Give an example
-```
+    Give an example
 
 ### Final output
+
 If everything went well, the output of the minimal working example should be:
 
 # TO UPDATE
 
-```
-Give an example 
-```
+    Give an example
 
 ## Explanations
-Add additional notes 
+
+Add additional notes
 
 ## Contributing
+
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## Authors
-* **Adriano Rutz** - *Initial work* - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
-* **Pierre-Marie Allard** - *Investigator* - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
-* **Jonathan Bisson** - *Hacker in Chief* - [bjo](https://gitlab.unige.ch/bjo)
+
+-   **Adriano Rutz** - _Initial work_ - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
+-   **Pierre-Marie Allard** - _Investigator_ - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
+-   **Jonathan Bisson** - _Hacker in Chief_ - [bjo](https://gitlab.unige.ch/bjo)
 
 See also the list of [contributors](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members) who participated in this project.
 
 ## License
+
 This project is licensed under the GNU GPLv3 license - see the [LICENSE.md](LICENSE.md) file for details
