@@ -665,13 +665,6 @@ set.seed(seed = 42,
 validationSet <- anti_join(openDbClean, realMetaSample) %>%
   sample_n(100)
 
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
-validationSet2 <-
-  anti_join(openDbClean, realValidationSetFilled) %>%
-  sample_n(13)
-
 cat("loading validation set \n")
 validationSetFilled_1 <-
   read_delim(
@@ -683,6 +676,13 @@ validationSetFilled_1 <-
   ) %>%
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+validationSet2 <-
+  anti_join(openDbClean, validationSetFilled_1) %>%
+  sample_n(13)
 
 cat("loading validation set bis \n")
 validationSetFilled_2 <-
