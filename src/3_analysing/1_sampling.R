@@ -184,6 +184,74 @@ if (nrow(openDbMinimal %>%
       ),
   )
 
+# additional again (new process) (needs 2_validating)
+if (exists("realMetaSample"))
+  openDbMinimal <- anti_join(inhouseDbFull, realMetaSample)
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+if (exists("realMetaSample"))
+  additionalSetBis <-
+  bind_rows(
+    A <- openDbMinimal %>%
+      filter(referenceType == "title")  %>%
+      sample_n(2) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    B <- openDbMinimal %>%
+      filter(referenceType == "publishingDetails")  %>%
+      sample_n(15) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    C <- openDbMinimal %>%
+      filter(referenceType == "split")  %>%
+      sample_n(3) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    D <- openDbMinimal %>%
+      filter(referenceType == "pubmed")  %>%
+      sample_n(10) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    E <- openDbMinimal %>%
+      filter(referenceType == "doi")  %>%
+      sample_n(2) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      )
+  ) %>%
+  select(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle,
+    curator,
+    validated,
+    comments
+  )
+
 cat("ensuring directories exist \n")
 ifelse(
   test = !dir.exists(pathDataInterimTablesAnalysed),
@@ -240,6 +308,17 @@ if (exists("additionalSet"))
     x = additionalSet,
     file = file.path(pathDataInterimTablesAnalysed,
                      "additionalSet.tsv"),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+
+if (exists("additionalSetBis"))
+  write.table(
+    x = additionalSetBis,
+    file = file.path(pathDataInterimTablesAnalysed,
+                     "additionalSetBis.tsv"),
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
