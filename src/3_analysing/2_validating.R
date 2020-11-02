@@ -191,6 +191,15 @@ sampleAllONPDB_additionalSet <-
     trim_ws = TRUE
   )
 
+sampleAllONPDB_additionalSetBis <-
+  read_delim(
+    file = "../data/validation/new/additionalSetBis.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
+
 sampleCondifent_PMA <-
   read_delim(
     file = "../data/validation/confident/100confidentPMAChecked.tsv",
@@ -301,6 +310,7 @@ sampleAllONPDB <- bind_rows(
   sampleAllONPDB_PMA,
   sampleAllONPDB_publishingDetails,
   sampleAllONPDB_additionalSet,
+  sampleAllONPDB_additionalSetBis,
   sampleCondifent_PMA
 )
 
@@ -358,15 +368,22 @@ table <- sampleAllONPDB %>%
   )
 
 globalSample <- bind_rows(table_old, table) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedPmid)
+  distinct(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    structureCleanedInchikey3D,
+    referenceCleanedDoi,
+    curator,
+    validated,
+    comments
   ) %>%
-  relocate(c(referenceCleanedPmcid, referenceCleanedPmid), .after = referenceCleanedDoi) %>%
-  select(-referenceCleanedPmcid,
-         -referenceCleanedPmid,
-         -referenceCleanedTitle) %>%
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
@@ -648,8 +665,15 @@ set.seed(seed = 42,
 validationSet <- anti_join(openDbClean, realMetaSample) %>%
   sample_n(100)
 
+set.seed(seed = 42,
+         kind = "Mersenne-Twister",
+         normal.kind = "Inversion")
+validationSet2 <-
+  anti_join(openDbClean, realValidationSetFilled) %>%
+  sample_n(13)
+
 cat("loading validation set \n")
-validationSetFilled <-
+validationSetFilled_1 <-
   read_delim(
     file = "../data/validation/validationSet.tsv",
     delim = "\t",
@@ -659,6 +683,21 @@ validationSetFilled <-
   ) %>%
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+
+cat("loading validation set bis \n")
+validationSetFilled_2 <-
+  read_delim(
+    file = "../data/validation/validationSetBis.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+  filter(!is.na(validated)) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+
+validationSetFilled <-
+  bind_rows(validationSetFilled_1, validationSetFilled_2)
 
 realValidationSetFilled <-
   inner_join(validationSetFilled, openDbClean) %>%
@@ -771,6 +810,19 @@ if (exists("validationSet"))
     x = validationSet,
     file = file.path(pathDataInterimTablesAnalysed,
                      "validationSet.tsv"),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+
+cat(file.path(pathDataInterimTablesAnalysed,
+              "validationSetBis.tsv"))
+if (exists("validationSet2"))
+  write.table(
+    x = validationSet2,
+    file = file.path(pathDataInterimTablesAnalysed,
+                     "validationSetBis.tsv"),
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
