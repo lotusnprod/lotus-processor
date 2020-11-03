@@ -71,6 +71,8 @@ start_time = time.time()
 
 df['ROMol'] = df[smiles_column_header].map(Chem.MolFromSmiles)
 
+df = df[~df['ROMol'].isnull()]
+
 # this one "Returns the number of unspecified atomic stereocenters"
 df['count_unspecified_atomic_stereocenters'] = df['ROMol'].map(
     Chem.rdMolDescriptors.CalcNumUnspecifiedAtomStereoCenters)
