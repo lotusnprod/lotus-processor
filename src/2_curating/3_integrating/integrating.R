@@ -117,7 +117,7 @@ translatedStructureTable <- read_delim(
 
 cat("... cleaned structures \n")
 cleanedStructureTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureFile),
+  file = gzfile(description = pathDataInterimTablesCleanedStructureStereoCounted),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -132,7 +132,9 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_validatorLog = validatorLog,
     structureCleaned_molecularFormula = formulaSanitized,
     structureCleaned_exactMass = exactmassSanitized,
-    structureCleaned_xlogp = xlogpSanitized
+    structureCleaned_xlogp = xlogpSanitized,
+    structureCleaned_stereocenters_unspecified = count_unspecified_atomic_stereocenters,
+    structureCleaned_stereocenters_total = count_atomic_stereocenters,
   )
 
 if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
@@ -224,7 +226,7 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
 cat("splitting metadata from minimal columns ... \n")
 cat("... structures \n")
 structureMinimal <- structureFull %>%
-  filter(!is.na(structureCleanedInchi)) %>%
+  filter(!is.na(structureCleanedInchikey3D)) %>%
   distinct(
     structureType,
     structureValue,
@@ -236,7 +238,7 @@ structureMinimal <- structureFull %>%
   )
 
 structureMetadata <- structureFull %>%
-  filter(!is.na(structureCleanedInchi)) %>%
+  filter(!is.na(structureCleanedInchikey3D)) %>%
   distinct(
     structureCleanedInchi,
     structureCleanedInchikey3D,
@@ -246,6 +248,8 @@ structureMetadata <- structureFull %>%
     structureCleaned_molecularFormula,
     structureCleaned_exactMass,
     structureCleaned_xlogp,
+    structureCleaned_stereocenters_unspecified,
+    structureCleaned_stereocenters_total
     # structureCleaned_class,
     # structureCleaned_superclass,
     # structureCleaned_pathway,

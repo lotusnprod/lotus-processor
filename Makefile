@@ -1,14 +1,14 @@
 include config.mk
 include paths.mk
 
-.PHONY: help docker-build docker-bash 
+.PHONY: help docker-build docker-bash
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
-.PHONY : cleaning-organism-interim 
+.PHONY : cleaning-organism-interim
 .PHONY : curating-and-analysing-and-visalizing visualizing
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
@@ -25,7 +25,7 @@ help:
 	@echo "curating: Run the 2_curating scripts"
 	@echo "analysing: Run the 3_analysing scripts"
 	@echo "visualizing: Run the 4_visualizing scripts"
-		
+
 
 
 docker-build:
@@ -70,7 +70,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/p
 
 curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
 
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing # curating-editing-structure-classifying
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting # curating-editing-structure-classifying
 
 curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
 

@@ -15,8 +15,9 @@ HISTORY:
 '''
 
 
-
 # importing packages
+import errno
+import os
 import chemosanitizer_functions
 from chemosanitizer_functions import *
 
@@ -45,14 +46,14 @@ except:
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
-	myZip,
-	sep = '\t')
+    myZip,
+    sep='\t')
 
 if len(df) == 1:
     df['structureTranslated'] = 'InChI=1S/Pu'
     print('your dataframe is empty, plutonium loaded')
 else:
-	print('your dataframe is not empty :)')
+    print('your dataframe is not empty :)')
 
 # eventually filter display some info, comment according to your needs
 # df = df[df['originaldb'] == 'tcm']
@@ -65,20 +66,20 @@ df.info()
 # df.columns
 # df.info()
 
-
 # timer is started
 start_time = time.time()
 
 df['ROMol'] = df[smiles_column_header].map(Chem.MolFromSmiles)
 
-
 # this one "Returns the number of unspecified atomic stereocenters"
-df['count_unspecified_atomic_stereocenters'] = df['ROMol'].map(Chem.rdMolDescriptors.CalcNumUnspecifiedAtomStereoCenters)
+df['count_unspecified_atomic_stereocenters'] = df['ROMol'].map(
+    Chem.rdMolDescriptors.CalcNumUnspecifiedAtomStereoCenters)
 
 # this one "Returns the total number of atomic stereocenters (specified and unspecified)"
-df['count_atomic_stereocenters'] = df['ROMol'].map(Chem.rdMolDescriptors.CalcNumAtomStereoCenters)
+df['count_atomic_stereocenters'] = df['ROMol'].map(
+    Chem.rdMolDescriptors.CalcNumAtomStereoCenters)
 
-## We export this final df, after dropping the ROMol object
+# We export this final df, after dropping the ROMol object
 
 df.drop('ROMol', axis=1, inplace=True)
 
@@ -86,26 +87,21 @@ df.drop('ROMol', axis=1, inplace=True)
 print(" Above command executed in --- %s seconds ---" %
       (time.time() - start_time))
 
-
 df.info()
 
-
-
 # exporting df
-import os
-import errno
 filename = ouput_file_path
 if not os.path.exists(os.path.dirname(filename)):
     try:
         os.makedirs(os.path.dirname(filename))
-    except OSError as exc: # Guard against race condition
+    except OSError as exc:  # Guard against race condition
         if exc.errno != errno.EEXIST:
             raise
-            
+
 # df.to_csv(ouput_file_path, sep='\t', index=False)
 df.to_csv(
-	ouput_file_path, 
-	sep = '\t', 
-	index = False,
-	compression = 'gzip'
-	)
+    ouput_file_path,
+    sep='\t',
+    index=False,
+    compression='gzip'
+)

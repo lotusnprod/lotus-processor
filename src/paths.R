@@ -1130,6 +1130,9 @@ pathDataInterimTablesCleanedStructure <-
 pathDataInterimTablesCleanedStructureFile <-
   file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.gz")
 
+pathDataInterimTablesCleanedStructureStereoCounted <-
+  file.path(pathDataInterimTablesCleanedStructure, "counted.tsv.gz")
+
 pathDataInterimTablesCleanedStructureFileClassified <-
   file.path(pathDataInterimTablesCleanedStructure, "classified.tsv.gz")
 
