@@ -563,7 +563,7 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
   )
 
 cat("exporting ... \n")
-cat("pathDataInterimTablesCleanedOrganismFinal \n")
+cat(pathDataInterimTablesCleanedOrganismFinal, "\n")
 write.table(
   x = dataCuratedOrganism,
   file = gzfile(
