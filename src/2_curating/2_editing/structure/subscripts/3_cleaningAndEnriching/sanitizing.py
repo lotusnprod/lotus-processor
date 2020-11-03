@@ -99,13 +99,10 @@ df['inchikeySanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].map(
     Chem.MolToInchiKey)
 df['shortikSanitized'] = df['inchikeySanitized'].str.split(
     "-", n=1, expand=True)[0]
-
 df['formulaSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
     rdMolDescriptors.CalcMolFormula)
-
 df['exactmassSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
     Descriptors.ExactMolWt)
-
 df['xlogpSanitized'] = df['ROMolSanitizedLargestFragmentUncharged'].apply(
     Chem.Crippen.MolLogP)
 
