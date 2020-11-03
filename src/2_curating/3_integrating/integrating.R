@@ -335,10 +335,17 @@ referenceMetadata <- referenceTableFull %>%
     referenceCleaned_score_complementTotal
   )
 
-# cleaning memory
+cat("cleaning memory ... \n")
 gc(verbose = TRUE,
    reset = TRUE,
    full = TRUE)
+rm(
+  structureOld,
+  referenceOrganismDictionary,
+  organismTableFull,
+  organismOld,
+  organismDictionary
+)
 
 cat("joining minimal table ... \n")
 cat("... structures \n")
@@ -401,8 +408,11 @@ structureNA <- anti_join(x = originalTable,
                          y = structureFull)
 
 structureNA <- left_join(structureNA, structureFull) %>%
-  filter(is.na(structureCleanedInchi)) %>%
-  distinct(
+  filter(is.na(structureCleanedInchikey3D)) %>%
+  distinct(structureType,
+           structureValue,
+           .keep_all = TRUE) %>%
+  select(
     structureType,
     structureValue,
     structureCleanedInchi,

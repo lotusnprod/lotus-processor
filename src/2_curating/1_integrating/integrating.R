@@ -208,7 +208,7 @@ structureTable_full <- structureTable_full %>%
   select(structureType, structureValue)
 
 if (nrow(structureTable_full) == 0)
-  structureTable_full[1,] <- NA
+  structureTable_full[1, ] <- NA
 
 cat("... organisms table \n")
 organismTable <- dbTable %>%
@@ -491,7 +491,7 @@ write.table(
 )
 
 cat(pathDataInterimTablesOriginalReferenceTitleFolder, "\n")
-split_data_table(
+split_data_table_quote(
   x = referenceTable_title,
   no_rows_per_frame = 1000,
   text = "",
@@ -528,7 +528,7 @@ write.table(
 )
 
 cat(pathDataInterimTablesOriginalReferenceOriginalFolder, "\n")
-split_data_table(
+split_data_table_quote(
   x = referenceTable_original,
   no_rows_per_frame = 1000,
   text = "",
