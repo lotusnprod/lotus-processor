@@ -220,6 +220,16 @@ inhouseDbMinimal <- read_delim(
   trim_ws = TRUE
 )
 
+cat("... reference metadata \n")
+structureMetadata <-
+  read_delim(
+    file = gzfile(pathDataInterimDictionariesStructureMetadata),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
+
 cat("... organism metadata \n")
 organismMetadata <-
   read_delim(
@@ -388,8 +398,12 @@ globalSample <- bind_rows(table_old, table) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 cat("adding metadata \n")
+cat("... structures \n")
+inhouseDbFull <- left_join(inhouseDbMinimal, structureMetadata)
+
 cat("... organisms \n")
-inhouseDbFull <- left_join(inhouseDbMinimal, organismMetadata)
+inhouseDbFull <- left_join(inhouseDbFull, organismMetadata)
+
 cat("... references \n")
 inhouseDbFull <- left_join(inhouseDbFull, referenceMetadata)
 
@@ -597,6 +611,7 @@ openDb <- inhouseDbFull %>%
     structureCleanedSmiles,
     # structureCleanedName,
     # structureCleanedNameIupac,
+    structureCleaned_stereocenters_unspecified,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -616,6 +631,9 @@ dnpDb <- inhouseDbFull %>%
     structureCleanedInchikey3D,
     structureCleanedInchi,
     structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac,
+    structureCleaned_stereocenters_unspecified,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
