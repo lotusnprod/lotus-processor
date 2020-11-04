@@ -19,7 +19,7 @@ fileInZip <-
     outFile <- list()
     fileList <- unzip(inZip, list = TRUE)
     fileList[, 1] <-
-      gsub("__MACOSX/._", "", fileList[, 1]) #error thrown on one line for me otherwise
+      gsub("__MACOSX/._", "", fileList[, 1]) # error thrown on one line for me otherwise
     for (i in 1:nrow(fileList)) {
       if (grepl(".json", fileList[i, 1])) {
         oFa <- fromJSON(unz(inZip, fileList[i, 1]))
@@ -110,9 +110,10 @@ data <- tibble(id, smiles, organism, reference) %>%
   distinct(id, .keep_all = TRUE) %>%
   filter(!is.na(smiles)) %>%
   select(id,
-         smiles,
-         biologicalsource = organism,
-         reference) %>%
+    smiles,
+    biologicalsource = organism,
+    reference
+  ) %>%
   mutate(
     reference_doi = gsub(
       pattern = "doi:",

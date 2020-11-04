@@ -8,8 +8,8 @@ source("functions/standardizing.R")
 
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
-library(tidyverse) #provides pivot_wider
+library(rvest) # provides read_html
+library(tidyverse) # provides pivot_wider
 library(XML)
 
 # get paths
@@ -31,9 +31,9 @@ list <- list()
 
 for (i in 1:length(X)) {
   data <- xmlParse(file = X[i])
-  
+
   xml_data <- xmlToList(node = data)
-  
+
   id <- (xml_data$id)
   name <- (xml_data$nome)
   inchi <- (xml_data$inchi)
@@ -92,7 +92,7 @@ for (i in 1:length(X)) {
       no = (xml_data$especies$origem$especie)
     ))
   )
-  
+
   df <- data.frame(
     id,
     name,
@@ -107,7 +107,7 @@ for (i in 1:length(X)) {
     organismGenus,
     organismSpecies
   )
-  
+
   list[[i]] <- df
 }
 
@@ -117,9 +117,10 @@ data_original <- bind_rows(list)
 data_manipulated <- data_original %>%
   mutate(
     biologicalsource = paste(organismFamily,
-                             organismGenus,
-                             organismSpecies,
-                             sep = " "),
+      organismGenus,
+      organismSpecies,
+      sep = " "
+    ),
     inchi = paste("InChI=", inchi, sep = "")
   ) %>%
   cSplit("referenceFull", sep = ";") %>%
@@ -143,7 +144,7 @@ data_manipulated <- data_original %>%
     inchi,
     inchikey,
     smiles,
-    #temporary
+    # temporary
     biologicalsource,
     reference_authors = referenceAuthors,
     reference_title = referenceTitle,

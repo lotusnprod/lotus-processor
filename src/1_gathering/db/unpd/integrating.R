@@ -29,26 +29,32 @@ data_original_ISDB <- read_delim(
 # selecting
 data_translated <-
   left_join(data_original,
-            data_original_ISDB,
-            by = c("inchik" = "inchik")) %>%
-  select(unpdid,
-         inchik,
-         ln_reduced,
-         ref,
-         InChI,
-         SMILES)
+    data_original_ISDB,
+    by = c("inchik" = "inchik")
+  ) %>%
+  select(
+    unpdid,
+    inchik,
+    ln_reduced,
+    ref,
+    InChI,
+    SMILES
+  )
 
 data_translated[] <-
-  lapply(data_translated, function(x)
-    gsub("\r\n", " ", x))
+  lapply(data_translated, function(x) {
+    gsub("\r\n", " ", x)
+  })
 
 data_translated[] <-
-  lapply(data_translated, function(x)
-    gsub("\r", " ", x))
+  lapply(data_translated, function(x) {
+    gsub("\r", " ", x)
+  })
 
 data_translated[] <-
-  lapply(data_translated, function(x)
-    gsub("\n", " ", x))
+  lapply(data_translated, function(x) {
+    gsub("\n", " ", x)
+  })
 
 # exporting
 write.table(

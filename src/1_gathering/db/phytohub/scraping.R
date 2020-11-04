@@ -1,4 +1,4 @@
-#title: "PHYTOHUB scrapeR"
+# title: "PHYTOHUB scrapeR"
 
 # loading paths
 source("paths.R")
@@ -11,43 +11,44 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
-library(rvest)  # provides read_html
+library(rvest) # provides read_html
 
 # get paths
 database <- databases$get("phytohub")
 
-url <- 'http://phytohub.eu/entries/PHUB'
+url <- "http://phytohub.eu/entries/PHUB"
 
 X <- (1:1975)
 
-getphytohub <- function(X)
-{
-  tryCatch({
-    cd_id <- str_pad (X, 6, pad = "0")
-    url_id <- paste(url, cd_id)
-    url_id <- gsub("\\s", "", url_id)
-    sample <- read_html(url_id)
-    scrape1 <-
-      html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]") %>%
-      html_text()
-    scrape2 <-
-      html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[10]/pre/small") %>%
-      html_text()
-    scrape3 <-
-      html_nodes(sample, xpath = "//*[@id=\"fs\"]/div/div/div/table") %>%
-      html_table()
-    scrape4 <- scrape3[[1]]
-    scrape5 <-
-      html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre") %>%
-      html_text()
-    
-    df <- cbind(scrape1, scrape2, scrape5, scrape4)
-    final_df <- data.frame(df)
-    return(final_df)
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+getphytohub <- function(X) {
+  tryCatch(
+    {
+      cd_id <- str_pad(X, 6, pad = "0")
+      url_id <- paste(url, cd_id)
+      url_id <- gsub("\\s", "", url_id)
+      sample <- read_html(url_id)
+      scrape1 <-
+        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]") %>%
+        html_text()
+      scrape2 <-
+        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[10]/pre/small") %>%
+        html_text()
+      scrape3 <-
+        html_nodes(sample, xpath = "//*[@id=\"fs\"]/div/div/div/table") %>%
+        html_table()
+      scrape4 <- scrape3[[1]]
+      scrape5 <-
+        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre") %>%
+        html_text()
+
+      df <- cbind(scrape1, scrape2, scrape5, scrape4)
+      final_df <- data.frame(df)
+      return(final_df)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 PHYTOHUB <- invisible(
@@ -59,7 +60,7 @@ PHYTOHUB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )
@@ -78,38 +79,41 @@ PHYTOHUB_4 <- PHYTOHUB_3 %>%
     biologicalsource_precursor = Food.Source
   ) %>%
   filter(is.na(name_precursor)) %>%
-  select(name,
-         inchi,
-         smiles,
-         biologicalsource)
+  select(
+    name,
+    inchi,
+    smiles,
+    biologicalsource
+  )
 
-url <- 'http://phytohub.eu/entry_food_sources/'
+url <- "http://phytohub.eu/entry_food_sources/"
 
 X <- (1:2975)
 
-getphytohubref <- function(X)
-{
-  tryCatch({
-    cd_id <- X
-    url_id <- paste(url, cd_id)
-    url_id <- gsub("\\s", "", url_id)
-    sample <- read_html(url_id)
-    scrape1 <-
-      html_nodes(sample, xpath = "/html/body/main/div/h1") %>%
-      html_text()
-    scrape2 <-
-      html_nodes(sample, xpath = "/html/body/main/blockquote") %>%
-      html_text()
-    
-    df <- cbind(scrape1, scrape2)
-    
-    final_df <- as.data.frame(df)
-    
-    return(final_df)
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+getphytohubref <- function(X) {
+  tryCatch(
+    {
+      cd_id <- X
+      url_id <- paste(url, cd_id)
+      url_id <- gsub("\\s", "", url_id)
+      sample <- read_html(url_id)
+      scrape1 <-
+        html_nodes(sample, xpath = "/html/body/main/div/h1") %>%
+        html_text()
+      scrape2 <-
+        html_nodes(sample, xpath = "/html/body/main/blockquote") %>%
+        html_text()
+
+      df <- cbind(scrape1, scrape2)
+
+      final_df <- as.data.frame(df)
+
+      return(final_df)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 PHYTOHUB_REF <- invisible(
@@ -121,7 +125,7 @@ PHYTOHUB_REF <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )

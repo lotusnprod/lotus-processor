@@ -31,8 +31,10 @@ data_selected <- data_original %>%
     reference_original = Reference
   ) %>%
   mutate(reference_split = ifelse(
-    test = grepl(pattern = ".*et al",
-                 x = reference_original),
+    test = grepl(
+      pattern = ".*et al",
+      x = reference_original
+    ),
     yes =
       trimws(x = sub(
         pattern = "^ /",

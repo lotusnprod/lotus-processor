@@ -18,7 +18,7 @@ dataPublishingDetails <- read_delim(
 )
 
 cat("submitting to crossRef \n")
-if (nrow(dataPublishingDetails) != 1)
+if (nrow(dataPublishingDetails) != 1) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit_publishingDetails,
@@ -32,28 +32,33 @@ if (nrow(dataPublishingDetails) != 1)
       ignore.interactive = TRUE
     )
   )
+}
 
 cat("This may take several minutes \n")
 
 cat("joining results with original list \n")
-if (nrow(dataPublishingDetails) != 1)
+if (nrow(dataPublishingDetails) != 1) {
   dataPublishingDetails <-
-  getAllReferences(data = dataPublishingDetails,
-                   referenceType = "publishingDetails",
-                   method = "osa")
+    getAllReferences(
+      data = dataPublishingDetails,
+      referenceType = "publishingDetails",
+      method = "osa"
+    )
+}
 
-if (nrow(dataPublishingDetails) == 1)
+if (nrow(dataPublishingDetails) == 1) {
   dataPublishingDetails <- data.frame() %>%
-  mutate(
-    referenceOriginal_publishingDetails = NA,
-    referenceTranslatedDoi = NA,
-    referenceTranslatedJournal = NA,
-    referenceTranslatedTitle = NA,
-    referenceTranslatedDate = NA,
-    referenceTranslatedAuthor = NA,
-    referenceTranslationScoreCrossref = NA,
-    referenceTranslationScoreDistance = NA
-  )
+    mutate(
+      referenceOriginal_publishingDetails = NA,
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA
+    )
+}
 
 cat("ensuring directories exist \n")
 ifelse(
@@ -69,8 +74,10 @@ ifelse(
 )
 
 cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedReferencePublishingDetails,
-    "\n")
+cat(
+  pathDataInterimTablesTranslatedReferencePublishingDetails,
+  "\n"
+)
 write.table(
   x = dataPublishingDetails,
   file = gzfile(

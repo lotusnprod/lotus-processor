@@ -1,14 +1,14 @@
 # additional fig
 
 # needs 3_metrics
-fig1 <- plot_ly(type = 'violin')  %>%
+fig1 <- plot_ly(type = "violin") %>%
   add_trace(
     x = 1,
     y = organismsPerStructure$n,
-    legendgroup = 'organisms per structure',
-    scalegroup = 'organisms per structure',
-    name = 'organisms per structure',
-    side = 'negative',
+    legendgroup = "organisms per structure",
+    scalegroup = "organisms per structure",
+    name = "organisms per structure",
+    side = "negative",
     box = list(visible = T),
     meanline = list(visible = T),
     color = I("#a6cee3")
@@ -16,10 +16,10 @@ fig1 <- plot_ly(type = 'violin')  %>%
   add_trace(
     x = 1,
     y = structuresPerOrganism$n,
-    legendgroup = 'structures per organism',
-    scalegroup = 'structures per organism',
-    name = 'structures per organism',
-    side = 'positive',
+    legendgroup = "structures per organism",
+    scalegroup = "structures per organism",
+    name = "structures per organism",
+    side = "positive",
     box = list(visible = T),
     meanline = list(visible = T),
     color = I("#1f78b4")

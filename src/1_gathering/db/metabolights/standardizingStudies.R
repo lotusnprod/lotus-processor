@@ -16,13 +16,17 @@ library(tidyr)
 database <- databases$get("metabolights")
 
 files <-
-  dir(path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
-      pattern = "*.json")
+  dir(
+    path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+    pattern = "*.json"
+  )
 
 filenames <-
-  list.files(path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
-             pattern = "*.json",
-             full.names = TRUE)
+  list.files(
+    path = pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+    pattern = "*.json",
+    full.names = TRUE
+  )
 
 # just to get problematic entries
 
@@ -46,7 +50,7 @@ id <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -63,7 +67,7 @@ name <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -80,7 +84,7 @@ inchi <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -97,7 +101,7 @@ smiles <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -114,7 +118,7 @@ species <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 

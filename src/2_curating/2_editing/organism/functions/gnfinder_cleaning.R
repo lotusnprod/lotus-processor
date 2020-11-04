@@ -12,7 +12,7 @@ gnfinder_cleaning <- function(num, organismCol) {
       ".tsv",
       sep = ""
     )
-    
+
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedOrganismOriginal,
@@ -25,7 +25,7 @@ gnfinder_cleaning <- function(num, organismCol) {
         sep = ""
       )
   }
-  
+
   if (organismCol == "organismInterim") {
     inpath_organism_f <- paste(
       pathDataInterimTablesTranslatedOrganism,
@@ -37,7 +37,7 @@ gnfinder_cleaning <- function(num, organismCol) {
       ".tsv",
       sep = ""
     )
-    
+
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedOrganismTranslated,
@@ -50,23 +50,27 @@ gnfinder_cleaning <- function(num, organismCol) {
         sep = ""
       )
   }
-  
-  gnfound <- data.frame(fromJSON(txt = inpath_gnfinder_f,
-                                 simplifyDataFrame = TRUE))
-  
-    data_bio <- read_delim(
-      file = inpath_organism_f,
-      delim = "\t",
-      escape_double = FALSE,
-      trim_ws = FALSE
-    ) %>%
+
+  gnfound <- data.frame(fromJSON(
+    txt = inpath_gnfinder_f,
+    simplifyDataFrame = TRUE
+  ))
+
+  data_bio <- read_delim(
+    file = inpath_organism_f,
+    delim = "\t",
+    escape_double = FALSE,
+    trim_ws = FALSE
+  ) %>%
     mutate_all(as.character)
-  
-  data_bio <- data_bio[!is.na(data_bio[, organismCol]),]
-  
-  data_bio_clean <- biocleaning(gnfound = gnfound,
-                                names = data_bio,
-                                organismCol = organismCol)
-  
+
+  data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]
+
+  data_bio_clean <- biocleaning(
+    gnfound = gnfound,
+    names = data_bio,
+    organismCol = organismCol
+  )
+
   return(data_bio_clean)
 }

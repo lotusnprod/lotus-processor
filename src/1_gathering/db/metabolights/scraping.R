@@ -9,7 +9,7 @@ library(pbmcapply)
 library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
+library(rvest) # provides read_html
 library(XML)
 
 # get paths
@@ -31,27 +31,30 @@ entries_filtered <- entries %>%
   distinct(.)
 
 url <-
-  'https://www.ebi.ac.uk/metabolights/webservice/beta/compound/'
+  "https://www.ebi.ac.uk/metabolights/webservice/beta/compound/"
 
 X <- entries_filtered$`unlist(df[3, ])`
 
-getmetabolights <- function(X)
-{
-  tryCatch({
-    cd_id <- X
-    url_id <- paste(url, cd_id, sep = "")
-    destfile = paste(pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
-                     cd_id,
-                     ".json",
-                     sep = "")
-    text <- read_html(url_id) %>%
-      html_text()
-  },
-  error = function(e) {
-    
-  })
+getmetabolights <- function(X) {
+  tryCatch(
+    {
+      cd_id <- X
+      url_id <- paste(url, cd_id, sep = "")
+      destfile <- paste(pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+        cd_id,
+        ".json",
+        sep = ""
+      )
+      text <- read_html(url_id) %>%
+        html_text()
+    },
+    error = function(e) {
+
+    }
+  )
   write(text,
-        file = destfile)
+    file = destfile
+  )
 }
 
 pbmclapply(
@@ -62,6 +65,6 @@ pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )

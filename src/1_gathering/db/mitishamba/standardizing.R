@@ -43,7 +43,7 @@ data_selected <- data_original %>%
     pattern = "^\\,",
     replacement = "",
     x = reference_test_2
-  ))  %>%
+  )) %>%
   mutate(reference_test_2 = trimws(x = reference_test_2)) %>%
   select(
     name,
@@ -61,9 +61,11 @@ data_standard <-
     data_selected = data_selected,
     db = "mit_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_original",
-                        "reference_authors",
-                        "reference_split")
+    reference_field = c(
+      "reference_original",
+      "reference_authors",
+      "reference_split"
+    )
   )
 
 # exporting

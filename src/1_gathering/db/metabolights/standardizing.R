@@ -5,7 +5,7 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
-library(Hmisc) #neeed for capitalize()
+library(Hmisc) # neeed for capitalize()
 library(splitstackshape)
 library(tidyverse)
 

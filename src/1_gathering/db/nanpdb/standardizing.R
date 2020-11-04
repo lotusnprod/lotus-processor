@@ -34,40 +34,49 @@ data_selected <- data_original %>%
     reference_authors = Authors.information
   ) %>%
   cSplit("biologicalsource",
-         " Known use:",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    " Known use:",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   select(uniqueid,
-         name,
-         smiles,
-         biologicalsource = biologicalsource_1,
-         pubchem,
-         reference,
-         reference_authors) %>%
-  mutate(biologicalsource = gsub("Source: ",
-                                 "",
-                                 biologicalsource)) %>%
+    name,
+    smiles,
+    biologicalsource = biologicalsource_1,
+    pubchem,
+    reference,
+    reference_authors
+  ) %>%
+  mutate(biologicalsource = gsub(
+    "Source: ",
+    "",
+    biologicalsource
+  )) %>%
   mutate_all(as.character) %>%
   cSplit("reference",
-         "Title: ",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    "Title: ",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   cSplit("reference_2",
-         " PubMed: ",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    " PubMed: ",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   cSplit("reference_1",
-         " Reference: ",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    " Reference: ",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   cSplit("reference_authors",
-         "Author(s): ",
-         stripWhite = FALSE,
-         fixed = TRUE) %>%
+    "Author(s): ",
+    stripWhite = FALSE,
+    fixed = TRUE
+  ) %>%
   cSplit("reference_authors_2",
-         "Curator(s): ",
-         stripWhite = FALSE,
-         fixed = TRUE) %>%
+    "Curator(s): ",
+    stripWhite = FALSE,
+    fixed = TRUE
+  ) %>%
   mutate(
     reference_title = reference_2_1,
     reference_authors = reference_authors_2_1,

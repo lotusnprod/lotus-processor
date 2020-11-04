@@ -1,4 +1,4 @@
-#title: "BIOPHYTMOL scrapeR"
+# title: "BIOPHYTMOL scrapeR"
 
 # loading paths
 source("paths.R")
@@ -8,19 +8,18 @@ library(pbmcapply)
 library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
-library(tidyverse) #provides pivot_wider
+library(rvest) # provides read_html
+library(tidyverse) # provides pivot_wider
 
 # get paths
 database <- databases$get("biophytmol")
 
 url <-
-  'http://crdd.osdd.net/servers/biophytmol/search-biophytmol.php?compound_id='
+  "http://crdd.osdd.net/servers/biophytmol/search-biophytmol.php?compound_id="
 
 X <- (1001:4154)
 
-getbiophyt <- function(X)
-{
+getbiophyt <- function(X) {
   tryCatch({
     cd_id <- X
     url_id <- paste(url, cd_id, "&type=compound_id")
@@ -53,8 +52,10 @@ BIOPHYTMOL_4 <- BIOPHYTMOL_3 %>%
   select(1:3) %>%
   filter(!is.na(X2)) %>%
   group_by(column_label) %>%
-  pivot_wider(names_from = X1,
-              values_from = X2) %>%
+  pivot_wider(
+    names_from = X1,
+    values_from = X2
+  ) %>%
   filter(!is.na(SMILES)) %>%
   select(
     uniqueid = `Compound ID`,
@@ -68,14 +69,16 @@ BIOPHYTMOL_4 <- BIOPHYTMOL_3 %>%
     reference = `Reference(s)`
   ) %>%
   mutate(reference = paste(pubmed, reference, sep = "§")) %>%
-  select(uniqueid,
-         name,
-         biologicalsource,
-         biologicalpart,
-         extract,
-         pubchem,
-         smiles,
-         reference)
+  select(
+    uniqueid,
+    name,
+    biologicalsource,
+    biologicalpart,
+    extract,
+    pubchem,
+    smiles,
+    reference
+  )
 
 # exporting
 database$writeFile(database$sourceFiles$tsv, BIOPHYTMOL_4)

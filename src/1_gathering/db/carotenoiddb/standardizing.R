@@ -34,9 +34,11 @@ data_manipulated <- data_original %>%
   )
 
 data_manipulated$biologicalsource <-
-  gsub("(\\))([A-Z])",
-       ")SPLIT\\2",
-       data_manipulated$biologicalsource)
+  gsub(
+    "(\\))([A-Z])",
+    ")SPLIT\\2",
+    data_manipulated$biologicalsource
+  )
 
 data_manipulated <- data_manipulated %>%
   cSplit(
@@ -49,8 +51,9 @@ data_manipulated <- data_manipulated %>%
 
 data_manipulated_long <- data_manipulated %>%
   gather(c(8:ncol(.)),
-         key = "n",
-         value = "biologicalsource") %>%
+    key = "n",
+    value = "biologicalsource"
+  ) %>%
   group_by(uniqueid) %>%
   select(-n) %>%
   distinct(biologicalsource, .keep_all = TRUE) %>%
@@ -65,13 +68,15 @@ data_manipulated_long$reference <-
 
 data_manipulated_long_ref <- data_manipulated_long %>%
   cSplit("reference",
-         sep = "SPLIT",
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    sep = "SPLIT",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   gather(c(8:ncol(.)),
-         key = "n",
-         value = "reference") %>%
+    key = "n",
+    value = "reference"
+  ) %>%
   select(-n) %>%
   group_by(uniqueid) %>%
   distinct(biologicalsource, reference, .keep_all = TRUE) %>%
@@ -89,7 +94,7 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     biorefnum = str_extract(data_manipulated_long_ref$biologicalsource, "(Ref.\\d*)")
   ) %>%
   filter(refnum == biorefnum |
-           is.na(refnum)) %>%
+    is.na(refnum)) %>%
   mutate(reference_unsplittable = gsub(
     pattern = "(Ref.\\d* : )",
     replacement = "",
@@ -99,22 +104,28 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     reference_title = gsub(
       pattern = "\"",
       replacement = "",
-      x = str_extract(string = reference_unsplittable,
-                      pattern = "\".*\"")
+      x = str_extract(
+        string = reference_unsplittable,
+        pattern = "\".*\""
+      )
     ),
     reference_doi_1 =
       gsub(
         pattern = "\"",
         replacement = "",
-        x = str_extract(string = reference_unsplittable,
-                        pattern = "doi:.*")
+        x = str_extract(
+          string = reference_unsplittable,
+          pattern = "doi:.*"
+        )
       ),
     reference_doi_2 =
       gsub(
         pattern = "\"",
         replacement = "",
-        x = str_extract(string = reference_unsplittable,
-                        pattern = "DOI:.*")
+        x = str_extract(
+          string = reference_unsplittable,
+          pattern = "DOI:.*"
+        )
       )
   ) %>%
   mutate(reference_doi = ifelse(
@@ -129,8 +140,10 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     fixed = TRUE,
     stripWhite = FALSE
   ) %>%
-  select(biologicalsource = biologicalsource_1,
-         everything()) %>%
+  select(
+    biologicalsource = biologicalsource_1,
+    everything()
+  ) %>%
   mutate(
     reference_doi = gsub(
       pattern = "doi:",

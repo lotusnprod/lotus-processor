@@ -37,17 +37,20 @@ data_manipulated <- data_original %>%
     )
   ) %>%
   cSplit("reference",
-         sep = "§",
-         fixed = TRUE,
-         drop = FALSE) %>%
+    sep = "§",
+    fixed = TRUE,
+    drop = FALSE
+  ) %>%
   cSplit("reference_1",
-         sep = "[ISBN:",
-         fixed = TRUE,
-         stripWhite = FALSE) %>%
+    sep = "[ISBN:",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
   cSplit("reference_2",
-         sep = "[ISBN:",
-         fixed = TRUE,
-         stripWhite = FALSE) %>%
+    sep = "[ISBN:",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
   mutate(reference_2_1 = sub(
     pattern = "doi: ",
     replacement = "doi§ ",
@@ -84,7 +87,7 @@ data_manipulated <- data_original %>%
     sep = "[PubMed§",
     fixed = TRUE,
     stripWhite = FALSE
-  )  %>%
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     referenceIsbn_1 = gsub(
@@ -157,9 +160,10 @@ data_manipulated <- data_original %>%
     )
   ) %>%
   cSplit("referenceNew",
-         sep = "§",
-         fixed = TRUE,
-         drop = FALSE) %>%
+    sep = "§",
+    fixed = TRUE,
+    drop = FALSE
+  ) %>%
   cSplit(
     "referenceNew_1",
     sep = "[ISBN:",
@@ -208,7 +212,7 @@ data_manipulated <- data_original %>%
     sep = "[PubMed§",
     fixed = TRUE,
     stripWhite = FALSE
-  )  %>%
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     referenceAuthors_2 = ifelse(
@@ -274,9 +278,10 @@ data_manipulated <- data_original %>%
     )
   ) %>%
   cSplit("referenceNewNew",
-         sep = "§",
-         fixed = TRUE,
-         drop = FALSE) %>%
+    sep = "§",
+    fixed = TRUE,
+    drop = FALSE
+  ) %>%
   cSplit(
     "referenceNewNew_1",
     sep = "[ISBN:",
@@ -325,7 +330,7 @@ data_manipulated <- data_original %>%
     sep = "[PubMed§",
     fixed = TRUE,
     stripWhite = FALSE
-  )  %>%
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     referenceAuthors_3 = referenceNewNew_1_1,

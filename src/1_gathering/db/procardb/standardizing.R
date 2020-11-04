@@ -33,7 +33,7 @@ data_selected <- data_original %>%
     uniqueid = column_label,
     name = `CAROTENOID NAME`,
     biologicalsource,
-    #inchi = InChI #is an inchikey!!!
+    # inchi = InChI #is an inchikey!!!
     smiles = `CANONICAL SMILES`,
     pubchem = `PUBCHEM ID`,
     reference
@@ -51,9 +51,10 @@ data_manipulated <- data_selected %>%
   mutate(reference = sub(pattern = ":", replacement = "§", reference)) %>%
   cSplit("reference", sep = "§") %>%
   cSplit("reference_2",
-         sep = "PMID",
-         fixed = TRUE,
-         stripWhite = FALSE) %>%
+    sep = "PMID",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_authors = reference_1,
@@ -80,9 +81,11 @@ data_standard <-
     data_selected = data_manipulated,
     db = "pro_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_authors",
-                        "reference_split",
-                        "reference_pubmed")
+    reference_field = c(
+      "reference_authors",
+      "reference_split",
+      "reference_pubmed"
+    )
   )
 
 # exporting

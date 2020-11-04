@@ -36,30 +36,34 @@ inhouseDb <- bind_rows(dnpDb, openDb)
 
 pairsOpenDb <- openDb %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey2D)) %>%
+    !is.na(structureCleanedInchikey2D)) %>%
   distinct(structureCleanedInchikey2D,
-           organismCleaned,
-           .keep_all = TRUE)
+    organismCleaned,
+    .keep_all = TRUE
+  )
 
 pairsOutsideDnp <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey2D)) %>%
+    !is.na(structureCleanedInchikey2D)) %>%
   distinct(structureCleanedInchikey2D,
-           organismCleaned,
-           .keep_all = TRUE) %>%
+    organismCleaned,
+    .keep_all = TRUE
+  ) %>%
   filter(database != "dnp_1")
 
 pairsFull <- bind_rows(openDb, dnpDb) %>%
   filter(!is.na(organismCleaned) &
-           !is.na(structureCleanedInchikey2D)) %>%
+    !is.na(structureCleanedInchikey2D)) %>%
   distinct(structureCleanedInchikey2D,
-           organismCleaned,
-           .keep_all = TRUE)
+    organismCleaned,
+    .keep_all = TRUE
+  )
 
 pairsDNP <- dnpDb %>%
   distinct(structureCleanedInchikey2D,
-           organismCleaned,
-           .keep_all = TRUE)
+    organismCleaned,
+    .keep_all = TRUE
+  )
 
 stats <- pairsOutsideDnp %>%
   group_by(database) %>%
@@ -133,9 +137,9 @@ tableStructures <-
   c(
     "only001_structure" = sum(structuresPerOrganism$n == 1),
     "between001and010_structures" = sum(structuresPerOrganism$n >= 1 &
-                                          structuresPerOrganism$n <= 9),
+      structuresPerOrganism$n <= 9),
     "between010and100_structures" = sum(structuresPerOrganism$n >= 10 &
-                                          structuresPerOrganism$n <= 99),
+      structuresPerOrganism$n <= 99),
     "above100_structures" = sum(structuresPerOrganism$n >= 100)
   ) %>%
   data.frame()
@@ -151,9 +155,9 @@ tableOrganisms <-
   c(
     "only001_organism" = sum(organismsPerStructure$n == 1),
     "between001and010_organisms" = sum(organismsPerStructure$n >= 1 &
-                                         organismsPerStructure$n  <= 9),
+      organismsPerStructure$n <= 9),
     "between010and100_organisms" = sum(organismsPerStructure$n >= 10 &
-                                         organismsPerStructure$n  <= 99),
+      organismsPerStructure$n <= 99),
     "above100_organisms" = sum(organismsPerStructure$n >= 100)
   ) %>%
   data.frame()
@@ -290,7 +294,7 @@ colnames(tableOrganisms)[1] <- "structures"
 #     n
 #   )
 
-#exporting
+# exporting
 # # stats
 # ## structures by kingdom
 

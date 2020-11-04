@@ -21,10 +21,11 @@ originalTable <- read_delim(
 )
 
 cat("loading dictionaries ... \n")
-if (file.exists(pathDataInterimDictionariesStructureDictionary))
+if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   cat("... structures \n")
+}
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary))
+if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   structureDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
     delim = "\t",
@@ -32,11 +33,13 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
-if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("... organisms \n")
+}
 
-if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   organismDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
     delim = "\t",
@@ -44,11 +47,13 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   cat("... references \n")
+}
 
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   referenceOrganismDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesReferenceOrganismDictionary),
     delim = "\t",
@@ -56,11 +61,13 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
-if (file.exists(pathDataInterimDictionariesStructureMetadata))
+if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... structures metadata \n")
+}
 
-if (file.exists(pathDataInterimDictionariesStructureMetadata))
+if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureMetadata <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesStructureMetadata),
     delim = "\t",
@@ -68,11 +75,13 @@ if (file.exists(pathDataInterimDictionariesStructureMetadata))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
-if (file.exists(pathDataInterimDictionariesOrganismMetadata))
+if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... organisms metadata \n")
+}
 
-if (file.exists(pathDataInterimDictionariesOrganismMetadata))
+if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismMetadata <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismMetadata),
     delim = "\t",
@@ -80,6 +89,7 @@ if (file.exists(pathDataInterimDictionariesOrganismMetadata))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
 cat("... cleaned organisms \n")
 organismTableFull <- read_delim(
@@ -137,9 +147,10 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_stereocenters_total = count_atomic_stereocenters,
   )
 
-if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified)) {
   cat("... classified structures \n")
-if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+}
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified)) {
   classifiedStructureTableFull <- read_delim(
     file = gzfile(description = pathDataInterimTablesCleanedStructureFileClassified),
     delim = "\t",
@@ -147,15 +158,16 @@ if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  select(
-    structureCleanedSmiles = smiles,
-    structureCleaned_class = class_results,
-    structureCleaned_superclass = superclass_results,
-    structureCleaned_pathway = pathway_results,
-    structureCleaned_glycoside = isglycoside,
-    structureCleaned_fp1 = fp1,
-    structureCleaned_fp2 = fp2
-  )
+    select(
+      structureCleanedSmiles = smiles,
+      structureCleaned_class = class_results,
+      structureCleaned_superclass = superclass_results,
+      structureCleaned_pathway = pathway_results,
+      structureCleaned_glycoside = isglycoside,
+      structureCleaned_fp1 = fp1,
+      structureCleaned_fp2 = fp2
+    )
+}
 
 cat("... cleaned references \n")
 referenceTableFull <- read_delim(
@@ -169,59 +181,71 @@ referenceTableFull <- read_delim(
 
 cat("joining ... \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... previously cleaned organisms with metadata \n")
+}
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismOld <-
-  left_join(organismDictionary, organismMetadata)
+    left_join(organismDictionary, organismMetadata)
+}
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-    file.exists(pathDataInterimDictionariesStructureMetadata))
+  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... previously cleaned structures with metadata \n")
+}
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-    file.exists(pathDataInterimDictionariesStructureMetadata))
+  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureOld <-
-  left_join(structureDictionary, structureMetadata)
+    left_join(structureDictionary, structureMetadata)
+}
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... previously cleaned organism with new ones \n")
+}
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-    file.exists(pathDataInterimDictionariesOrganismMetadata))
+  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
-  distinct()
+    distinct()
+}
 
 cat("... translated structures with cleaned ones ... \n")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated)
 
-if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified)) {
   cat("... with their classification \n")
-if (file.exists(pathDataInterimTablesCleanedStructureFileClassified))
+}
+if (file.exists(pathDataInterimTablesCleanedStructureFileClassified)) {
   structureFull <-
-  left_join(structureFull, classifiedStructureTableFull)
+    left_join(structureFull, classifiedStructureTableFull)
+}
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-    file.exists(pathDataInterimDictionariesStructureMetadata))
+  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... previously cleaned and classified structures \n")
+}
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-    file.exists(pathDataInterimDictionariesStructureMetadata))
+  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureFull <- bind_rows(structureFull, structureOld) %>%
-  distinct()
+    distinct()
+}
 
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   cat("... previously cleaned references \n")
+}
 
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   referenceTableFull <-
-  bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
-  distinct()
+    bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
+    distinct()
+}
 
 cat("splitting metadata from minimal columns ... \n")
 cat("... structures \n")
@@ -336,9 +360,11 @@ referenceMetadata <- referenceTableFull %>%
   )
 
 cat("cleaning memory ... \n")
-gc(verbose = TRUE,
-   reset = TRUE,
-   full = TRUE)
+gc(
+  verbose = TRUE,
+  reset = TRUE,
+  full = TRUE
+)
 rm(
   structureOld,
   referenceOrganismDictionary,
@@ -362,7 +388,7 @@ cat("... references \n")
 inhouseDbMinimal <-
   left_join(inhouseDbMinimal, referenceMinimal) %>%
   filter(!is.na(referenceCleanedTitle) |
-           database == "dnp_1") %>%
+    database == "dnp_1") %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
@@ -404,14 +430,17 @@ cat(
   "generating list with chemical names having no translation \n",
   "to avoid translating them again (since process is long) \n"
 )
-structureNA <- anti_join(x = originalTable,
-                         y = structureFull)
+structureNA <- anti_join(
+  x = originalTable,
+  y = structureFull
+)
 
 structureNA <- left_join(structureNA, structureFull) %>%
   filter(is.na(structureCleanedInchikey3D)) %>%
   distinct(structureType,
-           structureValue,
-           .keep_all = TRUE) %>%
+    structureValue,
+    .keep_all = TRUE
+  ) %>%
   select(
     structureType,
     structureValue,
@@ -498,8 +527,10 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-cat(pathDataInterimDictionariesReferenceOrganismDictionary,
-    "\n")
+cat(
+  pathDataInterimDictionariesReferenceOrganismDictionary,
+  "\n"
+)
 write.table(
   x = referenceTableFull,
   file = gzfile(

@@ -1,4 +1,4 @@
-name:         lotus_env
+name: lotus_env
 channels:
   - conda-forge
   - bioconda

@@ -19,8 +19,9 @@ dataOriginal <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-if (nrow(dataOriginal) == 0)
+if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
+}
 
 # to avoid errors if dataframe not empty at the begining but filled with NA
 colnames(dataOriginal)[1] <- "structureOriginal_nominal"
@@ -108,10 +109,14 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     )
   )) %>%
   mutate(inchiNominal_cactus = as.character(inchiNominal_cactus)) %>%
-  mutate(inchiNominal_cactus = y_as_na(x = inchiNominal_cactus,
-                                       y = "character(0)")) %>%
-  mutate(inchiNominal_cactus = y_as_na(x = inchiNominal_cactus,
-                                       y = "NA")) %>%
+  mutate(inchiNominal_cactus = y_as_na(
+    x = inchiNominal_cactus,
+    y = "character(0)"
+  )) %>%
+  mutate(inchiNominal_cactus = y_as_na(
+    x = inchiNominal_cactus,
+    y = "NA"
+  )) %>%
   mutate(inchiNominal_cactus = gsub(
     pattern = "^http.*",
     replacement = NA,
@@ -123,8 +128,10 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     x = inchiNominal_cactus
   ))
 
-dataInterim_2 <- left_join(dataInterim,
-                           dataTranslatedNominal_cactus)
+dataInterim_2 <- left_join(
+  dataInterim,
+  dataTranslatedNominal_cactus
+)
 
 dataForCTS <- dataInterim_2 %>%
   filter(is.na(inchiNominal_opsin) & is.na(inchiNominal_cactus)) %>%
@@ -132,8 +139,9 @@ dataForCTS <- dataInterim_2 %>%
   select(structureOriginal_nominal, nameCleaned)
 
 cat("translating structures with CTS (slow but more results) \n")
-if (nrow(dataForCTS) == 0)
+if (nrow(dataForCTS) == 0) {
   dataForCTS[1, "nameCleaned"] <- NA
+}
 
 dataTranslatedNominal_cts <- dataForCTS %>%
   mutate(inchiNominal_cts = invisible(
@@ -159,14 +167,20 @@ dataTranslatedNominal_cts <- dataForCTS %>%
     replacement = NA,
     x = inchiNominal_cts
   )) %>%
-  mutate(inchiNominal_cts = y_as_na(x = inchiNominal_cts,
-                                    y = "NA"))
+  mutate(inchiNominal_cts = y_as_na(
+    x = inchiNominal_cts,
+    y = "NA"
+  ))
 
-dataTranslated <- left_join(dataInterim_2,
-                            dataTranslatedNominal_cts) %>%
+dataTranslated <- left_join(
+  dataInterim_2,
+  dataTranslatedNominal_cts
+) %>%
   mutate(inchiNominal_cts = ifelse(
-    test =  grepl(pattern = "^InChI=.*",
-                  x = inchiNominal_cts),
+    test = grepl(
+      pattern = "^InChI=.*",
+      x = inchiNominal_cts
+    ),
     yes = inchiNominal_cts,
     no = NA
   )) %>%

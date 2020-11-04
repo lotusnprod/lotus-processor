@@ -12,8 +12,10 @@ source("functions/reference.R")
 cat("loading original references lists \n")
 length <-
   length(
-    list.files(path = pathDataInterimTablesOriginalReferenceOriginalFolder,
-               pattern = 'tsv')
+    list.files(
+      path = pathDataInterimTablesOriginalReferenceOriginalFolder,
+      pattern = "tsv"
+    )
   )
 
 cut <- 1000
@@ -41,8 +43,10 @@ ifelse(
   test = !dir.exists(pathDataInterimTablesTranslatedReferenceOriginalFolder),
   yes = dir.create(pathDataInterimTablesTranslatedReferenceOriginalFolder),
   no = file.remove(
-    list.files(path = pathDataInterimTablesTranslatedReferenceOriginalFolder,
-               full.names = TRUE)
+    list.files(
+      path = pathDataInterimTablesTranslatedReferenceOriginalFolder,
+      full.names = TRUE
+    )
   ) &
     dir.create(
       pathDataInterimTablesTranslatedReferenceOriginalFolder,
@@ -55,36 +59,36 @@ for (i in num) {
     pathDataInterimTablesOriginalReferenceOriginalFolder,
     str_pad(
       string = i,
-      width = 6  ,
+      width = 6,
       pad = "0"
     ),
     ".tsv",
     sep = ""
   )
-  
+
   outpath <-
     paste(
       pathDataInterimTablesTranslatedReferenceOriginalFolder,
       str_pad(
         string = i,
-        width = 6  ,
+        width = 6,
         pad = "0"
       ),
       ".tsv.gz",
       sep = ""
     )
-  
+
   cat(paste("step", i / cut, "of", length))
-  
+
   dataOriginal <- read_delim(
     file = inpath,
     delim = "\t",
     escape_double = FALSE,
     trim_ws = TRUE
   )
-  
+
   cat("submitting to crossRef \n")
-  if (nrow(dataOriginal) != 1)
+  if (nrow(dataOriginal) != 1) {
     reflist <- invisible(
       pbmclapply(
         FUN = getref_noLimit,
@@ -98,27 +102,32 @@ for (i in num) {
         ignore.interactive = TRUE
       )
     )
-  
+  }
+
   cat("treating results, may take a while if full mode \n")
-  if (nrow(dataOriginal) != 0)
+  if (nrow(dataOriginal) != 0) {
     dataOriginal2 <-
-    getAllReferences(data = dataOriginal,
-                     referenceType = "original",
-                     method = "osa")
-  
-  if (nrow(dataOriginal) == 0)
+      getAllReferences(
+        data = dataOriginal,
+        referenceType = "original",
+        method = "osa"
+      )
+  }
+
+  if (nrow(dataOriginal) == 0) {
     dataOriginal2 <- data.frame() %>%
-    mutate(
-      referenceOriginal_original = NA,
-      referenceTranslatedDoi = NA,
-      referenceTranslatedJournal = NA,
-      referenceTranslatedTitle = NA,
-      referenceTranslatedDate = NA,
-      referenceTranslatedAuthor = NA,
-      referenceTranslationScoreCrossref = NA,
-      referenceTranslationScoreDistance = NA
-    )
-  
+      mutate(
+        referenceOriginal_original = NA,
+        referenceTranslatedDoi = NA,
+        referenceTranslatedJournal = NA,
+        referenceTranslatedTitle = NA,
+        referenceTranslatedDate = NA,
+        referenceTranslatedAuthor = NA,
+        referenceTranslationScoreCrossref = NA,
+        referenceTranslationScoreDistance = NA
+      )
+  }
+
   cat("exporting ... \n")
   write.table(
     x = dataOriginal2,
@@ -132,31 +141,37 @@ for (i in num) {
     sep = "\t",
     fileEncoding = "UTF-8"
   )
-  
+
   ## cleaning memory
-  gc(verbose = TRUE,
-     reset = TRUE,
-     full = TRUE)
+  gc(
+    verbose = TRUE,
+    reset = TRUE,
+    full = TRUE
+  )
 }
 
 cat("joining results with original lists \n")
-dataOriginal3 <- do.call("rbind",
-                         lapply(list.files(
-                           path = file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder),
-                           pattern = "*.tsv.gz",
-                           full.names = FALSE
-                         ),
-                         function(x) {
-                           read_delim(
-                             file = gzfile(
-                               file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
-                             ),
-                             delim = "\t",
-                             escape_double = FALSE,
-                             trim_ws = TRUE
-                           ) %>%
-                             mutate_all(as.character)
-                         }))
+dataOriginal3 <- do.call(
+  "rbind",
+  lapply(
+    list.files(
+      path = file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder),
+      pattern = "*.tsv.gz",
+      full.names = FALSE
+    ),
+    function(x) {
+      read_delim(
+        file = gzfile(
+          file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
+        ),
+        delim = "\t",
+        escape_double = FALSE,
+        trim_ws = TRUE
+      ) %>%
+        mutate_all(as.character)
+    }
+  )
+)
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedReferenceOriginal, "\n")

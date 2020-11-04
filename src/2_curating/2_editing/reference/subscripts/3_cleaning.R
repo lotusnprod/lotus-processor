@@ -217,10 +217,14 @@ cat("cleaning \n")
 dataCleaned <- dataTranslated %>%
   filter(!is.na(referenceTranslatedType)) %>%
   filter(!is.na(referenceTranslatedValue)) %>%
-  mutate(referenceCleanedValue = referenceTranslatedValue,
-         referenceCleanedType = referenceTranslatedType) %>%
-  select(-referenceTranslatedValue,
-         -referenceTranslatedType)
+  mutate(
+    referenceCleanedValue = referenceTranslatedValue,
+    referenceCleanedType = referenceTranslatedType
+  ) %>%
+  select(
+    -referenceTranslatedValue,
+    -referenceTranslatedType
+  )
 
 rm(dataTranslated)
 
@@ -228,21 +232,25 @@ cat("checking for organism in title, may take a while if running full mode \n")
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismOriginal) &
-           !is.na(referenceCleanedValue)) %>%
+    !is.na(referenceCleanedValue)) %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
-    test = str_detect(string = fixed(tolower(
-      referenceCleanedValue
-    )),
-    pattern = fixed(tolower(
-      word(organismCleaned, 1)
-    ))),
+    test = str_detect(
+      string = fixed(tolower(
+        referenceCleanedValue
+      )),
+      pattern = fixed(tolower(
+        word(organismCleaned, 1)
+      ))
+    ),
     yes = 1,
     no = 0
   )) %>%
   filter(referenceCleaned_scoreTitleOrganism == 1) %>%
-  pivot_wider(names_from = referenceCleanedType,
-              names_prefix = "referenceCleaned_",
-              values_from = referenceCleanedValue) %>%
+  pivot_wider(
+    names_from = referenceCleanedType,
+    names_prefix = "referenceCleaned_",
+    values_from = referenceCleanedValue
+  ) %>%
   mutate_all(as.character) %>%
   pivot_longer(
     cols = (ncol(.) - 1):ncol(.),
@@ -267,11 +275,12 @@ rm(dataCleaned)
 subDataCleanedJoined_1 <- dataCleanedJoined %>%
   filter(referenceCleanedType == "scoreCrossref") %>%
   distinct(organismOriginal,
-           referenceType,
-           referenceValue,
-           organismCleaned,
-           level,
-           .keep_all = TRUE)
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    level,
+    .keep_all = TRUE
+  )
 
 # this is because sadly crossref does not always give the same DOI, therefore
 ## we do not have unique values ...
@@ -288,36 +297,43 @@ subDataCleanedJoined_2 <- dataCleanedJoined %>%
   )
 
 dataCleanedJoinedUnique <-
-  bind_rows(subDataCleanedJoined_1,
-            subDataCleanedJoined_2)
+  bind_rows(
+    subDataCleanedJoined_1,
+    subDataCleanedJoined_2
+  )
 
-rm(dataCleanedJoined,
-   subDataCleanedJoined_1,
-   subDataCleanedJoined_2)
+rm(
+  dataCleanedJoined,
+  subDataCleanedJoined_1,
+  subDataCleanedJoined_2
+)
 
 gc()
 
 cat("manipulating and keeping best result only (long step) \n")
 dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
-  pivot_wider(names_from = referenceCleanedType,
-              names_prefix = "referenceCleaned_",
-              values_from = referenceCleanedValue)
+  pivot_wider(
+    names_from = referenceCleanedType,
+    names_prefix = "referenceCleaned_",
+    values_from = referenceCleanedValue
+  )
 
 rm(dataCleanedJoinedUnique)
 
 dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   filter(referenceType == "doi" |
-           referenceType == "pubmed" |
-           referenceType == "title") %>%
+    referenceType == "pubmed" |
+    referenceType == "title") %>%
   group_by(organismOriginal, organismCleaned, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
   distinct(organismOriginal,
-           organismCleaned,
-           referenceValue,
-           .keep_all = TRUE) %>%
+    organismCleaned,
+    referenceValue,
+    .keep_all = TRUE
+  ) %>%
   select(-level) %>%
   mutate(
     referenceCleaned_scoreComplement_date = NA,
@@ -363,8 +379,8 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
   mutate(
     referenceCleaned_scoreComplement_total =
       referenceCleaned_scoreComplement_date +
-      referenceCleaned_scoreComplement_author +
-      referenceCleaned_scoreComplement_journal
+        referenceCleaned_scoreComplement_author +
+        referenceCleaned_scoreComplement_journal
   ) %>%
   group_by(organismOriginal, organismCleaned, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
@@ -372,19 +388,24 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   ungroup() %>%
   distinct(organismOriginal,
-           organismCleaned,
-           referenceValue,
-           .keep_all = TRUE) %>%
+    organismCleaned,
+    referenceValue,
+    .keep_all = TRUE
+  ) %>%
   select(-level)
 
 rm(dataCleanedJoinedWide)
 
-dataCleanedJoinedWideScore <- bind_rows(dataCleanedJoinedWide_1,
-                                        dataCleanedJoinedWide_2) %>%
+dataCleanedJoinedWideScore <- bind_rows(
+  dataCleanedJoinedWide_1,
+  dataCleanedJoinedWide_2
+) %>%
   mutate(referenceCleaned_doi = toupper(referenceCleaned_doi))
 
-rm(dataCleanedJoinedWide_1,
-   dataCleanedJoinedWide_2)
+rm(
+  dataCleanedJoinedWide_1,
+  dataCleanedJoinedWide_2
+)
 
 subDataClean_doi <- dataCleanedJoinedWideScore %>%
   filter(!is.na(referenceCleaned_doi)) %>%
@@ -406,17 +427,20 @@ PMC_ids <- read_delim(
   trim_ws = TRUE
 ) %>%
   filter(!is.na(DOI) | !is.na(PMID)) %>%
-  select(DOI,
-         PMCID,
-         PMID) %>%
+  select(
+    DOI,
+    PMCID,
+    PMID
+  ) %>%
   mutate(DOI = toupper(DOI)) %>%
   mutate_all(as.character) %>%
   tibble()
 
 cat("adding PMID and PMCID \n")
 df_doi <- left_join(subDataClean_doi,
-                    PMC_ids,
-                    by = c("referenceCleaned_doi" = "DOI")) %>%
+  PMC_ids,
+  by = c("referenceCleaned_doi" = "DOI")
+) %>%
   filter(!is.na(PMID) | !is.na(PMCID)) %>%
   select(
     referenceCleaned_doi,
@@ -425,19 +449,22 @@ df_doi <- left_join(subDataClean_doi,
   )
 
 df_pubmed <- left_join(subDataClean_pmid,
-                       PMC_ids,
-                       by = c("referenceValue" = "PMID")) %>%
+  PMC_ids,
+  by = c("referenceValue" = "PMID")
+) %>%
   filter(!is.na(referenceValue) | !is.na(PMCID)) %>%
   select(referenceValue,
-         referenceCleaned_pmcid = PMCID) %>%
+    referenceCleaned_pmcid = PMCID
+  ) %>%
   mutate(referenceCleaned_pmid = referenceValue)
 
 tableJoined <- left_join(dataCleanedJoinedWideScore, df_doi)
 
 referenceTable <-
   left_join(tableJoined,
-            df_pubmed,
-            by = c("referenceValue" = "referenceValue")) %>%
+    df_pubmed,
+    by = c("referenceValue" = "referenceValue")
+  ) %>%
   mutate(
     referenceCleaned_pmid = ifelse(
       test = !is.na(referenceCleaned_pmid.x),

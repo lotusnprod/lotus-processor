@@ -24,12 +24,15 @@ data_manipulated <- data_original %>%
   mutate(
     name = `Compound name`,
     biologicalsource = paste(ifelse(is.na(Genus),
-                                    "",
-                                    Genus),
-                             ifelse(is.na(Species),
-                                    "",
-                                    Species),
-                             sep = " "),
+      "",
+      Genus
+    ),
+    ifelse(is.na(Species),
+      "",
+      Species
+    ),
+    sep = " "
+    ),
     inchi = Inchl,
     smiles = `SMILES (canonical or isomeric)`
   )

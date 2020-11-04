@@ -35,7 +35,7 @@ id <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -52,7 +52,7 @@ additionalfields <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -69,7 +69,7 @@ references <- pbmclapply(
   mc.silent = TRUE,
   mc.cores = (parallel::detectCores() - 2),
   mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE, 
+  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
 )
 
@@ -83,7 +83,7 @@ data <- tibble(id, additionalfields, references) %>%
     additionalfields
   )
 
-data_clean <- data  %>%
+data_clean <- data %>%
   unnest(additionalfields) %>%
   unnest(additionalfields) %>%
   mutate(value = lag(additionalfields, 1))
@@ -316,17 +316,21 @@ data_clean_final <- data_clean_3 %>%
   )
 
 data_clean_final[] <-
-  lapply(data_clean_final, function(x)
-    gsub("\r\n", " ", x))
+  lapply(data_clean_final, function(x) {
+    gsub("\r\n", " ", x)
+  })
 data_clean_final[] <-
-  lapply(data_clean_final, function(x)
-    gsub("\r", " ", x))
+  lapply(data_clean_final, function(x) {
+    gsub("\r", " ", x)
+  })
 data_clean_final[] <-
-  lapply(data_clean_final, function(x)
-    gsub("\n", " ", x))
+  lapply(data_clean_final, function(x) {
+    gsub("\n", " ", x)
+  })
 data_clean_final[] <-
-  lapply(data_clean_final, function(x)
-    gsub("\t", " ", x))
+  lapply(data_clean_final, function(x) {
+    gsub("\t", " ", x)
+  })
 
 # export
 write.table(

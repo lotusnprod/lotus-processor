@@ -1,4 +1,4 @@
-#title: "SANCDB scrapeR"
+# title: "SANCDB scrapeR"
 
 # loading paths
 source("paths.R")
@@ -9,17 +9,16 @@ library(pbmcapply)
 library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
+library(rvest) # provides read_html
 
 # get paths
 database <- databases$get("sancdb")
 
-url <- 'https://sancdb.rubi.ru.ac.za/compounds/'
+url <- "https://sancdb.rubi.ru.ac.za/compounds/"
 
 X <- (1:1000)
 
-getsanc <- function(X)
-{
+getsanc <- function(X) {
   tryCatch({
     cd_id <- X
     url_id <- paste(url, cd_id, "/")
@@ -42,7 +41,7 @@ SANCDB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 ) %>%
