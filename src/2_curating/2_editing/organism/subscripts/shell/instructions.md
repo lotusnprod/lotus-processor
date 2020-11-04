@@ -4,7 +4,6 @@ All instructions to run gnfinder can be found at : https://github.com/gnames/gnf
 
 ## Batch launcher
 
-Run gnfinder jobs on batch of .tsv files by 
+Run gnfinder jobs on batch of .tsv files by
 
-```sh gnfinder_launcher.sh ```
-
+`sh gnfinder_launcher.sh `

@@ -14,7 +14,8 @@ database <- databases$get("tmmc")
 
 ## files
 data_original <- read_excel(database$sourceFiles$tsv,
-                            sheet = 1) %>%
+  sheet = 1
+) %>%
   mutate_all(as.character)
 
 data_original_long <- data_original %>%

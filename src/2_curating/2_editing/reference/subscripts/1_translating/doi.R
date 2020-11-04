@@ -18,22 +18,23 @@ dataDoi <- read_delim(
 )
 
 cat("submitting to crossRef \n")
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   reflistDoi <-
-  pbmclapply(
-    FUN = getrefDoi,
-    X = dataDoi$referenceOriginal_doi,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
-    mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
-  )
+    pbmclapply(
+      FUN = getrefDoi,
+      X = dataDoi$referenceOriginal_doi,
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
+}
 
 cat("joining results with original list \n")
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDoi"] <-
       as.character(ifelse(
@@ -46,8 +47,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedJournal"] <-
       as.character(ifelse(
@@ -60,8 +62,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedTitle"] <-
       as.character(ifelse(
@@ -74,8 +77,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDate"] <-
       as.character(ifelse(
@@ -88,8 +92,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslatedAuthor"] <-
       as.character(ifelse(
@@ -102,8 +107,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreCrossref"] <-
       as.character(ifelse(
@@ -116,8 +122,9 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) != 1)
+if (nrow(dataDoi) != 1) {
   for (i in 1:length(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreDistance"] <-
       as.character(ifelse(
@@ -130,36 +137,42 @@ if (nrow(dataDoi) != 1)
         no = NA
       )[1])
   }
+}
 
-if (nrow(dataDoi) == 1)
+if (nrow(dataDoi) == 1) {
   dataDoi <- data.frame() %>%
-  mutate(
-    referenceOriginal_doi = NA,
-    referenceTranslatedDoi = NA,
-    referenceTranslatedJournal = NA,
-    referenceTranslatedTitle = NA,
-    referenceTranslatedDate = NA,
-    referenceTranslatedAuthor = NA,
-    referenceTranslationScoreCrossref = NA,
-    referenceTranslationScoreDistance = NA
-  )
+    mutate(
+      referenceOriginal_doi = NA,
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA
+    )
+}
 
 cat("removing unfriendly characters \n")
 dataDoi <- dataDoi %>%
   mutate_all(as.character)
 
 dataDoi[] <-
-  lapply(dataDoi, function(x)
-    gsub("\r\n", " ", x))
+  lapply(dataDoi, function(x) {
+    gsub("\r\n", " ", x)
+  })
 dataDoi[] <-
-  lapply(dataDoi, function(x)
-    gsub("\r", " ", x))
+  lapply(dataDoi, function(x) {
+    gsub("\r", " ", x)
+  })
 dataDoi[] <-
-  lapply(dataDoi, function(x)
-    gsub("\n", " ", x))
+  lapply(dataDoi, function(x) {
+    gsub("\n", " ", x)
+  })
 dataDoi[] <-
-  lapply(dataDoi, function(x)
-    gsub("\t", " ", x))
+  lapply(dataDoi, function(x) {
+    gsub("\t", " ", x)
+  })
 
 cat("ensuring directories exist \n")
 ifelse(

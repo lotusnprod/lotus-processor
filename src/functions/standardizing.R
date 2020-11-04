@@ -5,7 +5,7 @@ standardizing_original <- function(data_selected,
                                    structure_field,
                                    # possibilities: c("inchi","smiles","name")
                                    reference_field)
-  # possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal", "reference_original","reference_publishingDetails","reference_pubmed","reference_split","reference_title")
+# possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal", "reference_original","reference_publishingDetails","reference_pubmed","reference_split","reference_title")
 {
   data_selected[setdiff(
     c(
@@ -26,7 +26,7 @@ standardizing_original <- function(data_selected,
     ),
     names(data_selected)
   )] <- NA
-  
+
   data_standard <- data.frame(data_selected) %>%
     mutate(database = db) %>%
     select(
@@ -44,25 +44,32 @@ standardizing_original <- function(data_selected,
       biologicalsource,
       all_of(reference_field)
     ),
-    .keep_all = TRUE)
-  
+    .keep_all = TRUE
+    )
+
   data_standard[] <-
-    lapply(data_standard, function(x)
-      gsub("\r\n", " ", x))
+    lapply(data_standard, function(x) {
+      gsub("\r\n", " ", x)
+    })
   data_standard[] <-
-    lapply(data_standard, function(x)
-      gsub("\r", " ", x))
+    lapply(data_standard, function(x) {
+      gsub("\r", " ", x)
+    })
   data_standard[] <-
-    lapply(data_standard, function(x)
-      gsub("\n", " ", x))
+    lapply(data_standard, function(x) {
+      gsub("\n", " ", x)
+    })
   data_standard[] <-
-    lapply(data_standard, function(x)
-      gsub("\t", " ", x))
-  
+    lapply(data_standard, function(x) {
+      gsub("\t", " ", x)
+    })
+
   data_standard <- data_standard %>%
-    mutate_all( ~ gsub('[^ -~]', '', .)) %>%
-    mutate_all(.tbl = .,
-               .funs = trimws)
-  
+    mutate_all(~ gsub("[^ -~]", "", .)) %>%
+    mutate_all(
+      .tbl = .,
+      .funs = trimws
+    )
+
   return(data_standard)
 }

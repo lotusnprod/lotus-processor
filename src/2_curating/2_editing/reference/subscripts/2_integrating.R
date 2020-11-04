@@ -200,9 +200,10 @@ dataFull <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("...  cleaned organisms \n")
-if (file.exists(pathDataInterimDictionariesOrganismDictionary))
+}
+if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
     delim = "\t",
@@ -210,13 +211,17 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  distinct(organismOriginal,
-           organismCleaned) %>%
-  mutate_all(as.character)
+    distinct(
+      organismOriginal,
+      organismCleaned
+    ) %>%
+    mutate_all(as.character)
+}
 
-if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
+if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("... cleaned organisms \n")
-if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
+}
+if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <- read_delim(
     file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
     delim = "\t",
@@ -224,13 +229,17 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  distinct(organismOriginal,
-           organismCleaned) %>%
-  mutate_all(as.character)
+    distinct(
+      organismOriginal,
+      organismCleaned
+    ) %>%
+    mutate_all(as.character)
+}
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary))
+if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   cat("... reference dictionary, this may take a while \n")
-if (file.exists(pathDataInterimDictionariesReferenceDictionary))
+}
+if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   referenceDictionary <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
     delim = "\t",
@@ -238,19 +247,23 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary))
     escape_double = FALSE,
     trim_ws = TRUE
   )
+}
 
 cat("joining ... \n")
 cat("... all reference types \n")
 
-dataCrossref <- bind_rows(dataDoi,
-                          dataOriginal,
-                          dataPublishingDetails,
-                          dataPubmed,
-                          dataSplit,
-                          dataTitle)
+dataCrossref <- bind_rows(
+  dataDoi,
+  dataOriginal,
+  dataPublishingDetails,
+  dataPubmed,
+  dataSplit,
+  dataTitle
+)
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary))
-  dataCrossref <-  bind_rows(dataCrossref, referenceDictionary)
+if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+  dataCrossref <- bind_rows(dataCrossref, referenceDictionary)
+}
 
 dataCrossref <- dataCrossref %>%
   filter(!is.na(referenceOriginal)) %>%
@@ -266,10 +279,12 @@ cat("... with organisms \n")
 dataJoined <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
-  distinct(organismOriginal,
-           referenceType,
-           referenceValue,
-           organismCleaned)
+  distinct(
+    organismOriginal,
+    referenceType,
+    referenceValue,
+    organismCleaned
+  )
 
 rm(
   dataDoi,
@@ -285,8 +300,9 @@ rm(
 
 cat("... with reference dictionary \n")
 dataTranslated <- left_join(dataJoined,
-                            dataCrossref,
-                            by = c("referenceValue" = "referenceOriginal")) %>%
+  dataCrossref,
+  by = c("referenceValue" = "referenceOriginal")
+) %>%
   filter(
     !is.na(referenceTranslatedValue) |
       referenceType == "external" |

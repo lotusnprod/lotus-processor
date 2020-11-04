@@ -21,7 +21,7 @@ dataPubmed <- read_delim(
 ## 2
 # mc cores set to 2 because fails otherwise (entrez limitation probably)
 cat("submitting to entrez \n")
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   reflistPubmed <- invisible(
     pbmclapply(
       FUN = getrefPubmed,
@@ -35,75 +35,88 @@ if (nrow(dataPubmed) != 1)
       ignore.interactive = TRUE
     )
   )
-if (nrow(dataPubmed) != 1)
+}
+if (nrow(dataPubmed) != 1) {
   reflistPubmedBound <- bind_rows(reflistPubmed)
+}
 
 cat("joining results with original list \n")
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedDoi"] <-
       reflistPubmedBound[i, "translatedDoi"]
   }
+}
 
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedJournal"] <-
       reflistPubmedBound[i, "translatedJournal"]
   }
+}
 
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedTitle"] <-
       reflistPubmedBound[i, "translatedTitle"]
   }
+}
 
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedAuthor"] <-
       reflistPubmedBound[i, "translatedAuthor"]
   }
+}
 
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslatedDate"] <-
       reflistPubmedBound[i, "translatedDate"]
   }
+}
 
-if (nrow(dataPubmed) != 1)
+if (nrow(dataPubmed) != 1) {
   for (i in 1:nrow(reflistPubmedBound)) {
     dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
     dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
   }
+}
 
-if (nrow(dataPubmed) == 1)
+if (nrow(dataPubmed) == 1) {
   dataPubmed <- data.frame() %>%
-  mutate(
-    referenceOriginal_pubmed = NA,
-    referenceTranslatedDoi = NA,
-    referenceTranslatedJournal = NA,
-    referenceTranslatedTitle = NA,
-    referenceTranslatedDate = NA,
-    referenceTranslatedAuthor = NA,
-    referenceTranslationScoreCrossref = NA,
-    referenceTranslationScoreDistance = NA
-  )
+    mutate(
+      referenceOriginal_pubmed = NA,
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA
+    )
+}
 
 cat("removing unfriendly characters \n")
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)
 
 dataPubmed[] <-
-  lapply(dataPubmed, function(x)
-    gsub("\r\n", " ", x))
+  lapply(dataPubmed, function(x) {
+    gsub("\r\n", " ", x)
+  })
 dataPubmed[] <-
-  lapply(dataPubmed, function(x)
-    gsub("\r", " ", x))
+  lapply(dataPubmed, function(x) {
+    gsub("\r", " ", x)
+  })
 dataPubmed[] <-
-  lapply(dataPubmed, function(x)
-    gsub("\n", " ", x))
+  lapply(dataPubmed, function(x) {
+    gsub("\n", " ", x)
+  })
 dataPubmed[] <-
-  lapply(dataPubmed, function(x)
-    gsub("\t", " ", x))
+  lapply(dataPubmed, function(x) {
+    gsub("\t", " ", x)
+  })
 
 cat("ensuring directories exist \n")
 ifelse(

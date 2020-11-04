@@ -19,76 +19,78 @@ myDirtyF <- function(table) {
   table_tot <- table %>%
     group_by(referenceType) %>%
     count(name = "tot")
-  
+
   table_y <- table %>%
     filter(validated == "Y") %>%
     group_by(referenceType) %>%
     count(name = "y")
-  
+
   table_n <- table %>%
     filter(validated == "N") %>%
     group_by(referenceType) %>%
-    count(name =  "n")
-  
+    count(name = "n")
+
   table_mix <- table %>%
     filter(validated == "Y/N") %>%
     group_by(referenceType) %>%
     count(name = "mix")
-  
+
   table_full <- left_join(table_tot, table_y)
   table_full <- left_join(table_full, table_n)
   table_full <- left_join(table_full, table_mix) %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot)
-  
-  return (table_full)
+    mutate(ratio = y / tot)
+
+  return(table_full)
 }
 myDirtyC <- function(table) {
   table_tot <- table %>%
     count(name = "tot")
-  
+
   table_y <- table %>%
     filter(validated == "Y") %>%
     count(name = "y")
-  
+
   table_n <- table %>%
     filter(validated == "N") %>%
-    count(name =  "n")
-  
+    count(name = "n")
+
   table_mix <- table %>%
     filter(validated == "Y/N") %>%
     count(name = "mix")
-  
+
   table_full <-
-    bind_cols(table_tot, table_y, table_n, table_mix)  %>%
+    bind_cols(table_tot, table_y, table_n, table_mix) %>%
     replace(is.na(.), 0) %>%
-    mutate(ratio =  y / tot)
-  
-  return (table_full)
+    mutate(ratio = y / tot)
+
+  return(table_full)
 }
 myDirtyP <- function(table, title, yaxismax) {
   fig <-
     plot_ly(
       data = table,
-      x = ~ referenceType,
-      y = ~ y,
-      type = 'bar',
-      name = 'correct',
-      color = I('green')
+      x = ~referenceType,
+      y = ~y,
+      type = "bar",
+      name = "correct",
+      color = I("green")
     ) %>%
     add_trace(
-      y = ~ n,
-      name = 'uncorrect',
-      color = I('red'),
+      y = ~n,
+      name = "uncorrect",
+      color = I("red"),
       text = ~ round(x = ratio, digits = 2),
-      textposition = 'outside',
-      textfont = list(color = I('black'), size = 20)
+      textposition = "outside",
+      textfont = list(color = I("black"), size = 20)
     ) %>%
     layout(
       title = title,
-      yaxis = list(title = 'Count',
-                   range = c(0, yaxismax)),
-      barmode = 'stack'
+      yaxis = list(
+        title = "Count",
+        range = c(0, yaxismax)
+      ),
+      barmode = "stack"
     )
   return(fig)
 }
@@ -96,24 +98,26 @@ myDirtyQ <- function(table, title, yaxismax) {
   fig <-
     plot_ly(
       data = table,
-      y = ~ y,
-      type = 'bar',
-      name = 'correct',
-      color = I('green')
+      y = ~y,
+      type = "bar",
+      name = "correct",
+      color = I("green")
     ) %>%
     add_trace(
-      y = ~ n,
-      name = 'uncorrect',
-      color = I('red'),
+      y = ~n,
+      name = "uncorrect",
+      color = I("red"),
       text = ~ round(x = ratio, digits = 2),
-      textposition = 'outside',
-      textfont = list(color = I('black'), size = 20)
+      textposition = "outside",
+      textfont = list(color = I("black"), size = 20)
     ) %>%
     layout(
       title = title,
-      yaxis = list(title = 'Count',
-                   range = c(0, yaxismax)),
-      barmode = 'stack'
+      yaxis = list(
+        title = "Count",
+        range = c(0, yaxismax)
+      ),
+      barmode = "stack"
     )
   return(fig)
 }
@@ -464,50 +468,63 @@ tableAntiFiltered_count_global <-
 cat("visualizing ... \n")
 cat("... validation set per category \n")
 fig_full <-
-  myDirtyP(table = table_count,
-           yaxismax = 140,
-           title = "full version")
+  myDirtyP(
+    table = table_count,
+    yaxismax = 140,
+    title = "full version"
+  )
 fig_full
 
 cat("... validated set per category \n")
 fig_filtered <-
-  myDirtyP(table = tableFiltered_count,
-           yaxismax = 140,
-           title = "filtered version")
+  myDirtyP(
+    table = tableFiltered_count,
+    yaxismax = 140,
+    title = "filtered version"
+  )
 fig_filtered
 
 cat("... rejected set per category \n")
 fig_anti <-
-  myDirtyP(table = tableAntiFiltered_count,
-           yaxismax = 140,
-           title = "anti version")
+  myDirtyP(
+    table = tableAntiFiltered_count,
+    yaxismax = 140,
+    title = "anti version"
+  )
 fig_anti
 
 cat("... validation set global \n")
-newfull <- myDirtyQ(table = table_count_global,
-                    yaxismax = 550,
-                    title = "new full version")
+newfull <- myDirtyQ(
+  table = table_count_global,
+  yaxismax = 550,
+  title = "new full version"
+)
 newfull
 
 cat("... validated set global \n")
-newfiltered <- myDirtyQ(table = tableFiltered_count_global,
-                        yaxismax = 550,
-                        title = "new filtered version")
+newfiltered <- myDirtyQ(
+  table = tableFiltered_count_global,
+  yaxismax = 550,
+  title = "new filtered version"
+)
 newfiltered
 
 cat("... rejected set global \n")
-antifull <- myDirtyQ(table = tableAntiFiltered_count_global,
-                     yaxismax = 550,
-                     title = "anti full version")
+antifull <- myDirtyQ(
+  table = tableAntiFiltered_count_global,
+  yaxismax = 550,
+  title = "anti full version"
+)
 antifull
 
 cat("calculating statistics ... \n")
 old <- table_count %>%
   select(referenceType,
-         tot,
-         y,
-         n,
-         ratio1 = ratio)
+    tot,
+    y,
+    n,
+    ratio1 = ratio
+  )
 
 cat("... true positives and false positives \n")
 new <- tableFiltered_count %>%
@@ -537,16 +554,22 @@ beta <- 0.5
 
 cat("... precision, recall and Fbeta", beta, "score \n")
 f1Table <- full_join(f1Table, anti) %>%
-  mutate(tpfn = tp + fn,
-         tpfp = tp + fp) %>%
-  mutate(recall = tp / tpfn,
-         precision = tp / tpfp) %>%
-  mutate(rxp = recall * precision,
-         rpp = recall + precision) %>%
+  mutate(
+    tpfn = tp + fn,
+    tpfp = tp + fp
+  ) %>%
+  mutate(
+    recall = tp / tpfn,
+    precision = tp / tpfp
+  ) %>%
+  mutate(
+    rxp = recall * precision,
+    rpp = recall + precision
+  ) %>%
   mutate(f2 = 2 * rxp / rpp) %>%
   select(-tpfn, -tpfp, -rxp, -rpp) %>%
-  mutate(fbeta = (1 + beta ^ 2) * (precision * recall) / ((precision * beta ^
-                                                             2) + recall)) %>%
+  mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
+    2) + recall)) %>%
   replace(. == "NaN", 0)
 
 
@@ -590,9 +613,11 @@ openDb <- inhouseDbFull %>%
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  mutate(structureCleanedInchikey2D = substring(text = structureCleanedInchikey3D,
-                                                first = 1,
-                                                last = 14)) %>%
+  mutate(structureCleanedInchikey2D = substring(
+    text = structureCleanedInchikey3D,
+    first = 1,
+    last = 14
+  )) %>%
   select(
     database,
     organismOriginal,
@@ -640,9 +665,11 @@ dnpDb <- inhouseDbFull %>%
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  mutate(structureCleanedInchikey2D = substring(text = structureCleanedInchikey3D,
-                                                first = 1,
-                                                last = 14)) %>%
+  mutate(structureCleanedInchikey2D = substring(
+    text = structureCleanedInchikey3D,
+    first = 1,
+    last = 14
+  )) %>%
   select(
     database,
     organismOriginal,
@@ -677,9 +704,11 @@ manuallyRemovedEntries <- realMetaSample %>%
 
 openDbClean <- anti_join(openDb, manuallyRemovedEntries)
 
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
+set.seed(
+  seed = 42,
+  kind = "Mersenne-Twister",
+  normal.kind = "Inversion"
+)
 validationSet <- anti_join(openDbClean, realMetaSample) %>%
   sample_n(100)
 
@@ -695,9 +724,11 @@ validationSetFilled_1 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
-set.seed(seed = 42,
-         kind = "Mersenne-Twister",
-         normal.kind = "Inversion")
+set.seed(
+  seed = 42,
+  kind = "Mersenne-Twister",
+  normal.kind = "Inversion"
+)
 validationSet2 <-
   anti_join(openDbClean, validationSetFilled_1) %>%
   sample_n(13)
@@ -741,7 +772,8 @@ realValidationSetFilled <-
   )
 
 finalStats <- realValidationSetFilled %>%
-  group_by(referenceType) %>% count(validated == "Y")
+  group_by(referenceType) %>%
+  count(validated == "Y")
 
 cat("outputing correct entries from manually validated set \n")
 manuallyValidatedSet2 <- realValidationSetFilled %>%
@@ -760,9 +792,10 @@ manuallyRemovedEntries3 <-
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3)
 
 cat("exporting \n")
-if (mode == "full")
+if (mode == "full") {
   cat("../data/validation/manuallyValidated.tsv.gz", "\n")
-if (mode == "full")
+}
+if (mode == "full") {
   write.table(
     x = manuallyValidatedSet3,
     file = gzfile(
@@ -775,10 +808,12 @@ if (mode == "full")
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
-if (mode == "full")
+if (mode == "full") {
   cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
-if (mode == "full")
+}
+if (mode == "full") {
   write.table(
     x = manuallyRemovedEntries3,
     file = gzfile(
@@ -791,6 +826,7 @@ if (mode == "full")
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
 cat(pathDataInterimTablesAnalysedPlatinum, "\n")
 write.table(
@@ -820,32 +856,44 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-cat(file.path(pathDataInterimTablesAnalysed,
-              "validationSet.tsv"),
-    "\n")
-if (exists("validationSet"))
+cat(
+  file.path(
+    pathDataInterimTablesAnalysed,
+    "validationSet.tsv"
+  ),
+  "\n"
+)
+if (exists("validationSet")) {
   write.table(
     x = validationSet,
-    file = file.path(pathDataInterimTablesAnalysed,
-                     "validationSet.tsv"),
+    file = file.path(
+      pathDataInterimTablesAnalysed,
+      "validationSet.tsv"
+    ),
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
-cat(file.path(pathDataInterimTablesAnalysed,
-              "validationSetBis.tsv"))
-if (exists("validationSet2"))
+cat(file.path(
+  pathDataInterimTablesAnalysed,
+  "validationSetBis.tsv"
+))
+if (exists("validationSet2")) {
   write.table(
     x = validationSet2,
-    file = file.path(pathDataInterimTablesAnalysed,
-                     "validationSetBis.tsv"),
+    file = file.path(
+      pathDataInterimTablesAnalysed,
+      "validationSetBis.tsv"
+    ),
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
 end <- Sys.time()
 

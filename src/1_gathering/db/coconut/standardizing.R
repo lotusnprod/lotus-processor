@@ -36,9 +36,10 @@ data_selected <- data_original %>%
     fixed = TRUE
   ) %>%
   cSplit("reference_doi",
-         sep = ",",
-         direction = "long",
-         fixed = TRUE) %>%
+    sep = ",",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
   # cSplit("reference_external",
   #        sep = ",",
   #        direction = "long",
@@ -58,8 +59,10 @@ data_selected <- data_original %>%
   data.frame()
 
 data_corrected <- data_selected %>%
-  mutate(reference_publishingDetails = reference_doi,
-         reference_authors = reference_doi) %>%
+  mutate(
+    reference_publishingDetails = reference_doi,
+    reference_authors = reference_doi
+  ) %>%
   mutate(n = nchar(reference_doi)) %>%
   mutate(
     reference_pubmed = ifelse(
@@ -111,7 +114,7 @@ data_standard <-
       "reference_doi",
       "reference_pubmed",
       "reference_authors",
-      "reference_publishingDetails" ,
+      "reference_publishingDetails",
       "reference_external"
     )
   )

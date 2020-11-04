@@ -25,7 +25,7 @@ dataOriginal <- read_delim(
       tolower(`?species`),
       capitalize(string = tolower(`?family`))
     ),
-    inchi =  NA,
+    inchi = NA,
     reference_doi = NA
   ) %>%
   select(

@@ -9,8 +9,8 @@ library(pbmcapply)
 library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
-library(tidyverse) #provides pivot_wider
+library(rvest) # provides read_html
+library(tidyverse) # provides pivot_wider
 
 # get paths
 database <- databases$get("carotenoiddb")
@@ -25,12 +25,11 @@ ids <- read_delim(
 ) %>%
   mutate_all(as.character)
 
-url <- 'http://carotenoiddb.jp/Entries/'
+url <- "http://carotenoiddb.jp/Entries/"
 
 X <- ids$X1
 
-getcarotenoid <- function(X)
-{
+getcarotenoid <- function(X) {
   tryCatch({
     cd_id <- X
     url_id <- paste(url, cd_id, ".html")
@@ -72,20 +71,25 @@ CAROTENOIDDB_2$value <- y_as_na(CAROTENOIDDB_2$value, "")
 CAROTENOIDDB_3 <- CAROTENOIDDB_2 %>%
   filter(!grepl("^CA0", name)) %>%
   group_by(level) %>%
-  pivot_wider(names_from = name,
-              values_from = value) %>%
+  pivot_wider(
+    names_from = name,
+    values_from = value
+  ) %>%
   ungroup() %>%
   select(-level)
 
 CAROTENOIDDB_3[] <-
-  lapply(CAROTENOIDDB_3, function(x)
-    gsub("\r\n", " ", x))
+  lapply(CAROTENOIDDB_3, function(x) {
+    gsub("\r\n", " ", x)
+  })
 CAROTENOIDDB_3[] <-
-  lapply(CAROTENOIDDB_3, function(x)
-    gsub("\r", " ", x))
+  lapply(CAROTENOIDDB_3, function(x) {
+    gsub("\r", " ", x)
+  })
 CAROTENOIDDB_3[] <-
-  lapply(CAROTENOIDDB_3, function(x)
-    gsub("\n", " ", x))
+  lapply(CAROTENOIDDB_3, function(x) {
+    gsub("\n", " ", x)
+  })
 
 # exporting
 database$writeFile(database$sourceFiles$tsv, CAROTENOIDDB_3)

@@ -11,11 +11,14 @@ source("functions.R")
 ### dictionary from TMMC
 database <- databases$get("tmmc")
 tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
-                            sheet = 1) %>%
+  sheet = 1
+) %>%
   mutate_all(as.character) %>%
-  select(latin = LATIN,
-         common = COMMON,
-         biologicalsource = SCIENCE) %>%
+  select(
+    latin = LATIN,
+    common = COMMON,
+    biologicalsource = SCIENCE
+  ) %>%
   distinct(biologicalsource, .keep_all = TRUE)
 
 ### dictionary from TCMID
@@ -25,23 +28,29 @@ tcmNamesDic_2 <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  select(latin = `Latin Name`,
-         common = `English Name`) %>%
+  select(
+    latin = `Latin Name`,
+    common = `English Name`
+  ) %>%
   filter(!is.na(common) &
-           !is.na(latin)) %>%
+    !is.na(latin)) %>%
   mutate(biologicalsource = latin)
 
 ## dictionary from Chinese Medicine Board of Australia
 tcmNamesDic_3 <-
-  read_excel(path = pathDataExternalTranslationSourceTcmCmba,
-             sheet = 1) %>%
+  read_excel(
+    path = pathDataExternalTranslationSourceTcmCmba,
+    sheet = 1
+  ) %>%
   mutate_all(as.character) %>%
-  select(latin = 6,
-         common = 9) %>%
+  select(
+    latin = 6,
+    common = 9
+  ) %>%
   mutate(biologicalsource = latin) %>%
   filter(row.names(.) != 1) %>%
   filter(common != "N/A" &
-           latin != "N/A")
+    latin != "N/A")
 
 # latin genitive dictionaries
 ## i
@@ -61,7 +70,7 @@ latinGenitiveIsDic <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-)  %>%
+) %>%
   mutate(n = str_count(string = genitive)) %>%
   arrange(desc(n)) %>%
   select(-n)
@@ -111,7 +120,8 @@ tcmNamesDic_3 <- tcmNamesDic_3 %>%
     stripWhite = FALSE
   ) %>%
   select(common,
-         biologicalsource = biologicalsource_2) %>%
+    biologicalsource = biologicalsource_2
+  ) %>%
   filter(!is.na(biologicalsource)) %>%
   cSplit(
     splitCols = "biologicalsource",
@@ -182,9 +192,11 @@ tcmNamesDic_2$common <- capitalize(string = tcmNamesDic_2$common)
 tcmNamesDic_2 <-
   tcm_inverting(x = tcmNamesDic_2) %>%
   mutate(latin = biologicalsource) %>%
-  select(latin,
-         common,
-         biologicalsource) %>%
+  select(
+    latin,
+    common,
+    biologicalsource
+  ) %>%
   filter(!is.na(biologicalsource)) %>%
   distinct(biologicalsource, .keep_all = TRUE)
 
@@ -211,15 +223,20 @@ tcmNamesDic_2 <-
 
 # joining
 tcmNamesDic <-
-  rbind(tcmNamesDic_1_1,
-        tcmNamesDic_1_2,
-        tcmNamesDic_2,
-        tcmNamesDic_3) %>%
+  rbind(
+    tcmNamesDic_1_1,
+    tcmNamesDic_1_2,
+    tcmNamesDic_2,
+    tcmNamesDic_3
+  ) %>%
   distinct(common, .keep_all = TRUE) %>%
-  cSplit(splitCols = "biologicalsource",
-         sep = " ") %>%
+  cSplit(
+    splitCols = "biologicalsource",
+    sep = " "
+  ) %>%
   select(common,
-         biologicalsource = biologicalsource_01)
+    biologicalsource = biologicalsource_01
+  )
 
 # filtering empty entries
 tcmNamesDic <- tcmNamesDic %>%
@@ -230,8 +247,10 @@ tcmNamesDic <- tcmNamesDic %>%
 tcmNamesDic_ae <- tcmNamesDic %>%
   distinct(biologicalsource, .keep_all = TRUE) %>%
   arrange(biologicalsource) %>%
-  filter(grepl(pattern = "\\w+ae\\b",
-               x =  biologicalsource)) %>%
+  filter(grepl(
+    pattern = "\\w+ae\\b",
+    x = biologicalsource
+  )) %>%
   mutate(newbiologicalsource = biologicalsource)
 
 tcmNamesDic_ae$newbiologicalsource <- gsub(
@@ -244,8 +263,10 @@ tcmNamesDic_ae$newbiologicalsource <- gsub(
 tcmNamesDic_i <- tcmNamesDic %>%
   distinct(biologicalsource, .keep_all = TRUE) %>%
   arrange(biologicalsource) %>%
-  filter(grepl(pattern = "\\w+i\\b",
-               x = biologicalsource)) %>%
+  filter(grepl(
+    pattern = "\\w+i\\b",
+    x = biologicalsource
+  )) %>%
   mutate(newbiologicalsource = biologicalsource)
 
 a <- paste("\\b", latinGenitiveIDic$genitive, "\\b", sep = "")
@@ -272,8 +293,10 @@ tcmNamesDic_i$newbiologicalsource <-
 tcmNamesDic_is <- tcmNamesDic %>%
   distinct(biologicalsource, .keep_all = TRUE) %>%
   arrange(biologicalsource) %>%
-  filter(grepl(pattern = "\\w+is\\b",
-               x = biologicalsource)) %>%
+  filter(grepl(
+    pattern = "\\w+is\\b",
+    x = biologicalsource
+  )) %>%
   mutate(newbiologicalsource = biologicalsource)
 
 c <- paste("\\b", latinGenitiveIsDic$genitive, "\\b", sep = "")
@@ -308,8 +331,10 @@ tcmNamesDicCurated$newbiologicalsource <-
   )
 
 tcmNamesDicCurated$newbiologicalsource <-
-  y_as_na(x = tcmNamesDicCurated$newbiologicalsource,
-          y = "FALSE")
+  y_as_na(
+    x = tcmNamesDicCurated$newbiologicalsource,
+    y = "FALSE"
+  )
 
 # joining
 tcmNamesDicCurated <-
@@ -324,7 +349,7 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
 # sorting in appropriate order
 tcmNamesDicCurated <- tcmNamesDicCurated %>%
   mutate(n = str_count(string = common)) %>%
-  arrange(desc(n)) %>%  # sorting for replacements like "sea cucumber" and so on...
+  arrange(desc(n)) %>% # sorting for replacements like "sea cucumber" and so on...
   select(
     vernacularName = common,
     canonicalName = biologicalsource,

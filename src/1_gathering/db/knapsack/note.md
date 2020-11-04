@@ -1,11 +1,8 @@
 # Note
 
-Manually removed 
+Manually removed
 
 "
-
-
-
 
                                        ,"
 

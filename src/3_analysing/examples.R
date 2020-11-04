@@ -23,20 +23,23 @@ openDb <- read_delim(
 structureSearch_1 <- openDb %>%
   filter(structureType == "nominal") %>%
   distinct(structureValue,
-           structureCleanedInchikey3D,
-           .keep_all = TRUE)
+    structureCleanedInchikey3D,
+    .keep_all = TRUE
+  )
 
 structureSearch_2 <- openDb %>%
   filter(structureType == "smiles") %>%
   distinct(structureValue,
-           structureCleanedInchikey3D,
-           .keep_all = TRUE)
+    structureCleanedInchikey3D,
+    .keep_all = TRUE
+  )
 
 structureSearch_3 <- openDb %>%
   filter(structureType == "inchi") %>%
   distinct(structureValue,
-           structureCleanedInchikey3D,
-           .keep_all = TRUE)
+    structureCleanedInchikey3D,
+    .keep_all = TRUE
+  )
 
 structureSearch <-
   rbind(structureSearch_1, structureSearch_2, structureSearch_3) %>%
@@ -46,7 +49,8 @@ structureSearch <-
 
 saltSearch <- structureSearch_3 %>%
   distinct(structureValue,
-           .keep_all = TRUE) %>%
+    .keep_all = TRUE
+  ) %>%
   group_by(structureCleanedInchikey3D) %>%
   add_count() %>%
   filter(grepl(pattern = "\\.", x = structureValue)) %>%
@@ -77,8 +81,9 @@ hitInchi_str <- maybeHit_str %>%
 
 organismSearch <- openDb %>%
   distinct(organismOriginal,
-           organismCleaned,
-           .keep_all = TRUE) %>%
+    organismCleaned,
+    .keep_all = TRUE
+  ) %>%
   group_by(organismCleaned) %>%
   add_count() %>%
   arrange(desc(n)) %>%
@@ -100,7 +105,8 @@ reference <- openDb %>%
 
 referenceSearch <- reference %>%
   distinct(referenceValue,
-           .keep_all = TRUE) %>%
+    .keep_all = TRUE
+  ) %>%
   group_by(referenceCleanedDoi) %>%
   add_count() %>%
   arrange(desc(n)) %>%
@@ -125,7 +131,7 @@ doubleTest <- openDb %>%
   count() %>%
   arrange(desc(n))
 
-pairTest <-  openDb %>%
+pairTest <- openDb %>%
   filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
   filter(organismCleaned == "Crataegus monogyna") %>%
   distinct(organismOriginal, structureValue, organismCleaned)

@@ -58,41 +58,45 @@ data_manipulated <- data_selected %>%
   ) %>%
   mutate(reference_original = y_as_na(reference_original, y = "")) %>%
   mutate(reference_original = ifelse(
-    test = !grepl(pattern = "[^ -~]", x = reference_original) ,
+    test = !grepl(pattern = "[^ -~]", x = reference_original),
     yes = reference_original,
     no = NA
   )) %>%
-  mutate(reference_split =
-           ifelse(
-             test = grepl(pattern = ".*et al.",
-                          x = reference_original),
-             yes = trimws(x = sub(
-               pattern = "^.;",
-               replacement = "",
-               x = sub(
-                 pattern = "^ \\\\",
-                 replacement = "",
-                 x = sub(
-                   pattern = "^\\\\",
-                   replacement = "",
-                   x = sub(
-                     pattern = "^ \\.",
-                     replacement = "",
-                     x = sub(
-                       pattern = "^;",
-                       replacement = "",
-                       x = sub(
-                         pattern = ".*et al.",
-                         replacement = "",
-                         x = reference_original
-                       )
-                     )
-                   )
-                 )
-               )
-             )),
-             no = NA
-           )) %>%
+  mutate(
+    reference_split =
+      ifelse(
+        test = grepl(
+          pattern = ".*et al.",
+          x = reference_original
+        ),
+        yes = trimws(x = sub(
+          pattern = "^.;",
+          replacement = "",
+          x = sub(
+            pattern = "^ \\\\",
+            replacement = "",
+            x = sub(
+              pattern = "^\\\\",
+              replacement = "",
+              x = sub(
+                pattern = "^ \\.",
+                replacement = "",
+                x = sub(
+                  pattern = "^;",
+                  replacement = "",
+                  x = sub(
+                    pattern = ".*et al.",
+                    replacement = "",
+                    x = reference_original
+                  )
+                )
+              )
+            )
+          )
+        )),
+        no = NA
+      )
+  ) %>%
   data.frame()
 
 # reverse_words <- function(string) {

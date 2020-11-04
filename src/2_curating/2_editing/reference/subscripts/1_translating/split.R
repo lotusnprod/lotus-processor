@@ -18,7 +18,7 @@ dataSplit <- read_delim(
 )
 
 cat("submitting to crossRef \n")
-if (nrow(dataSplit) != 1)
+if (nrow(dataSplit) != 1) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit,
@@ -32,26 +32,31 @@ if (nrow(dataSplit) != 1)
       ignore.interactive = TRUE
     )
   )
+}
 
 cat("This may take several minutes \n")
 
-if (nrow(dataSplit) != 1)
-  dataSplit <- getAllReferences(data = dataSplit,
-                                referenceType = "split",
-                                method = "osa")
-
-if (nrow(dataSplit) == 1)
-  dataSplit <- data.frame() %>%
-  mutate(
-    referenceOriginal_split = NA,
-    referenceTranslatedDoi = NA,
-    referenceTranslatedJournal = NA,
-    referenceTranslatedTitle = NA,
-    referenceTranslatedDate = NA,
-    referenceTranslatedAuthor = NA,
-    referenceTranslationScoreCrossref = NA,
-    referenceTranslationScoreDistance = NA
+if (nrow(dataSplit) != 1) {
+  dataSplit <- getAllReferences(
+    data = dataSplit,
+    referenceType = "split",
+    method = "osa"
   )
+}
+
+if (nrow(dataSplit) == 1) {
+  dataSplit <- data.frame() %>%
+    mutate(
+      referenceOriginal_split = NA,
+      referenceTranslatedDoi = NA,
+      referenceTranslatedJournal = NA,
+      referenceTranslatedTitle = NA,
+      referenceTranslatedDate = NA,
+      referenceTranslatedAuthor = NA,
+      referenceTranslationScoreCrossref = NA,
+      referenceTranslationScoreDistance = NA
+    )
+}
 
 cat("ensuring directories exist \n")
 ifelse(

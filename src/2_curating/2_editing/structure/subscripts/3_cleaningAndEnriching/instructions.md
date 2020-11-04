@@ -10,38 +10,38 @@ To do: make requirements files (mainly needs rdkit, molvs). Note that the molvs 
 
 ## fragment.py
 
-in  /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ needs to be replaced with the version present in this folder
+in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ needs to be replaced with the version present in this folder
 
 ### What the scripts does
 
 Given a tab delimited file as input having a SMILES and an InChI column it will firstgenerate a ROmol object for SMILES and InChI.
 It will then:
 
--   validate the ROmol and apend a new column with the validation log (allowing to see what are the problems).
--   standardize the ROmol object
--   fetch the largest fragment
--   uncharge the molecule
+- validate the ROmol and apend a new column with the validation log (allowing to see what are the problems).
+- standardize the ROmol object
+- fetch the largest fragment
+- uncharge the molecule
 
 Once these steps are realized the following fields are generated from the sanitized output:
 
--   SMILES
--   InChI
--   InChIKey
--   Short InChI key
--   Molecular Formula
--   Exact Mass
--   Protonated Exact Mass
--   Deprotonated Exact Mass
+- SMILES
+- InChI
+- InChIKey
+- Short InChI key
+- Molecular Formula
+- Exact Mass
+- Protonated Exact Mass
+- Deprotonated Exact Mass
 
 ### Command line
 
 In your appropriate conda env run
 
--   General
+- General
 
 `python opennpdb_sanitizer_script.py /path/to/input_file.tsv /path/to/output_file.tsv smiles_column_header inchi_column_header`
 
--   Example
+- Example
 
 `nohup python opennpdb_sanitizer_script.py ../outputs/tables/open_NP_db.tsv ../outputs/tables/open_NP_db_sanitized.tsv smiles inchi`
 

@@ -14,11 +14,13 @@ database <- databases$get("tppt")
 
 ## files
 data_original_1 <- read_excel(database$sourceFiles$tsv,
-                              sheet = 1) %>%
+  sheet = 1
+) %>%
   mutate_all(as.character)
 
 data_original_2 <- read_excel(database$sourceFiles$tsv,
-                              sheet = 3) %>%
+  sheet = 3
+) %>%
   mutate_all(as.character)
 
 data_filled <- data_original_1 %>%
@@ -29,8 +31,9 @@ data_filled <- data_original_1 %>%
       Stereo_SMILES == "NS",
       Canonical_SMILES,
       ifelse(Stereo_SMILES == "racemat",
-             Canonical_SMILES,
-             Stereo_SMILES)
+        Canonical_SMILES,
+        Stereo_SMILES
+      )
     )
   ))
 

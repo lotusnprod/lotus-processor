@@ -14,8 +14,10 @@ database <- databases$get("inflamnat")
 
 ## files
 data_original <-
-  read_excel(path = database$sourceFiles$tsv,
-             sheet = 1) %>%
+  read_excel(
+    path = database$sourceFiles$tsv,
+    sheet = 1
+  ) %>%
   mutate_all(as.character)
 
 # selecting
@@ -57,9 +59,10 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   cSplit("reference_2",
-         sep = '\\.,',
-         stripWhite = FALSE,
-         fixed = FALSE) %>%
+    sep = "\\.,",
+    stripWhite = FALSE,
+    fixed = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_title_2 = ifelse(
@@ -74,7 +77,8 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   cSplit("reference_authors_2",
-         sep = "et.al.", stripWhite = FALSE) %>%
+    sep = "et.al.", stripWhite = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   mutate(reference_title_2_2 = gsub("\\([0-9]{4}\\)", "", reference_authors_2_2)) %>%
   mutate(

@@ -62,9 +62,10 @@ references <- read_delim(
 
 ## Compiling flavors
 compiled_flavors <- full_join(compounds_flavors,
-                              flavors,
-                              by = c('flavor_id' = 'id'),
-                              match = "all")
+  flavors,
+  by = c("flavor_id" = "id"),
+  match = "all"
+)
 
 clean_flavors <- compiled_flavors %>%
   select(
@@ -78,20 +79,23 @@ clean_flavors <- compiled_flavors %>%
 # Casting
 ## contents
 compounds_contents <- left_join(compounds,
-                                contents,
-                                by = c('id' = 'source_id'),
-                                match = "all") %>%
+  contents,
+  by = c("id" = "source_id"),
+  match = "all"
+) %>%
   group_by(id) %>%
   distinct(orig_food_scientific_name,
-           orig_food_part,
-           .keep_all = TRUE) %>%
+    orig_food_part,
+    .keep_all = TRUE
+  ) %>%
   ungroup()
 
 ## flavors
 compounds_flavors <- left_join(compounds,
-                               clean_flavors,
-                               by = c('id' = 'compound_id'),
-                               match = "all")
+  clean_flavors,
+  by = c("id" = "compound_id"),
+  match = "all"
+)
 
 compounds_flavors_casted <- compounds_flavors %>%
   group_by(id) %>%
@@ -103,8 +107,10 @@ compounds_flavors_casted <- compounds_flavors %>%
   ) %>%
   ungroup()
 
-compounds_contents_flavors <- left_join(compounds_contents,
-                                        compounds_flavors_casted)
+compounds_contents_flavors <- left_join(
+  compounds_contents,
+  compounds_flavors_casted
+)
 
 # Minimal output
 foodb <- compounds_contents_flavors %>%
@@ -114,8 +120,9 @@ foodb <- compounds_contents_flavors %>%
   )) %>%
   mutate(
     biologicalsource = paste(orig_food_scientific_name,
-                             orig_food_common_name,
-                             sep = " "),
+      orig_food_common_name,
+      sep = " "
+    ),
     reference_external = ifelse(
       test = citation_type == "DATABASE" |
         citation_type == "UNKNOWN" |
@@ -134,10 +141,10 @@ foodb <- compounds_contents_flavors %>%
     reference_original = ifelse(
       test =
         !grepl(pattern = "[0-9]{6,9}", x = citation) &
-        citation != "MANUAL" &
-        citation_type == "ARTICLE" |
-        citation_type == "TEXTBOOK" |
-        is.na(citation_type),
+          citation != "MANUAL" &
+          citation_type == "ARTICLE" |
+          citation_type == "TEXTBOOK" |
+          is.na(citation_type),
       yes = citation,
       no = NA
     )
@@ -159,8 +166,10 @@ foodb <- compounds_contents_flavors %>%
   ) %>%
   mutate(reference_doi = str_extract(
     pattern = "10.*",
-    string = str_extract(pattern = "doi.*",
-                         string = reference_original)
+    string = str_extract(
+      pattern = "doi.*",
+      string = reference_original
+    )
   )) %>%
   data.frame()
 

@@ -14,7 +14,7 @@ Database <-
       interimFile = "character"
     ),
     methods = list(
-      writeFile = function (file, data) {
+      writeFile = function(file, data) {
         write.table(
           x = data,
           file = gzfile(
@@ -28,7 +28,7 @@ Database <-
           fileEncoding = "UTF-8"
         )
       },
-      writeInterim = function (data) {
+      writeInterim = function(data) {
         writeFile(interimFile, data)
       }
     )
@@ -50,24 +50,27 @@ Databases <-
       paths = "environment"
     ),
     methods = list(
-      initialize = function (pathDbSource, pathDbInterim) {
-        .self$pathDbSource = pathDbSource
-        .self$pathDbInterim = pathDbInterim
+      initialize = function(pathDbSource, pathDbInterim) {
+        .self$pathDbSource <- pathDbSource
+        .self$pathDbInterim <- pathDbInterim
         .self$paths <- new.env(hash = T)
       },
       #' @param name Name of the database
       #' @param sourceFile Name of the source file (without path)
       #' @param interimFile Name of the interim file (without path)
-      add = function (name, sourceFiles, interimFile) {
-        .self$paths[[name]] = Database$new(
+      add = function(name, sourceFiles, interimFile) {
+        .self$paths[[name]] <- Database$new(
           name = name,
-          sourceFiles = lapply(sourceFiles,
-                               function(path)
-                                 file.path(pathDbSource, file.path(name, path))),
+          sourceFiles = lapply(
+            sourceFiles,
+            function(path) {
+              file.path(pathDbSource, file.path(name, path))
+            }
+          ),
           interimFile = file.path(pathDbInterim, interimFile)
         )
       },
-      get = function (name) {
+      get = function(name) {
         return(.self$paths[[name]])
       }
     )

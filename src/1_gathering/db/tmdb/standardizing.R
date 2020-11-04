@@ -37,8 +37,9 @@ data_selected <- data_pivoted %>%
     reference_publishingDetails = References
   ) %>%
   cSplit("reference_publishingDetails",
-         sep = ";",
-         direction = "long") %>%
+    sep = ";",
+    direction = "long"
+  ) %>%
   mutate(
     reference_publishingDetails = gsub(
       pattern = "\\(.*\\D.*\\)",
@@ -58,8 +59,9 @@ data_standard <-
   )
 
 data_standard[] <-
-  lapply(data_standard, function(x)
-    gsub("Not Available", NA, x))
+  lapply(data_standard, function(x) {
+    gsub("Not Available", NA, x)
+  })
 
 # exporting
 database$writeInterim(data_standard)

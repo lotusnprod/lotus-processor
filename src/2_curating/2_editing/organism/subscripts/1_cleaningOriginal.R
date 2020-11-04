@@ -45,83 +45,98 @@ ifelse(
   test = !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
   yes = dir.create(pathDataInterimTablesCleanedOrganismOriginal),
   no = file.remove(
-    list.files(path = pathDataInterimTablesCleanedOrganismOriginal,
-               full.names = TRUE)
+    list.files(
+      path = pathDataInterimTablesCleanedOrganismOriginal,
+      full.names = TRUE
+    )
   ) &
     dir.create(pathDataInterimTablesCleanedOrganismOriginal,
-               showWarnings = FALSE)
+      showWarnings = FALSE
+    )
 )
 
 cat("submitting to GNFinder \n")
 system(command = paste("bash", pathOriginalGnfinderScript))
 
 length <-
-  length(list.files(path = pathDataInterimTablesOriginalOrganism,
-                    pattern = 'tsv'))
+  length(list.files(
+    path = pathDataInterimTablesOriginalOrganism,
+    pattern = "tsv"
+  ))
 
 cut <- 10000
 
-if (length != 0)
+if (length != 0) {
   num <- as.integer(seq(
     from = 1 * cut,
     to = length * cut,
     by = cut
   ))
+}
 
 dataCleanOriginalOrganism <- list()
 
 cat("cleaning GNFinder output \n")
-if (length != 0)
+if (length != 0) {
   for (i in num) {
     j <- i / cut
     cat(paste("step", j, "of", length))
-    tryCatch({
-      dataCleanOriginalOrganism[[j]] <-
-        gnfinder_cleaning(num = i,
-                          organismCol = "organismOriginal")
-    }, error = function(e) {
-      cat("ERROR :", conditionMessage(e), "\n")
-    })
+    tryCatch(
+      {
+        dataCleanOriginalOrganism[[j]] <-
+          gnfinder_cleaning(
+            num = i,
+            organismCol = "organismOriginal"
+          )
+      },
+      error = function(e) {
+        cat("ERROR :", conditionMessage(e), "\n")
+      }
+    )
   }
+}
 
 cat("selecting and reordering \n")
-if (length(dataCleanOriginalOrganism) != 0)
+if (length(dataCleanOriginalOrganism) != 0) {
   dataCleanedOriginalOrganism <-
-  bind_rows(dataCleanOriginalOrganism) %>%
-  select(
-    organismOriginal,
-    organismCleaned = canonicalname,
-    organismCleanedCurrent = canonicalnameCurrent,
-    organismDbTaxo = dbTaxo,
-    everything()
-  ) %>%
-  select(-nchar, -sum)
+    bind_rows(dataCleanOriginalOrganism) %>%
+    select(
+      organismOriginal,
+      organismCleaned = canonicalname,
+      organismCleanedCurrent = canonicalnameCurrent,
+      organismDbTaxo = dbTaxo,
+      everything()
+    ) %>%
+    select(-nchar, -sum)
+}
 
-if (length(dataCleanOriginalOrganism) == 0)
+if (length(dataCleanOriginalOrganism) == 0) {
   dataCleanedOriginalOrganism <- data.frame() %>%
-  mutate(
-    organismOriginal = NA,
-    organismCleaned = NA,
-    organismCleanedCurrent = NA,
-    organismDbTaxo = NA,
-    value_min = NA,
-    value_max = NA,
-    taxonId = NA,
-    taxonomy = NA,
-    rank = NA,
-    ids = NA,
-    dbQuality = NA
-  )
+    mutate(
+      organismOriginal = NA,
+      organismCleaned = NA,
+      organismCleanedCurrent = NA,
+      organismDbTaxo = NA,
+      value_min = NA,
+      value_max = NA,
+      taxonId = NA,
+      taxonomy = NA,
+      rank = NA,
+      ids = NA,
+      dbQuality = NA
+    )
+}
 
 dataCleanedOriginalOrganismUnique <-
   dataCleanedOriginalOrganism %>%
   distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
 cat("exporting ... \n")
-if (length != 0)
+if (length != 0) {
   cat(pathDataInterimTablesCleanedOrganismOriginalTable, "\n")
+}
 
-if (length != 0)
+if (length != 0) {
   write.table(
     x = dataCleanedOriginalOrganism,
     file = gzfile(
@@ -134,12 +149,16 @@ if (length != 0)
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
-if (length != 0)
-  cat(pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
-      "\n")
+if (length != 0) {
+  cat(
+    pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
+    "\n"
+  )
+}
 
-if (length != 0)
+if (length != 0) {
   write.table(
     x = dataCleanedOriginalOrganismUnique,
     file = gzfile(
@@ -152,6 +171,7 @@ if (length != 0)
     sep = "\t",
     fileEncoding = "UTF-8"
   )
+}
 
 end <- Sys.time()
 

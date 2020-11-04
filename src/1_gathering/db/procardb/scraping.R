@@ -10,34 +10,35 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
-library(rvest)  # provides read_html
-library(tidyr) #provides pivot_wider
+library(rvest) # provides read_html
+library(tidyr) # provides pivot_wider
 
 # get paths
 database <- databases$get("procardb")
 
 url <-
-  'http://bioinfo.imtech.res.in/servers/procardb/?c=carotenoides&m=getDetail&id=C'
+  "http://bioinfo.imtech.res.in/servers/procardb/?c=carotenoides&m=getDetail&id=C"
 
 url_bio <-
-  'http://bioinfo.imtech.res.in/servers/procardb/?c=organisms&m=getDetail&id=R'
+  "http://bioinfo.imtech.res.in/servers/procardb/?c=organisms&m=getDetail&id=R"
 
 X <- (1:1942)
 X_bio <- (1:403)
 
-getprocardb <- function(X)
-{
-  tryCatch({
-    cd_id <-  str_pad (X, 4, pad = "0")
-    url_id <- paste(url, cd_id)
-    url_id <- gsub("\\s", "", url_id)
-    df1 <- read_html(url_id) %>%
-      html_node(xpath = "/html/body/div[3]/div/div/table") %>%
-      html_table(., fill = TRUE)
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+getprocardb <- function(X) {
+  tryCatch(
+    {
+      cd_id <- str_pad(X, 4, pad = "0")
+      url_id <- paste(url, cd_id)
+      url_id <- gsub("\\s", "", url_id)
+      df1 <- read_html(url_id) %>%
+        html_node(xpath = "/html/body/div[3]/div/div/table") %>%
+        html_table(., fill = TRUE)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 PROCARDB <- invisible(
@@ -65,26 +66,29 @@ PROCARDB_2 <- bind_rows(PROCARDB_2, .id = "column_label")
 
 PROCARDB_2 <- PROCARDB_2 %>%
   group_by(column_label) %>%
-  pivot_wider(names_from = 2,
-              values_from = 3)
+  pivot_wider(
+    names_from = 2,
+    values_from = 3
+  )
 
 urls_1 <- X
 ids_1 <- PROCARDB_2$column_label
 list_1 <- urls_1[which(!urls_1 %in% ids_1)]
 
-getprocardb_bio <- function(X_bio)
-{
-  tryCatch({
-    cd_id_bio <-  str_pad (X_bio, 3, pad = "0")
-    url_id_bio <- paste(url_bio, cd_id_bio)
-    url_id_bio <- gsub("\\s", "", url_id_bio)
-    df1 <- read_html(url_id_bio) %>%
-      html_node(xpath = "/html/body/div[3]/div/div/div[2]/table") %>%
-      html_table(., fill = TRUE)
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+getprocardb_bio <- function(X_bio) {
+  tryCatch(
+    {
+      cd_id_bio <- str_pad(X_bio, 3, pad = "0")
+      url_id_bio <- paste(url_bio, cd_id_bio)
+      url_id_bio <- gsub("\\s", "", url_id_bio)
+      df1 <- read_html(url_id_bio) %>%
+        html_node(xpath = "/html/body/div[3]/div/div/div[2]/table") %>%
+        html_table(., fill = TRUE)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 PROCARDB_3 <- invisible(
@@ -105,19 +109,20 @@ PROCARDB_4 <- PROCARDB_3[PROCARDB_3 != "Timed out!"]
 
 PROCARDB_4 <- bind_rows(PROCARDB_4, .id = "column_label")
 
-getprocardb_names <- function(X_bio)
-{
-  tryCatch({
-    cd_id_bio <-  str_pad (X_bio, 3, pad = "0")
-    url_id_bio <- paste(url_bio, cd_id_bio)
-    url_id_bio <- gsub("\\s", "", url_id_bio)
-    df1 <- read_html(url_id_bio) %>%
-      html_node(xpath = "/html/body/div[3]/div/div/div") %>%
-      html_text()
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+getprocardb_names <- function(X_bio) {
+  tryCatch(
+    {
+      cd_id_bio <- str_pad(X_bio, 3, pad = "0")
+      url_id_bio <- paste(url_bio, cd_id_bio)
+      url_id_bio <- gsub("\\s", "", url_id_bio)
+      df1 <- read_html(url_id_bio) %>%
+        html_node(xpath = "/html/body/div[3]/div/div/div") %>%
+        html_text()
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 PROCARDB_5 <- invisible(
@@ -148,24 +153,30 @@ PROCARDB_6 <- PROCARDB_6 %>%
   mutate(column_label = row.names(.))
 
 PROCARDB_final <- full_join(PROCARDB_6, PROCARDB_4) %>%
-  select(biologicalsource,
-         `CAROTENOID NAME`)
+  select(
+    biologicalsource,
+    `CAROTENOID NAME`
+  )
 
 PROCARDB_final <- full_join(PROCARDB_final, PROCARDB_2) %>%
   distinct(biologicalsource, `CAROTENOID NAME`, .keep_all = TRUE)
 
 PROCARDB_final[] <-
-  lapply(PROCARDB_final, function(x)
-    gsub("\r\n", " ", x))
+  lapply(PROCARDB_final, function(x) {
+    gsub("\r\n", " ", x)
+  })
 PROCARDB_final[] <-
-  lapply(PROCARDB_final, function(x)
-    gsub("\r", " ", x))
+  lapply(PROCARDB_final, function(x) {
+    gsub("\r", " ", x)
+  })
 PROCARDB_final[] <-
-  lapply(PROCARDB_final, function(x)
-    gsub("\n", " ", x))
+  lapply(PROCARDB_final, function(x) {
+    gsub("\n", " ", x)
+  })
 PROCARDB_final[] <-
-  lapply(PROCARDB_final, function(x)
-    gsub("\t", " ", x))
+  lapply(PROCARDB_final, function(x) {
+    gsub("\t", " ", x)
+  })
 
 # exporting
 database$writeFile(database$sourceFiles$tsv, PROCARDB_final)

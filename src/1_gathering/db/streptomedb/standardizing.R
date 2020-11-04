@@ -1,4 +1,4 @@
-#title: "STREPTOMEDB cleaneR"
+# title: "STREPTOMEDB cleaneR"
 
 # loading paths
 source("paths.R")
@@ -23,11 +23,12 @@ data_original <- read_delim(
 ## selecting
 data_selected <- data_original %>%
   select(uniqueid,
-         name,
-         smiles,
-         pubchem,
-         reference_pubmed = pubmedid,
-         biologicalsource) %>%
+    name,
+    smiles,
+    pubchem,
+    reference_pubmed = pubmedid,
+    biologicalsource
+  ) %>%
   cSplit("reference_pubmed", sep = ";", direction = "long") %>%
   cSplit("biologicalsource", sep = ";", direction = "long") %>%
   data.frame()

@@ -9,32 +9,33 @@ library(pbmcapply)
 library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
-library(rvest)  # provides read_html
+library(rvest) # provides read_html
 
 # get paths
 database <- databases$get("tmdb")
 
-url <- 'http://pcsb.ahau.edu.cn:8080/TCDB/f/browseDetail?id='
+url <- "http://pcsb.ahau.edu.cn:8080/TCDB/f/browseDetail?id="
 
 X <- (1:1473)
 
-gettmdb <- function(X)
-{
-  tryCatch({
-    cd_id <- X
-    url_id <- paste(url, cd_id)
-    url_id <- gsub("\\s", "", url_id)
-    sample <- read_html(url_id)
-    scrape1 <-
-      html_nodes(sample, xpath = "/html/body/div[1]/div/table") %>%
-      html_table(., fill = TRUE)
-    
-    scrape2 <- scrape1[[1]]
-    return(scrape2)
-  },
-  error = function(e) {
-    "Timed out!"
-  })
+gettmdb <- function(X) {
+  tryCatch(
+    {
+      cd_id <- X
+      url_id <- paste(url, cd_id)
+      url_id <- gsub("\\s", "", url_id)
+      sample <- read_html(url_id)
+      scrape1 <-
+        html_nodes(sample, xpath = "/html/body/div[1]/div/table") %>%
+        html_table(., fill = TRUE)
+
+      scrape2 <- scrape1[[1]]
+      return(scrape2)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
 TMDB <- invisible(
@@ -46,7 +47,7 @@ TMDB <- invisible(
     mc.silent = TRUE,
     mc.cores = (parallel::detectCores() - 2),
     mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE, 
+    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
   )
 )

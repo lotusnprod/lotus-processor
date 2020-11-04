@@ -70,8 +70,10 @@ publications <- read_delim(
 )
 
 composition <-
-  read_excel(path = database$sourceFiles$tsvComposition,
-             sheet = 1)
+  read_excel(
+    path = database$sourceFiles$tsvComposition,
+    sheet = 1
+  )
 
 ### joining
 a <- full_join(compounds, compounds_structures)
@@ -123,8 +125,9 @@ data_referenced <-
   data.frame()
 
 data_referenced[] <-
-  lapply(data_referenced, function(x)
-    gsub("NULL", NA, x))
+  lapply(data_referenced, function(x) {
+    gsub("NULL", NA, x)
+  })
 
 # standardizing
 data_standard <-

@@ -16,96 +16,109 @@ library(tidyverse)
 #######################################################
 
 getref <- function(X) {
-  tryCatch({
-    cr_works(
-      flq = c(query.bibliographic = X),
-      sort = 'score',
-      order = "desc",
-      limit = 1
-    )
-  },
-  error = function(e) {
-    NA
-  })
+  tryCatch(
+    {
+      cr_works(
+        flq = c(query.bibliographic = X),
+        sort = "score",
+        order = "desc",
+        limit = 1
+      )
+    },
+    error = function(e) {
+      NA
+    }
+  )
 }
 
 #######################################################
 #######################################################
 
 getref_noLimit <- function(X) {
-  tryCatch({
-    cr_works(
-      flq = c(query.bibliographic = X),
-      sort = 'score',
-      order = "desc"
-    )
-  },
-  error = function(e) {
-    NA
-  })
+  tryCatch(
+    {
+      cr_works(
+        flq = c(query.bibliographic = X),
+        sort = "score",
+        order = "desc"
+      )
+    },
+    error = function(e) {
+      NA
+    }
+  )
 }
 
 #######################################################
 #######################################################
 
 getref_noLimit_publishingDetails <- function(X) {
-  tryCatch({
-    cr_works(query = X,
-             sort = 'score',
-             order = "desc")
-  },
-  error = function(e) {
-    NA
-  })
+  tryCatch(
+    {
+      cr_works(
+        query = X,
+        sort = "score",
+        order = "desc"
+      )
+    },
+    error = function(e) {
+      NA
+    }
+  )
 }
 
 #######################################################
 #######################################################
 
 getrefPubmed <- function(X) {
-  tryCatch({
-    df <- entrez_summary(db = "pubmed", id = X)
-    
-    translatedDoi <-
-      ifelse(test = "doi" %in% df[["articleids"]][, 1],
-             yes = trimws(df[["articleids"]][["value"]][[which(df[["articleids"]] == "doi")]]),
-             no = NA)
-    translatedJournal <- df[["fulljournalname"]]
-    translatedTitle <- df[["title"]]
-    translatedAuthor <- df[["sortfirstauthor"]]
-    translatedDate <- df[["pubdate"]]
-    
-    ids <-
+  tryCatch(
+    {
+      df <- entrez_summary(db = "pubmed", id = X)
+
+      translatedDoi <-
+        ifelse(test = "doi" %in% df[["articleids"]][, 1],
+          yes = trimws(df[["articleids"]][["value"]][[which(df[["articleids"]] == "doi")]]),
+          no = NA
+        )
+      translatedJournal <- df[["fulljournalname"]]
+      translatedTitle <- df[["title"]]
+      translatedAuthor <- df[["sortfirstauthor"]]
+      translatedDate <- df[["pubdate"]]
+
+      ids <-
+        data.frame(
+          translatedDoi,
+          translatedJournal,
+          translatedTitle,
+          translatedAuthor,
+          translatedDate
+        )
+      return(ids)
+    },
+    error = function(e) {
       data.frame(
-        translatedDoi,
-        translatedJournal,
-        translatedTitle,
-        translatedAuthor,
-        translatedDate
+        "translatedDoi" = NA,
+        "translatedJournal" = NA,
+        "translatedTitle" = NA,
+        "translatedAuthor" = NA,
+        "translatedDate" = NA
       )
-    return(ids)
-  },
-  error = function(e) {
-    data.frame(
-      "translatedDoi" = NA,
-      "translatedJournal" = NA,
-      "translatedTitle" = NA,
-      "translatedAuthor" = NA,
-      "translatedDate" = NA
-    )
-  })
+    }
+  )
 }
 
 #######################################################
 #######################################################
 
 getrefDoi <- function(X) {
-  tryCatch({
-    cr_works(dois = X)
-  },
-  error = function(e) {
-    NA
-  })
+  tryCatch(
+    {
+      cr_works(dois = X)
+    },
+    error = function(e) {
+      NA
+    }
+  )
 }
 
 #######################################################
@@ -113,12 +126,13 @@ getrefDoi <- function(X) {
 
 getBestReference <- function(data, referenceType, method = "osa") {
   referenceColumnName <- paste("referenceOriginal",
-                               referenceType,
-                               sep = "_")
-  
+    referenceType,
+    sep = "_"
+  )
+
   tableIntial <- data %>%
     mutate(level = row.names(.))
-  
+
   dataList <- list()
   for (i in 1:length(reflist)) {
     ifelse(
@@ -131,22 +145,24 @@ getBestReference <- function(data, referenceType, method = "osa") {
       no = dataList[[i]] <- data.frame(NA)
     )
   }
-  
+
   names(dataList) <- 1:length(dataList)
-  
+
   bound <- bind_rows(dataList[!is.na(dataList)], .id = "level")
-  
+
   tableInterim <- left_join(tableIntial, bound)
-  
+
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
-      stringdist(a = as.character(tolower(tableInterim[i, 1])),
-                 # method is case sensitive
-                 b = as.character(tolower(tableInterim[i, "title"])),
-                 # method is case sensitive
-                 method = method)
+      stringdist(
+        a = as.character(tolower(tableInterim[i, 1])),
+        # method is case sensitive
+        b = as.character(tolower(tableInterim[i, "title"])),
+        # method is case sensitive
+        method = method
+      )
   }
-  
+
   tableFinal <- tableInterim %>%
     select(
       all_of(referenceColumnName),
@@ -158,11 +174,17 @@ getBestReference <- function(data, referenceType, method = "osa") {
       referenceTranslationScoreCrossref = score,
       referenceTranslationScoreDistance = distScore
     ) %>%
-    unnest(cols = c(referenceTranslatedAuthor),
-           keep_empty = TRUE) %>%
-    distinct_at(., .vars = (c(1,
-                              4)),
-                .keep_all = TRUE) %>%
+    unnest(
+      cols = c(referenceTranslatedAuthor),
+      keep_empty = TRUE
+    ) %>%
+    distinct_at(.,
+      .vars = (c(
+        1,
+        4
+      )),
+      .keep_all = TRUE
+    ) %>%
     select(
       all_of(referenceColumnName),
       referenceTranslatedDoi,
@@ -175,24 +197,30 @@ getBestReference <- function(data, referenceType, method = "osa") {
     ) %>%
     group_by_at(1) %>%
     arrange(referenceTranslationScoreDistance) %>%
-    distinct_at(., .vars = (c(1)),
-                .keep_all = TRUE) %>%
+    distinct_at(.,
+      .vars = (c(1)),
+      .keep_all = TRUE
+    ) %>%
     ungroup() %>%
     mutate_all(as.character)
-  
+
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\r\n", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\r\n", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\r", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\r", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\n", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\n", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\t", " ", x))
-  
+    lapply(tableFinal, function(x) {
+      gsub("\t", " ", x)
+    })
+
   return(tableFinal)
 }
 
@@ -201,12 +229,13 @@ getBestReference <- function(data, referenceType, method = "osa") {
 
 getAllReferences <- function(data, referenceType, method = "osa") {
   referenceColumnName <- paste("referenceOriginal",
-                               referenceType,
-                               sep = "_")
-  
+    referenceType,
+    sep = "_"
+  )
+
   tableIntial <- data %>%
     mutate(level = row.names(.))
-  
+
   dataList <- list()
   for (i in 1:length(reflist)) {
     ifelse(
@@ -219,13 +248,13 @@ getAllReferences <- function(data, referenceType, method = "osa") {
       no = dataList[[i]] <- data.frame(NA)
     )
   }
-  
+
   names(dataList) <- 1:length(dataList)
-  
+
   bound <- bind_rows(dataList[!is.na(dataList)], .id = "level")
-  
+
   tableInterim <- left_join(tableIntial, bound)
-  
+
   for (i in 1:nrow(tableInterim)) {
     tableInterim[i, "distScore"] <-
       ifelse(
@@ -241,90 +270,104 @@ getAllReferences <- function(data, referenceType, method = "osa") {
         no = NA
       )
   }
-  
-  
-  if (!"title" %in% colnames(tableInterim))
+
+
+  if (!"title" %in% colnames(tableInterim)) {
     tableFinal <- tableInterim %>%
-    mutate(
-      referenceTranslatedDoi = NA,
-      referenceTranslatedJournal = NA,
-      referenceTranslatedTitle = NA,
-      referenceTranslatedDate = NA,
-      referenceTranslatedAuthor = NA,
-      referenceTranslationScoreCrossref = NA,
-      referenceTranslationScoreDistance = NA,
-    ) %>%
-    select(
-      all_of(referenceColumnName),
-      referenceTranslatedDoi,
-      referenceTranslatedJournal,
-      referenceTranslatedTitle,
-      referenceTranslatedDate,
-      referenceTranslatedAuthor,
-      referenceTranslationScoreCrossref,
-      referenceTranslationScoreDistance
-    ) %>%
-    mutate_all(as.character)
-  
-  if ("title" %in% colnames(tableInterim))
+      mutate(
+        referenceTranslatedDoi = NA,
+        referenceTranslatedJournal = NA,
+        referenceTranslatedTitle = NA,
+        referenceTranslatedDate = NA,
+        referenceTranslatedAuthor = NA,
+        referenceTranslationScoreCrossref = NA,
+        referenceTranslationScoreDistance = NA,
+      ) %>%
+      select(
+        all_of(referenceColumnName),
+        referenceTranslatedDoi,
+        referenceTranslatedJournal,
+        referenceTranslatedTitle,
+        referenceTranslatedDate,
+        referenceTranslatedAuthor,
+        referenceTranslationScoreCrossref,
+        referenceTranslationScoreDistance
+      ) %>%
+      mutate_all(as.character)
+  }
+
+  if ("title" %in% colnames(tableInterim)) {
     tableFinal <- tableInterim %>%
-    select(
-      all_of(referenceColumnName),
-      referenceTranslatedDoi = doi,
-      referenceTranslatedJournal = container.title,
-      referenceTranslatedTitle = title,
-      referenceTranslatedDate = issued,
-      referenceTranslatedAuthor = author,
-      referenceTranslationScoreCrossref = score,
-      referenceTranslationScoreDistance = distScore,
-    ) %>%
-    unnest(cols = c(referenceTranslatedAuthor),
-           keep_empty = TRUE) %>%
-    distinct_at(., .vars = (c(1,
-                              4)),
-                .keep_all = TRUE) %>%
-    select(
-      all_of(referenceColumnName),
-      referenceTranslatedDoi,
-      referenceTranslatedJournal,
-      referenceTranslatedTitle,
-      referenceTranslatedDate,
-      referenceTranslatedAuthor = family,
-      referenceTranslationScoreCrossref,
-      referenceTranslationScoreDistance
-    ) %>%
-    mutate_all(as.character)
-  
+      select(
+        all_of(referenceColumnName),
+        referenceTranslatedDoi = doi,
+        referenceTranslatedJournal = container.title,
+        referenceTranslatedTitle = title,
+        referenceTranslatedDate = issued,
+        referenceTranslatedAuthor = author,
+        referenceTranslationScoreCrossref = score,
+        referenceTranslationScoreDistance = distScore,
+      ) %>%
+      unnest(
+        cols = c(referenceTranslatedAuthor),
+        keep_empty = TRUE
+      ) %>%
+      distinct_at(.,
+        .vars = (c(
+          1,
+          4
+        )),
+        .keep_all = TRUE
+      ) %>%
+      select(
+        all_of(referenceColumnName),
+        referenceTranslatedDoi,
+        referenceTranslatedJournal,
+        referenceTranslatedTitle,
+        referenceTranslatedDate,
+        referenceTranslatedAuthor = family,
+        referenceTranslationScoreCrossref,
+        referenceTranslationScoreDistance
+      ) %>%
+      mutate_all(as.character)
+  }
+
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\r\n", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\r\n", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\r", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\r", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\n", " ", x))
+    lapply(tableFinal, function(x) {
+      gsub("\n", " ", x)
+    })
   tableFinal[] <-
-    lapply(tableFinal, function(x)
-      gsub("\t", " ", x))
-  
+    lapply(tableFinal, function(x) {
+      gsub("\t", " ", x)
+    })
+
   return(tableFinal)
 }
 #######################################################
 #######################################################
 
 getref_top10 <- function(X) {
-  tryCatch({
-    cr_works(
-      flq = c(query.bibliographic = X),
-      sort = 'score',
-      order = "desc",
-      limit = 10
-    )
-  },
-  error = function(e) {
-    NA
-  })
+  tryCatch(
+    {
+      cr_works(
+        flq = c(query.bibliographic = X),
+        sort = "score",
+        order = "desc",
+        limit = 10
+      )
+    },
+    error = function(e) {
+      NA
+    }
+  )
 }
 
 #######################################################

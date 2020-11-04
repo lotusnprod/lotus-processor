@@ -12,7 +12,7 @@ library(tidyverse)
 # get paths
 database <- databases$get("pamdb")
 
-##files
+## files
 data_original <-
   read_excel(database$sourceFiles$tsv) %>%
   mutate_all(as.character)
@@ -31,9 +31,10 @@ data_selected <- data_original %>%
 
 data_manipulated <- data_selected %>%
   cSplit("reference",
-         sep = "Pubmed:",
-         fixed = TRUE,
-         stripWhite = FALSE) %>%
+    sep = "Pubmed:",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_title = str_extract(string = reference_1, pattern = "\".*\""),
@@ -44,9 +45,10 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   cSplit("reference_2",
-         sep = " ",
-         fixed = TRUE,
-         stripWhite = FALSE) %>%
+    sep = " ",
+    fixed = TRUE,
+    stripWhite = FALSE
+  ) %>%
   mutate_all(as.character) %>%
   select(
     uniqueid,
@@ -67,9 +69,11 @@ data_standard <-
     data_selected = data_manipulated,
     db = "pam_1",
     structure_field = c("name", "inchi", "smiles"),
-    reference_field = c("reference_original",
-                        "reference_pubmed",
-                        "reference_title")
+    reference_field = c(
+      "reference_original",
+      "reference_pubmed",
+      "reference_title"
+    )
   )
 
 # exporting
