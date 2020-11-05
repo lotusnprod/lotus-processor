@@ -1,16 +1,19 @@
 # LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
 ## Abstract
+
 *LOTUS* actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
 It represents the most exhaustive open DB of natural products (NP).
 It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
 Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
 ## Data Availability Statements
+
 The data used to support the findings of this study have been deposited in the XXX Dataverse repository ([DOI or OTHER PERSISTENT IDENTIFIER]).
 An snapshot of the repository at the time of publication is also available.
 
 ## Dataset list
+
 | db | initial observations| initial unique referenced structure-organism pairs| website | article | retrieval | license | contact | varia |
 |:--:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|:-------:|
 | afrotryp | 321 | 312 |  |[afrotryp_article](https://link.springer.com/article/10.1007/s00044-016-1764-y?shared-article-renderer) | [afrotryp_download](https://static-content.springer.com/esm/art%3A10.1007%2Fs00044-016-1764-y/MediaObjects/44_2016_1764_MOESM1_ESM.doc) | [article reuse conditions](https://s100.copyright.com/AppDispatchServlet?title=Binding%20of%20anti-Trypanosoma%20natural%20products%20from%20African%20flora%20against%20selected%20drug%20targets%3A%20a%20docking%20study&author=Akachukwu%20Ibezim%20et%20al&contentID=10.1007%2Fs00044-016-1764-y&publication=1054-2523&publicationDate=2017-01-11&publisherName=SpringerNature&orderBeanReset=true) | [Fidele Ntie-Kang](https://link.springer.com/article/10.1007/s00044-016-1764-y/email/correspondent/c1/new) or [Ngozi Justina Nwodo](https://link.springer.com/article/10.1007/s00044-016-1764-y/email/correspondent/c2/new) |  |
@@ -70,12 +73,12 @@ see <https://social-science-data-editors.github.io/guidance/template-README.html
 
 ## Acknowledgments
 
--   Hat tip to anyone whose code was used
--   Inspiration
--   etc.
-
+- Hat tip to anyone whose code was used
+- Inspiration
+- etc.
 
 ## Flowchart
+
 ```mermaid
 graph TD
 
@@ -251,7 +254,6 @@ end
 end
 ```
 
-
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
@@ -260,23 +262,29 @@ These instructions will get you a copy of the project up and running on your loc
 
 You need:
 
--   Git
--   [DVC](https://www.dvc.org).
+- Git
+- [DVC](https://www.dvc.org)
 
-You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
+- If you want to be able to use the [PMID translation script](src/2_curating/2_editing/reference/subscripts/1_translating/pubmed.R) with less limitations and it to work correctly, you have to set an API key as described in the following [vignette](https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html)
+
+- You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
 from scratch.
 
 ### Access to metabomaps
 
 Add this to your
 
-     ~/.ssh/config
+```console
+~/.ssh/config
+```
 
-    Host metabomaps
-      IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
-      User <user_remote>
-      HostName metabomaps.nprod.net
-      Port 10311
+```console
+Host metabomaps
+  IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
+  User <user_remote>
+  HostName metabomaps.nprod.net
+  Port 10311
+```
 
 ### Pull the repository
 
@@ -316,17 +324,21 @@ A "loose" environment.yml file is created and should allow to recreate a working
 
 We will also create another environment for strict mirroring of the installed packages. (TO DO)
 
-    conda env create -f environment.yml
+conda env create -f environment.yml
 
 If your environement is not directly sources by your default bash run the following lines
 
-    $ source ~/anaconda3/etc/profile.d/conda.sh
+```console
+source ~/anaconda3/etc/profile.d/conda.sh
 
-    $ conda activate your_env
+conda activate lotus_env
+```
 
-Your R working directory should be src
+Your R working directory should be 'src'
 
-    $ cd src
+```console
+cd src
+```
 
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
 
@@ -339,8 +351,10 @@ Use this example to check if all steps are running correctly on your machine.
 
 (Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>)
 
-    remake --profile -B curating
-    gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
+```console
+remake --profile -B curating
+gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
+```
 
 ### Description
 
@@ -348,7 +362,7 @@ The minimal working example file contains following columns:
 
 # TO UPDATE
 
-    Give an example
+Give an example
 
 ### Final output
 
@@ -356,7 +370,7 @@ If everything went well, the output of the minimal working example should be:
 
 # TO UPDATE
 
-    Give an example
+Give an example
 
 ## Explanations
 
@@ -368,9 +382,9 @@ Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduc
 
 ## Authors
 
--   **Adriano Rutz** - _Initial work_ - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
--   **Pierre-Marie Allard** - _Investigator_ - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
--   **Jonathan Bisson** - _Hacker in Chief_ - [bjo](https://gitlab.unige.ch/bjo)
+- **Adriano Rutz** - _Initial work_ - [Adriano.Rutz](https://gitlab.unige.ch/Adriano.Rutz)
+- **Pierre-Marie Allard** - _Investigator_ - [Pierre-Marie.Allard](https://gitlab.unige.ch/Pierre-Marie.Allard)
+- **Jonathan Bisson** - _Hacker in Chief_ - [bjo](https://gitlab.unige.ch/bjo)
 
 See also the list of [contributors](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members) who participated in this project.
 

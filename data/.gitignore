@@ -1,9 +1,6 @@
+/dvc_pipeline_outputs
 /external
 /interim
 /processed
-/dvc_outputs
 .DS_Store
-**/.DS_Store
-/backup
 /validation
-/dvc_pipeline_outputs
