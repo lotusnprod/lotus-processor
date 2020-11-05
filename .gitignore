@@ -1,13 +1,12 @@
 .vscode/
 .DS_Store
-**/.DS_Store
 settings.json
-*.Rhistory
-*.ipynb_checkpoints
+.Rhistory
+.ipynb_checkpoints
 *_pm.tsv
 *_pm.csv
 **/0_initial_files/
-*.log
+.log
 *~
 bin/gnfinder
 ci_env
@@ -17,5 +16,5 @@ callgrind.*
 /.gradle/
 /src/2_curating/2_editing/organism/subscripts/2_translating_organism_kotlin/build/
 .idea
- __pycache__/
- *.pyc
+__pycache__/
+.pyc
