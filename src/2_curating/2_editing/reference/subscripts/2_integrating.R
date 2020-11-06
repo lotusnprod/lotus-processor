@@ -251,7 +251,6 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 
 cat("joining ... \n")
 cat("... all reference types \n")
-
 dataCrossref <- bind_rows(
   dataDoi,
   dataOriginal,
@@ -320,6 +319,8 @@ dataTranslated <- left_join(dataJoined,
     level
   )
 
+rm(dataJoined)
+
 cat("ensuring directories exist \n")
 ifelse(
   test = !dir.exists(pathDataInterimDictionariesReference),
@@ -355,6 +356,8 @@ write.table(
   sep = "\t",
   fileEncoding = "UTF-8"
 )
+
+rm(dataCrossref)
 
 end <- Sys.time()
 
