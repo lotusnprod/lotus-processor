@@ -121,6 +121,13 @@ structureMetadata_1 <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  distinct(
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleaned_inchikey2D,
+    structureCleaned_stereocenters_unspecified
+  ) %>%
   tibble()
 
 cat("... structures classification \n")
@@ -131,17 +138,6 @@ structureMetadata_2 <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  tibble()
-
-cat("... references \n")
-referenceMetadata <-
-  read_delim(
-    file = gzfile(pathDataInterimDictionariesReferenceMetadata),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
   tibble()
 
 cat("joining DNP and openDB \n")
@@ -359,9 +355,7 @@ cat("adding metadata for more detailed analysis ... \n")
 cat("... inhouse DB \n")
 inhouseDbMeta <- left_join(inhouseDb, structureMetadata_2)
 
-inhouseDbMeta <- left_join(inhouseDbMeta, organismMetadata)
-
-inhouseDbMeta <- left_join(inhouseDbMeta, referenceMetadata) %>%
+inhouseDbMeta <- left_join(inhouseDbMeta, organismMetadata) %>%
   arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
   arrange(desc(organismCleaned_dbTaxo_7species)) %>%
   arrange(desc(organismCleaned_dbTaxo_6genus)) %>%
@@ -381,9 +375,7 @@ inhouseDbMeta <- left_join(inhouseDbMeta, referenceMetadata) %>%
 cat("... open DB \n")
 openDbMeta <- left_join(openDb, structureMetadata_2)
 
-openDbMeta <- left_join(openDbMeta, organismMetadata)
-
-openDbMeta <- left_join(openDbMeta, referenceMetadata) %>%
+openDbMeta <- left_join(openDbMeta, organismMetadata) %>%
   arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
   arrange(desc(organismCleaned_dbTaxo_7species)) %>%
   arrange(desc(organismCleaned_dbTaxo_6genus)) %>%
@@ -1985,7 +1977,7 @@ try({
       referenceValue,
       organismCleaned,
       structureCleanedInchikey3D,
-      referenceCleanedDoi,
+      referenceCleanedTitle,
       cleaned_structure,
       cleaned_organism,
       cleaned_reference,

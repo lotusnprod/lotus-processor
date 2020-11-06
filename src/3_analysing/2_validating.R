@@ -232,6 +232,13 @@ structureMetadata <-
     col_types = cols(.default = "c"),
     escape_double = FALSE,
     trim_ws = TRUE
+  ) %>%
+  distinct(
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleaned_inchikey2D,
+    structureCleaned_stereocenters_unspecified
   )
 
 cat("... organism metadata \n")
@@ -243,7 +250,13 @@ organismMetadata <-
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
-  select(1:5)
+  distinct(
+    organismCleaned,
+    organismCleaned_dbTaxo,
+    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_dbTaxoTaxonRanks,
+    organismCleaned_dbTaxoTaxonomy
+  )
 
 cat("... reference metadata \n")
 referenceMetadata <-
@@ -253,6 +266,19 @@ referenceMetadata <-
     col_types = cols(.default = "c"),
     escape_double = FALSE,
     trim_ws = TRUE
+  ) %>%
+  distinct(
+    organismCleaned,
+    referenceType,
+    referenceValue,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid,
+    referenceCleanedTitle,
+    referenceCleaned_journal,
+    referenceCleaned_score_distance,
+    referenceCleaned_score_titleOrganism,
+    referenceCleaned_score_complementTotal
   )
 
 sampleAllONPDB_old <-
@@ -403,10 +429,12 @@ globalSample <- bind_rows(table_old, table) %>%
 
 cat("adding metadata \n")
 cat("... structures \n")
-inhouseDbFull <- left_join(inhouseDbMinimal, structureMetadata)
+inhouseDbFull <-
+  left_join(inhouseDbMinimal, structureMetadata)
 
 cat("... organisms \n")
-inhouseDbFull <- left_join(inhouseDbFull, organismMetadata)
+inhouseDbFull <-
+  left_join(inhouseDbFull, organismMetadata)
 
 cat("... references \n")
 inhouseDbFull <- left_join(inhouseDbFull, referenceMetadata)

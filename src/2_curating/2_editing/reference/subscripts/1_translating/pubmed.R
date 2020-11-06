@@ -18,8 +18,7 @@ dataPubmed <- read_delim(
 )
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
-## 2
-# mc cores set to 2 because fails otherwise (entrez limitation probably)
+# mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
 cat("submitting to entrez \n")
 if (nrow(dataPubmed) != 1) {
   reflistPubmed <- invisible(
@@ -29,15 +28,21 @@ if (nrow(dataPubmed) != 1) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 2,
+      mc.cores = 1,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
     )
   )
 }
+
 if (nrow(dataPubmed) != 1) {
-  reflistPubmedBound <- bind_rows(reflistPubmed)
+  if (length(reflistPubmed) == 1) {
+    reflistPubmedBound <- bind_rows(reflistPubmed)
+  }
+  if (length(reflistPubmed) == 2) {
+    reflistPubmedBound <- bind_rows(reflistPubmed$value)
+  }
 }
 
 cat("joining results with original list \n")
