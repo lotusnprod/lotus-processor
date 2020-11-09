@@ -6,7 +6,7 @@ This is a quick guide concerning the use of `make`.
 
 ### Mode
 
-First of all, you can choose between the minimal working example `min` or making the whole DB `full`. By defaut make will run the `min` example for tests. To override it, simply do:
+First of all, you can choose between the minimal working example `MIN` or making the whole DB `FULL`. By defaut make will run the `MIN` example for tests. To override it, simply do:
 
 ```console
 make MODE=full <target>
@@ -14,7 +14,11 @@ make MODE=full <target>
 
 ### Docker
 
-The `docker-build` and `docker-bash` commands are for our CI integration, you normally do not need them.
+The `docker-build` and `docker-bash` commands are for our CI integration, and may be useful if you want to use our custom
+docker environment.
+
+`docker-build` will build a docker image than you can enter using docker-bash. The advantage is that you are sure to have
+the right versions of everything in your image, as it can sometimes be difficult to reproduce other people's environments.
 
 ### Gathering the data
 
@@ -26,23 +30,20 @@ First, you need to perform the `gathering` of your initial data. To do so, you h
 
 ### Curating the data
 
-Once done, you can do the `curating` steps of your initial data. If you are in a hurry, following command will do everything:
+Once done, you can do the `curating` steps of your initial data. The following command will run all the curation tasks:
 
 ```console
 make curating
 ```
 
-Globally, `curating` is divided in three steps:
+`curating` is divided in three steps:
 
 - `curating-1-integrating`: integrates all previously gathered data
-- `curating-editing`: will perform the editing (cleaning) of the data
+- `curating-editing`: will perform the editing (cleaning) of the data through the three following steps:
+    - `curating-editing-structure`: will perform the curation of the structures
+    - `curating-editing-organism`: will perform the curation of the organisms
+    - `curating-editing-reference`: will perform the curation of the references
 - `curating-3-integrating`: will perform the integration of cleaned data with initial data
-
-Globally, `curating-editing` is also divided in three steps:
-
-- `curating-editing-structure`: will perform the curation of the structures
-- `curating-editing-organism`: will perform the curation of the organisms
-- `curating-editing-reference`: will perform the curation of the references
 
 Each curation step for each object is divided in more substeps. Fore more advanced details please see [the makefile](../Makefile).
 
@@ -74,4 +75,4 @@ additional details about the command arguments can be found [here](https://www.g
 
 ## More info
 
-If you want to know more simply visit <https://www.gnu.org/software/make/manual/make.html>
+If you want to know more about how a Makefile works, simply visit <https://www.gnu.org/software/make/manual/make.html>
