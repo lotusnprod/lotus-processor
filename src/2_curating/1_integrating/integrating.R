@@ -100,8 +100,6 @@ if (mode == "min") {
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
   )
-}
-if (mode == "min") {
   dbTable <- dbTable %>%
     sample_n(size = 2000)
 }

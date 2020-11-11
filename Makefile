@@ -70,7 +70,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/p
 
 curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
 
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting # curating-editing-structure-classifying
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting curating-editing-structure-naming # curating-editing-structure-classifying
 
 curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
 
@@ -93,6 +93,9 @@ ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_S
 curating-editing-structure-stereocounting: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz smilesSanitized
+
+curating-editing-structure-naming: 
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_SUBSCRIPTS_ENRICHING_PATH}/naming.R
 
 curating-editing-structure-classifying: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/classified.tsv.gz
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/classified.tsv.gz: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz

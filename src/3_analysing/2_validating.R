@@ -238,7 +238,9 @@ structureMetadata <-
     structureCleanedInchi,
     structureCleanedInchikey3D,
     structureCleaned_inchikey2D,
-    structureCleaned_stereocenters_unspecified
+    structureCleaned_stereocenters_unspecified,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional
   )
 
 cat("... organism metadata \n")
@@ -662,8 +664,8 @@ openDb <- inhouseDbFull %>%
     structureCleanedInchikey2D,
     structureCleanedInchi,
     structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional,
     structureCleaned_stereocenters_unspecified,
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -684,8 +686,8 @@ dnpDb <- inhouseDbFull %>%
     structureCleanedInchikey3D,
     structureCleanedInchi,
     structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional,
     structureCleaned_stereocenters_unspecified,
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -714,8 +716,8 @@ dnpDb <- inhouseDbFull %>%
     structureCleanedInchikey2D,
     structureCleanedInchi,
     structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
@@ -817,7 +819,9 @@ manuallyRemovedEntries2 <- realValidationSetFilled %>%
 manuallyRemovedEntries3 <-
   bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2)
 
-openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3)
+openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
+  filter(!database %in% forbidden_export)
+
 
 cat("exporting \n")
 if (mode == "full") {
