@@ -127,7 +127,7 @@ translatedStructureTable <- read_delim(
 
 cat("... cleaned structures \n")
 cleanedStructureTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureStereoCounted),
+  file = gzfile(description = pathDataInterimTablesCleanedStructureNamed),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -145,6 +145,8 @@ cleanedStructureTableFull <- read_delim(
     structureCleaned_xlogp = xlogpSanitized,
     structureCleaned_stereocenters_unspecified = count_unspecified_atomic_stereocenters,
     structureCleaned_stereocenters_total = count_atomic_stereocenters,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional
   )
 
 if (file.exists(pathDataInterimTablesCleanedStructureFileClassified)) {
@@ -256,9 +258,7 @@ structureMinimal <- structureFull %>%
     structureValue,
     structureCleanedInchi,
     structureCleanedInchikey3D,
-    structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac
+    structureCleanedSmiles
   )
 
 structureMetadata <- structureFull %>%
@@ -273,7 +273,9 @@ structureMetadata <- structureFull %>%
     structureCleaned_exactMass,
     structureCleaned_xlogp,
     structureCleaned_stereocenters_unspecified,
-    structureCleaned_stereocenters_total
+    structureCleaned_stereocenters_total,
+    structureCleaned_nameIupac,
+    structureCleaned_nameTraditional
     # structureCleaned_class,
     # structureCleaned_superclass,
     # structureCleaned_pathway,
