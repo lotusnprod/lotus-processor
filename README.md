@@ -347,6 +347,15 @@ If you are using Visual Studio be sure to set your R path in the settings option
 A minimal working example containing XXX entries coming from various DB's is proposed.
 Use this example to check if all steps are running correctly on your machine.
 
+## Molconvert issue
+
+At the moment, we use molconvert (commercial) for structure to chemical name conversion. Since we cannot disseminate it, you won't be able to proceed to the translation except if you modify following variables in src/paths.R accordingly:
+
+```console
+works_locally_only <- TRUE # FALSE
+molconvertPath <- adapt_path_to # "~/../../Applications/MarvinSuite/bin/molconvert"
+```
+
 ## To build a graph from the make
 
 (Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>)
