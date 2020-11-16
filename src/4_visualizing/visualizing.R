@@ -205,12 +205,6 @@ inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
   distinct(structureCleanedInchikey2D, .keep_all = TRUE) %>%
   data.frame()
 
-inhouseDb_structures_dis <- inhouseDb %>%
-  distinct(structureCleanedInchikey2D,
-    database,
-    .keep_all = TRUE
-  )
-
 upset(
   inhouseDb_structures_2plot_wide,
   nsets = 10,
@@ -267,12 +261,6 @@ inhouseDb_organism_2plot_wide <-
   distinct(organismCleaned, .keep_all = TRUE) %>%
   data.frame()
 
-inhouseDb_organism_dis <- inhouseDb %>%
-  filter(!is.na(organismCleaned)) %>%
-  distinct(organismCleaned,
-    database,
-    .keep_all = TRUE
-  )
 
 upset(
   inhouseDb_organism_2plot_wide,
