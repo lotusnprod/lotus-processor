@@ -150,13 +150,53 @@ structureNamed <-
     by = c("smilesSanitized" = "smiles")
   )
 
+structureNamed_defined <- structureNamed %>%
+  filter(count_unspecified_atomic_stereocenters == 0)
+
+structureNamed_undefined <- structureNamed %>%
+  filter(count_unspecified_atomic_stereocenters != 0) %>%
+  mutate(
+    structureCleaned_nameTraditional = gsub(
+      pattern = "(-)-",
+      replacement = "",
+      x = structureCleaned_nameTraditional,
+      fixed = TRUE
+    )
+  ) %>%
+  mutate(
+    structureCleaned_nameTraditional = gsub(
+      pattern = "(+)-",
+      replacement = "",
+      x = structureCleaned_nameTraditional,
+      fixed = TRUE
+    )
+  ) %>%
+  mutate(
+    structureCleaned_nameTraditional = gsub(
+      pattern = "(-)",
+      replacement = "",
+      x = structureCleaned_nameTraditional,
+      fixed = TRUE
+    )
+  ) %>%
+  mutate(
+    structureCleaned_nameTraditional = gsub(
+      pattern = "(+)",
+      replacement = "",
+      x = structureCleaned_nameTraditional,
+      fixed = TRUE
+    )
+  )
+
+structureNamed_cleaned <-
+  bind_rows(structureNamed_defined, structureNamed_undefined)
 
 cat("ensuring directories exist \n")
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedStructureNamed, "\n")
 
 write.table(
-  x = structureNamed,
+  x = structureNamed_cleaned,
   file = gzfile(
     description = pathDataInterimTablesCleanedStructureNamed,
     compression = 9,
