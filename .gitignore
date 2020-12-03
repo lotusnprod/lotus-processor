@@ -18,3 +18,4 @@ callgrind.*
 .idea
 __pycache__/
 .pyc
+src/local_pma
