@@ -65,7 +65,7 @@ standardizing_original <- function(data_selected,
     })
 
   data_standard <- data_standard %>%
-    mutate_all(~ gsub("[^ -~]", "", .)) %>%
+    mutate_all(~ iconv(x = ., from = "utf-8", to = "utf-8//ignore")) %>%
     mutate_all(
       .tbl = .,
       .funs = trimws
