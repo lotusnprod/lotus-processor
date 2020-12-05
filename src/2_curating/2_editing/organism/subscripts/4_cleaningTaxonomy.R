@@ -624,6 +624,18 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
     organism_8_variety
   )
 
+dataCuratedOrganism <- dataCuratedOrganism %>%
+  group_by(organismOriginal) %>%
+  mutate(
+    word1 = word(string = organismCleaned, end = 1),
+    count = str_count(string = organismCleaned, pattern = " ")
+  ) %>%
+  group_by(word1) %>%
+  mutate(countbis = max(count)) %>%
+  filter(!(count == 0 & countbis == 1)) %>%
+  ungroup() %>%
+  select(-countbis, -count, -word1)
+
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismFinal, "\n")
 write.table(
