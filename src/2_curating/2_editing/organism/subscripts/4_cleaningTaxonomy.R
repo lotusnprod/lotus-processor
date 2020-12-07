@@ -15,21 +15,56 @@ source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 log_debug(" Step 4")
 cat("defining function \n")
 taxo_cleaning_auto <- function(dfsel) {
-  dfsel$count <-
-    rowSums(!is.na(dfsel[(grepl(
-      pattern = "organism_",
-      x = colnames(dfsel),
-      fixed = TRUE
-    ))]))
-  
   df1 <- dfsel %>%
+    group_by(organismOriginal, organism_7_species) %>%
+    fill(organism_8_variety, .direction = "downup") %>%
+    group_by(organismOriginal, organism_6_genus) %>%
+    fill(organism_7_species, .direction = "downup") %>%
+    group_by(organismOriginal, organism_5_family) %>%
+    fill(organism_6_genus, .direction = "downup") %>%
+    group_by(organismOriginal, organism_4_order) %>%
+    fill(organism_5_family, .direction = "downup") %>%
+    group_by(organismOriginal, organism_3_class) %>%
+    fill(organism_4_order, .direction = "downup") %>%
+    group_by(organismOriginal, organism_2_phylum) %>%
+    fill(organism_3_class, .direction = "downup") %>%
+    group_by(organismOriginal, organism_1_kingdom) %>%
+    fill(organism_2_phylum, .direction = "downup") %>%
     group_by(organismOriginal) %>%
-    mutate(count_max = max(count)) %>%
-    ungroup() %>% 
-    filter(count == count_max) %>%
-    select(-count, -count_max)
-  
-  return(df1)
+    fill(organism_1_kingdom, .direction = "downup") %>%
+    ungroup() %>%
+    mutate(organismCleanedBis = as.character(apply(.[7:15], 1, function(x) {
+      tail(na.omit(x), 1)
+    })))
+
+  df1$organismCleanedBis <-
+    y_as_na(
+      x = df1$organismCleanedBis,
+      y = "character(0)"
+    )
+
+  df1$organismCleanedBis <-
+    y_as_na(
+      x = df1$organismCleanedBis,
+      y = "NA"
+    )
+
+  df2 <- df1 %>%
+    filter(organismCleaned == organismCleanedBis) %>%
+    distinct(
+      organismOriginal,
+      organismDetected,
+      organismDbTaxo,
+      organismDbTaxoQuality,
+      organismTaxonIds,
+      organismTaxonRanks,
+      organismTaxonomy,
+      organismCleaned
+    )
+
+  df3 <- left_join(df2, dfsel)
+
+  return(df3)
 }
 
 cat("Step 4 \n")
@@ -40,33 +75,33 @@ dataCleanedOrganismManipulated <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 ) %>%
-  relocate(organismCleaned, .after = organismTaxonomy)
+  select(everything(), organismDetected = organismCleaned)
+relocate(organismDetected, .after = organismTaxonomy) %>%
+  distinct()
 
-# curating taxonomy
-## auto
-dataCuratedOrganismAuto <-
-  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
-
-## manual
-# dataCuratedOrganism <-
-#   taxo_cleaning_manual(dfsel = dataCleanedOrganismManipulated)
-
-cat("keeping lowest taxon \n")
-dataCuratedOrganism <- dataCuratedOrganismAuto %>%
-  mutate(organismCleaned = as.character(apply(dataCuratedOrganismAuto[7:15], 1, function(x) {
+dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
+  mutate(organismCleaned = as.character(apply(dataCleanedOrganismManipulated[7:15], 1, function(x) {
     tail(na.omit(x), 1)
   })))
 
 dataCuratedOrganism$organismCleaned <-
-  y_as_na(x = dataCuratedOrganism$organismCleaned,
-          y = "character(0)")
+  y_as_na(
+    x = dataCuratedOrganism$organismCleaned,
+    y = "character(0)"
+  )
 
 dataCuratedOrganism$organismCleaned <-
-  y_as_na(x = dataCuratedOrganism$organismCleaned,
-          y = "NA")
+  y_as_na(
+    x = dataCuratedOrganism$organismCleaned,
+    y = "NA"
+  )
+
+cat("cleaning duplicate upstream taxa \n")
+dataCuratedOrganismAuto <-
+  taxo_cleaning_auto(dfsel = dataCuratedOrganism)
 
 cat("selecting \n")
-dataCuratedOrganism[setdiff(
+dataCuratedOrganismAuto[setdiff(
   x = c(
     "organismOriginal",
     "organismCleaned",
@@ -84,17 +119,16 @@ dataCuratedOrganism[setdiff(
     "organism_7_species",
     "organism_8_quality"
   ),
-  y = names(dataCuratedOrganism)
+  y = names(dataCuratedOrganismAuto)
 )] <- NA
 
-dataCuratedOrganism <- dataCuratedOrganism %>%
+dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   select(
     organismOriginal,
+    organismDetected,
     organismCleaned,
     organismDbTaxo,
     organismDbTaxoQuality,
-    # organismModifiedTaxonomyAuto = organism_modified_taxonomy_auto,
-    # organismModifiedTaxonomyManual = organism_modified_taxonomy_manual,
     organismTaxonIds,
     organismTaxonRanks,
     organismTaxonomy,
@@ -111,7 +145,7 @@ dataCuratedOrganism <- dataCuratedOrganism %>%
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismFinal, "\n")
 write.table(
-  x = dataCuratedOrganism,
+  x = dataCuratedOrganismAuto,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismFinal,
     compression = 9,

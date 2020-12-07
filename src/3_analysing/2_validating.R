@@ -271,7 +271,8 @@ referenceMetadata <-
     trim_ws = TRUE
   ) %>%
   distinct(
-    organismCleaned,
+    organismOriginal,
+    organismDetected,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
@@ -826,7 +827,6 @@ manuallyRemovedEntries3 <-
 
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
   filter(!database %in% forbidden_export)
-
 
 cat("exporting \n")
 if (mode == "full") {
