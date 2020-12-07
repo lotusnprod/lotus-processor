@@ -75,8 +75,8 @@ dataCleanedOrganismManipulated <- read_delim(
   escape_double = FALSE,
   trim_ws = FALSE
 ) %>%
-  select(everything(), organismDetected = organismCleaned)
-relocate(organismDetected, .after = organismTaxonomy) %>%
+  select(everything(), organismDetected = organismCleaned) %>%
+  relocate(organismDetected, .after = organismTaxonomy) %>%
   distinct()
 
 dataCuratedOrganism <- dataCleanedOrganismManipulated %>%

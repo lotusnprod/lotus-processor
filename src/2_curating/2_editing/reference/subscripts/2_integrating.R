@@ -231,7 +231,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   ) %>%
     distinct(
       organismOriginal,
-      organismCleaned
+      organismDetected
     ) %>%
     mutate_all(as.character)
 }
