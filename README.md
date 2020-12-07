@@ -1,3 +1,5 @@
+[![pipeline status](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/badges/master/pipeline.svg)](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/commits/master) [![coverage report](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/badges/master/coverage.svg)](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/commits/master)
+
 # LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
 ## Abstract
