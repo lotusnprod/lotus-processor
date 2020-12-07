@@ -239,7 +239,7 @@ dataCleanedScore <- dataCleaned %>%
         referenceCleanedValue
       )),
       pattern = fixed(tolower(
-        word(organismCleaned, 1)
+        word(organismDetected, 1)
       ))
     ),
     yes = 1,
@@ -274,10 +274,11 @@ rm(dataCleaned)
 ## we do not have unique values ...
 subDataCleanedJoined_1 <- dataCleanedJoined %>%
   filter(referenceCleanedType == "scoreCrossref") %>%
-  distinct(organismOriginal,
+  distinct(
+    organismOriginal,
     referenceType,
     referenceValue,
-    organismCleaned,
+    organismDetected,
     level,
     .keep_all = TRUE
   )
@@ -290,11 +291,13 @@ subDataCleanedJoined_2 <- dataCleanedJoined %>%
     organismOriginal,
     referenceType,
     referenceValue,
-    organismCleaned,
+    organismDetected,
     level,
     referenceCleanedType,
     .keep_all = TRUE
   )
+
+rm(dataCleanedJoined)
 
 dataCleanedJoinedUnique <-
   bind_rows(
@@ -303,7 +306,6 @@ dataCleanedJoinedUnique <-
   )
 
 rm(
-  dataCleanedJoined,
   subDataCleanedJoined_1,
   subDataCleanedJoined_2
 )
@@ -324,13 +326,13 @@ dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   filter(referenceType == "doi" |
     referenceType == "pubmed" |
     referenceType == "title") %>%
-  group_by(organismOriginal, organismCleaned, referenceValue) %>%
+  group_by(organismOriginal, organismDetected, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
   distinct(organismOriginal,
-    organismCleaned,
+    organismDetected,
     referenceValue,
     .keep_all = TRUE
   ) %>%
@@ -382,13 +384,13 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
         referenceCleaned_scoreComplement_author +
         referenceCleaned_scoreComplement_journal
   ) %>%
-  group_by(organismOriginal, organismCleaned, referenceValue) %>%
+  group_by(organismOriginal, organismDetected, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreComplement_total))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   ungroup() %>%
   distinct(organismOriginal,
-    organismCleaned,
+    organismDetected,
     referenceValue,
     .keep_all = TRUE
   ) %>%
@@ -479,7 +481,7 @@ referenceTable <-
   ) %>%
   select(
     organismOriginal,
-    organismCleaned,
+    organismDetected,
     referenceType,
     referenceValue,
     referenceCleanedDoi = referenceCleaned_doi,

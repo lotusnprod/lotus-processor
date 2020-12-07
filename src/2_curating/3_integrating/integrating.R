@@ -101,6 +101,7 @@ organismTableFull <- read_delim(
 ) %>%
   select(
     organismOriginal,
+    organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo = organismDbTaxo,
     organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
@@ -249,6 +250,14 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
     distinct()
 }
 
+rm(
+  structureOld,
+  structureDictionary,
+  organismOld,
+  organismDictionary,
+  referenceOrganismDictionary
+)
+
 cat("splitting metadata from minimal columns ... \n")
 cat("... structures \n")
 structureMinimal <- structureFull %>%
@@ -290,6 +299,7 @@ organismMinimal <- organismTableFull %>%
   filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(
     organismOriginal,
+    organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo,
     organismCleaned_dbTaxoTaxonIds,
@@ -325,7 +335,8 @@ referenceMinimal <- referenceTableFull %>%
   ) %>%
   filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
-    organismCleaned,
+    organismOriginal,
+    organismDetected,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
@@ -342,7 +353,8 @@ referenceMetadata <- referenceTableFull %>%
   ) %>%
   filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
-    organismCleaned,
+    organismOriginal,
+    organismDetected,
     referenceType,
     referenceValue,
     referenceCleanedDoi,
@@ -367,13 +379,7 @@ gc(
   reset = TRUE,
   full = TRUE
 )
-rm(
-  structureOld,
-  referenceOrganismDictionary,
-  organismTableFull,
-  organismOld,
-  organismDictionary
-)
+rm(organismTableFull)
 
 cat("joining minimal table ... \n")
 cat("... structures \n")

@@ -213,7 +213,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   ) %>%
     distinct(
       organismOriginal,
-      organismCleaned
+      organismDetected
     ) %>%
     mutate_all(as.character)
 }
@@ -282,7 +282,7 @@ dataJoined <-
     organismOriginal,
     referenceType,
     referenceValue,
-    organismCleaned
+    organismDetected
   )
 
 rm(
@@ -311,7 +311,7 @@ dataTranslated <- left_join(dataJoined,
   ) %>%
   distinct(
     organismOriginal,
-    organismCleaned,
+    organismDetected,
     referenceType,
     referenceValue,
     referenceTranslatedType,
