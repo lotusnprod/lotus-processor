@@ -131,6 +131,13 @@ taxaVernacular <- left_join(taxa, vernacular) %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
   arrange(desc(str_count(vernacularName)))
 
+# deleting vernacular names corresponding to generic epithets for safety reasons
+## they are almost safe (see Cacao) but just to be on the safe side...
+# list <- commonSciSub %>%
+#   filter(vernacularName %in% taxa$genericName)
+taxaVernacular <- taxaVernacular %>%
+  filter(!vernacularName %in% taxa$genericName)
+
 # joining common names from PhenolExplorer and FooDB
 commonSciPheFoo <- full_join(commonSciPhe, commonSciFoo)
 
@@ -142,6 +149,13 @@ commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk)
 # library(textclean) DOES NOT GIVE GOOD RESULTS (ex. cherry tomatoes)
 # library(SemNetCleaner) also does not work (ex. Zebrafish)
 # food2sci$plural <- make_plural(food2sci$name)
+
+# deleting vernacular names corresponding to generic epithets for safety reasons
+## they are almost safe (see Cacao) but just to be on the safe side...
+# list <- commonSciSub %>%
+#   filter(vernacularName %in% taxa$genericName)
+commonSciPheFooDuk <- commonSciPheFooDuk %>%
+  filter(!vernacularName %in% taxa$genericName)
 
 ### normal
 commonSciPlural_1 <- commonSciPheFooDuk %>%

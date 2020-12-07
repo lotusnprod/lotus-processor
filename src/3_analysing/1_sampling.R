@@ -378,3 +378,70 @@ if (exists("additionalSetBis")) {
     fileEncoding = "UTF-8"
   )
 }
+
+#additional again
+set.seed(
+  seed = 42,
+  kind = "Mersenne-Twister",
+  normal.kind = "Inversion"
+)
+if(exists("openDbClean2")){
+additionalSetTer <-
+  bind_rows(
+    A <- openDbClean2 %>%
+      filter(referenceType == "title") %>%
+      sample_n(49) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    B <- openDbClean2 %>%
+      filter(referenceType == "publishingDetails") %>%
+      sample_n(12) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      ),
+    C <- openDbClean2 %>%
+      filter(referenceType == "pubmed") %>%
+      sample_n(59) %>%
+      mutate(
+        curator = "AR",
+        validated = NA,
+        comments = NA
+      )
+  ) %>%
+  select(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle,
+    curator,
+    validated,
+    comments
+  )
+}
+
+if (exists("additionalSetTer")) {
+  write.table(
+    x = additionalSetTer,
+    file = file.path(
+      pathDataInterimTablesAnalysed,
+      "additionalSetTer.tsv"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+}

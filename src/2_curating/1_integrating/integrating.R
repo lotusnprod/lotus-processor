@@ -101,7 +101,7 @@ if (mode == "min") {
     normal.kind = "Inversion"
   )
   dbTable <- dbTable %>%
-    sample_n(size = 2000)
+    sample_n(size = 1000)
 }
 
 cat("removing unfriendly characters \n")
