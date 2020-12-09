@@ -7,7 +7,7 @@ source("functions/database.R")
 mode <- Sys.getenv("FULL", unset = "full")
 
 # only for molconvert step (structures/../enriching/naming.R)
-works_locally_only <- TRUE
+works_locally_only <- FALSE
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 
 # databases for which we have no right to disseminate the data

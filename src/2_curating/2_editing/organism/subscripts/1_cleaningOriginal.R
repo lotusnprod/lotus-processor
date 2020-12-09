@@ -10,8 +10,7 @@ cat("... functions \n")
 source("functions/bio.R")
 source("functions/helpers.R")
 source("functions/log.R")
-source("2_curating/2_editing/organism/functions/manipulating_taxo.R") # shouldnt these path be in the path.R ???
-source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R") # shouldnt these path be in the path.R ???
+source("2_curating/2_editing/organism/functions/gnfinder_cleaning.R")
 
 cat("loading ... \n")
 cat("... libraries \n")

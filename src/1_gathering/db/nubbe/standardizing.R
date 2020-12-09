@@ -116,9 +116,9 @@ data_original <- bind_rows(list)
 
 data_manipulated <- data_original %>%
   mutate(
-    biologicalsource = paste(organismFamily,
-      organismGenus,
+    biologicalsource = paste(organismGenus,
       organismSpecies,
+      organismFamily,
       sep = " "
     ),
     inchi = paste("InChI=", inchi, sep = "")
@@ -132,7 +132,7 @@ data_manipulated <- data_original %>%
       x = referenceFull_01
     ),
     biologicalsource = gsub(
-      pattern = "NA ",
+      pattern = " NA",
       replacement = "",
       x = biologicalsource,
       fixed = TRUE

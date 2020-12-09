@@ -1,4 +1,4 @@
-cat("This script performs taxonomy alignment. \n")
+cat("This script performs taxonomy cleaning and alignment. \n")
 
 start <- Sys.time()
 
@@ -10,12 +10,107 @@ cat("... functions \n")
 source("functions/log.R")
 source("functions/helpers.R")
 source("functions/bio.R")
-source("2_curating/2_editing/organism/functions/manipulating_taxo.R")
 
 log_debug(" Step 4")
 cat("defining function \n")
 taxo_cleaning_auto <- function(dfsel) {
-  df1 <- dfsel %>%
+  cat("cleaning aberrant taxa \n")
+  df1_a <- dfsel %>%
+    distinct(
+      organismDbTaxo,
+      organismDetected,
+      organism_5_family,
+      organism_6_genus,
+      organism_7_species,
+      organism_8_variety,
+      .keep_all = TRUE
+    ) %>%
+    group_by(organismDbTaxo, organism_5_family, organism_6_genus) %>% # intraDB consistency
+    add_count() %>%
+    group_by(organismDbTaxo, organism_6_genus) %>%
+    add_count(name = "m") %>%
+    mutate(ratio = n / m) %>%
+    ungroup() %>%
+    filter(ratio > 0.1 | is.na(organism_6_genus)) %>%
+    select(-n, -m, -ratio) %>%
+    group_by(organism_5_family, organism_6_genus) %>% # interDB consistency
+    add_count() %>%
+    group_by(organism_6_genus) %>%
+    add_count(name = "m") %>%
+    mutate(ratio = n / m) %>%
+    ungroup() %>%
+    filter(ratio > 0.1 | is.na(organism_6_genus)) %>%
+    select(-n, -m, -ratio) %>%
+    mutate(organismDetected_1 = word(
+      string = organismDetected,
+      start = 1,
+      end = 1
+    )) %>%
+    group_by(
+      organismDbTaxo,
+      organismDetected_1,
+      organism_1_kingdom
+    ) %>% # intraDB consistency complex (Echinacea example)
+    add_count() %>%
+    group_by(
+      organismDbTaxo,
+      organismDetected_1
+    ) %>%
+    add_count(name = "m") %>%
+    mutate(ratio = n / m) %>%
+    ungroup() %>%
+    filter(ratio > 0.5 | is.na(organism_1_kingdom)) %>%
+    select(-n, -m, -ratio, -organismDetected_1)
+
+  df1_b <- dfsel %>%
+    distinct(
+      organismOriginal,
+      organismDbTaxo,
+      organismDetected
+    )
+
+  df1_c <- left_join(df1_b, df1_a)
+
+  df2_a <- semi_join(
+    dfsel,
+    df1_c
+  )
+
+  df2_b <- anti_join(
+    dfsel,
+    df1_c
+  ) %>%
+    distinct(
+      organismOriginal,
+      organismDbTaxo,
+      organismDetected
+    )
+
+  df2_c <- df2_b %>%
+    distinct(
+      organismDbTaxo,
+      organismDetected
+    )
+
+  df3_a <- left_join(
+    df2_c,
+    df1_c
+  ) %>%
+    filter(!is.na(organismCleaned)) %>%
+    select(-organismOriginal) %>%
+    distinct()
+
+  df3_b <- left_join(df2_b, df3_a) %>%
+    filter(!is.na(organismCleaned))
+
+  df3_c <- bind_rows(df2_a, df3_b) %>%
+    distinct()
+
+  ## in case you want to see the horror
+  # horror <- anti_join(dfsel, df3)
+
+  cat("cleaning duplicate upstream taxa \n")
+  df4 <- df3_c %>%
     group_by(organismOriginal, organism_7_species) %>%
     fill(organism_8_variety, .direction = "downup") %>%
     group_by(organismOriginal, organism_6_genus) %>%
@@ -37,19 +132,19 @@ taxo_cleaning_auto <- function(dfsel) {
       tail(na.omit(x), 1)
     })))
 
-  df1$organismCleanedBis <-
+  df4$organismCleanedBis <-
     y_as_na(
-      x = df1$organismCleanedBis,
+      x = df4$organismCleanedBis,
       y = "character(0)"
     )
 
-  df1$organismCleanedBis <-
+  df4$organismCleanedBis <-
     y_as_na(
-      x = df1$organismCleanedBis,
+      x = df4$organismCleanedBis,
       y = "NA"
     )
 
-  df2 <- df1 %>%
+  df5 <- df4 %>%
     filter(organismCleaned == organismCleanedBis) %>%
     distinct(
       organismOriginal,
@@ -62,9 +157,9 @@ taxo_cleaning_auto <- function(dfsel) {
       organismCleaned
     )
 
-  df3 <- left_join(df2, dfsel)
+  df6 <- left_join(df5, df3_c)
 
-  return(df3)
+  return(df6)
 }
 
 cat("Step 4 \n")
@@ -96,7 +191,6 @@ dataCuratedOrganism$organismCleaned <-
     y = "NA"
   )
 
-cat("cleaning duplicate upstream taxa \n")
 dataCuratedOrganismAuto <-
   taxo_cleaning_auto(dfsel = dataCuratedOrganism)
 
@@ -140,7 +234,8 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organism_6_genus,
     organism_7_species,
     organism_8_variety
-  )
+  ) %>%
+  filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismFinal, "\n")

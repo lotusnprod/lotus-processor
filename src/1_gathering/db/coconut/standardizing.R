@@ -104,10 +104,65 @@ data_corrected$reference_authors <-
 data_corrected$reference_external <-
   y_as_na(data_corrected$reference_external, "NA")
 
+findCapitals_1 <- data_corrected$biologicalsource %>%
+  data.frame() %>%
+  filter(!is.na(.)) %>%
+  mutate(nchar = nchar(.)) %>%
+  mutate(first = substr(., start = 1, stop = 1)) %>%
+  mutate(last = substr(., start = nchar, stop = nchar)) %>%
+  select(
+    x = ".",
+    nchar,
+    first,
+    last
+  ) %>%
+  distinct()
+
+findCapitals_2 <- data_corrected$biologicalsource %>%
+  data.frame() %>%
+  filter(!is.na(.)) %>%
+  mutate(nchar = nchar(.)) %>%
+  mutate(first = substr(., start = 1, stop = 1)) %>%
+  mutate(last = substr(., start = nchar, stop = nchar)) %>%
+  select(
+    y = ".",
+    nchar,
+    first,
+    last
+  ) %>%
+  distinct()
+
+findCapitals_3 <- full_join(findCapitals_1, findCapitals_2) %>%
+  filter(tolower(x) == tolower(y)) %>%
+  filter(x != y) %>%
+  mutate(
+    capitals_x = str_count(string = x, pattern = "[A-Z]"),
+    capitals_y = str_count(string = y, pattern = "[A-Z]")
+  ) %>%
+  filter(capitals_x > capitals_y)
+
+data_corrected_capitals <- left_join(data_corrected,
+  findCapitals_3,
+  by = c("biologicalsource" = "x")
+) %>%
+  mutate(biologicalsource = ifelse(
+    test = !is.na(y),
+    yes = y,
+    no = biologicalsource
+  )) %>%
+  select(
+    -y,
+    -nchar,
+    -first,
+    -last,
+    -capitals_x,
+    -capitals_y
+  )
+
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_corrected,
+    data_selected = data_corrected_capitals,
     db = "coc_1",
     structure_field = c("inchi", "smiles", "name"),
     reference_field = c(
