@@ -1,3 +1,3 @@
-log_debug <- function(s) {
-  cat(paste(Sys.time(), s, "\n"))
+log_debug <- function(...) {
+  cat(paste(Sys.time(), ..., "\n"))
 }

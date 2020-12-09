@@ -38,6 +38,7 @@ manipulating_taxo <- function(dfsel, dic) {
       organismOriginal,
       organismCleaned,
       organismDbTaxo,
+      taxonId, # because some organisms can have multiple ids
       dbQuality,
       taxonomy,
       rank,
@@ -45,6 +46,7 @@ manipulating_taxo <- function(dfsel, dic) {
     ) %>%
     distinct(organismCleaned,
       organismDbTaxo,
+      taxonId, # because some organisms can have multiple ids
       .keep_all = TRUE
     ) %>%
     cSplit(
@@ -61,7 +63,7 @@ manipulating_taxo <- function(dfsel, dic) {
   # manipulating taxa
   df2 <- df1 %>%
     pivot_longer(
-      cols = 6:ncol(.),
+      cols = 7:ncol(.),
       names_to = c(".value", "level"),
       names_sep = "_",
       values_to = "taxonomy",
@@ -70,6 +72,7 @@ manipulating_taxo <- function(dfsel, dic) {
     distinct(organismOriginal,
       organismCleaned,
       organismDbTaxo,
+      taxonId, # because some organisms can have multiple ids
       level,
       .keep_all = TRUE
     )
@@ -101,6 +104,7 @@ manipulating_taxo <- function(dfsel, dic) {
           "organismOriginal",
           "organismCleaned",
           "organismDbTaxo",
+          "taxonId",
           "ids",
           "dbQuality",
           "kingdom",
@@ -115,14 +119,14 @@ manipulating_taxo <- function(dfsel, dic) {
     )
 
   # pasting suffix to colnames to pivot then (the double pivot allows to tidy the data)
-  colnames(df3)[6:ncol(df3)] <-
-    paste("bio_", colnames(df3)[6:ncol(df3)], sep = "")
+  colnames(df3)[7:ncol(df3)] <-
+    paste("bio_", colnames(df3)[7:ncol(df3)], sep = "")
 
   # pivoting (long)
   if (nrow(df3) != 0) {
     df4 <- df3 %>%
       pivot_longer(
-        cols = 6:ncol(.),
+        cols = 7:ncol(.),
         names_to = c(".value", "level"),
         names_sep = "_",
         values_to = "taxonomy",
@@ -133,7 +137,7 @@ manipulating_taxo <- function(dfsel, dic) {
   # pivoting (wide)
   if (nrow(df3) != 0) {
     df5 <- df4 %>%
-      group_by(organismCleaned, organismDbTaxo) %>%
+      group_by(organismCleaned, organismDbTaxo, taxonId) %>%
       distinct(ids,
         level,
         .keep_all = TRUE

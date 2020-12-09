@@ -5,6 +5,7 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
+library(Hmisc)
 library(tidyverse)
 
 # get paths
@@ -29,6 +30,8 @@ data_selected <- data_original %>%
     reference_authors = Reference,
     reference_publishingDetails = Publisher
   )
+
+data_selected$biologicalsource <- capitalize(tolower(data_selected$biologicalsource))
 
 # standardizing
 data_standard <-

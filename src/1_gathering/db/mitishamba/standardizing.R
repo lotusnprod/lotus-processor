@@ -5,6 +5,7 @@ source("paths.R")
 source("functions/helpers.R")
 source("functions/standardizing.R")
 
+library(Hmisc)
 library(splitstackshape)
 library(tidyverse)
 
@@ -55,10 +56,16 @@ data_selected <- data_original %>%
   ) %>%
   data.frame()
 
+data_corrected <- data_selected %>%
+  cSplit("biologicalsource", sep = ",", direction = "long") %>%
+  filter(grepl(pattern = "[A-Z]", x = biologicalsource)) %>%
+  mutate(biologicalsource = capitalize(tolower(biologicalsource))) %>%
+  data.frame()
+
 # standardizing
 data_standard <-
   standardizing_original(
-    data_selected = data_selected,
+    data_selected = data_corrected,
     db = "mit_1",
     structure_field = c("name", "smiles"),
     reference_field = c(
