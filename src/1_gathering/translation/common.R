@@ -15,8 +15,10 @@ commonSciPhe <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
-  select(vernacularName = name,
-         canonicalName = food_source_scientific_name) %>%
+  select(
+    vernacularName = name,
+    canonicalName = food_source_scientific_name
+  ) %>%
   filter(!is.na(vernacularName))
 
 ### common names from FooDB
@@ -26,8 +28,10 @@ commonSciFoo <- read_delim(
   escape_double = TRUE,
   trim_ws = TRUE
 ) %>%
-  select(vernacularName = name,
-         canonicalName = name_scientific) %>%
+  select(
+    vernacularName = name,
+    canonicalName = name_scientific
+  ) %>%
   filter(!is.na(vernacularName))
 
 ### common names from DrDuke
@@ -37,8 +41,10 @@ commonDuk <- read_delim(
   escape_double = TRUE,
   trim_ws = TRUE
 ) %>%
-  select(vernacularName = CNNAM,
-         FNFNUM)
+  select(
+    vernacularName = CNNAM,
+    FNFNUM
+  )
 
 ### scientific names from DrDuke
 sciDuk <- read_delim(
@@ -48,7 +54,8 @@ sciDuk <- read_delim(
   trim_ws = TRUE
 ) %>%
   select(FNFNUM,
-         canonicalName = TAXON)
+    canonicalName = TAXON
+  )
 
 commonSciDuk <- left_join(sciDuk, commonDuk) %>%
   select(-FNFNUM) %>%
@@ -64,12 +71,16 @@ taxa <- read_delim(
   progress = TRUE
 ) %>%
   filter(!is.na(canonicalName)) %>%
-  select(taxonID,
-         canonicalName,
-         genericName,
-         specificEpithet) %>%
-  filter(!grepl(pattern = "\\?",
-                x = canonicalName))
+  select(
+    taxonID,
+    canonicalName,
+    genericName,
+    specificEpithet
+  ) %>%
+  filter(!grepl(
+    pattern = "\\?",
+    x = canonicalName
+  ))
 
 #### taxa
 vernacular <- read_delim(
@@ -79,10 +90,14 @@ vernacular <- read_delim(
   trim_ws = FALSE
 ) %>%
   filter(language == "en") %>%
-  select(taxonID,
-         vernacularName) %>%
-  filter(!grepl(pattern = "\\?",
-                x = vernacularName))
+  select(
+    taxonID,
+    vernacularName
+  ) %>%
+  filter(!grepl(
+    pattern = "\\?",
+    x = vernacularName
+  ))
 
 ### manually subtracted entries
 manualSubtraction <- read_delim(
@@ -127,7 +142,7 @@ taxaVernacular <- taxaVernacular %>%
 commonSciPheFoo <- full_join(commonSciPhe, commonSciFoo)
 
 # joining common names from DrDukes
-commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk)%>%
+commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk) %>%
   filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
 
 # adding
@@ -141,19 +156,27 @@ commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk)%>%
 # list <- commonSciSub %>%
 #   filter(vernacularName %in% taxa$genericName)
 
-commonSciPheFooDuk <- commonSciPheFooDuk 
+commonSciPheFooDuk <- commonSciPheFooDuk
 
 ### normal
 commonSciPlural_1 <- commonSciPheFooDuk %>%
   filter(
-    !grepl(pattern = "(.+[^aeiou])y$",
-           x = vernacularName) &
-      !grepl(pattern = "(.+[^aeiou])o$",
-             x = vernacularName) &
-      !grepl(pattern = ".+s$|.+sh$|.+ch$.+x$|.+z$",
-             x = vernacularName) &
-      !grepl(pattern = ".+f$|.+fe$",
-             x = vernacularName)
+    !grepl(
+      pattern = "(.+[^aeiou])y$",
+      x = vernacularName
+    ) &
+      !grepl(
+        pattern = "(.+[^aeiou])o$",
+        x = vernacularName
+      ) &
+      !grepl(
+        pattern = ".+s$|.+sh$|.+ch$.+x$|.+z$",
+        x = vernacularName
+      ) &
+      !grepl(
+        pattern = ".+f$|.+fe$",
+        x = vernacularName
+      )
   )
 
 commonSciPlural_1$vernacularName <-
@@ -162,10 +185,14 @@ commonSciPlural_1$vernacularName <-
 ### "o" and "y" plurals (mango -> mangoes, berry -> berries)
 commonSciPlural_2 <- commonSciPheFooDuk %>%
   filter(
-    grepl(pattern = "(.+[^aeiou])y$",
-          x = vernacularName) |
-      grepl(pattern = "(.+[^aeiou])o$",
-            x = vernacularName)
+    grepl(
+      pattern = "(.+[^aeiou])y$",
+      x = vernacularName
+    ) |
+      grepl(
+        pattern = "(.+[^aeiou])o$",
+        x = vernacularName
+      )
   )
 
 commonSciPlural_2$vernacularName <- gsub(
@@ -182,16 +209,20 @@ commonSciPlural_2$vernacularName <- gsub(
 
 ### s, sh, ch, x, z
 commonSciPlural_3 <- commonSciPheFooDuk %>%
-  filter(grepl(pattern = ".+s$|.+sh$|.+ch$.+x$|.+z$",
-               x = vernacularName))
+  filter(grepl(
+    pattern = ".+s$|.+sh$|.+ch$.+x$|.+z$",
+    x = vernacularName
+  ))
 
 commonSciPlural_3$vernacularName <-
   paste(commonSciPlural_3$vernacularName, "es", sep = "")
 
 ### f, fe
 commonSciPlural_4 <- commonSciPheFooDuk %>%
-  filter(grepl(pattern = "(.+)f$|(.+)fe$",
-               x = vernacularName))
+  filter(grepl(
+    pattern = "(.+)f$|(.+)fe$",
+    x = vernacularName
+  ))
 
 commonSciPlural_4$vernacularName <- gsub(
   pattern = "(.+)f$|(.+)fe$",
@@ -247,19 +278,27 @@ commonSci$vernacularName <- gsub(
 
 # removing approximative additions of specific names
 commonSci <- commonSci %>%
-  filter(vernacularName != word(string = canonicalName,
-                                start = 1))
+  filter(vernacularName != word(
+    string = canonicalName,
+    start = 1
+  ))
 ## explanation
 explanation <- commonSci %>%
-  filter(vernacularName == word(string = canonicalName,
-                                start = 1))
+  filter(vernacularName == word(
+    string = canonicalName,
+    start = 1
+  ))
 
 # filtering only results with canonical name
-commonSci$canonicalName <- y_as_na(x = commonSci$canonicalName,
-                                   y = "N/A")
+commonSci$canonicalName <- y_as_na(
+  x = commonSci$canonicalName,
+  y = "N/A"
+)
 
-commonSci$canonicalName <- y_as_na(x = commonSci$canonicalName,
-                                   y = "")
+commonSci$canonicalName <- y_as_na(
+  x = commonSci$canonicalName,
+  y = ""
+)
 
 commonSci$canonicalName <- trimws(commonSci$canonicalName)
 
@@ -286,9 +325,11 @@ commonSci_2 <- commonSci %>%
   add_count(name = "vernacularCount") %>%
   filter(vernacularCount != 1) %>%
   arrange(vernacularName) %>%
-  cSplit(splitCols = "canonicalName",
-         sep = " ",
-         drop = FALSE) %>%
+  cSplit(
+    splitCols = "canonicalName",
+    sep = " ",
+    drop = FALSE
+  ) %>%
   group_by(vernacularName, canonicalName_1, canonicalName_2) %>%
   add_count(name = "specificCount") %>%
   group_by(vernacularName, canonicalName_1) %>%
@@ -324,22 +365,26 @@ commonSci_4 <- commonSci_3 %>%
   arrange(desc(specificRatio)) %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
   mutate(newCanonicalName = paste(canonicalName_1,
-                                  canonicalName_2,
-                                  sep = " ")) %>%
+    canonicalName_2,
+    sep = " "
+  )) %>%
   select(vernacularName,
-         canonicalName = newCanonicalName) %>%
+    canonicalName = newCanonicalName
+  ) %>%
   arrange(vernacularName)
 
 ## generic name matching
 commonSci_5 <- anti_join(commonSci_3,
-                         commonSci_4,
-                         by = "vernacularName") %>%
+  commonSci_4,
+  by = "vernacularName"
+) %>%
   filter(specificRatio <= 0.5 &
-           genericRatio > 0.5) %>%
+    genericRatio > 0.5) %>%
   arrange(desc(genericRatio)) %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
   select(vernacularName,
-         canonicalName = canonicalName_1) %>%
+    canonicalName = canonicalName_1
+  ) %>%
   arrange(vernacularName)
 
 # joining again cleaned results
@@ -354,8 +399,10 @@ common2Sci <- commonSciSub %>%
   mutate(n = str_count(string = vernacularName)) %>%
   arrange(desc(n)) %>% # sorting for replacements like "sea cucumber" and so on...
   filter(n >= 4) %>% # names with 3 char are not enough
-  select(vernacularName,
-         canonicalName) %>%
+  select(
+    vernacularName,
+    canonicalName
+  ) %>%
   filter(!grepl("\\?", canonicalName)) %>%
   filter(!grepl("\\)", vernacularName))
 
