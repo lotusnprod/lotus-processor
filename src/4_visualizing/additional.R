@@ -30,7 +30,7 @@ fig1 <- plot_ly(type = "violin") %>%
   ))
 fig1
 
-orca(p = fig1, file= file.path(pathDataProcessedFigures, "violin.pdf"))
+orca(p = fig1, file = file.path(pathDataProcessedFigures, "violin.pdf"))
 
 fig2 <- plot_ly(type = "violin") %>%
   add_trace(
@@ -62,4 +62,4 @@ fig2 <- plot_ly(type = "violin") %>%
   ))
 fig2
 
-orca(p = fig2, file= file.path(pathDataProcessedFigures, "violin_zoomed.pdf"))
+orca(p = fig2, file = file.path(pathDataProcessedFigures, "violin_zoomed.pdf"))

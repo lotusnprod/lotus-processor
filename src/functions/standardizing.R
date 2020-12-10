@@ -37,11 +37,11 @@ standardizing_original <- function(data_selected,
       all_of(reference_field)
     ) %>%
     filter_at(vars(all_of(structure_field)), any_vars(!is.na(.))) %>%
-    filter_at(vars(all_of(structure_field)), any_vars(grepl(pattern = "[[:alnum:]]",x = .))) %>%
+    filter_at(vars(all_of(structure_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
     filter(!is.na(biologicalsource)) %>%
-    filter(grepl(pattern = "[[:alpha:]]",x = biologicalsource)) %>% 
+    filter(grepl(pattern = "[[:alpha:]]", x = biologicalsource)) %>%
     filter_at(vars(all_of(reference_field)), any_vars(!is.na(.))) %>%
-    filter_at(vars(all_of(reference_field)), any_vars(grepl(pattern = "[[:alnum:]]",x = .))) %>%
+    filter_at(vars(all_of(reference_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
     distinct_at(vars(
       all_of(structure_field),
       biologicalsource,
