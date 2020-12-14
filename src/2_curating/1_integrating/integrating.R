@@ -284,8 +284,9 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 referenceTable_doi <- referenceTable_doi %>%
   select(referenceOriginal_doi = referenceOriginal)
 
-row.names(referenceTable_doi) <-
-  referenceTable_doi$referenceOriginal_doi
+if (nrow(referenceTable_doi) == 0) {
+  referenceTable_doi[1, ] <- NA
+}
 
 cat("... PMID table \n")
 referenceTable_pubmed <- dbTable %>%
@@ -330,6 +331,10 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 
 referenceTable_title <- referenceTable_title %>%
   select(referenceOriginal_title = referenceOriginal)
+
+if (nrow(referenceTable_title) == 0) {
+  referenceTable_title[1, ] <- NA
+}
 
 cat(".. reference publishing details table \n")
 referenceTable_publishingDetails <- dbTable %>%
