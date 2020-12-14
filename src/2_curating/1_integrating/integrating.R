@@ -247,7 +247,8 @@ structureTable_full <- structureTable_full %>%
     values_to = "structureValue",
     values_drop_na = TRUE
   ) %>%
-  select(structureType, structureValue)
+  select(structureType, structureValue) %>%
+  distinct()
 
 if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
@@ -437,7 +438,8 @@ referenceTable_full <- dbTable %>%
     organismOriginal,
     referenceType,
     referenceValue
-  )
+  ) %>%
+  distinct()
 
 cat("... full original table \n")
 originalTable <- dbTable %>%
@@ -456,7 +458,8 @@ originalTable <- dbTable %>%
     values_to = "structureValue",
     values_drop_na = TRUE
   ) %>%
-  select(-drop, -drop2)
+  select(-drop, -drop2) %>%
+  distinct()
 
 cat("ensuring directories exist ... \n")
 ifelse(
