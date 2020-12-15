@@ -59,8 +59,18 @@ taxo_cleaning_auto <- function(dfsel) {
     add_count(name = "m") %>%
     mutate(ratio = n / m) %>%
     ungroup() %>%
-    filter(ratio > 0.5 | is.na(organism_1_kingdom)) %>%
-    select(-n, -m, -ratio, -organismDetected_1)
+    filter((ratio > 0.5 |
+      is.na(organism_1_kingdom)) |
+      str_count(string = organismDetected, pattern = "\\b") > 2) %>%
+    select(-n, -m, -ratio, -organismDetected_1) %>%
+    group_by(organismDetected,organism_5_family, organism_6_genus) %>% # interDB consistency
+    add_count() %>%
+    group_by(organismDetected,organism_5_family) %>%
+    add_count(name = "m") %>%
+    mutate(ratio = n / m) %>%
+    ungroup() %>%
+    filter(ratio >= 0.5 | is.na(organism_6_genus)) %>%
+    select(-n, -m, -ratio)
 
   df1_b <- dfsel %>%
     distinct(

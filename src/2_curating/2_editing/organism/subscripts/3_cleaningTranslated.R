@@ -111,7 +111,8 @@ if (length(dataCleanTranslatedOrganism) != 0) {
       organismDbTaxo = dbTaxo,
       everything()
     ) %>%
-    select(-nchar, -sum)
+    select(-nchar, -sum) %>%
+    distinct()
 }
 
 if (length(dataCleanTranslatedOrganism) == 0) {
@@ -135,11 +136,6 @@ if (length(dataCleanTranslatedOrganism) == 0) {
 if (nrow(dataInterimOrganismToFill) != 0) {
   dataCleanedTranslatedOrganism2join <-
     dataInterimOrganismToFill %>%
-    mutate(organismInterim = ifelse(
-      test = organismInterim == word(organismOriginal, 3),
-      yes = NA,
-      no = organismInterim
-    )) %>% # this is to avoid too big family groups because of some "Asteraceae" etc making caluclations too big
     filter(!is.na(organismInterim)) %>%
     distinct(organismOriginal, organismInterim) %>%
     mutate_all(as.character)
@@ -158,7 +154,20 @@ if (length != 0) {
   dataCleanedTranslatedOrganismFull <-
     left_join(
       dataCleanedTranslatedOrganism2join,
-      dataCleanedTranslatedOrganism
+      dataCleanedTranslatedOrganism %>% distinct(organismInterim, organismCleaned)
+    ) %>%
+    left_join(
+      .,
+      dataCleanedTranslatedOrganism %>% distinct(
+        organismCleaned,
+        organismCleanedCurrent,
+        organismDbTaxo,
+        taxonId,
+        taxonomy,
+        rank,
+        ids,
+        dbQuality
+      )
     ) %>%
     select(-organismInterim) %>%
     distinct(organismOriginal,

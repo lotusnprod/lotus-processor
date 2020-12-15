@@ -56,6 +56,9 @@ inline fun processRecord(record: Map<String, String>): Map<String, String> {
     // initialString = "bar" candidatesList=["ABC"]
     // initialString = "" candidatesList=["ABC", "XYZ"]
 
+    // AR COMMENT: ACTUALLY IF WE HAVE "foo" => 123 in the dic, it adds it at the end although "foo bar" has 
+    // already been matched. We do not want this. I am not really sure on how to fix it.
+
 
     // We need to make a loop we can exit from
     run loop@{
@@ -81,7 +84,7 @@ inline fun processRecord(record: Map<String, String>): Map<String, String> {
     newTerm = newTerm.replace(it.first, it.second)
     }*/
     // We combine both the new term and the eventual candidateList
-    newRecord["organismInterim"] = (listOf(newTerm) + candidateList).joinToString(" , ")
+    newRecord["organismInterim"] = candidateList.joinToString(" , ")
     return newRecord
 }
 
