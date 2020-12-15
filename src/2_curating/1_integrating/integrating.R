@@ -19,89 +19,135 @@ library(tidyverse)
 
 cat("... files ... \n")
 cat("... DBs \n")
-dbList <- lapply(pathDataInterimDbDir, db_loader)
 
-cat("... dictionaries ... \n")
-cat("... structures \n")
-if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-  structureDictionary <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+if (mode != "test") {
+  dbList <- lapply(pathDataInterimDbDir, db_loader)
+
+  cat("... dictionaries ... \n")
+  cat("... structures \n")
+  if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
+    structureDictionary <- read_delim(
+      file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      escape_double = FALSE,
+      trim_ws = TRUE
+    ) %>%
+      tibble()
+  }
+
+  cat("... previously unsucessfully querried structures \n")
+  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureAntiDictionary <- read_delim(
+      file = gzfile(description = pathDataInterimDictionariesStructureAntiDictionary),
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      escape_double = FALSE,
+      trim_ws = TRUE
+    ) %>%
+      tibble()
+  }
+
+  cat("... organisms \n")
+  if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
+    organismDictionary <- read_delim(
+      file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      escape_double = FALSE,
+      trim_ws = TRUE
+    ) %>%
+      tibble()
+  }
+
+  cat("... references \n")
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceDictionary <- read_delim(
+      file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      escape_double = FALSE,
+      trim_ws = TRUE
+    ) %>%
+      data.table()
+  }
+
+  cat("renaming and selecting columns \n")
+  dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
+    select(
+      database,
+      organismOriginal = biologicalsource,
+      structureOriginal_inchi = inchi,
+      structureOriginal_nominal = name,
+      structureOriginal_smiles = smiles,
+      referenceOriginal_authors = reference_authors,
+      referenceOriginal_doi = reference_doi,
+      referenceOriginal_external = reference_external,
+      referenceOriginal_isbn = reference_isbn,
+      referenceOriginal_journal = reference_journal,
+      referenceOriginal_original = reference_original,
+      referenceOriginal_pubmed = reference_pubmed,
+      referenceOriginal_publishingDetails = reference_publishingDetails,
+      referenceOriginal_split = reference_split,
+      referenceOriginal_title = reference_title,
+    ) %>%
     tibble()
-}
 
-cat("... previously unsucessfully querried structures \n")
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  structureAntiDictionary <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesStructureAntiDictionary),
+  if (mode == "min") {
+    cat("sampling rows for min mode \n")
+  }
+  if (mode == "min") {
+    set.seed(
+      seed = 42,
+      kind = "Mersenne-Twister",
+      normal.kind = "Inversion"
+    )
+    dbTable <- dbTable %>%
+      sample_n(size = 1000)
+  }
+}
+if (mode == "test") {
+  dbTable <- read_delim(
+    file = pathTests,
     delim = "\t",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
+    pivot_wider(
+      names_from = c("structureType"),
+      values_from = c("structureValue"),
+      names_prefix = "structureOriginal_"
+    ) %>%
+    pivot_wider(
+      names_from = c("referenceType"),
+      values_from = c("referenceValue"),
+      names_prefix = "referenceOriginal_"
+    ) %>%
+    mutate(
+      referenceOriginal_authors = NA,
+      referenceOriginal_external = NA,
+      referenceOriginal_isbn = NA,
+      referenceOriginal_journal = NA
+    ) %>%
+    select(
+      database = db,
+      organismOriginal,
+      structureOriginal_inchi,
+      structureOriginal_nominal,
+      structureOriginal_smiles,
+      referenceOriginal_authors,
+      referenceOriginal_doi,
+      referenceOriginal_external,
+      referenceOriginal_isbn,
+      referenceOriginal_journal,
+      referenceOriginal_original,
+      referenceOriginal_pubmed,
+      referenceOriginal_publishingDetails,
+      referenceOriginal_split,
+      referenceOriginal_title,
+    ) %>%
     tibble()
-}
-
-cat("... organisms \n")
-if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  organismDictionary <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
-    tibble()
-}
-
-cat("... references \n")
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceDictionary <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
-    data.table()
-}
-
-cat("renaming and selecting columns \n")
-dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
-  select(
-    database,
-    organismOriginal = biologicalsource,
-    structureOriginal_inchi = inchi,
-    structureOriginal_nominal = name,
-    structureOriginal_smiles = smiles,
-    referenceOriginal_authors = reference_authors,
-    referenceOriginal_doi = reference_doi,
-    referenceOriginal_external = reference_external,
-    referenceOriginal_isbn = reference_isbn,
-    referenceOriginal_journal = reference_journal,
-    referenceOriginal_original = reference_original,
-    referenceOriginal_pubmed = reference_pubmed,
-    referenceOriginal_publishingDetails = reference_publishingDetails,
-    referenceOriginal_split = reference_split,
-    referenceOriginal_title = reference_title,
-  ) %>%
-  tibble()
-
-if (mode == "min") {
-  cat("sampling rows for min mode \n")
-}
-if (mode == "min") {
-  set.seed(
-    seed = 42,
-    kind = "Mersenne-Twister",
-    normal.kind = "Inversion"
-  )
-  dbTable <- dbTable %>%
-    sample_n(size = 1000)
 }
 
 cat("removing unfriendly characters \n")
@@ -128,20 +174,22 @@ structureTable_inchi <- dbTable %>%
   distinct(structureOriginal_inchi) %>%
   select(structureValue = structureOriginal_inchi)
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-  structureTable_inchi <-
-    anti_join(
-      x = structureTable_inchi,
-      y = structureDictionary
-    )
-}
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
+    structureTable_inchi <-
+      anti_join(
+        x = structureTable_inchi,
+        y = structureDictionary
+      )
+  }
 
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  structureTable_inchi <-
-    anti_join(
-      x = structureTable_inchi,
-      y = structureAntiDictionary
-    )
+  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureTable_inchi <-
+      anti_join(
+        x = structureTable_inchi,
+        y = structureAntiDictionary
+      )
+  }
 }
 
 structureTable_inchi <- structureTable_inchi %>%
@@ -160,21 +208,22 @@ structureTable_smiles <- dbTable %>%
   filter(!is.na(structureOriginal_smiles)) %>%
   distinct(structureOriginal_smiles) %>%
   select(structureValue = structureOriginal_smiles)
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
+    structureTable_smiles <-
+      anti_join(
+        x = structureTable_smiles,
+        y = structureDictionary
+      )
+  }
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-  structureTable_smiles <-
-    anti_join(
-      x = structureTable_smiles,
-      y = structureDictionary
-    )
-}
-
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  structureTable_smiles <-
-    anti_join(
-      x = structureTable_smiles,
-      y = structureAntiDictionary
-    )
+  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureTable_smiles <-
+      anti_join(
+        x = structureTable_smiles,
+        y = structureAntiDictionary
+      )
+  }
 }
 
 structureTable_smiles <- structureTable_smiles %>%
@@ -195,20 +244,22 @@ structureTable_nominal <- dbTable %>%
   distinct(structureOriginal_nominal) %>%
   select(structureValue = structureOriginal_nominal)
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-  structureTable_nominal <-
-    anti_join(
-      x = structureTable_nominal,
-      y = structureDictionary
-    )
-}
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
+    structureTable_nominal <-
+      anti_join(
+        x = structureTable_nominal,
+        y = structureDictionary
+      )
+  }
 
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  structureTable_nominal <-
-    anti_join(
-      x = structureTable_nominal,
-      y = structureAntiDictionary
-    )
+  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureTable_nominal <-
+      anti_join(
+        x = structureTable_nominal,
+        y = structureAntiDictionary
+      )
+  }
 }
 
 structureTable_nominal <- structureTable_nominal %>%
@@ -219,17 +270,23 @@ if (nrow(structureTable_nominal) == 0) {
 }
 
 cat("... structures table \n")
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  structureTable_full <- dbTable %>%
-    filter(!structureOriginal_inchi %in% structureAntiDictionary$structureValue) %>%
-    filter(!structureOriginal_smiles %in% structureAntiDictionary$structureValue) %>%
-    filter(!structureOriginal_nominal %in% structureAntiDictionary$structureValue) %>%
-    filter(!structureOriginal_inchi %in% structureDictionary$structureValue) %>%
-    filter(!structureOriginal_smiles %in% structureDictionary$structureValue) %>%
-    filter(!structureOriginal_nominal %in% structureDictionary$structureValue)
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureTable_full <- dbTable %>%
+      filter(!structureOriginal_inchi %in% structureAntiDictionary$structureValue) %>%
+      filter(!structureOriginal_smiles %in% structureAntiDictionary$structureValue) %>%
+      filter(!structureOriginal_nominal %in% structureAntiDictionary$structureValue) %>%
+      filter(!structureOriginal_inchi %in% structureDictionary$structureValue) %>%
+      filter(!structureOriginal_smiles %in% structureDictionary$structureValue) %>%
+      filter(!structureOriginal_nominal %in% structureDictionary$structureValue)
+  }
+
+  if (!file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    structureTable_full <- dbTable
+  }
 }
 
-if (!file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+if (mode == "test") {
   structureTable_full <- dbTable
 }
 
@@ -260,11 +317,13 @@ organismTable <- dbTable %>%
   distinct(organismOriginal) %>%
   data.table()
 
-if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  organismTable <- anti_join(
-    x = organismTable,
-    y = organismDictionary
-  )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
+    organismTable <- anti_join(
+      x = organismTable,
+      y = organismDictionary
+    )
+  }
 }
 
 cat("... references tables ... \n")
@@ -274,11 +333,13 @@ referenceTable_doi <- dbTable %>%
   distinct(referenceOriginal_doi) %>%
   select(referenceOriginal = referenceOriginal_doi)
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_doi <- anti_join(
-    x = referenceTable_doi,
-    y = referenceDictionary
-  )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_doi <- anti_join(
+      x = referenceTable_doi,
+      y = referenceDictionary
+    )
+  }
 }
 
 referenceTable_doi <- referenceTable_doi %>%
@@ -294,11 +355,13 @@ referenceTable_pubmed <- dbTable %>%
   distinct(referenceOriginal_pubmed) %>%
   select(referenceOriginal = referenceOriginal_pubmed)
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_pubmed <- anti_join(
-    x = referenceTable_pubmed,
-    y = referenceDictionary
-  )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_pubmed <- anti_join(
+      x = referenceTable_pubmed,
+      y = referenceDictionary
+    )
+  }
 }
 
 referenceTable_pubmed <- referenceTable_pubmed %>%
@@ -322,11 +385,13 @@ referenceTable_title <- dbTable %>%
   select(referenceOriginal = referenceOriginal_title) %>%
   data.table()
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_title <- anti_join(
-    x = referenceTable_title,
-    y = referenceDictionary
-  )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_title <- anti_join(
+      x = referenceTable_title,
+      y = referenceDictionary
+    )
+  }
 }
 
 referenceTable_title <- referenceTable_title %>%
@@ -345,12 +410,14 @@ referenceTable_publishingDetails <- dbTable %>%
   distinct(referenceOriginal_publishingDetails) %>%
   select(referenceOriginal = referenceOriginal_publishingDetails)
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_publishingDetails <-
-    anti_join(
-      x = referenceTable_publishingDetails,
-      y = referenceDictionary
-    )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_publishingDetails <-
+      anti_join(
+        x = referenceTable_publishingDetails,
+        y = referenceDictionary
+      )
+  }
 }
 
 referenceTable_publishingDetails <-
@@ -372,12 +439,14 @@ referenceTable_split <- dbTable %>%
   distinct(referenceOriginal_split) %>%
   select(referenceOriginal = referenceOriginal_split)
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_split <-
-    anti_join(
-      x = referenceTable_split,
-      y = referenceDictionary
-    )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_split <-
+      anti_join(
+        x = referenceTable_split,
+        y = referenceDictionary
+      )
+  }
 }
 
 referenceTable_split <- referenceTable_split %>%
@@ -400,12 +469,14 @@ referenceTable_original <- dbTable %>%
   select(referenceOriginal = referenceOriginal_original) %>%
   data.table()
 
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceTable_original <-
-    anti_join(
-      x = referenceTable_original,
-      y = referenceDictionary
-    )
+if (mode != "test") {
+  if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    referenceTable_original <-
+      anti_join(
+        x = referenceTable_original,
+        y = referenceDictionary
+      )
+  }
 }
 
 referenceTable_original <- referenceTable_original %>%

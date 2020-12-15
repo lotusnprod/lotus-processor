@@ -419,24 +419,36 @@ subDataClean_pmid <- dataCleanedJoinedWideScore %>%
   distinct(referenceValue) %>%
   mutate_all(as.character)
 
-cat("loading pmcid file, this may take a while \n")
-# here because of memory
-PMC_ids <- read_delim(
-  file = gzfile(pathDataExternalTranslationSourcePubmedFile),
-  delim = ",",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  filter(!is.na(DOI) | !is.na(PMID)) %>%
-  select(
-    DOI,
-    PMCID,
-    PMID
+if (mode != "test") {
+  cat("loading pmcid file, this may take a while \n")
+  # here because of memory
+  PMC_ids <- read_delim(
+    file = gzfile(pathDataExternalTranslationSourcePubmedFile),
+    delim = ",",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
   ) %>%
-  mutate(DOI = toupper(DOI)) %>%
-  mutate_all(as.character) %>%
-  tibble()
+    filter(!is.na(DOI) | !is.na(PMID)) %>%
+    select(
+      DOI,
+      PMCID,
+      PMID
+    ) %>%
+    mutate(DOI = toupper(DOI)) %>%
+    mutate_all(as.character) %>%
+    tibble()
+} else {
+  ## TEMPORARY to be fast
+  PMC_ids <-
+    data.frame(
+      DOI = NA,
+      PMCID = NA,
+      PMID = NA
+    ) %>%
+    mutate_all(as.character) %>%
+    tibble()
+}
 
 cat("adding PMID and PMCID \n")
 df_doi <- left_join(subDataClean_doi,

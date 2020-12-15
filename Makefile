@@ -114,7 +114,7 @@ curating-editing-organism-translating: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/in
 ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/src/main/kotlin/*.kt)
 	./gradlew castShadows
 ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH}/common/black.tsv ${INTERIM_DICTIONARY_PATH}/common/manualSubtraction.tsv ${INTERIM_DICTIONARY_PATH}/common/names.tsv.gz ${INTERIM_DICTIONARY_PATH}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
-	@java -jar ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${FULL}
+	@java -jar ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${MODE}
 
 curating-editing-organism-cleaning-translated: curating-editing-organism-translating ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.gz
 ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.gz: $(wildcard ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated/*.json) ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_SUBSCRIPTS_PATH}/3_cleaningTranslated.R
