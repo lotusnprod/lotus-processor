@@ -4,7 +4,7 @@
 
 source("functions/database.R")
 
-mode <- Sys.getenv("FULL", unset = "min")
+mode <- Sys.getenv("MODE", unset = "test")
 
 # only for molconvert step (structures/../enriching/naming.R)
 works_locally_only <- TRUE
@@ -928,6 +928,14 @@ if (mode == "min") {
     )
 }
 
+if (mode == "test") {
+  pathDataInterimDictionaries <-
+    file.path(
+      pathDataInterim,
+      "dictionaries_test"
+    )
+}
+
 ##### common
 pathDataInterimDictionariesCommon <-
   file.path(
@@ -1141,6 +1149,14 @@ if (mode == "min") {
     )
 }
 
+if (mode == "test") {
+  pathDataInterimTables <-
+    file.path(
+      pathDataInterim,
+      "tables_test"
+    )
+}
+
 #### tables
 if (mode == "full") {
   pathDataProcessedTables <-
@@ -1158,6 +1174,14 @@ if (mode == "min") {
     )
 }
 
+if (mode == "test") {
+  pathDataProcessedTables <-
+    file.path(
+      pathDataProcessed,
+      "tables_test"
+    )
+}
+
 #### figures
 if (mode == "full") {
   pathDataProcessedFigures <-
@@ -1172,6 +1196,14 @@ if (mode == "min") {
     file.path(
       pathDataProcessed,
       "figures_min"
+    )
+}
+
+if (mode == "test") {
+  pathDataProcessedFigures <-
+    file.path(
+      pathDataProcessed,
+      "figures_test"
     )
 }
 
@@ -1550,6 +1582,11 @@ if (mode == "min") {
     "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_min.sh"
 }
 
+if (mode == "test") {
+  pathOriginalGnfinderScript <-
+    "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_test.sh"
+}
+
 if (mode == "full") {
   pathTranslatedGnfinderScript <-
     "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_full.sh"
@@ -1559,3 +1596,10 @@ if (mode == "min") {
   pathTranslatedGnfinderScript <-
     "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_min.sh"
 }
+
+if (mode == "test") {
+  pathTranslatedGnfinderScript <-
+    "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_test.sh"
+}
+
+pathTests <- file.path(pathDataInterimTablesOriginal,"tests.tsv")

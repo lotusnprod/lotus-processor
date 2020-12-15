@@ -37,10 +37,10 @@ if (nrow(dataPubmed) != 1) {
 }
 
 if (nrow(dataPubmed) != 1) {
-  if (length(reflistPubmed) != 2) {
+  if (is.null(reflistPubmed$value)) {
     reflistPubmedBound <- bind_rows(reflistPubmed)
   }
-  if (length(reflistPubmed) == 2) {
+  else {
     reflistPubmedBound <- bind_rows(reflistPubmed$value)
   }
 }

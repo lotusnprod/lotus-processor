@@ -91,52 +91,61 @@ if (works_locally_only == FALSE) {
   #     "-g"
   #   )
   # )
+
+
+  cat("loading files ... \n")
+  structureNamesTraditional <- read_delim(
+    file = pathDataInterimTablesCleanedStructureSmiles_1,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    col_names = FALSE,
+    skip_empty_rows = FALSE,
+    trim_ws = TRUE
+  ) %>%
+    select(structureCleaned_nameTraditional = X1)
+
+  structureNamesIupac <- read_delim(
+    file = pathDataInterimTablesCleanedStructureSmiles_2,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    col_names = FALSE,
+    skip_empty_rows = FALSE,
+    trim_ws = TRUE
+  ) %>%
+    select(structureCleaned_nameIupac = X1)
+
+  # structureNamesCommon <- read_delim(
+  #   file = pathDataInterimTablesCleanedStructureSmiles_3,
+  #   delim = "\t",
+  #   col_types = cols(.default = "c"),
+  #   escape_double = FALSE,
+  #   col_names = FALSE,
+  #   skip_empty_rows = FALSE,
+  #   trim_ws = TRUE
+  # ) %>%
+  #   select(structureCleanedNameCommon = X1)
+
+  # structureNamesCommonAll <- read_delim(
+  #   file = pathDataInterimTablesCleanedStructureSmiles_4,
+  #   delim = "\t",
+  #   col_types = cols(.default = "c"),
+  #   escape_double = FALSE,
+  #   col_names = FALSE,
+  #   skip_empty_rows = FALSE,
+  #   trim_ws = TRUE
+  # ) %>%
+  #   select(structureCleanedNameCommonAll = X1)
 }
 
-cat("loading files ... \n")
-structureNamesTraditional <- read_delim(
-  file = pathDataInterimTablesCleanedStructureSmiles_1,
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  col_names = FALSE,
-  skip_empty_rows = FALSE,
-  trim_ws = TRUE
-) %>%
-  select(structureCleaned_nameTraditional = X1)
+if (works_locally_only == TRUE) {
+  structureNamesTraditional <-
+    data.frame(structureCleaned_nameTraditional = NA)
 
-structureNamesIupac <- read_delim(
-  file = pathDataInterimTablesCleanedStructureSmiles_2,
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  col_names = FALSE,
-  skip_empty_rows = FALSE,
-  trim_ws = TRUE
-) %>%
-  select(structureCleaned_nameIupac = X1)
-
-# structureNamesCommon <- read_delim(
-#   file = pathDataInterimTablesCleanedStructureSmiles_3,
-#   delim = "\t",
-#   col_types = cols(.default = "c"),
-#   escape_double = FALSE,
-#   col_names = FALSE,
-#   skip_empty_rows = FALSE,
-#   trim_ws = TRUE
-# ) %>%
-#   select(structureCleanedNameCommon = X1)
-
-# structureNamesCommonAll <- read_delim(
-#   file = pathDataInterimTablesCleanedStructureSmiles_4,
-#   delim = "\t",
-#   col_types = cols(.default = "c"),
-#   escape_double = FALSE,
-#   col_names = FALSE,
-#   skip_empty_rows = FALSE,
-#   trim_ws = TRUE
-# ) %>%
-#   select(structureCleanedNameCommonAll = X1)
+  structureNamesIupac <-
+    data.frame(structureCleaned_nameIupac = NA)
+}
 
 smilesFilled <- bind_cols(
   smilesDictionary,
