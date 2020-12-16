@@ -1,13 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val univocityParserVersion = "2.8.4"
+val univocityParserVersion = "2.9.0"
 group = "net.nprod.onpdb"
-version = "0.3-SNAPSHOT"
+version = "0.4-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "1.3.72"
+    kotlin("jvm") version "1.4.21"
     application
-    id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("name.remal.check-updates") version "1.1.6"
 }
 
 repositories {
@@ -35,14 +36,14 @@ tasks.withType<KotlinCompile>() {
  * We say what needs to be executed
  */
 application {
-    mainClassName = "MainKt"
+    mainClass.set("MainKt")
 }
 
 tasks.withType<Jar> {
     manifest {
         attributes(
             mapOf(
-                "Main-Class" to application.mainClassName
+                "Main-Class" to application.mainClass
             )
         )
     }
