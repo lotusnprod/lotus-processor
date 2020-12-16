@@ -4,7 +4,7 @@
 
 source("functions/database.R")
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "test")
 
 # only for molconvert step (structures/../enriching/naming.R)
 works_locally_only <- TRUE
@@ -1602,4 +1602,19 @@ if (mode == "test") {
     "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_test.sh"
 }
 
-pathTests <- file.path(pathDataInterimTablesOriginal,"tests.tsv")
+pathTests <- file.path(pathDataInterimTablesOriginal, "tests.tsv")
+
+pathTestsOrganisms <- file.path(
+  pathDataInterimTables,
+  "5_expectation/organisms.tsv"
+)
+
+pathTestsStructures <- file.path(
+  pathDataInterimTables,
+  "5_expectation/structures.tsv"
+)
+
+pathTestsReferences <- file.path(
+  pathDataInterimTables,
+  "5_expectation/references.tsv"
+)
