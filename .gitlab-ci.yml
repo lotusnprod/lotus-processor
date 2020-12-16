@@ -1,26 +1,26 @@
 stages:
-  - docker
+  - build-docker
   - test-docker
   - pull-data
-  - test-curating
-  - test-results
+  - build-tests
+  - test-tests
   - build-databases
   - build-translation
   - build-curating
   - build-analysing
   - build-visualizing
 
-build_docker_image:
-  stage: docker
+build-docker:
+  stage: build-docker
   script:
     - make docker-build
 
-validate_docker_image:
+test-docker:
   stage: test-docker
   script:
     - docker run --rm -v $PWD:/srv/onpdb onpdb-environment true
 
-dvc_pull:
+pull-data:
   stage: pull-data
   script:
     - docker run --rm -v /home/gitlab-runner/.aws:/home/user/.aws -v $PWD:/srv/onpdb -v /srv/onpdb-data/dvc_tmp:/srv/onpdb/.dvc/tmp -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/validation:/srv/onpdb/data/validation onpdb-environment bash -c "cd /srv/onpdb && dvc cache dir /srv/dvc && dvc pull -f"
@@ -28,8 +28,8 @@ dvc_pull:
     - changes:
         - data/*.dvc
 
-test-curating:
-  stage: test-curating
+build-tests:
+  stage: build-tests
   script:
     - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/validation:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make MODE=test curating"
   rules:
@@ -37,8 +37,8 @@ test-curating:
         - data/*.dvc
         - src/2_curating/*
 
-test_results:
-  stage: test-results
+test-tests:
+  stage: test-tests
   script:
     - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/validation:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make MODE=test tests"
 
