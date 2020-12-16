@@ -1,6 +1,5 @@
 library(testthat)
 library(tidyverse)
-setwd("~/GitLab/opennaturalproductsdb/src")
 source("paths.R")
 source("functions/log.R")
 
