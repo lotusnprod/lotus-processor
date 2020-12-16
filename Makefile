@@ -1,7 +1,7 @@
 include config.mk
 include paths.mk
 
-.PHONY: help docker-build docker-bash
+.PHONY: help docker-build docker-bash tests
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-classifying
@@ -33,6 +33,9 @@ docker-build:
 
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment
+
+tests:
+	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
 
 gathering-full: gathering-databases-full gathering-translation-full
 

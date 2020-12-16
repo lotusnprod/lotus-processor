@@ -2,6 +2,7 @@ stages:
   - docker
   - test-docker
   - pull-data
+  - test
   - build-databases
   - build-translation
   - build-curating
@@ -25,6 +26,11 @@ dvc-pull:
   rules:
     - changes:
         - data/*.dvc
+
+test_units:
+  stage: test
+  script:
+    - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/validation:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make tests"
 
 build-databases:
   stage: build-databases

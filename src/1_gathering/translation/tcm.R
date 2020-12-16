@@ -354,8 +354,8 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
     vernacularName = common,
     canonicalName = biologicalsource,
     newCanonicalName = newbiologicalsource
-  ) %>% 
-  distinct() %>% 
+  ) %>%
+  distinct() %>%
   filter(vernacularName != canonicalName | is.na(newCanonicalName))
 
 # exporting

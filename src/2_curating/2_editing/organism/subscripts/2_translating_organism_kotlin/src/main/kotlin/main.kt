@@ -49,16 +49,16 @@ inline fun processRecord(record: Map<String, String>): Map<String, String> {
     if (newTerm == "") return newRecord
     val candidateList = mutableSetOf<String>()
     // So this is a bit complicated
-    // We match each string only once and replace it from the initial string so it doesn't get matched again
+    // We match each string only once and remove it from the initial string so it doesn't get matched again
     //
-    // So for "foo bar bim" if we have in the dictionnary "foo bar" => ABC  and "bim" => XYZ
+    // So for "foo bar bim" if we have in the dictionnary "foo bar" => ABC  and "bim" => XYZ and "foo" => 123
     // it would process it like that: initialString = "foo bar"
     // initialString = "bar" candidatesList=["ABC"]
     // initialString = "" candidatesList=["ABC", "XYZ"]
 
-    // AR COMMENT: ACTUALLY IF WE HAVE "foo" => 123 in the dic, it adds it at the end although "foo bar" has 
-    // already been matched. We do not want this. I am not really sure on how to fix it.
-
+    // AR comment: Actually, does not work as expected. For some reason "foo bar" is not properly removed from
+    // initialString, so foo gets matched and we end up with candidatesList=["ABC", "XYZ", "123"]. I think 
+    // it might be because of a case-sensitive issue
 
     // We need to make a loop we can exit from
     run loop@{
