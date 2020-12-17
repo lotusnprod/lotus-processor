@@ -43,6 +43,7 @@ tasks.withType<KotlinCompile>() {
  */
 application {
     mainClass.set("MainKt")
+    mainClassName = "MainKt"
 }
 
 tasks.withType<Jar> {
@@ -63,6 +64,7 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveBaseName.set("shadow")
     archiveClassifier.set("")
     archiveVersion.set("")
+
 }
 
 /**
