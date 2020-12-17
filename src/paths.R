@@ -4,10 +4,10 @@
 
 source("functions/database.R")
 
-mode <- Sys.getenv("MODE", unset = "test")
+mode <- Sys.getenv("MODE", unset = "min")
 
 # only for molconvert step (structures/../enriching/naming.R)
-works_locally_only <- TRUE
+works_locally_only <- FALSE
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 
 # databases for which we have no right to disseminate the data
@@ -936,10 +936,16 @@ if (mode == "test") {
     )
 }
 
+pathDataInterimDictionariesFix <-
+  file.path(
+    pathDataInterim,
+    "dictionaries"
+  )
+
 ##### common
 pathDataInterimDictionariesCommon <-
   file.path(
-    pathDataInterimDictionaries,
+    pathDataInterimDictionariesFix,
     "common"
   )
 
@@ -967,7 +973,7 @@ pathDataInterimDictionariesCommonNames <-
 ##### latin
 pathDataInterimDictionariesLatin <-
   file.path(
-    pathDataInterimDictionaries,
+    pathDataInterimDictionariesFix,
     "latin"
   )
 
@@ -1002,7 +1008,7 @@ pathDataInterimDictionariesLatinPlantParts <-
 ##### taxa
 pathDataInterimDictionariesTaxa <-
   file.path(
-    pathDataInterimDictionaries,
+    pathDataInterimDictionariesFix,
     "taxa"
   )
 
@@ -1114,7 +1120,7 @@ pathDataInterimDictionariesTaxaRanks <-
 ###### tcm
 pathDataInterimDictionariesTcm <-
   file.path(
-    pathDataInterimDictionaries,
+    pathDataInterimDictionariesFix,
     "tcm"
   )
 
