@@ -478,6 +478,12 @@ ifelse(
   no = paste(pathDataInterimDictionariesOrganism, "exists")
 )
 
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesReference),
+  yes = dir.create(pathDataInterimDictionariesReference),
+  no = paste(pathDataInterimDictionariesReference, "exists")
+)
+
 cat("writing the monster table, if running fullmode, this may take a while \n")
 cat(pathDataInterimTablesCuratedTable, "\n")
 write.table(
