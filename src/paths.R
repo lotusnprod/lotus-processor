@@ -4,10 +4,10 @@
 
 source("functions/database.R")
 
-mode <- Sys.getenv("MODE", unset = "min")
+mode <- Sys.getenv("MODE", unset = "full")
 
 # only for molconvert step (structures/../enriching/naming.R)
-works_locally_only <- FALSE
+works_locally_only <- TRUE
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 
 # databases for which we have no right to disseminate the data
