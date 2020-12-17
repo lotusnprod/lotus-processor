@@ -1,6 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val univocityParserVersion = "2.9.0"
+val junitApiVersion = "5.6.0"
+
 group = "net.nprod.onpdb"
 version = "0.4-SNAPSHOT"
 
@@ -23,6 +25,10 @@ dependencies {
 
     // Univocity is a fast TSV reader/writer
     implementation("com.univocity", "univocity-parsers", univocityParserVersion)
+    implementation("org.junit.jupiter:junit-jupiter:5.4.2")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitApiVersion")
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitApiVersion")
 }
 
 /**
@@ -57,4 +63,15 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
     archiveBaseName.set("shadow")
     archiveClassifier.set("")
     archiveVersion.set("")
+}
+
+/**
+ * Configuration of test framework
+ */
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
