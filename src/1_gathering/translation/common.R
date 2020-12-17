@@ -129,7 +129,8 @@ taxaVernacular <- left_join(taxa, vernacular) %>%
   arrange(desc(str_count(canonicalName))) %>%
   ungroup() %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
-  arrange(desc(str_count(vernacularName)))
+  arrange(desc(str_count(vernacularName))) %>% 
+  filter(canonicalName != "boa constrictor")
 
 # deleting vernacular names corresponding to generic epithets for safety reasons
 ## they are almost safe (see Cacao) but just to be on the safe side...
@@ -404,7 +405,7 @@ common2Sci <- commonSciSub %>%
     canonicalName
   ) %>%
   filter(!grepl("\\?", canonicalName)) %>%
-  filter(!grepl("\\)", vernacularName))
+  filter(!grepl("\\)", vernacularName)) %>% 
 
 # exporting
 write.table(
