@@ -61,6 +61,10 @@ fun main(args: Array<String>) {
         it.toFieldMap()
     } ?: throw Exception("Sorry can't read organism list.")
 
+    // Now we generate the dictionaries for replacement
+
+    val dics = Dictionaries()
+
     // TCM
     //
     // Here we are going to generate a list of regular expressions that are going to allow us to match TCM names and
@@ -140,7 +144,8 @@ fun main(args: Array<String>) {
     )
     outputWriter.writeHeaders(headers)
     dataCleanedOriginalOrganism.forEach { row ->
-        outputWriter.writeRow(headers.map { row.getOrDefault(it, "") })
+        if (row["organismInterim"] != "")
+            outputWriter.writeRow(headers.map { row.getOrDefault(it, "") })
     }
     outputWriter.close()
 
