@@ -405,7 +405,7 @@ common2Sci <- commonSciSub %>%
     canonicalName
   ) %>%
   filter(!grepl("\\?", canonicalName)) %>%
-  filter(!grepl("\\)", vernacularName)) %>% 
+  filter(!grepl("\\)", vernacularName))
 
 # exporting
 write.table(
