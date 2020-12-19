@@ -1,6 +1,4 @@
-#######################################################
 ####################   Functions   ####################
-#######################################################
 
 library(parallel)
 library(pbmcapply)
@@ -9,34 +7,14 @@ library(tidyverse)
 library(webchem)
 
 #######################################################
-#######################################################
-
-# pubchem2inchi <- function(i)
-# {
-#   tryCatch({
-#     cpd <-
-#       data_translated_pubchem[i, "structure_original_numerical_pubchem"]
-#     url <-
-#       paste(
-#         "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/",
-#         cpd,
-#         "/property/InChI/txt",
-#         sep = ""
-#       )
-#     url <- gsub(pattern = "\\s",
-#                 replacement = "%20",
-#                 x = url)
-#     read_html(url) %>%
-#       html_text()
-#   }
-#   , error = function(e) {
-#     NA
-#   })
-# }
-
-#######################################################
-#######################################################
-
+#' Title
+#'
+#' @param i
+#'
+#' @return
+#' @export
+#'
+#' @examples
 name2inchi_cactus <- function(i) {
   tryCatch(
     {
@@ -62,8 +40,15 @@ name2inchi_cactus <- function(i) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param x
+#'
+#' @return
+#' @export
+#'
+#' @examples
 preparing_name <- function(x) {
   x$nameCleaned <- x$structureOriginal_nominal
   x$nameCleaned <-
@@ -236,8 +221,15 @@ preparing_name <- function(x) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param i
+#'
+#' @return
+#' @export
+#'
+#' @examples
 name2inchi_cts <- function(i) {
   tryCatch(
     {
@@ -256,5 +248,4 @@ name2inchi_cts <- function(i) {
   )
 }
 
-#######################################################
 #######################################################

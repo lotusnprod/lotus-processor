@@ -1,5 +1,14 @@
 source("2_curating/2_editing/organism/functions/biocleaning.R")
 
+#' Title
+#'
+#' @param num
+#' @param organismCol
+#'
+#' @return
+#' @export
+#'
+#' @examples
 gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismOriginal") {
     inpath_organism_f <- paste(

@@ -1,6 +1,4 @@
-#######################################################
 ####################   Functions   ####################
-#######################################################
 
 library(data.table)
 library(parallel)
@@ -13,8 +11,15 @@ library(stringi)
 library(tidyverse)
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getref <- function(X) {
   tryCatch(
     {
@@ -32,8 +37,15 @@ getref <- function(X) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getref_noLimit <- function(X) {
   tryCatch(
     {
@@ -50,8 +62,15 @@ getref_noLimit <- function(X) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getref_noLimit_publishingDetails <- function(X) {
   tryCatch(
     {
@@ -68,8 +87,15 @@ getref_noLimit_publishingDetails <- function(X) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getrefPubmed <- function(X) {
   tryCatch(
     {
@@ -108,8 +134,15 @@ getrefPubmed <- function(X) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getrefDoi <- function(X) {
   tryCatch(
     {
@@ -122,8 +155,17 @@ getrefDoi <- function(X) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param data
+#' @param referenceType
+#' @param method
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getBestReference <- function(data, referenceType, method = "osa") {
   referenceColumnName <- paste("referenceOriginal",
     referenceType,
@@ -225,8 +267,17 @@ getBestReference <- function(data, referenceType, method = "osa") {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param data
+#' @param referenceType
+#' @param method
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getAllReferences <- function(data, referenceType, method = "osa") {
   referenceColumnName <- paste("referenceOriginal",
     referenceType,
@@ -352,8 +403,15 @@ getAllReferences <- function(data, referenceType, method = "osa") {
   return(tableFinal)
 }
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param X
+#'
+#' @return
+#' @export
+#'
+#' @examples
 getref_top10 <- function(X) {
   tryCatch(
     {
@@ -370,5 +428,4 @@ getref_top10 <- function(X) {
   )
 }
 
-#######################################################
 #######################################################
