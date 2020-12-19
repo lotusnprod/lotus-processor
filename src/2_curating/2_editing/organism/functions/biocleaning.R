@@ -1,7 +1,26 @@
+#' Title
+#'
+#' @param x
+#' @param n
+#'
+#' @return
+#' @export
+#'
+#' @examples
 homemadeShift <- function(x, n) {
   c(x[-(seq(n))], rep(NA, n))
 }
 
+#' Title
+#'
+#' @param gnfound
+#' @param names
+#' @param organismCol
+#'
+#' @return
+#' @export
+#'
+#' @examples
 biocleaning <- function(gnfound, names, organismCol) {
   log_debug("Biocleaning")
   log_debug("Biocleaning: finished creating dataframe")

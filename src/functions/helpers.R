@@ -1,12 +1,17 @@
-#######################################################
 ####################   Functions   ####################
-#######################################################
 
 library(tidyverse)
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param path_to_db
+#'
+#' @return
+#' @export
+#'
+#' @examples
 db_loader <- function(path_to_db) {
   db <- read_delim(
     file = gzfile(path_to_db),
@@ -19,8 +24,18 @@ db_loader <- function(path_to_db) {
 }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param x
+#' @param no_rows_per_frame
+#' @param text
+#' @param path_to_store
+#'
+#' @return
+#' @export
+#'
+#' @examples
 split_data_table <-
   function(x, no_rows_per_frame, text, path_to_store) {
     split_vec <- seq(1, nrow(x), no_rows_per_frame)
@@ -53,8 +68,18 @@ split_data_table <-
   }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param x
+#' @param no_rows_per_frame
+#' @param text
+#' @param path_to_store
+#'
+#' @return
+#' @export
+#'
+#' @examples
 split_data_table_quote <-
   function(x, no_rows_per_frame, text, path_to_store) {
     split_vec <- seq(1, nrow(x), no_rows_per_frame)
@@ -87,8 +112,16 @@ split_data_table_quote <-
   }
 
 #######################################################
-#######################################################
 
+#' Title
+#'
+#' @param x
+#' @param y
+#'
+#' @return
+#' @export
+#'
+#' @examples
 y_as_na <- function(x, y) {
   if ("factor" %in% class(x)) {
     x <- as.character(x)
@@ -98,3 +131,5 @@ y_as_na <- function(x, y) {
     no = NA
   )
 }
+
+#######################################################

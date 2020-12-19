@@ -1,5 +1,16 @@
 library(tidyverse)
 
+#' Title
+#'
+#' @param data_selected
+#' @param db
+#' @param structure_field
+#' @param reference_field
+#'
+#' @return
+#' @export
+#'
+#' @examples
 standardizing_original <- function(data_selected,
                                    db,
                                    structure_field,

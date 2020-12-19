@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param dfsel
+#' @param dic
+#'
+#' @return
+#' @export
+#'
+#' @examples
 manipulating_taxo <- function(dfsel, dic) {
   # creating variables for replacement by dictionary
   a <- paste("\\b", dic$taxaRank, "\\b", sep = "")
@@ -249,6 +258,14 @@ manipulating_taxo <- function(dfsel, dic) {
   return(df6)
 }
 
+#' Title
+#'
+#' @param dfsel
+#'
+#' @return
+#' @export
+#'
+#' @examples
 taxo_cleaning_manual <- function(dfsel) {
   inhouse_db <- dfsel
 
