@@ -1,4 +1,4 @@
-setwd(dir = "~/gitlab/opennaturalproductsdb/src")
+# setwd(dir = "~/gitlab/opennaturalproductsdb/src")
 
 library(testthat)
 library(tidyverse)
