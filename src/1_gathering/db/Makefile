@@ -123,7 +123,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz: # $(wildc
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
 
 metabolights-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz
-{EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml ${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml ${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
 
 mibig: ${INTERIM_DB_PATH}/mibig.tsv.gz

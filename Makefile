@@ -4,7 +4,7 @@ include paths.mk
 .PHONY: help docker-build docker-bash tests
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
-.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing 
+.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing  curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
@@ -71,7 +71,7 @@ ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/p
 
 curating-editing:  curating-editing-structure curating-editing-organism curating-editing-reference
 
-curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting curating-editing-structure-naming
+curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting curating-editing-structure-naming curating-editing-structure-classifying
 
 curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
 
@@ -97,6 +97,9 @@ ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz: ${SRC_CURATING_EDITING_S
 
 curating-editing-structure-naming: 
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/naming.R
+
+curating-editing-structure-classifying: 
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/np_classifier.R
 
 curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 
