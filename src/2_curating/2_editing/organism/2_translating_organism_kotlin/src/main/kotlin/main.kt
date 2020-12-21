@@ -144,13 +144,13 @@ fun main(args: Array<String>) {
     )
     outputWriter.writeHeaders(headers)
     dataCleanedOriginalOrganism.forEach { row ->
-        if (row["organismInterim"] != "")
+        if (!row["organismInterim"].isNullOrEmpty())
             outputWriter.writeRow(headers.map { row.getOrDefault(it, "") })
     }
     outputWriter.close()
 
     logger.info("Writing GNFinder files in $pathDataInterimTablesTranslatedOrganism")
-    dataCleanedOriginalOrganism.mapNotNull { it["organismInterim"] }
+    dataCleanedOriginalOrganism.filter { !it["organismInterim"].isNullOrEmpty() }
         .chunked(cut).mapIndexed { idx, chunk ->
             val number = (idx * cut + cut).toString().padStart(6, '0')
             val fileName = "$pathDataInterimTablesTranslatedOrganism/$number.tsv"
