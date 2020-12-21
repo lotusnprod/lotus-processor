@@ -7,6 +7,7 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
+library(chorddiag)
 library(collapsibleTree)
 library(data.table)
 library(ggalluvial)
