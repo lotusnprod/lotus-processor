@@ -4,7 +4,7 @@
 
 source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "test")
+mode <- Sys.getenv("MODE", unset = "full")
 
 # only for molconvert step (structures/../enriching/naming.R)
 works_locally_only <- TRUE
