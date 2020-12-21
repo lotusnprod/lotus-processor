@@ -4,8 +4,11 @@
 ## paths
 source("paths.R")
 
-## functions
-source("functions.R")
+library(Hmisc)
+library(splitstackshape)
+library(tidyverse)
+
+source("r/y_as_na.R")
 
 ##  files
 ### common names from PhenolExplorer
@@ -129,7 +132,7 @@ taxaVernacular <- left_join(taxa, vernacular) %>%
   arrange(desc(str_count(canonicalName))) %>%
   ungroup() %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
-  arrange(desc(str_count(vernacularName))) %>% 
+  arrange(desc(str_count(vernacularName))) %>%
   filter(canonicalName != "boa constrictor")
 
 # deleting vernacular names corresponding to generic epithets for safety reasons
@@ -283,6 +286,7 @@ commonSci <- commonSci %>%
     string = canonicalName,
     start = 1
   ))
+
 ## explanation
 explanation <- commonSci %>%
   filter(vernacularName == word(

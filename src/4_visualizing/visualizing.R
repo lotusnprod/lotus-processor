@@ -5,8 +5,15 @@ start <- Sys.time()
 cat("sourcing ... \n")
 cat("... paths \n")
 source("paths.R")
-cat("... functions \n")
-source("functions.R")
+
+cat("... libraries \n")
+library(collapsibleTree)
+library(data.table)
+library(ggalluvial)
+library(ggfittext)
+library(plotly)
+library(tidyverse)
+library(UpSetR)
 
 if (mode != "test") {
   cat("loading files, if running fullmode, this may take a while ... \n")
@@ -131,16 +138,44 @@ if (mode != "test") {
     ) %>%
     tibble()
 
-  cat("... structures classification \n")
+  cat("... structures classification ...\n")
+  cat("... classyfire \n")
   structureMetadata_2 <- read_delim(
     file = gzfile(
-      "../data/interim/09_structureContextualizer/classy.tsv.gz"
+      pathDataInterimDictionariesStructureDictionaryClassyfireFile
     ),
-    # dirty residue, will have to change
     delim = "\t",
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
+    select(
+      structureCleanedSmiles,
+      structureCleanedInchi,
+      structureCleanedInchikey3D,
+      structureCleaned_classyfire_1kingdom = structureCleaned_1kingdom,
+      structureCleaned_classyfire_2superclass = structureCleaned_2superclass,
+      structureCleaned_classyfire_3class = structureCleaned_3class,
+      structureCleaned_classyfire_4subclass = structureCleaned_4subclass,
+      structureCleaned_classyfire_5directParent = structureCleaned_5directParent
+    ) %>%
+    tibble()
+
+  cat("... NpClassifier \n")
+  structureMetadata_3 <- read_delim(
+    file = gzfile(
+      pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+    ),
+    delim = "\t",
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+    select(
+      structureCleanedSmiles = smiles,
+      structureCleaned_npclassifier_1pathway = pathway,
+      structureCleaned_npclassifier_2superclass = superclass,
+      structureCleaned_npclassifier_3class = class,
+    ) %>%
+    distinct() %>%
     tibble()
 
   cat("joining DNP and openDB \n")
@@ -343,9 +378,14 @@ if (mode != "test") {
   dev.off()
 
   cat("adding metadata for more detailed analysis ... \n")
-  cat("... inhouse DB \n")
+  cat("... inhouse DB ... \n")
+  cat("... classyfire \n")
   inhouseDbMeta <- left_join(inhouseDb, structureMetadata_2)
 
+  cat("... npclassifier \n")
+  inhouseDbMeta <- left_join(inhouseDbMeta, structureMetadata_3)
+
+  cat("... organism \n")
   inhouseDbMeta <- left_join(inhouseDbMeta, organismMetadata) %>%
     arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
     arrange(desc(organismCleaned_dbTaxo_7species)) %>%
@@ -363,9 +403,14 @@ if (mode != "test") {
       .keep_all = TRUE
     )
 
-  cat("... open DB \n")
+  cat("... open DB ... \n")
+  cat("... classyfire \n")
   openDbMeta <- left_join(openDb, structureMetadata_2)
 
+  cat("... npclassifier \n")
+  openDbMeta <- left_join(openDbMeta, structureMetadata_3)
+
+  cat("... organism \n")
   openDbMeta <- left_join(openDbMeta, organismMetadata) %>%
     arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
     arrange(desc(organismCleaned_dbTaxo_7species)) %>%
@@ -384,17 +429,17 @@ if (mode != "test") {
     )
 
   chemo <- inhouseDbMeta %>%
-    filter(!is.na(structureCleaned_2superclass)) %>%
+    filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
     distinct(
       structureCleanedInchikey2D,
-      structureCleaned_2superclass
+      structureCleaned_classyfire_2superclass
     )
 
   chemo3D <- inhouseDbMeta %>%
-    filter(!is.na(structureCleaned_2superclass)) %>%
+    filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
     distinct(
       structureCleanedInchikey3D,
-      structureCleaned_2superclass
+      structureCleaned_classyfire_2superclass
     )
 
   bio <- inhouseDbMeta %>%
@@ -671,8 +716,8 @@ if (mode != "test") {
           distinct(database)
       ))
       mostsuperclasses <- inhouseDb_most_organism_2plot_wide %>%
-        filter(!is.na(structureCleaned_2superclass)) %>%
-        count(structureCleaned_2superclass) %>%
+        filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
+        count(structureCleaned_classyfire_2superclass) %>%
         arrange(desc(n)) %>%
         head(10)
       upset(
@@ -683,7 +728,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -704,7 +749,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -724,7 +769,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -743,7 +788,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -761,7 +806,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -778,7 +823,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -795,7 +840,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -810,7 +855,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1],
@@ -824,7 +869,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(
                 mostsuperclasses[1, 1],
                 mostsuperclasses[2, 1]
@@ -837,7 +882,7 @@ if (mode != "test") {
           list(
             query = elements,
             params = list(
-              "structureCleaned_2superclass",
+              "structureCleaned_classyfire_2superclass",
               c(mostsuperclasses[1, 1])
             ),
             active = TRUE,
@@ -963,15 +1008,15 @@ if (mode != "test") {
   cat("getting list of most studied chemical subclasses for exploration \n")
   inhouseDb_most_chemical_subclass <-
     inhouseDbMeta %>%
-    filter(!is.na(structureCleaned_4subclass)) %>%
-    count(structureCleaned_4subclass) %>%
+    filter(!is.na(structureCleaned_classyfire_4subclass)) %>%
+    count(structureCleaned_classyfire_4subclass) %>%
     arrange(desc(n))
 
   cat("defining drawing function for most chemical subclasses ... \n")
   getGraphChemicalClass <- function(subclass) {
     inhouseDb_most_chemical_class_2plot <-
       inhouseDbMeta %>%
-      filter(structureCleaned_4subclass == subclass) %>%
+      filter(structureCleaned_classyfire_4subclass == subclass) %>%
       distinct(structureCleanedInchikey2D,
         organismCleaned,
         database,
@@ -1007,7 +1052,7 @@ if (mode != "test") {
 
     dbnumostchemicalclass <- as.numeric(nrow(
       inhouseDbMeta %>%
-        filter(structureCleaned_4subclass == subclass) %>%
+        filter(structureCleaned_classyfire_4subclass == subclass) %>%
         distinct(database)
     ))
 
@@ -1270,7 +1315,7 @@ if (mode != "test") {
     distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
   mostsuperclass <- inhouseDb_kingdoms_wide %>%
-    count(structureCleaned_2superclass) %>%
+    count(structureCleaned_classyfire_2superclass) %>%
     arrange(desc(n)) %>%
     head(10)
 
@@ -1282,7 +1327,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1303,7 +1348,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1323,7 +1368,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1342,7 +1387,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1360,7 +1405,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1377,7 +1422,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1394,7 +1439,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1409,7 +1454,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1],
@@ -1423,7 +1468,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass[1, 1],
             mostsuperclass[2, 1]
@@ -1436,7 +1481,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(mostsuperclass[1, 1])
         ),
         active = TRUE,
@@ -1505,7 +1550,7 @@ if (mode != "test") {
     distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
   mostsuperclass2 <- inhouseDb_phyla_wide %>%
-    count(structureCleaned_2superclass) %>%
+    count(structureCleaned_classyfire_2superclass) %>%
     arrange(desc(n)) %>%
     head(10)
 
@@ -1517,7 +1562,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1538,7 +1583,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1558,7 +1603,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1577,7 +1622,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1595,7 +1640,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1612,7 +1657,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1629,7 +1674,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1644,7 +1689,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1],
@@ -1658,7 +1703,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass2[1, 1],
             mostsuperclass2[2, 1]
@@ -1671,7 +1716,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(mostsuperclass2[1, 1])
         ),
         active = TRUE,
@@ -1740,7 +1785,7 @@ if (mode != "test") {
     distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
   mostsuperclass3 <- inhouseDb_classes_wide %>%
-    count(structureCleaned_2superclass) %>%
+    count(structureCleaned_classyfire_2superclass) %>%
     arrange(desc(n)) %>%
     head(10)
 
@@ -1752,7 +1797,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1773,7 +1818,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1793,7 +1838,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1812,7 +1857,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1830,7 +1875,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1847,7 +1892,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1864,7 +1909,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1879,7 +1924,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1],
@@ -1893,7 +1938,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(
             mostsuperclass3[1, 1],
             mostsuperclass3[2, 1]
@@ -1906,7 +1951,7 @@ if (mode != "test") {
       list(
         query = elements,
         params = list(
-          "structureCleaned_2superclass",
+          "structureCleaned_classyfire_2superclass",
           c(mostsuperclass3[1, 1])
         ),
         active = TRUE,
@@ -2193,8 +2238,6 @@ if (mode != "test") {
     dev.off()
   })
 
-  detach("package:Hmisc", unload = TRUE)
-
   try({
     cat("drawing interactive biological tree \n")
     data4tree_bio <- openDbMeta %>%
@@ -2252,31 +2295,31 @@ if (mode != "test") {
   try({
     cat("drawing interactive chemical tree \n")
     data4tree_chemo <- openDbMeta %>%
-      filter(!is.na(structureCleaned_5directParent)) %>%
+      filter(!is.na(structureCleaned_classyfire_5directParent)) %>%
       filter(
-        !is.na(structureCleaned_1kingdom) &
-          !is.na(structureCleaned_2superclass) &
-          !is.na(structureCleaned_3class) &
-          !is.na(structureCleaned_4subclass) &
-          !is.na(structureCleaned_5directParent)
+        !is.na(structureCleaned_classyfire_1kingdom) &
+          !is.na(structureCleaned_classyfire_2superclass) &
+          !is.na(structureCleaned_classyfire_3class) &
+          !is.na(structureCleaned_classyfire_4subclass) &
+          !is.na(structureCleaned_classyfire_5directParent)
       ) %>%
-      distinct(structureCleaned_5directParent, .keep_all = TRUE) %>%
+      distinct(structureCleaned_classyfire_5directParent, .keep_all = TRUE) %>%
       group_by(
-        structureCleaned_1kingdom,
-        structureCleaned_2superclass,
-        structureCleaned_3class,
-        structureCleaned_4subclass,
-        structureCleaned_5directParent
+        structureCleaned_classyfire_1kingdom,
+        structureCleaned_classyfire_2superclass,
+        structureCleaned_classyfire_3class,
+        structureCleaned_classyfire_4subclass,
+        structureCleaned_classyfire_5directParent
       ) %>%
       summarize("percentage of parent" = n())
     Tree_chemo <- collapsibleTreeSummary(
       df = data4tree_chemo,
       hierarchy = c(
-        "structureCleaned_1kingdom",
-        "structureCleaned_2superclass",
-        "structureCleaned_3class",
-        "structureCleaned_4subclass",
-        "structureCleaned_5directParent"
+        "structureCleaned_classyfire_1kingdom",
+        "structureCleaned_classyfire_2superclass",
+        "structureCleaned_classyfire_3class",
+        "structureCleaned_classyfire_4subclass",
+        "structureCleaned_classyfire_5directParent"
       ),
       root = "root",
       nodeSize = NULL,
@@ -2511,7 +2554,7 @@ if (mode != "test") {
     top_big_chord_bio <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_1kingdom) &
-          !is.na(structureCleaned_2superclass)
+          !is.na(structureCleaned_classyfire_2superclass)
       ) %>%
       group_by(organismCleaned_dbTaxo_1kingdom) %>%
       add_count() %>%
@@ -2524,23 +2567,23 @@ if (mode != "test") {
     top_big_chord_chemo <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_1kingdom) &
-          !is.na(structureCleaned_2superclass)
+          !is.na(structureCleaned_classyfire_2superclass)
       ) %>%
       filter(organismCleaned_dbTaxo_1kingdom %in% top_big_chord_bio) %>%
-      group_by(structureCleaned_2superclass) %>%
+      group_by(structureCleaned_classyfire_2superclass) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_2superclass) %>%
+      distinct(structureCleaned_classyfire_2superclass) %>%
       head(12)
     top_big_chord_chemo <-
-      top_big_chord_chemo$structureCleaned_2superclass
+      top_big_chord_chemo$structureCleaned_classyfire_2superclass
     chord_big <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_1kingdom",
-      chemical_level = "structureCleaned_2superclass",
+      chemical_level = "structureCleaned_classyfire_2superclass",
       chemical_filter_value = top_big_chord_chemo,
-      chemical_filter_level = "structureCleaned_2superclass",
+      chemical_filter_level = "structureCleaned_classyfire_2superclass",
       biological_filter_value = top_big_chord_bio,
       biological_filter_level = "organismCleaned_dbTaxo_1kingdom",
       palette = paired_palette_med
@@ -2555,7 +2598,7 @@ if (mode != "test") {
     cat("... drawing medium chord diagram \n")
     top_organism_med <- openDbMeta %>%
       filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
-      filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
+      filter(structureCleaned_classyfire_2superclass == "Alkaloids and derivatives") %>%
       group_by(organismCleaned_dbTaxo_5family) %>%
       add_count() %>%
       ungroup() %>%
@@ -2566,22 +2609,23 @@ if (mode != "test") {
       top_organism_med$organismCleaned_dbTaxo_5family
     top_chemo_med <- openDbMeta %>%
       filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
-      filter(structureCleaned_2superclass == "Alkaloids and derivatives") %>%
-      filter(!is.na(structureCleaned_3class)) %>%
+      filter(structureCleaned_classyfire_2superclass == "Alkaloids and derivatives") %>%
+      filter(!is.na(structureCleaned_classyfire_3class)) %>%
       filter(organismCleaned_dbTaxo_5family %in% top_organism_med) %>%
-      group_by(structureCleaned_3class) %>%
+      group_by(structureCleaned_classyfire_3class) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_3class) %>%
+      distinct(structureCleaned_classyfire_3class) %>%
       head(18)
-    top_chemo_med <- top_chemo_med$structureCleaned_3class
+    top_chemo_med <-
+      top_chemo_med$structureCleaned_classyfire_3class
     chord_med <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_5family",
-      chemical_level = "structureCleaned_3class",
+      chemical_level = "structureCleaned_classyfire_3class",
       chemical_filter_value = top_chemo_med,
-      chemical_filter_level = "structureCleaned_3class",
+      chemical_filter_level = "structureCleaned_classyfire_3class",
       biological_filter_value = top_organism_med,
       biological_filter_level = "organismCleaned_dbTaxo_5family",
       palette = paired_palette_30
@@ -2596,7 +2640,7 @@ if (mode != "test") {
     cat("... drawing small chord diagram \n")
     top_organism_sma <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
@@ -2610,25 +2654,26 @@ if (mode != "test") {
       top_organism_sma$organismCleaned_dbTaxo_7species
     top_chemo_sma <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_6genus == "Erythroxylum") %>%
       filter(organismCleaned_dbTaxo_7species %in% top_organism_sma) %>%
-      filter(!is.na(structureCleaned_5directParent)) %>%
-      group_by(structureCleaned_5directParent) %>%
+      filter(!is.na(structureCleaned_classyfire_5directParent)) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent) %>%
+      distinct(structureCleaned_classyfire_5directParent) %>%
       head(12)
-    top_chemo_sma <- top_chemo_sma$structureCleaned_5directParent
+    top_chemo_sma <-
+      top_chemo_sma$structureCleaned_classyfire_5directParent
     chord_sma <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_sma,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_sma,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_big
@@ -2643,7 +2688,7 @@ if (mode != "test") {
     cat("... drawing Ranunculaceae chord diagram \n")
     top_organism_ranunculaceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
@@ -2657,26 +2702,26 @@ if (mode != "test") {
       top_organism_ranunculaceae$organismCleaned_dbTaxo_7species
     top_chemo_ranunculaceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Ranunculaceae") %>%
       filter(organismCleaned_dbTaxo_7species %in% top_organism_ranunculaceae) %>%
-      filter(!is.na(structureCleaned_5directParent)) %>%
-      group_by(structureCleaned_5directParent) %>%
+      filter(!is.na(structureCleaned_classyfire_5directParent)) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent) %>%
+      distinct(structureCleaned_classyfire_5directParent) %>%
       head(12)
     top_chemo_ranunculaceae <-
-      top_chemo_ranunculaceae$structureCleaned_5directParent
+      top_chemo_ranunculaceae$structureCleaned_classyfire_5directParent
     chord_ranunculaceae <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_ranunculaceae,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_ranunculaceae,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_big
@@ -2691,7 +2736,7 @@ if (mode != "test") {
     cat("... drawing Papaveraceae chord diagram \n")
     top_organism_papaveraceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
@@ -2705,26 +2750,26 @@ if (mode != "test") {
       top_organism_papaveraceae$organismCleaned_dbTaxo_7species
     top_chemo_papaveraceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Papaveraceae") %>%
       filter(organismCleaned_dbTaxo_7species %in% top_organism_papaveraceae) %>%
-      filter(!is.na(structureCleaned_5directParent)) %>%
-      group_by(structureCleaned_5directParent) %>%
+      filter(!is.na(structureCleaned_classyfire_5directParent)) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent) %>%
+      distinct(structureCleaned_classyfire_5directParent) %>%
       head(12)
     top_chemo_papaveraceae <-
-      top_chemo_papaveraceae$structureCleaned_5directParent
+      top_chemo_papaveraceae$structureCleaned_classyfire_5directParent
     chord_papaveraceae <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_papaveraceae,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_papaveraceae,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_big
@@ -2739,7 +2784,7 @@ if (mode != "test") {
     cat("... drawing Gentianaceae chord diagram \n")
     top_organism_gentianaceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
@@ -2753,11 +2798,11 @@ if (mode != "test") {
       top_organism_gentianaceae$organismCleaned_dbTaxo_7species
     top_chemo_gentianaceae <- openDbMeta %>%
       filter(
-        !is.na(structureCleaned_5directParent) &
+        !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
-      filter(structureCleaned_5directParent == "Xanthones") %>%
+      filter(structureCleaned_classyfire_5directParent == "Xanthones") %>%
       filter(organismCleaned_dbTaxo_7species %in% top_organism_gentianaceae) %>%
       filter(!is.na(structureCleanedInchikey2D)) %>%
       group_by(structureCleanedInchikey2D) %>%
@@ -2790,7 +2835,7 @@ if (mode != "test") {
     top_organism_06 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       group_by(organismCleaned_dbTaxo_7species) %>%
@@ -2804,25 +2849,26 @@ if (mode != "test") {
     top_chemo_06 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
-          !is.na(structureCleaned_5directParent)
+          !is.na(structureCleaned_classyfire_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent)
       ) %>%
       filter(organismCleaned %in% top_organism_06) %>%
-      group_by(structureCleaned_5directParent) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent,
+      distinct(structureCleaned_classyfire_5directParent,
         .keep_all = TRUE
       ) %>%
       head(6)
-    top_chemo_06 <- top_chemo_06$structureCleaned_5directParent
+    top_chemo_06 <-
+      top_chemo_06$structureCleaned_classyfire_5directParent
     chord_06 <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_06,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_06,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_sma
@@ -2838,7 +2884,7 @@ if (mode != "test") {
     top_organism_12 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       group_by(organismCleaned_dbTaxo_7species) %>%
@@ -2852,25 +2898,26 @@ if (mode != "test") {
     top_chemo_12 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
-          !is.na(structureCleaned_5directParent)
+          !is.na(structureCleaned_classyfire_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent)
       ) %>%
       filter(organismCleaned %in% top_organism_12) %>%
-      group_by(structureCleaned_5directParent) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent,
+      distinct(structureCleaned_classyfire_5directParent,
         .keep_all = TRUE
       ) %>%
       head(12)
-    top_chemo_12 <- top_chemo_12$structureCleaned_5directParent
+    top_chemo_12 <-
+      top_chemo_12$structureCleaned_classyfire_5directParent
     chord_12 <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_12,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_12,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_big
@@ -2886,7 +2933,7 @@ if (mode != "test") {
     top_organism_24 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent) &
           !is.na(organismCleaned_dbTaxo_7species)
       ) %>%
       group_by(organismCleaned_dbTaxo_7species) %>%
@@ -2900,25 +2947,26 @@ if (mode != "test") {
     top_chemo_24 <- openDbMeta %>%
       filter(
         !is.na(organismCleaned_dbTaxo_7species) &
-          !is.na(structureCleaned_5directParent) &
-          !is.na(structureCleaned_5directParent)
+          !is.na(structureCleaned_classyfire_5directParent) &
+          !is.na(structureCleaned_classyfire_5directParent)
       ) %>%
       filter(organismCleaned %in% top_organism_24) %>%
-      group_by(structureCleaned_5directParent) %>%
+      group_by(structureCleaned_classyfire_5directParent) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleaned_5directParent,
+      distinct(structureCleaned_classyfire_5directParent,
         .keep_all = TRUE
       ) %>%
       head(24)
-    top_chemo_24 <- top_chemo_24$structureCleaned_5directParent
+    top_chemo_24 <-
+      top_chemo_24$structureCleaned_classyfire_5directParent
     chord_24 <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleaned_5directParent",
+      chemical_level = "structureCleaned_classyfire_5directParent",
       chemical_filter_value = top_chemo_24,
-      chemical_filter_level = "structureCleaned_5directParent",
+      chemical_filter_level = "structureCleaned_classyfire_5directParent",
       biological_filter_value = top_organism_24,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_meg

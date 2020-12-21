@@ -2,9 +2,9 @@
 ##################################   Paths   ##################################
 ###############################################################################
 
-source("functions/database.R")
+source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "test")
 
 # only for molconvert step (structures/../enriching/naming.R)
 works_locally_only <- TRUE
@@ -1064,6 +1064,29 @@ pathDataInterimDictionariesStructureAntiDictionary <-
 pathDataInterimDictionariesStructureMetadata <-
   file.path(pathDataInterimDictionariesStructure, "metadata.tsv.gz")
 
+pathDataInterimDictionariesStructureDictionaryClassyfire <-
+  file.path(
+    pathDataInterimDictionariesFix,
+    "structure/classyfire"
+  )
+
+pathDataInterimDictionariesStructureDictionaryClassyfireFile <-
+  file.path(
+    pathDataInterimDictionariesStructureDictionaryClassyfire,
+    "classy.tsv.gz"
+  )
+
+pathDataInterimDictionariesStructureDictionaryNpclassifier <-
+  file.path(
+    pathDataInterimDictionariesFix,
+    "structure/npclassifier"
+  )
+
+pathDataInterimDictionariesStructureDictionaryNpclassifierFile <-
+  file.path(
+    pathDataInterimDictionariesStructureDictionaryNpclassifier,
+    "smiles_np_classified.tsv.gz"
+  )
 
 ##### reference
 pathDataInterimDictionariesReference <-
@@ -1459,9 +1482,6 @@ pathDataInterimTablesCleanedStructureSmiles_4 <-
 pathDataInterimTablesCleanedStructureNamed <-
   file.path(pathDataInterimTablesCleanedStructure, "named.tsv.gz")
 
-pathDataInterimTablesCleanedStructureFileClassified <-
-  file.path(pathDataInterimTablesCleanedStructure, "classified.tsv.gz")
-
 ## ref
 pathDataInterimTablesCleanedReference <-
   file.path(pathDataInterimTablesCleaned, "reference")
@@ -1580,32 +1600,32 @@ pathDataInterimTablesAnalysedSampleKnapsack <-
 ## dirty for the moment
 if (mode == "full") {
   pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_full.sh"
+    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh"
 }
 
 if (mode == "min") {
   pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_min.sh"
+    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh"
 }
 
 if (mode == "test") {
   pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/originalGnfinderLauncher_test.sh"
+    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
 }
 
 if (mode == "full") {
   pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_full.sh"
+    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh"
 }
 
 if (mode == "min") {
   pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_min.sh"
+    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh"
 }
 
 if (mode == "test") {
   pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/subscripts/shell/translatedGnfinderLauncher_test.sh"
+    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 }
 
 pathTests <- file.path(pathDataInterimTablesOriginal, "tests.tsv")
