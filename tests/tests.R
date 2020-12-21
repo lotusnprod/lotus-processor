@@ -1,7 +1,9 @@
+setwd(dir = "~/gitlab/opennaturalproductsdb/src")
+
 library(testthat)
 library(tidyverse)
 source("paths.R")
-source("functions/log.R")
+source("r/log.R")
 
 #' Check if taxon is attributed to the right kingdom
 #'
@@ -100,7 +102,6 @@ cleanedStructureTableFull <- read_delim(
     structureCleanedInchi = inchiSanitized,
     structureCleanedInchikey3D = inchikeySanitized,
     structureCleaned_inchikey2D = shortikSanitized,
-    structureCleaned_validatorLog = validatorLog,
     structureCleaned_molecularFormula = formulaSanitized,
     structureCleaned_exactMass = exactmassSanitized,
     structureCleaned_xlogp = xlogpSanitized,
@@ -122,6 +123,7 @@ referenceTableFull <- read_delim(
   trim_ws = TRUE
 ) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
+  select(-referenceCleaned_score_crossref) %>%
   tibble()
 
 log_debug("joining structures")
@@ -149,6 +151,7 @@ structureFullExpectation <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  select(-structureCleaned_validatorLog) %>%
   tibble()
 
 log_debug("... references")
@@ -159,6 +162,7 @@ referenceTableFullExpectation <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  select(-referenceCleaned_score_crossref) %>%
   tibble()
 
 log_debug("testing ...")

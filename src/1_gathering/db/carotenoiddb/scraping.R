@@ -2,8 +2,7 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/parallel.R")
+source("r/parallel.R")
 
 library(pbmcapply)
 library(parallel)

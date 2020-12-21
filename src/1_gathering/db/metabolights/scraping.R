@@ -2,7 +2,7 @@
 
 # loading paths
 source("paths.R")
-source("functions/parallel.R")
+source("r/parallel.R")
 
 library(dplyr)
 library(pbmcapply)
@@ -40,11 +40,12 @@ getmetabolights <- function(X) {
     {
       cd_id <- X
       url_id <- paste(url, cd_id, sep = "")
-      destfile <- paste(pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
-        cd_id,
-        ".json",
-        sep = ""
-      )
+      destfile <-
+        paste(pathDataExternalDbSourceMetabolightsStudiesScrapedDir,
+          cd_id,
+          ".json",
+          sep = ""
+        )
       text <- read_html(url_id) %>%
         html_text()
     },

@@ -2,8 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/standardizing.R")
+source("r/y_as_na.R")
+source("r/standardizing_original.R")
 
 library(gdata)
 library(splitstackshape)

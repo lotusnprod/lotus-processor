@@ -2,8 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/standardizing.R")
+source("r/database.R")
+source("r/standardizing_original.R")
 
 library(Hmisc)
 library(tidyverse)
@@ -31,7 +31,8 @@ data_selected <- data_original %>%
     reference_publishingDetails = Publisher
   )
 
-data_selected$biologicalsource <- capitalize(tolower(data_selected$biologicalsource))
+data_selected$biologicalsource <-
+  capitalize(tolower(data_selected$biologicalsource))
 
 # standardizing
 data_standard <-

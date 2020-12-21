@@ -6,8 +6,8 @@ cat("sourcing ... \n")
 cat("... paths \n")
 source("paths.R")
 
-cat("... functions \n")
-source("functions.R")
+cat("... libraries \n")
+library(tidyverse)
 
 cat("loading ... \n")
 cat("... validated db, if running fullmode, this may take a while \n")

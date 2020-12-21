@@ -2,9 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/parallel.R")
-source("functions/standardizing.R")
+source("r/parallel.R")
+source("r/standardizing_original.R")
 
 library(data.table)
 library(splitstackshape) # provides cSplit

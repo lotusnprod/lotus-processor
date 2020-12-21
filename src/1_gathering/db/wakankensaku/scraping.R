@@ -2,8 +2,7 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/parallel.R")
+source("r/parallel.R")
 
 library(pbmcapply)
 library(parallel)
@@ -15,7 +14,8 @@ library(tidyverse) # provides pivot_wider
 # get paths
 database <- databases$get("wakankensaku")
 
-url <- "https://wakankensaku.inm.u-toyama.ac.jp/wiki/Persist:CompoundList"
+url <-
+  "https://wakankensaku.inm.u-toyama.ac.jp/wiki/Persist:CompoundList"
 
 WAKANKENSAKU <- read_html(url) %>%
   xml_child(2) %>%

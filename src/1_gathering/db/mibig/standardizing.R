@@ -2,9 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/standardizing.R")
-source("functions/parallel.R")
+source("r/standardizing_original.R")
+source("r/parallel.R")
 
 library(jsonlite)
 library(pbmcapply)

@@ -4,8 +4,17 @@
 ## paths
 source("paths.R")
 
+library(Hmisc)
+library(readxl)
+library(splitstackshape)
+library(stringi)
+library(tidyverse)
+
 ## functions
-source("functions.R")
+source("r/database.R")
+source("r/y_as_na.R")
+source("r/tcm_cleaning.R")
+source("r/tcm_inverting.R")
 
 ## files
 ### dictionary from TMMC

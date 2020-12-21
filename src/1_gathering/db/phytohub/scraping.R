@@ -2,8 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("functions/helpers.R")
-source("functions/parallel.R")
+source("r/y_as_na.R")
+source("r/parallel.R")
 
 library(dplyr)
 library(pbmcapply)
