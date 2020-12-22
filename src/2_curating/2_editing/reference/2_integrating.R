@@ -204,7 +204,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("...  cleaned organisms \n")
 }
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  dataCleanedOrganismManipulated <- read_delim(
+  dataCleanedOrganismManipulated_old <- read_delim(
     file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -216,6 +216,26 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       organismDetected
     ) %>%
     mutate_all(as.character)
+
+  dataCleanedOrganismManipulated_new <- read_delim(
+    file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+    distinct(
+      organismOriginal,
+      organismDetected
+    ) %>%
+    mutate_all(as.character)
+
+  dataCleanedOrganismManipulated <-
+    bind_rows(
+      dataCleanedOrganismManipulated_old,
+      dataCleanedOrganismManipulated_new
+    ) %>%
+    distinct()
 }
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {

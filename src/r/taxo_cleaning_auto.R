@@ -7,7 +7,7 @@
 #'
 #' @examples
 taxo_cleaning_auto <- function(dfsel) {
-  cat("cleaning aberrant taxa \n")
+  cat("cleaning inconsistent taxa \n")
   df1_a <- dfsel %>%
     distinct(
       organismDbTaxo,
@@ -15,7 +15,7 @@ taxo_cleaning_auto <- function(dfsel) {
       organism_5_family,
       organism_6_genus,
       organism_7_species,
-      organism_8_variety,
+      # organism_8_variety,
       .keep_all = TRUE
     ) %>%
     group_by(organismDbTaxo, organism_5_family, organism_6_genus) %>% # intraDB consistency
@@ -114,8 +114,8 @@ taxo_cleaning_auto <- function(dfsel) {
 
   cat("cleaning duplicate upstream taxa \n")
   df4 <- df3_c %>%
-    group_by(organismOriginal, organism_7_species) %>%
-    fill(organism_8_variety, .direction = "downup") %>%
+    # group_by(organismOriginal, organism_7_species) %>%
+    # fill(organism_8_variety, .direction = "downup") %>%
     group_by(organismOriginal, organism_6_genus) %>%
     fill(organism_7_species, .direction = "downup") %>%
     group_by(organismOriginal, organism_5_family) %>%
@@ -131,21 +131,9 @@ taxo_cleaning_auto <- function(dfsel) {
     group_by(organismOriginal) %>%
     fill(organism_1_kingdom, .direction = "downup") %>%
     ungroup() %>%
-    mutate(organismCleanedBis = as.character(apply(.[7:15], 1, function(x) {
+    mutate(organismCleanedBis = apply(.[, 10:16], 1, function(x) {
       tail(na.omit(x), 1)
-    })))
-
-  df4$organismCleanedBis <-
-    y_as_na(
-      x = df4$organismCleanedBis,
-      y = "character(0)"
-    )
-
-  df4$organismCleanedBis <-
-    y_as_na(
-      x = df4$organismCleanedBis,
-      y = "NA"
-    )
+    }))
 
   df5 <- df4 %>%
     filter(organismCleaned == organismCleanedBis) %>%

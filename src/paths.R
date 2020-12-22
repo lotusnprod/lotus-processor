@@ -1387,6 +1387,14 @@ pathDataInterimTablesTranslatedStructureSmiles <-
 pathDataInterimTablesTranslatedStructureNominal <-
   file.path(pathDataInterimTablesTranslatedStructure, "nominal.tsv.gz")
 
+### nominal
+pathDataInterimTablesTranslatedStructureNominal_opsin <-
+  file.path(pathDataInterimTablesTranslatedStructure, "nominal_opsin.tsv.gz")
+
+### nominal
+pathDataInterimTablesTranslatedStructureNominal_cactus <-
+  file.path(pathDataInterimTablesTranslatedStructure, "nominal_cactus.tsv.gz")
+
 ### prepared_1
 pathDataInterimTablesTranslatedStructurePrepared_1 <-
   file.path(

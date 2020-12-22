@@ -90,6 +90,21 @@ dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
 
 dataInterim <- left_join(dataPreparedNames, dataInterim)
 
+cat("exporting interim ... \n")
+cat(pathDataInterimTablesTranslatedStructureNominal_opsin, "\n")
+write.table(
+  x = dataInterim,
+  file = gzfile(
+    description = pathDataInterimTablesTranslatedStructureNominal_opsin,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
 dataForCactus <- dataInterim %>%
   filter(is.na(inchiNominal_opsin)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
@@ -108,7 +123,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
+      mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
@@ -139,6 +154,21 @@ dataInterim_2 <- left_join(
   dataTranslatedNominal_cactus
 )
 
+cat("exporting interim ... \n")
+cat(pathDataInterimTablesTranslatedStructureNominal_cactus, "\n")
+write.table(
+  x = dataInterim_2,
+  file = gzfile(
+    description = pathDataInterimTablesTranslatedStructureNominal_cactus,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
 dataForCTS <- dataInterim_2 %>%
   filter(is.na(inchiNominal_opsin) & is.na(inchiNominal_cactus)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
@@ -157,7 +187,7 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
+      mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE

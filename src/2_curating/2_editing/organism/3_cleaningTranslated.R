@@ -8,7 +8,6 @@ source("paths.R")
 
 cat("... functions \n")
 source("r/log.R")
-source("r/manipulating_taxo.R")
 source("r/gnfinder_cleaning.R")
 
 cat("loading ... \n")
@@ -199,42 +198,10 @@ if (length != 0) {
     select(-n)
 }
 
-cat("manipulating taxonomic levels \n")
-if (length != 0 &
-  nrow(dataCleanedOrganism) != 0) {
-  dataCleanedOrganismManipulated <-
-    manipulating_taxo(
-      dfsel = dataCleanedOrganism,
-      dic = taxaRanksDictionary
-    )
-}
-
-if (length == 0 |
-  nrow(dataCleanedOrganism) == 0) {
-  dataCleanedOrganismManipulated <- data.frame() %>%
-    mutate(
-      organismOriginal = NA,
-      organismCleaned = NA,
-      organismDbTaxo = NA,
-      organsimDbTaxoQuality = NA,
-      organismTaxonIds = NA,
-      organismTaxonRanks = NA,
-      organismTaxonomy = NA,
-      organism_1_kingdom = NA,
-      organism_2_phylum = NA,
-      organism_3_class = NA,
-      organism_4_order = NA,
-      organism_5_family = NA,
-      organism_6_genus = NA,
-      organism_7_species = NA,
-      organism_8_variety = NA
-    )
-}
-
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismTranslatedTable, "\n")
 write.table(
-  x = dataCleanedOrganismManipulated,
+  x = dataCleanedOrganism,
   file = gzfile(
     description = pathDataInterimTablesCleanedOrganismTranslatedTable,
     compression = 9,
