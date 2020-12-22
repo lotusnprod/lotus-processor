@@ -11,6 +11,7 @@ source("r/log.R")
 source("r/y_as_na.R")
 source("r/manipulating_taxo.R")
 source("r/taxo_cleaning_auto.R")
+source("r/rank_order.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -75,18 +76,6 @@ if (nrow(dataCleanedOrganism) == 0) {
       # organism_8_variety_id = NA
     )
 }
-
-rank_order <-
-  c(
-    "variety",
-    "species",
-    "genus",
-    "family",
-    "order",
-    "class",
-    "phylum",
-    "kingdom"
-  )
 
 dataCleanedOrganismManipulated <-
   dataCleanedOrganismManipulated[order(match(
