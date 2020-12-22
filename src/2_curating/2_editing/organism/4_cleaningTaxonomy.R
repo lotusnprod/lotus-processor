@@ -9,6 +9,7 @@ source("paths.R")
 cat("... functions \n")
 source("r/log.R")
 source("r/y_as_na.R")
+source("r/manipulating_taxo.R")
 source("r/taxo_cleaning_auto.R")
 
 cat("loading ... \n")
@@ -18,41 +19,70 @@ library(tidyverse)
 log_debug(" Step 4")
 cat("... files ... \n")
 cat("... cleaned organisms \n")
-dataCleanedOrganismManipulated <- read_delim(
+dataCleanedOrganism <- read_delim(
   file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedTable),
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE
 ) %>%
-  select(everything(), organismDetected = organismCleaned) %>%
-  relocate(organismDetected, .after = organismTaxonomy) %>%
   distinct()
 
-dataCuratedOrganism <- dataCleanedOrganismManipulated %>%
-  mutate(organismCleaned = as.character(apply(dataCleanedOrganismManipulated[7:15], 1, function(x) {
-    tail(na.omit(x), 1)
-  })))
+cat(" ... taxa ranks dictionary \n")
+taxaRanksDictionary <- read_delim(
+  file = pathDataInterimDictionariesTaxaRanks,
+  delim = "\t",
+  escape_double = FALSE,
+  trim_ws = TRUE
+)
 
-dataCuratedOrganism$organismCleaned <-
-  y_as_na(
-    x = dataCuratedOrganism$organismCleaned,
-    y = "character(0)"
-  )
+cat("manipulating taxonomic levels \n")
+if (nrow(dataCleanedOrganism) != 0) {
+  dataCleanedOrganismManipulated <-
+    manipulating_taxo(
+      dfsel = dataCleanedOrganism,
+      dic = taxaRanksDictionary
+    )
+}
 
-dataCuratedOrganism$organismCleaned <-
-  y_as_na(
-    x = dataCuratedOrganism$organismCleaned,
-    y = "NA"
-  )
+if (nrow(dataCleanedOrganism) == 0) {
+  dataCleanedOrganismManipulated <- data.frame() %>%
+    mutate(
+      organismOriginal = NA,
+      organismDetected = NA,
+      organismCleaned = NA,
+      organismCleanedId = NA,
+      organismDbTaxo = NA,
+      organismDbTaxoQuality = NA,
+      organismTaxonIds = NA,
+      organismTaxonRanks = NA,
+      organismTaxonomy = NA,
+      organism_1_kingdom = NA,
+      organism_2_phylum = NA,
+      organism_3_class = NA,
+      organism_4_order = NA,
+      organism_5_family = NA,
+      organism_6_genus = NA,
+      organism_7_species = NA,
+      organism_1_kingdom_id = NA,
+      organism_2_phylum_id = NA,
+      organism_3_class_id = NA,
+      organism_4_order_id = NA,
+      organism_5_family_id = NA,
+      organism_6_genus_id = NA,
+      organism_7_species_id = NA
+    )
+}
 
 dataCuratedOrganismAuto <-
-  taxo_cleaning_auto(dfsel = dataCuratedOrganism)
+  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
 
 cat("selecting \n")
 dataCuratedOrganismAuto[setdiff(
   x = c(
     "organismOriginal",
+    "organismDetected",
     "organismCleaned",
+    "organismCleanedId",
     "organismDbTaxo",
     "organismDbTaxoQuality",
     "organismTaxonIds",
@@ -65,7 +95,15 @@ dataCuratedOrganismAuto[setdiff(
     "organism_5_family",
     "organism_6_genus",
     "organism_7_species",
-    "organism_8_quality"
+    "organism_8_quality",
+    "organism_1_kingdom_id",
+    "organism_2_phylum_id",
+    "organism_3_class_id",
+    "organism_4_order_id",
+    "organism_5_family_id",
+    "organism_6_genus_id",
+    "organism_7_species_id",
+    "organism_8_quality_id"
   ),
   y = names(dataCuratedOrganismAuto)
 )] <- NA
@@ -75,6 +113,7 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organismOriginal,
     organismDetected,
     organismCleaned,
+    organismCleanedId,
     organismDbTaxo,
     organismDbTaxoQuality,
     organismTaxonIds,
@@ -87,7 +126,13 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organism_5_family,
     organism_6_genus,
     organism_7_species,
-    organism_8_variety
+    organism_1_kingdom_id,
+    organism_2_phylum_id,
+    organism_3_class_id,
+    organism_4_order_id,
+    organism_5_family_id,
+    organism_6_genus_id,
+    organism_7_species_id
   ) %>%
   filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 

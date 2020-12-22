@@ -14,7 +14,6 @@ source("r/db_loader.R")
 source("r/split_data_table.R")
 source("r/split_data_table_quote.R")
 
-
 cat("loading ... \n")
 cat("... libraries \n")
 library(data.table)

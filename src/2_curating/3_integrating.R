@@ -102,6 +102,7 @@ organismTableFull <- read_delim(
     organismOriginal,
     organismDetected,
     organismCleaned,
+    organismCleaned_id = organismCleanedId,
     organismCleaned_dbTaxo = organismDbTaxo,
     organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
     organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
@@ -113,8 +114,16 @@ organismTableFull <- read_delim(
     organismCleaned_dbTaxo_5family = organism_5_family,
     organismCleaned_dbTaxo_6genus = organism_6_genus,
     organismCleaned_dbTaxo_7species = organism_7_species,
-    organismCleaned_dbTaxo_8variety = organism_8_variety
-  )
+    # organismCleaned_dbTaxo_8variety = organism_8_variety
+    organismCleaned_dbTaxo_1kingdom_id = organism_1_kingdom_id,
+    organismCleaned_dbTaxo_2phylum_id = organism_2_phylum_id,
+    organismCleaned_dbTaxo_3class_id = organism_3_class_id,
+    organismCleaned_dbTaxo_4order_id = organism_4_order_id,
+    organismCleaned_dbTaxo_5family_id = organism_5_family_id,
+    organismCleaned_dbTaxo_6genus_id = organism_6_genus_id,
+    organismCleaned_dbTaxo_7species_id = organism_7_species_id,
+  ) %>%
+  distinct()
 
 cat("... translated structures \n")
 translatedStructureTable <- read_delim(
@@ -264,6 +273,7 @@ organismMinimal <- organismTableFull %>%
     organismOriginal,
     organismDetected,
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -275,6 +285,7 @@ organismMetadata <- organismTableFull %>%
   filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -286,7 +297,14 @@ organismMetadata <- organismTableFull %>%
     organismCleaned_dbTaxo_5family,
     organismCleaned_dbTaxo_6genus,
     organismCleaned_dbTaxo_7species,
-    organismCleaned_dbTaxo_8variety
+    # organismCleaned_dbTaxo_8variety
+    organismCleaned_dbTaxo_1kingdom_id,
+    organismCleaned_dbTaxo_2phylum_id,
+    organismCleaned_dbTaxo_3class_id,
+    organismCleaned_dbTaxo_4order_id,
+    organismCleaned_dbTaxo_5family_id,
+    organismCleaned_dbTaxo_6genus_id,
+    organismCleaned_dbTaxo_7species_id,
   )
 
 cat("... references \n")
