@@ -51,6 +51,7 @@ if (nrow(dataCleanedOrganism) == 0) {
       organismDetected = NA,
       organismCleaned = NA,
       organismCleanedId = NA,
+      organismCleanedRank = NA,
       organismDbTaxo = NA,
       organismDbTaxoQuality = NA,
       organismTaxonIds = NA,
@@ -63,18 +64,47 @@ if (nrow(dataCleanedOrganism) == 0) {
       organism_5_family = NA,
       organism_6_genus = NA,
       organism_7_species = NA,
-      organism_1_kingdom_id = NA,
-      organism_2_phylum_id = NA,
-      organism_3_class_id = NA,
-      organism_4_order_id = NA,
-      organism_5_family_id = NA,
-      organism_6_genus_id = NA,
-      organism_7_species_id = NA
+      organism_8_variety = NA,
+      # organism_1_kingdom_id = NA,
+      # organism_2_phylum_id = NA,
+      # organism_3_class_id = NA,
+      # organism_4_order_id = NA,
+      # organism_5_family_id = NA,
+      # organism_6_genus_id = NA,
+      # organism_7_species_id = NA,
+      # organism_8_variety_id = NA
     )
 }
 
+rank_order <-
+  c(
+    "variety",
+    "species",
+    "genus",
+    "family",
+    "order",
+    "class",
+    "phylum",
+    "kingdom"
+  )
+
+dataCleanedOrganismManipulated <-
+  dataCleanedOrganismManipulated[order(match(
+    dataCleanedOrganismManipulated$organismCleanedRank,
+    rank_order
+  )), ]
+
+dataCleanedOrganismManipulated_clean <- dataCleanedOrganismManipulated %>%
+  distinct(organismOriginal, organismDetected, organismCleaned, .keep_all = TRUE) %>%
+  select(organismOriginal, organismDetected, organismCleaned, organismCleanedRank)
+
+dataCleanedOrganismManipulated_clean_2 <- left_join(
+  dataCleanedOrganismManipulated_clean,
+  dataCleanedOrganismManipulated
+) %>% distinct()
+
 dataCuratedOrganismAuto <-
-  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated)
+  taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated_clean_2)
 
 cat("selecting \n")
 dataCuratedOrganismAuto[setdiff(
@@ -83,6 +113,7 @@ dataCuratedOrganismAuto[setdiff(
     "organismDetected",
     "organismCleaned",
     "organismCleanedId",
+    "organismCleanedRank",
     "organismDbTaxo",
     "organismDbTaxoQuality",
     "organismTaxonIds",
@@ -95,15 +126,15 @@ dataCuratedOrganismAuto[setdiff(
     "organism_5_family",
     "organism_6_genus",
     "organism_7_species",
-    "organism_8_quality",
-    "organism_1_kingdom_id",
-    "organism_2_phylum_id",
-    "organism_3_class_id",
-    "organism_4_order_id",
-    "organism_5_family_id",
-    "organism_6_genus_id",
-    "organism_7_species_id",
-    "organism_8_quality_id"
+    "organism_8_variety"
+    # "organism_1_kingdom_id",
+    # "organism_2_phylum_id",
+    # "organism_3_class_id",
+    # "organism_4_order_id",
+    # "organism_5_family_id",
+    # "organism_6_genus_id",
+    # "organism_7_species_id",
+    # "organism_8_variety_id"
   ),
   y = names(dataCuratedOrganismAuto)
 )] <- NA
@@ -114,6 +145,7 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organismDetected,
     organismCleaned,
     organismCleanedId,
+    organismCleanedRank,
     organismDbTaxo,
     organismDbTaxoQuality,
     organismTaxonIds,
@@ -126,13 +158,15 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organism_5_family,
     organism_6_genus,
     organism_7_species,
-    organism_1_kingdom_id,
-    organism_2_phylum_id,
-    organism_3_class_id,
-    organism_4_order_id,
-    organism_5_family_id,
-    organism_6_genus_id,
-    organism_7_species_id
+    organism_8_variety
+    # organism_1_kingdom_id,
+    # organism_2_phylum_id,
+    # organism_3_class_id,
+    # organism_4_order_id,
+    # organism_5_family_id,
+    # organism_6_genus_id,
+    # organism_7_species_id,
+    # organism_8_variety_id,
   ) %>%
   filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 
