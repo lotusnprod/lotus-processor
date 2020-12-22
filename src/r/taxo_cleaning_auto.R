@@ -114,8 +114,8 @@ taxo_cleaning_auto <- function(dfsel) {
 
   cat("cleaning duplicate upstream taxa \n")
   df4 <- df3_c %>%
-    # group_by(organismOriginal, organism_7_species) %>%
-    # fill(organism_8_variety, .direction = "downup") %>%
+    group_by(organismOriginal, organism_7_species) %>%
+    fill(organism_8_variety, .direction = "downup") %>%
     group_by(organismOriginal, organism_6_genus) %>%
     fill(organism_7_species, .direction = "downup") %>%
     group_by(organismOriginal, organism_5_family) %>%
@@ -131,7 +131,11 @@ taxo_cleaning_auto <- function(dfsel) {
     group_by(organismOriginal) %>%
     fill(organism_1_kingdom, .direction = "downup") %>%
     ungroup() %>%
-    mutate(organismCleanedBis = apply(.[, 10:16], 1, function(x) {
+    mutate(organismCleanedBis = apply(.[, grepl(
+      pattern = "organism_",
+      x = colnames(.),
+      fixed = TRUE
+    )], 1, function(x) {
       tail(na.omit(x), 1)
     }))
 
