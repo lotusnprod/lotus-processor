@@ -9,6 +9,7 @@ source("paths.R")
 cat("... functions \n")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
+source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -18,28 +19,16 @@ library(tidyverse)
 log_debug("  Step 3")
 cat("... files ... \n")
 cat("... translated organisms \n")
-dataInterimOrganismToFill <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedInterim),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE
-)
+dataInterimOrganismToFill <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedInterim)
 
 cat("... cleaned original organisms \n")
-dataCleanedOriginalOrganism <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedOrganismOriginalTable),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE
-)
+dataCleanedOriginalOrganism <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismOriginalTable)
 
 cat(" ... taxa ranks dictionary \n")
-taxaRanksDictionary <- read_delim(
-  file = pathDataInterimDictionariesTaxaRanks,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+taxaRanksDictionary <-
+  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
 cat("ensuring directories exist \n")
 ifelse(
@@ -200,17 +189,9 @@ if (length != 0) {
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismTranslatedTable, "\n")
-write.table(
+vroom_write_safe(
   x = dataCleanedOrganism,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismTranslatedTable,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesCleanedOrganismTranslatedTable
 )
 
 end <- Sys.time()

@@ -8,22 +8,31 @@ source("r/standardizing_original.R")
 library(Hmisc) # neeed for capitalize()
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("metabolights")
 
-data_clean_final <- read_delim(
+data_clean_final <- vroom(
   file = gzfile(database$sourceFiles$tsvPrecleaned),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = ""
 )
 
-species_studies <- read_delim(
+species_studies <- vroom(
   file = gzfile(database$sourceFiles$tsvStudies),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = ""
 ) %>%
   distinct(species)
 

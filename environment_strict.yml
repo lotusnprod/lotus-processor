@@ -374,6 +374,7 @@ dependencies:
   - r-viridis=0.5.1=r40h6115d3f_1004
   - r-viridislite=0.3.0=r40h6115d3f_1003
   - r-visnetwork=2.0.9=r40h6115d3f_1
+  - r-vroom
   - r-waldo=0.2.3=r40hc72bb7e_0
   - r-webchem=1.1.0=r40h142f84f_0
   - r-whisker=0.4=r40h6115d3f_1

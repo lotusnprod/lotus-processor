@@ -11,15 +11,11 @@ library(tidyverse)
 
 cat("... functions \n")
 source("r/y_as_na.R")
+source("r/vroom_safe.R")
 
 cat("loading crossref translations file, this may take a while \n")
-dataTranslated <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceFile),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataTranslated <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceFile) %>%
   tibble()
 
 ### Find something appropriate
@@ -424,12 +420,14 @@ subDataClean_pmid <- dataCleanedJoinedWideScore %>%
 if (mode != "test") {
   cat("loading pmcid file, this may take a while \n")
   # here because of memory
-  PMC_ids <- read_delim(
-    file = gzfile(pathDataExternalTranslationSourcePubmedFile),
+  PMC_ids <- vroom(
+    file = pathDataExternalTranslationSourcePubmedFile,
     delim = ",",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
-    trim_ws = TRUE
+    quote = "",
+    trim_ws = TRUE,
+    num_threads = 1
   ) %>%
     filter(!is.na(DOI) | !is.na(PMID)) %>%
     select(
@@ -531,17 +529,9 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedReferenceFile, "\n")
-write.table(
+vroom_write_safe(
   x = referenceTable,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedReferenceFile,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesCleanedReferenceFile
 )
 
 end <- Sys.time()

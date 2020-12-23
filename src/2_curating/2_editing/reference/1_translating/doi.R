@@ -12,14 +12,11 @@ library(pbmcapply)
 
 cat("... functions \n")
 source("r/getrefDoi.R")
+source("r/vroom_safe.R")
 
 cat("loading DOI list \n")
-dataDoi <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceDoi),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+dataDoi <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceDoi)
 
 cat("submitting to crossRef \n")
 if (nrow(dataDoi) != 1) {
@@ -193,17 +190,9 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedReferenceDoi, "\n")
-write.table(
+vroom_write_safe(
   x = dataDoi,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceDoi,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferenceDoi
 )
 
 end <- Sys.time()

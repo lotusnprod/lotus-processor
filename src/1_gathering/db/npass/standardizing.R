@@ -7,46 +7,62 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("npass")
 
 ## files
-data_original_1 <- read_delim(
+data_original_1 <- vroom(
   file = database$sourceFiles$tsvGeneral,
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = ""
 ) %>%
   mutate_all(as.character) %>%
   data.frame()
 
-data_original_2 <- read_delim(
+data_original_2 <- vroom(
   file = database$sourceFiles$tsvProperties,
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = ""
 ) %>%
   mutate_all(as.character) %>%
   data.frame()
 
-data_original_3 <- read_delim(
+data_original_3 <- vroom(
   file = database$sourceFiles$tsvSpeciesInfo,
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = "",
+  col_types = cols(.default = "c")
 ) %>%
-  mutate_all(as.character) %>%
   data.frame()
 
-data_original_4 <- read_delim(
+data_original_4 <- vroom(
   file = database$sourceFiles$tsvSpeciesPair,
-  col_types = cols(.default = "c"),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = "",
+  col_types = cols(.default = "c")
 ) %>%
-  mutate_all(as.character) %>%
   data.frame()
 
 # joining

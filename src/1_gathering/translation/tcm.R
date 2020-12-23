@@ -9,12 +9,14 @@ library(readxl)
 library(splitstackshape)
 library(stringi)
 library(tidyverse)
+library(vroom)
 
 ## functions
 source("r/database.R")
 source("r/y_as_na.R")
 source("r/tcm_cleaning.R")
 source("r/tcm_inverting.R")
+source("r/vroom_safe.R")
 
 ## files
 ### dictionary from TMMC
@@ -31,11 +33,15 @@ tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
   distinct(biologicalsource, .keep_all = TRUE)
 
 ### dictionary from TCMID
-tcmNamesDic_2 <- read_delim(
+tcmNamesDic_2 <- vroom(
   file = pathDataExternalTranslationSourceTcmTcmid,
   delim = "\t",
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
+  quote = ""
 ) %>%
   select(
     latin = `Latin Name`,
@@ -368,15 +374,7 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
   filter(vernacularName != canonicalName | is.na(newCanonicalName))
 
 # exporting
-write.table(
+vroom_write_safe(
   x = tcmNamesDicCurated,
-  file = gzfile(
-    description = pathDataInterimDictionariesTcmNames,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimDictionariesTcmNames
 )

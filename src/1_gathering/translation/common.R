@@ -7,16 +7,21 @@ source("paths.R")
 library(Hmisc)
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 source("r/y_as_na.R")
+source("r/vroom_safe.R")
 
 ##  files
 ### common names from PhenolExplorer
-commonSciPhe <- read_delim(
+commonSciPhe <- vroom(
   file = pathDataExternalTranslationSourceCommonPhenolexplorer,
   delim = ",",
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
 ) %>%
   select(
     vernacularName = name,
@@ -38,7 +43,7 @@ commonSciFoo <- read_delim(
   filter(!is.na(vernacularName))
 
 ### common names from DrDuke
-commonDuk <- read_delim(
+commonDuk <- vroom(
   file = pathDataExternalTranslationSourceCommonDrdukeCommon,
   delim = ",",
   escape_double = TRUE,
@@ -50,7 +55,7 @@ commonDuk <- read_delim(
   )
 
 ### scientific names from DrDuke
-sciDuk <- read_delim(
+sciDuk <- vroom(
   file = pathDataExternalTranslationSourceCommonDrdukeScientific,
   delim = ",",
   escape_double = TRUE,
@@ -66,12 +71,13 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
 
 ### GBIF
 #### taxa
-taxa <- read_delim(
+taxa <- vroom(
   file = pathDataExternalTranslationSourceCommonGbifScientific,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = FALSE,
-  progress = TRUE
+  progress = TRUE,
+  quote = ""
 ) %>%
   filter(!is.na(canonicalName)) %>%
   select(
@@ -83,14 +89,16 @@ taxa <- read_delim(
   filter(!grepl(
     pattern = "\\?",
     x = canonicalName
-  ))
+  )) %>%
+  distinct()
 
 #### taxa
-vernacular <- read_delim(
+vernacular <- vroom(
   file = pathDataExternalTranslationSourceCommonGbifVernacular,
   delim = "\t",
   escape_double = FALSE,
-  trim_ws = FALSE
+  trim_ws = FALSE,
+  quote = ""
 ) %>%
   filter(language == "en") %>%
   select(
@@ -100,10 +108,11 @@ vernacular <- read_delim(
   filter(!grepl(
     pattern = "\\?",
     x = vernacularName
-  ))
+  )) %>%
+  distinct()
 
 ### manually subtracted entries
-manualSubtraction <- read_delim(
+manualSubtraction <- vroom(
   file = pathDataInterimDictionariesCommonManualSubtraction,
   delim = "\t",
   escape_double = FALSE,
@@ -133,7 +142,7 @@ taxaVernacular <- left_join(taxa, vernacular) %>%
   ungroup() %>%
   distinct(vernacularName, .keep_all = TRUE) %>%
   arrange(desc(str_count(vernacularName))) %>%
-  filter(canonicalName != "boa constrictor")
+  filter(canonicalName != "Boa constrictor")
 
 # deleting vernacular names corresponding to generic epithets for safety reasons
 ## they are almost safe (see Cacao) but just to be on the safe side...
@@ -256,11 +265,7 @@ commonSci$vernacularName <-
 commonSci$vernacularName <- trimws(x = commonSci$vernacularName)
 
 commonSci <- commonSci %>%
-  mutate_if(is.character, ~ gsub(
-    pattern = "[^ -~]",
-    replacement = "",
-    x = .
-  ))
+  mutate_all(~ iconv(x = ., from = "utf-8", to = "utf-8//ignore"))
 
 commonSci$vernacularName <- gsub(
   pattern = "/",
@@ -397,7 +402,7 @@ commonSciJoined <- rbind(commonSci_1, commonSci_4, commonSci_5)
 
 # deleting ambiguous entries
 commonSciSub <- commonSciJoined %>%
-  filter(!vernacularName %in% manualSubtraction$name)
+  filter(!tolower(vernacularName) %in% tolower(manualSubtraction$name))
 
 ## sorting in appropriate order
 common2Sci <- commonSciSub %>%
@@ -412,15 +417,7 @@ common2Sci <- commonSciSub %>%
   filter(!grepl("\\)", vernacularName))
 
 # exporting
-write.table(
+vroom_write_safe(
   x = common2Sci,
-  file = gzfile(
-    description = pathDataInterimDictionariesCommonNames,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimDictionariesCommonNames
 )

@@ -8,14 +8,11 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+source("r/vroom_safe.R")
 
 cat("loading db, if running fullmode, this may take a while \n")
-openDbMinimal <- read_delim(
-  file = gzfile(pathDataInterimTablesCuratedTable),
-  col_types = cols(.default = "c"),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
+openDbMinimal <- vroom_read_safe(
+  path = pathDataInterimTablesCuratedTable
 ) %>%
   data.frame()
 

@@ -13,6 +13,7 @@ cat("... functions \n")
 source("r/db_loader.R")
 source("r/split_data_table.R")
 source("r/split_data_table_quote.R")
+source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -28,49 +29,29 @@ if (mode != "test") {
   cat("... dictionaries ... \n")
   cat("... structures \n")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-    structureDictionary <- read_delim(
-      file = gzfile(description = pathDataInterimDictionariesStructureDictionary),
-      delim = "\t",
-      col_types = cols(.default = "c"),
-      escape_double = FALSE,
-      trim_ws = TRUE
-    ) %>%
+    structureDictionary <-
+      vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
       tibble()
   }
 
   cat("... previously unsucessfully querried structures \n")
   if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-    structureAntiDictionary <- read_delim(
-      file = gzfile(description = pathDataInterimDictionariesStructureAntiDictionary),
-      delim = "\t",
-      col_types = cols(.default = "c"),
-      escape_double = FALSE,
-      trim_ws = TRUE
-    ) %>%
+    structureAntiDictionary <-
+      vroom_read_safe(path = pathDataInterimDictionariesStructureAntiDictionary) %>%
       tibble()
   }
 
   cat("... organisms \n")
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-    organismDictionary <- read_delim(
-      file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
-      delim = "\t",
-      col_types = cols(.default = "c"),
-      escape_double = FALSE,
-      trim_ws = TRUE
-    ) %>%
+    organismDictionary <-
+      vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
       tibble()
   }
 
   cat("... references \n")
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-    referenceDictionary <- read_delim(
-      file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
-      delim = "\t",
-      col_types = cols(.default = "c"),
-      escape_double = FALSE,
-      trim_ws = TRUE
-    ) %>%
+    referenceDictionary <-
+      vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary) %>%
       data.table()
   }
 
@@ -151,20 +132,6 @@ if (mode == "test") {
     ) %>%
     tibble()
 }
-
-cat("removing unfriendly characters \n")
-dbTable[] <- lapply(dbTable, function(x) {
-  gsub("\r\n", " ", x)
-})
-dbTable[] <- lapply(dbTable, function(x) {
-  gsub("\r", " ", x)
-})
-dbTable[] <- lapply(dbTable, function(x) {
-  gsub("\n", " ", x)
-})
-dbTable[] <- lapply(dbTable, function(x) {
-  gsub("\t", " ", x)
-})
 
 cat("keeping entries not previously curated only ... \n")
 cat("... inchi table \n")
@@ -625,31 +592,15 @@ if (nrow(organismTable) != 0) {
 }
 
 cat(pathDataInterimTablesOriginalReferenceDoi, "\n")
-write.table(
+vroom_write_safe(
   x = referenceTable_doi,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceDoi,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalReferenceDoi
 )
 
 cat(pathDataInterimTablesOriginalReferencePubmed, "\n")
-write.table(
+vroom_write_safe(
   x = referenceTable_pubmed,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferencePubmed,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = TRUE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalReferencePubmed
 )
 
 cat(pathDataInterimTablesOriginalReferenceTitleFolder, "\n")
@@ -664,31 +615,15 @@ cat(
   pathDataInterimTablesOriginalReferencePublishingDetails,
   "\n"
 )
-write.table(
+vroom_write_safe(
   x = referenceTable_publishingDetails,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferencePublishingDetails,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalReferencePublishingDetails
 )
 
 cat(pathDataInterimTablesOriginalReferenceSplit, "\n")
-write.table(
+vroom_write_safe(
   x = referenceTable_split,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceSplit,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalReferenceSplit
 )
 
 cat(pathDataInterimTablesOriginalReferenceOriginalFolder, "\n")
@@ -700,87 +635,39 @@ split_data_table_quote(
 )
 
 cat(pathDataInterimTablesOriginalReferenceFull, "\n")
-write.table(
+vroom_write_safe(
   x = referenceTable_full,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalReferenceFull,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalReferenceFull
 )
 
 cat(pathDataInterimTablesOriginalStructureInchi, "\n")
-write.table(
+vroom_write_safe(
   x = structureTable_inchi,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalStructureInchi,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalStructureInchi
 )
 
 cat(pathDataInterimTablesOriginalStructureNominal, "\n")
-write.table(
+vroom_write_safe(
   x = structureTable_nominal,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalStructureNominal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalStructureNominal
 )
 
 cat(pathDataInterimTablesOriginalStructureSmiles, "\n")
-write.table(
+vroom_write_safe(
   x = structureTable_smiles,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalStructureSmiles,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalStructureSmiles
 )
 
 cat(pathDataInterimTablesOriginalStructureFull, "\n")
-write.table(
+vroom_write_safe(
   x = structureTable_full,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalStructureFull,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalStructureFull
 )
 
 cat(pathDataInterimTablesOriginalTable, "\n")
-write.table(
+vroom_write_safe(
   x = originalTable,
-  file = gzfile(
-    description = pathDataInterimTablesOriginalTable,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesOriginalTable
 )
 
 end <- Sys.time()

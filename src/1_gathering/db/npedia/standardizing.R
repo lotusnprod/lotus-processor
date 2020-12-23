@@ -6,18 +6,23 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("npedia")
 
 ## files
-data_original <- read_delim(
+data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
-  escape_double = TRUE,
-  trim_ws = FALSE
-) %>%
-  mutate_all(as.character)
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
+  escape_double = FALSE,
+  trim_ws = TRUE,
+  quote = "",
+  col_types = cols(.default = "c")
+)
 
 # selecting
 data_selected <- data_original %>%

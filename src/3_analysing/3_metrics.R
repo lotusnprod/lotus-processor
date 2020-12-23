@@ -8,28 +8,15 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... validated db, if running fullmode, this may take a while \n")
-openDb <- read_delim(
-  file = gzfile(pathDataInterimTablesAnalysedPlatinum),
-  col_types = cols(.default = "c"),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+openDb <- vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   data.frame()
 
 cat("... dnp db \n")
-dnpDb <- read_delim(
-  file = gzfile(file.path(
-    pathDataInterimTablesAnalysed, "dnp.tsv.gz"
-  )),
-  col_types = cols(.default = "c"),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dnpDb <- vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
   data.frame()
 
 inhouseDb <- bind_rows(dnpDb, openDb)

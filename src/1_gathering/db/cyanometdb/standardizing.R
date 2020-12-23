@@ -7,16 +7,20 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("cyanometdb")
 
 ## files
-data_original <- read_delim(
+data_original <- vroom(
   file = database$sourceFiles$tsv,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = TRUE,
-  trim_ws = FALSE
+  trim_ws = FALSE,
 ) %>%
   mutate_all(as.character)
 

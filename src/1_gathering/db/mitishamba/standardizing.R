@@ -7,16 +7,21 @@ source("r/standardizing_original.R")
 library(Hmisc)
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("mitishamba")
 
 ## files
-data_original <- read_delim(
+data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
+  escape_backslash = TRUE,
   trim_ws = TRUE,
-  escape_backslash = TRUE
+  quote = ""
 ) %>%
   mutate_all(as.character)
 

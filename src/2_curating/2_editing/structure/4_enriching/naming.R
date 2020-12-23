@@ -8,16 +8,12 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+source("r/vroom_safe.R")
 
 cat("loading files ... \n")
 cat("...  counted structures \n")
-structureCounted <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureStereoCounted),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+structureCounted <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
 cat("keeping smiles only ... \n")
 smilesDictionary <- structureCounted %>%
@@ -25,17 +21,9 @@ smilesDictionary <- structureCounted %>%
   select(smiles = smilesSanitized)
 
 cat("writing the smiles table \n")
-write.table(
+vroom_write_safe(
   x = smilesDictionary,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedStructureSmiles,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesCleanedStructureSmiles
 )
 
 if (works_locally_only == FALSE) {
@@ -90,7 +78,6 @@ if (works_locally_only == FALSE) {
   #     "-g"
   #   )
   # )
-
 
   cat("loading files ... \n")
   structureNamesTraditional <- read_delim(
@@ -203,17 +190,9 @@ cat("ensuring directories exist \n")
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedStructureNamed, "\n")
 
-write.table(
+vroom_write_safe(
   x = structureNamed_cleaned,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedStructureNamed,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesCleanedStructureNamed
 )
 
 end <- Sys.time()

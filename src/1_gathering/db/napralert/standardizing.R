@@ -4,9 +4,9 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
 library(Hmisc)
+library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("napralert")
@@ -16,7 +16,8 @@ dataOriginal <- read_delim(
   file = gzfile(database$sourceFiles$tsvOriginal),
   delim = "\t",
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_types = cols(.default = "c")
 ) %>%
   mutate(
     biologicalsource = paste(
@@ -35,14 +36,18 @@ dataOriginal <- read_delim(
     reference_authors = `?authors`,
     reference_doi,
     reference_journal = `?journal`
-  ) %>%
-  mutate_all(as.character)
+  )
 
-dataMatched <- read_delim(
+dataMatched <- vroom(
   file = gzfile(database$sourceFiles$tsvMatched),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  quote = "",
+  col_types = cols(.default = "c")
 ) %>%
   mutate(
     name = NA,
@@ -58,8 +63,7 @@ dataMatched <- read_delim(
     reference_authors,
     reference_journal,
     reference_doi = DOI
-  ) %>%
-  mutate_all(as.character)
+  )
 
 # manipulating
 dataJoined <- bind_rows(dataMatched, dataOriginal)

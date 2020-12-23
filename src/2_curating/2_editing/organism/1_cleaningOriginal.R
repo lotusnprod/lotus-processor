@@ -9,6 +9,7 @@ source("paths.R")
 cat("... functions \n")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
+source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -17,12 +18,8 @@ library(tidyverse)
 
 log_debug("  Step 1")
 cat("... taxa ranks dictionary \n")
-taxaRanksDictionary <- read_delim(
-  file = pathDataInterimDictionariesTaxaRanks,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+taxaRanksDictionary <-
+  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
 cat("ensuring directories exist \n")
 ifelse(
@@ -133,17 +130,9 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  write.table(
+  vroom_write_safe(
     x = dataCleanedOriginalOrganism,
-    file = gzfile(
-      description = pathDataInterimTablesCleanedOrganismOriginalTable,
-      compression = 9,
-      encoding = "UTF-8"
-    ),
-    row.names = FALSE,
-    quote = FALSE,
-    sep = "\t",
-    fileEncoding = "UTF-8"
+    path = pathDataInterimTablesCleanedOrganismOriginalTable
   )
 }
 
@@ -155,17 +144,9 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  write.table(
+  vroom_write_safe(
     x = dataCleanedOriginalOrganismUnique,
-    file = gzfile(
-      description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
-      compression = 9,
-      encoding = "UTF-8"
-    ),
-    row.names = FALSE,
-    quote = FALSE,
-    sep = "\t",
-    fileEncoding = "UTF-8"
+    path = pathDataInterimTablesCleanedOrganismOriginalUniqueTable
   )
 }
 

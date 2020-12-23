@@ -18,6 +18,7 @@ library(plotly)
 cat("... functions \n")
 source("r/filter.R")
 source("r/myDirtyValidationFig.R")
+source("r/vroom_safe.R")
 
 cat("loading files ... \n")
 sampleAllONPDB_AR_old <-
@@ -110,23 +111,12 @@ sampleCondifent_PMA <-
   mutate(curator = "PMA2")
 
 cat("... documented pairs \n")
-inhouseDbMinimal <- read_delim(
-  file = gzfile(pathDataInterimTablesCuratedTable),
-  col_types = cols(.default = "c"),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+inhouseDbMinimal <-
+  vroom_read_safe(path = pathDataInterimTablesCuratedTable)
 
 cat("... reference metadata \n")
 structureMetadata <-
-  read_delim(
-    file = gzfile(pathDataInterimDictionariesStructureMetadata),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
   distinct(
     structureCleanedSmiles,
     structureCleanedInchi,
@@ -140,13 +130,7 @@ structureMetadata <-
 
 cat("... organism metadata \n")
 organismMetadata <-
-  read_delim(
-    file = gzfile(pathDataInterimDictionariesOrganismMetadata),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata) %>%
   distinct(
     organismCleaned,
     organismCleaned_dbTaxo,
@@ -157,13 +141,7 @@ organismMetadata <-
 
 cat("... reference metadata \n")
 referenceMetadata <-
-  read_delim(
-    file = gzfile(pathDataInterimDictionariesReferenceMetadata),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  vroom_read_safe(path = pathDataInterimDictionariesReferenceMetadata) %>%
   distinct(
     organismOriginal,
     organismDetected,
@@ -764,31 +742,15 @@ if (mode == "full") {
 }
 
 cat(pathDataInterimTablesAnalysedPlatinum, "\n")
-write.table(
+vroom_write_safe(
   x = openDbClean2,
-  file = gzfile(
-    description = pathDataInterimTablesAnalysedPlatinum,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesAnalysedPlatinum
 )
 
 cat(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"), "\n")
-write.table(
+vroom_write_safe(
   x = dnpDb,
-  file = gzfile(
-    description = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"),
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
 )
 
 cat(
