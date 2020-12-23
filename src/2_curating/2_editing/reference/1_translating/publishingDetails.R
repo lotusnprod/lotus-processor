@@ -13,14 +13,11 @@ library(pbmcapply)
 cat("... functions \n")
 source("r/getref_noLimit_publishingDetails.R")
 source("r/getAllReferences.R")
+source("r/vroom_safe.R")
 
 cat("loading publishing details list \n")
-dataPublishingDetails <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferencePublishingDetails),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+dataPublishingDetails <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalReferencePublishingDetails)
 
 cat("submitting to crossRef \n")
 if (nrow(dataPublishingDetails) != 1) {
@@ -83,17 +80,9 @@ cat(
   pathDataInterimTablesTranslatedReferencePublishingDetails,
   "\n"
 )
-write.table(
+vroom_write_safe(
   x = dataPublishingDetails,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferencePublishingDetails,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferencePublishingDetails
 )
 
 end <- Sys.time()

@@ -12,6 +12,7 @@ source("r/y_as_na.R")
 source("r/manipulating_taxo.R")
 source("r/taxo_cleaning_auto.R")
 source("r/rank_order.R")
+source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -20,21 +21,13 @@ library(tidyverse)
 log_debug(" Step 4")
 cat("... files ... \n")
 cat("... cleaned organisms \n")
-dataCleanedOrganism <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedOrganismTranslatedTable),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE
-) %>%
+dataCleanedOrganism <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedTable) %>%
   distinct()
 
 cat(" ... taxa ranks dictionary \n")
-taxaRanksDictionary <- read_delim(
-  file = pathDataInterimDictionariesTaxaRanks,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+taxaRanksDictionary <-
+  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
 cat("manipulating taxonomic levels \n")
 if (nrow(dataCleanedOrganism) != 0) {
@@ -83,14 +76,25 @@ dataCleanedOrganismManipulated <-
     rank_order
   )), ]
 
-dataCleanedOrganismManipulated_clean <- dataCleanedOrganismManipulated %>%
-  distinct(organismOriginal, organismDetected, organismCleaned, .keep_all = TRUE) %>%
-  select(organismOriginal, organismDetected, organismCleaned, organismCleanedRank)
+dataCleanedOrganismManipulated_clean <-
+  dataCleanedOrganismManipulated %>%
+  distinct(organismOriginal,
+    organismDetected,
+    organismCleaned,
+    .keep_all = TRUE
+  ) %>%
+  select(
+    organismOriginal,
+    organismDetected,
+    organismCleaned,
+    organismCleanedRank
+  )
 
-dataCleanedOrganismManipulated_clean_2 <- left_join(
-  dataCleanedOrganismManipulated_clean,
-  dataCleanedOrganismManipulated
-) %>% distinct()
+dataCleanedOrganismManipulated_clean_2 <-
+  left_join(
+    dataCleanedOrganismManipulated_clean,
+    dataCleanedOrganismManipulated
+  ) %>% distinct()
 
 dataCuratedOrganismAuto <-
   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated_clean_2)
@@ -161,17 +165,9 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismFinal, "\n")
-write.table(
+vroom_write_safe(
   x = dataCuratedOrganismAuto,
-  file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismFinal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesCleanedOrganismFinal
 )
 
 end <- Sys.time()

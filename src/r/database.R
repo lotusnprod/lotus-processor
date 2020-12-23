@@ -1,3 +1,5 @@
+library(vroom)
+
 # These are helpers functions and classes to handle the databases
 
 #' Store a database files paths
@@ -15,17 +17,20 @@ Database <-
     ),
     methods = list(
       writeFile = function(file, data) {
-        write.table(
+        vroom_write(
           x = data,
-          file = gzfile(
+          path = gzfile(
             description = file,
             compression = 9,
             encoding = "UTF-8"
           ),
-          row.names = FALSE,
-          quote = FALSE,
-          sep = "\t",
-          fileEncoding = "UTF-8"
+          num_threads = 1,
+          bom = TRUE,
+          quote = "needed",
+          delim = "\t",
+          col_names = TRUE,
+          progress = TRUE,
+          append = FALSE
         )
       },
       writeInterim = function(data) {

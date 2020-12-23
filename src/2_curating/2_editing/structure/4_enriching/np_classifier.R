@@ -13,25 +13,16 @@ library(tidyverse)
 
 cat("... functions \n")
 source("r/getClass.R")
+source("r/vroom_safe.R")
 
 cat("loading smiles ... \n")
-smiles <- read_delim(
-  file = gzfile(pathDataInterimTablesCleanedStructureSmiles),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE
-) %>%
+smiles <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedStructureSmiles) %>%
   distinct() %>%
   tibble()
 
-old <- read_delim(
-  file = gzfile(
-    pathDataInterimDictionariesStructureDictionaryNpclassifierFile
-  ),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE
-) %>%
+old <-
+  vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
   distinct() %>%
   tibble()
 
@@ -59,7 +50,7 @@ if (length(queries) != 0) {
     )
   )
 
-  df_new <- bind_rows(list_df)
+  df_new <- bind_rows(list_df) %>% mutate_all(as.character)
 
   df <- bind_rows(old, df_new) %>%
     distinct()
@@ -67,12 +58,9 @@ if (length(queries) != 0) {
   df <- old
 }
 
-fwrite(
-  df,
-  file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
-  quote = FALSE,
-  sep = "\t",
-  showProgress = TRUE
+vroom_write_safe(
+  x = df,
+  path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
 )
 
 end <- Sys.time()

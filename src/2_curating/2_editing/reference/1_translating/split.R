@@ -13,14 +13,11 @@ library(pbmcapply)
 cat("... functions \n")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
+source("r/vroom_safe.R")
 
 cat("loading split references list \n")
-dataSplit <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferenceSplit),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+dataSplit <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceSplit)
 
 cat("submitting to crossRef \n")
 if (nrow(dataSplit) != 1) {
@@ -78,17 +75,9 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedReferenceSplit, "\n")
-write.table(
+vroom_write_safe(
   x = dataSplit,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceSplit,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferenceSplit
 )
 
 end <- Sys.time()

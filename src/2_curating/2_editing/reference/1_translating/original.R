@@ -13,6 +13,7 @@ library(pbmcapply)
 cat("... functions \n")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
+source("r/vroom_safe.R")
 
 cat("loading original references lists \n")
 length <-
@@ -134,17 +135,9 @@ for (i in num) {
   }
 
   cat("exporting ... \n")
-  write.table(
+  vroom_write_safe(
     x = dataOriginal2,
-    file = gzfile(
-      description = outpath,
-      compression = 9,
-      encoding = "UTF-8"
-    ),
-    row.names = FALSE,
-    quote = TRUE,
-    sep = "\t",
-    fileEncoding = "UTF-8"
+    path = outpath
   )
 
   ## cleaning memory
@@ -180,17 +173,9 @@ dataOriginal3 <- do.call(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedReferenceOriginal, "\n")
-write.table(
+vroom_write_safe(
   x = dataOriginal3,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceOriginal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferenceOriginal
 )
 
 end <- Sys.time()

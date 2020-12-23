@@ -7,63 +7,88 @@ source("r/standardizing_original.R")
 library(splitstackshape)
 library(tidyverse)
 library(readxl)
+library(vroom)
 
 # get paths
 database <- databases$get("phenolexplorer")
 
 # loading all files
-compounds_classification <- read_delim(
+compounds_classification <- vroom(
   file = database$sourceFiles$tsvCompoundsClassification,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-compounds_structures <- read_delim(
+compounds_structures <- vroom(
   file = database$sourceFiles$tsvCompoundsStructures,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-compounds <- read_delim(
+compounds <- vroom(
   file = database$sourceFiles$tsvCompounds,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-foods_classification <- read_delim(
+foods_classification <- vroom(
   file = database$sourceFiles$tsvFoodsClassification,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-foods <- read_delim(
+foods <- vroom(
   file = database$sourceFiles$tsvFoods,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-metabolites_structures <- read_delim(
+metabolites_structures <- vroom(
   file = database$sourceFiles$tsvMetabolitesStructures,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-metabolites <- read_delim(
+metabolites <- vroom(
   file = database$sourceFiles$tsvMetabolites,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )
 
-publications <- read_delim(
+publications <- vroom(
   file = database$sourceFiles$tsvPublications,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
   trim_ws = TRUE
 )

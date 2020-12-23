@@ -8,34 +8,20 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+source("r/vroom_safe.R")
 
 cat("loading files ... \n")
 cat("... whole chemicals list \n")
-originalTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesOriginalStructureFull),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+originalTable <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
 
 cat("... chemical names list \n")
-nominalStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesTranslatedStructureNominal),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+nominalStructureTable <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal)
 
 cat("... SMILES list \n")
-smilesStructureTable <- read_delim(
-  file = gzfile(description = pathDataInterimTablesTranslatedStructureSmiles),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+smilesStructureTable <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedStructureSmiles)
 
 cat("joining \n")
 translatedStructureTable <-
@@ -86,31 +72,15 @@ if (nrow(translatedStructureTableUnique) == 0) {
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedStructureFinal, "\n")
-write.table(
+vroom_write(
   x = translatedStructureTable,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedStructureFinal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedStructureFinal
 )
 
 cat(pathDataInterimTablesTranslatedStructureUnique, "\n")
-write.table(
+vroom_write(
   x = translatedStructureTableUnique,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedStructureUnique,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedStructureUnique
 )
 
 end <- Sys.time()

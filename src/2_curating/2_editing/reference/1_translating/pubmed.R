@@ -12,14 +12,11 @@ library(pbmcapply)
 
 cat("... functions \n")
 source("r/getrefPubmed.R")
+source("r/vroom_safe.R")
 
 cat("loading PMID list \n")
-dataPubmed <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalReferencePubmed),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-)
+dataPubmed <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalReferencePubmed)
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
@@ -142,17 +139,9 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedReferencePubmed, "\n")
-write.table(
+vroom_write_safe(
   x = dataPubmed,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferencePubmed,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = TRUE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferencePubmed
 )
 
 end <- Sys.time()

@@ -15,17 +15,13 @@ library(ggfittext)
 library(plotly)
 library(tidyverse)
 library(UpSetR)
+source("r/vroom_safe.R")
 
 if (mode != "test") {
   cat("loading files, if running fullmode, this may take a while ... \n")
   cat("... open DB \n")
-  openDb <- read_delim(
-    file = gzfile(pathDataInterimTablesAnalysedPlatinum),
-    col_types = cols(.default = "c"),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  openDb <-
+    vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
     distinct(
       database,
       organismCleaned,
@@ -36,25 +32,13 @@ if (mode != "test") {
     tibble()
 
   cat("... open DB \n")
-  openDbMaximal <- read_delim(
-    file = gzfile(pathDataInterimTablesCuratedTableMaximal),
-    col_types = cols(.default = "c"),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  openDbMaximal <-
+    vroom_read_safe(path = pathDataInterimTablesCuratedTableMaximal) %>%
     tibble()
 
   cat("... DNP DB \n")
-  dnpDb <- read_delim(
-    file = gzfile(file.path(
-      pathDataInterimTablesAnalysed, "dnp.tsv.gz"
-    )),
-    col_types = cols(.default = "c"),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  dnpDb <-
+    vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
     distinct(
       database,
       organismCleaned,
@@ -66,12 +50,8 @@ if (mode != "test") {
 
   cat("... metadata ... \n")
   cat("... organisms \n")
-  organismMetadata <- read_delim(
-    file = gzfile(pathDataInterimDictionariesOrganismMetadata),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  organismMetadata <-
+    vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata) %>%
     tibble() %>%
     mutate(
       organismCleaned_dbTaxo_1kingdom = ifelse(
@@ -124,12 +104,8 @@ if (mode != "test") {
     )
 
   cat("... structures metadata \n")
-  structureMetadata_1 <- read_delim(
-    file = gzfile(pathDataInterimDictionariesStructureMetadata),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  structureMetadata_1 <-
+    vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
     distinct(
       structureCleanedSmiles,
       structureCleanedInchi,
@@ -141,14 +117,8 @@ if (mode != "test") {
 
   cat("... structures classification ...\n")
   cat("... classyfire \n")
-  structureMetadata_2 <- read_delim(
-    file = gzfile(
-      pathDataInterimDictionariesStructureDictionaryClassyfireFile
-    ),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  structureMetadata_2 <-
+    vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryClassyfireFile) %>%
     select(
       structureCleanedSmiles,
       structureCleanedInchi,
@@ -162,13 +132,9 @@ if (mode != "test") {
     tibble()
 
   cat("... NpClassifier \n")
-  structureMetadata_3 <- read_delim(
-    file = gzfile(
+  structureMetadata_3 <- vroom_read_safe(
+    path =
       pathDataInterimDictionariesStructureDictionaryNpclassifierFile
-    ),
-    delim = "\t",
-    escape_double = FALSE,
-    trim_ws = TRUE
   ) %>%
     select(
       structureCleanedSmiles = smiles,

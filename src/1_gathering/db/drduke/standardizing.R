@@ -6,44 +6,57 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("drduke")
 
 ## files
-data_common <- read_delim(
+data_common <- vroom(
   file = database$sourceFiles$tsvCommon,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_types = cols(.default = "c")
 ) %>%
-  mutate_all(as.character) %>%
   select(FNFNUM, CNNAM)
 
-data_farmacy <- read_delim(
+data_farmacy <- vroom(
   file = database$sourceFiles$tsvFarmacy,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate_all(as.character)
+  trim_ws = TRUE,
+  col_types = cols(.default = "c")
+)
 
-data_fntax <- read_delim(
+data_fntax <- vroom(
   file = database$sourceFiles$tsvTaxa,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_types = cols(.default = "c")
 ) %>%
-  mutate_all(as.character) %>%
   select(FNFNUM, TAXON)
 
-data_reference <- read_delim(
+data_reference <- vroom(
   file = database$sourceFiles$tsvReference,
   delim = ",",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
+  trim_ws = TRUE,
+  col_types = cols(.default = "c")
 ) %>%
-  mutate_all(as.character) %>%
   select(REFERENCE, LONGREF)
 
 # joining
@@ -85,8 +98,7 @@ data_filtered_1 <- data_selected %>%
     biologicalsource,
     reference_authors,
     reference_original,
-    reference_external,
-    reference_split
+    reference_external
   )
 
 data_filtered_2 <- data_selected %>%
@@ -94,8 +106,7 @@ data_filtered_2 <- data_selected %>%
   mutate(
     reference_external = reference_original,
     reference_authors = NA,
-    reference_original = NA,
-    reference_split = NA
+    reference_original = NA
   ) %>%
   select(-REFERENCE)
 
@@ -116,8 +127,7 @@ data_standard <-
     reference_field = c(
       "reference_original",
       "reference_external",
-      "reference_authors",
-      "reference_split"
+      "reference_authors"
     )
   )
 

@@ -15,15 +15,11 @@ source("r/y_as_na.R")
 source("r/preparing_name.R")
 source("r/name2inchi_cactus.R")
 source("r/name2inchi_cts.R")
+source("r/vroom_safe.R")
 
 cat("loading chemical names lists \n")
-dataOriginal <- read_delim(
-  file = gzfile(pathDataInterimTablesOriginalStructureNominal),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate_all(as.character)
+dataOriginal <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalStructureNominal)
 
 if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
@@ -76,13 +72,14 @@ system(
 )
 
 cat("loading opsin results \n")
-dataOpsin <- read_delim(
-  file = pathDataInterimTablesTranslatedStructureOpsin,
-  delim = "\t",
-  skip_empty_rows = FALSE,
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataOpsin <-
+  read_delim(
+    file = pathDataInterimTablesTranslatedStructureOpsin,
+    delim = "\t",
+    skip_empty_rows = FALSE,
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
   mutate_all(as.character) %>%
   select(inchiNominal_opsin = X1)
 
@@ -92,17 +89,9 @@ dataInterim <- left_join(dataPreparedNames, dataInterim)
 
 cat("exporting interim ... \n")
 cat(pathDataInterimTablesTranslatedStructureNominal_opsin, "\n")
-write.table(
+vroom_write_safe(
   x = dataInterim,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedStructureNominal_opsin,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedStructureNominal_opsin
 )
 
 dataForCactus <- dataInterim %>%
@@ -123,7 +112,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 2,
+      mc.cores = 10,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
@@ -155,18 +144,13 @@ dataInterim_2 <- left_join(
 )
 
 cat("exporting interim ... \n")
-cat(pathDataInterimTablesTranslatedStructureNominal_cactus, "\n")
-write.table(
+cat(
+  pathDataInterimTablesTranslatedStructureNominal_cactus,
+  "\n"
+)
+vroom_write_safe(
   x = dataInterim_2,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedStructureNominal_cactus,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedStructureNominal_cactus
 )
 
 dataForCTS <- dataInterim_2 %>%
@@ -232,17 +216,9 @@ dataTranslated <- left_join(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
-write.table(
+vroom_write_safe(
   x = dataTranslated,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedStructureNominal,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedStructureNominal
 )
 
 end <- Sys.time()

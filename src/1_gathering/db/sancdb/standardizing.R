@@ -7,18 +7,22 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+ibrary(vroom)
 
 # get paths
 database <- databases$get("sancdb")
 
 ## files
-data_original <- read_delim(
+data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
   escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate_all(as.character)
+  trim_ws = TRUE,
+  quote = ""
+)
 
 #  cleaning
 ## function

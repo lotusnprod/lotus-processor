@@ -149,6 +149,13 @@ preparing_name <- function(x) {
       replacement = "\\)",
       x = x$nameCleaned
     )
+  x$nameCleaned <-
+    gsub(
+      pattern = "\"\"\"",
+      replacement = "",
+      x = x$nameCleaned
+    )
+
   x$nameCleaned <- trimws(x = x$nameCleaned)
   x$nameCleaned <- tolower(x = x$nameCleaned)
   x$nameCleaned <-

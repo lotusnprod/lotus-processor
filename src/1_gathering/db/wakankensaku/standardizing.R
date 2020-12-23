@@ -6,18 +6,22 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("wakankensaku")
 
 ## files
-data_original <- read_delim(
+data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
   escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate_all(as.character)
+  trim_ws = TRUE,
+  col_names = TRUE,
+  id = NULL,
+  progress = TRUE,
+  quote = ""
+)
 
 # manipulating
 data_manipulated <- data_original %>%

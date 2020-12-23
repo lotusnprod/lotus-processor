@@ -8,15 +8,12 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+source("r/vroom_safe.R")
 
 cat("... files ... \n")
 cat("... DOI \n")
-dataDoi <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceDoi),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataDoi <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceDoi) %>%
   select(
     referenceOriginal = referenceOriginal_doi,
     doi_doi = referenceTranslatedDoi,
@@ -39,12 +36,8 @@ dataDoi <- read_delim(
   mutate_all(as.character)
 
 cat("... original references \n")
-dataOriginal <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceOriginal),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataOriginal <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceOriginal) %>%
   select(
     referenceOriginal = referenceOriginal_original,
     doi_original = referenceTranslatedDoi,
@@ -70,12 +63,8 @@ dataOriginal <- read_delim(
   mutate_all(as.character)
 
 cat("... PMID \n")
-dataPubmed <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferencePubmed),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataPubmed <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePubmed) %>%
   select(
     referenceOriginal = referenceOriginal_pubmed,
     doi_pubmed = referenceTranslatedDoi,
@@ -98,12 +87,8 @@ dataPubmed <- read_delim(
   mutate_all(as.character)
 
 cat("... publishing details \n")
-dataPublishingDetails <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferencePublishingDetails),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataPublishingDetails <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePublishingDetails) %>%
   select(
     referenceOriginal = referenceOriginal_publishingDetails,
     doi_publishingDetails = referenceTranslatedDoi,
@@ -129,12 +114,8 @@ dataPublishingDetails <- read_delim(
   mutate_all(as.character)
 
 cat("... titles \n")
-dataTitle <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceTitle),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataTitle <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceTitle) %>%
   select(
     referenceOriginal = referenceOriginal_title,
     doi_title = referenceTranslatedDoi,
@@ -160,12 +141,8 @@ dataTitle <- read_delim(
   mutate_all(as.character)
 
 cat("... split \n")
-dataSplit <- read_delim(
-  file = gzfile(pathDataInterimTablesTranslatedReferenceSplit),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataSplit <-
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceSplit) %>%
   select(
     referenceOriginal = referenceOriginal_split,
     doi_split = referenceTranslatedDoi,
@@ -191,39 +168,24 @@ dataSplit <- read_delim(
   mutate_all(as.character)
 
 cat("... full references \n")
-dataFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesOriginalReferenceFull),
-  delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+dataFull <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceFull) %>%
   mutate_all(as.character)
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("...  cleaned organisms \n")
 }
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  dataCleanedOrganismManipulated_old <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesOrganismDictionary),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  dataCleanedOrganismManipulated_old <-
+    vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
     distinct(
       organismOriginal,
       organismDetected
     ) %>%
     mutate_all(as.character)
 
-  dataCleanedOrganismManipulated_new <- read_delim(
-    file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  dataCleanedOrganismManipulated_new <-
+    vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
     distinct(
       organismOriginal,
       organismDetected
@@ -242,13 +204,8 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("... cleaned organisms \n")
 }
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  dataCleanedOrganismManipulated <- read_delim(
-    file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  dataCleanedOrganismManipulated <-
+    vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
     distinct(
       organismOriginal,
       organismDetected
@@ -260,13 +217,8 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   cat("... reference dictionary, this may take a while \n")
 }
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  referenceDictionary <- read_delim(
-    file = gzfile(description = pathDataInterimDictionariesReferenceDictionary),
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  )
+  referenceDictionary <-
+    vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary)
 }
 
 cat("joining ... \n")
@@ -357,31 +309,15 @@ ifelse(
 
 cat("exporting, this may take a while if running full mode \n")
 cat(pathDataInterimTablesTranslatedReferenceFile, "\n")
-write.table(
+vroom_write_safe(
   x = dataTranslated,
-  file = gzfile(
-    description = pathDataInterimTablesTranslatedReferenceFile,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimTablesTranslatedReferenceFile
 )
 
 cat(pathDataInterimDictionariesReferenceDictionary, "\n")
-write.table(
+vroom_write_safe(
   x = dataCrossref,
-  file = gzfile(
-    description = pathDataInterimDictionariesReferenceDictionary,
-    compression = 9,
-    encoding = "UTF-8"
-  ),
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
+  path = pathDataInterimDictionariesReferenceDictionary
 )
 
 rm(dataCrossref)
