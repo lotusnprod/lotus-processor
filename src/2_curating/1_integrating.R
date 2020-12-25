@@ -177,6 +177,7 @@ structureTable_smiles <- dbTable %>%
   filter(!is.na(structureOriginal_smiles)) %>%
   distinct(structureOriginal_smiles) %>%
   select(structureValue = structureOriginal_smiles)
+
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
     structureTable_smiles <-
@@ -240,41 +241,30 @@ if (nrow(structureTable_nominal) == 0) {
 
 cat("... structures table \n")
 if (mode != "test") {
-  if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-    structureTable_full <- dbTable %>%
-      filter(!structureOriginal_inchi %in% structureAntiDictionary$structureValue) %>%
-      filter(!structureOriginal_smiles %in% structureAntiDictionary$structureValue) %>%
-      filter(!structureOriginal_nominal %in% structureAntiDictionary$structureValue) %>%
-      filter(!structureOriginal_inchi %in% structureDictionary$structureValue) %>%
-      filter(!structureOriginal_smiles %in% structureDictionary$structureValue) %>%
-      filter(!structureOriginal_nominal %in% structureDictionary$structureValue)
-  }
-
-  if (!file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-    structureTable_full <- dbTable
-  }
+  structureTable_full <-
+    bind_rows(
+      structureTable_inchi %>%
+        mutate(structureType = "inchi") %>%
+        select(structureType,
+          structureValue = structureOriginal_inchi
+        ),
+      structureTable_smiles %>%
+        mutate(structureType = "smiles") %>%
+        select(structureType,
+          structureValue = structureOriginal_smiles
+        ),
+      structureTable_nominal %>%
+        mutate(structureType = "nominal") %>%
+        select(structureType,
+          structureValue = structureOriginal_nominal
+        )
+    ) %>%
+    distinct()
 }
 
 if (mode == "test") {
   structureTable_full <- dbTable
 }
-
-structureTable_full <- structureTable_full %>%
-  distinct(
-    structureOriginal_inchi,
-    structureOriginal_smiles,
-    structureOriginal_nominal
-  ) %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
-    cols = 1:ncol(.),
-    names_to = c("drop", "structureType"),
-    names_sep = "_",
-    values_to = "structureValue",
-    values_drop_na = TRUE
-  ) %>%
-  select(structureType, structureValue) %>%
-  distinct()
 
 if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
