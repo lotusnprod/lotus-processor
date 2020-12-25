@@ -240,31 +240,25 @@ if (nrow(structureTable_nominal) == 0) {
 }
 
 cat("... structures table \n")
-if (mode != "test") {
-  structureTable_full <-
-    bind_rows(
-      structureTable_inchi %>%
-        mutate(structureType = "inchi") %>%
-        select(structureType,
-          structureValue = structureOriginal_inchi
-        ),
-      structureTable_smiles %>%
-        mutate(structureType = "smiles") %>%
-        select(structureType,
-          structureValue = structureOriginal_smiles
-        ),
-      structureTable_nominal %>%
-        mutate(structureType = "nominal") %>%
-        select(structureType,
-          structureValue = structureOriginal_nominal
-        )
-    ) %>%
-    distinct()
-}
-
-if (mode == "test") {
-  structureTable_full <- dbTable
-}
+structureTable_full <-
+  bind_rows(
+    structureTable_inchi %>%
+      mutate(structureType = "inchi") %>%
+      select(structureType,
+        structureValue = structureOriginal_inchi
+      ),
+    structureTable_smiles %>%
+      mutate(structureType = "smiles") %>%
+      select(structureType,
+        structureValue = structureOriginal_smiles
+      ),
+    structureTable_nominal %>%
+      mutate(structureType = "nominal") %>%
+      select(structureType,
+        structureValue = structureOriginal_nominal
+      )
+  ) %>%
+  distinct()
 
 if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
