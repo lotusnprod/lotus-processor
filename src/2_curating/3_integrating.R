@@ -15,6 +15,9 @@ cat("... original table \n")
 originalTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalTable)
 
+originalStructureTable <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
+
 cat("loading dictionaries ... \n")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   cat("... structures \n")
@@ -358,9 +361,13 @@ cat(
   "to avoid translating them again (since process is long) \n"
 )
 structureNA <- anti_join(
-  x = originalTable,
+  x = originalStructureTable,
   y = structureFull
-)
+) %>%
+  distinct(
+    structureType,
+    structureValue
+  )
 
 structureNA <- left_join(structureNA, structureFull) %>%
   filter(is.na(structureCleanedInchikey3D)) %>%
@@ -376,7 +383,8 @@ structureNA <- left_join(structureNA, structureFull) %>%
     structureCleanedSmiles,
     # structureCleanedName,
     # structureCleanedNameIupac
-  )
+  ) %>%
+  distinct()
 
 cat("ensuring directories exist \n")
 ifelse(
