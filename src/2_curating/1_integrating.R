@@ -170,10 +170,10 @@ if (nrow(structureTable_inchi) == 0) {
 
 cat("... smiles table \n")
 structureTable_smiles <- dbTable %>%
-  filter(!grepl(
-    pattern = "^InChI=.*",
-    x = structureOriginal_inchi
-  )) %>%
+  # filter(!grepl(
+  #   pattern = "^InChI=.*",
+  #   x = structureOriginal_inchi
+  # )) %>%
   filter(!is.na(structureOriginal_smiles)) %>%
   distinct(structureOriginal_smiles) %>%
   select(structureValue = structureOriginal_smiles)
