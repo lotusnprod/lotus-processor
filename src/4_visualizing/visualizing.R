@@ -345,7 +345,6 @@ if (mode != "test") {
   dev.off()
 
   cat("adding metadata for more detailed analysis ... \n")
-  cat("... inhouse DB ... \n")
   cat("... classyfire \n")
   inhouseDbMeta <- left_join(inhouseDb, structureMetadata_2)
 
@@ -361,7 +360,10 @@ if (mode != "test") {
     arrange(desc(organismCleaned_dbTaxo_4order)) %>%
     arrange(desc(organismCleaned_dbTaxo_3class)) %>%
     arrange(desc(organismCleaned_dbTaxo_2phylum)) %>%
-    arrange(desc(organismCleaned_dbTaxo_1kingdom)) %>%
+    arrange(desc(organismCleaned_dbTaxo_1kingdom))
+
+  openDbMeta <- inhouseDbMeta %>%
+    filter(database != "dnp_1") %>%
     distinct(
       database,
       organismCleaned,
@@ -370,23 +372,7 @@ if (mode != "test") {
       .keep_all = TRUE
     )
 
-  cat("... open DB ... \n")
-  cat("... classyfire \n")
-  openDbMeta <- left_join(openDb, structureMetadata_2)
-
-  cat("... npclassifier \n")
-  openDbMeta <- left_join(openDbMeta, structureMetadata_3)
-
-  cat("... organism \n")
-  openDbMeta <- left_join(openDbMeta, organismMetadata) %>%
-    arrange(desc(organismCleaned_dbTaxo_8variety)) %>%
-    arrange(desc(organismCleaned_dbTaxo_7species)) %>%
-    arrange(desc(organismCleaned_dbTaxo_6genus)) %>%
-    arrange(desc(organismCleaned_dbTaxo_5family)) %>%
-    arrange(desc(organismCleaned_dbTaxo_4order)) %>%
-    arrange(desc(organismCleaned_dbTaxo_3class)) %>%
-    arrange(desc(organismCleaned_dbTaxo_2phylum)) %>%
-    arrange(desc(organismCleaned_dbTaxo_1kingdom)) %>%
+  inhouseDbMeta <- inhouseDbMeta %>%
     distinct(
       database,
       organismCleaned,
@@ -2187,8 +2173,8 @@ if (mode != "test") {
       ) +
       scale_x_discrete(limits = c("database", "original", "cleaned")) +
       # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-      scale_fill_manual(values = c("#fb9a99", "#1f78b4")) +
-      scale_colour_manual(values = c("#fb9a99", "#1f78b4")) +
+      scale_fill_manual(values = c("#D71D62", "#08589B")) +
+      scale_colour_manual(values = c("#D71D62", "#08589B")) +
       theme(
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),

@@ -361,8 +361,8 @@ cat(
   "to avoid translating them again (since process is long) \n"
 )
 structureNA <- anti_join(
-  x = originalStructureTable,
-  y = structureFull
+  x = originalTable,
+  y = structureMinimal
 ) %>%
   distinct(
     structureType,
