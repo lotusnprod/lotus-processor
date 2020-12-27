@@ -167,7 +167,6 @@ dataTitle3 <- do.call(
           file.path(pathDataInterimTablesTranslatedReferenceTitleFolder, x)
         ),
         delim = "\t",
-        escape_double = FALSE,
         trim_ws = TRUE
       ) %>%
         mutate_all(as.character)

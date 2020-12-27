@@ -15,11 +15,6 @@ database <- databases$get("drduke")
 data_common <- vroom(
   file = database$sourceFiles$tsvCommon,
   delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 ) %>%
   select(FNFNUM, CNNAM)
@@ -27,22 +22,12 @@ data_common <- vroom(
 data_farmacy <- vroom(
   file = database$sourceFiles$tsvFarmacy,
   delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 )
 
 data_fntax <- vroom(
   file = database$sourceFiles$tsvTaxa,
   delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 ) %>%
   select(FNFNUM, TAXON)
@@ -50,11 +35,6 @@ data_fntax <- vroom(
 data_reference <- vroom(
   file = database$sourceFiles$tsvReference,
   delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 ) %>%
   select(REFERENCE, LONGREF)

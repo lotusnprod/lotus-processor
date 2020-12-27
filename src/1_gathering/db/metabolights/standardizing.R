@@ -15,24 +15,12 @@ database <- databases$get("metabolights")
 
 data_clean_final <- vroom(
   file = gzfile(database$sourceFiles$tsvPrecleaned),
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+  delim = "\t"
 )
 
 species_studies <- vroom(
   file = gzfile(database$sourceFiles$tsvStudies),
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+  delim = "\t"
 ) %>%
   distinct(species)
 

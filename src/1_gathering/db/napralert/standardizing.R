@@ -15,8 +15,6 @@ database <- databases$get("napralert")
 dataOriginal <- read_delim(
   file = gzfile(database$sourceFiles$tsvOriginal),
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 ) %>%
   mutate(
@@ -41,12 +39,6 @@ dataOriginal <- read_delim(
 dataMatched <- vroom(
   file = gzfile(database$sourceFiles$tsvMatched),
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = "",
   col_types = cols(.default = "c")
 ) %>%
   mutate(

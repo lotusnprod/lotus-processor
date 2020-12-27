@@ -14,12 +14,7 @@ database <- databases$get("dnp")
 ## files
 data_original <- vroom(
   file = database$sourceFiles$tsv,
-  delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE
+  delim = ","
 ) %>%
   mutate_all(as.character)
 
