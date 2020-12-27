@@ -18,6 +18,8 @@ WORKDIR /srv/onpdb
 SHELL ["/bin/bash", "-c"]
 
 RUN cd /tmp && curl -L https://github.com/gnames/gnfinder/releases/download/v0.11.1/gnfinder-v0.11.1-linux.tar.gz | tar xz && mv gnfinder /usr/local/bin
+RUN cd /tmp && curl -L https://github.com/gnames/gnverify/releases/download/v0.1.0/gnverify-v0.1.0-linux.tar.gz | tar xz && mv gnverify /usr/local/bin
+
 RUN conda run -p /srv/onpdb_env /environment_non_conda.sh
 
 USER user
