@@ -15,13 +15,7 @@ database <- databases$get("mitishamba")
 ## files
 data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_backslash = TRUE,
-  trim_ws = TRUE,
-  quote = ""
+  delim = "\t"
 ) %>%
   mutate_all(as.character)
 

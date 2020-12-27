@@ -14,15 +14,11 @@ source("r/vroom_safe.R")
 
 ##  files
 ### common names from PhenolExplorer
-commonSciPhe <- vroom(
-  file = pathDataExternalTranslationSourceCommonPhenolexplorer,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-) %>%
+commonSciPhe <-
+  vroom(
+    file = pathDataExternalTranslationSourceCommonPhenolexplorer,
+    delim = ","
+  ) %>%
   select(
     vernacularName = name,
     canonicalName = food_source_scientific_name
@@ -30,12 +26,12 @@ commonSciPhe <- vroom(
   filter(!is.na(vernacularName))
 
 ### common names from FooDB
-commonSciFoo <- read_delim(
-  file = pathDataExternalTranslationSourceCommonFoodb,
-  delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
-) %>%
+commonSciFoo <-
+  read_delim(
+    file = pathDataExternalTranslationSourceCommonFoodb,
+    delim = ",",
+    quote = ""
+  ) %>%
   select(
     vernacularName = name,
     canonicalName = name_scientific
@@ -43,24 +39,22 @@ commonSciFoo <- read_delim(
   filter(!is.na(vernacularName))
 
 ### common names from DrDuke
-commonDuk <- vroom(
-  file = pathDataExternalTranslationSourceCommonDrdukeCommon,
-  delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
-) %>%
+commonDuk <-
+  vroom(
+    file = pathDataExternalTranslationSourceCommonDrdukeCommon,
+    delim = ","
+  ) %>%
   select(
     vernacularName = CNNAM,
     FNFNUM
   )
 
 ### scientific names from DrDuke
-sciDuk <- vroom(
-  file = pathDataExternalTranslationSourceCommonDrdukeScientific,
-  delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
-) %>%
+sciDuk <-
+  vroom(
+    file = pathDataExternalTranslationSourceCommonDrdukeScientific,
+    delim = ","
+  ) %>%
   select(FNFNUM,
     canonicalName = TAXON
   )
@@ -71,16 +65,14 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
 
 ### GBIF
 #### taxa
-taxa <- vroom(
-  file = pathDataExternalTranslationSourceCommonGbifScientific,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE,
-  progress = TRUE,
-  quote = ""
-) %>%
+taxa <-
+  vroom(
+    file = pathDataExternalTranslationSourceCommonGbifScientific,
+    delim = "\t",
+    quote = ""
+  ) %>%
   filter(!is.na(canonicalName)) %>%
-  select(
+  distinct(
     taxonID,
     canonicalName,
     genericName,
@@ -89,34 +81,28 @@ taxa <- vroom(
   filter(!grepl(
     pattern = "\\?",
     x = canonicalName
-  )) %>%
-  distinct()
+  ))
 
 #### taxa
 vernacular <- vroom(
   file = pathDataExternalTranslationSourceCommonGbifVernacular,
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = FALSE,
   quote = ""
 ) %>%
   filter(language == "en") %>%
-  select(
+  distinct(
     taxonID,
     vernacularName
   ) %>%
   filter(!grepl(
     pattern = "\\?",
     x = vernacularName
-  )) %>%
-  distinct()
+  ))
 
 ### manually subtracted entries
 manualSubtraction <- vroom(
   file = pathDataInterimDictionariesCommonManualSubtraction,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
+  delim = "\t"
 )
 
 # removing parts of PhenolExplorer names

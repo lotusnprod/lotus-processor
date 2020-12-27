@@ -35,13 +35,7 @@ tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
 ### dictionary from TCMID
 tcmNamesDic_2 <- vroom(
   file = pathDataExternalTranslationSourceTcmTcmid,
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  quote = ""
+  delim = "\t"
 ) %>%
   select(
     latin = `Latin Name`,

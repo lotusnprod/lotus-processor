@@ -40,10 +40,10 @@ manipulating_taxo <- function(dfsel, dic) {
     y = ""
   )
 
-  dfsel$ids <- y_as_na(
-    x = dfsel$ids,
-    y = ""
-  )
+  # dfsel$ids <- y_as_na(
+  #   x = dfsel$ids,
+  #   y = ""
+  # )
 
   # selecting and splitting taxonomy and ranks
   df1 <- dfsel %>%
@@ -52,10 +52,10 @@ manipulating_taxo <- function(dfsel, dic) {
       organismDbTaxo,
       taxonId,
       # because some organisms can have multiple ids
-      dbQuality,
+      # dbQuality,
       name = taxonomy,
       rank,
-      id = ids
+      # id = ids
     ) %>%
     distinct(
       organismCleaned,
@@ -71,17 +71,17 @@ manipulating_taxo <- function(dfsel, dic) {
       splitCols = "rank",
       sep = "|"
     ) %>%
-    cSplit(
-      splitCols = "id",
-      sep = "|"
-    ) %>%
+    # cSplit(
+    #   splitCols = "id",
+    #   sep = "|"
+    # ) %>%
     mutate_all(as.character) %>%
     tibble()
 
   # manipulating taxa
   df2 <- df1 %>%
     pivot_longer(
-      cols = 5:ncol(.),
+      cols = 4:ncol(.),
       names_to = c(".value", "level"),
       names_sep = "_",
       values_to = "taxonomy",
@@ -102,12 +102,12 @@ manipulating_taxo <- function(dfsel, dic) {
     no = df2$rank
   )
 
-  df2$id <- sub(
-    pattern = "urn:lsid:marinespecies.org:taxname:",
-    replacement = "",
-    x = df2$id,
-    fixed = TRUE
-  )
+  # df2$id <- sub(
+  #   pattern = "urn:lsid:marinespecies.org:taxname:",
+  #   replacement = "",
+  #   x = df2$id,
+  #   fixed = TRUE
+  # )
 
   df2$taxonId <- sub(
     pattern = "urn:lsid:marinespecies.org:taxname:",
@@ -146,14 +146,14 @@ manipulating_taxo <- function(dfsel, dic) {
         # rank == "tribe" |
         # rank == "subtribe" |
         rank == "genus" |
-        # rank == "subgenus" |
+        rank == "subgenus" |
         rank == "species" |
-        # rank == "subspecies" |
+        rank == "subspecies" |
         rank == "variety"
     ) %>%
     pivot_wider(
       names_from = rank,
-      values_from = c(name, id)
+      values_from = name
     ) %>%
     select(-level)
 
@@ -161,10 +161,9 @@ manipulating_taxo <- function(dfsel, dic) {
   if (nrow(df3) != 0) {
     df4 <- df3 %>%
       pivot_longer(
-        cols = 5:ncol(.),
-        names_to = c(".value", "rank"),
-        names_sep = "_",
-        values_to = "taxonomy",
+        cols = 4:ncol(.),
+        names_to = "rank",
+        values_to = "name",
         values_drop_na = TRUE
       )
   }
@@ -175,12 +174,11 @@ manipulating_taxo <- function(dfsel, dic) {
       group_by(organismCleaned, organismDbTaxo, taxonId) %>%
       distinct(rank,
         name,
-        id,
         .keep_all = TRUE
       ) %>%
       pivot_wider(
         names_from = rank,
-        values_from = c(name, id)
+        values_from = name
       ) %>%
       ungroup() %>%
       select_if(
@@ -190,22 +188,16 @@ manipulating_taxo <- function(dfsel, dic) {
             "organismDbTaxo",
             "taxonId",
             "dbQuality",
-            "name_kingdom",
-            "name_phylum",
-            "name_class",
-            "name_order",
-            "name_family",
-            "name_genus",
-            "name_species",
-            "name_variety"
-            # "id_kingdom",
-            # "id_phylum",
-            # "id_class",
-            # "id_order",
-            # "id_family",
-            # "id_genus",
-            # "id_species",
-            # "id_variety"
+            "kingdom",
+            "phylum",
+            "class",
+            "order",
+            "family",
+            "genus",
+            "subgnus",
+            "species",
+            "subspecies",
+            "variety"
           )
       )
   }
@@ -217,14 +209,16 @@ manipulating_taxo <- function(dfsel, dic) {
         "organismDbTaxo",
         "taxonId",
         "dbQuality",
-        "name_kingdom",
-        "name_phylum",
-        "name_class",
-        "name_order",
-        "name_family",
-        "name_genus",
-        "name_species",
-        "name_variety"
+        "kingdom",
+        "phylum",
+        "class",
+        "order",
+        "family",
+        "genus",
+        "subgenus",
+        "species",
+        "subspecies",
+        "variety"
         # "id_kingdom",
         # "id_phylum",
         # "id_class",
@@ -247,21 +241,23 @@ manipulating_taxo <- function(dfsel, dic) {
         organismOriginal,
         organismDetected = organismCleaned,
         organismCleaned = name,
-        organismCleanedId = id,
+        organismCleanedId = taxonId,
         organismCleanedRank = taxon_rank,
         organismDbTaxo,
         organismDbTaxoQuality = dbQuality,
-        organismTaxonIds = ids,
+        # organismTaxonIds = ids,
         organismTaxonRanks = rank,
         organismTaxonomy = taxonomy,
-        organism_1_kingdom = name_kingdom,
-        organism_2_phylum = name_phylum,
-        organism_3_class = name_class,
-        organism_4_order = name_order,
-        organism_5_family = name_family,
-        organism_6_genus = name_genus,
-        organism_7_species = name_species,
-        organism_8_variety = name_variety,
+        organism_1_kingdom = kingdom,
+        organism_2_phylum = phylum,
+        organism_3_class = class,
+        organism_4_order = order,
+        organism_5_family = family,
+        organism_6_genus = genus,
+        organism_6_1_subgenus = subgenus,
+        organism_7_species = species,
+        organism_7_1_subspecies = subspecies,
+        organism_8_variety = variety,
         # organism_1_kingdom_id = id_kingdom,
         # organism_2_phylum_id = id_phylum,
         # organism_3_class_id = id_class,
@@ -272,6 +268,8 @@ manipulating_taxo <- function(dfsel, dic) {
         # organism_8_variety_id = id_variety
       ) %>%
       filter(!is.na(organismCleaned)) %>%
+      filter(!is.na(organismCleanedRank)) %>%
+      filter(organismCleanedRank != "NA") %>%
       distinct()
   }
 
@@ -285,7 +283,7 @@ manipulating_taxo <- function(dfsel, dic) {
         organismCleanedRank = NA,
         organismDbTaxo = NA,
         organismDbTaxoQuality = NA,
-        organismTaxonIds = NA,
+        # organismTaxonIds = NA,
         organismTaxonRanks = NA,
         organismTaxonomy = NA,
         organism_1_kingdom = NA,
@@ -294,7 +292,9 @@ manipulating_taxo <- function(dfsel, dic) {
         organism_4_order = NA,
         organism_5_family = NA,
         organism_6_genus = NA,
+        organism_6_1_subgenus = NA,
         organism_7_species = NA,
+        organism_7_1_subspecies = NA,
         organism_8_variety = NA,
         # organism_1_kingdom_id = NA,
         # organism_2_phylum_id = NA,

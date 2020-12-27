@@ -7,56 +7,47 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("foodb")
 
 # files
-compounds_flavors <- read_delim(
-  file = database$sourceFiles$tsvCompoundsFlavors,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE
-) %>%
+compounds_flavors <-
+  vroom(
+    file = database$sourceFiles$tsvCompoundsFlavors,
+    delim = ","
+  ) %>%
   mutate_all(as.character)
 
 compounds <- read_delim(
   file = database$sourceFiles$tsvCompounds,
-  delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
+  delim = ","
 ) %>%
   mutate_all(as.character)
 
-contents <- read_delim(
+contents <- vroom(
   file = database$sourceFiles$tsvContent,
-  delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
+  delim = ","
 ) %>%
   mutate_all(as.character)
 
-flavors <- read_delim(
+flavors <- vroom(
   file = database$sourceFiles$tsvFlavor,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE
+  delim = ","
 ) %>%
   mutate_all(as.character)
 
-foods <- read_delim(
+foods <- vroom(
   file = database$sourceFiles$tsvFood,
   delim = ",",
-  escape_double = TRUE,
-  trim_ws = TRUE
+  quote = ""
 ) %>%
   mutate_all(as.character)
 
-references <- read_delim(
+references <- vroom(
   file = database$sourceFiles$tsvReference,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE
+  delim = ","
 ) %>%
   mutate_all(as.character)
 

@@ -14,13 +14,7 @@ database <- databases$get("wakankensaku")
 ## files
 data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  quote = ""
+  delim = "\t"
 )
 
 # manipulating

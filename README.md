@@ -266,6 +266,8 @@ You need:
 
 - Git
 - [DVC](https://www.dvc.org)
+- gnfinder (see how to install)
+- gnverify (see how to install)
 
 - If you want to be able to use the [PMID translation script](src/2_curating/2_editing/reference/subscripts/1_translating/pubmed.R) with less limitations and it to work correctly, you have to set an API key as described in the following [vignette](https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html)
 

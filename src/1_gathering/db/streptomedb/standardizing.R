@@ -6,7 +6,7 @@ source("r/standardizing_original.R")
 
 library(splitstackshape)
 library(tidyverse)
-ibrary(vroom)
+library(vroom)
 
 # get paths
 database <- databases$get("streptomedb")
@@ -15,11 +15,6 @@ database <- databases$get("streptomedb")
 data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   quote = ""
 )
 

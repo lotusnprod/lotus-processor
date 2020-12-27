@@ -16,11 +16,6 @@ database <- databases$get("npass")
 data_original_1 <- vroom(
   file = database$sourceFiles$tsvGeneral,
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   quote = ""
 ) %>%
   mutate_all(as.character) %>%
@@ -28,13 +23,7 @@ data_original_1 <- vroom(
 
 data_original_2 <- vroom(
   file = database$sourceFiles$tsvProperties,
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+  delim = "\t"
 ) %>%
   mutate_all(as.character) %>%
   data.frame()
@@ -42,12 +31,6 @@ data_original_2 <- vroom(
 data_original_3 <- vroom(
   file = database$sourceFiles$tsvSpeciesInfo,
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = "",
   col_types = cols(.default = "c")
 ) %>%
   data.frame()
@@ -55,12 +38,6 @@ data_original_3 <- vroom(
 data_original_4 <- vroom(
   file = database$sourceFiles$tsvSpeciesPair,
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = "",
   col_types = cols(.default = "c")
 ) %>%
   data.frame()
@@ -112,6 +89,8 @@ data_manipulated <- data_selected %>%
   ) %>%
   data.frame()
 
+data_manipulated$name <- y_as_na(data_standard$name, "n.a.")
+
 # standardizing
 data_standard <-
   standardizing_original(
@@ -125,8 +104,6 @@ data_standard <-
       "reference_title"
     )
   )
-
-data_standard$name <- y_as_na(data_standard$name, "n.a.")
 
 # exporting
 database$writeInterim(data_standard)

@@ -12,10 +12,8 @@ vroom_read_safe <- function(path) {
   vroom(
     file = path,
     delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
     quote = "",
-    trim_ws = TRUE,
+    col_types = cols(.default = "c"),
     num_threads = 1
   )
 }
