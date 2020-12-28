@@ -133,6 +133,7 @@ organismMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata) %>%
   distinct(
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -504,6 +505,7 @@ openDb <- inhouseDbFull %>%
   distinct(
     database,
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -530,6 +532,7 @@ openDb <- inhouseDbFull %>%
     referenceType,
     referenceValue,
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -554,6 +557,7 @@ dnpDb <- inhouseDbFull %>%
   distinct(
     database,
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
@@ -584,6 +588,7 @@ dnpDb <- inhouseDbFull %>%
     referenceType,
     referenceValue,
     organismCleaned,
+    organismCleaned_id,
     organismCleaned_dbTaxo,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,

@@ -945,7 +945,7 @@ if (mode != "test") {
     height = 9
   )
 
-  getGraphStudiedPlant(plant = "Capsicum annuum annuum")
+  getGraphStudiedPlant(plant = "Capsicum annuum")
   dev.off()
 
   cat("... drawing Arabidopsis thaliana metabolites repartition \n")

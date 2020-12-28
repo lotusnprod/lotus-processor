@@ -222,6 +222,7 @@ organismMinimal <- organismTableFull %>%
     organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo,
+    organismCleaned_id,
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy
