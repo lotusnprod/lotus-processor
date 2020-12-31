@@ -1039,6 +1039,12 @@ pathDataInterimDictionariesOrganismDictionary <-
     "dictionary.tsv.gz"
   )
 
+pathDataInterimDictionariesOrganismDictionaryOTL <-
+  file.path(
+    pathDataInterimDictionariesOrganism,
+    "otl.sqlite"
+  )
+
 pathDataInterimDictionariesOrganismMetadata <-
   file.path(pathDataInterimDictionariesOrganism, "metadata.tsv.gz")
 

@@ -22,6 +22,7 @@ dependencies:
   - r-codetools
   - r-collapsibletree
   - r-data.table
+  - r-DBI
   - r-dplyr
   - r-forcats
   - r-formula
@@ -39,8 +40,10 @@ dependencies:
   - r-readr
   - r-readxl
   - r-rentrez
+  - r-rotl
   - r-rvest
   - r-splitstackshape
+  - r-RSQLite
   - r-stringdist
   - r-stringi
   - r-stringr
