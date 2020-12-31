@@ -42,21 +42,19 @@ vroom_write_safe(
 cat("submitting to GNVerify \n")
 system(command = paste("bash", pathGnverifyScript))
 
-dataCleanedOrganismVerified <- data.frame(
-  stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
-)
-
 verified <- stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
 
 verified_df <- verified %>%
   data.frame() %>%
+  select(-curation,-matchType) %>% 
   unnest(preferredResults, names_repair = "minimal") %>%
+  filter(curation != "NotCurated") %>% 
   select(
     organismCleaned = input,
     organismDbTaxo = dataSourceTitleShort,
-    taxonId = recordId,
-    matchedName,
-    matchedCanonicalFull,
+    taxonId = currentRecordId,
+    currentName,
+    currentCanonicalFull,
     taxonomy = classificationPath,
     rank = classificationRanks
   )
