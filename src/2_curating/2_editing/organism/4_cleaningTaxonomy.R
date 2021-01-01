@@ -46,9 +46,9 @@ verified <- stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTab
 
 verified_df <- verified %>%
   data.frame() %>%
-  select(-curation,-matchType) %>% 
+  select(-curation, -matchType) %>%
   unnest(preferredResults, names_repair = "minimal") %>%
-  filter(curation != "NotCurated") %>% 
+  filter(curation != "NotCurated") %>%
   select(
     organismCleaned = input,
     organismDbTaxo = dataSourceTitleShort,
