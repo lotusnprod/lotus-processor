@@ -89,7 +89,7 @@ data_manipulated <- data_selected %>%
   ) %>%
   data.frame()
 
-data_manipulated$name <- y_as_na(data_standard$name, "n.a.")
+data_manipulated$name <- y_as_na(data_manipulated$name, "n.a.")
 
 # standardizing
 data_standard <-
