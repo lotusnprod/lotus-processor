@@ -131,7 +131,7 @@ new_matched_meta_list <-
   tax_lineage()
 
 new_matched_meta <- bind_rows(new_matched_meta_list,
-                              .id = "id"
+  .id = "id"
 )
 
 dbWriteTable(
