@@ -982,474 +982,478 @@ if (mode != "test") {
   dev.off()
 
   cat("drawing repartition of metabolites among Plantae phyla \n")
-  pdf(
-    file = file.path(pathDataProcessedFigures, "phyla.pdf"),
-    width = 16,
-    height = 9
-  )
+  try({
+    pdf(
+      file = file.path(pathDataProcessedFigures, "phyla.pdf"),
+      width = 16,
+      height = 9
+    )
 
-  inhouseDb_phyla <- inhouseDbMeta %>%
-    filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
-    filter(!is.na(organismCleaned_dbTaxo_2phylum)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned_dbTaxo_2phylum,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismCleaned_dbTaxo_2phylum) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
+    inhouseDb_phyla <- inhouseDbMeta %>%
+      filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
+      filter(!is.na(organismCleaned_dbTaxo_2phylum)) %>%
+      distinct(structureCleanedInchikey2D,
+        organismCleaned_dbTaxo_2phylum,
+        .keep_all = TRUE
+      ) %>%
+      group_by(organismCleaned_dbTaxo_2phylum) %>%
+      count(structureCleanedInchikey2D) %>%
+      ungroup()
 
-  inhouseDb_phyla_wide <-
-    inhouseDb_phyla %>%
-    pivot_wider(
-      names_from = organismCleaned_dbTaxo_2phylum,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    data.frame()
+    inhouseDb_phyla_wide <-
+      inhouseDb_phyla %>%
+      pivot_wider(
+        names_from = organismCleaned_dbTaxo_2phylum,
+        values_from = n
+      ) %>%
+      mutate_at(
+        .vars = c(2:ncol(.)),
+        ~ replace(
+          x = .,
+          list = is.na(.),
+          values = 0
+        )
+      ) %>%
+      mutate_at(
+        .vars = c(2:ncol(.)),
+        ~ replace(
+          x = .,
+          list = . >= 1,
+          values = 1
+        )
+      ) %>%
+      data.frame()
 
-  inhouseDb_phyla_wide <-
-    left_join(inhouseDb_phyla_wide, chemo) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+    inhouseDb_phyla_wide <-
+      left_join(inhouseDb_phyla_wide, chemo) %>%
+      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
-  mostsuperclass2 <- inhouseDb_phyla_wide %>%
-    count(structureCleaned_classyfire_2superclass) %>%
-    arrange(desc(n)) %>%
-    head(10)
+    mostsuperclass2 <- inhouseDb_phyla_wide %>%
+      count(structureCleaned_classyfire_2superclass) %>%
+      arrange(desc(n)) %>%
+      head(10)
 
-  upset(
-    inhouseDb_phyla_wide,
-    nsets = 10,
-    query.legend = "top",
-    queries = list(
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1],
-            mostsuperclass2[9, 1],
-            mostsuperclass2[10, 1]
-          )
+    upset(
+      inhouseDb_phyla_wide,
+      nsets = 10,
+      query.legend = "top",
+      queries = list(
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1],
+              mostsuperclass2[9, 1],
+              mostsuperclass2[10, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#6a3d9a",
+          query.name = mostsuperclass2[10, 1]
         ),
-        active = TRUE,
-        color = "#6a3d9a",
-        query.name = mostsuperclass2[10, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1],
-            mostsuperclass2[9, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1],
+              mostsuperclass2[9, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#cab2d6",
+          query.name = mostsuperclass2[9, 1]
         ),
-        active = TRUE,
-        color = "#cab2d6",
-        query.name = mostsuperclass2[9, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#ff7f00",
+          query.name = mostsuperclass2[8, 1]
         ),
-        active = TRUE,
-        color = "#ff7f00",
-        query.name = mostsuperclass2[8, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#fdbf6f",
+          query.name = mostsuperclass2[7, 1]
         ),
-        active = TRUE,
-        color = "#fdbf6f",
-        query.name = mostsuperclass2[7, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#e31a1c",
+          query.name = mostsuperclass2[6, 1]
         ),
-        active = TRUE,
-        color = "#e31a1c",
-        query.name = mostsuperclass2[6, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1]
-          )
-        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1]
+            )
+          ),
 
-        active = TRUE,
-        color = "#fb9a99",
-        query.name = mostsuperclass2[5, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1]
-          )
+          active = TRUE,
+          color = "#fb9a99",
+          query.name = mostsuperclass2[5, 1]
         ),
-        active = TRUE,
-        color = "#33a02c",
-        query.name = mostsuperclass2[4, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#33a02c",
+          query.name = mostsuperclass2[4, 1]
         ),
-        active = TRUE,
-        color = "#b2df8a",
-        query.name = mostsuperclass2[3, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#b2df8a",
+          query.name = mostsuperclass2[3, 1]
         ),
-        active = TRUE,
-        color = "#1f78b4",
-        query.name = mostsuperclass2[2, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(mostsuperclass2[1, 1])
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#1f78b4",
+          query.name = mostsuperclass2[2, 1]
         ),
-        active = TRUE,
-        color = "#a6cee3",
-        query.name = mostsuperclass2[1, 1]
-      )
-    ),
-    # mb.ratio = c(0.7, 0.3),
-    order.by = "freq",
-    nintersects = 50,
-    # empty.intersections = "on",
-    number.angles = 30,
-    point.size = 5,
-    line.size = 2,
-    text.scale = 2,
-    mainbar.y.label = "Unique structures per intersection",
-    sets.x.label = "Unique structures per phylum",
-    set_size.show = TRUE
-  )
-  dev.off()
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(mostsuperclass2[1, 1])
+          ),
+          active = TRUE,
+          color = "#a6cee3",
+          query.name = mostsuperclass2[1, 1]
+        )
+      ),
+      # mb.ratio = c(0.7, 0.3),
+      order.by = "freq",
+      nintersects = 50,
+      # empty.intersections = "on",
+      number.angles = 30,
+      point.size = 5,
+      line.size = 2,
+      text.scale = 2,
+      mainbar.y.label = "Unique structures per intersection",
+      sets.x.label = "Unique structures per phylum",
+      set_size.show = TRUE
+    )
+    dev.off()
+  })
 
   cat("drawing repartition of metabolites among Tracheophyta classes \n")
-  pdf(
-    file = file.path(pathDataProcessedFigures, "classes.pdf"),
-    width = 16,
-    height = 9
-  )
+  try({
+    pdf(
+      file = file.path(pathDataProcessedFigures, "classes.pdf"),
+      width = 16,
+      height = 9
+    )
 
-  inhouseDb_classes <- inhouseDbMeta %>%
-    filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
-    filter(!is.na(organismCleaned_dbTaxo_3class)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned_dbTaxo_3class,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismCleaned_dbTaxo_3class) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
+    inhouseDb_classes <- inhouseDbMeta %>%
+      filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
+      filter(!is.na(organismCleaned_dbTaxo_3class)) %>%
+      distinct(structureCleanedInchikey2D,
+        organismCleaned_dbTaxo_3class,
+        .keep_all = TRUE
+      ) %>%
+      group_by(organismCleaned_dbTaxo_3class) %>%
+      count(structureCleanedInchikey2D) %>%
+      ungroup()
 
-  inhouseDb_classes_wide <-
-    inhouseDb_classes %>%
-    pivot_wider(
-      names_from = organismCleaned_dbTaxo_3class,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    data.frame()
+    inhouseDb_classes_wide <-
+      inhouseDb_classes %>%
+      pivot_wider(
+        names_from = organismCleaned_dbTaxo_3class,
+        values_from = n
+      ) %>%
+      mutate_at(
+        .vars = c(2:ncol(.)),
+        ~ replace(
+          x = .,
+          list = is.na(.),
+          values = 0
+        )
+      ) %>%
+      mutate_at(
+        .vars = c(2:ncol(.)),
+        ~ replace(
+          x = .,
+          list = . >= 1,
+          values = 1
+        )
+      ) %>%
+      data.frame()
 
-  inhouseDb_classes_wide <-
-    left_join(inhouseDb_classes_wide, chemo) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+    inhouseDb_classes_wide <-
+      left_join(inhouseDb_classes_wide, chemo) %>%
+      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
-  mostsuperclass3 <- inhouseDb_classes_wide %>%
-    count(structureCleaned_classyfire_2superclass) %>%
-    arrange(desc(n)) %>%
-    head(10)
+    mostsuperclass3 <- inhouseDb_classes_wide %>%
+      count(structureCleaned_classyfire_2superclass) %>%
+      arrange(desc(n)) %>%
+      head(10)
 
-  upset(
-    inhouseDb_classes_wide,
-    nsets = 10,
-    query.legend = "top",
-    queries = list(
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1],
-            mostsuperclass3[9, 1],
-            mostsuperclass3[10, 1]
-          )
+    upset(
+      inhouseDb_classes_wide,
+      nsets = 10,
+      query.legend = "top",
+      queries = list(
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1],
+              mostsuperclass3[9, 1],
+              mostsuperclass3[10, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#6a3d9a",
+          query.name = mostsuperclass3[10, 1]
         ),
-        active = TRUE,
-        color = "#6a3d9a",
-        query.name = mostsuperclass3[10, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1],
-            mostsuperclass3[9, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1],
+              mostsuperclass3[9, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#cab2d6",
+          query.name = mostsuperclass3[9, 1]
         ),
-        active = TRUE,
-        color = "#cab2d6",
-        query.name = mostsuperclass3[9, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#ff7f00",
+          query.name = mostsuperclass3[8, 1]
         ),
-        active = TRUE,
-        color = "#ff7f00",
-        query.name = mostsuperclass3[8, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#fdbf6f",
+          query.name = mostsuperclass3[7, 1]
         ),
-        active = TRUE,
-        color = "#fdbf6f",
-        query.name = mostsuperclass3[7, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#e31a1c",
+          query.name = mostsuperclass3[6, 1]
         ),
-        active = TRUE,
-        color = "#e31a1c",
-        query.name = mostsuperclass3[6, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1]
-          )
-        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1]
+            )
+          ),
 
-        active = TRUE,
-        color = "#fb9a99",
-        query.name = mostsuperclass3[5, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1]
-          )
+          active = TRUE,
+          color = "#fb9a99",
+          query.name = mostsuperclass3[5, 1]
         ),
-        active = TRUE,
-        color = "#33a02c",
-        query.name = mostsuperclass3[4, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#33a02c",
+          query.name = mostsuperclass3[4, 1]
         ),
-        active = TRUE,
-        color = "#b2df8a",
-        query.name = mostsuperclass3[3, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1]
-          )
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#b2df8a",
+          query.name = mostsuperclass3[3, 1]
         ),
-        active = TRUE,
-        color = "#1f78b4",
-        query.name = mostsuperclass3[2, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(mostsuperclass3[1, 1])
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#1f78b4",
+          query.name = mostsuperclass3[2, 1]
         ),
-        active = TRUE,
-        color = "#a6cee3",
-        query.name = mostsuperclass3[1, 1]
-      )
-    ),
-    # mb.ratio = c(0.7, 0.3),
-    order.by = "freq",
-    nintersects = 81,
-    # empty.intersections = "on",
-    number.angles = 30,
-    point.size = 5,
-    line.size = 2,
-    text.scale = 2,
-    mainbar.y.label = "Unique structures per intersection",
-    sets.x.label = "Unique structures per class",
-    set_size.show = TRUE
-  )
-  dev.off()
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(mostsuperclass3[1, 1])
+          ),
+          active = TRUE,
+          color = "#a6cee3",
+          query.name = mostsuperclass3[1, 1]
+        )
+      ),
+      # mb.ratio = c(0.7, 0.3),
+      order.by = "freq",
+      nintersects = 81,
+      # empty.intersections = "on",
+      number.angles = 30,
+      point.size = 5,
+      line.size = 2,
+      text.scale = 2,
+      mainbar.y.label = "Unique structures per intersection",
+      sets.x.label = "Unique structures per class",
+      set_size.show = TRUE
+    )
+    dev.off()
+  })
 
   try({
     cat("preparing alluvial plot ... \n")
