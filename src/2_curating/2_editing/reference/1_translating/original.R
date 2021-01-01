@@ -163,7 +163,8 @@ dataOriginal3 <- do.call(
           file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
         ),
         delim = "\t",
-        trim_ws = TRUE
+        trim_ws = TRUE,
+        quote = ""
       ) %>%
         mutate_all(as.character)
     }

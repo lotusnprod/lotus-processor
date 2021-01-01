@@ -26,7 +26,6 @@ data_pivoted <- data_original %>%
   unnest() %>%
   ungroup()
 
-
 # selecting
 data_selected <- data_pivoted %>%
   select(

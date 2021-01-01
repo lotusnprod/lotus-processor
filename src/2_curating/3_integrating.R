@@ -305,19 +305,12 @@ gc(
 rm(organismTableFull)
 
 cat("joining minimal table ... \n")
-cat("... structures \n")
 inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
-  filter(!is.na(structureCleanedInchikey3D))
-
-cat("... organisms \n")
-inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, organismMinimal) %>%
-  filter(!is.na(organismCleaned))
-
-cat("... references \n")
-inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, referenceMinimal) %>%
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  left_join(., organismMinimal) %>%
+  filter(!is.na(organismCleaned)) %>%
+  left_join(., referenceMinimal) %>%
   filter(!is.na(referenceCleanedTitle) |
     database == "dnp_1") %>%
   filter(
