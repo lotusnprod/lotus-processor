@@ -16,6 +16,11 @@ library(plotly)
 library(tidyverse)
 library(UpSetR)
 source("r/vroom_safe.R")
+source("r/draw_chord.R")
+source("r/palettes.R")
+source("r/getGraphChemicalClass.R")
+source("r/getGraphStudiedPlant.R")
+source("r/prepare_upset.R")
 
 if (mode != "test") {
   cat("loading files, if running fullmode, this may take a while ... \n")
@@ -180,35 +185,12 @@ if (mode != "test") {
     height = 9
   )
 
-  inhouseDb_structures_2plot <- inhouseDb %>%
-    distinct(structureCleanedInchikey2D, database) %>%
-    group_by(database) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
-
-  inhouseDb_structures_2plot_wide <- inhouseDb_structures_2plot %>%
-    pivot_wider(
-      names_from = database,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE) %>%
-    data.frame()
+  inhouseDb_structures_2plot_wide <-
+    prepare_upset(
+      table = inhouseDb,
+      group = c("database"),
+      variable = c("structureCleanedInchikey2D")
+    )
 
   upset(
     inhouseDb_structures_2plot_wide,
@@ -234,38 +216,12 @@ if (mode != "test") {
     height = 9
   )
 
-  inhouseDb_organism_2plot <- inhouseDb %>%
-    filter(!is.na(organismCleaned)) %>%
-    distinct(organismCleaned, database) %>%
-    group_by(database) %>%
-    count(organismCleaned) %>%
-    ungroup()
-
   inhouseDb_organism_2plot_wide <-
-    inhouseDb_organism_2plot %>%
-    pivot_wider(
-      names_from = database,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    distinct(organismCleaned, .keep_all = TRUE) %>%
-    data.frame()
-
+    prepare_upset(
+      table = inhouseDb,
+      group = c("database"),
+      variable = c("organismCleaned")
+    )
 
   upset(
     inhouseDb_organism_2plot_wide,
@@ -291,41 +247,12 @@ if (mode != "test") {
     height = 9
   )
 
-  inhouseDbPairs_2plot <- inhouseDb %>%
-    filter(!is.na(structureCleanedInchikey2D) &
-      !is.na(organismCleaned)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned,
-      database,
-      .keep_all = TRUE
-    ) %>%
-    group_by(database) %>%
-    count(structureCleanedInchikey2D, organismCleaned) %>%
-    ungroup()
-
-  inhouseDbPairs_2plot_wide <- inhouseDbPairs_2plot %>%
-    pivot_wider(
-      names_from = database,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(3:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(3:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    distinct(structureCleanedInchikey2D, organismCleaned, .keep_all = TRUE) %>%
-    data.frame()
+  inhouseDbPairs_2plot_wide <-
+    prepare_upset(
+      table = inhouseDb,
+      group = c("database"),
+      variable = c("structureCleanedInchikey2D", "organismCleaned")
+    )
 
   upset(
     inhouseDbPairs_2plot_wide,
@@ -414,45 +341,18 @@ if (mode != "test") {
       count(structureCleanedInchikey2D) %>%
       arrange(desc(n))
     mostinchi <- as.character(inhouseDb_most_structures[1, 1])
-    inhouseDb_most_structures_2plot <-
-      inhouseDbMeta %>%
+    inhouseDb_most_structures_2plot <- inhouseDbMeta %>%
       filter(structureCleanedInchikey2D == mostinchi) %>%
-      filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-      distinct(structureCleanedInchikey2D,
-        organismCleaned,
-        database,
-        .keep_all = TRUE
-      ) %>%
-      group_by(database, organismCleaned) %>%
-      count(structureCleanedInchikey2D) %>%
-      ungroup()
+      filter(!is.na(organismCleaned_dbTaxo_1kingdom))
     inhouseDb_most_structures_2plot_wide <-
-      inhouseDb_most_structures_2plot %>%
-      pivot_wider(
-        names_from = database,
-        values_from = n
+      prepare_upset_complex(
+        table = inhouseDb_most_structures_2plot,
+        group = c("database", "organismCleaned"),
+        ## order is important
+        variable = c("structureCleanedInchikey2D")
       ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = is.na(.),
-          values = 0
-        )
-      ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = . >= 1,
-          values = 1
-        )
-      ) %>%
-      distinct(organismCleaned, .keep_all = TRUE) %>%
-      data.frame()
-    inhouseDb_most_structures_2plot_wide <-
       left_join(
-        inhouseDb_most_structures_2plot_wide,
+        .,
         bio
       ) %>%
       distinct(structureCleanedInchikey2D,
@@ -537,41 +437,16 @@ if (mode != "test") {
     inhouseDb_most_structures_2plot <-
       inhouseDbMeta %>%
       filter(structureCleanedInchikey2D == mostinchi2) %>%
-      filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-      distinct(structureCleanedInchikey2D,
-        organismCleaned,
-        database,
-        .keep_all = TRUE
-      ) %>%
-      group_by(database, organismCleaned) %>%
-      count(structureCleanedInchikey2D) %>%
-      ungroup()
+      filter(!is.na(organismCleaned_dbTaxo_1kingdom))
     inhouseDb_most_structures_2plot_wide <-
-      inhouseDb_most_structures_2plot %>%
-      pivot_wider(
-        names_from = database,
-        values_from = n
+      prepare_upset_complex(
+        table = inhouseDb_most_structures_2plot,
+        group = c("database", "organismCleaned"),
+        ## order is important
+        variable = c("structureCleanedInchikey2D")
       ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = is.na(.),
-          values = 0
-        )
-      ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = . >= 1,
-          values = 1
-        )
-      ) %>%
-      data.frame()
-    inhouseDb_most_structures_2plot_wide <-
       left_join(
-        inhouseDb_most_structures_2plot_wide,
+        .,
         bio
       ) %>%
       distinct(structureCleanedInchikey2D,
@@ -615,256 +490,12 @@ if (mode != "test") {
     count(organismCleaned) %>%
     arrange(desc(n))
 
-  cat("defining drawing function for most studied plants ... \n")
-  getGraphStudiedPlant <- function(plant) {
-    try({
-      mostplant <-
-        as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCleaned == plant, 1])
-      inhouseDb_most_organism_2plot <-
-        inhouseDbMeta %>%
-        filter(organismCleaned == mostplant) %>%
-        distinct(structureCleanedInchikey2D,
-          organismCleaned,
-          database,
-          .keep_all = TRUE
-        ) %>%
-        group_by(organismCleaned, database) %>%
-        count(structureCleanedInchikey2D) %>%
-        ungroup()
-      inhouseDb_most_organism_2plot_wide <-
-        inhouseDb_most_organism_2plot %>%
-        pivot_wider(
-          names_from = database,
-          values_from = n
-        ) %>%
-        mutate_at(
-          .vars = c(3:ncol(.)),
-          ~ replace(
-            x = .,
-            list = is.na(.),
-            values = 0
-          )
-        ) %>%
-        mutate_at(
-          .vars = c(3:ncol(.)),
-          ~ replace(
-            x = .,
-            list = . >= 1,
-            values = 1
-          )
-        ) %>%
-        data.frame()
-      inhouseDb_most_organism_2plot_wide <-
-        left_join(
-          inhouseDb_most_organism_2plot_wide,
-          chemo
-        ) %>%
-        distinct(structureCleanedInchikey2D,
-          organismCleaned,
-          .keep_all = TRUE
-        )
-      dbnumostorganism <- as.numeric(nrow(
-        inhouseDbMeta %>%
-          filter(organismCleaned == mostplant) %>%
-          distinct(database)
-      ))
-      mostsuperclasses <- inhouseDb_most_organism_2plot_wide %>%
-        filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
-        count(structureCleaned_classyfire_2superclass) %>%
-        arrange(desc(n)) %>%
-        head(10)
-      upset(
-        inhouseDb_most_organism_2plot_wide,
-        nsets = 10,
-        query.legend = "top",
-        queries = list(
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1],
-                mostsuperclasses[6, 1],
-                mostsuperclasses[7, 1],
-                mostsuperclasses[8, 1],
-                mostsuperclasses[9, 1],
-                mostsuperclasses[10, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#6a3d9a",
-            query.name = mostsuperclasses[10, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1],
-                mostsuperclasses[6, 1],
-                mostsuperclasses[7, 1],
-                mostsuperclasses[8, 1],
-                mostsuperclasses[9, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#cab2d6",
-            query.name = mostsuperclasses[9, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1],
-                mostsuperclasses[6, 1],
-                mostsuperclasses[7, 1],
-                mostsuperclasses[8, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#ff7f00",
-            query.name = mostsuperclasses[8, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1],
-                mostsuperclasses[6, 1],
-                mostsuperclasses[7, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#fdbf6f",
-            query.name = mostsuperclasses[7, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1],
-                mostsuperclasses[6, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#e31a1c",
-            query.name = mostsuperclasses[6, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1],
-                mostsuperclasses[5, 1]
-              )
-            ),
-
-            active = TRUE,
-            color = "#fb9a99",
-            query.name = mostsuperclasses[5, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1],
-                mostsuperclasses[4, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#33a02c",
-            query.name = mostsuperclasses[4, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1],
-                mostsuperclasses[3, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#b2df8a",
-            query.name = mostsuperclasses[3, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(
-                mostsuperclasses[1, 1],
-                mostsuperclasses[2, 1]
-              )
-            ),
-            active = TRUE,
-            color = "#1f78b4",
-            query.name = mostsuperclasses[2, 1]
-          ),
-          list(
-            query = elements,
-            params = list(
-              "structureCleaned_classyfire_2superclass",
-              c(mostsuperclasses[1, 1])
-            ),
-            active = TRUE,
-            color = "#a6cee3",
-            query.name = mostsuperclasses[1, 1]
-          )
-        ),
-        # mb.ratio = c(0.7, 0.3),
-        order.by = "freq",
-        nintersects = 20,
-        # empty.intersections = "on",
-        number.angles = 30,
-        point.size = 5,
-        line.size = 2,
-        text.scale = 2,
-        mainbar.y.label = "Unique structures per intersection",
-        sets.x.label = "Unique structures per database",
-        set_size.show = TRUE
-      )
-    })
-  }
-
   cat("... drawing Cannabis sativa metabolites repartition \n")
   pdf(
     file = file.path(pathDataProcessedFigures, "cannabisSativa.pdf"),
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Cannabis sativa")
   dev.off()
 
@@ -874,7 +505,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Cryptomeria japonica")
   dev.off()
 
@@ -884,7 +514,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Tripterygium wilfordii")
   dev.off()
 
@@ -894,7 +523,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Citrus aurantium")
   dev.off()
 
@@ -904,7 +532,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Camellia sinensis")
   dev.off()
 
@@ -914,7 +541,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Panax ginseng")
   dev.off()
 
@@ -924,7 +550,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Vitis vinifera")
   dev.off()
 
@@ -934,7 +559,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Zingiber officinale")
   dev.off()
 
@@ -944,8 +568,7 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
-  getGraphStudiedPlant(plant = "Capsicum annuum annuum")
+  getGraphStudiedPlant(plant = "Capsicum annuum")
   dev.off()
 
   cat("... drawing Arabidopsis thaliana metabolites repartition \n")
@@ -954,7 +577,6 @@ if (mode != "test") {
     width = 16,
     height = 9
   )
-
   getGraphStudiedPlant(plant = "Arabidopsis thaliana")
   dev.off()
 
@@ -964,242 +586,6 @@ if (mode != "test") {
     filter(!is.na(structureCleaned_classyfire_4subclass)) %>%
     count(structureCleaned_classyfire_4subclass) %>%
     arrange(desc(n))
-
-  cat("defining drawing function for most chemical subclasses ... \n")
-  getGraphChemicalClass <- function(subclass) {
-    inhouseDb_most_chemical_class_2plot <-
-      inhouseDbMeta %>%
-      filter(structureCleaned_classyfire_4subclass == subclass) %>%
-      distinct(structureCleanedInchikey2D,
-        organismCleaned,
-        database,
-        .keep_all = TRUE
-      ) %>%
-      group_by(organismCleaned_dbTaxo_5family, database) %>%
-      count(structureCleanedInchikey2D) %>%
-      ungroup()
-
-    inhouseDb_most_chemical_class_2plot_wide <-
-      inhouseDb_most_chemical_class_2plot %>%
-      pivot_wider(
-        names_from = database,
-        values_from = n
-      ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = is.na(.),
-          values = 0
-        )
-      ) %>%
-      mutate_at(
-        .vars = c(3:ncol(.)),
-        ~ replace(
-          x = .,
-          list = . >= 1,
-          values = 1
-        )
-      ) %>%
-      data.frame()
-
-    dbnumostchemicalclass <- as.numeric(nrow(
-      inhouseDbMeta %>%
-        filter(structureCleaned_classyfire_4subclass == subclass) %>%
-        distinct(database)
-    ))
-
-    mostfamilies <-
-      inhouseDb_most_chemical_class_2plot_wide %>%
-      filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
-      count(organismCleaned_dbTaxo_5family) %>%
-      arrange(desc(n)) %>%
-      head(10)
-
-    upset(
-      inhouseDb_most_chemical_class_2plot_wide,
-      nsets = 10,
-      query.legend = "top",
-      queries = list(
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1],
-              mostfamilies[6, 1],
-              mostfamilies[7, 1],
-              mostfamilies[8, 1],
-              mostfamilies[9, 1],
-              mostfamilies[10, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#6a3d9a",
-          query.name = mostfamilies[10, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1],
-              mostfamilies[6, 1],
-              mostfamilies[7, 1],
-              mostfamilies[8, 1],
-              mostfamilies[9, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#cab2d6",
-          query.name = mostfamilies[9, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1],
-              mostfamilies[6, 1],
-              mostfamilies[7, 1],
-              mostfamilies[8, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#ff7f00",
-          query.name = mostfamilies[8, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1],
-              mostfamilies[6, 1],
-              mostfamilies[7, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#fdbf6f",
-          query.name = mostfamilies[7, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1],
-              mostfamilies[6, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#e31a1c",
-          query.name = mostfamilies[6, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1],
-              mostfamilies[5, 1]
-            )
-          ),
-
-          active = TRUE,
-          color = "#fb9a99",
-          query.name = mostfamilies[5, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1],
-              mostfamilies[4, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#33a02c",
-          query.name = mostfamilies[4, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1],
-              mostfamilies[3, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#b2df8a",
-          query.name = mostfamilies[3, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(
-              mostfamilies[1, 1],
-              mostfamilies[2, 1]
-            )
-          ),
-          active = TRUE,
-
-          color = "#1f78b4",
-          query.name = mostfamilies[2, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "organismCleaned_dbTaxo_5family",
-            c(mostfamilies[1, 1])
-          ),
-          active = TRUE,
-          color = "#a6cee3",
-          query.name = mostfamilies[1, 1]
-        )
-      ),
-      # mb.ratio = c(0.7, 0.3),
-      order.by = "freq",
-      nintersects = 20,
-      # empty.intersections = "on",
-      number.angles = 30,
-      point.size = 5,
-      line.size = 2,
-      text.scale = 2,
-      mainbar.y.label = "Unique structures per intersection",
-      sets.x.label = "Unique structures per database",
-      set_size.show = TRUE
-    )
-  }
 
   cat("... drawing Terpene lactones repartition \n")
   try({
@@ -1230,41 +616,15 @@ if (mode != "test") {
     height = 9
   )
   inhouseDb_kingdoms <- inhouseDbMeta %>%
-    filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned_dbTaxo_1kingdom,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismCleaned_dbTaxo_1kingdom) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
+    filter(!is.na(organismCleaned_dbTaxo_1kingdom))
 
   inhouseDb_kingdoms_wide <-
-    inhouseDb_kingdoms %>%
-    pivot_wider(
-      names_from = organismCleaned_dbTaxo_1kingdom,
-      values_from = n
+    prepare_upset(
+      table = inhouseDb_kingdoms,
+      group = c("organismCleaned_dbTaxo_1kingdom"),
+      variable = c("structureCleanedInchikey2D")
     ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    data.frame()
-
-  inhouseDb_kingdoms_wide <-
-    left_join(inhouseDb_kingdoms_wide, chemo) %>%
+    left_join(., chemo) %>%
     distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
   mostsuperclass <- inhouseDb_kingdoms_wide %>%
@@ -1457,474 +817,426 @@ if (mode != "test") {
   dev.off()
 
   cat("drawing repartition of metabolites among Plantae phyla \n")
-  pdf(
-    file = file.path(pathDataProcessedFigures, "phyla.pdf"),
-    width = 16,
-    height = 9
-  )
+  try({
+    pdf(
+      file = file.path(pathDataProcessedFigures, "phyla.pdf"),
+      width = 16,
+      height = 9
+    )
 
-  inhouseDb_phyla <- inhouseDbMeta %>%
-    filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
-    filter(!is.na(organismCleaned_dbTaxo_2phylum)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned_dbTaxo_2phylum,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismCleaned_dbTaxo_2phylum) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
+    inhouseDb_phyla <- inhouseDbMeta %>%
+      filter(organismCleaned_dbTaxo_1kingdom == "Plantae") %>%
+      filter(!is.na(organismCleaned_dbTaxo_2phylum))
 
-  inhouseDb_phyla_wide <-
-    inhouseDb_phyla %>%
-    pivot_wider(
-      names_from = organismCleaned_dbTaxo_2phylum,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    data.frame()
+    inhouseDb_phyla_wide <-
+      prepare_upset(
+        table = inhouseDb_phyla,
+        group = c("organismCleaned_dbTaxo_2phylum"),
+        variable = c("structureCleanedInchikey2D")
+      ) %>%
+      left_join(., chemo) %>%
+      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
-  inhouseDb_phyla_wide <-
-    left_join(inhouseDb_phyla_wide, chemo) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+    mostsuperclass2 <- inhouseDb_phyla_wide %>%
+      count(structureCleaned_classyfire_2superclass) %>%
+      arrange(desc(n)) %>%
+      head(10)
 
-  mostsuperclass2 <- inhouseDb_phyla_wide %>%
-    count(structureCleaned_classyfire_2superclass) %>%
-    arrange(desc(n)) %>%
-    head(10)
+    upset(
+      inhouseDb_phyla_wide,
+      nsets = 10,
+      query.legend = "top",
+      queries = list(
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1],
+              mostsuperclass2[9, 1],
+              mostsuperclass2[10, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#6a3d9a",
+          query.name = mostsuperclass2[10, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1],
+              mostsuperclass2[9, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#cab2d6",
+          query.name = mostsuperclass2[9, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1],
+              mostsuperclass2[8, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#ff7f00",
+          query.name = mostsuperclass2[8, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1],
+              mostsuperclass2[7, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#fdbf6f",
+          query.name = mostsuperclass2[7, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1],
+              mostsuperclass2[6, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#e31a1c",
+          query.name = mostsuperclass2[6, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1],
+              mostsuperclass2[5, 1]
+            )
+          ),
 
-  upset(
-    inhouseDb_phyla_wide,
-    nsets = 10,
-    query.legend = "top",
-    queries = list(
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1],
-            mostsuperclass2[9, 1],
-            mostsuperclass2[10, 1]
-          )
+          active = TRUE,
+          color = "#fb9a99",
+          query.name = mostsuperclass2[5, 1]
         ),
-        active = TRUE,
-        color = "#6a3d9a",
-        query.name = mostsuperclass2[10, 1]
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1],
+              mostsuperclass2[4, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#33a02c",
+          query.name = mostsuperclass2[4, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1],
+              mostsuperclass2[3, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#b2df8a",
+          query.name = mostsuperclass2[3, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass2[1, 1],
+              mostsuperclass2[2, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#1f78b4",
+          query.name = mostsuperclass2[2, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(mostsuperclass2[1, 1])
+          ),
+          active = TRUE,
+          color = "#a6cee3",
+          query.name = mostsuperclass2[1, 1]
+        )
       ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1],
-            mostsuperclass2[9, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#cab2d6",
-        query.name = mostsuperclass2[9, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1],
-            mostsuperclass2[8, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#ff7f00",
-        query.name = mostsuperclass2[8, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1],
-            mostsuperclass2[7, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#fdbf6f",
-        query.name = mostsuperclass2[7, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1],
-            mostsuperclass2[6, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#e31a1c",
-        query.name = mostsuperclass2[6, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1],
-            mostsuperclass2[5, 1]
-          )
-        ),
-
-        active = TRUE,
-        color = "#fb9a99",
-        query.name = mostsuperclass2[5, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1],
-            mostsuperclass2[4, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#33a02c",
-        query.name = mostsuperclass2[4, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1],
-            mostsuperclass2[3, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#b2df8a",
-        query.name = mostsuperclass2[3, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass2[1, 1],
-            mostsuperclass2[2, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#1f78b4",
-        query.name = mostsuperclass2[2, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(mostsuperclass2[1, 1])
-        ),
-        active = TRUE,
-        color = "#a6cee3",
-        query.name = mostsuperclass2[1, 1]
-      )
-    ),
-    # mb.ratio = c(0.7, 0.3),
-    order.by = "freq",
-    nintersects = 50,
-    # empty.intersections = "on",
-    number.angles = 30,
-    point.size = 5,
-    line.size = 2,
-    text.scale = 2,
-    mainbar.y.label = "Unique structures per intersection",
-    sets.x.label = "Unique structures per phylum",
-    set_size.show = TRUE
-  )
-  dev.off()
+      # mb.ratio = c(0.7, 0.3),
+      order.by = "freq",
+      nintersects = 50,
+      # empty.intersections = "on",
+      number.angles = 30,
+      point.size = 5,
+      line.size = 2,
+      text.scale = 2,
+      mainbar.y.label = "Unique structures per intersection",
+      sets.x.label = "Unique structures per phylum",
+      set_size.show = TRUE
+    )
+    dev.off()
+  })
 
   cat("drawing repartition of metabolites among Tracheophyta classes \n")
-  pdf(
-    file = file.path(pathDataProcessedFigures, "classes.pdf"),
-    width = 16,
-    height = 9
-  )
+  try({
+    pdf(
+      file = file.path(pathDataProcessedFigures, "classes.pdf"),
+      width = 16,
+      height = 9
+    )
 
-  inhouseDb_classes <- inhouseDbMeta %>%
-    filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
-    filter(!is.na(organismCleaned_dbTaxo_3class)) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned_dbTaxo_3class,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismCleaned_dbTaxo_3class) %>%
-    count(structureCleanedInchikey2D) %>%
-    ungroup()
+    inhouseDb_classes <- inhouseDbMeta %>%
+      filter(organismCleaned_dbTaxo_2phylum == "Tracheophyta") %>%
+      filter(!is.na(organismCleaned_dbTaxo_3class))
 
-  inhouseDb_classes_wide <-
-    inhouseDb_classes %>%
-    pivot_wider(
-      names_from = organismCleaned_dbTaxo_3class,
-      values_from = n
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = is.na(.),
-        values = 0
-      )
-    ) %>%
-    mutate_at(
-      .vars = c(2:ncol(.)),
-      ~ replace(
-        x = .,
-        list = . >= 1,
-        values = 1
-      )
-    ) %>%
-    data.frame()
+    inhouseDb_classes_wide <-
+      prepare_upset(
+        table = inhouseDb_classes,
+        group = c("organismCleaned_dbTaxo_3class"),
+        variable = c("structureCleanedInchikey2D")
+      ) %>%
+      left_join(., chemo) %>%
+      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
 
-  inhouseDb_classes_wide <-
-    left_join(inhouseDb_classes_wide, chemo) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+    mostsuperclass3 <- inhouseDb_classes_wide %>%
+      count(structureCleaned_classyfire_2superclass) %>%
+      arrange(desc(n)) %>%
+      head(10)
 
-  mostsuperclass3 <- inhouseDb_classes_wide %>%
-    count(structureCleaned_classyfire_2superclass) %>%
-    arrange(desc(n)) %>%
-    head(10)
+    upset(
+      inhouseDb_classes_wide,
+      nsets = 10,
+      query.legend = "top",
+      queries = list(
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1],
+              mostsuperclass3[9, 1],
+              mostsuperclass3[10, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#6a3d9a",
+          query.name = mostsuperclass3[10, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1],
+              mostsuperclass3[9, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#cab2d6",
+          query.name = mostsuperclass3[9, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1],
+              mostsuperclass3[8, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#ff7f00",
+          query.name = mostsuperclass3[8, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1],
+              mostsuperclass3[7, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#fdbf6f",
+          query.name = mostsuperclass3[7, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1],
+              mostsuperclass3[6, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#e31a1c",
+          query.name = mostsuperclass3[6, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1],
+              mostsuperclass3[5, 1]
+            )
+          ),
 
-  upset(
-    inhouseDb_classes_wide,
-    nsets = 10,
-    query.legend = "top",
-    queries = list(
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1],
-            mostsuperclass3[9, 1],
-            mostsuperclass3[10, 1]
-          )
+          active = TRUE,
+          color = "#fb9a99",
+          query.name = mostsuperclass3[5, 1]
         ),
-        active = TRUE,
-        color = "#6a3d9a",
-        query.name = mostsuperclass3[10, 1]
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1],
+              mostsuperclass3[4, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#33a02c",
+          query.name = mostsuperclass3[4, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1],
+              mostsuperclass3[3, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#b2df8a",
+          query.name = mostsuperclass3[3, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(
+              mostsuperclass3[1, 1],
+              mostsuperclass3[2, 1]
+            )
+          ),
+          active = TRUE,
+          color = "#1f78b4",
+          query.name = mostsuperclass3[2, 1]
+        ),
+        list(
+          query = elements,
+          params = list(
+            "structureCleaned_classyfire_2superclass",
+            c(mostsuperclass3[1, 1])
+          ),
+          active = TRUE,
+          color = "#a6cee3",
+          query.name = mostsuperclass3[1, 1]
+        )
       ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1],
-            mostsuperclass3[9, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#cab2d6",
-        query.name = mostsuperclass3[9, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1],
-            mostsuperclass3[8, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#ff7f00",
-        query.name = mostsuperclass3[8, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1],
-            mostsuperclass3[7, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#fdbf6f",
-        query.name = mostsuperclass3[7, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1],
-            mostsuperclass3[6, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#e31a1c",
-        query.name = mostsuperclass3[6, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1],
-            mostsuperclass3[5, 1]
-          )
-        ),
-
-        active = TRUE,
-        color = "#fb9a99",
-        query.name = mostsuperclass3[5, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1],
-            mostsuperclass3[4, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#33a02c",
-        query.name = mostsuperclass3[4, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1],
-            mostsuperclass3[3, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#b2df8a",
-        query.name = mostsuperclass3[3, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(
-            mostsuperclass3[1, 1],
-            mostsuperclass3[2, 1]
-          )
-        ),
-        active = TRUE,
-        color = "#1f78b4",
-        query.name = mostsuperclass3[2, 1]
-      ),
-      list(
-        query = elements,
-        params = list(
-          "structureCleaned_classyfire_2superclass",
-          c(mostsuperclass3[1, 1])
-        ),
-        active = TRUE,
-        color = "#a6cee3",
-        query.name = mostsuperclass3[1, 1]
-      )
-    ),
-    # mb.ratio = c(0.7, 0.3),
-    order.by = "freq",
-    nintersects = 81,
-    # empty.intersections = "on",
-    number.angles = 30,
-    point.size = 5,
-    line.size = 2,
-    text.scale = 2,
-    mainbar.y.label = "Unique structures per intersection",
-    sets.x.label = "Unique structures per class",
-    set_size.show = TRUE
-  )
-  dev.off()
+      # mb.ratio = c(0.7, 0.3),
+      order.by = "freq",
+      nintersects = 81,
+      # empty.intersections = "on",
+      number.angles = 30,
+      point.size = 5,
+      line.size = 2,
+      text.scale = 2,
+      mainbar.y.label = "Unique structures per intersection",
+      sets.x.label = "Unique structures per class",
+      set_size.show = TRUE
+    )
+    dev.off()
+  })
 
   try({
     cat("preparing alluvial plot ... \n")
@@ -2290,217 +1602,6 @@ if (mode != "test") {
       file = "Tree_chemo.html"
     )
   })
-
-  cat("defining color palettes ... \n")
-  cat("... small \n")
-  paired_palette_sma <- c(
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928"
-  )
-
-  cat("... medium \n")
-  paired_palette_med <- c(
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c"
-  )
-
-  cat("... 30 \n")
-  paired_palette_30 <- c(
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c"
-  )
-
-  cat("... big \n")
-  paired_palette_big <- c(
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c"
-  )
-
-  paired_palette_meg <- c(
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#fdbf6f",
-    "#ff7f00",
-    "#cab2d6",
-    "#6a3d9a",
-    "#ffff99",
-    "#b15928",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c",
-    "#a6cee3",
-    "#1f78b4",
-    "#b2df8a",
-    "#33a02c",
-    "#fb9a99",
-    "#e31a1c"
-  )
-
-  cat("defining drawing function for chord diagrams ... \n")
-  draw_chord <-
-    function(data,
-             biological_level,
-             chemical_level,
-             biological_filter_value = NULL,
-             biological_filter_level = NULL,
-             chemical_filter_value = NULL,
-             chemical_filter_level = NULL,
-             palette = paired_palette_med) {
-      try({
-        table <- data.frame(data)
-        table <- table[!is.na(table[, biological_level]), ]
-        table <- table[!is.na(table[, chemical_level]), ]
-        if (!is.null(biological_filter_value)) {
-          table <-
-            table[table[, biological_filter_level] %in% biological_filter_value, ]
-        }
-        if (!is.null(chemical_filter_value)) {
-          table <-
-            table[table[, chemical_filter_level] %in% chemical_filter_value, ]
-        }
-        m1 <-
-          as.data.table(table(table[, c(biological_level, chemical_level)]))
-        m1 <- m1 %>%
-          pivot_wider(names_from = 2, values_from = N) %>%
-          unnest() %>%
-          column_to_rownames(var = biological_level) %>%
-          select(order(colSums(-.)))
-        m2 <- t(m1) %>%
-          as.data.frame() %>%
-          select(order(colSums(-.)))
-        m2$name <- colnames(m1)
-        # colnames(m1) <- paste("chemo", colnames(m1), sep = "_")
-        m1$name <- sort(colnames(m2[, 1:ncol(m2) - 1]))
-        # colnames(m2)[1:ncol(m2)-1] <- paste("bio", colnames(m2[1:ncol(m2)-1]), sep = "_")
-        test_3 <- full_join(m2, m1)
-        test_3[is.na(test_3)] <- 0
-        rownames(test_3) <- test_3$name
-        test_3 <- test_3 %>% select(-name)
-        test_4 <- as.matrix(test_3)
-        test_5 <- test_4[colnames(test_4), colnames(test_4)]
-        chord <- chorddiag(
-          data = test_5,
-          groupColors = palette,
-          groupnamePadding = 10,
-          groupThickness = 0.1,
-          chordedgeColor = palette,
-          groupnameFontsize = 18,
-          margin = 260,
-          showTooltips = FALSE,
-          ticklabelFontsize = 0,
-          showTicks = FALSE,
-          showZeroTooltips = FALSE
-        )
-        return(chord)
-      })
-    }
 
   try({
     cat("... drawing big chord diagram \n")

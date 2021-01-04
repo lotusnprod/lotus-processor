@@ -14,8 +14,7 @@ database <- databases$get("phytohub")
 data_original <- read_delim(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
-  escape_double = TRUE,
-  trim_ws = FALSE
+  quote = ""
 ) %>%
   mutate_all(as.character)
 

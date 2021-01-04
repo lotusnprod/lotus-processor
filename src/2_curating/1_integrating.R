@@ -10,7 +10,6 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... functions \n")
-source("r/db_loader.R")
 source("r/split_data_table.R")
 source("r/split_data_table_quote.R")
 source("r/vroom_safe.R")
@@ -24,7 +23,7 @@ cat("... files ... \n")
 cat("... DBs \n")
 
 if (mode != "test") {
-  dbList <- lapply(pathDataInterimDbDir, db_loader)
+  dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
   cat("... dictionaries ... \n")
   cat("... structures \n")
@@ -90,13 +89,7 @@ if (mode != "test") {
   }
 }
 if (mode == "test") {
-  dbTable <- read_delim(
-    file = pathTests,
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    trim_ws = TRUE
-  ) %>%
+  dbTable <- vroom_read_safe(path = pathTests) %>%
     pivot_wider(
       names_from = c("structureType"),
       values_from = c("structureValue"),
@@ -165,7 +158,7 @@ structureTable_inchi <- structureTable_inchi %>%
   select(structureOriginal_inchi = structureValue)
 
 if (nrow(structureTable_inchi) == 0) {
-  structureTable_inchi <- rbind(structureTable_inchi, list(NA))
+  structureTable_inchi <- data.frame(structureOriginal_inchi = NA)
 }
 
 cat("... smiles table \n")
@@ -200,7 +193,7 @@ structureTable_smiles <- structureTable_smiles %>%
   select(structureOriginal_smiles = structureValue)
 
 if (nrow(structureTable_smiles) == 0) {
-  structureTable_smiles <- rbind(structureTable_smiles, list(NA))
+  structureTable_smiles <- data.frame(structureOriginal_smiles = NA)
 }
 
 cat("... chemical names table \n")
@@ -236,7 +229,7 @@ structureTable_nominal <- structureTable_nominal %>%
   select(structureOriginal_nominal = structureValue)
 
 if (nrow(structureTable_nominal) == 0) {
-  structureTable_nominal <- rbind(structureTable_nominal, list(NA))
+  structureTable_nominal <- data.frame(structureOriginal_nominal = NA)
 }
 
 cat("... structures table \n")

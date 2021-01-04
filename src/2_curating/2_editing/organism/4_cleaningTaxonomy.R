@@ -17,6 +17,7 @@ source("r/vroom_safe.R")
 cat("loading ... \n")
 cat("... libraries \n")
 library(tidyverse)
+library(jsonlite)
 
 log_debug(" Step 4")
 cat("... files ... \n")
@@ -29,11 +30,42 @@ cat(" ... taxa ranks dictionary \n")
 taxaRanksDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
+dataCleanedOrganismVerify <- dataCleanedOrganism %>%
+  filter(!is.na(organismCleaned)) %>%
+  distinct(organismCleaned)
+
+vroom_write_safe(
+  x = dataCleanedOrganismVerify,
+  path = pathDataInterimTablesCleanedOrganismVerifyTable
+)
+
+cat("submitting to GNVerify \n")
+system(command = paste("bash", pathGnverifyScript))
+
+verified <- stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
+
+verified_df <- verified %>%
+  data.frame() %>%
+  select(-curation, -matchType) %>%
+  unnest(preferredResults, names_repair = "minimal") %>%
+  filter(curation != "NotCurated") %>%
+  select(
+    organismCleaned = input,
+    organismDbTaxo = dataSourceTitleShort,
+    taxonId = currentRecordId,
+    currentName,
+    currentCanonicalFull,
+    taxonomy = classificationPath,
+    rank = classificationRanks
+  )
+
+dataCleanedOrganismVerified <- left_join(dataCleanedOrganism %>% distinct(organismOriginal, organismCleaned), verified_df)
+
 cat("manipulating taxonomic levels \n")
 if (nrow(dataCleanedOrganism) != 0) {
   dataCleanedOrganismManipulated <-
     manipulating_taxo(
-      dfsel = dataCleanedOrganism,
+      dfsel = dataCleanedOrganismVerified,
       dic = taxaRanksDictionary
     )
 }
@@ -57,7 +89,9 @@ if (nrow(dataCleanedOrganism) == 0) {
       organism_4_order = NA,
       organism_5_family = NA,
       organism_6_genus = NA,
+      organism_6_1_subgenus = NA,
       organism_7_species = NA,
+      organism_7_1_subspecies = NA,
       organism_8_variety = NA,
       # organism_1_kingdom_id = NA,
       # organism_2_phylum_id = NA,
@@ -94,7 +128,8 @@ dataCleanedOrganismManipulated_clean_2 <-
   left_join(
     dataCleanedOrganismManipulated_clean,
     dataCleanedOrganismManipulated
-  ) %>% distinct()
+  ) %>%
+  distinct()
 
 dataCuratedOrganismAuto <-
   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated_clean_2)
@@ -109,7 +144,7 @@ dataCuratedOrganismAuto[setdiff(
     "organismCleanedRank",
     "organismDbTaxo",
     "organismDbTaxoQuality",
-    "organismTaxonIds",
+    # "organismTaxonIds",
     "organismTaxonRanks",
     "organismTaxonomy",
     "organism_1_kingdom",
@@ -118,7 +153,9 @@ dataCuratedOrganismAuto[setdiff(
     "organism_4_order",
     "organism_5_family",
     "organism_6_genus",
+    "organism_6_1_subgenus",
     "organism_7_species",
+    "organism_7_1_subspecies",
     "organism_8_variety"
     # "organism_1_kingdom_id",
     # "organism_2_phylum_id",
@@ -140,8 +177,8 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organismCleanedId,
     organismCleanedRank,
     organismDbTaxo,
-    organismDbTaxoQuality,
-    organismTaxonIds,
+    # organismDbTaxoQuality,
+    # organismTaxonIds,
     organismTaxonRanks,
     organismTaxonomy,
     organism_1_kingdom,
@@ -150,7 +187,9 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     organism_4_order,
     organism_5_family,
     organism_6_genus,
+    # organism_6_1_subgenus,
     organism_7_species,
+    # organism_7_1_subspecies,
     organism_8_variety
     # organism_1_kingdom_id,
     # organism_2_phylum_id,

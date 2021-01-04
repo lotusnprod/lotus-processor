@@ -114,10 +114,14 @@ taxo_cleaning_auto <- function(dfsel) {
 
   cat("cleaning duplicate upstream taxa \n")
   df4 <- df3_c %>%
-    group_by(organismOriginal, organism_7_species) %>%
+    group_by(organismOriginal, organism_7_1_subspecies) %>%
     fill(organism_8_variety, .direction = "downup") %>%
-    group_by(organismOriginal, organism_6_genus) %>%
+    group_by(organismOriginal, organism_7_species) %>%
+    fill(organism_7_1_subspecies, .direction = "downup") %>%
+    group_by(organismOriginal, organism_6_1_subgenus) %>%
     fill(organism_7_species, .direction = "downup") %>%
+    group_by(organismOriginal, organism_6_genus) %>%
+    fill(organism_6_1_subgenus, .direction = "downup") %>%
     group_by(organismOriginal, organism_5_family) %>%
     fill(organism_6_genus, .direction = "downup") %>%
     group_by(organismOriginal, organism_4_order) %>%
@@ -146,7 +150,7 @@ taxo_cleaning_auto <- function(dfsel) {
       organismDetected,
       organismDbTaxo,
       organismDbTaxoQuality,
-      organismTaxonIds,
+      # organismTaxonIds,
       organismTaxonRanks,
       organismTaxonomy,
       organismCleaned

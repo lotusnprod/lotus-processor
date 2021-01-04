@@ -3,6 +3,7 @@
 # loading paths
 source("paths.R")
 source("r/standardizing_original.R")
+source("r/y_as_na.R")
 
 library(splitstackshape)
 library(tidyverse)
@@ -15,11 +16,6 @@ database <- databases$get("npcare")
 data_original <- vroom(
   file = database$sourceFiles$tsv,
   delim = ";",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   col_types = cols(.default = "c")
 )
 
@@ -36,6 +32,22 @@ data_selected <- data_original %>%
     reference_title = ref,
     reference_pubmed
   )
+
+data_selected[] <-
+  lapply(data_selected, function(x) {
+    gsub("\"", " ", x)
+  })
+
+data_selected <- data_selected %>%
+  mutate_all(
+    .tbl = .,
+    .funs = trimws
+  )
+
+data_selected[] <-
+  lapply(data_selected, function(x) {
+    y_as_na(x, y = "")
+  })
 
 # standardizing
 data_standard <-
