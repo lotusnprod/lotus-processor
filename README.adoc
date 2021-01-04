@@ -1,8 +1,10 @@
 = LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
 = Overview
-*LOTUS* actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
-It represents the most exhaustive open DB of natural products (NP).
+*LOTUS*, actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
+
+It represents the most exhaustive open DB of natural products (NP). 
+
 It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
 Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
 
@@ -28,21 +30,17 @@ You need:
 
 - If you want to be able to use the xref:src/2_curating/2_editing/reference/1_translating/pubmed.R[PMID translation script] with less limitations and it to work correctly, you have to set an API key as described in the following link:https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html[vignette]
 
-- You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
-from scratch.
-
-== Description of programs
+== Programs use
+=== Description
 // see if flowchat is enough, update
-image:flowchart.png[flowchart]
+image:flowchart.svg[Embedded,600,opts=inline]
 
 === Instructions
-
-=== Details
-
-== Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-=== Access to metabomaps
+==== Access to metabomaps
+You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
+from scratch.
 Add this to your
 [source]
 ----
@@ -58,7 +56,7 @@ Host metabomaps
   Port 10311
 ----
 
-=== Pull the repository
+==== Pull the repository
 [source,console]
 ----
 git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
@@ -67,16 +65,16 @@ git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
 dvc pull  // This will take a while
 ----
 
-=== Having the data in a different place
+==== Having the data in a different place
 If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
 
-=== If you want to build only a simple DB
+==== If you want to build only a simple DB
 [source,console]
 ----
 make -C src/1_gathering/db -B alkamid
 ----
 
-=== Use docker to build
+==== Use docker to build
 Install docker on your machine, make sure it is on your path
 then
 
@@ -87,8 +85,6 @@ make docker-bash
 ----
 
 This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
-
-=== Packages
 
 ==== Conda environement
 A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory.
@@ -115,11 +111,11 @@ cd src
 
 If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
 
-== Minimal working example
+==== Minimal working example
 A minimal working example containing XXX entries coming from various DB's is proposed.
 Use this example to check if all steps are running correctly on your machine.
 
-== Molconvert issue
+==== Molconvert issue
 At the moment, we use molconvert (commercial) for structure to chemical name conversion. Since we cannot disseminate it, you won't be able to proceed to the translation except if you modify following variables in src/paths.R accordingly:
 
 [source,console]
@@ -128,15 +124,15 @@ works_locally_only <- TRUE // FALSE
 molconvertPath <- adapt_path_to // "~/../../Applications/MarvinSuite/bin/molconvert"
 ----
 
-== To build the flowchart
+==== To build the flowchart
 [source,console]
 ----
 yarn global add @mermaid-js/mermaid-cli
 
-mmdc -i flowchart.mmd -o flowchart.png --width 2700 --height 900
+mmdc -i flowchart.mmd -o flowchart.svg
 ----
 
-== To build a graph from the make
+==== To build a graph from the make
 (
   Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>
 )
@@ -147,20 +143,9 @@ remake --profile -B curating
 gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
 ----
 
-=== Description
-The minimal working example file contains following columns:
+== Tests
 
-== TO UPDATE 1
-Give an example
-
-=== Final output
-If everything went well, the output of the minimal working example should be:
-
-== TO UPDATE 2
-Give an example
-
-== Explanations
-Add additional notes
+TO DO
 
 == Contributing
 Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduct, and the process for submitting pull requests to us.
