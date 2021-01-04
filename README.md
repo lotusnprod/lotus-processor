@@ -44,7 +44,7 @@ see <https://social-science-data-editors.github.io/guidance/template-README.html
 
 ## Flowchart
 
-![flowchart](flowchart.mmd)
+![flowchart](flowchart.md)
 
 ## Getting Started
 
