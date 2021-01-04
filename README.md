@@ -44,9 +44,7 @@ see <https://social-science-data-editors.github.io/guidance/template-README.html
 
 ## Flowchart
 
-```mermaid
 ![flowchart](flowchart.mmd)
-```
 
 ## Getting Started
 
