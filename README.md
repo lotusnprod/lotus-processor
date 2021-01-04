@@ -1,5 +1,3 @@
-[![pipeline status](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/badges/master/pipeline.svg)](https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/commits/master)
-
 # LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
 ## Overview
@@ -16,7 +14,7 @@ An snapshot of the repository at the time of publication is also available.
 
 ## Dataset list
 
-![dataset](dataset.md)
+[dataset](dataset.md)
 
 ## Computational requirements
 
@@ -44,9 +42,7 @@ see <https://social-science-data-editors.github.io/guidance/template-README.html
 
 ## Flowchart
 
-```mermaid
-![flowchart](flowchart.mmd)
-```
+![flowchart](flowchart.png)
 
 ## Getting Started
 
@@ -150,6 +146,14 @@ At the moment, we use molconvert (commercial) for structure to chemical name con
 ```console
 works_locally_only <- TRUE # FALSE
 molconvertPath <- adapt_path_to # "~/../../Applications/MarvinSuite/bin/molconvert"
+```
+
+## To build the flowchart
+
+```console
+yarn global add @mermaid-js/mermaid-cli
+
+mmdc -i flowchart.mmd -o flowchart.png --width 2700 --height 900
 ```
 
 ## To build a graph from the make
