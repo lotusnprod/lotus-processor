@@ -16,11 +16,6 @@ database <- databases$get("coconut")
 data_original <- vroom(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
   quote = ""
 )
 

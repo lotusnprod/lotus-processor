@@ -16,12 +16,6 @@ database <- databases$get("afrotryp")
 data_original <- vroom(
   file = unz(database$sourceFiles$tsv, "AFROTRYP.tsv"),
   delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
 ) %>%
   mutate_all(as.character)
 

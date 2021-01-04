@@ -16,11 +16,7 @@ database <- databases$get("cyanometdb")
 data_original <- vroom(
   file = database$sourceFiles$tsv,
   delim = ",",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = TRUE,
-  trim_ws = FALSE,
+  trim_ws = FALSE
 ) %>%
   mutate_all(as.character)
 

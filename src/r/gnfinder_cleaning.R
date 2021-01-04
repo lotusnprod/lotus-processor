@@ -66,7 +66,13 @@ gnfinder_cleaning <- function(num, organismCol) {
     simplifyDataFrame = TRUE
   ))
 
-  data_bio <- vroom_read_safe(path = inpath_organism_f) %>%
+  data_bio <- vroom(
+    file = inpath_organism_f,
+    delim = "\t",
+    quote = "",
+    col_types = cols(.default = "c"),
+    num_threads = 1
+  ) %>%
     mutate_all(as.character)
 
   data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]

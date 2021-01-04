@@ -74,7 +74,7 @@ organismTableFull <-
     organismCleaned_id = organismCleanedId,
     organismCleaned_rank = organismCleanedRank,
     organismCleaned_dbTaxo = organismDbTaxo,
-    organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
+    # organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
     organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
     organismCleaned_dbTaxoTaxonomy = organismTaxonomy,
     organismCleaned_dbTaxo_1kingdom = organism_1_kingdom,
@@ -222,7 +222,8 @@ organismMinimal <- organismTableFull %>%
     organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
+    organismCleaned_id,
+    # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy
   )
@@ -235,7 +236,7 @@ organismMetadata <- organismTableFull %>%
     organismCleaned_id,
     organismCleaned_rank,
     organismCleaned_dbTaxo,
-    organismCleaned_dbTaxoTaxonIds,
+    # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
     organismCleaned_dbTaxo_1kingdom,
@@ -304,19 +305,12 @@ gc(
 rm(organismTableFull)
 
 cat("joining minimal table ... \n")
-cat("... structures \n")
 inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
-  filter(!is.na(structureCleanedInchikey3D))
-
-cat("... organisms \n")
-inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, organismMinimal) %>%
-  filter(!is.na(organismCleaned))
-
-cat("... references \n")
-inhouseDbMinimal <-
-  left_join(inhouseDbMinimal, referenceMinimal) %>%
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  left_join(., organismMinimal) %>%
+  filter(!is.na(organismCleaned)) %>%
+  left_join(., referenceMinimal) %>%
   filter(!is.na(referenceCleanedTitle) |
     database == "dnp_1") %>%
   filter(

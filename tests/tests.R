@@ -63,7 +63,7 @@ organismTableFull <- read_delim(
     organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo = organismDbTaxo,
-    organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
+    # organismCleaned_dbTaxoTaxonIds = organismTaxonIds,
     organismCleaned_dbTaxoTaxonRanks = organismTaxonRanks,
     organismCleaned_dbTaxoTaxonomy = organismTaxonomy,
     organismCleaned_dbTaxo_1kingdom = organism_1_kingdom,

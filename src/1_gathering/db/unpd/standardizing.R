@@ -16,13 +16,7 @@ database <- databases$get("unpd")
 data_original <- vroom(
   file = gzfile(pathDataExternalDbSourceUnpdIntegrated),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+  col_types = cols(.default = "c")
 )
 
 # selecting
