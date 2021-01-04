@@ -33,7 +33,7 @@ You need:
 == Programs use
 === Description
 // see if flowchat is enough, update
-image:flowchart.svg[Embedded,600,opts=inline]
+image:flowchart.svg[Embedded,800,opts=inline]
 
 === Instructions
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
