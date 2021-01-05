@@ -19,7 +19,6 @@ include::docs/requirements.adoc[]
 == Programs use
 
 === Description
-// see if flowchat is enough, update
 image:img/flowchart.svg[Embedded,1600,opts=inline]
 
 include::docs/usage.adoc[]
