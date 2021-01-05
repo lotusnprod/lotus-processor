@@ -18,7 +18,7 @@ molconvertPath <- adapt_path_to // "~/../../Applications/MarvinSuite/bin/molconv
 ----
 yarn global add @mermaid-js/mermaid-cli
 
-mmdc -i flowchart.mmd -o flowchart.svg
+mmdc -i docs/flowchart.mmd -o img/flowchart.svg
 ----
 
 === To build a graph from the make
