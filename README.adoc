@@ -13,8 +13,12 @@ The data used to support the findings of this study have been deposited in the X
 An snapshot of the repository at the time of publication is also available.
 
 == Dataset list
-All data used for this study is listed under xref:dataset.adoc[dataset.adoc]
+All data used for this study is listed under xref:dataset.tsv[dataset.tsv]
 
+[%header,format=tsv]
+|===
+include::dataset.tsv[]
+|===
 // see if include it directly in case: // include::dataset.adoc[]
 
 == Computational requirements
@@ -24,11 +28,11 @@ You need:
 - R
 - python
 - Git
-- link:https://www.dvc.org[DVC]
-- link:https://github.com/gnames/gnfinder[gnfinder]
-- link:https://github.com/gnames/gnverify[gnverify]
+- link:{https://www.dvc.org}[DVC]
+- link:{https://github.com/gnames/gnfinder}[gnfinder]
+- link:{https://github.com/gnames/gnverify}[gnverify]
 
-- If you want to be able to use the xref:src/2_curating/2_editing/reference/1_translating/pubmed.R[PMID translation script] with less limitations and it to work correctly, you have to set an API key as described in the following link:https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html[vignette]
+- If you want to be able to use the xref:src/2_curating/2_editing/reference/1_translating/pubmed.R[PMID translation script] with less limitations and it to work correctly, you have to set an API key as described in the following link:{https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html}[vignette]
 
 == Programs use
 === Description
@@ -151,11 +155,11 @@ TO DO
 Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduct, and the process for submitting pull requests to us.
 
 == Authors
-- *Adriano Rutz* - _Initial work_ - link:https://gitlab.unige.ch/Adriano.Rutz[Adriano.Rutz]
-- *Pierre-Marie Allard* - _Investigator_ - link:https://gitlab.unige.ch/Pierre-Marie.Allard[Pierre-Marie.Allard]
-- *Jonathan Bisson* - _Hacker in Chief_ - link:https://gitlab.unige.ch/bjo[bjo]
+- *Adriano Rutz* - _Initial work_ - link:{https://gitlab.unige.ch/Adriano.Rutz}[Adriano.Rutz]
+- *Pierre-Marie Allard* - _Investigator_ - link:{https://gitlab.unige.ch/Pierre-Marie.Allard}[Pierre-Marie.Allard]
+- *Jonathan Bisson* - _Hacker in Chief_ - link:{https://gitlab.unige.ch/bjo}[bjo]
 
-See also the list of link:https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members[contributors] who participated in this project.
+See also the list of link:{https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members}[contributors] who participated in this project.
 
 == References
 
