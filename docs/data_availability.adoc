@@ -1,0 +1,4 @@
+== Data Availability Statements
+
+The data used to support the findings of this study have been deposited in the XXX Dataverse repository ([DOI or OTHER PERSISTENT IDENTIFIER]).
+An snapshot of the repository at the time of publication is also available.
