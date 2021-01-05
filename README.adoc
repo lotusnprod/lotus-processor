@@ -1,16 +1,10 @@
 = LOTUS: a curated naturaL prOducTs occUrrences databaSe
 
-= Overview
-*LOTUS*, actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
+include::docs/toc.adoc[]
 
-It represents the most exhaustive open DB of natural products (NP). 
+include::docs/intro.adoc[]
 
-It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
-Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
-
-== Data Availability Statements
-The data used to support the findings of this study have been deposited in the XXX Dataverse repository ([DOI or OTHER PERSISTENT IDENTIFIER]).
-An snapshot of the repository at the time of publication is also available.
+include::docs/data_availability.adoc[]
 
 == Dataset list
 All data used for this study is listed under xref:dataset.tsv[dataset.tsv]
@@ -19,137 +13,22 @@ All data used for this study is listed under xref:dataset.tsv[dataset.tsv]
 |===
 include::dataset.tsv[]
 |===
-// see if include it directly in case: // include::dataset.adoc[]
 
-== Computational requirements
-
-You need:
-
-- R
-- python
-- Git
-- link:{https://www.dvc.org}[DVC]
-- link:{https://github.com/gnames/gnfinder}[gnfinder]
-- link:{https://github.com/gnames/gnverify}[gnverify]
-
-- If you want to be able to use the xref:src/2_curating/2_editing/reference/1_translating/pubmed.R[PMID translation script] with less limitations and it to work correctly, you have to set an API key as described in the following link:{https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html}[vignette]
+include::docs/requirements.adoc[]
 
 == Programs use
+
 === Description
 // see if flowchat is enough, update
-image:flowchart.svg[Embedded,1600,opts=inline]
+image:img/flowchart.svg[Embedded,1600,opts=inline]
 
-=== Instructions
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+include::docs/usage.adoc[]
 
-==== Access to metabomaps
-You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
-from scratch.
-Add this to your
-[source]
-----
-~/.ssh/config
-----
+include::docs/misc.adoc[]
 
-[source]
-----
-Host metabomaps
-  IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
-  User <user_remote>
-  HostName metabomaps.nprod.net
-  Port 10311
-----
+include::docs/faq.adoc[]
 
-==== Pull the repository
-[source,console]
-----
-git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
-
-// If you need the data
-dvc pull  // This will take a while
-----
-
-==== Having the data in a different place
-If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
-
-==== If you want to build only a simple DB
-[source,console]
-----
-make -C src/1_gathering/db -B alkamid
-----
-
-==== Use docker to build
-Install docker on your machine, make sure it is on your path
-then
-
-[source,console]
-----
-make docker-build
-make docker-bash
-----
-
-This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
-
-==== Conda environement
-A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory.
-
-We will also create another environment for strict mirroring of the installed packages. (TO DO)
-
-conda env create -f environment.yml
-
-If your environement is not directly sources by your default bash run the following lines
-
-[source,console]
-----
-source ~/anaconda3/etc/profile.d/conda.sh
-
-conda activate lotus_env
-----
-
-Your R working directory should be 'src'
-
-[source,console]
-----
-cd src
-----
-
-If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
-
-==== Minimal working example
-A minimal working example containing XXX entries coming from various DB's is proposed.
-Use this example to check if all steps are running correctly on your machine.
-
-==== Molconvert issue
-At the moment, we use molconvert (commercial) for structure to chemical name conversion. Since we cannot disseminate it, you won't be able to proceed to the translation except if you modify following variables in src/paths.R accordingly:
-
-[source,console]
-----
-works_locally_only <- TRUE // FALSE
-molconvertPath <- adapt_path_to // "~/../../Applications/MarvinSuite/bin/molconvert"
-----
-
-==== To build the flowchart
-[source,console]
-----
-yarn global add @mermaid-js/mermaid-cli
-
-mmdc -i flowchart.mmd -o flowchart.svg
-----
-
-==== To build a graph from the make
-(
-  Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>
-)
-
-[source,console]
-----
-remake --profile -B curating
-gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
-----
-
-== Tests
-
-TO DO
+include::docs/references.adoc[]
 
 == Contributing
 Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduct, and the process for submitting pull requests to us.
@@ -160,8 +39,6 @@ Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduc
 - *Jonathan Bisson* - _Hacker in Chief_ - link:{https://gitlab.unige.ch/bjo}[bjo]
 
 See also the list of link:{https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members}[contributors] who participated in this project.
-
-== References
 
 == Acknowledgments
 - Hat tip to anyone whose code was used

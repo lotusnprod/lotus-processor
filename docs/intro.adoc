@@ -1,0 +1,8 @@
+== Introduction
+
+*LOTUS*, actually, consists of XXX'XXX referenced structure - organism pairs, collected and curated among 34 open databases (DB).
+
+It represents the most exhaustive open DB of natural products (NP). 
+
+It encompasses XXX'XXX distinct sanitized structures in XX’XXX resolved organisms.
+Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
