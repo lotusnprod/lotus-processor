@@ -12,11 +12,13 @@ source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... validated db, if running fullmode, this may take a while \n")
-openDb <- vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
+openDb <-
+  vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   data.frame()
 
 cat("... dnp db \n")
-dnpDb <- vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
+dnpDb <-
+  vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
   data.frame()
 
 inhouseDb <- bind_rows(dnpDb, openDb)
@@ -65,8 +67,6 @@ openDbOrganism <- openDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-cat(paste("open:", nrow(openDbOrganism), "distinct organisms \n", sep = " "))
-
 ### inhouseDB
 inhouseDbOrganism <- inhouseDb %>%
   filter(!is.na(organismCleaned)) %>%
@@ -92,8 +92,6 @@ cat("analysing unique structures per db \n")
 openDbStructure <- openDb %>%
   filter(!is.na(structureCleanedInchikey2D)) %>%
   distinct(structureCleanedInchikey2D, .keep_all = TRUE)
-
-cat(paste("open:", nrow(openDbStructure), "distinct structures \n", sep = " "))
 
 ### inhouseDB
 inhouseDbStructure <- inhouseDb %>%
@@ -333,6 +331,43 @@ colnames(tableOrganisms)[1] <- "structures"
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
+
+cat(
+  paste(
+    nrow(pairsOpenDb),
+    "unique (2D) referenced structure-organism pairs. \n",
+    "They consist of \n",
+    nrow(openDbStructure),
+    "unique (2D) curated structures and \n",
+    nrow(openDbOrganism),
+    "unique organisms,\n",
+    "originating from \n",
+    nrow(pairsOpenDb %>% distinct(database)),
+    "initial open databases. \n",
+    "\n",
+    "Among structures, \n",
+    tableOrganisms[1, 1],
+    "are present in only 1 organism, \n",
+    tableOrganisms[2, 1],
+    "are present in between 1 and 10 organisms, \n",
+    tableOrganisms[3, 1],
+    "are present in between 10 and 100 organisms, \n",
+    tableOrganisms[4, 1],
+    "are present in more than 100 organisms, \n",
+    "\n",
+    "Among organisms, \n",
+    tableStructures[1, 1],
+    "contain only 1 structure, \n",
+    tableStructures[2, 1],
+    "contain between 1 and 10 structures, \n",
+    tableStructures[3, 1],
+    "contain between 10 and 100 structures, \n",
+    tableStructures[4, 1],
+    "contain more than 100 structures, \n",
+    sep = " "
+  ),
+  file = "../docs/metrics.adoc"
+)
 
 end <- Sys.time()
 
