@@ -21,45 +21,30 @@ originalStructureTable <-
 cat("loading dictionaries ... \n")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   cat("... structures \n")
-}
-
-if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   structureDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   cat("... organisms \n")
-}
-
-if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   organismDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   cat("... references \n")
-}
-
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   referenceOrganismDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesReferenceOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... structures metadata \n")
-}
-
-if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureMetadata <-
     vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... organisms metadata \n")
-}
-
-if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismMetadata <-
     vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata)
 }
@@ -120,10 +105,6 @@ cat("joining ... \n")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... previously cleaned organisms with metadata \n")
-}
-
-if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismOld <-
     left_join(organismDictionary, organismMetadata)
 }
@@ -131,10 +112,6 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... previously cleaned structures with metadata \n")
-}
-
-if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureOld <-
     left_join(structureDictionary, structureMetadata)
 }
@@ -142,10 +119,6 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   cat("... previously cleaned organism with new ones \n")
-}
-
-if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
     distinct()
 }
@@ -158,19 +131,12 @@ structureFull <-
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... previously cleaned structures \n")
-}
-
-if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-  file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureFull <- bind_rows(structureFull, structureOld) %>%
     distinct()
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   cat("... previously cleaned references \n")
-}
-
-if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   referenceTableFull <-
     bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
     distinct()

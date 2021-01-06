@@ -42,7 +42,8 @@ vroom_write_safe(
 cat("submitting to GNVerify \n")
 system(command = paste("bash", pathGnverifyScript))
 
-verified <- stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
+verified <-
+  stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
 
 verified_df <- verified %>%
   data.frame() %>%
@@ -59,7 +60,25 @@ verified_df <- verified %>%
     rank = classificationRanks
   )
 
-dataCleanedOrganismVerified <- left_join(dataCleanedOrganism %>% distinct(organismOriginal, organismCleaned), verified_df)
+## example ID 165 empty, maybe fill later on
+verified_df$organismDbTaxo <- y_as_na(verified_df$organismDbTaxo, "")
+
+dataCleanedOrganismVerified <- left_join(
+  dataCleanedOrganism %>%
+    distinct(organismOriginal, organismCleaned),
+  verified_df
+) %>%
+  select(
+    organismOriginal,
+    organismCleaned,
+    organismDbTaxo,
+    taxonId,
+    currentName,
+    currentCanonicalFull,
+    taxonomy,
+    rank
+  ) %>%
+  filter(!is.na(organismDbTaxo))
 
 cat("manipulating taxonomic levels \n")
 if (nrow(dataCleanedOrganism) != 0) {
@@ -80,6 +99,7 @@ if (nrow(dataCleanedOrganism) == 0) {
       organismCleanedRank = NA,
       organismDbTaxo = NA,
       organismDbTaxoQuality = NA,
+      name = NA,
       organismTaxonIds = NA,
       organismTaxonRanks = NA,
       organismTaxonomy = NA,

@@ -96,7 +96,6 @@ manipulating_taxo <- function(dfsel, dic) {
       .keep_all = TRUE
     )
 
-
   df2$rank <- ifelse(test = is.na(df2$rank),
     yes = "NA",
     no = df2$rank
@@ -232,7 +231,6 @@ manipulating_taxo <- function(dfsel, dic) {
     )] <- NA
   }
 
-
   # adding taxa to initial df
   if (nrow(df3) != 0) {
     df6 <- left_join(dfsel, df5) %>%
@@ -240,11 +238,12 @@ manipulating_taxo <- function(dfsel, dic) {
       select(
         organismOriginal,
         organismDetected = organismCleaned,
-        organismCleaned = name,
+        organismCleaned = currentCanonicalFull,
         organismCleanedId = taxonId,
         organismCleanedRank = taxon_rank,
         organismDbTaxo,
         organismDbTaxoQuality = dbQuality,
+        name,
         # organismTaxonIds = ids,
         organismTaxonRanks = rank,
         organismTaxonomy = taxonomy,
