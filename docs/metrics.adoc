@@ -9,10 +9,10 @@
  75875 are present in only 1 organism, 
  118598 are present in between 1 and 10 organisms, 
  3876 are present in between 10 and 100 organisms, 
- 361 are present in more than 100 organisms, 
+ 361 are present in more than 100 organisms. 
  
  Among organisms, 
  7178 contain only 1 structure, 
  27606 contain between 1 and 10 structures, 
  10926 contain between 10 and 100 structures, 
- 264 contain more than 100 structures, 
+ 264 contain more than 100 structures. 
