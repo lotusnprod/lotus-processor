@@ -26,29 +26,29 @@ if (mode != "test") {
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
   cat("... dictionaries ... \n")
-  cat("... structures \n")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
+    cat("... structures \n")
     structureDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
       tibble()
   }
 
-  cat("... previously unsucessfully querried structures \n")
   if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+    cat("... previously unsucessfully querried structures \n")
     structureAntiDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesStructureAntiDictionary) %>%
       tibble()
   }
 
-  cat("... organisms \n")
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
+    cat("... organisms \n")
     organismDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
       tibble()
   }
 
-  cat("... references \n")
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
+    cat("... references \n")
     referenceDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary) %>%
       data.table()
@@ -91,8 +91,6 @@ if (mode != "test") {
 
   if (mode == "min") {
     cat("sampling rows for min mode \n")
-  }
-  if (mode == "min") {
     set.seed(
       seed = 42,
       kind = "Mersenne-Twister",

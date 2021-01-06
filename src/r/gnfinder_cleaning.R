@@ -61,11 +61,6 @@ gnfinder_cleaning <- function(num, organismCol) {
       )
   }
 
-  gnfound <- data.frame(fromJSON(
-    txt = inpath_gnfinder_f,
-    simplifyDataFrame = TRUE
-  ))
-
   data_bio <- vroom(
     file = inpath_organism_f,
     delim = "\t",
@@ -77,11 +72,37 @@ gnfinder_cleaning <- function(num, organismCol) {
 
   data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]
 
-  data_bio_clean <- biocleaning(
-    gnfound = gnfound,
-    names = data_bio,
-    organismCol = organismCol
-  )
+  if (fromJSON(
+    txt = inpath_gnfinder_f,
+    simplifyDataFrame = TRUE
+  )$metadata$totalNames != 0) {
+    gnfound <- data.frame(fromJSON(
+      txt = inpath_gnfinder_f,
+      simplifyDataFrame = TRUE
+    ))
 
+    data_bio_clean <- biocleaning(
+      gnfound = gnfound,
+      names = data_bio,
+      organismCol = organismCol
+    )
+  }
+  else {
+    data_bio_clean <- data_bio %>%
+      mutate(
+        nchar = NA,
+        sum = NA,
+        value_min = NA,
+        value_max = NA,
+        canonicalname = NA,
+        canonicalnameCurrent = NA,
+        taxonId = NA,
+        dbTaxo = NA,
+        taxonomy = NA,
+        rank = NA,
+        ids = NA,
+        dbQuality = NA
+      )
+  }
   return(data_bio_clean)
 }
