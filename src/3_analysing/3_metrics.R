@@ -353,7 +353,7 @@ cat(
     tableOrganisms[3, 1],
     "are present in between 10 and 100 organisms, \n",
     tableOrganisms[4, 1],
-    "are present in more than 100 organisms, \n",
+    "are present in more than 100 organisms. \n",
     "\n",
     "Among organisms, \n",
     tableStructures[1, 1],
@@ -363,7 +363,7 @@ cat(
     tableStructures[3, 1],
     "contain between 10 and 100 structures, \n",
     tableStructures[4, 1],
-    "contain more than 100 structures, \n",
+    "contain more than 100 structures. \n",
     sep = " "
   ),
   file = "../docs/metrics.adoc"
