@@ -4,9 +4,9 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(readxl)
-library(splitstackshape)
-library(tidyverse)
+groundhog.library(readxl, date = groundhog.day)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
 
 # get paths
 database <- databases$get("tmmc")

@@ -16,8 +16,8 @@ source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
-library(tidyverse)
-library(jsonlite)
+groundhog.library(tidyverse, date = groundhog.day)
+groundhog.library(jsonlite, date = groundhog.day)
 
 log_debug(" Step 4")
 cat("... files ... \n")

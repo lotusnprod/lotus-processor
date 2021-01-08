@@ -1,4 +1,6 @@
-library(rvest)
+source("paths.R")
+library(groundhog)
+groundhog.library(rvest, date = groundhog.day)
 
 #' Title
 #'

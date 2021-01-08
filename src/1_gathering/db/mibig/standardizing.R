@@ -5,10 +5,11 @@ source("paths.R")
 source("r/standardizing_original.R")
 source("r/parallel.R")
 
-library(jsonlite)
-library(pbmcapply)
-library(splitstackshape)
-library(tidyverse)
+groundhog.library(jsonlite, date = groundhog.day)
+library(parallel)
+groundhog.library(pbmcapply, date = groundhog.day)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
 
 # get paths
 database <- databases$get("mibig")

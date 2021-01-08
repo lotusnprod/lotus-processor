@@ -4,10 +4,10 @@
 ## paths
 source("paths.R")
 
-library(Hmisc)
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+groundhog.library(Hmisc, date = groundhog.day)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
+groundhog.library(vroom, date = groundhog.day)
 
 source("r/y_as_na.R")
 source("r/vroom_safe.R")

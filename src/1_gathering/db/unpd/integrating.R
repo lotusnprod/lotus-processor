@@ -4,8 +4,8 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
 
 # get paths
 database <- databases$get("unpd")

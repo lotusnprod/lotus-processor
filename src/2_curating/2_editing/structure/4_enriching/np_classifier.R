@@ -7,9 +7,9 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-library(data.table)
-library(pbmcapply)
-library(tidyverse)
+groundhog.library(data.table, date = groundhog.day)
+groundhog.library(pbmcapply, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
 
 cat("... functions \n")
 source("r/getClass.R")

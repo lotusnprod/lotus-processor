@@ -7,8 +7,8 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-library(tidyverse)
-library(pbmcapply)
+groundhog.library(tidyverse, date = groundhog.day)
+groundhog.library(pbmcapply, date = groundhog.day)
 
 cat("... functions \n")
 source("r/y_as_na.R")

@@ -4,14 +4,14 @@
 source("paths.R")
 source("r/parallel.R")
 
-library(dplyr)
-library(pbmcapply)
+groundhog.library(dplyr, date = groundhog.day)
+groundhog.library(pbmcapply, date = groundhog.day)
 library(parallel)
-library(data.table)
-library(splitstackshape) # provides cSplit
-library(stringr) # provides str_pad
-library(rvest) # provides read_html
-library(tidyr) # provides pivot_wider
+groundhog.library(data.table, date = groundhog.day)
+groundhog.library(splitstackshape, date = groundhog.day) # provides cSplit
+groundhog.library(stringr, date = groundhog.day) # provides str_pad
+groundhog.library(rvest, date = groundhog.day) # provides read_html
+groundhog.library(tidyr, date = groundhog.day) # provides pivot_wider
 
 # get paths
 database <- databases$get("procardb")

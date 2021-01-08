@@ -1,4 +1,6 @@
-library(tidyverse)
+source("paths.R")
+library(groundhog)
+groundhog.library(tidyverse, date = groundhog.day)
 
 #' Title
 #'
