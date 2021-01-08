@@ -4,10 +4,10 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(Hmisc)
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+groundhog.library(Hmisc, date = groundhog.day)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
+groundhog.library(vroom, date = groundhog.day)
 
 # get paths
 database <- databases$get("mitishamba")

@@ -12,10 +12,10 @@ source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
-library(DBI)
-library(rotl)
-library(RSQLite)
-library(tidyverse)
+groundhog.library(DBI, date = groundhog.day)
+groundhog.library(rotl, date = groundhog.day)
+groundhog.library(RSQLite, date = groundhog.day)
+groundhog.library(tidyverse, date = groundhog.day)
 
 canonical_name_colname <- "organismCleaned"
 

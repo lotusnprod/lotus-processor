@@ -1,5 +1,7 @@
-library(splitstackshape)
-library(stringi)
+source("paths.R")
+library(groundhog)
+groundhog.library(splitstackshape, date = groundhog.day)
+groundhog.library(stringi, date = groundhog.day)
 source("r/y_as_na.R")
 
 #' Title

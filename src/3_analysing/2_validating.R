@@ -12,8 +12,8 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-library(tidyverse)
-library(plotly)
+groundhog.library(tidyverse, date = groundhog.day)
+groundhog.library(plotly, date = groundhog.day)
 
 cat("... functions \n")
 source("r/filter.R")
