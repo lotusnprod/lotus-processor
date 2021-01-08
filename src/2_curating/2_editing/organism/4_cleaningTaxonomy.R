@@ -49,7 +49,8 @@ verified_df <- verified %>%
   data.frame() %>%
   select(-curation, -matchType) %>%
   unnest(preferredResults, names_repair = "minimal") %>%
-  filter(curation != "NotCurated") %>%
+  filter(dataSourceTitleShort != "IRMNG (old)" &
+    dataSourceTitleShort != "IPNI") %>%
   select(
     organismCleaned = input,
     organismDbTaxo = dataSourceTitleShort,
@@ -61,7 +62,8 @@ verified_df <- verified %>%
   )
 
 ## example ID 165 empty, maybe fill later on
-verified_df$organismDbTaxo <- y_as_na(verified_df$organismDbTaxo, "")
+verified_df$organismDbTaxo <-
+  y_as_na(verified_df$organismDbTaxo, "")
 
 dataCleanedOrganismVerified <- left_join(
   dataCleanedOrganism %>%
@@ -79,6 +81,21 @@ dataCleanedOrganismVerified <- left_join(
     rank
   ) %>%
   filter(!is.na(organismDbTaxo))
+
+## last version doess not contain "species"
+indexFungorum <- dataCleanedOrganismVerified %>%
+  filter(organismDbTaxo == "Index Fungorum") %>%
+  mutate(
+    rank = ifelse(
+      test = rank == "kingdom|phylum|class|order|family|",
+      yes = "kingdom|phylum|class|order|family|species",
+      no = rank
+    )
+  )
+
+dataCleanedOrganismVerified <- dataCleanedOrganismVerified %>%
+  filter(organismDbTaxo != "Index Fungorum") %>%
+  bind_rows(., indexFungorum)
 
 cat("manipulating taxonomic levels \n")
 if (nrow(dataCleanedOrganism) != 0) {
