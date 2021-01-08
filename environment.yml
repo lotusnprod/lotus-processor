@@ -31,7 +31,6 @@ dependencies:
   - r-ggfittext
   - r-ggplot2
   - r-ggraph
-  - r-groundhog
   - r-hmisc
   - r-jsonlite
   - r-lattice
