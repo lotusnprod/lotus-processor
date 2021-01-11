@@ -7,7 +7,7 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-groundhog.library(tidyverse, date = groundhog.day)
+library(tidyverse)
 source("r/vroom_safe.R")
 
 cat("... files ... \n")

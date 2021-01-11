@@ -1,6 +1,5 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(rcrossref, date = groundhog.day)
+library(rcrossref)
 
 #' Title
 #'

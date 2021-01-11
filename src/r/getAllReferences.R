@@ -1,6 +1,5 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(stringdist, date = groundhog.day)
+library(stringdist)
 
 #' Title
 #'

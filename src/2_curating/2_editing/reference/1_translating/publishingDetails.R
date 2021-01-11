@@ -7,8 +7,8 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(pbmcapply, date = groundhog.day)
+library(tidyverse)
+library(pbmcapply)
 
 cat("... functions \n")
 source("r/getref_noLimit_publishingDetails.R")

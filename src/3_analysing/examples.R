@@ -7,7 +7,7 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
-groundhog.library(tidyverse, date = groundhog.day)
+library(tidyverse)
 
 cat("loading ... \n")
 cat("... validated db, if running fullmode, this may take a while \n")

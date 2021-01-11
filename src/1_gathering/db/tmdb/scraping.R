@@ -4,12 +4,12 @@
 source("paths.R")
 source("r/parallel.R")
 
-groundhog.library(dplyr, date = groundhog.day)
+library(dplyr)
 library(parallel)
-groundhog.library(pbmcapply, date = groundhog.day)
-groundhog.library(data.table, date = groundhog.day)
-groundhog.library(splitstackshape, date = groundhog.day) # provides cSplit
-groundhog.library(rvest, date = groundhog.day) # provides read_html
+library(pbmcapply)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest) # provides read_html
 
 # get paths
 database <- databases$get("tmdb")

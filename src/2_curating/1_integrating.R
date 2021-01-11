@@ -16,8 +16,8 @@ source("r/vroom_safe.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
-groundhog.library(data.table, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
+library(data.table)
+library(tidyverse)
 
 cat("... files ... \n")
 cat("... DBs \n")

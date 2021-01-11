@@ -5,11 +5,11 @@ source("paths.R")
 source("r/parallel.R")
 source("r/standardizing_original.R")
 
-groundhog.library(data.table, date = groundhog.day)
-groundhog.library(splitstackshape, date = groundhog.day) # provides cSplit
-groundhog.library(rvest, date = groundhog.day) # provides read_html
-groundhog.library(tidyverse, date = groundhog.day) # provides pivot_wider
-groundhog.library(XML, date = groundhog.day)
+library(data.table)
+library(splitstackshape) # provides cSplit
+library(rvest) # provides read_html
+library(tidyverse) # provides pivot_wider
+library(XML)
 
 # get paths
 database <- databases$get("nubbe")
