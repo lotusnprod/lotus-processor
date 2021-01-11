@@ -4,9 +4,9 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-groundhog.library(Hmisc, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(vroom, date = groundhog.day)
+library(Hmisc)
+library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("napralert")

@@ -2,9 +2,6 @@
 ##################################   Paths   ##################################
 ###############################################################################
 
-library(groundhog)
-groundhog.day <- Sys.Date() - 2 ## to update when we will freeze the scripts
-
 source("r/database.R") ## also change date in here
 
 mode <- Sys.getenv("MODE", unset = "full")

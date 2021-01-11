@@ -5,9 +5,9 @@ source("paths.R")
 source("r/standardizing_original.R")
 source("r/y_as_na.R")
 
-groundhog.library(splitstackshape, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(vroom, date = groundhog.day)
+library(splitstackshape)
+library(tidyverse)
+library(vroom)
 
 # get paths
 database <- databases$get("npcare")

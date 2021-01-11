@@ -1,7 +1,6 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(data.table, date = groundhog.day)
-groundhog.library(stringi, date = groundhog.day)
+library(data.table)
+library(stringi)
 source("r/homemadeShift.R")
 
 #' Title

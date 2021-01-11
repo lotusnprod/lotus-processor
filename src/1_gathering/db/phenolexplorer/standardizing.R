@@ -4,10 +4,10 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-groundhog.library(splitstackshape, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(readxl, date = groundhog.day)
-groundhog.library(vroom, date = groundhog.day)
+library(splitstackshape)
+library(tidyverse)
+library(readxl)
+library(vroom)
 
 # get paths
 database <- databases$get("phenolexplorer")

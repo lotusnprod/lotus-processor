@@ -4,12 +4,12 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-groundhog.library(dplyr, date = groundhog.day)
-groundhog.library(jsonlite, date = groundhog.day)
-groundhog.library(pbmcapply, date = groundhog.day)
-groundhog.library(readr, date = groundhog.day)
-groundhog.library(splitstackshape, date = groundhog.day)
-groundhog.library(tidyr, date = groundhog.day)
+library(dplyr)
+library(jsonlite)
+library(pbmcapply)
+library(readr)
+library(splitstackshape)
+library(tidyr)
 
 # get paths
 database <- databases$get("metabolights")

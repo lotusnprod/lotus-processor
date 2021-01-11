@@ -1,8 +1,7 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(jsonlite, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(rvest, date = groundhog.day)
+library(jsonlite)
+library(tidyverse)
+library(rvest)
 
 #' Title
 #'

@@ -1,6 +1,5 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(webchem, date = groundhog.day)
+library(webchem)
 
 #' Title
 #'

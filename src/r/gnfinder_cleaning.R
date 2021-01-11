@@ -1,6 +1,5 @@
 source("paths.R")
-library(groundhog)
-groundhog.library(jsonlite, date = groundhog.day)
+library(jsonlite)
 source("r/biocleaning.R")
 
 #' Title

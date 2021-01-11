@@ -4,12 +4,12 @@
 ## paths
 source("paths.R")
 
-groundhog.library(Hmisc, date = groundhog.day)
-groundhog.library(readxl, date = groundhog.day)
-groundhog.library(splitstackshape, date = groundhog.day)
-groundhog.library(stringi, date = groundhog.day)
-groundhog.library(tidyverse, date = groundhog.day)
-groundhog.library(vroom, date = groundhog.day)
+library(Hmisc)
+library(readxl)
+library(splitstackshape)
+library(stringi)
+library(tidyverse)
+library(vroom)
 
 ## functions
 source("r/database.R")
