@@ -93,9 +93,11 @@ indexFungorum <- dataCleanedOrganismVerified %>%
     )
   )
 
-dataCleanedOrganismVerified <- dataCleanedOrganismVerified %>%
-  filter(organismDbTaxo != "Index Fungorum") %>%
-  bind_rows(., indexFungorum)
+if (nrow(indexFungorum != 0)) {
+  dataCleanedOrganismVerified <- dataCleanedOrganismVerified %>%
+    filter(organismDbTaxo != "Index Fungorum") %>%
+    bind_rows(., indexFungorum)
+}
 
 cat("manipulating taxonomic levels \n")
 if (nrow(dataCleanedOrganism) != 0) {
