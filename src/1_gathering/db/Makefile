@@ -84,7 +84,7 @@ ${INTERIM_DB_PATH}/datawarrior.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/datawarrior/Na
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/datawarrior/standardizing.R
 
 dnp: ${INTERIM_DB_PATH}/dnp.tsv.gz
-${INTERIM_DB_PATH}/dnp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dnp/29_1/full_set.csv ${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
+${INTERIM_DB_PATH}/dnp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dnp/29_2/full_set.csv ${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
 
 drduke: ${INTERIM_DB_PATH}/drduke.tsv.gz

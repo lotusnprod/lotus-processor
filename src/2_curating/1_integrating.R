@@ -75,20 +75,6 @@ if (mode != "test") {
     ) %>%
     tibble()
 
-  ## for triples
-  # triples <- dbTable %>%
-  #   rowid_to_column("subject") %>%
-  #   mutate(subject = paste0("LTS", str_pad(
-  #     string = subject,
-  #     width = 7,
-  #     pad = "0"
-  #   ))) %>%
-  #   gather(predicate,
-  #          object,
-  #          -subject,
-  #          na.rm = TRUE) %>%
-  #   arrange(subject)
-
   if (mode == "min") {
     cat("sampling rows for min mode \n")
     set.seed(

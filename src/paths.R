@@ -143,12 +143,9 @@ databases$add(
 
 databases$add(
   name = "dnp",
-  sourceFiles = list(tsv = "29_1/full_set.csv"),
+  sourceFiles = list(tsv = "29_2/full_set.csv"),
   interimFile = "dnp.tsv.gz"
 )
-
-###### COMMENT THERE ARE SCRIPTS IN DNP DATA FOLDER #######
-###### WE HAVE TO MOVE THEM WHEN UPDATING #######
 
 databases$add(
   name = "drduke",
