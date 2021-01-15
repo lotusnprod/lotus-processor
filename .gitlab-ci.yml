@@ -14,11 +14,25 @@ build-docker:
   stage: build-docker
   script:
     - make docker-build
+  rules:
+    - changes:
+        - data/*.dvc
+        - src/**/*
+        - Dockerfile
+        - Makefile
+        - .gitlab-ci.yml
 
 test-docker:
   stage: test-docker
   script:
     - docker run --rm -v $PWD:/srv/onpdb onpdb-environment true
+  rules:
+    - changes:
+        - data/*.dvc
+        - src/**/*
+        - Dockerfile
+        - Makefile
+        - .gitlab-ci.yml
 
 pull-data:
   stage: pull-data
@@ -27,6 +41,7 @@ pull-data:
   rules:
     - changes:
         - data/*.dvc
+        - .gitlab-ci.yml
 
 build-tests:
   stage: build-tests
@@ -35,12 +50,22 @@ build-tests:
   rules:
     - changes:
         - data/*.dvc
-        - src/2_curating/*
+        - src/**/*
+        - Makefile
+        - .gitlab-ci.yml
+
 
 test-tests:
   stage: test-tests
   script:
     - docker run --rm -e DATA_PATH=/srv/onpdb/data -e SRC_PATH=/srv/onpdb/src -v /srv/onpdb-data/dvc:/srv/dvc -v /srv/onpdb-data/external:/srv/onpdb/data/external -v /srv/onpdb-data/interim:/srv/onpdb/data/interim -v /srv/onpdb-data/processed:/srv/onpdb/data/processed -v /srv/onpdb-data/validation:/srv/onpdb/data/validation -v $PWD:/srv/onpdb onpdb-environment bash -c "cd /srv/onpdb && make MODE=test tests"
+  rules:
+    - changes:
+        - data/*.dvc
+        - src/**/*
+        - Makefile
+        - .gitlab-ci.yml
+
 
 build-databases:
   stage: build-databases
@@ -50,6 +75,9 @@ build-databases:
     - changes:
         - data/*.dvc
         - src/1_gathering/db/**/*
+        - Makefile
+        - .gitlab-ci.yml
+
 
 build-translation:
   stage: build-translation
@@ -59,6 +87,8 @@ build-translation:
     - changes:
         - data/*.dvc
         - src/1_gathering/translation/**/*
+        - Makefile
+        - .gitlab-ci.yml
 
 build-curating:
   stage: build-curating
@@ -68,6 +98,8 @@ build-curating:
     - changes:
         - data/*.dvc
         - src/2_curating/*
+        - Makefile
+        - .gitlab-ci.yml
 
 build-analysing:
   stage: build-analysing
@@ -77,6 +109,8 @@ build-analysing:
     - changes:
         - data/*.dvc
         - src/3_analysing/*
+        - Makefile
+        - .gitlab-ci.yml
 
 build-visualizing:
   stage: build-visualizing
@@ -86,3 +120,5 @@ build-visualizing:
     - changes:
         - data/*.dvc
         - src/4_visualizing/*
+        - Makefile
+        - .gitlab-ci.yml
