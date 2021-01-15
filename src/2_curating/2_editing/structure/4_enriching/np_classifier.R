@@ -21,12 +21,32 @@ smiles <-
   distinct() %>%
   tibble()
 
+## temporary, will be written properly if validated
+triplesPostWikidata <-
+  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/compound_reference_taxon.tsv")
+
+structuresPostWikidata <-
+  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/compounds.tsv")
+
+postWikidata <- left_join(
+  triplesPostWikidata %>% distinct(compound),
+  structuresPostWikidata %>% distinct(wikidataId, isomericSmiles, canonicalSmiles),
+  by = c("compound" = "wikidataId")
+) %>%
+  mutate(smiles = ifelse(
+    test = !is.na(isomericSmiles),
+    yes = isomericSmiles,
+    no = canonicalSmiles
+  )) %>%
+  drop_na(smiles) %>%
+  distinct(smiles)
+
 old <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
   distinct() %>%
   tibble()
 
-new <- anti_join(smiles, old)
+new <- anti_join(bind_rows(smiles, postWikidata), old)
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
