@@ -30,10 +30,16 @@ structuresPostWikidata <-
 
 postWikidata <- left_join(
   triplesPostWikidata %>% distinct(compound),
-  structuresPostWikidata %>% distinct(wikidataId, canonicalSmiles),
+  structuresPostWikidata %>% distinct(wikidataId, isomericSmiles, canonicalSmiles),
   by = c("compound" = "wikidataId")
 ) %>%
-  select(smiles = canonicalSmiles)
+  mutate(smiles = ifelse(
+    test = !is.na(isomericSmiles),
+    yes = isomericSmiles,
+    no = canonicalSmiles
+  )) %>%
+  drop_na(smiles) %>%
+  distinct(smiles)
 
 old <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
