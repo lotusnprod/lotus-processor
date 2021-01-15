@@ -57,6 +57,7 @@ extracted_elements <- invisible(
 
 ASTERDB <- bind_rows(extracted_elements[!is.na(extracted_elements)])
 
-## # exporting
-database$writeFile(database$sourceFiles$tsv, ALKAMID)
-database$writeFile(database$sourceFiles$tsvRef, ALKAMID_REF_3)
+## blocked because down
+
+# ## # exporting
+# database$writeFile(database$sourceFiles$tsv, ASTERDB)
