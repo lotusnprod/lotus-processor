@@ -51,7 +51,7 @@ getClass <- function(X) {
     },
     error = function(e) {
       df <- data.frame(
-        smiles = smiles$smiles[[X]],
+        smiles = new$smiles[[X]],
         pathway = NA,
         superclass = NA,
         class = NA,
