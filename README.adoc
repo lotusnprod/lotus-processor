@@ -1,6 +1,5 @@
 = LOTUS: a curated naturaL prOducTs occUrrences databaSe
-
-include::docs/toc.adoc[]
+:toc:
 
 include::docs/intro.adoc[]
 
