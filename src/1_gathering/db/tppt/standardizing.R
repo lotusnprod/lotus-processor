@@ -66,7 +66,7 @@ data_selected <- data_original %>%
       yes = reference,
       no = NA
     ),
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "clinitox.ch",
       replacement = "",
       x = reference,
@@ -74,57 +74,63 @@ data_selected <- data_original %>%
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "KNApSAcK Database",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "KNApSAcKDatabase",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "EFSA Reoport (2012)",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "EFSA Report",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "EFSA Report (2010)",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   mutate(
-    reference_authors = gsub(
+    reference_original = gsub(
       pattern = "EFSA Report (2012)",
       replacement = "",
-      x = reference_authors,
+      x = reference_original,
       fixed = TRUE
     )
   ) %>%
   data.frame()
 
-data_selected$reference_authors <-
-  y_as_na(x = data_selected$reference_authors, y = "")
+data_selected$reference_original <-
+  y_as_na(x = data_selected$reference_original, y = "")
+
+data_selected$reference_authors <- gsub(
+  pattern = "\\([0-9]{4}\\)",
+  replacement = "",
+  x = data_selected$reference_original
+)
 
 # standardizing
 data_standard <-
@@ -132,7 +138,11 @@ data_standard <-
     data_selected = data_selected,
     db = "tpp_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_authors", "reference_external")
+    reference_field = c(
+      "reference_original",
+      "reference_authors",
+      "reference_external"
+    )
   )
 
 # exporting
