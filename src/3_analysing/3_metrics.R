@@ -8,6 +8,7 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+library(data.table)
 source("r/vroom_safe.R")
 
 cat("loading ... \n")
