@@ -11,10 +11,47 @@ library(tidyverse)
 source("r/vroom_safe.R")
 
 cat("loading ... \n")
-cat("... validated db, if running fullmode, this may take a while \n")
+cat("databases list ... \n")
+dataset <- read_delim(
+  file = "../docs/dataset.tsv",
+  delim = "\t"
+) %>%
+  select(
+    -`initial retrieved unique observations`,
+    -`cleaned documented structure-organism pairs`,
+    -`pairs validated for wikidata export`
+  )
+
+cat("initial table ... \n")
+dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
+  rbindlist(l = ., fill = TRUE) %>%
+  select(
+    database,
+    organismOriginal = biologicalsource,
+    structureOriginal_inchi = inchi,
+    structureOriginal_nominal = name,
+    structureOriginal_smiles = smiles,
+    referenceOriginal_authors = reference_authors,
+    referenceOriginal_doi = reference_doi,
+    referenceOriginal_external = reference_external,
+    referenceOriginal_isbn = reference_isbn,
+    referenceOriginal_journal = reference_journal,
+    referenceOriginal_original = reference_original,
+    referenceOriginal_pubmed = reference_pubmed,
+    referenceOriginal_publishingDetails = reference_publishingDetails,
+    referenceOriginal_split = reference_split,
+    referenceOriginal_title = reference_title,
+  ) %>%
+  tibble()
+
+cat("final table ... \n")
+inhouseDbMinimal <-
+  vroom_read_safe(path = pathDataInterimTablesCuratedTable)
+
+cat("validated for export ... \n")
 openDb <-
   vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
-  data.frame()
+  tibble()
 
 cat("... dnp db \n")
 dnpDb <-
@@ -22,6 +59,41 @@ dnpDb <-
   data.frame()
 
 inhouseDb <- bind_rows(dnpDb, openDb)
+
+initial_stats <- dbTable %>%
+  group_by(database) %>%
+  count(name = "initial retrieved unique observations")
+
+cleaned_stats <- inhouseDbMinimal %>%
+  group_by(database) %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchikey3D,
+    referenceCleanedTitle
+  ) %>% ## we should decide if 2 or 3D
+  count(name = "cleaned documented structure-organism pairs")
+
+final_stats <- openDb %>%
+  group_by(database) %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchikey3D,
+    referenceCleanedTitle
+  ) %>% ## we should decide if 2 or 3D
+  count(name = "pairs validated for wikidata export")
+
+stats_table <- left_join(initial_stats, cleaned_stats) %>%
+  left_join(., final_stats)
+
+dataset <- dataset %>%
+  left_join(., stats_table) %>%
+  select(
+    database,
+    `initial retrieved unique observations`,
+    `cleaned documented structure-organism pairs`,
+    `pairs validated for wikidata export`,
+    everything()
+  )
 
 pairsOpenDb <- openDb %>%
   filter(!is.na(organismCleaned) &
@@ -331,6 +403,15 @@ colnames(tableOrganisms)[1] <- "structures"
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
+
+write.table(
+  x = dataset,
+  file = "../docs/dataset.tsv",
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
 
 if (mode == "FULL") {
   cat(
