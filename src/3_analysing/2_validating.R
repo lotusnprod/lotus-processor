@@ -663,7 +663,26 @@ validationSetFilled_2 <-
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 validationSetFilled <-
-  bind_rows(validationSetFilled_1, validationSetFilled_2)
+  bind_rows(validationSetFilled_1, validationSetFilled_2) %>%
+  distinct(
+    database,
+    organismOriginal,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedPmcid,
+    referenceCleanedPmid,
+    referenceCleanedTitle,
+    curator,
+    validated,
+    comments
+  )
 
 realValidationSetFilled <-
   inner_join(validationSetFilled, openDbClean) %>%
@@ -779,10 +798,14 @@ if (exists("validationSet")) {
   )
 }
 
-cat(file.path(
-  pathDataInterimTablesAnalysed,
-  "validationSetBis.tsv"
-))
+cat(
+  file.path(
+    pathDataInterimTablesAnalysed,
+    "validationSetBis.tsv"
+  ),
+  "\n"
+)
+
 if (exists("validationSet2")) {
   write.table(
     x = validationSet2,
