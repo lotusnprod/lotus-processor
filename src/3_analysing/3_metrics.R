@@ -404,16 +404,16 @@ colnames(tableOrganisms)[1] <- "structures"
 #   fileEncoding = "UTF-8"
 # )
 
-write.table(
-  x = dataset,
-  file = "../docs/dataset.tsv",
-  row.names = FALSE,
-  quote = FALSE,
-  sep = "\t",
-  fileEncoding = "UTF-8"
-)
-
 if (mode == "FULL") {
+  write.table(
+    x = dataset,
+    file = "../docs/dataset.tsv",
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+
   cat(
     paste(
       nrow(pairsOpenDb),
