@@ -405,7 +405,7 @@ colnames(tableOrganisms)[1] <- "structures"
 #   fileEncoding = "UTF-8"
 # )
 
-if (mode == "FULL") {
+if (mode == "FULL" | mode == "full") {
   write.table(
     x = dataset,
     file = "../docs/dataset.tsv",
