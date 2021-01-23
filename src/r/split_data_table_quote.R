@@ -23,6 +23,7 @@ split_data_table_quote <-
         x = sample,
         file = paste(
           path_to_store,
+          "/",
           text,
           str_pad(
             string = as.integer(split_cut + (no_rows_per_frame - 1)),

@@ -8,6 +8,7 @@ source("paths.R")
 
 cat("... libraries \n")
 library(tidyverse)
+library(data.table)
 
 cat("... functions \n")
 source("r/y_as_na.R")
@@ -15,8 +16,7 @@ source("r/vroom_safe.R")
 
 cat("loading crossref translations file, this may take a while \n")
 dataTranslated <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceFile) %>%
-  tibble()
+  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceFile)
 
 cat("cleaning \n")
 dataCleaned <- dataTranslated %>%
@@ -66,11 +66,9 @@ dataCleanedScore <- dataCleaned %>%
   ) %>%
   filter(referenceCleanedType == "scoreTitleOrganism") %>%
   select(-drop) %>%
-  tibble() %>%
   distinct()
 
 dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore) %>%
-  tibble() %>%
   filter(!is.na(organismOriginal))
 
 rm(dataCleaned)

@@ -1134,9 +1134,16 @@ pathDataInterimDictionariesTaxaProblematic <-
   file.path(
     pathDataInterimDictionariesTaxa,
     "problematic.tsv.zip"
-  ) # to check
+  )
 
-####### problematic
+####### wrong verified
+pathDataInterimDictionariesTaxaWrongVerified <-
+  file.path(
+    pathDataInterimDictionariesTaxa,
+    "wrongVerified.tsv"
+  )
+
+####### ranks
 pathDataInterimDictionariesTaxaRanks <-
   file.path(
     pathDataInterimDictionariesTaxa,
@@ -1271,7 +1278,11 @@ pathDataInterimTablesOriginalStructureFull <-
 
 ## distinct organism
 pathDataInterimTablesOriginalOrganism <-
-  file.path(pathDataInterimTablesOriginal, "organism/")
+  file.path(pathDataInterimTablesOriginal, "organism")
+
+### file
+pathDataInterimTablesOriginalOrganismFile <-
+  file.path(pathDataInterimTablesOriginalOrganism, "original.tsv.gz")
 
 ## ref
 pathDataInterimTablesOriginalReference <-
@@ -1299,7 +1310,7 @@ pathDataInterimTablesOriginalReferenceDoi <-
 
 ### original
 pathDataInterimTablesOriginalReferenceOriginalFolder <-
-  file.path(pathDataInterimTablesOriginalReference, "original/")
+  file.path(pathDataInterimTablesOriginalReference, "original")
 
 ### pubmed
 pathDataInterimTablesOriginalReferencePubmed <-
@@ -1314,7 +1325,7 @@ pathDataInterimTablesOriginalReferencePublishingDetails <-
 
 ### title
 pathDataInterimTablesOriginalReferenceTitleFolder <-
-  file.path(pathDataInterimTablesOriginalReference, "title/")
+  file.path(pathDataInterimTablesOriginalReference, "title")
 
 ### split
 pathDataInterimTablesOriginalReferenceSplit <-
@@ -1334,7 +1345,7 @@ pathDataInterimTablesTranslated <-
 
 ## organism
 pathDataInterimTablesTranslatedOrganism <-
-  file.path(pathDataInterimTablesTranslated, "organism/")
+  file.path(pathDataInterimTablesTranslated, "organism")
 
 ### file
 ##### maybe not useful #####
@@ -1349,7 +1360,7 @@ pathDataInterimTablesTranslatedReferenceDoi <-
   file.path(pathDataInterimTablesTranslatedReference, "doi.tsv.gz")
 
 pathDataInterimTablesTranslatedReferenceOriginalFolder <-
-  file.path(pathDataInterimTablesTranslatedReference, "original/")
+  file.path(pathDataInterimTablesTranslatedReference, "original")
 
 pathDataInterimTablesTranslatedReferenceOriginal <-
   file.path(pathDataInterimTablesTranslatedReference, "original.tsv.gz")
@@ -1364,7 +1375,7 @@ pathDataInterimTablesTranslatedReferencePublishingDetails <-
   )
 
 pathDataInterimTablesTranslatedReferenceTitleFolder <-
-  file.path(pathDataInterimTablesTranslatedReference, "title/")
+  file.path(pathDataInterimTablesTranslatedReference, "title")
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")
@@ -1434,7 +1445,7 @@ pathDataInterimTablesCleanedOrganism <-
 
 ### original
 pathDataInterimTablesCleanedOrganismOriginal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "original/")
+  file.path(pathDataInterimTablesCleanedOrganism, "original")
 
 pathDataInterimTablesCleanedOrganismOriginalTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
@@ -1445,9 +1456,15 @@ pathDataInterimTablesCleanedOrganismOriginalUniqueTable <-
     "originalUnique.tsv.gz"
   )
 
+pathDataInterimTablesCleanedOrganismOriginalVerifiedTable <-
+  file.path(
+    pathDataInterimTablesCleanedOrganism,
+    "originalVerified.tsv.gz"
+  )
+
 ### translated
 pathDataInterimTablesCleanedOrganismTranslated <-
-  file.path(pathDataInterimTablesCleanedOrganism, "translated/")
+  file.path(pathDataInterimTablesCleanedOrganism, "translated")
 
 pathDataInterimTablesCleanedOrganismTranslatedInterim <-
   file.path(pathDataInterimTablesCleanedOrganism, "interim.tsv.gz")
@@ -1457,6 +1474,9 @@ pathDataInterimTablesCleanedOrganismTranslatedTable <-
 
 pathDataInterimTablesCleanedOrganismVerifyTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "verify.tsv.gz")
+
+pathDataInterimTablesCleanedOrganismVerifiedOriginalTable <-
+  file.path(pathDataInterimTablesCleanedOrganism, "original_verified.json")
 
 pathDataInterimTablesCleanedOrganismVerifiedTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "verified.json")
@@ -1613,52 +1633,34 @@ pathDataInterimTablesAnalysedSampleKnapsack <-
     "sampleKnapsack.tsv"
   )
 
-
 ## dirty for the moment
-if (mode == "full") {
-  pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh"
-}
+pathOriginalGnfinderScript <- switch(
+  mode,
+  "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
+)
 
-if (mode == "min") {
-  pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh"
-}
+pathTranslatedGnfinderScript <- switch(
+  mode,
+  "full" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
+)
 
-if (mode == "test") {
-  pathOriginalGnfinderScript <-
-    "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
-}
+pathOriginalGnverifyScript <- switch(
+  mode,
+  "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_test.sh"
+)
 
-if (mode == "full") {
-  pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh"
-}
-
-if (mode == "min") {
-  pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh"
-}
-
-if (mode == "test") {
-  pathTranslatedGnfinderScript <-
-    "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
-}
-
-if (mode == "full") {
-  pathGnverifyScript <-
-    "2_curating/2_editing/organism/shell/gnverifyLauncher_full.sh"
-}
-
-if (mode == "min") {
-  pathGnverifyScript <-
-    "2_curating/2_editing/organism/shell/gnverifyLauncher_min.sh"
-}
-
-if (mode == "test") {
-  pathGnverifyScript <-
-    "2_curating/2_editing/organism/shell/gnverifyLauncher_test.sh"
-}
+pathGnverifyScript <- switch(
+  mode,
+  "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_test.sh"
+)
 
 pathTests <- file.path(pathDataInterimTablesOriginal, "tests.tsv")
 

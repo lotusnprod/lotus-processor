@@ -10,6 +10,8 @@ cat("... functions \n")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
 source("r/vroom_safe.R")
+source("r/split_data_table.R")
+source("r/y_as_na.R")
 
 cat("loading ... \n")
 cat("... libraries \n")
@@ -20,6 +22,14 @@ log_debug("  Step 1")
 cat("... taxa ranks dictionary \n")
 taxaRanksDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
+
+wrongVerifiedDictionary <-
+  vroom_read_safe(path = pathDataInterimDictionariesTaxaWrongVerified) %>%
+  as.list()
+
+organismTable <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFile) %>%
+  distinct()
 
 cat("ensuring directories exist \n")
 ifelse(
@@ -47,6 +57,69 @@ ifelse(
       showWarnings = FALSE
     )
 )
+
+cat("submitting to GNVerify \n")
+system(command = paste("bash", pathOriginalGnverifyScript))
+
+verified <-
+  stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedOriginalTable))
+
+verified_df <- verified %>%
+  data.frame() %>%
+  select(
+    -curation,
+    -matchType
+  ) %>%
+  unnest(preferredResults, names_repair = "minimal") %>%
+  filter(dataSourceTitleShort != "IRMNG (old)" &
+    dataSourceTitleShort != "IPNI") %>%
+  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
+  select(
+    organismOriginal = input,
+    organismCleaned = currentCanonicalFull,
+    organismDbTaxo = dataSourceTitleShort,
+    taxonId = currentRecordId,
+    organismCleanedCurrent = currentName,
+    taxonomy = classificationPath,
+    rank = classificationRanks
+  )
+
+## example ID 165 empty, maybe fill later on
+verified_df$organismDbTaxo <-
+  y_as_na(verified_df$organismDbTaxo, "")
+
+dataOrganismVerified <- left_join(
+  organismTable,
+  verified_df
+) %>%
+  select(
+    organismOriginal,
+    organismCleaned,
+    organismDbTaxo,
+    taxonId,
+    organismCleanedCurrent,
+    taxonomy,
+    rank
+  )
+
+dataOrganismNoVerified <- dataOrganismVerified %>%
+  arrange(organismDbTaxo) %>%
+  distinct(organismOriginal, .keep_all = TRUE) %>%
+  filter(is.na(organismDbTaxo)) %>%
+  distinct(organismOriginal) %>%
+  data.table()
+
+dataOrganismVerified <- dataOrganismVerified %>%
+  filter(!is.na(organismDbTaxo))
+
+if (nrow(dataOrganismNoVerified) != 0) {
+  split_data_table(
+    x = dataOrganismNoVerified,
+    no_rows_per_frame = 10000,
+    text = "verify",
+    path_to_store = pathDataInterimTablesOriginalOrganism
+  )
+}
 
 cat("submitting to GNFinder \n")
 system(command = paste("bash", pathOriginalGnfinderScript))
@@ -100,7 +173,7 @@ if (length(dataCleanOriginalOrganism) != 0) {
       organismDbTaxo = dbTaxo,
       everything()
     ) %>%
-    select(-nchar, -sum)
+    select(-nchar, -sum, -value_min, -value_max, -ids, -dbQuality)
 }
 
 if (length(dataCleanOriginalOrganism) == 0) {
@@ -110,18 +183,13 @@ if (length(dataCleanOriginalOrganism) == 0) {
       organismCleaned = NA,
       organismCleanedCurrent = NA,
       organismDbTaxo = NA,
-      value_min = NA,
-      value_max = NA,
       taxonId = NA,
       taxonomy = NA,
       rank = NA,
-      ids = NA,
-      dbQuality = NA
     )
 }
 
-dataCleanedOriginalOrganismUnique <-
-  dataCleanedOriginalOrganism %>%
+dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism %>%
   distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
 
 cat("exporting ... \n")
@@ -149,6 +217,11 @@ if (length != 0) {
     path = pathDataInterimTablesCleanedOrganismOriginalUniqueTable
   )
 }
+
+vroom_write_safe(
+  x = dataOrganismVerified,
+  path = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable
+)
 
 end <- Sys.time()
 
