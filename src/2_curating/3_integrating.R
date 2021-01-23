@@ -276,7 +276,8 @@ inhouseDbMinimal <-
   filter(!is.na(structureCleanedInchikey3D)) %>%
   left_join(., organismMinimal) %>%
   filter(!is.na(organismCleaned)) %>%
-  left_join(., referenceMinimal) %>%
+  left_join(., referenceMinimal %>%
+    select(-organismDetected)) %>%
   filter(!is.na(referenceCleanedTitle) |
     database == "dnp_1") %>%
   filter(
