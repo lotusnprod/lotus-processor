@@ -26,6 +26,10 @@ cat("... cleaned original organisms \n")
 dataCleanedOriginalOrganism <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismOriginalTable)
 
+cat("... verified original organisms \n")
+dataVerifiedOriginalOrganism <-
+  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable)
+
 cat(" ... taxa ranks dictionary \n")
 taxaRanksDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
@@ -98,8 +102,7 @@ if (length(dataCleanTranslatedOrganism) != 0) {
       organismDbTaxo = dbTaxo,
       everything()
     ) %>%
-    select(-nchar, -sum) %>%
-    distinct()
+    select(-nchar, -sum, -value_min, -value_max, -ids, -dbQuality)
 }
 
 if (length(dataCleanTranslatedOrganism) == 0) {
@@ -109,13 +112,9 @@ if (length(dataCleanTranslatedOrganism) == 0) {
       organismCleaned = NA,
       organismCleanedCurrent = NA,
       organismDbTaxon = NA,
-      value_min = NA,
-      value_max = NA,
       taxonId = NA,
       taxonomy = NA,
       rank = NA,
-      ids = NA,
-      dbQuality = NA
     ) %>%
     mutate_all(as.character)
 }
@@ -152,8 +151,6 @@ if (length != 0) {
         taxonId,
         taxonomy,
         rank,
-        ids,
-        dbQuality
       )
     ) %>%
     select(-organismInterim) %>%
@@ -167,6 +164,7 @@ if (length != 0) {
 if (length != 0) {
   dataCleanedOrganism <-
     bind_rows(
+      dataVerifiedOriginalOrganism,
       dataCleanedOriginalOrganism,
       dataCleanedTranslatedOrganismFull
     )
@@ -184,7 +182,11 @@ if (length != 0) {
     ungroup() %>%
     filter(!is.na(organismCleaned) |
       !n > 1) %>%
-    select(-n)
+    select(-n) %>%
+    distinct(
+      organismOriginal,
+      organismCleaned
+    )
 }
 
 cat("exporting ... \n")

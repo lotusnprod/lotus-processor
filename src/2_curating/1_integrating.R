@@ -22,6 +22,8 @@ library(tidyverse)
 cat("... files ... \n")
 cat("... DBs \n")
 
+dirtyDB <- c("dnp_1", "foo_1", "wak_1")
+
 if (mode != "test") {
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
@@ -258,13 +260,27 @@ if (nrow(structureTable_full) == 0) {
 cat("... organisms table \n")
 organismTable <- dbTable %>%
   filter(!is.na(organismOriginal)) %>%
-  distinct(organismOriginal) %>%
+  distinct(organismOriginal, .keep_all = TRUE) %>%
+  select(database, organismOriginal) %>%
   data.table()
+
+organismTable_1 <- organismTable %>%
+  filter(database %in% dirtyDB) %>%
+  distinct(organismOriginal)
+
+organismTable_2 <- organismTable %>%
+  filter(!database %in% dirtyDB) %>%
+  distinct(organismOriginal)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-    organismTable <- anti_join(
-      x = organismTable,
+    organismTable_1 <- anti_join(
+      x = organismTable_1,
+      y = organismDictionary
+    )
+
+    organismTable_2 <- anti_join(
+      x = organismTable_2,
       y = organismDictionary
     )
   }
@@ -557,12 +573,20 @@ ifelse(
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesOriginalOrganism, "\n")
-if (nrow(organismTable) != 0) {
+
+if (nrow(organismTable_1) != 0) {
   split_data_table(
-    x = organismTable,
+    x = organismTable_1,
     no_rows_per_frame = 10000,
     text = "",
     path_to_store = pathDataInterimTablesOriginalOrganism
+  )
+}
+
+if (nrow(organismTable_2) != 0) {
+  vroom_write_safe(
+    x = organismTable_2,
+    path = pathDataInterimTablesOriginalOrganismFile
   )
 }
 

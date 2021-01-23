@@ -178,6 +178,10 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated_old <-
     vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
+    mutate(
+      organismDetected =
+        word(organismDetected, 1)
+    ) %>%
     distinct(
       organismOriginal,
       organismDetected
@@ -186,6 +190,10 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 
   dataCleanedOrganismManipulated_new <-
     vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
+    mutate(
+      organismDetected =
+        word(organismDetected, 1)
+    ) %>%
     distinct(
       organismOriginal,
       organismDetected
@@ -206,6 +214,10 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
     vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
+    mutate(
+      organismDetected =
+        word(organismDetected, 1)
+    ) %>%
     distinct(
       organismOriginal,
       organismDetected

@@ -15,6 +15,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismOriginal") {
     inpath_organism_f <- paste(
       pathDataInterimTablesOriginalOrganism,
+      "/",
       str_pad(
         string = num,
         width = 6,
@@ -27,6 +28,7 @@ gnfinder_cleaning <- function(num, organismCol) {
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedOrganismOriginal,
+        "/",
         str_pad(
           string = num,
           width = 6,
@@ -40,6 +42,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismInterim") {
     inpath_organism_f <- paste(
       pathDataInterimTablesTranslatedOrganism,
+      "/",
       str_pad(
         string = num,
         width = 6,
@@ -52,6 +55,7 @@ gnfinder_cleaning <- function(num, organismCol) {
     inpath_gnfinder_f <-
       paste(
         pathDataInterimTablesCleanedOrganismTranslated,
+        "/",
         str_pad(
           string = num,
           width = 6,
