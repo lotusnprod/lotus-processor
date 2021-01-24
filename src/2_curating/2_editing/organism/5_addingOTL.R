@@ -22,22 +22,25 @@ canonical_name_colname <- "organismCleaned"
 dataCuratedOrganismAuto <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal)
 
-## temporary, will be written properly if validated
-triplesPostWikidata <-
-  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/compound_reference_taxon.tsv")
+if (works_locally_only == FALSE) {
+  triplesPostWikidata <-
+    vroom_read_safe(path = wikidataLotusExporterDataOutputTriplesPath)
 
-organismsPostWikidata <-
-  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/taxa.tsv")
+  organismsPostWikidata <-
+    vroom_read_safe(path = wikidataLotusExporterDataOutputTaxaPath)
 
-postWikidata <- left_join(
-  triplesPostWikidata %>% distinct(taxon),
-  organismsPostWikidata %>% distinct(wikidataId, names_pipe_separated),
-  by = c("taxon" = "wikidataId")
-) %>%
-  select(organismCleaned = names_pipe_separated)
+  postWikidata <- left_join(
+    triplesPostWikidata %>% distinct(taxon),
+    organismsPostWikidata %>% distinct(wikidataId, names_pipe_separated),
+    by = c("taxon" = "wikidataId")
+  ) %>%
+    select(organismCleaned = names_pipe_separated)
 
-new_matched_names <- dataCuratedOrganismAuto %>%
-  bind_rows(., postWikidata) %>%
+  dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
+    bind_rows(., postWikidata)
+}
+
+dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   drop_na(!!as.name(canonical_name_colname)) %>%
   distinct(!!as.name(canonical_name_colname)) %>%
   mutate(search_string = tolower(
