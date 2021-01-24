@@ -2,11 +2,11 @@ include	../../../paths.mk
 
 DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
 
-DATABASES_RECONVERT = biofacquim-reconvert coconut-reconvert metabolights-reconvert streptomedb-reconvert
+DATABASES_RECONVERT = biofacquim-reconvert coconut-reconvert streptomedb-reconvert
 
 DATABASES_REINTEGRATE = unpd-reintegrate # plantcyc-reintegrate 
 
-DATABASES_RESCRAPE = alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape metabolights-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape procardb-rescrape sancdb-rescrape swmd-rescrape tmdb-rescrape wakankensaku-rescrape # nubbe-rescrape pharmdbk-rescrape not done
+DATABASES_RESCRAPE = alkamid-rescrape biophytmol-rescrape carotenoiddb-rescrape knapsack-rescrape mitishamba-rescrape nanpdb-rescrape npedia-rescrape phytohub-rescrape procardb-rescrape sancdb-rescrape swmd-rescrape tmdb-rescrape wakankensaku-rescrape # nubbe-rescrape pharmdbk-rescrape not done
 
 .PHONY: ${DATABASES} ${DATABATES_RECONVERT} ${DATABASES_REINTEGRATE} ${DATABASES_RESCRAPE}
 .PHONY: gathering-databases gathering-databases-rescrape gathering-databases-reintegrate gathering-databases-reconvert
@@ -111,20 +111,9 @@ knapsack-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 
-# PROCESS DONE FOR METABOLIGHTS IS HORROR... my apologies I can't write it another way
-## to be changed
-
 metabolights: ${INTERIM_DB_PATH}/metabolights.tsv.gz
-${INTERIM_DB_PATH}/metabolights.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
+${INTERIM_DB_PATH}/metabolights.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/escape_double.xml ${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
-
-metabolights-reconvert: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsPrecleaned.tsv.gz: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/metabolights/studiesScraped/*.json) ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml ${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R ${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/prestandardizing.R	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizingStudies.R
-
-metabolights-rescrape: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/metabolights/metabolightsStudiesScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_studies.xml ${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
-	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/scraping.R
 
 mibig: ${INTERIM_DB_PATH}/mibig.tsv.gz
 ${INTERIM_DB_PATH}/mibig.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/mibig/data.zip ${SRC_GATHERING_DB_PATH}/mibig/standardizing.R
