@@ -54,5 +54,5 @@ dependencies:
   - r-upsetr
   - r-vroom
   - r-webchem
-  - r-xml
+  - r-XML
   - r-xml2
