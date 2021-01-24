@@ -919,29 +919,22 @@ pathDataInterimDbUnpd <-
   )
 
 #### dictionaries
-if (mode == "full") {
-  pathDataInterimDictionaries <-
-    file.path(
-      pathDataInterim,
-      "dictionaries"
-    )
-}
-
-if (mode == "min") {
-  pathDataInterimDictionaries <-
-    file.path(
-      pathDataInterim,
-      "dictionaries_min"
-    )
-}
-
-if (mode == "test") {
-  pathDataInterimDictionaries <-
+pathDataInterimDictionaries <- switch(
+  mode,
+  "full" = file.path(
+    pathDataInterim,
+    "dictionaries"
+  ),
+  min = file.path(
+    pathDataInterim,
+    "dictionaries_min"
+  ),
+  "test" = pathDataInterimDictionaries <-
     file.path(
       pathDataInterim,
       "dictionaries_test"
     )
-}
+)
 
 pathDataInterimDictionariesFix <-
   file.path(
@@ -1182,79 +1175,58 @@ pathDataInterimDictionariesTcmNames <-
   )
 
 #### tables
-if (mode == "full") {
-  pathDataInterimTables <-
-    file.path(
-      pathDataInterim,
-      "tables"
-    )
-}
-
-if (mode == "min") {
-  pathDataInterimTables <-
-    file.path(
-      pathDataInterim,
-      "tables_min"
-    )
-}
-
-if (mode == "test") {
-  pathDataInterimTables <-
+pathDataInterimTables <- switch(
+  mode,
+  "full" = file.path(
+    pathDataInterim,
+    "tables"
+  ),
+  min = file.path(
+    pathDataInterim,
+    "tables_min"
+  ),
+  "test" = pathDataInterimDictionaries <-
     file.path(
       pathDataInterim,
       "tables_test"
     )
-}
+)
 
 #### tables
-if (mode == "full") {
-  pathDataProcessedTables <-
-    file.path(
-      pathDataProcessed,
-      "tables"
-    )
-}
-
-if (mode == "min") {
-  pathDataProcessedTables <-
-    file.path(
-      pathDataProcessed,
-      "tables_min"
-    )
-}
-
-if (mode == "test") {
-  pathDataProcessedTables <-
+pathDataProcessedTables <- switch(
+  mode,
+  "full" = file.path(
+    pathDataProcessed,
+    "tables"
+  ),
+  min = file.path(
+    pathDataProcessed,
+    "tables_min"
+  ),
+  "test" = pathDataInterimDictionaries <-
     file.path(
       pathDataProcessed,
       "tables_test"
     )
-}
+)
 
 #### figures
-if (mode == "full") {
-  pathDataProcessedFigures <-
-    file.path(
-      pathDataProcessed,
-      "figures"
-    )
-}
-
-if (mode == "min") {
-  pathDataProcessedFigures <-
-    file.path(
-      pathDataProcessed,
-      "figures_min"
-    )
-}
-
-if (mode == "test") {
-  pathDataProcessedFigures <-
+pathDataProcessedFigures <- switch(
+  mode,
+  "full" = file.path(
+    pathDataProcessed,
+    "figures"
+  ),
+  min = file.path(
+    pathDataProcessed,
+    "figures_min"
+  ),
+  "test" = pathDataInterimDictionaries <-
     file.path(
       pathDataProcessed,
       "figures_test"
     )
-}
+)
 
 ##### html
 pathDataProcessedFiguresHtml <-
