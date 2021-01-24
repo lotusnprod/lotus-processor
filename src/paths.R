@@ -8,7 +8,7 @@ mode <- Sys.getenv("MODE", unset = "full")
 
 works_locally_only <- TRUE
 ## for steps where paths need to be adapted locally or related ot other repos
-molconvertPath <- "~/../../../Applications/MarvinSuite/bin/molconvert"
+molconvertPath <- "~/Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterPath <- "../../wikidataLotusExporter"
 wikidataLotusExporterDataPath <-
   file.path(wikidataLotusExporterPath, "data")
