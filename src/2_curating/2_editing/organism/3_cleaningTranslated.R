@@ -75,7 +75,7 @@ cat("cleaning GNFinder output \n")
 if (length != 0) {
   for (i in num) {
     j <- i / cut
-    cat(paste("step", j, "of", length))
+    cat(paste("step", j, "of", length, "\n"))
     tryCatch(
       {
         dataCleanTranslatedOrganism[[j]] <-

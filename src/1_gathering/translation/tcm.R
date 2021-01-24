@@ -368,7 +368,20 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
   filter(vernacularName != canonicalName | is.na(newCanonicalName))
 
 # exporting
-vroom_write_safe(
+vroom_write(
   x = tcmNamesDicCurated,
-  path = pathDataInterimDictionariesTcmNames
+  path = gzfile(
+    description = pathDataInterimDictionariesTcmNames,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  num_threads = 1,
+  bom = TRUE,
+  quote = "none",
+  escape = "double",
+  delim = "\t",
+  col_names = TRUE,
+  progress = TRUE,
+  append = FALSE
 )
+## because of univocity parser settings

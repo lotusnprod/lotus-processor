@@ -27,7 +27,7 @@ commonSciPhe <-
 
 ### common names from FooDB
 commonSciFoo <-
-  read_delim(
+  vroom(
     file = pathDataExternalTranslationSourceCommonFoodb,
     delim = ",",
     quote = ""
@@ -390,6 +390,9 @@ commonSciJoined <- rbind(commonSci_1, commonSci_4, commonSci_5)
 commonSciSub <- commonSciJoined %>%
   filter(!tolower(vernacularName) %in% tolower(manualSubtraction$name))
 
+commonSciSub$canonicalName <-
+  y_as_na(commonSciSub$canonicalName, "\"\"")
+
 ## sorting in appropriate order
 common2Sci <- commonSciSub %>%
   mutate(n = str_count(string = vernacularName)) %>%
@@ -403,7 +406,20 @@ common2Sci <- commonSciSub %>%
   filter(!grepl("\\)", vernacularName))
 
 # exporting
-vroom_write_safe(
+vroom_write(
   x = common2Sci,
-  path = pathDataInterimDictionariesCommonNames
+  path = gzfile(
+    description = pathDataInterimDictionariesCommonNames,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  num_threads = 1,
+  bom = TRUE,
+  quote = "none",
+  escape = "double",
+  delim = "\t",
+  col_names = TRUE,
+  progress = TRUE,
+  append = FALSE
 )
+## because of univocity parser settings

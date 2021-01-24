@@ -35,6 +35,7 @@ split_data_table_quote <-
         ),
         row.names = FALSE,
         quote = TRUE,
+        qmethod = "double",
         sep = "\t",
         fileEncoding = "UTF-8"
       )

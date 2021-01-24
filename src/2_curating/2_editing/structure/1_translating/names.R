@@ -49,11 +49,13 @@ ifelse(
 
 cat("exporting prepared names ... \n")
 cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
+
 write.table(
   x = dataPreparedNamesDistinct,
   file = pathDataInterimTablesTranslatedStructurePrepared_1,
   row.names = FALSE,
   quote = FALSE,
+  qmethod = "double",
   sep = "\t",
   fileEncoding = "UTF-8"
 )
@@ -77,7 +79,7 @@ dataOpsin <-
     file = pathDataInterimTablesTranslatedStructureOpsin,
     delim = "\t",
     skip_empty_rows = FALSE,
-    escape_double = FALSE,
+    escape_double = TRUE,
     trim_ws = TRUE
   ) %>%
   mutate_all(as.character) %>%

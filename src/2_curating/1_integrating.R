@@ -10,7 +10,6 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... functions \n")
-source("r/split_data_table.R")
 source("r/split_data_table_quote.R")
 source("r/vroom_safe.R")
 
@@ -198,11 +197,11 @@ if (nrow(structureTable_smiles) == 0) {
 
 cat("... chemical names table \n")
 structureTable_nominal <- dbTable %>%
-  filter(!grepl(
-    pattern = "^InChI=.*",
-    x = structureOriginal_inchi
-  )) %>%
-  filter(is.na(structureOriginal_smiles)) %>%
+  # filter(!grepl(
+  #   pattern = "^InChI=.*",
+  #   x = structureOriginal_inchi
+  # )) %>%
+  # filter(is.na(structureOriginal_smiles)) %>%
   filter(!is.na(structureOriginal_nominal)) %>%
   distinct(structureOriginal_nominal) %>%
   select(structureValue = structureOriginal_nominal)
@@ -575,7 +574,7 @@ cat("exporting ... \n")
 cat(pathDataInterimTablesOriginalOrganism, "\n")
 
 if (nrow(organismTable_1) != 0) {
-  split_data_table(
+  split_data_table_quote(
     x = organismTable_1,
     no_rows_per_frame = 10000,
     text = "",
@@ -584,10 +583,23 @@ if (nrow(organismTable_1) != 0) {
 }
 
 if (nrow(organismTable_2) != 0) {
-  vroom_write_safe(
+  vroom_write(
     x = organismTable_2,
-    path = pathDataInterimTablesOriginalOrganismFile
+    path = gzfile(
+      description = pathDataInterimTablesOriginalOrganismFile,
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    num_threads = 1,
+    bom = TRUE,
+    quote = "none",
+    escape = "double",
+    delim = "\t",
+    col_names = TRUE,
+    progress = TRUE,
+    append = FALSE
   )
+  ## because gnverify does not parse quotes
 }
 
 cat(pathDataInterimTablesOriginalReferenceDoi, "\n")
