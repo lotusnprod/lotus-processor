@@ -191,12 +191,7 @@ databases$add(
 
 databases$add(
   name = "metabolights",
-  sourceFiles = list(
-    xmlComplete = "eb-eye_metabolights_complete.xml",
-    xmlStudies = "eb-eye_metabolights_studies.xml",
-    tsvPrecleaned = "metabolightsPrecleaned.tsv.gz",
-    tsvStudies = "metabolightsStudiesScraped.tsv.gz"
-  ),
+  sourceFiles = list(xmlComplete = "eb-eye_metabolights_complete.xml"),
   interimFile = "metabolights.tsv.gz"
 )
 
