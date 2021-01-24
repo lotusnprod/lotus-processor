@@ -21,32 +21,36 @@ smiles <-
   distinct() %>%
   tibble()
 
-## temporary, will be written properly if validated
-triplesPostWikidata <-
-  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/compound_reference_taxon.tsv")
+if (works_locally_only == FALSE) {
+  triplesPostWikidata <-
+    vroom_read_safe(path = wikidataLotusExporterDataOutputTriplesPath)
 
-structuresPostWikidata <-
-  vroom_read_safe(path = "../../wikidataLotusExporter/data/output/compounds.tsv")
+  structuresPostWikidata <-
+    vroom_read_safe(path = wikidataLotusExporterDataOutputStructuresPath)
 
-postWikidata <- left_join(
-  triplesPostWikidata %>% distinct(compound),
-  structuresPostWikidata %>% distinct(wikidataId, isomericSmiles, canonicalSmiles),
-  by = c("compound" = "wikidataId")
-) %>%
-  mutate(smiles = ifelse(
-    test = !is.na(isomericSmiles),
-    yes = isomericSmiles,
-    no = canonicalSmiles
-  )) %>%
-  drop_na(smiles) %>%
-  distinct(smiles)
+  postWikidata <- left_join(
+    triplesPostWikidata %>% distinct(compound),
+    structuresPostWikidata %>% distinct(wikidataId, isomericSmiles, canonicalSmiles),
+    by = c("compound" = "wikidataId")
+  ) %>%
+    mutate(smiles = ifelse(
+      test = !is.na(isomericSmiles),
+      yes = isomericSmiles,
+      no = canonicalSmiles
+    )) %>%
+    drop_na(smiles) %>%
+    distinct(smiles)
+
+  smiles <- smiles %>%
+    bind_rows(., postWikidata)
+}
 
 old <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
   distinct() %>%
   tibble()
 
-new <- anti_join(bind_rows(smiles, postWikidata), old)
+new <- anti_join(smiles, old)
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="

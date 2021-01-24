@@ -6,9 +6,24 @@ source("r/database.R") ## also change date in here
 
 mode <- Sys.getenv("MODE", unset = "full")
 
-# only for molconvert step (structures/../enriching/naming.R)
 works_locally_only <- TRUE
+## for steps where paths need to be adapted locally or related ot other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
+wikidataLotusExporterPath <- "../../wikidataLotusExporter"
+wikidataLotusExporterDataPath <-
+  file.path(wikidataLotusExporterPath, "data")
+wikidataLotusExporterDataOutputPath <-
+  file.path(wikidataLotusExporterDataPath, "output")
+wikidataLotusExporterDataOutputTaxaPath <-
+  file.path(wikidataLotusExporterDataOutputPath, "taxa.tsv")
+wikidataLotusExporterDataOutputStructuresPath <-
+  file.path(wikidataLotusExporterDataOutputPath, "compounds.tsv")
+wikidataLotusExporterDataOutputTriplesPath <-
+  file.path(
+    wikidataLotusExporterDataOutputPath,
+    "compound_reference_taxon.tsv"
+  )
+##
 
 # databases for which we have no right to disseminate the data
 forbidden_export <- c("foo_1")
@@ -1398,11 +1413,17 @@ pathDataInterimTablesTranslatedStructureNominal <-
 
 ### nominal
 pathDataInterimTablesTranslatedStructureNominal_opsin <-
-  file.path(pathDataInterimTablesTranslatedStructure, "nominal_opsin.tsv.gz")
+  file.path(
+    pathDataInterimTablesTranslatedStructure,
+    "nominal_opsin.tsv.gz"
+  )
 
 ### nominal
 pathDataInterimTablesTranslatedStructureNominal_cactus <-
-  file.path(pathDataInterimTablesTranslatedStructure, "nominal_cactus.tsv.gz")
+  file.path(
+    pathDataInterimTablesTranslatedStructure,
+    "nominal_cactus.tsv.gz"
+  )
 
 ### prepared_1
 pathDataInterimTablesTranslatedStructurePrepared_1 <-
@@ -1471,7 +1492,10 @@ pathDataInterimTablesCleanedOrganismVerifyTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "verify.tsv.gz")
 
 pathDataInterimTablesCleanedOrganismVerifiedOriginalTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "original_verified.json")
+  file.path(
+    pathDataInterimTablesCleanedOrganism,
+    "original_verified.json"
+  )
 
 pathDataInterimTablesCleanedOrganismVerifiedTable <-
   file.path(pathDataInterimTablesCleanedOrganism, "verified.json")
@@ -1629,29 +1653,25 @@ pathDataInterimTablesAnalysedSampleKnapsack <-
   )
 
 ## dirty for the moment
-pathOriginalGnfinderScript <- switch(
-  mode,
+pathOriginalGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
 )
 
-pathTranslatedGnfinderScript <- switch(
-  mode,
+pathTranslatedGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh",
   "min" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 )
 
-pathOriginalGnverifyScript <- switch(
-  mode,
+pathOriginalGnverifyScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_full.sh",
   "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_min.sh",
   "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_test.sh"
 )
 
-pathGnverifyScript <- switch(
-  mode,
+pathGnverifyScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_full.sh",
   "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_test.sh"
