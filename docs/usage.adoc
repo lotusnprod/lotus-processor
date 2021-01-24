@@ -56,7 +56,10 @@ A "loose" environment.yml file is created and should allow to recreate a working
 
 We will also create another environment for strict mirroring of the installed packages. (TO DO)
 
+[source,console]
+----
 conda env create -f environment.yml
+----
 
 If your environement is not directly sources by your default bash run the following lines
 
