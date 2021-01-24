@@ -40,7 +40,7 @@ if (works_locally_only == FALSE) {
     bind_rows(., postWikidata)
 }
 
-dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
+new_matched_names <- dataCuratedOrganismAuto %>%
   drop_na(!!as.name(canonical_name_colname)) %>%
   distinct(!!as.name(canonical_name_colname)) %>%
   mutate(search_string = tolower(
