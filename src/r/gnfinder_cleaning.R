@@ -69,7 +69,8 @@ gnfinder_cleaning <- function(num, organismCol) {
   data_bio <- vroom(
     file = inpath_organism_f,
     delim = "\t",
-    quote = "",
+    escape_double = TRUE,
+    escape_backslash = TRUE,
     col_types = cols(.default = "c"),
     num_threads = 1
   ) %>%

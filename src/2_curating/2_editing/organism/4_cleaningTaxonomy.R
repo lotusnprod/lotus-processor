@@ -34,10 +34,23 @@ dataCleanedOrganismVerify <- dataCleanedOrganism %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-vroom_write_safe(
+vroom_write(
   x = dataCleanedOrganismVerify,
-  path = pathDataInterimTablesCleanedOrganismVerifyTable
+  path = gzfile(
+    description = pathDataInterimTablesCleanedOrganismVerifyTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  num_threads = 1,
+  bom = TRUE,
+  quote = "none",
+  escape = "double",
+  delim = "\t",
+  col_names = TRUE,
+  progress = TRUE,
+  append = FALSE
 )
+## because gnverify does not parse quotes
 
 cat("submitting to GNVerify \n")
 system(command = paste("bash", pathGnverifyScript))

@@ -10,7 +10,7 @@ cat("... functions \n")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
 source("r/vroom_safe.R")
-source("r/split_data_table.R")
+source("r/split_data_table_quote.R")
 source("r/y_as_na.R")
 
 cat("loading ... \n")
@@ -113,7 +113,7 @@ dataOrganismVerified <- dataOrganismVerified %>%
   filter(!is.na(organismDbTaxo))
 
 if (nrow(dataOrganismNoVerified) != 0) {
-  split_data_table(
+  split_data_table_quote(
     x = dataOrganismNoVerified,
     no_rows_per_frame = 10000,
     text = "verify",
@@ -127,7 +127,7 @@ system(command = paste("bash", pathOriginalGnfinderScript))
 length <-
   length(list.files(
     path = pathDataInterimTablesOriginalOrganism,
-    pattern = "tsv"
+    pattern = "^[0-9]{6}.tsv"
   ))
 
 cut <- 10000
@@ -146,7 +146,7 @@ cat("cleaning GNFinder output \n")
 if (length != 0) {
   for (i in num) {
     j <- i / cut
-    cat(paste("step", j, "of", length))
+    cat(paste("step", j, "of", length, "\n"))
     tryCatch(
       {
         dataCleanOriginalOrganism[[j]] <-
@@ -212,10 +212,23 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  vroom_write_safe(
+  vroom_write(
     x = dataCleanedOriginalOrganismUnique,
-    path = pathDataInterimTablesCleanedOrganismOriginalUniqueTable
+    path = gzfile(
+      description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
+      compression = 9,
+      encoding = "UTF-8"
+    ),
+    num_threads = 1,
+    bom = TRUE,
+    quote = "none",
+    escape = "double",
+    delim = "\t",
+    col_names = TRUE,
+    progress = TRUE,
+    append = FALSE
   )
+  ## because of univocity parser settings
 }
 
 vroom_write_safe(

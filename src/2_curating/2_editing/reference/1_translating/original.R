@@ -63,6 +63,7 @@ ifelse(
 for (i in num) {
   inpath <- paste(
     pathDataInterimTablesOriginalReferenceOriginalFolder,
+    "/",
     str_pad(
       string = i,
       width = 6,
@@ -75,6 +76,7 @@ for (i in num) {
   outpath <-
     paste(
       pathDataInterimTablesTranslatedReferenceOriginalFolder,
+      "/",
       str_pad(
         string = i,
         width = 6,
@@ -84,12 +86,12 @@ for (i in num) {
       sep = ""
     )
 
-  cat(paste("step", i / cut, "of", length))
+  cat(paste("step", i / cut, "of", length, "\n"))
 
   dataOriginal <- read_delim(
     file = inpath,
     delim = "\t",
-    escape_double = FALSE,
+    escape_double = TRUE,
     trim_ws = TRUE
   )
 
@@ -164,7 +166,7 @@ dataOriginal3 <- do.call(
         ),
         delim = "\t",
         trim_ws = TRUE,
-        quote = ""
+        escape_double = TRUE,
       ) %>%
         mutate_all(as.character)
     }
