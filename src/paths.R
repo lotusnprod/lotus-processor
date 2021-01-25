@@ -925,15 +925,14 @@ pathDataInterimDictionaries <- switch(
     pathDataInterim,
     "dictionaries"
   ),
-  min = file.path(
+  "min" = file.path(
     pathDataInterim,
     "dictionaries_min"
   ),
-  "test" = pathDataInterimDictionaries <-
-    file.path(
-      pathDataInterim,
-      "dictionaries_test"
-    )
+  "test" = file.path(
+    pathDataInterim,
+    "dictionaries_test"
+  )
 )
 
 pathDataInterimDictionariesFix <-
@@ -1181,7 +1180,7 @@ pathDataInterimTables <- switch(
     pathDataInterim,
     "tables"
   ),
-  min = file.path(
+  "min" = file.path(
     pathDataInterim,
     "tables_min"
   ),
@@ -1199,15 +1198,14 @@ pathDataProcessedTables <- switch(
     pathDataProcessed,
     "tables"
   ),
-  min = file.path(
+  "min" = file.path(
     pathDataProcessed,
     "tables_min"
   ),
-  "test" = pathDataInterimDictionaries <-
-    file.path(
-      pathDataProcessed,
-      "tables_test"
-    )
+  "test" = file.path(
+    pathDataProcessed,
+    "tables_test"
+  )
 )
 
 #### figures
@@ -1217,15 +1215,14 @@ pathDataProcessedFigures <- switch(
     pathDataProcessed,
     "figures"
   ),
-  min = file.path(
+  "min" = file.path(
     pathDataProcessed,
     "figures_min"
   ),
-  "test" = pathDataInterimDictionaries <-
-    file.path(
-      pathDataProcessed,
-      "figures_test"
-    )
+  "test" = file.path(
+    pathDataProcessed,
+    "figures_test"
+  )
 )
 
 ##### html
