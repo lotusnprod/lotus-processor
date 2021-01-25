@@ -119,11 +119,13 @@ new_matched_otl_exact <- new_matched_otl_exact %>%
   filter(!is.na(unique_name))
 
 ## very doubtful quality
-new_matched_otl_approx <- tnrs_match_names(
-  names = taxa_approx$search_string,
-  do_approximate_matching = TRUE,
-  include_suppressed = FALSE
-)
+if (length(taxa_approx != 0)) {
+  new_matched_otl_approx <- tnrs_match_names(
+    names = taxa_approx$search_string,
+    do_approximate_matching = TRUE,
+    include_suppressed = FALSE
+  )
+}
 
 ## not joining it for now since results of fuzzy seem really bad
 new_matched_otl <-
