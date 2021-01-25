@@ -104,7 +104,7 @@ curating-editing-structure-classifying:
 curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 
 curating-editing-organism-cleaning-original: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/*.tsv) ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/1_cleaningOriginal.R
+${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/^[0-9]{6}.tsv) ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/1_cleaningOriginal.R
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/1_cleaningOriginal.R
 
 cleaning-organism-interim:
