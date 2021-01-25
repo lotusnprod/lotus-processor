@@ -102,7 +102,7 @@ if (length(dataCleanTranslatedOrganism) != 0) {
       organismDbTaxo = dbTaxo,
       everything()
     ) %>%
-    select(-nchar, -sum, -value_min, -value_max, -ids, -dbQuality)
+    select(-ids, -dbQuality)
 }
 
 if (length(dataCleanTranslatedOrganism) == 0) {
