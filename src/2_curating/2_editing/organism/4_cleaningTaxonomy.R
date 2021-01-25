@@ -95,7 +95,7 @@ dataCleanedOrganismVerified <- left_join(
   ) %>%
   filter(!is.na(organismDbTaxo))
 
-## last version doess not contain "species"
+## last version does not contain "species"
 indexFungorum <- dataCleanedOrganismVerified %>%
   filter(organismDbTaxo == "Index Fungorum") %>%
   mutate(
