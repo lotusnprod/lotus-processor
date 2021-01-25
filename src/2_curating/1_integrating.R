@@ -264,7 +264,7 @@ organismTable <- dbTable %>%
   data.table()
 
 organismTable_1 <- organismTable %>%
-  filter(database %in% dirtyDB) %>%
+  filter(database %in% c(dirtyDB, "tes_1")) %>%
   distinct(organismOriginal)
 
 organismTable_2 <- organismTable %>%
