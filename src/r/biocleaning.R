@@ -7,13 +7,14 @@ source("r/homemadeShift.R")
 #'
 #' @param gnfound
 #' @param names
+#' @param names_quotes
 #' @param organismCol
 #'
 #' @return
 #' @export
 #'
 #' @examples
-biocleaning <- function(gnfound, names, organismCol) {
+biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   log_debug("Biocleaning")
   log_debug("Biocleaning: finished creating dataframe")
   # extracting preferred results data table
@@ -238,18 +239,18 @@ biocleaning <- function(gnfound, names, organismCol) {
 
   # computing sum of characters to match with GNFinder results
   if (organismCol == "organismOriginal") {
-    names$nchar <-
-      nchar(x = names$organismOriginal)
+    names_quotes$nchar <-
+      nchar(x = names_quotes$`"organismOriginal"`)
   }
 
   if (organismCol == "organismInterim") {
-    names$nchar <-
-      nchar(x = names$organismInterim)
+    names_quotes$nchar <-
+      nchar(x = names_quotes$`"organismInterim"`)
   }
 
-  names[1, "sum"] <- nchar(colnames(names)[1]) + 1
-  for (i in 2:nrow(names)) {
-    names[i, "sum"] <- names[i - 1, "nchar"] + 1 + names[i - 1, "sum"]
+  names_quotes[1, "sum"] <- nchar(colnames(names_quotes)[1]) + 1
+  for (i in 2:nrow(names_quotes)) {
+    names_quotes[i, "sum"] <- names_quotes[i - 1, "nchar"] + 1 + names_quotes[i - 1, "sum"]
   }
 
   # adding min and max to merge
@@ -261,7 +262,7 @@ biocleaning <- function(gnfound, names, organismCol) {
     data.table()
 
   # filtering non-empty values
-  y_2 <- names %>%
+  y_2 <- names_quotes %>%
     mutate(value_min = sum)
 
   # filling sum values
@@ -271,6 +272,8 @@ biocleaning <- function(gnfound, names, organismCol) {
 
   # transforming as data table (needed for next function)
   y_2 <- y_2 %>%
+    bind_cols(., data_bio) %>%
+    select(organismOriginal, nchar, sum, value_min, value_max) %>%
     data.table()
 
   # setting joining keys
