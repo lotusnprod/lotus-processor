@@ -155,6 +155,9 @@ vroom_write_safe(
   path = pathDataInterimTablesTranslatedStructureNominal_cactus
 )
 
+# dataInterim_2 <-
+#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cactus)
+
 dataForCTS <- dataInterim_2 %>%
   filter(is.na(inchiNominal_opsin) & is.na(inchiNominal_cactus)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
