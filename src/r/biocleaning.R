@@ -272,7 +272,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
 
   # transforming as data table (needed for next function)
   y_2 <- y_2 %>%
-    bind_cols(., data_bio) %>%
+    bind_cols(., names) %>%
     select(organismOriginal, nchar, sum, value_min, value_max) %>%
     data.table()
 
