@@ -245,12 +245,13 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
 
   if (organismCol == "organismInterim") {
     names_quotes$nchar <-
-      nchar(x = names_quotes$`"organismInterim"`)
+      nchar(x = names_quotes$organismInterim)
   }
 
   names_quotes[1, "sum"] <- nchar(colnames(names_quotes)[1]) + 1
   for (i in 2:nrow(names_quotes)) {
-    names_quotes[i, "sum"] <- names_quotes[i - 1, "nchar"] + 1 + names_quotes[i - 1, "sum"]
+    names_quotes[i, "sum"] <-
+      names_quotes[i - 1, "nchar"] + 1 + names_quotes[i - 1, "sum"]
   }
 
   # adding min and max to merge
@@ -271,14 +272,22 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   y_2[nrow(y_2), 5] <- y_2[nrow(y_2), 4] + 10000
 
   # transforming as data table (needed for next function)
+  if (organismCol == "organismInterim") {
+    y_2 <- y_2 %>% select(-organismInterim)
+  }
+
   y_2 <- y_2 %>%
     bind_cols(., names) %>%
-    select(organismOriginal, nchar, sum, value_min, value_max) %>%
+    select(switch(organismCol,
+      "organismOriginal" = "organismOriginal",
+      "organismInterim" = "organismInterim"
+    ), nchar, sum, value_min, value_max) %>%
     data.table()
 
   # setting joining keys
   setkey(taxoEnhanced, value_min, value_max)
   setkey(y_2, value_min, value_max)
+
   # joining
   pre_final_db <- foverlaps(
     taxoEnhanced,
@@ -291,10 +300,15 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
     pre_final_db
   ) %>%
     select(
+      -nchar,
+      -sum,
+      -value_min,
+      -value_max,
       -i.sum,
       -i.value_max,
       -i.value_min
-    )
+    ) %>%
+    distinct()
 
   return(final_db)
 }

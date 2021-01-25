@@ -82,28 +82,30 @@ gnfinder_cleaning <- function(num, organismCol) {
     delim = "\t",
     quote = "",
     escape_double = FALSE,
+    trim_ws = FALSE,
     escape_backslash = FALSE,
+    na = c(""),
     col_types = cols(.default = "c"),
     num_threads = 1
   ) %>%
     mutate_all(as.character)
 
-  data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]
+  if (organismCol == "organismOriginal") {
+    data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]
+  }
 
-  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(organismCol,
+  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(
+    organismCol,
     "organismOriginal" = paste0("\"", organismCol, "\""),
     "organismInterim" = "organismInterim"
   )]), ]
 
-  if (fromJSON(
+  gnfound <- data.frame(fromJSON(
     txt = inpath_gnfinder_f,
     simplifyDataFrame = TRUE
-  )$metadata$totalNames != 0) {
-    gnfound <- data.frame(fromJSON(
-      txt = inpath_gnfinder_f,
-      simplifyDataFrame = TRUE
-    ))
+  ))
 
+  if (nrow(gnfound) != 0) {
     data_bio_clean <- biocleaning(
       gnfound = gnfound,
       names = data_bio,
