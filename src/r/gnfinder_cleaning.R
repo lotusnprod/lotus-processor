@@ -90,7 +90,10 @@ gnfinder_cleaning <- function(num, organismCol) {
 
   data_bio <- data_bio[!is.na(data_bio[, organismCol]), ]
 
-  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, paste0("\"", organismCol, "\"")]), ]
+  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(organismCol,
+    "organismOriginal" = paste0("\"", organismCol, "\""),
+    "organismInterim" = "organismInterim"
+  )]), ]
 
   if (fromJSON(
     txt = inpath_gnfinder_f,
