@@ -39,8 +39,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_original_long,
     db = "tmm_1",
-    structure_field = c("name"),
-    reference_field = c("reference_pubmed")
+    structure_field = "name",
+    reference_field = "reference_pubmed"
   )
 
 # exporting

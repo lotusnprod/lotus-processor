@@ -14,7 +14,7 @@ source("r/y_as_na.R")
 #' @examples
 manipulating_taxo <- function(dfsel, dic) {
   # creating variables for replacement by dictionary
-  a <- paste("\\b", dic$taxaRank, "\\b", sep = "")
+  a <- paste0("\\b", dic$taxaRank, "\\b")
   b <- dic$taxaRankStandard
 
   dfsel$rank <- gsub(

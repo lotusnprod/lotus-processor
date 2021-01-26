@@ -70,7 +70,7 @@ additional_fields_l <-
     xpath = ".//entry/additional_fields"
   )
 
-X <- 1:nrow(entries)
+X <- seq_len(nrow(entries))
 
 get_length_cross_references <- function(X) {
   length <- length(cross_references_l[[X]] %>% as_list())
@@ -271,7 +271,7 @@ data_standard <-
     data_selected = data_selected,
     db = "met_1",
     structure_field = c("name", "inchi"),
-    reference_field = c("reference_pubmed")
+    reference_field = "reference_pubmed"
   )
 
 # exporting

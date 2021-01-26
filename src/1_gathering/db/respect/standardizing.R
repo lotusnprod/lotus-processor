@@ -27,7 +27,7 @@ data_standard <- do.call(
 )
 
 data_transposed <- t(data_standard) %>%
-  cSplit(1:ncol(.), sep = ":")
+  cSplit(seq_len(ncol(.)), sep = ":")
 
 # cleaning
 ## function
@@ -38,38 +38,38 @@ RESPECT_clean <- function(dfsel) {
     filter_at(vars(-V1_1), any_vars(. == "SP$SAMPLE")) %>%
     tibble()
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "biologicalsource_col"] <-
       which(sapply(df_2[i, ], function(x) {
         any(x == "SP$SAMPLE")
       }))
   }
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "biologicalsource"] <-
       df_2[i, as.numeric((df_2[i, "biologicalsource_col"] + 1))]
   }
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "inchi_col"] <-
       which(sapply(df_2[i, ], function(x) {
         any(x == "CH$INCHI")
       }))
   }
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "inchi"] <-
       df_2[i, as.numeric((df_2[i, "inchi_col"] + 1))]
   }
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "smiles_col"] <-
       which(sapply(df_2[i, ], function(x) {
         any(x == "CH$SMILES")
       }))
   }
 
-  for (i in 1:nrow(df_2)) {
+  for (i in seq_len(nrow(df_2))) {
     df_2[i, "smiles"] <-
       df_2[i, as.numeric((df_2[i, "smiles_col"] + 1))]
   }

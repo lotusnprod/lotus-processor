@@ -26,7 +26,7 @@ getGraphChemicalClass <- function(subclass) {
       values_from = n
     ) %>%
     mutate_at(
-      .vars = c(3:ncol(.)),
+      .vars = 3:ncol(.),
       ~ replace(
         x = .,
         list = is.na(.),
@@ -34,7 +34,7 @@ getGraphChemicalClass <- function(subclass) {
       )
     ) %>%
     mutate_at(
-      .vars = c(3:ncol(.)),
+      .vars = 3:ncol(.),
       ~ replace(
         x = .,
         list = . >= 1,
@@ -220,7 +220,7 @@ getGraphChemicalClass <- function(subclass) {
         query = elements,
         params = list(
           "organismCleaned_dbTaxo_5family",
-          c(mostfamilies[1, 1])
+          mostfamilies[1, 1]
         ),
         active = TRUE,
         color = "#a6cee3",

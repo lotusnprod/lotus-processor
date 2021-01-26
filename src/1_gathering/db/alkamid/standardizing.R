@@ -145,7 +145,7 @@ data_selected <- cleaning_alkamid(x = data_original)
 
 # making names compatible
 ref_prepared <- ref_original %>%
-  mutate(uniqueid = paste("Alkamid moleculeID", entry_id, sep = "")) %>%
+  mutate(uniqueid = paste0("Alkamid moleculeID", entry_id)) %>%
   select(
     uniqueid,
     reference_authors = `Author(s)`,

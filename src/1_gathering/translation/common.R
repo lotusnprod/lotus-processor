@@ -179,7 +179,7 @@ commonSciPlural_1 <- commonSciPheFooDuk %>%
   )
 
 commonSciPlural_1$vernacularName <-
-  paste(commonSciPlural_1$vernacularName, "s", sep = "")
+  paste0(commonSciPlural_1$vernacularName, "s")
 
 ### "o" and "y" plurals (mango -> mangoes, berry -> berries)
 commonSciPlural_2 <- commonSciPheFooDuk %>%
@@ -214,7 +214,7 @@ commonSciPlural_3 <- commonSciPheFooDuk %>%
   ))
 
 commonSciPlural_3$vernacularName <-
-  paste(commonSciPlural_3$vernacularName, "es", sep = "")
+  paste0(commonSciPlural_3$vernacularName, "es")
 
 ### f, fe
 commonSciPlural_4 <- commonSciPheFooDuk %>%

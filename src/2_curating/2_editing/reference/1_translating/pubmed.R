@@ -48,42 +48,42 @@ if (nrow(dataPubmed) != 1) {
 
 cat("joining results with original list \n")
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedDoi"] <-
       reflistPubmedBound[i, "translatedDoi"]
   }
 }
 
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedJournal"] <-
       reflistPubmedBound[i, "translatedJournal"]
   }
 }
 
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedTitle"] <-
       reflistPubmedBound[i, "translatedTitle"]
   }
 }
 
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedAuthor"] <-
       reflistPubmedBound[i, "translatedAuthor"]
   }
 }
 
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedDate"] <-
       reflistPubmedBound[i, "translatedDate"]
   }
 }
 
 if (nrow(dataPubmed) != 1) {
-  for (i in 1:nrow(reflistPubmedBound)) {
+  for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
     dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
   }

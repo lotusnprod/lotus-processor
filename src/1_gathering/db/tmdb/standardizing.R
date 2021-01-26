@@ -51,8 +51,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "tmd_1",
-    structure_field = c("name"),
-    reference_field = c("reference_publishingDetails")
+    structure_field = "name",
+    reference_field = "reference_publishingDetails"
   )
 
 data_standard[] <-

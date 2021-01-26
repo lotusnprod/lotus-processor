@@ -21,18 +21,11 @@ split_data_table <-
 
       write.table(
         x = sample,
-        file = paste(
-          path_to_store,
-          "/",
-          text,
-          str_pad(
-            string = as.integer(split_cut + (no_rows_per_frame - 1)),
-            width = 6,
-            pad = "0"
-          ),
-          ".tsv",
-          sep = ""
-        ),
+        file = paste0(path_to_store, "/", text, str_pad(
+          string = as.integer(split_cut + (no_rows_per_frame - 1)),
+          width = 6,
+          pad = "0"
+        ), ".tsv"),
         row.names = FALSE,
         quote = FALSE,
         sep = "\t",

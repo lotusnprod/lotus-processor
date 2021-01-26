@@ -58,7 +58,7 @@ queries <- new$smiles
 cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
-  X <- (1:length(queries))
+  X <- (seq_along(queries))
 
   list_df <- invisible(
     pbmclapply(

@@ -165,19 +165,14 @@ preparing_name <- function(x) {
       x = gsub(
         pattern = ",$",
         replacement = "",
-        x = (paste(
-          sep = "",
-          gsub(
-            pattern = ".*,([^.]+)\\:.*",
-            replacement = "\\1",
-            x = x$nameCleaned
-          ),
-          "-",
-          str_extract(
-            pattern = ".*,",
-            string = x$nameCleaned
-          )
-        ))
+        x = (paste0(gsub(
+          pattern = ".*,([^.]+)\\:.*",
+          replacement = "\\1",
+          x = x$nameCleaned
+        ), "-", str_extract(
+          pattern = ".*,",
+          string = x$nameCleaned
+        )))
       )
     )
 

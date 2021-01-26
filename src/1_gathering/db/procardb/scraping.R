@@ -34,6 +34,8 @@ getprocardb <- function(X) {
       df1 <- read_html(url_id) %>%
         html_node(xpath = "/html/body/div[3]/div/div/table") %>%
         html_table(., fill = TRUE)
+
+      return(df1)
     },
     error = function(e) {
       "Timed out!"
@@ -57,7 +59,7 @@ PROCARDB <- invisible(
 
 PROCARDB_2 <- PROCARDB[PROCARDB != "Timed out!"]
 
-for (i in 1:length(PROCARDB_2)) {
+for (i in seq_along(PROCARDB_2)) {
   colnames(PROCARDB_2[[i]]) <-
     c("CAROTENOID INFO", "CAROTENOID INFO 2")
 }
@@ -84,6 +86,8 @@ getprocardb_bio <- function(X_bio) {
       df1 <- read_html(url_id_bio) %>%
         html_node(xpath = "/html/body/div[3]/div/div/div[2]/table") %>%
         html_table(., fill = TRUE)
+
+      return(df1)
     },
     error = function(e) {
       "Timed out!"
@@ -118,6 +122,8 @@ getprocardb_names <- function(X_bio) {
       df1 <- read_html(url_id_bio) %>%
         html_node(xpath = "/html/body/div[3]/div/div/div") %>%
         html_text()
+
+      return(df1)
     },
     error = function(e) {
       "Timed out!"

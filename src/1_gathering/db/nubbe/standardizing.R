@@ -28,7 +28,7 @@ X <- ids$X1
 
 list <- list()
 
-for (i in 1:length(X)) {
+for (i in seq_along(X)) {
   data <- xmlParse(file = X[i])
 
   xml_data <- xmlToList(node = data)
@@ -120,7 +120,7 @@ data_manipulated <- data_original %>%
       organismFamily,
       sep = " "
     ),
-    inchi = paste("InChI=", inchi, sep = "")
+    inchi = paste0("InChI=", inchi)
   ) %>%
   cSplit("referenceFull", sep = ";") %>%
   mutate_all(as.character) %>%

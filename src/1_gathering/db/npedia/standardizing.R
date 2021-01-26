@@ -36,7 +36,7 @@ data_standard <-
     data_selected = data_selected,
     db = "npe_1",
     structure_field = c("name", "inchi"),
-    reference_field = c("reference_original")
+    reference_field = "reference_original"
   )
 
 # exporting

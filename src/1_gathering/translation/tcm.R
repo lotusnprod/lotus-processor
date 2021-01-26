@@ -278,7 +278,7 @@ tcmNamesDic_i <- tcmNamesDic %>%
   )) %>%
   mutate(newbiologicalsource = biologicalsource)
 
-a <- paste("\\b", latinGenitiveIDic$genitive, "\\b", sep = "")
+a <- paste0("\\b", latinGenitiveIDic$genitive, "\\b")
 b <- latinGenitiveIDic$nominative
 
 tcmNamesDic_i$newbiologicalsource <-
@@ -308,7 +308,7 @@ tcmNamesDic_is <- tcmNamesDic %>%
   )) %>%
   mutate(newbiologicalsource = biologicalsource)
 
-c <- paste("\\b", latinGenitiveIsDic$genitive, "\\b", sep = "")
+c <- paste0("\\b", latinGenitiveIsDic$genitive, "\\b")
 d <- latinGenitiveIsDic$nominative
 
 tcmNamesDic_is$newbiologicalsource <-
@@ -327,7 +327,7 @@ tcmNamesDic_is$newbiologicalsource <-
 tcmNamesDicCurated <- full_join(tcmNamesDic, tcmNamesDic_ae)
 
 # removing some organism parts
-e <- paste("\\b", latinGenitivePartsDic$part, "\\b", sep = "")
+e <- paste0("\\b", latinGenitivePartsDic$part, "\\b")
 f <- as.character(latinGenitivePartsDic$replacement)
 
 tcmNamesDicCurated$newbiologicalsource <-

@@ -110,7 +110,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
   mutate(inchiNominal_cactus = invisible(
     pbmclapply(
       FUN = name2inchi_cactus,
-      X = 1:nrow(dataForCactus),
+      X = seq_len(nrow(dataForCactus)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
@@ -172,7 +172,7 @@ dataTranslatedNominal_cts <- dataForCTS %>%
   mutate(inchiNominal_cts = invisible(
     pbmclapply(
       FUN = name2inchi_cts,
-      X = 1:nrow(dataForCTS),
+      X = seq_len(nrow(dataForCTS)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,

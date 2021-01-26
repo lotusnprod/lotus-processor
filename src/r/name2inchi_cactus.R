@@ -14,11 +14,7 @@ name2inchi_cactus <- function(i) {
     {
       cpd <- dataForCactus[i, "nameCleaned"]
       url <-
-        paste("https://cactus.nci.nih.gov/chemical/structure/",
-          cpd,
-          "/stdinchi",
-          sep = ""
-        )
+        paste0("https://cactus.nci.nih.gov/chemical/structure/", cpd, "/stdinchi")
       url <- gsub(
         pattern = "\\s",
         replacement = "%20",

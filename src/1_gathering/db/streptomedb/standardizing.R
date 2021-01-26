@@ -37,7 +37,7 @@ data_standard <-
     data_selected = data_selected,
     db = "str_1",
     structure_field = c("name", "smiles"),
-    reference_field = c("reference_pubmed")
+    reference_field = "reference_pubmed"
   )
 
 # exporting

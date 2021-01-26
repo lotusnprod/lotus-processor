@@ -28,7 +28,7 @@ getGraphStudiedPlant <- function(plant) {
         values_from = n
       ) %>%
       mutate_at(
-        .vars = c(3:ncol(.)),
+        .vars = 3:ncol(.),
         ~ replace(
           x = .,
           list = is.na(.),
@@ -36,7 +36,7 @@ getGraphStudiedPlant <- function(plant) {
         )
       ) %>%
       mutate_at(
-        .vars = c(3:ncol(.)),
+        .vars = 3:ncol(.),
         ~ replace(
           x = .,
           list = . >= 1,
@@ -226,7 +226,7 @@ getGraphStudiedPlant <- function(plant) {
           query = elements,
           params = list(
             "structureCleaned_classyfire_2superclass",
-            c(mostsuperclasses[1, 1])
+            mostsuperclasses[1, 1]
           ),
           active = TRUE,
           color = "#a6cee3",
