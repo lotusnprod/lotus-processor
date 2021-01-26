@@ -26,7 +26,7 @@ wikidataLotusExporterDataOutputTriplesPath <-
 ##
 
 # databases for which we have no right to disseminate the data
-forbidden_export <- c("foo_1")
+forbidden_export <- "foo_1"
 
 # root
 ## bin
@@ -668,10 +668,7 @@ pathDataExternalTranslationSourceTcmCmba <-
 
 #### dir
 pathDataInterimDbDir <-
-  Sys.glob(file.path(paste(pathDataInterimDb,
-    "/*.tsv.gz",
-    sep = ""
-  )))
+  Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
 
 ##### biofacquim
 pathDataInterimDbBiofacquim <-
@@ -1185,9 +1182,9 @@ pathDataInterimTables <- switch(
     "tables_min"
   ),
   "test" = file.path(
-      pathDataInterim,
-      "tables_test"
-    )
+    pathDataInterim,
+    "tables_test"
+  )
 )
 
 #### tables
