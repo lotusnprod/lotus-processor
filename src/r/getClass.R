@@ -14,12 +14,7 @@ library(rvest)
 getClass <- function(X) {
   tryCatch(
     {
-      url_id <- paste(url,
-        order,
-        queries[X],
-        # cached,
-        sep = ""
-      )
+      url_id <- paste0(url, order, queries[X])
       result <- read_html(url_id) %>%
         html_text() %>%
         fromJSON()

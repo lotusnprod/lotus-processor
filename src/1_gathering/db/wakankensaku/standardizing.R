@@ -31,8 +31,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "wak_1",
-    structure_field = c("name"),
-    reference_field = c("reference_original")
+    structure_field = "name",
+    reference_field = "reference_original"
   )
 
 # exporting

@@ -49,7 +49,7 @@ data_manipulated <- data_manipulated %>%
   mutate(across(.cols = everything(), as.character))
 
 data_manipulated_long <- data_manipulated %>%
-  gather(c(8:ncol(.)),
+  gather(8:ncol(.),
     key = "n",
     value = "biologicalsource"
   ) %>%
@@ -72,7 +72,7 @@ data_manipulated_long_ref <- data_manipulated_long %>%
     fixed = FALSE
   ) %>%
   mutate_all(as.character) %>%
-  gather(c(8:ncol(.)),
+  gather(8:ncol(.),
     key = "n",
     value = "reference"
   ) %>%

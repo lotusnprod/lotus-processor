@@ -19,7 +19,7 @@ prepare_upset <- function(table, group, variable) {
       values_from = n
     ) %>%
     mutate_at(
-      .vars = c((length(group) + length(variable)):ncol(.)),
+      .vars = (length(group) + length(variable)):ncol(.),
       ~ replace(
         x = .,
         list = is.na(.),
@@ -27,7 +27,7 @@ prepare_upset <- function(table, group, variable) {
       )
     ) %>%
     mutate_at(
-      .vars = c((length(group) + length(variable)):ncol(.)),
+      .vars = (length(group) + length(variable)):ncol(.),
       ~ replace(
         x = .,
         list = . >= 1,
@@ -61,7 +61,7 @@ prepare_upset_complex <- function(table, group, variable) {
       values_from = n
     ) %>%
     mutate_at(
-      .vars = c((length(group) + length(variable)):ncol(.)),
+      .vars = (length(group) + length(variable)):ncol(.),
       ~ replace(
         x = .,
         list = is.na(.),
@@ -69,7 +69,7 @@ prepare_upset_complex <- function(table, group, variable) {
       )
     ) %>%
     mutate_at(
-      .vars = c((length(group) + length(variable)):ncol(.)),
+      .vars = (length(group) + length(variable)):ncol(.),
       ~ replace(
         x = .,
         list = . >= 1,

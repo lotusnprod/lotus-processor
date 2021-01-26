@@ -35,7 +35,7 @@ colnames(df)[8] <- "DOI"
 colnames(df)[9] <- "Journal"
 colnames(df)[10] <- "Site"
 
-for (i in 1:length(data@SDF)) {
+for (i in seq_along(data@SDF)) {
   df[i, 1] <- data@SDF[[i]]@datablock[["ID"]]
   df[i, 2] <- data@SDF[[i]]@datablock[["Name"]]
   df[i, 3] <- data@SDF[[i]]@datablock[["SMILES"]]

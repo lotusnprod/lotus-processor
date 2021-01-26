@@ -36,7 +36,7 @@ if (nrow(dataDoi) != 1) {
 
 cat("joining results with original list \n")
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDoi"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -51,7 +51,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedJournal"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -66,7 +66,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedTitle"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -81,7 +81,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDate"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -96,7 +96,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedAuthor"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -111,7 +111,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreCrossref"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
@@ -126,7 +126,7 @@ if (nrow(dataDoi) != 1) {
 }
 
 if (nrow(dataDoi) != 1) {
-  for (i in 1:length(reflistDoi)) {
+  for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreDistance"] <-
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),

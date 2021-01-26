@@ -188,8 +188,8 @@ if (mode != "test") {
   inhouseDb_structures_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
-      group = c("database"),
-      variable = c("structureCleanedInchikey2D")
+      group = "database",
+      variable = "structureCleanedInchikey2D"
     )
 
   upset(
@@ -219,8 +219,8 @@ if (mode != "test") {
   inhouseDb_organism_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
-      group = c("database"),
-      variable = c("organismCleaned")
+      group = "database",
+      variable = "organismCleaned"
     )
 
   upset(
@@ -250,7 +250,7 @@ if (mode != "test") {
   inhouseDbPairs_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
-      group = c("database"),
+      group = "database",
       variable = c("structureCleanedInchikey2D", "organismCleaned")
     )
 
@@ -349,7 +349,7 @@ if (mode != "test") {
         table = inhouseDb_most_structures_2plot,
         group = c("database", "organismCleaned"),
         ## order is important
-        variable = c("structureCleanedInchikey2D")
+        variable = "structureCleanedInchikey2D"
       ) %>%
       left_join(
         .,
@@ -404,7 +404,7 @@ if (mode != "test") {
           query = elements,
           params = list(
             "organismCleaned_dbTaxo_1kingdom",
-            c(mostkingdom[1, 1])
+            mostkingdom[1, 1]
           ),
           active = TRUE,
           color = "#a6cee3",
@@ -443,7 +443,7 @@ if (mode != "test") {
         table = inhouseDb_most_structures_2plot,
         group = c("database", "organismCleaned"),
         ## order is important
-        variable = c("structureCleanedInchikey2D")
+        variable = "structureCleanedInchikey2D"
       ) %>%
       left_join(
         .,
@@ -621,8 +621,8 @@ if (mode != "test") {
   inhouseDb_kingdoms_wide <-
     prepare_upset(
       table = inhouseDb_kingdoms,
-      group = c("organismCleaned_dbTaxo_1kingdom"),
-      variable = c("structureCleanedInchikey2D")
+      group = "organismCleaned_dbTaxo_1kingdom",
+      variable = "structureCleanedInchikey2D"
     ) %>%
     left_join(., chemo) %>%
     distinct(structureCleanedInchikey2D, .keep_all = TRUE)
@@ -795,7 +795,7 @@ if (mode != "test") {
         query = elements,
         params = list(
           "structureCleaned_classyfire_2superclass",
-          c(mostsuperclass[1, 1])
+          mostsuperclass[1, 1]
         ),
         active = TRUE,
         color = "#a6cee3",
@@ -831,8 +831,8 @@ if (mode != "test") {
     inhouseDb_phyla_wide <-
       prepare_upset(
         table = inhouseDb_phyla,
-        group = c("organismCleaned_dbTaxo_2phylum"),
-        variable = c("structureCleanedInchikey2D")
+        group = "organismCleaned_dbTaxo_2phylum",
+        variable = "structureCleanedInchikey2D"
       ) %>%
       left_join(., chemo) %>%
       distinct(structureCleanedInchikey2D, .keep_all = TRUE)
@@ -1005,7 +1005,7 @@ if (mode != "test") {
           query = elements,
           params = list(
             "structureCleaned_classyfire_2superclass",
-            c(mostsuperclass2[1, 1])
+            mostsuperclass2[1, 1]
           ),
           active = TRUE,
           color = "#a6cee3",
@@ -1042,8 +1042,8 @@ if (mode != "test") {
     inhouseDb_classes_wide <-
       prepare_upset(
         table = inhouseDb_classes,
-        group = c("organismCleaned_dbTaxo_3class"),
-        variable = c("structureCleanedInchikey2D")
+        group = "organismCleaned_dbTaxo_3class",
+        variable = "structureCleanedInchikey2D"
       ) %>%
       left_join(., chemo) %>%
       distinct(structureCleanedInchikey2D, .keep_all = TRUE)
@@ -1216,7 +1216,7 @@ if (mode != "test") {
           query = elements,
           params = list(
             "structureCleaned_classyfire_2superclass",
-            c(mostsuperclass3[1, 1])
+            mostsuperclass3[1, 1]
           ),
           active = TRUE,
           color = "#a6cee3",

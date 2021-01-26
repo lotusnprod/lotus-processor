@@ -29,6 +29,8 @@ getnpedia <- function(X) {
       df1 <- read_html(url_id) %>%
         html_node(xpath = "/html/body/table[2]") %>%
         html_table(., fill = TRUE)
+
+      return(df1)
     },
     error = function(e) {
       "Timed out!"
@@ -77,6 +79,8 @@ getnpedia_2 <- function(X) {
       df1 <- read_html(url_id) %>%
         html_node(xpath = "/html/body/table[2]") %>%
         html_table(., fill = TRUE)
+
+      return(df1)
     },
     error = function(e) {
       "Timed out!"

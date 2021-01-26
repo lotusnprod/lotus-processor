@@ -27,7 +27,7 @@ colnames(df)[4] <- "pubchem"
 colnames(df)[5] <- "biologicalsource"
 colnames(df)[6] <- "pubmedid"
 
-for (i in 1:length(data@SDF)) {
+for (i in seq_along(data@SDF)) {
   df[i, 1] <- data@SDF[[i]]@header[["Molecule_Name"]]
   df[i, 2] <- data@SDF[[i]]@datablock[["canonical_smiles"]]
   df[i, 3] <- data@SDF[[i]]@datablock[["compound_id"]]

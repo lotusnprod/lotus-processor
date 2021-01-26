@@ -29,7 +29,7 @@ X <- ids
 getswmd <- function(X) {
   tryCatch({
     cd_id <- X
-    url_id <- paste(url, cd_id, sep = "")
+    url_id <- paste0(url, cd_id)
 
     df0 <- read_html(url_id) %>%
       html_node(xpath = "body")

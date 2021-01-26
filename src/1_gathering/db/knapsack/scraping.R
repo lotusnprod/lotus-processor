@@ -57,11 +57,7 @@ GetKnapSackTable <- function(X) {
         mutate(joincol = url_id)
 
       df_for_ref <- full_join(df1, i) %>%
-        mutate(link = paste(joincol,
-          "&key=",
-          .,
-          sep = ""
-        )) %>%
+        mutate(link = paste0(joincol, "&key=", .)) %>%
         select(-joincol, -.)
 
       return(df_for_ref)

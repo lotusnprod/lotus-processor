@@ -20,7 +20,7 @@ fileInZip <-
     fileList <- unzip(inZip, list = TRUE)
     fileList[, 1] <-
       gsub("__MACOSX/._", "", fileList[, 1]) # error thrown on one line for me otherwise
-    for (i in 1:nrow(fileList)) {
+    for (i in seq_len(nrow(fileList))) {
       if (grepl(".json", fileList[i, 1])) {
         oFa <- fromJSON(unz(inZip, fileList[i, 1]))
         outFile[[i]] <- oFa
@@ -31,7 +31,7 @@ fileInZip <-
 
 df <- fileInZip(inZip = database$sourceFiles$data)
 
-x <- 1:length(df)
+x <- seq_along(df)
 
 getid <- function(x) {
   j <- df[[x]][["cluster"]][["mibig_accession"]]

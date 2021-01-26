@@ -21,7 +21,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
     mutate(level = row.names(.))
 
   dataList <- list()
-  for (i in 1:length(reflist)) {
+  for (i in seq_along(reflist)) {
     ifelse(
       test = !is.na(reflist[[i]]),
       yes = ifelse(
@@ -33,13 +33,13 @@ getBestReference <- function(data, referenceType, method = "osa") {
     )
   }
 
-  names(dataList) <- 1:length(dataList)
+  names(dataList) <- seq_along(dataList)
 
   bound <- bind_rows(dataList[!is.na(dataList)], .id = "level")
 
   tableInterim <- left_join(tableIntial, bound)
 
-  for (i in 1:nrow(tableInterim)) {
+  for (i in seq_len(nrow(tableInterim))) {
     tableInterim[i, "distScore"] <-
       stringdist(
         a = as.character(tolower(tableInterim[i, 1])),
@@ -62,7 +62,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
       referenceTranslationScoreDistance = distScore
     ) %>%
     unnest(
-      cols = c(referenceTranslatedAuthor),
+      cols = referenceTranslatedAuthor,
       keep_empty = TRUE
     ) %>%
     distinct_at(.,
@@ -85,7 +85,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
     group_by_at(1) %>%
     arrange(referenceTranslationScoreDistance) %>%
     distinct_at(.,
-      .vars = (c(1)),
+      .vars = (1),
       .keep_all = TRUE
     ) %>%
     ungroup() %>%

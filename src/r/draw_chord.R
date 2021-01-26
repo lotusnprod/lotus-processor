@@ -46,7 +46,7 @@ draw_chord <-
         select(order(colSums(-.)))
       m2$name <- colnames(m1)
       # colnames(m1) <- paste("chemo", colnames(m1), sep = "_")
-      m1$name <- sort(colnames(m2[, 1:ncol(m2) - 1]))
+      m1$name <- sort(colnames(m2[, seq_len(ncol(m2)) - 1]))
       # colnames(m2)[1:ncol(m2)-1] <- paste("bio", colnames(m2[1:ncol(m2)-1]), sep = "_")
       test_3 <- full_join(m2, m1)
       test_3[is.na(test_3)] <- 0

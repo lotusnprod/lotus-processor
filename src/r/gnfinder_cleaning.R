@@ -13,57 +13,33 @@ source("r/biocleaning.R")
 #' @examples
 gnfinder_cleaning <- function(num, organismCol) {
   if (organismCol == "organismOriginal") {
-    inpath_organism_f <- paste(
-      pathDataInterimTablesOriginalOrganism,
-      "/",
-      str_pad(
+    inpath_organism_f <- paste0(pathDataInterimTablesOriginalOrganism, "/", str_pad(
+      string = num,
+      width = 6,
+      pad = 0
+    ), ".tsv")
+
+    inpath_gnfinder_f <-
+      paste0(pathDataInterimTablesCleanedOrganismOriginal, "/", str_pad(
         string = num,
         width = 6,
         pad = 0
-      ),
-      ".tsv",
-      sep = ""
-    )
-
-    inpath_gnfinder_f <-
-      paste(
-        pathDataInterimTablesCleanedOrganismOriginal,
-        "/",
-        str_pad(
-          string = num,
-          width = 6,
-          pad = 0
-        ),
-        ".json",
-        sep = ""
-      )
+      ), ".json")
   }
 
   if (organismCol == "organismInterim") {
-    inpath_organism_f <- paste(
-      pathDataInterimTablesTranslatedOrganism,
-      "/",
-      str_pad(
+    inpath_organism_f <- paste0(pathDataInterimTablesTranslatedOrganism, "/", str_pad(
+      string = num,
+      width = 6,
+      pad = 0
+    ), ".tsv")
+
+    inpath_gnfinder_f <-
+      paste0(pathDataInterimTablesCleanedOrganismTranslated, "/", str_pad(
         string = num,
         width = 6,
         pad = 0
-      ),
-      ".tsv",
-      sep = ""
-    )
-
-    inpath_gnfinder_f <-
-      paste(
-        pathDataInterimTablesCleanedOrganismTranslated,
-        "/",
-        str_pad(
-          string = num,
-          width = 6,
-          pad = 0
-        ),
-        ".json",
-        sep = ""
-      )
+      ), ".json")
   }
 
   data_bio <- vroom(
@@ -84,7 +60,7 @@ gnfinder_cleaning <- function(num, organismCol) {
     escape_double = FALSE,
     trim_ws = FALSE,
     escape_backslash = FALSE,
-    na = c(""),
+    na = "",
     col_types = cols(.default = "c"),
     num_threads = 1
   ) %>%

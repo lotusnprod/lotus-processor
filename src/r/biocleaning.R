@@ -130,7 +130,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   df4$variety[df4$variety >= 1] <- 1
 
   df4[setdiff(
-    x = c("isSynonym"),
+    x = "isSynonym",
     y = names(df4)
   )] <- NA
 
@@ -180,7 +180,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
     arrange(id)
 
   df5b[setdiff(
-    x = c("classificationIds"),
+    x = "classificationIds",
     y = names(df5b)
   )] <- NA
 

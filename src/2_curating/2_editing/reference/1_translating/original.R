@@ -61,30 +61,18 @@ ifelse(
 )
 
 for (i in num) {
-  inpath <- paste(
-    pathDataInterimTablesOriginalReferenceOriginalFolder,
-    "/",
-    str_pad(
+  inpath <- paste0(pathDataInterimTablesOriginalReferenceOriginalFolder, "/", str_pad(
+    string = i,
+    width = 6,
+    pad = "0"
+  ), ".tsv")
+
+  outpath <-
+    paste0(pathDataInterimTablesTranslatedReferenceOriginalFolder, "/", str_pad(
       string = i,
       width = 6,
       pad = "0"
-    ),
-    ".tsv",
-    sep = ""
-  )
-
-  outpath <-
-    paste(
-      pathDataInterimTablesTranslatedReferenceOriginalFolder,
-      "/",
-      str_pad(
-        string = i,
-        width = 6,
-        pad = "0"
-      ),
-      ".tsv.gz",
-      sep = ""
-    )
+    ), ".tsv.gz")
 
   cat(paste("step", i / cut, "of", length, "\n"))
 

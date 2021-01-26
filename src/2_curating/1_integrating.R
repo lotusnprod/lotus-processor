@@ -90,13 +90,13 @@ if (mode != "test") {
 if (mode == "test") {
   dbTable <- vroom_read_safe(path = pathTests) %>%
     pivot_wider(
-      names_from = c("structureType"),
-      values_from = c("structureValue"),
+      names_from = "structureType",
+      values_from = "structureValue",
       names_prefix = "structureOriginal_"
     ) %>%
     pivot_wider(
-      names_from = c("referenceType"),
-      values_from = c("referenceValue"),
+      names_from = "referenceType",
+      values_from = "referenceValue",
       names_prefix = "referenceOriginal_"
     ) %>%
     mutate(
