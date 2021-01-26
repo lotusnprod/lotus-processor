@@ -126,13 +126,29 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
 cat("... translated structures with cleaned ones ... \n")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
-  select(-structureTranslated)
+  select(-structureTranslated) %>%
+  filter(!is.na(structureCleanedInchikey3D)) %>%
+  distinct(
+    structureType,
+    structureValue,
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey3D,
+    .keep_all = TRUE
+  )
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   cat("... previously cleaned structures \n")
   structureFull <- bind_rows(structureFull, structureOld) %>%
-    distinct()
+    distinct(
+      structureType,
+      structureValue,
+      structureCleanedSmiles,
+      structureCleanedInchi,
+      structureCleanedInchikey3D,
+      .keep_all = TRUE
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
@@ -168,15 +184,7 @@ structureMetadata <- structureFull %>%
     structureCleanedInchi,
     structureCleanedInchikey3D,
     structureCleanedSmiles,
-    structureCleaned_inchikey2D,
-    structureCleaned_validatorLog,
-    structureCleaned_molecularFormula,
-    structureCleaned_exactMass,
-    structureCleaned_xlogp,
-    structureCleaned_stereocenters_unspecified,
-    structureCleaned_stereocenters_total,
-    structureCleaned_nameIupac,
-    structureCleaned_nameTraditional
+    .keep_all = TRUE
   )
 
 cat("... organisms \n")
@@ -322,7 +330,7 @@ cat(
   "to avoid translating them again (since process is long) \n"
 )
 structureNA <- anti_join(
-  x = originalTable,
+  x = originalStructureTable,
   y = structureMinimal
 ) %>%
   distinct(
