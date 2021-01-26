@@ -112,7 +112,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: # ${SRC_GATHERING_DB
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 
 metabolights: ${INTERIM_DB_PATH}/metabolights.tsv.gz
-${INTERIM_DB_PATH}/metabolights.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/escape_double.xml ${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
+${INTERIM_DB_PATH}/metabolights.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/metabolights/eb-eye_metabolights_complete.xml ${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/metabolights/standardizing.R
 
 mibig: ${INTERIM_DB_PATH}/mibig.tsv.gz
