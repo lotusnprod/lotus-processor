@@ -165,7 +165,8 @@ organism_structure_df <- global_df %>%
 
 final_df <- left_join(ref_df, organism_structure_df) %>%
   filter(!is.na(organism) &
-    !is.na(inchi) & !is.na(pubmed_ref)) %>%
+    !is.na(inchi) &
+    !is.na(pubmed_ref)) %>%
   mutate(organism = gsub(
     pattern = "NCBITAXON:",
     replacement = "",

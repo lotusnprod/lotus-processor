@@ -77,7 +77,8 @@ data_manipulated <- data_selected %>%
     ),
     reference_external = ifelse(
       test = referenceType == "Database" |
-        referenceType == "Patent" | referenceType == "Dataset",
+        referenceType == "Patent" |
+        referenceType == "Dataset",
       yes = reference,
       no = NA
     ),

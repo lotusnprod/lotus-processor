@@ -1,21 +1,24 @@
 # Standardization of structural inputs
 
-This is done using modules of the MolVS package, a molecule validation and standardization tool, written in Python. (<https://molvs.readthedocs.io/en/latest/>)
+This is done using modules of the MolVS package, a molecule validation and standardization tool, written in
+Python. (<https://molvs.readthedocs.io/en/latest/>)
 
 ## Running the script
 
 ### Requirements
 
-To do: make requirements files (mainly needs rdkit, molvs). Note that the molvs **input**.py file needs to be mannually modified to launch the function we call in the script (see script)
+To do: make requirements files (mainly needs rdkit, molvs). Note that the molvs **input**.py file needs to be mannually
+modified to launch the function we call in the script (see script)
 
 ## fragment.py
 
-in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ needs to be replaced with the version present in this folder
+in /Users/USERNAME/opt/anaconda3/lib/python3.7/site-packages/molvs/ needs to be replaced with the version present in
+this folder
 
 ### What the scripts does
 
-Given a tab delimited file as input having a SMILES and an InChI column it will firstgenerate a ROmol object for SMILES and InChI.
-It will then:
+Given a tab delimited file as input having a SMILES and an InChI column it will firstgenerate a ROmol object for SMILES
+and InChI. It will then:
 
 - validate the ROmol and apend a new column with the validation log (allowing to see what are the problems).
 - standardize the ROmol object

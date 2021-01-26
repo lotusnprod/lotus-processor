@@ -19,7 +19,7 @@ preparing_name <- function(x) {
     gsub(
       "\\u03b2",
       replacement = "beta",
-      x =  x$nameCleaned,
+      x = x$nameCleaned,
       fixed = TRUE
     )
   x$nameCleaned <-
@@ -33,7 +33,7 @@ preparing_name <- function(x) {
     gsub(
       "\\u03b4",
       replacement = "delta",
-      x =  x$nameCleaned,
+      x = x$nameCleaned,
       fixed = TRUE
     )
   x$nameCleaned <-

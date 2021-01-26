@@ -230,7 +230,10 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   log_debug("Biocleaning: finished joining")
 
   dbQuality <- gnfound$names.verification$dataSourceQuality
-  dbTaxo <- gnfound$names.verification$bestResult$dataSourceTitle
+  dbTaxo <- gnfound$
+    names.verification$
+    bestResult$
+    dataSourceTitle
 
   dfQuality <- data.frame(dbTaxo, dbQuality) %>%
     distinct(dbTaxo, .keep_all = TRUE)
@@ -251,7 +254,9 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   names_quotes[1, "sum"] <- nchar(colnames(names_quotes)[1]) + 1
   for (i in 2:nrow(names_quotes)) {
     names_quotes[i, "sum"] <-
-      names_quotes[i - 1, "nchar"] + 1 + names_quotes[i - 1, "sum"]
+      names_quotes[i - 1, "nchar"] +
+      1 +
+      names_quotes[i - 1, "sum"]
   }
 
   # adding min and max to merge
