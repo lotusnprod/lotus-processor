@@ -107,6 +107,7 @@ dataForCactus <- dataInterim %>%
 
 cat("... with cactus (fast) \n")
 dataTranslatedNominal_cactus <- dataForCactus %>%
+  select(-structureOriginal_nominal) %>%
   mutate(inchiNominal_cactus = invisible(
     pbmclapply(
       FUN = name2inchi_cactus,
@@ -169,6 +170,7 @@ if (nrow(dataForCTS) == 0) {
 }
 
 dataTranslatedNominal_cts <- dataForCTS %>%
+  select(-structureOriginal_nominal) %>%
   mutate(inchiNominal_cts = invisible(
     pbmclapply(
       FUN = name2inchi_cts,
