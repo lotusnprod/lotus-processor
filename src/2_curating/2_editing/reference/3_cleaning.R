@@ -313,7 +313,7 @@ referenceTable <-
     referenceCleaned_score_titleOrganism = referenceCleaned_scoreTitleOrganism,
     referenceCleaned_score_complementDate = referenceCleaned_scoreComplement_date,
     referenceCleaned_score_complementAuthor = referenceCleaned_scoreComplement_author,
-    referenceCleaned_score_complementJournal =  referenceCleaned_scoreComplement_journal,
+    referenceCleaned_score_complementJournal = referenceCleaned_scoreComplement_journal,
     referenceCleaned_score_complementTotal = referenceCleaned_scoreComplement_total
   ) %>%
   distinct() %>%
