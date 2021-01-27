@@ -73,6 +73,9 @@ pathDataProcessed <-
     "processed"
   )
 
+## sqlite
+lotusDB <- file.path(pathDataProcessed, "lotus.sqlite")
+
 #### db
 pathDataInterimDb <-
   file.path(
