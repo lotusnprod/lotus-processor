@@ -468,7 +468,7 @@ drv <- SQLite()
 
 db <- dbConnect(
   drv = drv,
-  dbname = "../data/processed/lotus.sqlite"
+  dbname = lotusDB
 )
 
 dbListObjects(db)
