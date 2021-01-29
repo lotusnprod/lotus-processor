@@ -12,6 +12,8 @@ library(DBI)
 library(RSQLite)
 library(tidyverse)
 source("r/vroom_safe.R")
+source("r/sqlFromFile.R")
+source("r/dbSendQueries.R")
 
 dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
@@ -464,12 +466,17 @@ rm(
   temp
 )
 
+## TEMP
 drv <- SQLite()
+
+file.create("../data/processed/lotusNew.sqlite")
 
 db <- dbConnect(
   drv = drv,
-  dbname = lotusDB
+  dbname = "../data/processed/lotusNew.sqlite"
 )
+
+dbSendQueries(conn = db, sqlFromFile("create_lotus.sql"))
 
 dbListObjects(db)
 
@@ -477,11 +484,18 @@ dbListFields(db, "curation_states")
 dbListFields(db, "data_processed")
 dbListFields(db, "data_processed__data_source")
 dbListFields(db, "data_source")
+dbListFields(db, "databases_source")
+dbListFields(db, "databases_types")
 dbListFields(db, "organisms_cleaned")
+dbListFields(db, "organisms_source")
 dbListFields(db, "organisms_synonyms")
+dbListFields(db, "organisms_types")
 dbListFields(db, "references_cleaned")
-dbListFields(db, "source_databases")
+dbListFields(db, "references_source")
+dbListFields(db, "references_types")
 dbListFields(db, "structures_cleaned")
+dbListFields(db, "structures_source")
+dbListFields(db, "structures_types")
 dbListFields(db, "taxonomic_databases")
 dbListFields(db, "taxonomic_information")
 
