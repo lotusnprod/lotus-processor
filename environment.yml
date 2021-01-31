@@ -19,6 +19,7 @@ dependencies:
   - bioconductor-chemminer
   - r-base
   - r-chorddiag
+  - r-classyfireR
   - r-codetools
   - r-collapsibletree
   - r-data.table
