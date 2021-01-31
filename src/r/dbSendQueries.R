@@ -2,8 +2,8 @@
 
 #' Title
 #'
-#' @param conn 
-#' @param sql 
+#' @param conn
+#' @param sql
 #'
 #' @return
 #' @export
