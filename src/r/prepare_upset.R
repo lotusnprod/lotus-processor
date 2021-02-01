@@ -34,7 +34,7 @@ prepare_upset <- function(table, group, variable) {
         values = 1
       )
     ) %>%
-    distinct(!!as.name(variable), .keep_all = TRUE) %>%
+    distinct(!!!syms(variable), .keep_all = TRUE) %>%
     data.frame()
 
   return(table_2plot)
