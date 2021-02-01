@@ -90,6 +90,12 @@ def MolToIK_fun_safe(smiles, romol):
         print('Sayonara Babeee !')
         return None
 
+# It looks like the  Chem.RemoveStereochemistry should be defined this way and not assigned to a variable. See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
+
+def MolToFlatMol_fun(romol):
+    Chem.RemoveStereochemistry(romol)
+    return romol
+
 
 def MolToMF_fun(romol):
     m = rdMolDescriptors.CalcMolFormula(romol)
