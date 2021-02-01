@@ -36,15 +36,16 @@ data_selected <- data_original %>%
     stripWhite = FALSE,
     fixed = FALSE
   ) %>%
-  select(uniqueid,
-    name,
-    smiles,
+  select(
+    uniqueid,
+    structure_name = name,
+    structure_smiles = smiles,
     biologicalsource = biologicalsource_1,
     pubchem,
     reference,
     reference_authors
   ) %>%
-  mutate(biologicalsource = gsub(
+  mutate(organism_clean = gsub(
     "Source: ",
     "",
     biologicalsource
@@ -87,7 +88,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "nan_1",
-    structure_field = c("name", "smiles"),
+    structure_field = "structure_smiles",
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_title",
       "reference_authors",

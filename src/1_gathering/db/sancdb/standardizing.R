@@ -756,9 +756,9 @@ data_manipulated$referenceTitle <-
 data_manipulated <- data_manipulated %>%
   select(
     uniqueid,
-    name,
-    smiles,
-    biologicalsource,
+    structure_name = name,
+    structure_smiles = smiles,
+    organism_clean = biologicalsource,
     cas,
     pubchem,
     reference_authors = referenceAuthors,
@@ -771,7 +771,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "san_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_title")
   )
 

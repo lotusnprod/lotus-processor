@@ -36,7 +36,7 @@ rm(dataTranslated)
 cat("checking for organism in title, may take a while if running full mode \n")
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
-  filter(!is.na(organismOriginal) &
+  filter(!is.na(organismValue) &
     !is.na(referenceCleanedValue)) %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
     test = str_detect(
@@ -69,7 +69,7 @@ dataCleanedScore <- dataCleaned %>%
   distinct()
 
 dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore) %>%
-  filter(!is.na(organismOriginal))
+  filter(!is.na(organismValue))
 
 rm(dataCleaned)
 
@@ -78,7 +78,8 @@ rm(dataCleaned)
 subDataCleanedJoined_1 <- dataCleanedJoined %>%
   filter(referenceCleanedType == "scoreCrossref") %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     referenceType,
     referenceValue,
     organismDetected,
@@ -91,7 +92,8 @@ subDataCleanedJoined_1 <- dataCleanedJoined %>%
 subDataCleanedJoined_2 <- dataCleanedJoined %>%
   filter(referenceCleanedType != "scoreCrossref") %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     referenceType,
     referenceValue,
     organismDetected,
@@ -129,12 +131,14 @@ dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   filter(referenceType == "doi" |
     referenceType == "pubmed" |
     referenceType == "title") %>%
-  group_by(organismOriginal, organismDetected, referenceValue) %>%
+  group_by(organismType, organismValue, organismDetected, referenceValue) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
-  distinct(organismOriginal,
+  distinct(
+    organismType,
+    organismValue,
     organismDetected,
     referenceValue,
     .keep_all = TRUE
@@ -187,12 +191,19 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
         referenceCleaned_scoreComplement_author +
         referenceCleaned_scoreComplement_journal
   ) %>%
-  group_by(organismOriginal, organismDetected, referenceValue) %>%
+  group_by(
+    organismType,
+    organismValue,
+    organismDetected,
+    referenceValue
+  ) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreCrossref))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreComplement_total))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   ungroup() %>%
-  distinct(organismOriginal,
+  distinct(
+    organismType,
+    organismValue,
     organismDetected,
     referenceValue,
     .keep_all = TRUE
@@ -297,7 +308,8 @@ referenceTable <-
     )
   ) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     referenceType,
     referenceValue,

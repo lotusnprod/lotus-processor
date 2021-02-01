@@ -22,17 +22,17 @@ data_original <- vroom(
 data_selected <- data_original %>%
   select(
     uniqueid = ID,
-    name = Name,
-    smiles = SMILES,
-    biologicalsource = Specie,
+    structure_name = Name,
+    structure_smiles = SMILES,
+    organism_clean = Specie,
     reference_journal = Journal,
     reference_doi = DOI,
     reference_publishingDetails = Reference
   ) %>%
-  mutate(biologicalsource = gsub(
+  mutate(organism_clean = gsub(
     pattern = "_",
     replacement = " ",
-    x = biologicalsource,
+    x = organism_clean,
     fixed = TRUE
   ))
 
@@ -41,7 +41,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "bio_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_doi",
       "reference_journal",

@@ -21,14 +21,14 @@ data_original <- vroom(
 data_selected <- data_original %>%
   select(
     uniqueid = 1,
-    name = 2,
+    structure_name = 2,
     pubchem = 3,
     chemspider = 4,
-    biologicalsource = 8,
+    organism_clean = 8,
     geo = 9,
     extraction = 10,
-    smiles = 14,
-    inchi = 15,
+    structure_smiles = 14,
+    structure_inchi = 15,
     reference_original = Reference
   )
 
@@ -37,7 +37,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "swm_1",
-    structure_field = c("name", "smiles", "inchi"),
+    structure_field = c("structure_name", "structure_smiles", "structure_inchi"),
+    organism_field = "organism_clean",
     reference_field = "reference_original"
   )
 

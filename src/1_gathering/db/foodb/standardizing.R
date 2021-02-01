@@ -110,10 +110,8 @@ foodb <- compounds_contents_flavors %>%
     orig_food_common_name = ""
   )) %>%
   mutate(
-    biologicalsource = paste(orig_food_scientific_name,
-      orig_food_common_name,
-      sep = " "
-    ),
+    organism_clean = orig_food_scientific_name,
+    organism_dirty = orig_food_common_name,
     reference_external = ifelse(
       test = citation_type == "DATABASE" |
         citation_type == "UNKNOWN" |
@@ -142,16 +140,17 @@ foodb <- compounds_contents_flavors %>%
   ) %>%
   select(
     uniqueid = public_id,
-    name,
-    biologicalsource,
+    structure_name = name,
+    organism_clean,
+    organism_dirty,
     orig_food_part,
     standard_content,
     reference_external,
     reference_pubmed,
     reference_original,
-    smiles = moldb_smiles,
-    inchi = moldb_inchi,
-    inchikey = moldb_inchikey,
+    structure_smiles = moldb_smiles,
+    structure_inchi = moldb_inchi,
+    structure_inchikey = moldb_inchikey,
     flavor_name,
     flavor_group
   ) %>%
@@ -164,15 +163,18 @@ foodb <- compounds_contents_flavors %>%
   )) %>%
   data.frame()
 
-foodb$biologicalsource <- trimws(foodb$biologicalsource)
-foodb$biologicalsource <-
-  y_as_na(foodb$biologicalsource, "")
+foodb$organism_clean <- trimws(foodb$organism_clean)
+foodb$organism_clean <- y_as_na(foodb$organism_clean, "")
+
+foodb$organism_dirty <- trimws(foodb$organism_dirty)
+foodb$organism_dirty <- y_as_na(foodb$organism_dirty, "")
 
 # standardizing
 data_standard <- standardizing_original(
   data_selected = foodb,
   db = "foo_1",
-  structure_field = c("name", "smiles", "inchi"),
+  structure_field = c("structure_name", "structure_smiles", "structure_inchi"),
+  organism_field = c("organism_clean", "organism_dirty"),
   reference_field = c(
     "reference_external",
     "reference_pubmed",

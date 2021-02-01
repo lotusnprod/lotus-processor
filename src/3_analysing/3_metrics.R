@@ -28,10 +28,11 @@ dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
   rbindlist(l = ., fill = TRUE) %>%
   select(
     database,
-    organismOriginal = biologicalsource,
-    structureOriginal_inchi = inchi,
-    structureOriginal_nominal = name,
-    structureOriginal_smiles = smiles,
+    organismOriginal_clean = organism_clean,
+    organismOriginal_dirty = organism_dirty,
+    structureOriginal_inchi = structure_inchi,
+    structureOriginal_nominal = structure_name,
+    structureOriginal_smiles = structure_smiles,
     referenceOriginal_authors = reference_authors,
     referenceOriginal_doi = reference_doi,
     referenceOriginal_external = reference_external,

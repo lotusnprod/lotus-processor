@@ -12,34 +12,56 @@ source("r/biocleaning.R")
 #'
 #' @examples
 gnfinder_cleaning <- function(num, organismCol) {
-  if (organismCol == "organismOriginal") {
-    inpath_organism_f <- paste0(pathDataInterimTablesOriginalOrganism, "/", str_pad(
-      string = num,
-      width = 6,
-      pad = 0
-    ), ".tsv")
+  if (organismCol == "organismValue") {
+    inpath_organism_f <-
+      paste0(
+        pathDataInterimTablesOriginalOrganism,
+        "/",
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
+        ".tsv"
+      )
 
     inpath_gnfinder_f <-
-      paste0(pathDataInterimTablesCleanedOrganismOriginal, "/", str_pad(
-        string = num,
-        width = 6,
-        pad = 0
-      ), ".json")
+      paste0(
+        pathDataInterimTablesCleanedOrganismOriginal,
+        "/",
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
+        ".json"
+      )
   }
 
   if (organismCol == "organismInterim") {
-    inpath_organism_f <- paste0(pathDataInterimTablesTranslatedOrganism, "/", str_pad(
-      string = num,
-      width = 6,
-      pad = 0
-    ), ".tsv")
+    inpath_organism_f <-
+      paste0(
+        pathDataInterimTablesTranslatedOrganism,
+        "/",
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
+        ".tsv"
+      )
 
     inpath_gnfinder_f <-
-      paste0(pathDataInterimTablesCleanedOrganismTranslated, "/", str_pad(
-        string = num,
-        width = 6,
-        pad = 0
-      ), ".json")
+      paste0(
+        pathDataInterimTablesCleanedOrganismTranslated,
+        "/",
+        str_pad(
+          string = num,
+          width = 6,
+          pad = 0
+        ),
+        ".json"
+      )
   }
 
   data_bio <- vroom(
@@ -68,7 +90,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
   data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(
     organismCol,
-    "organismOriginal" = paste0("\"", organismCol, "\""),
+    "organismValue" = paste0("\"", organismCol, "\""),
     "organismInterim" = "organismInterim"
   )]), ]
 

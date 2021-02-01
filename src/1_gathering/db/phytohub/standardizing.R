@@ -386,10 +386,10 @@ data_pivoted <- data_manipulated %>%
     values_drop_na = TRUE
   ) %>%
   select(
-    name,
-    inchi,
-    smiles,
-    biologicalsource,
+    structure_name = name,
+    structure_inchi = inchi,
+    structure_smiles = smiles,
+    organism_dirty = biologicalsource,
     reference_isbn = referenceIsbn,
     reference_authors = referenceAuthors,
     reference_original = referenceUnsplittable,
@@ -427,7 +427,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_pivoted,
     db = "phy_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_dirty",
     reference_field = c(
       "reference_isbn",
       "reference_authors",

@@ -135,7 +135,7 @@ cleaning_alkamid <- function(x) {
       uniqueid = name_1_1_1_1_1_1,
       name = name_1_1_2,
       smiles = name_1_2,
-      biologicalsource
+      organism_clean = biologicalsource
     )
   return(df7)
 }
@@ -155,14 +155,20 @@ ref_prepared <- ref_original %>%
 
 # joining references
 data_referenced <- left_join(data_selected, ref_prepared) %>%
-  group_by(uniqueid, biologicalsource)
+  group_by(uniqueid, organism_clean) %>%
+  select(
+    structure_smiles = smiles,
+    structure_name = name,
+    everything()
+  )
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_referenced,
     db = "alk_1",
-    structure_field = c("smiles", "name"),
+    structure_field = c("structure_smiles", "structure_name"),
+    organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_journal", "reference_title")
   )
 

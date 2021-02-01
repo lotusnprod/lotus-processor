@@ -20,13 +20,13 @@ data_original <-
 data_selected <- data_original %>%
   select(
     uniqueid = MetID,
-    name = Name,
-    inchi = InChI,
-    smiles = SMILES,
+    structure_name = Name,
+    structure_inchi = InChI,
+    structure_smiles = SMILES,
     cas = `CAS number`,
     reference = References
   ) %>%
-  mutate(biologicalsource = "Pseudomonas aeruginosa")
+  mutate(organism_clean = "Pseudomonas aeruginosa")
 
 data_manipulated <- data_selected %>%
   cSplit("reference",
@@ -51,10 +51,10 @@ data_manipulated <- data_selected %>%
   mutate_all(as.character) %>%
   select(
     uniqueid,
-    biologicalsource,
-    name,
-    inchi,
-    smiles,
+    organism_clean,
+    structure_name,
+    structure_inchi,
+    structure_smiles,
     cas,
     reference_original,
     reference_title,
@@ -67,7 +67,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "pam_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_original",
       "reference_pubmed",

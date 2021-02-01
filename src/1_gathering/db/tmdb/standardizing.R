@@ -44,21 +44,27 @@ data_selected <- data_pivoted %>%
       x = reference_publishingDetails
     )
   ) %>%
+  select(
+    structure_name = name,
+    organism_clean = biologicalsource,
+    everything()
+  ) %>%
   data.frame()
+
+data_selected[] <-
+  lapply(data_selected, function(x) {
+    gsub("Not Available", NA, x)
+  })
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "tmd_1",
-    structure_field = "name",
+    structure_field = "structure_name",
+    organism_field = "organism_clean",
     reference_field = "reference_publishingDetails"
   )
-
-data_standard[] <-
-  lapply(data_standard, function(x) {
-    gsub("Not Available", NA, x)
-  })
 
 # exporting
 database$writeInterim(data_standard)

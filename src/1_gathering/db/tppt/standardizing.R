@@ -121,7 +121,13 @@ data_selected <- data_original %>%
       fixed = TRUE
     )
   ) %>%
-  data.frame()
+  data.frame() %>%
+  select(
+    structure_name = name,
+    structure_smiles = smiles,
+    organism_clean = biologicalsource,
+    everything()
+  )
 
 data_selected$reference_original <-
   y_as_na(x = data_selected$reference_original, y = "")
@@ -137,7 +143,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "tpp_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_original",
       "reference_authors",

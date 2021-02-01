@@ -23,9 +23,9 @@ data_original <- vroom(
 data_selected <- data_original %>%
   select(
     uniqueid = ID,
-    name = Name,
-    biologicalsource = Source,
-    inchi = InChI,
+    structure_name = Name,
+    organism_clean = Source,
+    structure_inchi = InChI,
     cas = `CAS No.`,
     reference_original = Reference
   )
@@ -35,7 +35,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "npe_1",
-    structure_field = c("name", "inchi"),
+    structure_field = c("structure_name", "structure_inchi"),
+    organism_field = "organism_clean",
     reference_field = "reference_original"
   )
 

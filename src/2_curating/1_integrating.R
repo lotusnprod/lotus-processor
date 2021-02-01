@@ -16,14 +16,26 @@ source("r/vroom_safe.R")
 cat("loading ... \n")
 cat("... libraries \n")
 library(data.table)
+library(DBI)
+library(RSQLite)
 library(tidyverse)
 
 cat("... files ... \n")
 cat("... DBs \n")
 
-dirtyDB <- c("dnp_1", "foo_1", "wak_1")
-
 if (mode != "test") {
+  cat("... connecting to SQLite database ...")
+  drv <- SQLite()
+
+  db <- dbConnect(
+    drv = drv,
+    dbname = lotusDB
+  )
+
+  cat("... listing remote objects")
+  dbListObjects(db)
+
+  cat("... list of source databases")
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
   cat("... dictionaries ... \n")
@@ -59,10 +71,11 @@ if (mode != "test") {
   dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
     select(
       database,
-      organismOriginal = biologicalsource,
-      structureOriginal_inchi = inchi,
-      structureOriginal_nominal = name,
-      structureOriginal_smiles = smiles,
+      organismOriginal_clean = organism_clean,
+      organismOriginal_dirty = organism_dirty,
+      structureOriginal_inchi = structure_inchi,
+      structureOriginal_nominal = structure_name,
+      structureOriginal_smiles = structure_smiles,
       referenceOriginal_authors = reference_authors,
       referenceOriginal_doi = reference_doi,
       referenceOriginal_external = reference_external,
@@ -87,8 +100,14 @@ if (mode != "test") {
       sample_n(size = 1000)
   }
 }
+
 if (mode == "test") {
   dbTable <- vroom_read_safe(path = pathTests) %>%
+    pivot_wider(
+      names_from = "organismType",
+      values_from = "organismValue",
+      names_prefix = "organismOriginal_"
+    ) %>% 
     pivot_wider(
       names_from = "structureType",
       values_from = "structureValue",
@@ -107,7 +126,8 @@ if (mode == "test") {
     ) %>%
     select(
       database = db,
-      organismOriginal,
+      organismOriginal_clean,
+      organismOriginal_dirty,
       structureOriginal_inchi,
       structureOriginal_nominal,
       structureOriginal_smiles,
@@ -125,15 +145,39 @@ if (mode == "test") {
     tibble()
 }
 
+cat("... full original table \n")
+originalTable <- dbTable %>%
+  select(database, everything()) %>%
+  pivot_longer(
+    cols = 7:ncol(.),
+    names_to = c("drop", "referenceType"),
+    names_sep = "_",
+    values_to = "referenceValue",
+    values_drop_na = TRUE
+  ) %>%
+  pivot_longer(
+    cols = 4:6,
+    names_to = c("drop2", "structureType"),
+    names_sep = "_",
+    values_to = "structureValue",
+    values_drop_na = TRUE
+  ) %>%
+  pivot_longer(
+    cols = 2:3,
+    names_to = c("drop3", "organismType"),
+    names_sep = "_",
+    values_to = "organismValue",
+    values_drop_na = TRUE
+  ) %>%
+  select(-drop, -drop2, -drop3) %>%
+  distinct()
+
 cat("keeping entries not previously curated only ... \n")
 cat("... inchi table \n")
-structureTable_inchi <- dbTable %>%
-  filter(grepl(
-    pattern = "^InChI=.*",
-    x = structureOriginal_inchi
-  )) %>%
-  distinct(structureOriginal_inchi) %>%
-  select(structureValue = structureOriginal_inchi)
+structureTable_inchi <- originalTable %>%
+  filter(structureType == "inchi") %>%
+  filter(!is.na(structureValue)) %>%
+  distinct(structureValue)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
@@ -161,14 +205,10 @@ if (nrow(structureTable_inchi) == 0) {
 }
 
 cat("... smiles table \n")
-structureTable_smiles <- dbTable %>%
-  # filter(!grepl(
-  #   pattern = "^InChI=.*",
-  #   x = structureOriginal_inchi
-  # )) %>%
-  filter(!is.na(structureOriginal_smiles)) %>%
-  distinct(structureOriginal_smiles) %>%
-  select(structureValue = structureOriginal_smiles)
+structureTable_smiles <- originalTable %>%
+  filter(structureType == "smiles") %>%
+  filter(!is.na(structureValue)) %>%
+  distinct(structureValue)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
@@ -196,15 +236,10 @@ if (nrow(structureTable_smiles) == 0) {
 }
 
 cat("... chemical names table \n")
-structureTable_nominal <- dbTable %>%
-  # filter(!grepl(
-  #   pattern = "^InChI=.*",
-  #   x = structureOriginal_inchi
-  # )) %>%
-  # filter(is.na(structureOriginal_smiles)) %>%
-  filter(!is.na(structureOriginal_nominal)) %>%
-  distinct(structureOriginal_nominal) %>%
-  select(structureValue = structureOriginal_nominal)
+structureTable_nominal <- originalTable %>%
+  filter(structureType == "nominal") %>%
+  filter(!is.na(structureValue)) %>%
+  distinct(structureValue)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
@@ -256,34 +291,55 @@ if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
 }
 
-cat("... organisms table \n")
-organismTable <- dbTable %>%
-  filter(!is.na(organismOriginal)) %>%
-  distinct(organismOriginal, .keep_all = TRUE) %>%
-  select(database, organismOriginal) %>%
-  data.table()
+cat("... organisms tables ... \n")
+cat("... clean \n")
+organismTable_clean <- originalTable %>%
+  filter(organismType == "clean") %>%
+  filter(!is.na(organismValue)) %>%
+  distinct(organismValue)
 
-organismTable_1 <- organismTable %>%
-  filter(database %in% c(dirtyDB, "tes_1")) %>%
-  distinct(organismOriginal)
+cat("... dirty \n")
+organismTable_dirty <- originalTable %>%
+  filter(organismType == "dirty") %>%
+  filter(!is.na(organismValue)) %>%
+  distinct(organismValue)
 
-organismTable_2 <- organismTable %>%
-  filter(!database %in% dirtyDB) %>%
-  distinct(organismOriginal)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-    organismTable_1 <- anti_join(
-      x = organismTable_1,
+    organismTable_clean <- anti_join(
+      x = organismTable_clean,
       y = organismDictionary
     )
 
-    organismTable_2 <- anti_join(
-      x = organismTable_2,
+    organismTable_dirty <- anti_join(
+      x = organismTable_dirty,
       y = organismDictionary
     )
   }
 }
+
+organismTable_clean <- organismTable_clean %>%
+  select(organismOriginal_clean = organismValue)
+
+organismTable_dirty <- organismTable_dirty %>%
+  select(organismOriginal_dirty = organismValue) %>%
+  data.table()
+
+cat("... structures table \n")
+organismTable_full <- bind_rows(
+  organismTable_clean %>%
+    mutate(organismType = "clean") %>%
+    select(organismType,
+      organismValue = organismOriginal_clean
+    ),
+  organismTable_dirty %>%
+    mutate(organismType = "dirty") %>%
+    select(organismType,
+      organismValue = organismOriginal_dirty
+    )
+) %>%
+  distinct()
 
 cat("... references tables ... \n")
 cat("... DOI table \n")
@@ -447,54 +503,20 @@ if (nrow(referenceTable_original) == 0) {
 }
 
 cat("... full references table \n")
-referenceTable_full <- dbTable %>%
-  distinct(
-    organismOriginal,
-    referenceOriginal_authors,
-    referenceOriginal_doi,
-    referenceOriginal_external,
-    referenceOriginal_isbn,
-    referenceOriginal_journal,
-    referenceOriginal_original,
-    referenceOriginal_pubmed,
-    referenceOriginal_publishingDetails,
-    referenceOriginal_title,
-    referenceOriginal_split
-  ) %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
-    cols = 2:ncol(.),
-    names_to = c("drop", "referenceType"),
-    names_sep = "_",
-    values_to = "referenceValue",
-    values_drop_na = TRUE
-  ) %>%
+referenceTable_full <- originalTable %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     referenceType,
     referenceValue
   ) %>%
   distinct()
 
-cat("... full original table \n")
-originalTable <- dbTable %>%
-  select(database, organismOriginal, everything()) %>%
-  pivot_longer(
-    cols = 6:ncol(.),
-    names_to = c("drop", "referenceType"),
-    names_sep = "_",
-    values_to = "referenceValue",
-    values_drop_na = TRUE
-  ) %>%
-  pivot_longer(
-    cols = 3:5,
-    names_to = c("drop2", "structureType"),
-    names_sep = "_",
-    values_to = "structureValue",
-    values_drop_na = TRUE
-  ) %>%
-  select(-drop, -drop2) %>%
-  distinct()
+# data_source <- dbGetQuery(
+#   conn = db,
+#   statement = "SELECT * FROM data_source"
+# )
+
 
 cat("ensuring directories exist ... \n")
 ifelse(
@@ -571,20 +593,9 @@ ifelse(
 )
 
 cat("exporting ... \n")
-cat(pathDataInterimTablesOriginalOrganism, "\n")
-
-if (nrow(organismTable_1) != 0) {
-  split_data_table_quote(
-    x = organismTable_1,
-    no_rows_per_frame = 10000,
-    text = "",
-    path_to_store = pathDataInterimTablesOriginalOrganism
-  )
-}
-
-if (nrow(organismTable_2) != 0) {
+if (nrow(organismTable_clean) != 0) {
   vroom_write(
-    x = organismTable_2,
+    x = organismTable_clean,
     path = gzfile(
       description = pathDataInterimTablesOriginalOrganismFile,
       compression = 9,
@@ -601,6 +612,12 @@ if (nrow(organismTable_2) != 0) {
   )
   ## because gnverify does not parse quotes
 }
+
+cat(pathDataInterimTablesOriginal, "\n")
+vroom_write_safe(
+  x = organismTable_full,
+  path = pathDataInterimTablesOriginalOrganismFull
+)
 
 cat(pathDataInterimTablesOriginalReferenceDoi, "\n")
 vroom_write_safe(

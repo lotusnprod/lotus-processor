@@ -45,9 +45,9 @@ data_selected <- data_original %>%
   )) %>%
   mutate(reference_test_2 = trimws(x = reference_test_2)) %>%
   select(
-    name,
+    structure_name = name,
     biologicalsource,
-    smiles,
+    structure_smiles = smiles,
     reference_authors = reference_test_1,
     reference_original,
     reference_split = reference_test_2
@@ -57,7 +57,7 @@ data_selected <- data_original %>%
 data_corrected <- data_selected %>%
   cSplit("biologicalsource", sep = ",", direction = "long") %>%
   filter(grepl(pattern = "[A-Z]", x = biologicalsource)) %>%
-  mutate(biologicalsource = capitalize(tolower(biologicalsource))) %>%
+  mutate(organism_clean = capitalize(tolower(biologicalsource))) %>%
   data.frame()
 
 # standardizing
@@ -65,7 +65,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_corrected,
     db = "mit_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_original",
       "reference_authors",

@@ -140,7 +140,7 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     stripWhite = FALSE
   ) %>%
   select(
-    biologicalsource = biologicalsource_1,
+    organism_clean = biologicalsource_1,
     everything()
   ) %>%
   mutate(
@@ -176,15 +176,22 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
     )
   ) %>%
   mutate(reference_doi = trimws(reference_doi)) %>%
-  data.frame()
+  data.frame() %>%
+  select(
+    structure_inchi = inchi,
+    structure_smiles = smiles,
+    structure_name = name,
+    everything()
+  )
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated_long_ref_unique,
     db = "car_1",
-    structure_field = c("inchi", "name", "smiles"),
-    reference_field = c("reference_original", "reference_title", "reference_doi")
+    structure_field = "structure_name",
+    organism_field = "organism_clean",
+    reference_field = c("reference_title", "reference_doi")
   )
 
 # exporting
