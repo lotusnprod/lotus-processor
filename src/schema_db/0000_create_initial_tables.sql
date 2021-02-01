@@ -25,7 +25,7 @@ create table databases_source
 	id INTEGER not null
 		constraint source_database_pk
 			primary key autoincrement,
-	name TEXT
+	name TEXT,
 	typeId INTEGER
 		references databases_types
 );
