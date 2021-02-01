@@ -5,6 +5,7 @@ library(tidyverse)
 #'
 #' @param data_selected
 #' @param db
+#' @param organism_field
 #' @param structure_field
 #' @param reference_field
 #'
@@ -14,17 +15,20 @@ library(tidyverse)
 #' @examples
 standardizing_original <- function(data_selected,
                                    db,
+                                   organism_field,
+                                   # possibilities: c("organism_clean","organism_dirty")
                                    structure_field,
-                                   # possibilities: c("inchi","smiles","name")
+                                   # possibilities: c("structure_inchi","structure_smiles","structure_name")
                                    reference_field)
 # possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal", "reference_original","reference_publishingDetails","reference_pubmed","reference_split","reference_title")
 {
   data_selected[setdiff(
     c(
-      "name",
-      "biologicalsource",
-      "inchi",
-      "smiles",
+      "structure_name",
+      "structure_inchi",
+      "structure_smiles",
+      "organism_clean",
+      "organism_dirty",
       "reference_authors",
       "reference_doi",
       "reference_external",
@@ -43,20 +47,19 @@ standardizing_original <- function(data_selected,
     mutate(database = db) %>%
     select(
       database,
-      name,
       all_of(structure_field),
-      biologicalsource,
+      all_of(organism_field),
       all_of(reference_field)
     ) %>%
     filter_at(vars(all_of(structure_field)), any_vars(!is.na(.))) %>%
     filter_at(vars(all_of(structure_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
-    filter(!is.na(biologicalsource)) %>%
-    filter(grepl(pattern = "[[:alpha:]]", x = biologicalsource)) %>%
+    filter_at(vars(all_of(organism_field)), any_vars(!is.na(.))) %>%
+    filter_at(vars(all_of(organism_field)), any_vars(grepl(pattern = "[[:alpha:]]", x = .))) %>%
     filter_at(vars(all_of(reference_field)), any_vars(!is.na(.))) %>%
     filter_at(vars(all_of(reference_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
     distinct_at(vars(
       all_of(structure_field),
-      biologicalsource,
+      all_of(organism_field),
       all_of(reference_field)
     ),
     .keep_all = TRUE

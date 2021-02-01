@@ -181,6 +181,7 @@ manipulating_taxo <- function(dfsel, dic) {
         values_from = name
       ) %>%
       ungroup() %>%
+      unnest() %>%
       select_if(
         names(.) %in%
           c(
@@ -237,7 +238,8 @@ manipulating_taxo <- function(dfsel, dic) {
     df6 <- left_join(dfsel, df5) %>%
       left_join(., df2_a) %>%
       select(
-        organismOriginal,
+        organismType,
+        organismValue,
         organismDetected = organismCleaned,
         organismCleaned = currentCanonicalFull,
         organismCleanedId = taxonId,
@@ -276,7 +278,8 @@ manipulating_taxo <- function(dfsel, dic) {
   if (nrow(df3) == 0) {
     df6 <- data.frame() %>%
       mutate(
-        organismOriginal = NA,
+        organismType = NA,
+        organismValue = NA,
         organismDetected = NA,
         organismCleaned = NA,
         organismCleanedId = NA,

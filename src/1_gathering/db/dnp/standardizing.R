@@ -22,9 +22,9 @@ data_original <- vroom(
 data_selected <- data_original %>%
   select(
     uniqueid = CRC_Number,
-    name = Molecule_Name,
-    inchi = MolfileName,
-    biologicalsource = Biological_Source
+    structure_name = Molecule_Name,
+    structure_inchi = MolfileName,
+    organism_dirty = Biological_Source
   ) %>%
   distinct(uniqueid, .keep_all = TRUE) %>%
   mutate(reference_external = "DNP") %>%
@@ -35,7 +35,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "dnp_1",
-    structure_field = c("name", "inchi"),
+    structure_field = c("structure_name", "structure_inchi"),
+    organism_field = "organism_dirty",
     reference_field = "reference_external"
   )
 

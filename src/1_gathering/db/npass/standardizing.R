@@ -54,11 +54,11 @@ data_selected <- data_original %>%
   select(
     pubchem = pubchem_cid,
     np_id,
-    name = pref_name,
-    inchi = standard_inchi,
+    structure_name = pref_name,
+    structure_inchi = standard_inchi,
     standard_inchi_key,
-    smiles = canonical_smiles,
-    biologicalsource = org_name,
+    structure_smiles = canonical_smiles,
+    organism_clean = org_name,
     reference = ref_id,
     referenceType = ref_id_type
   )
@@ -90,14 +90,15 @@ data_manipulated <- data_selected %>%
   ) %>%
   data.frame()
 
-data_manipulated$name <- y_as_na(data_manipulated$name, "n.a.")
+data_manipulated$structure_name <- y_as_na(data_manipulated$structure_name, "n.a.")
 
 # standardizing
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "npa_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_doi",
       "reference_pubmed",

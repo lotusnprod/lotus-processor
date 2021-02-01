@@ -183,7 +183,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
         word(organismDetected, 1)
     ) %>%
     distinct(
-      organismOriginal,
+      organismType,
+      organismValue,
       organismDetected
     ) %>%
     mutate_all(as.character)
@@ -195,7 +196,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
         word(organismDetected, 1)
     ) %>%
     distinct(
-      organismOriginal,
+      organismType,
+      organismValue,
       organismDetected
     ) %>%
     mutate_all(as.character)
@@ -219,7 +221,8 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
         word(organismDetected, 1)
     ) %>%
     distinct(
-      organismOriginal,
+      organismType,
+      organismValue,
       organismDetected
     ) %>%
     mutate_all(as.character)
@@ -263,7 +266,8 @@ dataJoined <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     referenceType,
     referenceValue,
     organismDetected
@@ -294,7 +298,8 @@ dataTranslated <- left_join(dataJoined,
       referenceType == "isbn"
   ) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     referenceType,
     referenceValue,

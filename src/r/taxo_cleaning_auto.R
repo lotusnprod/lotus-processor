@@ -101,25 +101,25 @@ taxo_cleaning_auto <- function(dfsel) {
 
   cat("cleaning duplicate upstream taxa \n")
   df4 <- dfsel %>%
-    group_by(organismOriginal, organism_7_1_subspecies) %>%
+    group_by(organismType, organismValue, organism_7_1_subspecies) %>%
     fill(organism_8_variety, .direction = "downup") %>%
-    group_by(organismOriginal, organism_7_species) %>%
+    group_by(organismType, organismValue, organism_7_species) %>%
     fill(organism_7_1_subspecies, .direction = "downup") %>%
-    group_by(organismOriginal, organism_6_1_subgenus) %>%
+    group_by(organismType, organismValue, organism_6_1_subgenus) %>%
     fill(organism_7_species, .direction = "downup") %>%
-    group_by(organismOriginal, organism_6_genus) %>%
+    group_by(organismType, organismValue, organism_6_genus) %>%
     fill(organism_6_1_subgenus, .direction = "downup") %>%
-    group_by(organismOriginal, organism_5_family) %>%
+    group_by(organismType, organismValue, organism_5_family) %>%
     fill(organism_6_genus, .direction = "downup") %>%
-    group_by(organismOriginal, organism_4_order) %>%
+    group_by(organismType, organismValue, organism_4_order) %>%
     fill(organism_5_family, .direction = "downup") %>%
-    group_by(organismOriginal, organism_3_class) %>%
+    group_by(organismType, organismValue, organism_3_class) %>%
     fill(organism_4_order, .direction = "downup") %>%
-    group_by(organismOriginal, organism_2_phylum) %>%
+    group_by(organismType, organismValue, organism_2_phylum) %>%
     fill(organism_3_class, .direction = "downup") %>%
-    group_by(organismOriginal, organism_1_kingdom) %>%
+    group_by(organismType, organismValue, organism_1_kingdom) %>%
     fill(organism_2_phylum, .direction = "downup") %>%
-    group_by(organismOriginal) %>%
+    group_by(organismType, organismValue) %>%
     fill(organism_1_kingdom, .direction = "downup") %>%
     ungroup() %>%
     mutate(organismCleanedBis = apply(.[, grepl(
@@ -133,7 +133,8 @@ taxo_cleaning_auto <- function(dfsel) {
   df5 <- df4 %>%
     filter(name == organismCleanedBis) %>%
     distinct(
-      organismOriginal,
+      organismType,
+      organismValue,
       organismDetected,
       organismDbTaxo,
       organismDbTaxoQuality,

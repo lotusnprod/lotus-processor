@@ -110,8 +110,8 @@ data <- tibble(id, smiles, organism, reference) %>%
   distinct(id, .keep_all = TRUE) %>%
   filter(!is.na(smiles)) %>%
   select(id,
-    smiles,
-    biologicalsource = organism,
+    structure_smiles = smiles,
+    organism_clean = organism,
     reference
   ) %>%
   mutate(
@@ -138,7 +138,8 @@ data$name <- NA
 data_standard <- standardizing_original(
   data_selected = data,
   db = "mib_1",
-  structure_field = c("name", "smiles"),
+  structure_field = "structure_smiles",
+  organism_field = "organism_clean",
   reference_field = c("reference_doi", "reference_pubmed", "reference_external")
 )
 

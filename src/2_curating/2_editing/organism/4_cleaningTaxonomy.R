@@ -79,12 +79,12 @@ verified_df$organismDbTaxo <-
   y_as_na(verified_df$organismDbTaxo, "")
 
 dataCleanedOrganismVerified <- left_join(
-  dataCleanedOrganism %>%
-    distinct(organismOriginal, organismCleaned),
+  dataCleanedOrganism,
   verified_df
 ) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismCleaned,
     organismDbTaxo,
     taxonId,
@@ -124,7 +124,8 @@ if (nrow(dataCleanedOrganism) != 0) {
 if (nrow(dataCleanedOrganism) == 0) {
   dataCleanedOrganismManipulated <- data.frame() %>%
     mutate(
-      organismOriginal = NA,
+      organismType = NA,
+      organismValue = NA,
       organismDetected = NA,
       organismCleaned = NA,
       organismCleanedId = NA,
@@ -164,13 +165,16 @@ dataCleanedOrganismManipulated <-
 
 dataCleanedOrganismManipulated_clean <-
   dataCleanedOrganismManipulated %>%
-  distinct(organismOriginal,
+  distinct(
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     .keep_all = TRUE
   ) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     organismCleanedRank
@@ -189,7 +193,8 @@ dataCuratedOrganismAuto <-
 cat("selecting \n")
 dataCuratedOrganismAuto[setdiff(
   x = c(
-    "organismOriginal",
+    "organismType",
+    "organismValue",
     "organismDetected",
     "organismCleaned",
     "organismCleanedId",
@@ -223,7 +228,8 @@ dataCuratedOrganismAuto[setdiff(
 
 dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     organismCleanedId,

@@ -145,7 +145,7 @@ data_corrected_capitals <- left_join(data_corrected,
   findCapitals_3,
   by = c("biologicalsource" = "x")
 ) %>%
-  mutate(biologicalsource = ifelse(
+  mutate(organism_clean = ifelse(
     test = !is.na(y),
     yes = y,
     no = biologicalsource
@@ -157,6 +157,21 @@ data_corrected_capitals <- left_join(data_corrected,
     -last,
     -capitals_x,
     -capitals_y
+  ) %>%
+  mutate(n = str_count(organism_clean, "\\S+")) %>%
+  mutate(organism_dirty = ifelse(test = n == 1,
+    yes = organism_clean,
+    no = NA
+  )) %>%
+  mutate(organism_clean = ifelse(test = n > 1,
+    yes = organism_clean,
+    no = NA
+  )) %>%
+  select(
+    structure_inchi = inchi,
+    structure_smiles = smiles,
+    structure_name = name,
+    everything()
   )
 
 # standardizing
@@ -164,7 +179,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_corrected_capitals,
     db = "coc_1",
-    structure_field = c("inchi", "smiles", "name"),
+    structure_field = c("structure_inchi", "structure_smiles", "structure_name"),
+    organism_field = c("organism_clean", "organism_dirty"),
     reference_field = c(
       "reference_doi",
       "reference_pubmed",

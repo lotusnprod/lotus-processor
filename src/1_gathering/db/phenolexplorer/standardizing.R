@@ -110,6 +110,12 @@ data_referenced <-
     direction = "long"
   ) %>%
   mutate_all(as.character) %>%
+  select(
+    structure_name = name,
+    structure_smiles = smiles,
+    organism_clean = biologicalsource,
+    everything()
+  ) %>%
   data.frame()
 
 data_referenced[] <-
@@ -122,7 +128,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_referenced,
     db = "phe_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_title",
       "reference_pubmed",

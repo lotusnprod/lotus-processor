@@ -18,6 +18,10 @@ library(tidyverse)
 
 log_debug("  Step 3")
 cat("... files ... \n")
+cat("full \n")
+organismTable_full <-
+  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFull)
+
 cat("... translated organisms \n")
 dataInterimOrganismToFill <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedInterim)
@@ -123,7 +127,7 @@ if (nrow(dataInterimOrganismToFill) != 0) {
   dataCleanedTranslatedOrganism2join <-
     dataInterimOrganismToFill %>%
     filter(!is.na(organismInterim)) %>%
-    distinct(organismOriginal, organismInterim) %>%
+    distinct(organismValue, organismInterim) %>%
     mutate_all(as.character)
 }
 
@@ -154,7 +158,7 @@ if (length != 0) {
       )
     ) %>%
     select(-organismInterim) %>%
-    distinct(organismOriginal,
+    distinct(organismValue,
       organismCleaned,
       taxonId,
       .keep_all = TRUE
@@ -164,7 +168,7 @@ if (length != 0) {
 if (length != 0) {
   dataCleanedOrganism <-
     bind_rows(
-      dataVerifiedOriginalOrganism,
+      dataVerifiedOriginalOrganism %>% select(-organismType),
       dataCleanedOriginalOrganism,
       dataCleanedTranslatedOrganismFull
     )
@@ -172,22 +176,26 @@ if (length != 0) {
 
 if (length != 0) {
   dataCleanedOrganism <- dataCleanedOrganism %>%
-    distinct(organismOriginal,
+    distinct(organismValue,
       organismCleaned,
       taxonId,
       .keep_all = TRUE
     ) %>%
-    group_by(organismOriginal) %>%
+    group_by(organismValue) %>%
     add_count() %>%
     ungroup() %>%
     filter(!is.na(organismCleaned) |
       !n > 1) %>%
     select(-n) %>%
     distinct(
-      organismOriginal,
+      organismValue,
       organismCleaned
     )
 }
+
+dataCleanedOrganism <- dataCleanedOrganism %>%
+  left_join(organismTable_full, .) %>%
+  distinct()
 
 cat("exporting ... \n")
 cat(pathDataInterimTablesCleanedOrganismTranslatedTable, "\n")

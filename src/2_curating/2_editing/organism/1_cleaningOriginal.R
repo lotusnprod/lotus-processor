@@ -28,7 +28,7 @@ wrongVerifiedDictionary <-
   as.list()
 
 organismTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFile) %>%
+  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFull) %>%
   distinct()
 
 cat("ensuring directories exist \n")
@@ -74,8 +74,10 @@ verified_df <- verified %>%
   filter(dataSourceTitleShort != "IRMNG (old)" &
     dataSourceTitleShort != "IPNI") %>%
   filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
+  mutate(organismType = "clean") %>%
   select(
-    organismOriginal = input,
+    organismType,
+    organismValue = input,
     organismCleaned = currentCanonicalFull,
     organismDbTaxo = dataSourceTitleShort,
     taxonId = currentRecordId,
@@ -93,7 +95,8 @@ dataOrganismVerified <- left_join(
   verified_df
 ) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismCleaned,
     organismDbTaxo,
     taxonId,
@@ -104,19 +107,21 @@ dataOrganismVerified <- left_join(
 
 dataOrganismNoVerified <- dataOrganismVerified %>%
   arrange(organismDbTaxo) %>%
-  distinct(organismOriginal, .keep_all = TRUE) %>%
+  distinct(organismValue, .keep_all = TRUE) %>%
   filter(is.na(organismDbTaxo)) %>%
-  distinct(organismOriginal) %>%
+  distinct(organismValue) %>%
   data.table()
 
 dataOrganismVerified <- dataOrganismVerified %>%
   filter(!is.na(organismDbTaxo))
 
+cat(pathDataInterimTablesOriginalOrganism, "\n")
+
 if (nrow(dataOrganismNoVerified) != 0) {
   split_data_table_quote(
     x = dataOrganismNoVerified,
     no_rows_per_frame = 10000,
-    text = "verify",
+    text = "",
     path_to_store = pathDataInterimTablesOriginalOrganism
   )
 }
@@ -124,6 +129,7 @@ if (nrow(dataOrganismNoVerified) != 0) {
 cat("submitting to GNFinder \n")
 system(command = paste("bash", pathOriginalGnfinderScript))
 
+cat("treating GNFinder results \n")
 length <-
   length(list.files(
     path = pathDataInterimTablesOriginalOrganism,
@@ -152,7 +158,7 @@ if (length != 0) {
         dataCleanOriginalOrganism[[j]] <-
           gnfinder_cleaning(
             num = i,
-            organismCol = "organismOriginal"
+            organismCol = "organismValue"
           )
       },
       error = function(e) {
@@ -167,7 +173,7 @@ if (length(dataCleanOriginalOrganism) != 0) {
   dataCleanedOriginalOrganism <-
     bind_rows(dataCleanOriginalOrganism) %>%
     select(
-      organismOriginal,
+      organismValue,
       organismCleaned = canonicalname,
       organismCleanedCurrent = canonicalnameCurrent,
       organismDbTaxo = dbTaxo,
@@ -179,7 +185,7 @@ if (length(dataCleanOriginalOrganism) != 0) {
 if (length(dataCleanOriginalOrganism) == 0) {
   dataCleanedOriginalOrganism <- data.frame() %>%
     mutate(
-      organismOriginal = NA,
+      organismValue = NA,
       organismCleaned = NA,
       organismCleanedCurrent = NA,
       organismDbTaxo = NA,
@@ -190,7 +196,7 @@ if (length(dataCleanOriginalOrganism) == 0) {
 }
 
 dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism %>%
-  distinct(organismOriginal, organismCleaned, .keep_all = TRUE)
+  distinct(organismValue, organismCleaned, .keep_all = TRUE)
 
 cat("exporting ... \n")
 if (length != 0) {

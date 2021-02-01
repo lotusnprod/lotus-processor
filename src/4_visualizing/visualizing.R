@@ -1271,7 +1271,8 @@ if (mode != "test") {
       ) %>%
       distinct(
         database,
-        organismOriginal,
+        organismType,
+        organismValue,
         structureType,
         structureValue,
         referenceType,
@@ -1285,16 +1286,15 @@ if (mode != "test") {
         validation,
       ) %>%
       pivot_longer(
-        cols = 11:13,
+        cols = 12:14,
         values_drop_na = TRUE
       ) %>%
-      mutate(organism_originalType = "organism") %>%
       select(
         database,
         structure_originalValue = structureValue,
         structure_originalType = structureType,
-        organism_originalValue = organismOriginal,
-        organism_originalType,
+        organism_originalValue = organismValue,
+        organism_originalType = organismType,
         reference_originalValue = referenceValue,
         reference_originalType = referenceType,
         cleanedType = name,
@@ -1304,6 +1304,12 @@ if (mode != "test") {
       distinct() %>%
       data.frame()
     ready_1 <- full %>%
+      pivot_wider(
+        names_from = organism_originalType,
+        names_prefix = "organism_",
+        values_from = organism_originalValue,
+        values_fn = first
+      ) %>%
       pivot_wider(
         names_from = reference_originalType,
         names_prefix = "reference_",
@@ -1318,7 +1324,8 @@ if (mode != "test") {
       ) %>%
       select(
         database,
-        organism_organism = organism_originalValue,
+        organism_organismClean = organism_clean,
+        organism_organismDirty = organism_dirty,
         structure_structureSmiles = structure_smiles,
         structure_structureInchi = structure_inchi,
         structure_structureNominal = structure_nominal,
@@ -1334,7 +1341,7 @@ if (mode != "test") {
       )
     ready_2 <- ready_1 %>%
       pivot_longer(
-        cols = 2:11,
+        cols = 2:12,
         names_to = c("origin", "originalType"),
         names_sep = "_",
         values_to = "originalValue"
@@ -1366,17 +1373,19 @@ if (mode != "test") {
         validation
       ) %>%
       count(name = "count") %>%
-      filter(
-        gsub(
+      filter(substr(
+        x = gsub(
           pattern = ".*_",
           replacement = "",
           x = cleanedType
-        ) %in% substr(
-          x = originalType,
-          start = 1,
-          stop = 9
-        )
-      ) %>%
+        ),
+        start = 1,
+        stop = 8
+      ) %in% substr(
+        x = originalType,
+        start = 1,
+        stop = 8
+      )) %>%
       ungroup() %>%
       arrange(desc(count, validation, database)) %>%
       mutate(
@@ -1386,8 +1395,13 @@ if (mode != "test") {
           x = validation
         ),
         originalType = gsub(
-          pattern = "organismOriginal",
-          replacement = "organism_original",
+          pattern = "organismClean",
+          replacement = "organism_clean",
+          x = originalType
+        ),
+        originalType = gsub(
+          pattern = "organismDirty",
+          replacement = "organism_dirty",
           x = originalType
         ),
         originalType = gsub(

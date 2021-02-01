@@ -21,11 +21,11 @@ data_original <- vroom(
 ## applying
 data_selected <- data_original %>%
   select(
-    name = Name,
+    structure_name = Name,
     uniqueid = C_ID,
-    inchi = InChICode,
-    smiles = SMILES,
-    biologicalsource = Organism,
+    structure_inchi = InChICode,
+    structure_smiles = SMILES,
+    organism_clean = Organism,
     reference_original = Reference
   ) %>%
   mutate(reference_split = ifelse(
@@ -60,7 +60,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "kna_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c("reference_original", "reference_split")
   )
 

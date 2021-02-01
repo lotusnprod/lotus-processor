@@ -27,9 +27,9 @@ dataOriginal <- read_delim(
     reference_doi = NA
   ) %>%
   select(
-    name = `?compound_name`,
-    inchi,
-    biologicalsource,
+    structure_name = `?compound_name`,
+    structure_inchi = inchi,
+    organism_clean = biologicalsource,
     reference_title = `?title`,
     reference_authors = `?authors`,
     reference_doi,
@@ -48,9 +48,9 @@ dataMatched <- vroom(
     reference_journal = NA,
   ) %>%
   select(
-    name,
-    inchi = InChI,
-    biologicalsource = TaxonName,
+    structure_name = name,
+    structure_inchi = InChI,
+    organism_clean = TaxonName,
     reference_title,
     reference_authors,
     reference_journal,
@@ -65,7 +65,8 @@ data_standard <-
   standardizing_original(
     data_selected = dataJoined,
     db = "nap_1",
-    structure_field = c("name", "inchi"),
+    structure_field = c("structure_name", "structure_inchi"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_doi",
       "reference_authors",

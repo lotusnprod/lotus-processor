@@ -1262,6 +1262,9 @@ pathDataInterimTablesOriginalOrganism <-
 pathDataInterimTablesOriginalOrganismFile <-
   file.path(pathDataInterimTablesOriginalOrganism, "original.tsv.gz")
 
+pathDataInterimTablesOriginalOrganismFull <-
+  file.path(pathDataInterimTablesOriginalOrganism, "full.tsv.gz")
+
 ## ref
 pathDataInterimTablesOriginalReference <-
   file.path(pathDataInterimTablesOriginal, "reference")

@@ -10,7 +10,7 @@ data class Dictionaries(
      */
     @Suppress("NOTHING_TO_INLINE")
     inline fun processRecord(record: Map<String, String>): String {
-        var newTerm = record["organismOriginal"]!!.replace(Regex("[. _]"), " ")
+        var newTerm = record["organismValue"]!!.replace(Regex("[. _]"), " ")
 
         // We process the term with the exclusion dictionary
 

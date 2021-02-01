@@ -1,4 +1,4 @@
-# this is very dirty for now, I'll be cleaning it later on
+## this is very dirty for now, I'll be cleaning it later on
 
 cat(
   "This script aims to establish filtering criteria to validate \n",
@@ -144,7 +144,8 @@ cat("... reference metadata \n")
 referenceMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesReferenceMetadata) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     referenceType,
     referenceValue,
@@ -285,9 +286,10 @@ table <- sampleAllONPDB %>%
   )
 
 globalSample <- bind_rows(table_old, table) %>%
+  mutate(organismValue = organismOriginal) %>%
   distinct(
     database,
-    organismOriginal,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -302,7 +304,10 @@ globalSample <- bind_rows(table_old, table) %>%
     comments
   ) %>%
   filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
+  left_join(., inhouseDbMinimal) %>%
+  select(-referenceCleanedTitle) %>%
+  distinct()
 
 cat("adding metadata \n")
 cat("... structures \n")
@@ -320,7 +325,7 @@ cat("joining manual validation results with documented pairs \n")
 realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
   distinct(
     database,
-    organismOriginal,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -526,7 +531,8 @@ openDb <- inhouseDbFull %>%
   )) %>%
   select(
     database,
-    organismOriginal,
+    organismType,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -582,7 +588,8 @@ dnpDb <- inhouseDbFull %>%
   )) %>%
   select(
     database,
-    organismOriginal,
+    organismType,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -664,9 +671,10 @@ validationSetFilled_2 <-
 
 validationSetFilled <-
   bind_rows(validationSetFilled_1, validationSetFilled_2) %>%
+  mutate(organismValue = organismOriginal) %>%
   distinct(
     database,
-    organismOriginal,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -682,13 +690,17 @@ validationSetFilled <-
     curator,
     validated,
     comments
-  )
+  ) %>%
+  left_join(., inhouseDbMinimal) %>%
+  select(-referenceCleanedTitle) %>%
+  distinct()
 
 realValidationSetFilled <-
   inner_join(validationSetFilled, openDbClean) %>%
   distinct(
     database,
-    organismOriginal,
+    organismType,
+    organismValue,
     structureType,
     structureValue,
     referenceType,

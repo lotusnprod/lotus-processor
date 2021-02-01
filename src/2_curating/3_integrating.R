@@ -53,7 +53,8 @@ cat("... cleaned organisms \n")
 organismTableFull <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     organismCleaned_id = organismCleanedId,
@@ -192,7 +193,8 @@ organismMinimal <- organismTableFull %>%
   filter(!is.na(organismCleaned)) %>%
   filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo,
@@ -232,7 +234,8 @@ referenceMinimal <- referenceTableFull %>%
   ) %>%
   filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     referenceType,
     referenceValue,
@@ -250,7 +253,8 @@ referenceMetadata <- referenceTableFull %>%
   ) %>%
   filter(!is.na(referenceCleanedTitle)) %>%
   distinct(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     referenceType,
     referenceValue,
@@ -296,7 +300,8 @@ inhouseDbMinimal <-
   ) %>%
   distinct(
     database,
-    organismOriginal,
+    organismType,
+    organismValue,
     structureType,
     structureValue,
     referenceType,
@@ -314,7 +319,8 @@ cat("outputting table with missing empty translations (for later on) ... \n")
 openDbMaximal <- originalTable %>%
   distinct(
     database,
-    organismOriginal,
+    organismType,
+    organismValue,
     referenceType,
     referenceValue,
     structureType,

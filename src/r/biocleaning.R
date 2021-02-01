@@ -241,9 +241,9 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   taxoEnhanced <- left_join(taxo, dfQuality)
 
   # computing sum of characters to match with GNFinder results
-  if (organismCol == "organismOriginal") {
+  if (organismCol == "organismValue") {
     names_quotes$nchar <-
-      nchar(x = names_quotes$`"organismOriginal"`)
+      nchar(x = names_quotes$`"organismValue"`)
   }
 
   if (organismCol == "organismInterim") {
@@ -284,7 +284,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   y_2 <- y_2 %>%
     bind_cols(., names) %>%
     select(switch(organismCol,
-      "organismOriginal" = "organismOriginal",
+      "organismValue" = "organismValue",
       "organismInterim" = "organismInterim"
     ), nchar, sum, value_min, value_max) %>%
     data.table()

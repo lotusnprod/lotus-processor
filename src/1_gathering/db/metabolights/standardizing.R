@@ -258,8 +258,9 @@ final_df <- left_join(ref_df, organism_structure_df) %>%
   distinct()
 
 data_selected <- final_df %>%
-  select(inchi,
-    biologicalsource = organism,
+  select(
+    structure_inchi = inchi,
+    organism_clean = organism,
     reference_pubmed = pubmed_ref
   ) %>%
   distinct() %>%
@@ -270,7 +271,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "met_1",
-    structure_field = c("name", "inchi"),
+    structure_field = "structure_inchi",
+    organism_field = "organism_clean",
     reference_field = "reference_pubmed"
   )
 

@@ -34,9 +34,9 @@ data_selected <- data_original %>%
   mutate(reference_authors = gsub("[0-9]\\) ", "", reference_2_01)) %>%
   select(
     uniqueid,
-    name,
-    smiles,
-    biologicalsource = biologicalsource_1,
+    structure_name = name,
+    structure_smiles = smiles,
+    organism_clean = biologicalsource_1,
     reference_authors,
     reference_pubmed = reference_1,
     reference_title = reference_2_02,
@@ -50,7 +50,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "bio_2",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_authors",
       "reference_journal",

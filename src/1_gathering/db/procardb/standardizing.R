@@ -28,10 +28,10 @@ data_selected <- data_original %>%
   ) %>%
   select(
     uniqueid = column_label,
-    name = `CAROTENOID NAME`,
-    biologicalsource,
+    structure_name = `CAROTENOID NAME`,
+    organism_clean = biologicalsource,
     # inchi = InChI #is an inchikey!!!
-    smiles = `CANONICAL SMILES`,
+    structure_smiles = `CANONICAL SMILES`,
     pubchem = `PUBCHEM ID`,
     reference
   )
@@ -77,7 +77,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "pro_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_authors",
       "reference_split",

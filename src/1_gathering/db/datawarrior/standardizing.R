@@ -21,20 +21,30 @@ data_original <- vroom(
 # manipulating
 data_manipulated <- data_original %>%
   cSplit("reference", sep = "; ") %>%
-  cSplit("remarks", sep = "; ", direction = "long") %>%
-  cSplit("remarks", sep = "<NL>", direction = "wide") %>%
+  cSplit("remarks",
+    sep = "; ",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
+  cSplit(
+    "remarks",
+    sep = "<NL>",
+    stripWhite = FALSE,
+    direction = "wide",
+    fixed = TRUE
+  ) %>%
   select(
-    name,
-    smiles = Smiles,
-    inchi = InChI,
+    structure_name = name,
+    structure_smiles = Smiles,
+    structure_inchi = InChI,
     biologicalsource = remarks_1,
     reference_authors = reference_1,
     reference_title = reference_2
   ) %>%
   mutate(
-    biologicalsource = gsub(
-      pattern = "Origin: ",
-      replacement = " ",
+    organism_clean = gsub(
+      pattern = "Origin:",
+      replacement = "",
       x = biologicalsource,
       fixed = TRUE
     )
@@ -62,7 +72,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "dat_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_title", "reference_isbn")
   )
 

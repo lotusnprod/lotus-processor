@@ -23,9 +23,9 @@ data_original <-
 data_selected <- data_original %>%
   select(
     uniqueid = Index,
-    name = Name,
-    smiles = SMILES,
-    biologicalsource = Origin,
+    structure_name = Name,
+    structure_smiles = SMILES,
+    organism_clean = Origin,
     pubchem = CID,
     reference = Reference
   )
@@ -105,6 +105,15 @@ data_manipulated <- data_selected %>%
       x = reference_original
     )
   ) %>%
+  mutate(n = str_count(organism_clean, "\\S+")) %>%
+  mutate(organism_dirty = ifelse(test = n > 1,
+    yes = organism_clean,
+    no = NA
+  )) %>%
+  mutate(organism_clean = ifelse(test = n == 1,
+    yes = organism_clean,
+    no = NA
+  )) %>%
   data.frame()
 
 # standardizing
@@ -112,7 +121,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "inf_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = c("organism_clean", "organism_dirty"),
     reference_field = c(
       "reference_authors",
       "reference_title",

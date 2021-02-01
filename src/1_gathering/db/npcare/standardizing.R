@@ -24,11 +24,11 @@ data_selected <- data_original %>%
   mutate(reference_pubmed = str_extract(string = ref_link, pattern = "[0-9]{6,9}")) %>%
   select(
     originalid = id,
-    name = compounds,
-    smiles = canonical_smiles,
+    structure_name = compounds,
+    structure_smiles = canonical_smiles,
     biologicalpart = extract,
     pubchem = pid,
-    biologicalsource = species,
+    organism_clean = species,
     reference_title = ref,
     reference_pubmed
   )
@@ -54,7 +54,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "npc_1",
-    structure_field = c("name", "smiles"),
+    structure_field = c("structure_name", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c("reference_title", "reference_pubmed")
   )
 

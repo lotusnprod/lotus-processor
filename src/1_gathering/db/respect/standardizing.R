@@ -129,10 +129,10 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   select(
-    name,
-    biologicalsource,
-    inchi,
-    smiles,
+    structure_name = name,
+    organism_clean = biologicalsource,
+    structure_inchi = inchi,
+    structure_smiles = smiles,
     reference_pubmed,
     reference_publishingDetails,
     reference_authors = reference_1_1,
@@ -145,7 +145,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "res_1",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = "structure_name",
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_pubmed",
       "reference_publishingDetails",

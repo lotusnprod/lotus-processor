@@ -22,10 +22,10 @@ data_selected <- data_original %>%
   mutate(biologicalsource = paste(genus, origin_species, sep = " ")) %>%
   select(
     npaid,
-    name = compound_names,
-    inchi = compound_inchi,
-    smiles = compound_smiles,
-    biologicalsource,
+    structure_name = compound_names,
+    structure_inchi = compound_inchi,
+    structure_smiles = compound_smiles,
+    organism_clean = biologicalsource,
     reference_authors = original_reference_author_list,
     reference_doi = original_reference_doi,
     reference_journal = original_journal_title,
@@ -38,7 +38,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "npa_2",
-    structure_field = c("name", "inchi", "smiles"),
+    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    organism_field = "organism_clean",
     reference_field = c(
       "reference_authors",
       "reference_doi",

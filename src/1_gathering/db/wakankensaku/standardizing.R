@@ -20,8 +20,8 @@ data_original <- vroom(
 # manipulating
 data_manipulated <- data_original %>%
   select(
-    name = Compound,
-    biologicalsource = `Plant resources`,
+    structure_name = Compound,
+    organism_dirty = `Plant resources`,
     reference_original = Literature
   ) %>%
   data.frame()
@@ -31,7 +31,8 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "wak_1",
-    structure_field = "name",
+    structure_field = "structure_name",
+    organism_field = "organism_dirty",
     reference_field = "reference_original"
   )
 
