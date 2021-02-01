@@ -107,7 +107,7 @@ if (mode == "test") {
       names_from = "organismType",
       values_from = "organismValue",
       names_prefix = "organismOriginal_"
-    ) %>% 
+    ) %>%
     pivot_wider(
       names_from = "structureType",
       values_from = "structureValue",
@@ -118,6 +118,7 @@ if (mode == "test") {
       values_from = "referenceValue",
       names_prefix = "referenceOriginal_"
     ) %>%
+    unnest() %>%
     mutate(
       referenceOriginal_authors = NA,
       referenceOriginal_external = NA,
@@ -125,7 +126,7 @@ if (mode == "test") {
       referenceOriginal_journal = NA
     ) %>%
     select(
-      database = db,
+      database,
       organismOriginal_clean,
       organismOriginal_dirty,
       structureOriginal_inchi,

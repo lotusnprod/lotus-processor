@@ -174,24 +174,30 @@ if (length != 0) {
     )
 }
 
-if (length != 0) {
-  dataCleanedOrganism <- dataCleanedOrganism %>%
-    distinct(organismValue,
-      organismCleaned,
-      taxonId,
-      .keep_all = TRUE
-    ) %>%
-    group_by(organismValue) %>%
-    add_count() %>%
-    ungroup() %>%
-    filter(!is.na(organismCleaned) |
-      !n > 1) %>%
-    select(-n) %>%
-    distinct(
-      organismValue,
-      organismCleaned
+if (length == 0) {
+  dataCleanedOrganism <-
+    bind_rows(
+      dataVerifiedOriginalOrganism %>% select(-organismType),
+      dataCleanedOriginalOrganism
     )
 }
+
+dataCleanedOrganism <- dataCleanedOrganism %>%
+  distinct(organismValue,
+    organismCleaned,
+    taxonId,
+    .keep_all = TRUE
+  ) %>%
+  group_by(organismValue) %>%
+  add_count() %>%
+  ungroup() %>%
+  filter(!is.na(organismCleaned) |
+    !n > 1) %>%
+  select(-n) %>%
+  distinct(
+    organismValue,
+    organismCleaned
+  )
 
 dataCleanedOrganism <- dataCleanedOrganism %>%
   left_join(organismTable_full, .) %>%

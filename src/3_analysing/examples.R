@@ -80,7 +80,8 @@ hitInchi_str <- maybeHit_str %>%
   distinct(structureValue)
 
 organismSearch <- openDb %>%
-  distinct(organismOriginal,
+  distinct(organismType,
+    organismValue,
     organismCleaned,
     .keep_all = TRUE
   ) %>%
@@ -98,7 +99,10 @@ maybeHit_org <- openDb %>%
   filter(organismCleaned == "Oryza sativa")
 
 hitNames_org <- maybeHit_org %>%
-  distinct(organismOriginal)
+  distinct(
+    organismType,
+    organismValue
+  )
 
 reference <- openDb %>%
   filter(!is.na(referenceCleanedDoi))
@@ -122,11 +126,17 @@ maybeHit_ref <- openDb %>%
   filter(referenceCleanedDoi == "10.1021/np0600595")
 
 hitNames_org <- maybeHit_org %>%
-  distinct(organismOriginal)
+  distinct(
+    organismType,
+    organismValue
+  )
 
 doubleTest <- openDb %>%
   filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
-  distinct(organismOriginal, organismCleaned) %>%
+  distinct(
+    organismType,
+    organismValue, organismCleaned
+  ) %>%
   group_by(organismCleaned) %>%
   count() %>%
   arrange(desc(n))
@@ -134,4 +144,7 @@ doubleTest <- openDb %>%
 pairTest <- openDb %>%
   filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
   filter(organismCleaned == "Crataegus monogyna") %>%
-  distinct(organismOriginal, structureValue, organismCleaned)
+  distinct(
+    organismType,
+    organismValue, structureValue, organismCleaned
+  )
