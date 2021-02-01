@@ -94,10 +94,15 @@ gnfinder_cleaning <- function(num, organismCol) {
     "organismInterim" = "organismInterim"
   )]), ]
 
-  gnfound <- data.frame(fromJSON(
+  if (fromJSON(
     txt = inpath_gnfinder_f,
     simplifyDataFrame = TRUE
-  ))
+  )$metadata$totalNames != 0) {
+    gnfound <- data.frame(fromJSON(
+      txt = inpath_gnfinder_f,
+      simplifyDataFrame = TRUE
+    ))
+  }
 
   if (nrow(gnfound) != 0) {
     data_bio_clean <- biocleaning(
@@ -106,8 +111,7 @@ gnfinder_cleaning <- function(num, organismCol) {
       names_quotes = data_bio_2,
       organismCol = organismCol
     )
-  }
-  else {
+  } else {
     data_bio_clean <- data_bio %>%
       mutate(
         nchar = NA,
