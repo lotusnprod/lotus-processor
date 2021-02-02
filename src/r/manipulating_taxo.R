@@ -155,6 +155,7 @@ manipulating_taxo <- function(dfsel, dic) {
       names_from = rank,
       values_from = name
     ) %>%
+    arrange(desc(level)) %>% ## because of Open Tree of Life taxonomy
     select(-level)
 
   # pivoting (long)
@@ -165,7 +166,13 @@ manipulating_taxo <- function(dfsel, dic) {
         names_to = "rank",
         values_to = "name",
         values_drop_na = TRUE
-      )
+      ) %>%
+      distinct(organismCleaned,
+        organismDbTaxo,
+        taxonId,
+        rank,
+        .keep_all = TRUE
+      ) ## because of Open Tree of Life taxonomy
   }
 
   # pivoting (wide)
@@ -181,7 +188,6 @@ manipulating_taxo <- function(dfsel, dic) {
         values_from = name
       ) %>%
       ungroup() %>%
-      unnest() %>%
       select_if(
         names(.) %in%
           c(
