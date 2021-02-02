@@ -1,3 +1,32 @@
+create table chemical_databases
+(
+	id INTEGER not null
+		constraint chemical_databases_pk
+			primary key autoincrement,
+	name TEXT
+);
+
+create unique index chemical_databases_id_uindex
+	on chemical_databases (id);
+
+create table chemical_information
+(
+	id INTEGER not null
+		constraint chemical_information_pk
+			primary key autoincrement,
+	cleanedStructureId INTEGER
+		references structures_cleaned,
+	chemicalDatabaseId INTEGER
+		references chemical_databases,
+	chemicalId TEXT,
+	ranks TEXT,
+	taxonomy TEXT,
+	rank TEXT
+);
+
+create unique index chemical_information_id_uindex
+	on chemical_information (id);
+	
 create table curation_states
 (
 	id INTEGER not null
@@ -119,9 +148,11 @@ create table structures_cleaned
 	traditionalName TEXT,
 	iupacName TEXT,
 	inchikey TEXT,
-	shortInchikey TEXT,
+	inchikey2D TEXT,
 	inchi TEXT,
+	inchi2D TEXT,
 	smiles TEXT,
+	smiles2D TEXT,
 	stereocentersTotal INTEGER,
 	stereocentersUnspecified INTEGER,
 	molecularFormula TEXT,
