@@ -59,7 +59,8 @@ organismTableFull <- read_delim(
   trim_ws = TRUE
 ) %>%
   select(
-    organismOriginal,
+    organismType,
+    organismValue,
     organismDetected,
     organismCleaned,
     organismCleaned_dbTaxo = organismDbTaxo,
@@ -100,8 +101,10 @@ cleanedStructureTableFull <- read_delim(
     structureTranslated,
     structureCleanedSmiles = smilesSanitized,
     structureCleanedInchi = inchiSanitized,
-    structureCleanedInchikey3D = inchikeySanitized,
+    structureCleanedInchikey = inchikeySanitized,
     structureCleaned_inchikey2D = shortikSanitized,
+    structureCleaned_inchi2D = inchiSanitizedFlat,
+    structureCleaned_smiles2D = smilesSanitizedFlat,
     structureCleaned_molecularFormula = formulaSanitized,
     structureCleaned_exactMass = exactmassSanitized,
     structureCleaned_xlogp = xlogpSanitized,
@@ -220,14 +223,3 @@ test_that(
 #   fileEncoding = "UTF-8"
 # )
 
-
-test_that(desc = "taxon", {
-  expect_success(expect_taxon(
-    organismTableFull,
-    c("Iris"),
-    c("Plantae", "Viridiplantae", NA)
-  ))
-  expect_failure(expect_length(1, 2), "has length 1, not length 2.")
-  expect_success(expect_length(1:10, 10))
-  expect_success(expect_length(letters[1:5], 5))
-})
