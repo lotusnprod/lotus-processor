@@ -119,8 +119,10 @@ structureMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
   distinct(
     structureCleanedSmiles,
+    structureCleaned_smiles2D,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleaned_inchi2D,
+    structureCleanedInchikey,
     structureCleaned_inchikey2D,
     structureCleaned_stereocenters_total,
     structureCleaned_stereocenters_unspecified,
@@ -213,7 +215,7 @@ table_old <- sampleAllONPDB_old %>%
     referenceValue,
     organismCleaned = organismLowestTaxon,
     structureCleanedInchi = inchiSanitized,
-    structureCleanedInchikey3D = inchikeySanitized,
+    structureCleanedInchikey = inchikeySanitized,
     structureCleanedSmiles = smilesSanitized,
     referenceCleanedDoi,
     referenceCleanedTitle,
@@ -275,7 +277,7 @@ table <- sampleAllONPDB %>%
     referenceValue,
     organismCleaned,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey = structureCleanedInchikey3D,
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -297,7 +299,7 @@ globalSample <- bind_rows(table_old, table) %>%
     organismCleaned,
     structureCleanedInchi,
     structureCleanedSmiles,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     referenceCleanedDoi,
     curator,
     validated,
@@ -332,7 +334,7 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
     referenceValue,
     organismCleaned,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -515,17 +517,19 @@ openDb <- inhouseDbFull %>%
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
+    structureCleaned_inchi2D,
+    structureCleaned_smiles2D,
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  mutate(structureCleanedInchikey2D = substring(
-    text = structureCleanedInchikey3D,
+  mutate(structureCleaned_inchikey2D = substring(
+    text = structureCleanedInchikey,
     first = 1,
     last = 14
   )) %>%
@@ -543,10 +547,12 @@ openDb <- inhouseDbFull %>%
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchikey3D,
-    structureCleanedInchikey2D,
+    structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
+    structureCleaned_inchikey2D,
+    structureCleaned_inchi2D,
+    structureCleaned_smiles2D,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,
@@ -568,9 +574,11 @@ dnpDb <- inhouseDbFull %>%
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
+    structureCleaned_inchi2D,
+    structureCleaned_smiles2D,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,
@@ -581,8 +589,8 @@ dnpDb <- inhouseDbFull %>%
     referenceCleanedTitle,
     .keep_all = TRUE
   ) %>%
-  mutate(structureCleanedInchikey2D = substring(
-    text = structureCleanedInchikey3D,
+  mutate(structureCleaned_inchikey2D = substring(
+    text = structureCleanedInchikey,
     first = 1,
     last = 14
   )) %>%
@@ -600,10 +608,12 @@ dnpDb <- inhouseDbFull %>%
     # organismCleaned_dbTaxoTaxonIds,
     organismCleaned_dbTaxoTaxonRanks,
     organismCleaned_dbTaxoTaxonomy,
-    structureCleanedInchikey3D,
-    structureCleanedInchikey2D,
+    structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
+    structureCleaned_inchikey2D,
+    structureCleaned_inchi2D,
+    structureCleaned_smiles2D,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,
@@ -672,6 +682,10 @@ validationSetFilled_2 <-
 validationSetFilled <-
   bind_rows(validationSetFilled_1, validationSetFilled_2) %>%
   mutate(organismValue = organismOriginal) %>%
+  select(
+    structureCleanedInchikey = structureCleanedInchikey3D,
+    everything()
+  ) %>%
   distinct(
     database,
     organismValue,
@@ -681,7 +695,7 @@ validationSetFilled <-
     referenceValue,
     organismCleaned,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -707,7 +721,7 @@ realValidationSetFilled <-
     referenceValue,
     organismCleaned,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles,
     referenceCleanedDoi,
     referenceCleanedPmcid,

@@ -30,7 +30,7 @@ if (mode != "test") {
     distinct(
       database,
       organismCleaned,
-      structureCleanedInchikey3D,
+      structureCleanedInchikey,
       referenceCleanedTitle,
       .keep_all = TRUE
     ) %>%
@@ -47,8 +47,8 @@ if (mode != "test") {
     distinct(
       database,
       organismCleaned,
-      structureCleanedInchikey3D,
-      structureCleanedInchikey2D,
+      structureCleanedInchikey,
+      structureCleaned_inchikey2D,
       .keep_all = TRUE
     ) %>%
     tibble()
@@ -114,7 +114,7 @@ if (mode != "test") {
     distinct(
       structureCleanedSmiles,
       structureCleanedInchi,
-      structureCleanedInchikey3D,
+      structureCleanedInchikey,
       structureCleaned_inchikey2D,
       structureCleaned_stereocenters_unspecified
     ) %>%
@@ -127,7 +127,7 @@ if (mode != "test") {
     select(
       structureCleanedSmiles,
       structureCleanedInchi,
-      structureCleanedInchikey3D,
+      structureCleanedInchikey = structureCleanedInchikey3D,
       structureCleaned_classyfire_1kingdom = structureCleaned_1kingdom,
       structureCleaned_classyfire_2superclass = structureCleaned_2superclass,
       structureCleaned_classyfire_3class = structureCleaned_3class,
@@ -189,7 +189,7 @@ if (mode != "test") {
     prepare_upset(
       table = inhouseDb,
       group = "database",
-      variable = "structureCleanedInchikey2D"
+      variable = "structureCleaned_inchikey2D"
     )
 
   upset(
@@ -251,7 +251,7 @@ if (mode != "test") {
     prepare_upset(
       table = inhouseDb,
       group = "database",
-      variable = c("structureCleanedInchikey2D", "organismCleaned")
+      variable = c("structureCleaned_inchikey2D", "organismCleaned")
     )
 
   upset(
@@ -294,7 +294,7 @@ if (mode != "test") {
     distinct(
       database,
       organismCleaned,
-      structureCleanedInchikey2D,
+      structureCleaned_inchikey2D,
       referenceCleanedTitle,
       .keep_all = TRUE
     )
@@ -303,7 +303,7 @@ if (mode != "test") {
     distinct(
       database,
       organismCleaned,
-      structureCleanedInchikey2D,
+      structureCleaned_inchikey2D,
       referenceCleanedTitle,
       .keep_all = TRUE
     )
@@ -311,14 +311,14 @@ if (mode != "test") {
   chemo <- inhouseDbMeta %>%
     filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
     distinct(
-      structureCleanedInchikey2D,
+      structureCleaned_inchikey2D,
       structureCleaned_classyfire_2superclass
     )
 
   chemo3D <- inhouseDbMeta %>%
     filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
     distinct(
-      structureCleanedInchikey3D,
+      structureCleanedInchikey,
       structureCleaned_classyfire_2superclass
     )
 
@@ -337,25 +337,25 @@ if (mode != "test") {
       height = 9
     )
     inhouseDb_most_structures <- inhouseDbMeta %>%
-      filter(!is.na(structureCleanedInchikey2D)) %>%
-      count(structureCleanedInchikey2D) %>%
+      filter(!is.na(structureCleaned_inchikey2D)) %>%
+      count(structureCleaned_inchikey2D) %>%
       arrange(desc(n))
     mostinchi <- as.character(inhouseDb_most_structures[1, 1])
     inhouseDb_most_structures_2plot <- inhouseDbMeta %>%
-      filter(structureCleanedInchikey2D == mostinchi) %>%
+      filter(structureCleaned_inchikey2D == mostinchi) %>%
       filter(!is.na(organismCleaned_dbTaxo_1kingdom))
     inhouseDb_most_structures_2plot_wide <-
       prepare_upset_complex(
         table = inhouseDb_most_structures_2plot,
         group = c("database", "organismCleaned"),
         ## order is important
-        variable = "structureCleanedInchikey2D"
+        variable = "structureCleaned_inchikey2D"
       ) %>%
       left_join(
         .,
         bio
       ) %>%
-      distinct(structureCleanedInchikey2D,
+      distinct(structureCleaned_inchikey2D,
         organismCleaned,
         .keep_all = TRUE
       )
@@ -365,7 +365,7 @@ if (mode != "test") {
       arrange(desc(n))
     dbnumostinchi <- as.numeric(nrow(
       inhouseDbMeta %>%
-        filter(structureCleanedInchikey2D == mostinchi) %>%
+        filter(structureCleaned_inchikey2D == mostinchi) %>%
         distinct(database)
     ))
     upset(
@@ -436,20 +436,20 @@ if (mode != "test") {
     mostinchi2 <- as.character(inhouseDb_most_structures[2, 1])
     inhouseDb_most_structures_2plot <-
       inhouseDbMeta %>%
-      filter(structureCleanedInchikey2D == mostinchi2) %>%
+      filter(structureCleaned_inchikey2D == mostinchi2) %>%
       filter(!is.na(organismCleaned_dbTaxo_1kingdom))
     inhouseDb_most_structures_2plot_wide <-
       prepare_upset_complex(
         table = inhouseDb_most_structures_2plot,
         group = c("database", "organismCleaned"),
         ## order is important
-        variable = "structureCleanedInchikey2D"
+        variable = "structureCleaned_inchikey2D"
       ) %>%
       left_join(
         .,
         bio
       ) %>%
-      distinct(structureCleanedInchikey2D,
+      distinct(structureCleaned_inchikey2D,
         organismCleaned,
         .keep_all = TRUE
       )
@@ -459,7 +459,7 @@ if (mode != "test") {
       arrange(desc(n))
     dbnumostinchi <- as.numeric(nrow(
       inhouseDbMeta %>%
-        filter(structureCleanedInchikey2D == mostinchi2) %>%
+        filter(structureCleaned_inchikey2D == mostinchi2) %>%
         distinct(database)
     ))
     upset(
@@ -622,10 +622,10 @@ if (mode != "test") {
     prepare_upset(
       table = inhouseDb_kingdoms,
       group = "organismCleaned_dbTaxo_1kingdom",
-      variable = "structureCleanedInchikey2D"
+      variable = "structureCleaned_inchikey2D"
     ) %>%
     left_join(., chemo) %>%
-    distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+    distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
   mostsuperclass <- inhouseDb_kingdoms_wide %>%
     count(structureCleaned_classyfire_2superclass) %>%
@@ -832,10 +832,10 @@ if (mode != "test") {
       prepare_upset(
         table = inhouseDb_phyla,
         group = "organismCleaned_dbTaxo_2phylum",
-        variable = "structureCleanedInchikey2D"
+        variable = "structureCleaned_inchikey2D"
       ) %>%
       left_join(., chemo) %>%
-      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+      distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
     mostsuperclass2 <- inhouseDb_phyla_wide %>%
       count(structureCleaned_classyfire_2superclass) %>%
@@ -1043,10 +1043,10 @@ if (mode != "test") {
       prepare_upset(
         table = inhouseDb_classes,
         group = "organismCleaned_dbTaxo_3class",
-        variable = "structureCleanedInchikey2D"
+        variable = "structureCleaned_inchikey2D"
       ) %>%
       left_join(., chemo) %>%
-      distinct(structureCleanedInchikey2D, .keep_all = TRUE)
+      distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
     mostsuperclass3 <- inhouseDb_classes_wide %>%
       count(structureCleaned_classyfire_2superclass) %>%
@@ -1264,7 +1264,7 @@ if (mode != "test") {
         cleaned_structure = ifelse(
           test = !is.na(structureCleanedSmiles) |
             !is.na(structureCleanedInchi) |
-            !is.na(structureCleanedInchikey3D),
+            !is.na(structureCleanedInchikey),
           yes = "structure_Yes",
           no = "structure_No"
         ),
@@ -1278,7 +1278,7 @@ if (mode != "test") {
         referenceType,
         referenceValue,
         organismCleaned,
-        structureCleanedInchikey3D,
+        structureCleanedInchikey,
         referenceCleanedTitle,
         cleaned_structure,
         cleaned_organism,
@@ -1872,21 +1872,21 @@ if (mode != "test") {
       filter(organismCleaned_dbTaxo_5family == "Gentianaceae") %>%
       filter(structureCleaned_classyfire_5directParent == "Xanthones") %>%
       filter(organismCleaned_dbTaxo_7species %in% top_organism_gentianaceae) %>%
-      filter(!is.na(structureCleanedInchikey2D)) %>%
-      group_by(structureCleanedInchikey2D) %>%
+      filter(!is.na(structureCleaned_inchikey2D)) %>%
+      group_by(structureCleaned_inchikey2D) %>%
       add_count() %>%
       ungroup() %>%
       arrange(desc(n)) %>%
-      distinct(structureCleanedInchikey2D) %>%
+      distinct(structureCleaned_inchikey2D) %>%
       head(144)
     top_chemo_gentianaceae <-
-      top_chemo_gentianaceae$structureCleanedInchikey2D
+      top_chemo_gentianaceae$structureCleaned_inchikey2D
     chord_gentianaceae <- draw_chord(
       data = openDbMeta,
       biological_level = "organismCleaned_dbTaxo_7species",
-      chemical_level = "structureCleanedInchikey2D",
+      chemical_level = "structureCleaned_inchikey2D",
       chemical_filter_value = top_chemo_gentianaceae,
-      chemical_filter_level = "structureCleanedInchikey2D",
+      chemical_filter_level = "structureCleaned_inchikey2D",
       biological_filter_value = top_organism_gentianaceae,
       biological_filter_level = "organismCleaned_dbTaxo_7species",
       palette = paired_palette_big

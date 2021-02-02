@@ -85,7 +85,9 @@ cleanedStructureTableFull <-
     structureTranslated,
     structureCleanedSmiles = smilesSanitized,
     structureCleanedInchi = inchiSanitized,
-    structureCleanedInchikey3D = inchikeySanitized,
+    structureCleanedInchikey = inchikeySanitized,
+    structureCleaned_smiles2D = smilesSanitizedFlat,
+    structureCleaned_inchi2D = inchiSanitizedFlat,
     structureCleaned_inchikey2D = shortikSanitized,
     structureCleaned_validatorLog = validatorLog,
     structureCleaned_molecularFormula = formulaSanitized,
@@ -128,13 +130,13 @@ cat("... translated structures with cleaned ones ... \n")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated) %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
   distinct(
     structureType,
     structureValue,
     structureCleanedSmiles,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     .keep_all = TRUE
   )
 
@@ -147,7 +149,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
       structureValue,
       structureCleanedSmiles,
       structureCleanedInchi,
-      structureCleanedInchikey3D,
+      structureCleanedInchikey,
       .keep_all = TRUE
     )
 }
@@ -170,20 +172,20 @@ rm(
 cat("splitting metadata from minimal columns ... \n")
 cat("... structures \n")
 structureMinimal <- structureFull %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
   distinct(
     structureType,
     structureValue,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles
   )
 
 structureMetadata <- structureFull %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
   distinct(
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles,
     .keep_all = TRUE
   )
@@ -285,7 +287,7 @@ rm(organismTableFull)
 cat("joining minimal table ... \n")
 inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
-  filter(!is.na(structureCleanedInchikey3D)) %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
   left_join(., organismMinimal) %>%
   filter(!is.na(organismCleaned)) %>%
   left_join(., referenceMinimal %>%
@@ -307,7 +309,7 @@ inhouseDbMinimal <-
     referenceType,
     referenceValue,
     organismCleaned,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
     # structureCleanedName,
@@ -345,7 +347,7 @@ structureNA <- anti_join(
   )
 
 structureNA <- left_join(structureNA, structureFull) %>%
-  filter(is.na(structureCleanedInchikey3D)) %>%
+  filter(is.na(structureCleanedInchikey)) %>%
   distinct(structureType,
     structureValue,
     .keep_all = TRUE
@@ -354,7 +356,7 @@ structureNA <- left_join(structureNA, structureFull) %>%
     structureType,
     structureValue,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     structureCleanedSmiles,
     # structureCleanedName,
     # structureCleanedNameIupac
