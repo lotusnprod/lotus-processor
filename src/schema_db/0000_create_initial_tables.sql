@@ -41,6 +41,57 @@ create unique index curation_states_id_uindex
 create unique index curation_states_name_uindex
 	on curation_states (name);
 
+create table data_processed
+(
+	id INTEGER not null
+		constraint processed_data_pk
+			primary key autoincrement,
+	structureCleanedId INTEGER
+		references structures_cleaned,
+	organismCleanedId INTEGER
+		references organisms_cleaned,
+	referenceCleanedId INTEGER
+		references references_cleaned,
+	curationStateId INTEGER
+		references curation_states
+);
+
+create unique index data_processed_id_uindex
+	on data_processed (id);
+
+create table data_source
+(
+	id INTEGER not null
+		constraint source_data_pk
+			primary key autoincrement,
+	databaseSourceId INTEGER
+		references databases_source,
+	organismSourceId INTEGER
+		references organisms_source,
+	structureSourceId INTEGER
+		references structures_source,
+	referenceSourceId INTEGER,
+	constraint data_source_references_source_id_id_fk
+		foreign key (id, referenceSourceId) references references_source (id, id)
+);
+
+create unique index data_source_id_uindex
+	on data_source (id);
+
+create table data_processed__data_source
+(
+	id INTEGER not null
+		constraint processed_data__source_data_pk
+			primary key autoincrement,
+	dataSourceId INTEGER
+		references data_source,
+	dataProcessedId INTEGER
+		references data_processed
+);
+
+create unique index data_processed__data_source_id_uindex
+	on data_processed__data_source (id);
+	
 create table databases_types
 (
 	id INTEGER not null
@@ -58,13 +109,12 @@ create table databases_source
 	typeId INTEGER
 		references databases_types
 );
-
-create unique index source_database_id_uindex
+	
+create unique index databases_source_id_uindex
 	on databases_source (id);
 
-create unique index source_database_name_uindex
+create unique index databases_source_name_uindex
 	on databases_source (name);
-
 
 create table organisms_cleaned
 (
@@ -74,7 +124,7 @@ create table organisms_cleaned
 	name TEXT
 );
 
-create unique index cleaned_organisms_id_uindex
+create unique index organisms_cleaned_id_uindex
 	on organisms_cleaned (id);
 
 create table organisms_synonyms
@@ -87,7 +137,7 @@ create table organisms_synonyms
 		references organisms_cleaned
 );
 
-create unique index organismSynonym_id_uindex
+create unique index organisms_synonyms_id_uindex
 	on organisms_synonyms (id);
 
 create table organisms_types
@@ -119,7 +169,7 @@ create table references_cleaned
 	title TEXT
 );
 
-create unique index cleaned_references_id_uindex
+create unique index references_cleaned_id_uindex
 	on references_cleaned (id);
 
 create table references_types
@@ -160,25 +210,8 @@ create table structures_cleaned
 	xlogp REAL
 );
 
-create table data_processed
-(
-	id INTEGER not null
-		constraint processed_data_pk
-			primary key autoincrement,
-	structureCleanedId INTEGER
-		references structures_cleaned,
-	organismCleanedId INTEGER
-		references organisms_cleaned,
-	referenceCleanedId INTEGER
-		references references_cleaned,
-	curationStateId INTEGER
-		references curation_states
-);
 
-create unique index processed_data_id_uindex
-	on data_processed (id);
-
-create unique index cleaned_compounds_id_uindex
+create unique index structures_cleaned_id_uindex
 	on structures_cleaned (id);
 
 create table structures_types
@@ -199,39 +232,33 @@ create table structures_source
 		references structures_types
 );
 
-create table data_source
+create table references_databases
 (
 	id INTEGER not null
-		constraint source_data_pk
+		constraint references_databases_pk
 			primary key autoincrement,
-	databaseSourceId INTEGER
-		references databases_source,
-	organismSourceId INTEGER
-		references organisms_source,
-	structureSourceId INTEGER
-		references structures_source,
-	referenceSourceId INTEGER,
-	constraint data_source_references_source_id_id_fk
-		foreign key (id, referenceSourceId) references references_source (id, id)
+	name TEXT
 );
 
-create table data_processed__data_source
+create unique index references_databases_id_uindex
+	on references_databases (id);
+
+create table references_information
 (
 	id INTEGER not null
-		constraint processed_data__source_data_pk
+		constraint references_information_pk
 			primary key autoincrement,
-	dataSourceId INTEGER
-		references data_source,
-	dataProcessedId INTEGER
-		references data_processed
+	cleanedReferenceId INTEGER
+		references references_cleaned,
+	referenceDatabaseId INTEGER
+		references references_databases,
+	referenceId TEXT,
+	data TEXT
 );
 
-create unique index processed_data__source_data_id_uindex
-	on data_processed__data_source (id);
-
-create unique index source_data_id_uindex
-	on data_source (id);
-
+create unique index references_information_id_uindex
+	on references_information (id);
+	
 create table taxonomic_databases
 (
 	id INTEGER not null

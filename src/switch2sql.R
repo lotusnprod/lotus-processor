@@ -15,6 +15,9 @@ source("r/vroom_safe.R")
 source("r/sqlFromFile.R")
 source("r/dbSendQueries.R")
 
+## chemical support tables to discuss and do
+## references support tables to discuss and do
+
 dbTypes <- read_delim(
   file = "../docs/dataset.tsv",
   delim = "\t"
@@ -317,21 +320,21 @@ structures_cleaned <- structureOld %>%
   distinct(
     structureCleanedSmiles,
     structureCleanedInchi,
-    structureCleanedInchikey3D
+    structureCleanedInchikey
   ) %>%
   mutate(id = row_number()) %>%
   select(
     id,
     structureCleanedSmiles,
     structureCleanedInchi,
-    structureCleanedInchikey3D
+    structureCleanedInchikey
   ) %>%
   left_join(
     .,
     structureOld %>% distinct(
       structureCleanedSmiles,
       structureCleanedInchi,
-      structureCleanedInchikey3D,
+      structureCleanedInchikey,
       .keep_all = TRUE
     )
   ) %>%
@@ -340,10 +343,12 @@ structures_cleaned <- structureOld %>%
     id,
     traditionalName = structureCleaned_nameTraditional,
     iupacName = structureCleaned_nameIupac,
-    inchikey = structureCleanedInchikey3D,
-    shortInchikey = structureCleaned_inchikey2D,
+    inchikey = structureCleanedInchikey,
+    inchikey2D = structureCleaned_inchikey2D,
     inchi = structureCleanedInchi,
+    inchi2D = structureCleaned_inchi2D,
     smiles = structureCleanedSmiles,
+    smiles2D = structureCleaned_smiles2D,
     stereocentersTotal = structureCleaned_stereocenters_total,
     stereocentersUnspecified = structureCleaned_stereocenters_unspecified,
     molecularFormula = structureCleaned_molecularFormula,
@@ -368,7 +373,7 @@ inhouseDbMinimal_complemented <- inhouseDbMinimal %>%
     structureValue,
     structureCleanedSmiles,
     structureCleanedInchi,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     organismCleaned,
     referenceCleanedTitle,
     .keep_all = TRUE
@@ -399,7 +404,7 @@ data_processed_temp <- inhouseDbMinimal_complemented %>%
     by = c(
       "structureCleanedSmiles" = "smiles",
       "structureCleanedInchi" = "inchi",
-      "structureCleanedInchikey3D" = "inchikey"
+      "structureCleanedInchikey" = "inchikey"
     )
   ) %>%
   select(
@@ -463,7 +468,7 @@ data_processed__data_source <- data_processed_temp %>%
   select(id, dataSourceId, dataProcessedId)
 
 data_processed <- data_processed %>%
-  select(
+  distinct(
     id,
     structureCleanedId,
     organismCleanedId,
@@ -481,7 +486,7 @@ data_source <- data_source %>%
   )
 
 references_cleaned <- references_cleaned %>%
-  select(
+  distinct(
     id,
     doi,
     pmcid,
@@ -527,6 +532,10 @@ dbSendQueries(
 
 dbListObjects(db)
 
+dbListFields(db, "chemical_databases")
+# colnames(chemical_databases) ## TO DO
+dbListFields(db, "chemical_information")
+# colnames(chemical_information) ## TO DO
 dbListFields(db, "curation_states")
 colnames(curation_states)
 dbListFields(db, "data_processed")
@@ -548,6 +557,10 @@ colnames(organisms_synonyms)
 dbListFields(db, "organisms_types")
 colnames(organisms_types)
 dbListFields(db, "references_cleaned")
+dbListFields(db, "references_databases")
+# colnames(references_databases) ## TO DO
+dbListFields(db, "references_information")
+# colnames(references_information) ## TO DO
 colnames(references_cleaned)
 dbListFields(db, "references_source")
 colnames(references_source)
@@ -563,6 +576,22 @@ dbListFields(db, "taxonomic_databases")
 colnames(taxonomic_databases)
 dbListFields(db, "taxonomic_information")
 colnames(taxonomic_information)
+
+# dbWriteTable(
+#   conn = db,
+#   name = "chemical_databases",
+#   value = chemical_databases,
+#   row.names = FALSE,
+#   append = TRUE
+# )
+
+# dbWriteTable(
+#   conn = db,
+#   name = "chemical_information",
+#   value = chemical_information,
+#   row.names = FALSE,
+#   append = TRUE
+# )
 
 dbWriteTable(
   conn = db,
@@ -652,6 +681,22 @@ dbWriteTable(
   append = TRUE
 )
 
+# dbWriteTable(
+#   conn = db,
+#   name = "references_databases",
+#   value = references_databases,
+#   row.names = FALSE,
+#   append = TRUE
+# )
+
+# dbWriteTable(
+#   conn = db,
+#   name = "references_information",
+#   value = references_information,
+#   row.names = FALSE,
+#   append = TRUE
+# )
+
 dbWriteTable(
   conn = db,
   name = "references_source",
@@ -709,3 +754,7 @@ dbWriteTable(
 )
 
 dbDisconnect(db)
+
+end <- Sys.time()
+
+cat("Script finished in", format(end - start), "\n")
