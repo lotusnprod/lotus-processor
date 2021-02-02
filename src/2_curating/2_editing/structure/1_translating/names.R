@@ -7,6 +7,7 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
+library(Hmisc)
 library(tidyverse)
 library(pbmcapply)
 
@@ -25,7 +26,7 @@ if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
 }
 
-# to avoid errors if dataframe not empty at the begining but filled with NA
+## to avoid errors if dataframe not empty at the begining but filled with NA
 colnames(dataOriginal)[1] <- "structureOriginal_nominal"
 
 cat("preparing names \n")
@@ -96,14 +97,138 @@ vroom_write_safe(
   path = pathDataInterimTablesTranslatedStructureNominal_opsin
 )
 
-dataForCactus <- dataInterim %>%
+dataForCTS <- dataInterim %>%
   filter(is.na(inchiNominal_opsin)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
   select(structureOriginal_nominal, nameCleaned)
 
+cat("translating structures with CTS (slow but better results) \n")
+if (nrow(dataForCTS) == 0) {
+  dataForCTS[1, "nameCleaned"] <- NA
+}
+
+dataTranslatedNominal_cts <- dataForCTS %>%
+  select(-structureOriginal_nominal) %>%
+  mutate(inchiNominal_cts = invisible(
+    pbmclapply(
+      FUN = name2inchi_cts,
+      X = seq_len(nrow(dataForCTS)),
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
+  )) %>%
+  mutate(inchiNominal_cts = gsub(
+    pattern = "^http.*",
+    replacement = NA,
+    x = inchiNominal_cts
+  )) %>%
+  mutate(inchiNominal_cts = gsub(
+    pattern = "^NCI.*",
+    replacement = NA,
+    x = inchiNominal_cts
+  )) %>%
+  mutate(inchiNominal_cts = y_as_na(
+    x = inchiNominal_cts,
+    y = "NA"
+  ))
+
+dataInterim_2 <- left_join(
+  dataInterim,
+  dataTranslatedNominal_cts
+)
+
+cat("exporting interim ... \n")
+cat(
+  pathDataInterimTablesTranslatedStructureNominal_cts,
+  "\n"
+)
+vroom_write_safe(
+  x = dataInterim_2,
+  path = pathDataInterimTablesTranslatedStructureNominal_cts
+)
+
+# dataInterim_2 <-
+#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cts)
+
+dataInterim_2 <- dataInterim_2 %>%
+  mutate(nameCleaned_capitalized = capitalize(nameCleaned))
+
+dataForCTS_2 <- dataInterim_2 %>%
+  filter(is.na(inchiNominal_cts)) %>%
+  filter(nameCleaned_capitalized != nameCleaned)
+
+cat("translating structures with CTS again (capitalized) \n")
+if (nrow(dataForCTS_2) == 0) {
+  dataForCTS_2[1, "nameCleaned_capitalized"] <- NA
+}
+
+dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
+  select(-structureOriginal_nominal) %>%
+  mutate(inchiNominal_cts_2 = invisible(
+    pbmclapply(
+      FUN = name2inchi_cts_capitalized,
+      X = seq_len(nrow(dataForCTS_2)),
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
+  )) %>%
+  mutate(inchiNominal_cts_2 = gsub(
+    pattern = "^http.*",
+    replacement = NA,
+    x = inchiNominal_cts_2
+  )) %>%
+  mutate(inchiNominal_cts_2 = gsub(
+    pattern = "^NCI.*",
+    replacement = NA,
+    x = inchiNominal_cts_2
+  )) %>%
+  mutate(inchiNominal_cts_2 = y_as_na(
+    x = inchiNominal_cts_2,
+    y = "NA"
+  ))
+
+dataInterim_3 <- left_join(
+  dataInterim_2,
+  dataTranslatedNominal_cts_2
+)
+
+cat("exporting interim ... \n")
+cat(
+  pathDataInterimTablesTranslatedStructureNominal_cts_2,
+  "\n"
+)
+vroom_write_safe(
+  x = dataInterim_3,
+  path = pathDataInterimTablesTranslatedStructureNominal_cts_2
+)
+
+# dataInterim_3 <-
+#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cts_2)
+
+## cactus is the lowest quality but allows retrieving important structures also
 ## some incorrect spotted...
 ### see https://cactus.nci.nih.gov/chemical/structure?identifier=terpinen-4-ol&representation=smiles
 ### or https://cactus.nci.nih.gov/chemical/structure?identifier=PONGAMOL&representation=smiles
+### or https://cactus.nci.nih.gov/chemical/structure/Combretastatin%20b-2%20/smiles
+
+dataForCactus <- dataInterim_3 %>%
+  filter(is.na(inchiNominal_opsin)) %>%
+  filter(is.na(inchiNominal_cts)) %>%
+  filter(is.na(inchiNominal_cts_2))
+
+if (nrow(dataForCactus) == 0) {
+  dataForCactus[1, "nameCleaned"] <- NA
+}
 
 cat("... with cactus (fast) \n")
 dataTranslatedNominal_cactus <- dataForCactus %>%
@@ -141,67 +266,10 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     x = inchiNominal_cactus
   ))
 
-dataInterim_2 <- left_join(
-  dataInterim,
-  dataTranslatedNominal_cactus
-)
-
-cat("exporting interim ... \n")
-cat(
-  pathDataInterimTablesTranslatedStructureNominal_cactus,
-  "\n"
-)
-vroom_write_safe(
-  x = dataInterim_2,
-  path = pathDataInterimTablesTranslatedStructureNominal_cactus
-)
-
-# dataInterim_2 <-
-#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cactus)
-
-dataForCTS <- dataInterim_2 %>%
-  filter(is.na(inchiNominal_opsin) & is.na(inchiNominal_cactus)) %>%
-  distinct(nameCleaned, .keep_all = TRUE) %>%
-  select(structureOriginal_nominal, nameCleaned)
-
-cat("translating structures with CTS (slow but more results) \n")
-if (nrow(dataForCTS) == 0) {
-  dataForCTS[1, "nameCleaned"] <- NA
-}
-
-dataTranslatedNominal_cts <- dataForCTS %>%
-  select(-structureOriginal_nominal) %>%
-  mutate(inchiNominal_cts = invisible(
-    pbmclapply(
-      FUN = name2inchi_cts,
-      X = seq_len(nrow(dataForCTS)),
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
-      mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
-    )
-  )) %>%
-  mutate(inchiNominal_cts = gsub(
-    pattern = "^http.*",
-    replacement = NA,
-    x = inchiNominal_cts
-  )) %>%
-  mutate(inchiNominal_cts = gsub(
-    pattern = "^NCI.*",
-    replacement = NA,
-    x = inchiNominal_cts
-  )) %>%
-  mutate(inchiNominal_cts = y_as_na(
-    x = inchiNominal_cts,
-    y = "NA"
-  ))
 
 dataTranslated <- left_join(
-  dataInterim_2,
-  dataTranslatedNominal_cts
+  dataInterim_3,
+  dataTranslatedNominal_cactus
 ) %>%
   mutate(inchiNominal_cts = ifelse(
     test = grepl(
@@ -211,13 +279,25 @@ dataTranslated <- left_join(
     yes = inchiNominal_cts,
     no = NA
   )) %>%
+  mutate(inchiNominal_cts_2 = ifelse(
+    test = grepl(
+      pattern = "^InChI=.*",
+      x = inchiNominal_cts_2
+    ),
+    yes = inchiNominal_cts_2,
+    no = NA
+  )) %>%
   mutate(structureTranslated_nominal = ifelse(
     test = !is.na(inchiNominal_opsin),
     yes = inchiNominal_opsin,
     no = ifelse(
-      test = !is.na(inchiNominal_cactus),
-      yes = inchiNominal_cactus,
-      no = inchiNominal_cts
+      test = !is.na(inchiNominal_cts),
+      yes = inchiNominal_cts,
+      no = ifelse(
+        test = !is.na(inchiNominal_cts_2),
+        yes = inchiNominal_cts_2,
+        no = inchiNominal_cactus
+      )
     )
   ))
 
