@@ -23,27 +23,27 @@ openDb <- read_delim(
 structureSearch_1 <- openDb %>%
   filter(structureType == "nominal") %>%
   distinct(structureValue,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     .keep_all = TRUE
   )
 
 structureSearch_2 <- openDb %>%
   filter(structureType == "smiles") %>%
   distinct(structureValue,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     .keep_all = TRUE
   )
 
 structureSearch_3 <- openDb %>%
   filter(structureType == "inchi") %>%
   distinct(structureValue,
-    structureCleanedInchikey3D,
+    structureCleanedInchikey,
     .keep_all = TRUE
   )
 
 structureSearch <-
   rbind(structureSearch_1, structureSearch_2, structureSearch_3) %>%
-  group_by(structureCleanedInchikey3D) %>%
+  group_by(structureCleanedInchikey) %>%
   add_count() %>%
   arrange(desc(n))
 
@@ -51,7 +51,7 @@ saltSearch <- structureSearch_3 %>%
   distinct(structureValue,
     .keep_all = TRUE
   ) %>%
-  group_by(structureCleanedInchikey3D) %>%
+  group_by(structureCleanedInchikey) %>%
   add_count() %>%
   filter(grepl(pattern = "\\.", x = structureValue)) %>%
   arrange(desc(n))
@@ -59,13 +59,13 @@ saltSearch <- structureSearch_3 %>%
 maybeHit_salt <- openDb %>%
   filter(!is.na(referenceCleanedDoi)) %>%
   filter(!is.na(organismCleaned)) %>%
-  filter(structureCleanedInchikey3D == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") %>%
+  filter(structureCleanedInchikey == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") %>%
   distinct(structureValue)
 
 maybeHit_str <- openDb %>%
   filter(!is.na(referenceCleanedDoi)) %>%
   filter(!is.na(organismCleaned)) %>%
-  filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N")
+  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N")
 
 hitNames_str <- maybeHit_str %>%
   filter(structureType == "nominal") %>%
@@ -132,7 +132,7 @@ hitNames_org <- maybeHit_org %>%
   )
 
 doubleTest <- openDb %>%
-  filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
+  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
   distinct(
     organismType,
     organismValue, organismCleaned
@@ -142,7 +142,7 @@ doubleTest <- openDb %>%
   arrange(desc(n))
 
 pairTest <- openDb %>%
-  filter(structureCleanedInchikey3D == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
+  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
   filter(organismCleaned == "Crataegus monogyna") %>%
   distinct(
     organismType,
