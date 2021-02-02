@@ -91,6 +91,7 @@ dataset <- dataset %>%
   left_join(., stats_table) %>%
   select(
     database,
+    `type`,
     `initial retrieved unique observations`,
     `cleaned documented structure-organism pairs`,
     `pairs validated for wikidata export`,
