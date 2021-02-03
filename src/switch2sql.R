@@ -527,7 +527,7 @@ db <- dbConnect(
 ## TEMP
 dbSendQueries(
   conn = db,
-  sqlFromFile("schema_db/0000_create_initial_tables.sql")
+  sql = sqlFromFile("schema_db/0000_create_initial_tables.sql")
 )
 
 dbListObjects(db)
