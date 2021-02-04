@@ -11,5 +11,4 @@ LEFT JOIN organism_source
 LEFT JOIN reference_source 
     ON data_source.referenceSourceId = reference_source.id
 LEFT JOIN structure_source 
-    ON data_source.structureSourceId = structure_source.id
-;
+    ON data_source.structureSourceId = structure_source.id;

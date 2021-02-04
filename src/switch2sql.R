@@ -567,6 +567,7 @@ colnames(organism_synonyms)
 dbListFields(db, "organism_types")
 colnames(organism_types)
 dbListFields(db, "reference_cleaned")
+colnames(reference_cleaned)
 dbListFields(db, "reference_databases")
 # colnames(reference_databases) ## TO DO
 dbListFields(db, "reference_information")
