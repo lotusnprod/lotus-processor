@@ -308,6 +308,9 @@ vroom_write_safe(
   path = pathDataInterimTablesTranslatedStructureNominal
 )
 
+# dataTranslated <-
+#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal)
+
 end <- Sys.time()
 
 cat("Script finished in", format(end - start), "\n")
