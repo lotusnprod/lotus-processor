@@ -131,36 +131,36 @@ originalTable <- dbTable %>%
   select(-drop, -drop2, -drop3) %>%
   distinct()
 
-databases_source <- originalTable %>%
+database_source <- originalTable %>%
   distinct(database) %>%
   mutate(databaseSourceId = row_number()) %>%
   left_join(., dbTypes) %>%
   group_by(type) %>%
-  mutate(typeId = group_indices()) %>%
+  mutate(typeId = cur_group_id()) %>%
   ungroup()
 
-organisms_source <- originalTable %>%
+organism_source <- originalTable %>%
   distinct(organismType, organismValue) %>%
   mutate(organismSourceId = row_number()) %>%
   group_by(organismType) %>%
-  mutate(typeId = group_indices()) %>%
+  mutate(typeId = cur_group_id()) %>%
   ungroup()
 
-structures_source <- originalTable %>%
+structure_source <- originalTable %>%
   distinct(structureType, structureValue) %>%
   mutate(structureSourceId = row_number()) %>%
   group_by(structureType) %>%
-  mutate(typeId = group_indices()) %>%
+  mutate(typeId = cur_group_id()) %>%
   ungroup()
 
-references_source <- originalTable %>%
+reference_source <- originalTable %>%
   distinct(referenceType, referenceValue) %>%
   mutate(referenceSourceId = row_number()) %>%
   group_by(referenceType) %>%
-  mutate(typeId = group_indices()) %>%
+  mutate(typeId = cur_group_id()) %>%
   ungroup()
 
-databases_types <- databases_source %>%
+database_types <- database_source %>%
   select(
     id = typeId,
     name = type
@@ -168,7 +168,7 @@ databases_types <- databases_source %>%
   distinct() %>%
   arrange(id)
 
-organisms_types <- organisms_source %>%
+organism_types <- organism_source %>%
   select(
     id = typeId,
     name = organismType
@@ -176,7 +176,7 @@ organisms_types <- organisms_source %>%
   distinct() %>%
   arrange(id)
 
-structures_types <- structures_source %>%
+structure_types <- structure_source %>%
   select(
     id = typeId,
     name = structureType
@@ -184,7 +184,7 @@ structures_types <- structures_source %>%
   distinct() %>%
   arrange(id)
 
-references_types <- references_source %>%
+reference_types <- reference_source %>%
   select(
     id = typeId,
     name = referenceType
@@ -193,41 +193,41 @@ references_types <- references_source %>%
   arrange(id)
 
 data_source <- originalTable %>%
-  left_join(., databases_source %>% select(-typeId)) %>%
-  left_join(., organisms_source %>% select(-typeId)) %>%
-  left_join(., structures_source %>% select(-typeId)) %>%
-  left_join(., references_source %>% select(-typeId)) %>%
+  left_join(., database_source %>% select(-typeId)) %>%
+  left_join(., organism_source %>% select(-typeId)) %>%
+  left_join(., structure_source %>% select(-typeId)) %>%
+  left_join(., reference_source %>% select(-typeId)) %>%
   mutate(id = row_number())
 
-databases_source <- databases_source %>%
+database_source <- database_source %>%
   select(
     id = databaseSourceId,
     name = database,
     typeId
   )
 
-organisms_source <- organisms_source %>%
+organism_source <- organism_source %>%
   select(
     id = organismSourceId,
     value = organismValue,
     typeId
   )
 
-structures_source <- structures_source %>%
+structure_source <- structure_source %>%
   select(
     id = structureSourceId,
     value = structureValue,
     typeId
   )
 
-references_source <- references_source %>%
+reference_source <- reference_source %>%
   select(
     id = referenceSourceId,
     value = referenceValue,
     typeId
   )
 
-organisms_detected <- organismOld %>%
+organism_detected <- organismOld %>%
   distinct(
     organismDetected,
     organismCleaned
@@ -239,16 +239,16 @@ organisms_detected <- organismOld %>%
     organismCleaned
   )
 
-organisms_cleaned <- organismOld %>%
+organism_cleaned <- organismOld %>%
   distinct(organismCleaned) %>%
   mutate(id = row_number()) %>%
   select(id,
     name = organismCleaned
   )
 
-organisms_synonyms <- organisms_detected %>%
+organism_synonyms <- organism_detected %>%
   left_join(.,
-    organisms_cleaned,
+    organism_cleaned,
     by = c("organismCleaned" = "name")
   ) %>%
   select(
@@ -260,7 +260,7 @@ organisms_synonyms <- organisms_detected %>%
 taxonomic_databases <- organismOld %>%
   distinct(organismCleaned_dbTaxo) %>%
   group_by(organismCleaned_dbTaxo) %>%
-  mutate(id = group_indices()) %>%
+  mutate(id = cur_group_id()) %>%
   ungroup() %>%
   select(id,
     name = organismCleaned_dbTaxo
@@ -268,7 +268,7 @@ taxonomic_databases <- organismOld %>%
 
 taxonomic_information <- organismOld %>%
   left_join(.,
-    organisms_cleaned,
+    organism_cleaned,
     by = c("organismCleaned" = "name")
   ) %>%
   select(
@@ -298,7 +298,7 @@ taxonomic_information <- organismOld %>%
     rank = organismCleaned_rank
   )
 
-references_cleaned <- referenceOrganismDictionary %>%
+reference_cleaned <- referenceOrganismDictionary %>%
   distinct(
     referenceCleanedDoi,
     referenceCleanedPmcid,
@@ -316,7 +316,7 @@ references_cleaned <- referenceOrganismDictionary %>%
     everything()
   )
 
-structures_cleaned <- structureOld %>%
+structure_cleaned <- structureOld %>%
   distinct(
     structureCleanedSmiles,
     structureCleanedInchi,
@@ -385,7 +385,7 @@ inhouseDbMinimal_complemented <- inhouseDbMinimal %>%
 
 data_processed_temp <- inhouseDbMinimal_complemented %>%
   left_join(.,
-    organisms_cleaned,
+    organism_cleaned,
     by = c("organismCleaned" = "name")
   ) %>%
   select(
@@ -394,7 +394,7 @@ data_processed_temp <- inhouseDbMinimal_complemented %>%
   ) %>%
   left_join(
     .,
-    structures_cleaned %>%
+    structure_cleaned %>%
       distinct(
         id,
         inchikey,
@@ -413,7 +413,7 @@ data_processed_temp <- inhouseDbMinimal_complemented %>%
   ) %>%
   left_join(
     .,
-    references_cleaned,
+    reference_cleaned,
     by = c(
       "organismType" = "organismType",
       "organismValue" = "organismValue",
@@ -463,17 +463,27 @@ data_processed__data_source <- data_processed_temp %>%
       everything()
     )) %>%
   filter(!is.na(dataProcessedId)) %>%
-  distinct(dataSourceId, dataProcessedId) %>%
+  distinct(dataSourceId, dataProcessedId, curationStateId) %>%
   mutate(id = row_number()) %>%
-  select(id, dataSourceId, dataProcessedId)
+  select(
+    id,
+    dataSourceId,
+    dataProcessedId,
+    curationStateId
+  )
 
 data_processed <- data_processed %>%
   distinct(
     id,
     structureCleanedId,
     organismCleanedId,
-    referenceCleanedId,
-    curationStateId
+    referenceCleanedId
+  ) %>%
+  select(
+    id,
+    structureCleanedId,
+    organismCleanedId,
+    referenceCleanedId
   )
 
 data_source <- data_source %>%
@@ -485,7 +495,7 @@ data_source <- data_source %>%
     referenceSourceId
   )
 
-references_cleaned <- references_cleaned %>%
+reference_cleaned <- reference_cleaned %>%
   distinct(
     id,
     doi,
@@ -505,7 +515,7 @@ rm(
   manuallyValidated,
   organismDictionary,
   organismMetadata,
-  organisms_detected,
+  organism_detected,
   organismOld,
   originalTable,
   referenceOrganismDictionary,
@@ -544,34 +554,34 @@ dbListFields(db, "data_processed__data_source")
 colnames(data_processed__data_source)
 dbListFields(db, "data_source")
 colnames(data_source)
-dbListFields(db, "databases_source")
-colnames(databases_source)
-dbListFields(db, "databases_types")
-colnames(databases_types)
-dbListFields(db, "organisms_cleaned")
-colnames(organisms_cleaned)
-dbListFields(db, "organisms_source")
-colnames(organisms_source)
-dbListFields(db, "organisms_synonyms")
-colnames(organisms_synonyms)
-dbListFields(db, "organisms_types")
-colnames(organisms_types)
-dbListFields(db, "references_cleaned")
-dbListFields(db, "references_databases")
-# colnames(references_databases) ## TO DO
-dbListFields(db, "references_information")
-# colnames(references_information) ## TO DO
-colnames(references_cleaned)
-dbListFields(db, "references_source")
-colnames(references_source)
-dbListFields(db, "references_types")
-colnames(references_types)
-dbListFields(db, "structures_cleaned")
-colnames(structures_cleaned)
-dbListFields(db, "structures_source")
-colnames(structures_source)
-dbListFields(db, "structures_types")
-colnames(structures_types)
+dbListFields(db, "database_source")
+colnames(database_source)
+dbListFields(db, "database_types")
+colnames(database_types)
+dbListFields(db, "organism_cleaned")
+colnames(organism_cleaned)
+dbListFields(db, "organism_source")
+colnames(organism_source)
+dbListFields(db, "organism_synonyms")
+colnames(organism_synonyms)
+dbListFields(db, "organism_types")
+colnames(organism_types)
+dbListFields(db, "reference_cleaned")
+dbListFields(db, "reference_databases")
+# colnames(reference_databases) ## TO DO
+dbListFields(db, "reference_information")
+# colnames(reference_information) ## TO DO
+colnames(reference_cleaned)
+dbListFields(db, "reference_source")
+colnames(reference_source)
+dbListFields(db, "reference_types")
+colnames(reference_types)
+dbListFields(db, "structure_cleaned")
+colnames(structure_cleaned)
+dbListFields(db, "structure_source")
+colnames(structure_source)
+dbListFields(db, "structure_types")
+colnames(structure_types)
 dbListFields(db, "taxonomic_databases")
 colnames(taxonomic_databases)
 dbListFields(db, "taxonomic_information")
@@ -627,112 +637,112 @@ dbWriteTable(
 
 dbWriteTable(
   conn = db,
-  name = "databases_source",
-  value = databases_source,
+  name = "database_source",
+  value = database_source,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "databases_types",
-  value = databases_types,
+  name = "database_types",
+  value = database_types,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "organisms_cleaned",
-  value = organisms_cleaned,
+  name = "organism_cleaned",
+  value = organism_cleaned,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "organisms_source",
-  value = organisms_source,
+  name = "organism_source",
+  value = organism_source,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "organisms_synonyms",
-  value = organisms_synonyms,
+  name = "organism_synonyms",
+  value = organism_synonyms,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "organisms_types",
-  value = organisms_types,
+  name = "organism_types",
+  value = organism_types,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "references_cleaned",
-  value = references_cleaned,
+  name = "reference_cleaned",
+  value = reference_cleaned,
   row.names = FALSE,
   append = TRUE
 )
 
 # dbWriteTable(
 #   conn = db,
-#   name = "references_databases",
-#   value = references_databases,
+#   name = "reference_databases",
+#   value = reference_databases,
 #   row.names = FALSE,
 #   append = TRUE
 # )
 
 # dbWriteTable(
 #   conn = db,
-#   name = "references_information",
-#   value = references_information,
+#   name = "reference_information",
+#   value = reference_information,
 #   row.names = FALSE,
 #   append = TRUE
 # )
 
 dbWriteTable(
   conn = db,
-  name = "references_source",
-  value = references_source,
+  name = "reference_source",
+  value = reference_source,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "references_types",
-  value = references_types,
+  name = "reference_types",
+  value = reference_types,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "structures_cleaned",
-  value = structures_cleaned,
+  name = "structure_cleaned",
+  value = structure_cleaned,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "structures_source",
-  value = structures_source,
+  name = "structure_source",
+  value = structure_source,
   row.names = FALSE,
   append = TRUE
 )
 
 dbWriteTable(
   conn = db,
-  name = "structures_types",
-  value = structures_types,
+  name = "structure_types",
+  value = structure_types,
   row.names = FALSE,
   append = TRUE
 )
