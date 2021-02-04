@@ -27,19 +27,19 @@ if (mode != "test") {
   ## work in progress for SQLite integration
   # cat("... connecting to SQLite database ...")
   # drv <- SQLite()
-  # 
+  #
   # db <- dbConnect(
   #   drv = drv,
   #   dbname = lotusDB
   # )
-  # 
+  #
   # cat("... listing remote objects")
   # dbListObjects(db)
-  # 
+  #
   # test <- RSQLite::dbGetQuery(
   #   conn = db,
   #   statement = sqlFromFile("schema_db/0001_extract_data_source.sql"))
-  
+
   cat("... list of source databases")
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
