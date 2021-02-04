@@ -286,4 +286,3 @@ create table taxonomic_information
 
 create unique index taxonomic_information_id_uindex
 	on taxonomic_information (id);
-	
