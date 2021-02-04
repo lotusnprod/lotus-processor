@@ -52,7 +52,7 @@ dependencies:
   - r-tidyr
   - r-tidyverse
   - r-upsetr
-  - r-vroom
+  - r-vroom<=1.3.2 # since for the moment 1.4.0 is not able to read quoted gzip properly 
   - r-webchem
   - r-XML
   - r-xml2
