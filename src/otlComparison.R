@@ -57,19 +57,19 @@ diff <- anti_join(otlVersion, gnverifyVersion)
 cat("so it seems that rotl version has \n", nrow(diff), "more results \n")
 
 cat("but then if we have a closer look and only go for distinct IDs... \n")
-cat("just an example to show what is meant:")
-cat("applying filter(organismCleanedId == \"65272\") to both tables")
+cat("just an example to show what is meant: \n")
+cat("applying filter(organismCleanedId == \"65272\") to both tables \n")
 
 otlStrepto <- otlVersion %>%
   filter(organismCleanedId == "65272")
 
-cat("rotl table")
+cat("rotl table \n")
 otlStrepto
 
 gnverifyStrepto <- gnverifyVersion %>%
   filter(organismCleanedId == "65272")
 
-cat("gnverify table")
+cat("gnverify table \n")
 gnverifyStrepto
 
 cat("so when keeping only one name per ID... \n")
@@ -106,5 +106,7 @@ cat(
 )
 
 cat("Conclusion: almost the same but very interesting for synonyms filtering \n")
+
+end <- Sys.time()
 
 cat("Script finished in", format(end - start), "\n")
