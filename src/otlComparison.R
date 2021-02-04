@@ -57,11 +57,27 @@ diff <- anti_join(otlVersion, gnverifyVersion)
 cat("so it seems that rotl version has \n", nrow(diff), "more results \n")
 
 cat("but then if we have a closer look and only go for distinct IDs... \n")
+cat("just an example to show what is meant:")
+cat("applying filter(organismCleanedId == \"65272\") to both tables")
+
+otlStrepto <- otlVersion %>%
+  filter(organismCleanedId == "65272")
+
+cat("rotl table")
+otlStrepto
+
+gnverifyStrepto <- gnverifyVersion %>%
+  filter(organismCleanedId == "65272")
+
+cat("gnverify table")
+gnverifyStrepto
+
+cat("so when keeping only one name per ID... \n")
+
 otlVersionDistinct <- otlVersion %>%
   left_join(., gnverifyVersion %>% mutate(isInBoth = "Y")) %>% ## to keep the same synonym for both
   arrange(isInBoth) %>%
   distinct(organismCleanedId, .keep_all = TRUE)
-
 cat(nrow(otlVersionDistinct), "distinct IDs for rotl API version \n")
 
 gnverifyVersionDistinct <- gnverifyVersion %>%
