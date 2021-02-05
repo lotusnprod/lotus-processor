@@ -13,5 +13,6 @@ dbSendQueries <- function(conn, sql) {
   dummyfunction <- function(sql, conn) {
     dbSendQuery(conn, sql)
   }
+
   lapply(sql, dummyfunction, conn)
 }
