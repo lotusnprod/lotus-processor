@@ -64,7 +64,7 @@ dataJoined <- bind_rows(dataMatched, dataOriginal)
 data_standard <-
   standardizing_original(
     data_selected = dataJoined,
-    db = "nap_1",
+    db = "napralert",
     structure_field = c("structure_name", "structure_inchi"),
     organism_field = "organism_clean",
     reference_field = c(

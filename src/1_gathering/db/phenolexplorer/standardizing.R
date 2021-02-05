@@ -127,7 +127,7 @@ data_referenced[] <-
 data_standard <-
   standardizing_original(
     data_selected = data_referenced,
-    db = "phe_1",
+    db = "phenolexplorer",
     structure_field = c("structure_name", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c(

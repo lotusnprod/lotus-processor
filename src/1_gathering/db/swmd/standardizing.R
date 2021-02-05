@@ -36,7 +36,7 @@ data_selected <- data_original %>%
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "swm_1",
+    db = "swmd",
     structure_field = c("structure_name", "structure_smiles", "structure_inchi"),
     organism_field = "organism_clean",
     reference_field = "reference_original"

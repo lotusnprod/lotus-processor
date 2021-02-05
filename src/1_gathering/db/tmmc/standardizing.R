@@ -43,7 +43,7 @@ data_original_long <- data_original %>%
 data_standard <-
   standardizing_original(
     data_selected = data_original_long,
-    db = "tmm_1",
+    db = "tmmc",
     structure_field = "structure_name",
     organism_field = "organism_clean",
     reference_field = "reference_pubmed"

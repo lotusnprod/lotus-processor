@@ -9,7 +9,7 @@
 filter_dirty <- function(dataframe) {
   dfDoi <- dataframe %>%
     filter(referenceType == "doi") %>%
-    filter(database != "coc_1" |
+    filter(database != "coconut" |
       as.numeric(referenceCleaned_score_titleOrganism) == 1)
 
   dfOriginal <- dataframe %>%

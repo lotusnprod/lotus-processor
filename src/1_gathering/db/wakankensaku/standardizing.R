@@ -30,7 +30,7 @@ data_manipulated <- data_original %>%
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "wak_1",
+    db = "wakankensaku",
     structure_field = "structure_name",
     organism_field = "organism_dirty",
     reference_field = "reference_original"

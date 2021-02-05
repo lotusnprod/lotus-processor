@@ -66,7 +66,7 @@ data_manipulated <- data_selected %>%
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "pam_1",
+    db = "pamdb",
     structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c(

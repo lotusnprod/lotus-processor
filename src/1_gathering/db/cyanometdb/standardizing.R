@@ -61,7 +61,7 @@ data_selected$organism_clean <-
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "cya_1",
+    db = "cyanometdb",
     structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c("reference_doi", "reference_title", "reference_journal")

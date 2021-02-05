@@ -26,7 +26,7 @@ wikidataLotusExporterDataOutputTriplesPath <-
 ##
 
 # databases for which we have no right to disseminate the data
-forbidden_export <- "foo_1"
+forbidden_export <- c("dnp","foodb")
 
 # root
 ## bin

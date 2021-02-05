@@ -60,7 +60,7 @@ data_selected[] <-
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "tmd_1",
+    db = "tmdb",
     structure_field = "structure_name",
     organism_field = "organism_clean",
     reference_field = "reference_publishingDetails"

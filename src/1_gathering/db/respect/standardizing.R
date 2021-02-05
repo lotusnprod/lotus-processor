@@ -144,7 +144,7 @@ data_manipulated <- data_selected %>%
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "res_1",
+    db = "respect",
     structure_field = "structure_name",
     organism_field = "organism_clean",
     reference_field = c(

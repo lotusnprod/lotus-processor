@@ -154,7 +154,7 @@ data_manipulated <- data_original %>%
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "nub_1",
+    db = "nubbe",
     structure_field = c("structure_inchi", "structure_name", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_title", "reference_doi")
