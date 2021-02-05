@@ -1,18 +1,18 @@
-413676 unique (2D) referenced structure-organism pairs. 
+413719 unique (2D) referenced structure-organism pairs. 
  They consist of 
- 137680 unique (2D) curated structures and 
- 37928 unique organisms,
+ 137697 unique (2D) curated structures and 
+ 37930 unique organisms,
  originating from 
- 34 initial open databases. 
+ 35 initial open databases. 
  
  Among structures, 
- 83523 are present in only 1 organism, 
- 121826 are present in between 1 and 10 organisms, 
+ 83533 are present in only 1 organism, 
+ 121843 are present in between 1 and 10 organisms, 
  3761 are present in between 10 and 100 organisms, 
  355 are present in more than 100 organisms. 
  
  Among organisms, 
  6459 contain only 1 structure, 
- 25248 contain between 1 and 10 structures, 
- 10415 contain between 10 and 100 structures, 
+ 25249 contain between 1 and 10 structures, 
+ 10416 contain between 10 and 100 structures, 
  292 contain more than 100 structures. 

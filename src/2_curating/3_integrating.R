@@ -390,7 +390,7 @@ ifelse(
 
 cat("writing the monster table, if running fullmode, this may take a while \n")
 cat(pathDataInterimTablesCuratedTable, "\n")
-vroom_write_safe(
+vroom_write_safe_append(
   x = inhouseDbMinimal,
   path = pathDataInterimTablesCuratedTable
 )
@@ -402,7 +402,7 @@ vroom_write_safe(
 )
 
 cat(pathDataInterimDictionariesStructureAntiDictionary, "\n")
-vroom_write_safe(
+vroom_write_safe_append(
   x = structureNA,
   path = pathDataInterimDictionariesStructureAntiDictionary
 )
@@ -441,7 +441,7 @@ vroom_write_safe(
 )
 
 cat(pathDataInterimTablesCuratedTableMaximal, "\n")
-vroom_write_safe(
+vroom_write_safe_append(
   x = openDbMaximal,
   path = pathDataInterimTablesCuratedTableMaximal
 )

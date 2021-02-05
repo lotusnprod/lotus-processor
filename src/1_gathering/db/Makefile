@@ -1,6 +1,6 @@
 include	../../../paths.mk
 
-DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
+DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dianatdb dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
 
 DATABASES_RECONVERT = biofacquim-reconvert coconut-reconvert streptomedb-reconvert
 
@@ -82,6 +82,10 @@ ${INTERIM_DB_PATH}/cyanometdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/medi
 datawarrior: ${INTERIM_DB_PATH}/datawarrior.tsv.gz
 ${INTERIM_DB_PATH}/datawarrior.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/datawarrior/NaturalProducts.txt ${SRC_GATHERING_DB_PATH}/datawarrior/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/datawarrior/standardizing.R
+
+dianatdb: ${INTERIM_DB_PATH}/dianatdb.tsv.gz
+${INTERIM_DB_PATH}/dianatdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dianatdb/2020_DiaNatDB_336.xlsx ${SRC_GATHERING_DB_PATH}/dianatdb/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/dianatdb/standardizing.R
 
 dnp: ${INTERIM_DB_PATH}/dnp.tsv.gz
 ${INTERIM_DB_PATH}/dnp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dnp/29_2/full_set.csv ${SRC_GATHERING_DB_PATH}/dnp/standardizing.R

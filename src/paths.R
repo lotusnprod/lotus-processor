@@ -2,11 +2,13 @@
 ##################################   Paths   ##################################
 ###############################################################################
 
-source("r/database.R") ## also change date in here
+source("r/database.R")
 
 mode <- Sys.getenv("MODE", unset = "full")
 
-works_locally_only <- TRUE
+db_mode <- "normal" ## "fromScratch"
+
+works_locally_only <- FALSE
 ## for steps where paths need to be adapted locally or related ot other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterPath <- "../../wikidataLotusExporter"
@@ -26,7 +28,7 @@ wikidataLotusExporterDataOutputTriplesPath <-
 ##
 
 # databases for which we have no right to disseminate the data
-forbidden_export <- c("dnp","foodb")
+forbidden_export <- c("dnp", "foodb")
 
 # root
 ## bin
@@ -157,6 +159,12 @@ databases$add(
   name = "datawarrior",
   sourceFiles = list(tsv = "NaturalProducts.txt"),
   interimFile = "datawarrior.tsv.gz"
+)
+
+databases$add(
+  name = "dianatdb",
+  sourceFiles = list(tsv = "2020_DiaNatDB_336.xlsx"),
+  interimFile = "dianatdb.tsv.gz"
 )
 
 databases$add(
