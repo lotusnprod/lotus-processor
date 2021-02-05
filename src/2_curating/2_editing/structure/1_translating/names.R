@@ -266,7 +266,6 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     x = inchiNominal_cactus
   ))
 
-
 dataTranslated <- left_join(
   dataInterim_3,
   dataTranslatedNominal_cactus
