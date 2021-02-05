@@ -1,7 +1,7 @@
 create table curation_type
 (
     id   INTEGER not null
-        constraint curation_states_pk
+        constraint curation_type_pk
             primary key autoincrement,
     name TEXT
 );
