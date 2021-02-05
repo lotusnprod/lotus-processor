@@ -12,6 +12,7 @@ cat("... paths \n")
 source("paths.R")
 
 cat("... libraries \n")
+library(stringi)
 library(tidyverse)
 library(plotly)
 
@@ -21,6 +22,15 @@ source("r/myDirtyValidationFig.R")
 source("r/vroom_safe.R")
 
 cat("loading files ... \n")
+oldDbNames <-
+  read_delim(
+    file = "../data/interim/dictionaries/dbNames.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  )
+
 sampleAllONPDB_AR_old <-
   read_delim(
     file = "../data/validation/old/AR.tsv",
@@ -308,8 +318,22 @@ globalSample <- bind_rows(table_old, table) %>%
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
   left_join(., inhouseDbMinimal) %>%
-  select(-referenceCleanedTitle) %>%
+  select(
+    -referenceCleanedTitle,
+    -organismType
+  ) %>%
   distinct()
+
+a <- paste0("\\b", oldDbNames$oldDbName, "\\b")
+b <- oldDbNames$newDbName
+
+globalSample$database <- stri_replace_all_regex(
+  str = globalSample$database,
+  pattern = a,
+  replacement = b,
+  case_insensitive = FALSE,
+  vectorize_all = FALSE
+)
 
 cat("adding metadata \n")
 cat("... structures \n")
@@ -706,8 +730,16 @@ validationSetFilled <-
     comments
   ) %>%
   left_join(., inhouseDbMinimal) %>%
-  select(-referenceCleanedTitle) %>%
+  select(-referenceCleanedTitle, -organismType) %>%
   distinct()
+
+validationSetFilled$database <- stri_replace_all_regex(
+  str = validationSetFilled$database,
+  pattern = a,
+  replacement = b,
+  case_insensitive = FALSE,
+  vectorize_all = FALSE
+)
 
 realValidationSetFilled <-
   inner_join(validationSetFilled, openDbClean) %>%
