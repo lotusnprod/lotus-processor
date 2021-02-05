@@ -11,6 +11,7 @@ source("paths.R")
 
 cat("... functions \n")
 source("r/split_data_table_quote.R")
+source("r/sqlFromFile.R")
 source("r/vroom_safe.R")
 
 cat("loading ... \n")
@@ -23,23 +24,26 @@ library(tidyverse)
 cat("... files ... \n")
 cat("... DBs \n")
 
-if (mode != "test") {
-  ## work in progress for SQLite integration
-  # cat("... connecting to SQLite database ...")
-  # drv <- SQLite()
-  #
-  # db <- dbConnect(
-  #   drv = drv,
-  #   dbname = lotusDB
-  # )
-  #
-  # cat("... listing remote objects")
-  # dbListObjects(db)
-  #
-  # test <- RSQLite::dbGetQuery(
-  #   conn = db,
-  #   statement = sqlFromFile("schema_db/0001_extract_data_source.sql"))
+if (mode == "full") {
+  # work in progress for SQLite integration
+  cat("... connecting to SQLite database ...")
+  drv <- SQLite()
 
+  db <- dbConnect(
+    drv = drv,
+    dbname = lotusDB
+  )
+
+  cat("... listing remote objects")
+  dbListObjects(db)
+
+  oldTable <- RSQLite::dbGetQuery(
+    conn = db,
+    statement = sqlFromFile("schema_db/0001_extract_data_source.sql")
+  )
+}
+
+if (mode != "test") {
   cat("... list of source databases")
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
@@ -178,6 +182,11 @@ originalTable <- dbTable %>%
   select(-drop, -drop2, -drop3) %>%
   distinct()
 
+if (mode == "full") {
+  cat("new entries only ... \n")
+  originalTable <- anti_join(originalTable, oldTable)
+}
+
 cat("keeping entries not previously curated only ... \n")
 cat("... inchi table \n")
 structureTable_inchi <- originalTable %>%
@@ -304,12 +313,19 @@ organismTable_clean <- originalTable %>%
   filter(!is.na(organismValue)) %>%
   distinct(organismValue)
 
+if (nrow(organismTable_clean) == 0) {
+  organismTable_clean[1, "organismValue"] <- NA
+}
+
 cat("... dirty \n")
 organismTable_dirty <- originalTable %>%
   filter(organismType == "dirty") %>%
   filter(!is.na(organismValue)) %>%
   distinct(organismValue)
 
+if (nrow(organismTable_dirty) == 0) {
+  organismTable_dirty[1, "organismValue"] <- NA
+}
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
