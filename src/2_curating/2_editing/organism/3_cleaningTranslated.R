@@ -134,7 +134,7 @@ if (nrow(dataInterimOrganismToFill) != 0) {
 if (nrow(dataInterimOrganismToFill) == 0) {
   dataCleanedTranslatedOrganism2join <- data.frame() %>%
     mutate(
-      organismOriginal = NA,
+      organismValue = NA,
       organismInterim = NA
     ) %>%
     mutate_all(as.character)
