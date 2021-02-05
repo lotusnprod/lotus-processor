@@ -137,7 +137,7 @@ data$name <- NA
 # standardizing
 data_standard <- standardizing_original(
   data_selected = data,
-  db = "mib_1",
+  db = "mibig",
   structure_field = "structure_smiles",
   organism_field = "organism_clean",
   reference_field = c("reference_doi", "reference_pubmed", "reference_external")

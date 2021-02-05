@@ -178,7 +178,7 @@ data_corrected_capitals <- left_join(data_corrected,
 data_standard <-
   standardizing_original(
     data_selected = data_corrected_capitals,
-    db = "coc_1",
+    db = "coconut",
     structure_field = c("structure_inchi", "structure_smiles", "structure_name"),
     organism_field = c("organism_clean", "organism_dirty"),
     reference_field = c(

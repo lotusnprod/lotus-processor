@@ -38,7 +38,7 @@ data_selected$organism_clean <-
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "afr_1",
+    db = "afrotryp",
     structure_field = "structure_name",
     organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_publishingDetails")

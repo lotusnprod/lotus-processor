@@ -107,7 +107,7 @@ data_filtered <- rbind(data_filtered_1, data_filtered_2) %>%
 data_standard <-
   standardizing_original(
     data_selected = data_filtered,
-    db = "duk_1",
+    db = "drduke",
     structure_field = "structure_name",
     organism_field = "organism_clean",
     reference_field = c(

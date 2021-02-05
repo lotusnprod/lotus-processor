@@ -142,7 +142,7 @@ data_selected$reference_authors <- gsub(
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "tpp_1",
+    db = "tppt",
     structure_field = c("structure_name", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c(

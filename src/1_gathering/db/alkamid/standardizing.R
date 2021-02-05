@@ -166,7 +166,7 @@ data_referenced <- left_join(data_selected, ref_prepared) %>%
 data_standard <-
   standardizing_original(
     data_selected = data_referenced,
-    db = "alk_1",
+    db = "alkamid",
     structure_field = c("structure_smiles", "structure_name"),
     organism_field = "organism_clean",
     reference_field = c("reference_authors", "reference_journal", "reference_title")

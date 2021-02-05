@@ -96,7 +96,7 @@ data_manipulated$structure_name <- y_as_na(data_manipulated$structure_name, "n.a
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "npa_1",
+    db = "npass",
     structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
     organism_field = "organism_clean",
     reference_field = c(

@@ -270,7 +270,7 @@ data_selected <- final_df %>%
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "met_1",
+    db = "metabolights",
     structure_field = "structure_inchi",
     organism_field = "organism_clean",
     reference_field = "reference_pubmed"

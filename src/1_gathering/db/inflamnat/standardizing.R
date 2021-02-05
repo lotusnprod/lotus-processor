@@ -120,7 +120,7 @@ data_manipulated <- data_selected %>%
 data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
-    db = "inf_1",
+    db = "inflamnat",
     structure_field = c("structure_name", "structure_smiles"),
     organism_field = c("organism_clean", "organism_dirty"),
     reference_field = c(
