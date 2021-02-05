@@ -293,12 +293,12 @@ inhouseDbMinimal <-
   left_join(., referenceMinimal %>%
     select(-organismDetected)) %>%
   filter(!is.na(referenceCleanedTitle) |
-    database == "dnp_1") %>%
+    database == "dnp") %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid) |
-      database == "dnp_1"
+      database == "dnp"
   ) %>%
   distinct(
     database,

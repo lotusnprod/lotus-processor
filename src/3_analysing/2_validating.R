@@ -487,7 +487,7 @@ f1Table <- full_join(f1Table, anti) %>%
 
 cat("... correcting with references ratios \n")
 refRatios <- inhouseDbFull %>%
-  filter(database != "dnp_1") %>%
+  filter(database != "dnp") %>%
   group_by(referenceType) %>%
   count() %>%
   mutate(prop = n / sum(.$n)) %>%
@@ -565,7 +565,7 @@ openDb <- inhouseDbFull %>%
 
 cat("outputting dnp pairs")
 dnpDb <- inhouseDbFull %>%
-  filter(database == "dnp_1") %>%
+  filter(database == "dnp") %>%
   distinct(
     database,
     organismCleaned,
