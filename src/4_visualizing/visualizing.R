@@ -290,7 +290,7 @@ if (mode != "test") {
     arrange(desc(organismCleaned_dbTaxo_1kingdom))
 
   openDbMeta <- inhouseDbMeta %>%
-    filter(database != "dnp_1") %>%
+    filter(database != "dnp") %>%
     distinct(
       database,
       organismCleaned,

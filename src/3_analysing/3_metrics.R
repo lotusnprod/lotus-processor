@@ -113,7 +113,7 @@ pairsOutsideDnp <- inhouseDb %>%
     organismCleaned,
     .keep_all = TRUE
   ) %>%
-  filter(database != "dnp_1")
+  filter(database != "dnp")
 
 pairsFull <- bind_rows(openDb, dnpDb) %>%
   filter(!is.na(organismCleaned) &
