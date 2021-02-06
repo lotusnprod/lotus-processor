@@ -8,7 +8,7 @@ mode <- Sys.getenv("MODE", unset = "full")
 
 db_mode <- "normal" ## "fromScratch"
 
-works_locally_only <- FALSE
+works_locally_only <- TRUE
 ## for steps where paths need to be adapted locally or related ot other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterPath <- "../../wikidataLotusExporter"
