@@ -171,7 +171,7 @@ create table organism_source
 create table ott_taxonomy
 (
     uid        INTEGER not null,
-    parentuid  INTEGER,
+    parent_uid  INTEGER,
     name       TEXT,
     rank       TEXT,
     sourceinfo TEXT,
