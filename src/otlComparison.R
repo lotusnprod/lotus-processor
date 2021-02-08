@@ -20,7 +20,7 @@ library(tidyverse)
 canonical_name_colname <- "organismCleaned"
 
 fullOrganisms <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal)
+  vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
 
 drv <- SQLite()
 
@@ -34,8 +34,8 @@ otlVersion <- dbGetQuery(
   statement = "SELECT
   taxa_names.canonical_name AS organismCleaned,
   taxa_otl.ott_id AS organismCleanedId
-FROM taxa_names
-LEFT JOIN taxa_otl
+  FROM taxa_names
+  LEFT JOIN taxa_otl
   ON taxa_names.search_string = taxa_otl.search_string"
 ) %>%
   filter(organismCleaned %in% fullOrganisms$organismCleaned) %>%
@@ -45,10 +45,10 @@ LEFT JOIN taxa_otl
 cat(nrow(otlVersion), "for rotl API version \n")
 
 gnverifyVersion <- fullOrganisms %>%
-  filter(organismDbTaxo == "Open Tree of Life") %>%
-  filter(!is.na(organismCleanedId)) %>%
-  distinct(organismCleaned, organismCleanedId) %>%
-  mutate(organismCleanedId = as.integer(organismCleanedId))
+  filter(organismCleaned_dbTaxo == "Open Tree of Life") %>%
+  filter(!is.na(organismCleaned_id)) %>%
+  distinct(organismCleaned, organismCleaned_id) %>%
+  mutate(organismCleanedId = as.integer(organismCleaned_id))
 
 cat(nrow(gnverifyVersion), "for gnverify version \n")
 
