@@ -43,13 +43,7 @@ if (works_locally_only == FALSE) {
 new_matched_names <- dataCuratedOrganismAuto %>%
   drop_na(!!as.name(canonical_name_colname)) %>%
   distinct(!!as.name(canonical_name_colname)) %>%
-  mutate(search_string = tolower(
-    sub(
-      pattern = "(\\w+\\s+\\w+).*",
-      replacement = "\\1",
-      x = organismCleaned
-    )
-  )) %>%
+  mutate(search_string = tolower(organismCleaned)) %>%
   distinct(
     !!as.name(canonical_name_colname),
     search_string
@@ -140,26 +134,27 @@ dbWriteTable(
   append = TRUE
 )
 
-new_ott_id <- new_matched_otl %>%
-  distinct(ott_id)
+## Not needed anymore?
 
-new_matched_meta_list <-
-  taxonomy_taxon_info(
-    ott_ids = new_ott_id$ott_id,
-    include_lineage = TRUE
-  ) %>%
-  tax_lineage()
-
-new_matched_meta <- bind_rows(new_matched_meta_list,
-  .id = "id"
-)
-
-dbWriteTable(
-  conn = db,
-  name = "taxa_meta",
-  value = new_matched_meta,
-  row.names = FALSE,
-  append = TRUE
-)
+# new_ott_id <- new_matched_otl %>%
+#   distinct(ott_id)
+#
+# new_matched_meta_list <-
+#   taxonomy_taxon_info(ott_ids = new_ott_id$ott_id,
+#                       include_lineage = TRUE,
+#                       include_terminal_descendants = TRUE
+#                         ) %>%
+#   tax_lineage()
+#
+# new_matched_meta <- bind_rows(new_matched_meta_list,
+#                               .id = "id")
+#
+# dbWriteTable(
+#   conn = db,
+#   name = "taxa_meta",
+#   value = new_matched_meta,
+#   row.names = FALSE,
+#   append = TRUE
+# )
 
 dbDisconnect(db)
