@@ -168,6 +168,17 @@ create table organism_source
         references organism_type
 );
 
+create table ott_taxonomy
+(
+    uid        INTEGER not null
+        parentuid INTEGER,
+    name       TEXT,
+    rank       TEXT,
+    sourceinfo TEXT,
+    uniqname   TEXT,
+    flags      TEXT
+);
+
 create table reference_cleaned
 (
     id    INTEGER not null
