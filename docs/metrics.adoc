@@ -6,13 +6,13 @@
  35 initial open databases. 
  
  Among structures, 
- 83533 are present in only 1 organism, 
+ 83530 are present in only 1 organism, 
  121843 are present in between 1 and 10 organisms, 
  3761 are present in between 10 and 100 organisms, 
  355 are present in more than 100 organisms. 
  
  Among organisms, 
- 6459 contain only 1 structure, 
- 25249 contain between 1 and 10 structures, 
+ 6457 contain only 1 structure, 
+ 25247 contain between 1 and 10 structures, 
  10416 contain between 10 and 100 structures, 
  292 contain more than 100 structures. 
