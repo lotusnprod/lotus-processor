@@ -136,6 +136,7 @@ manipulating_taxo <- function(dfsel, dic) {
   # manipulating taxa
   df3 <- df2 %>%
     filter(
+      # rank == "domain" |
       rank == "kingdom" |
         rank == "phylum" |
         rank == "class" |
@@ -201,7 +202,7 @@ manipulating_taxo <- function(dfsel, dic) {
             "order",
             "family",
             "genus",
-            "subgnus",
+            "subgenus",
             "species",
             "subspecies",
             "variety"
