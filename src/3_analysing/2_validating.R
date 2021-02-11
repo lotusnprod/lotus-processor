@@ -530,6 +530,51 @@ f2Table <- left_join(f1Table, refRatios) %>%
   ) %>%
   mutate()
 
+f2Table_reworked <- f2Table %>%
+  arrange(desc(prop)) %>%
+  select(
+    `reference type` = referenceType,
+    `true positives` = tp,
+    `false positives` = fp,
+    `false negatives` = fn,
+    `true negatives` = tn,
+    `relative abundance` = prop,
+    precision,
+    recall,
+    `F0.5 score` = f2,
+    recallcorr,
+    precisioncorr,
+    f2corr
+  ) %>%
+  rbind(
+    .,
+    tibble(
+      `reference type` = "Total",
+      `true positives` = sum(.$`true positives`),
+      `false positives` = sum(.$`false positives`),
+      `false negatives` = sum(.$`false negatives`),
+      `true negatives` = sum(.$`true negatives`),
+      `relative abundance` = sum(.$`relative abundance`),
+    ),
+    tibble(
+      `reference type` = "Corrected total",
+      `precision` = unique(.$precisioncorr),
+      `recall` = unique(.$recallcorr),
+      `F0.5 score` = unique(.$f2corr),
+    )
+  ) %>%
+  select(
+    `reference type`,
+    `true positives`,
+    `false positives`,
+    `false negatives`,
+    `true negatives`,
+    `relative abundance`,
+    precision,
+    recall,
+    `F0.5 score`,
+  )
+
 cat("applying the filtering criteria to the whole DB, this may take a while \n")
 openDb <- inhouseDbFull %>%
   filter_dirty() %>%
@@ -767,7 +812,44 @@ realValidationSetFilled <-
 
 finalStats <- realValidationSetFilled %>%
   group_by(referenceType) %>%
-  count(validated == "Y")
+  count(validated == "Y") %>%
+  ungroup()
+
+finalStats_reworked <- finalStats %>%
+  mutate(
+    `true positives` = ifelse(
+      test = `validated == "Y"` == TRUE,
+      yes = n,
+      no = 0
+    ),
+    `false positives` = ifelse(
+      test = `validated == "Y"` == FALSE,
+      yes = n,
+      no = 0
+    )
+  ) %>%
+  select(
+    `reference type` = referenceType,
+    everything(),
+    -n,
+    -`validated == "Y"`
+  ) %>%
+  group_by(`reference type`) %>%
+  summarise(
+    `true positives Validation` = max(`true positives`),
+    `false positives Validation` = max(`false positives`)
+  ) %>%
+  rbind(
+    .,
+    tibble(
+      `reference type` = "Total",
+      `true positives Validation` = sum(.$`true positives Validation`),
+      `false positives Validation` = sum(.$`false positives Validation`)
+    )
+  )
+
+finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
+  mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
 
 cat("outputing correct entries from manually validated set \n")
 manuallyValidatedSet2 <- realValidationSetFilled %>%
@@ -816,6 +898,15 @@ if (mode == "full") {
       compression = 9,
       encoding = "UTF-8"
     ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+
+  write.table(
+    x = finalTable,
+    file = "../data/validation/tableStats.csv",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
