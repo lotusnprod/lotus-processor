@@ -34,10 +34,14 @@ dbListObjects(db)
 
 cat("... loading files ... \n")
 
-dbTypes <- read_delim(file = "../docs/dataset.tsv",
-                      delim = "\t") %>%
-  select(database,
-         type)
+dbTypes <- read_delim(
+  file = "../docs/dataset.tsv",
+  delim = "\t"
+) %>%
+  select(
+    database,
+    type
+  )
 
 structureDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary)
@@ -80,12 +84,16 @@ originalTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalTable)
 
 structureOld <-
-  left_join(structureDictionary,
-            structureMetadata)
+  left_join(
+    structureDictionary,
+    structureMetadata
+  )
 
 organismOld <-
-  left_join(organismDictionary,
-            organismMetadata)
+  left_join(
+    organismDictionary,
+    organismMetadata
+  )
 
 ## fixed for the moment, will have to change
 curation_type <-
@@ -100,11 +108,13 @@ curation_type <-
   )
 
 curation_type_old <-
-  dbGetQuery(conn = db,
-             statement = "
+  dbGetQuery(
+    conn = db,
+    statement = "
              SELECT
              *
-             FROM curation_type")
+             FROM curation_type"
+  )
 
 curation_type <- curation_type %>%
   anti_join(., curation_type_old) %>%
@@ -119,11 +129,13 @@ dbWriteTable(
 )
 
 curation_type <-
-  dbGetQuery(conn = db,
-             statement = "
+  dbGetQuery(
+    conn = db,
+    statement = "
              SELECT
              *
-             FROM curation_type")
+             FROM curation_type"
+  )
 
 database_type <- dbTypes %>%
   distinct(type)
@@ -164,15 +176,19 @@ database_source <- originalTable %>%
   distinct(database) %>%
   left_join(., dbTypes) %>%
   left_join(., database_type) %>%
-  select(name = database,
-         databaseTypeId)
+  select(
+    name = database,
+    databaseTypeId
+  )
 
 database_source_old <-
-  dbGetQuery(conn = db,
-             statement = "
+  dbGetQuery(
+    conn = db,
+    statement = "
   SELECT
   name
-  FROM database_source")
+  FROM database_source"
+  )
 
 database_source <- database_source %>%
   anti_join(., database_source_old) %>%
@@ -222,17 +238,21 @@ organism_type <- dbGetQuery(
   FROM organism_type"
 )
 
-organism_source_old <- dbGetQuery(conn = db,
-                                  statement = "
+organism_source_old <- dbGetQuery(
+  conn = db,
+  statement = "
   SELECT
   *
-  FROM organism_source")
+  FROM organism_source"
+)
 
 organism_source <- originalTable %>%
   distinct(organismType, organismValue) %>%
   left_join(., organism_type) %>%
-  select(value = organismValue,
-         organismTypeId) %>%
+  select(
+    value = organismValue,
+    organismTypeId
+  ) %>%
   anti_join(., organism_source_old) %>%
   distinct()
 
@@ -280,17 +300,21 @@ structure_type <- dbGetQuery(
     FROM structure_type"
 )
 
-structure_source_old <- dbGetQuery(conn = db,
-                                   statement = "
+structure_source_old <- dbGetQuery(
+  conn = db,
+  statement = "
   SELECT
   *
-  FROM structure_source")
+  FROM structure_source"
+)
 
 structure_source <- originalTable %>%
   distinct(structureType, structureValue) %>%
   left_join(., structure_type) %>%
-  select(value = structureValue,
-         structureTypeId) %>%
+  select(
+    value = structureValue,
+    structureTypeId
+  ) %>%
   anti_join(., structure_source_old) %>%
   distinct()
 
@@ -338,17 +362,21 @@ reference_type <- dbGetQuery(
   FROM reference_type"
 )
 
-reference_source_old <- dbGetQuery(conn = db,
-                                   statement = "
+reference_source_old <- dbGetQuery(
+  conn = db,
+  statement = "
   SELECT
   *
-  FROM reference_source")
+  FROM reference_source"
+)
 
 reference_source <- originalTable %>%
   distinct(referenceType, referenceValue) %>%
   left_join(., reference_type) %>%
-  select(value = referenceValue,
-         referenceTypeId) %>%
+  select(
+    value = referenceValue,
+    referenceTypeId
+  ) %>%
   anti_join(., reference_source_old) %>%
   distinct()
 
@@ -360,37 +388,47 @@ dbWriteTable(
   append = TRUE
 )
 
-database_source <- dbGetQuery(conn = db,
-                              statement = "
+database_source <- dbGetQuery(
+  conn = db,
+  statement = "
                               SELECT
                               *
-                              FROM database_source")
+                              FROM database_source"
+)
 
-organism_source <- dbGetQuery(conn = db,
-                              statement = "
+organism_source <- dbGetQuery(
+  conn = db,
+  statement = "
                               SELECT
                               *
-                              FROM organism_source")
+                              FROM organism_source"
+)
 
-structure_source <- dbGetQuery(conn = db,
-                               statement = "
+structure_source <- dbGetQuery(
+  conn = db,
+  statement = "
                                SELECT
                                *
-                               FROM structure_source")
+                               FROM structure_source"
+)
 
-reference_source <- dbGetQuery(conn = db,
-                               statement = "
+reference_source <- dbGetQuery(
+  conn = db,
+  statement = "
                                SELECT
                                *
-                               FROM reference_source")
+                               FROM reference_source"
+)
 
 data_source <- originalTable %>%
-  left_join(.,
-            database_source %>% select(
-              database = name,
-              databaseSourceId = id,
-              everything()
-            )) %>%
+  left_join(
+    .,
+    database_source %>% select(
+      database = name,
+      databaseSourceId = id,
+      everything()
+    )
+  ) %>%
   left_join(
     .,
     organism_source %>% select(
@@ -415,16 +453,20 @@ data_source <- originalTable %>%
       everything()
     )
   ) %>%
-  distinct(databaseSourceId,
-           organismSourceId,
-           structureSourceId,
-           referenceSourceId)
+  distinct(
+    databaseSourceId,
+    organismSourceId,
+    structureSourceId,
+    referenceSourceId
+  )
 
-data_source_old <- dbGetQuery(conn = db,
-                              statement = "
+data_source_old <- dbGetQuery(
+  conn = db,
+  statement = "
                               SELECT
                               *
-                              FROM data_source")
+                              FROM data_source"
+)
 
 data_source <- data_source %>%
   anti_join(., data_source_old) %>%
@@ -438,25 +480,33 @@ dbWriteTable(
   append = TRUE
 )
 
-data_source <- dbGetQuery(conn = db,
-                          statement = "
+data_source <- dbGetQuery(
+  conn = db,
+  statement = "
                           SELECT
                           *
-                          FROM data_source")
+                          FROM data_source"
+)
 
 organism_detected <- organismOld %>%
-  distinct(organismDetected,
-           organismCleaned) %>%
+  distinct(
+    organismDetected,
+    organismCleaned
+  ) %>%
   mutate(id = row_number()) %>%
-  select(id,
-         organismDetected,
-         organismCleaned)
+  select(
+    id,
+    organismDetected,
+    organismCleaned
+  )
 
-organism_cleaned_old <- dbGetQuery(conn = db,
-                                   statement = "
+organism_cleaned_old <- dbGetQuery(
+  conn = db,
+  statement = "
                                    SELECT
                                    name
-                                   FROM organism_cleaned")
+                                   FROM organism_cleaned"
+)
 
 organism_cleaned <- organismOld %>%
   select(name = organismCleaned) %>%
@@ -471,20 +521,25 @@ dbWriteTable(
   append = TRUE
 )
 
-organism_cleaned <- dbGetQuery(conn = db,
-                               statement = "
+organism_cleaned <- dbGetQuery(
+  conn = db,
+  statement = "
                                SELECT
                                id,
                                name
-                               FROM organism_cleaned")
+                               FROM organism_cleaned"
+)
 
 organism_synonym <- organism_detected %>%
   left_join(.,
-            organism_cleaned,
-            by = c("organismCleaned" = "name")) %>%
-  select(id = id.x,
-         name = organismDetected,
-         organismCleanedId = id.y)
+    organism_cleaned,
+    by = c("organismCleaned" = "name")
+  ) %>%
+  select(
+    id = id.x,
+    name = organismDetected,
+    organismCleanedId = id.y
+  )
 
 organism_synonym_old <- dbGetQuery(
   conn = db,
@@ -508,11 +563,13 @@ dbWriteTable(
   append = TRUE
 )
 
-organism_database_old <- dbGetQuery(conn = db,
-                                    statement = "
+organism_database_old <- dbGetQuery(
+  conn = db,
+  statement = "
                                     SELECT
                                     name
-                                    FROM organism_database")
+                                    FROM organism_database"
+)
 
 organism_database <- organismOld %>%
   distinct(organismCleaned_dbTaxo) %>%
@@ -528,11 +585,13 @@ dbWriteTable(
   append = TRUE
 )
 
-organism_database <- dbGetQuery(conn = db,
-                                statement = "
+organism_database <- dbGetQuery(
+  conn = db,
+  statement = "
                                 SELECT
                                 *
-                                FROM organism_database")
+                                FROM organism_database"
+)
 
 organism_information_old <- dbGetQuery(
   conn = db,
@@ -549,18 +608,25 @@ organism_information_old <- dbGetQuery(
 
 organism_information <- organismOld %>%
   left_join(.,
-            organism_cleaned,
-            by = c("organismCleaned" = "name")) %>%
-  select(organismCleanedId = id,
-         everything()) %>%
+    organism_cleaned,
+    by = c("organismCleaned" = "name")
+  ) %>%
+  select(
+    organismCleanedId = id,
+    everything()
+  ) %>%
   left_join(.,
-            organism_database,
-            by = c("organismCleaned_dbTaxo" = "name")) %>%
-  select(organismDatabaseId = id,
-         everything()) %>%
+    organism_database,
+    by = c("organismCleaned_dbTaxo" = "name")
+  ) %>%
+  select(
+    organismDatabaseId = id,
+    everything()
+  ) %>%
   distinct(organismCleanedId,
-           organismDatabaseId,
-           .keep_all = TRUE) %>%
+    organismDatabaseId,
+    .keep_all = TRUE
+  ) %>%
   anti_join(organism_information_old) %>%
   select(
     organismCleanedId,
@@ -580,11 +646,13 @@ dbWriteTable(
   append = TRUE
 )
 
-reference_cleaned_old <- dbGetQuery(conn = db,
-                                    statement = "
+reference_cleaned_old <- dbGetQuery(
+  conn = db,
+  statement = "
                                     SELECT
                                     *
-                                    FROM reference_cleaned")
+                                    FROM reference_cleaned"
+)
 
 reference_cleaned <- referenceOrganismDictionary %>%
   filter(!is.na(referenceCleanedTitle)) %>%
@@ -612,22 +680,28 @@ dbWriteTable(
   append = TRUE
 )
 
-reference_cleaned <- dbGetQuery(conn = db,
-                                statement = "
+reference_cleaned <- dbGetQuery(
+  conn = db,
+  statement = "
                                 SELECT
                                 *
-                                FROM reference_cleaned")
+                                FROM reference_cleaned"
+)
 
-structure_cleaned_old <- dbGetQuery(conn = db,
-                                    statement = "
+structure_cleaned_old <- dbGetQuery(
+  conn = db,
+  statement = "
                                     SELECT
                                     *
-                                    FROM structure_cleaned")
+                                    FROM structure_cleaned"
+)
 
 structure_cleaned <- structureOld %>%
-  distinct(structureCleanedSmiles,
-           structureCleanedInchi,
-           structureCleanedInchikey) %>%
+  distinct(
+    structureCleanedSmiles,
+    structureCleanedInchi,
+    structureCleanedInchikey
+  ) %>%
   left_join(
     .,
     structureOld %>% distinct(
@@ -672,11 +746,13 @@ structure_cleaned <- structureOld %>%
 #   append = TRUE
 # )
 
-structure_cleaned <- dbGetQuery(conn = db,
-                                statement = "
+structure_cleaned <- dbGetQuery(
+  conn = db,
+  statement = "
                                 SELECT
                                 *
-                                FROM structure_cleaned")
+                                FROM structure_cleaned"
+)
 
 inhouseDbMinimal_complemented <-
   semi_join(inhouseDbMinimal, originalTable) %>%
@@ -702,35 +778,46 @@ inhouseDbMinimal_complemented <-
     .keep_all = TRUE
   ) %>%
   select(everything(),
-         -name,
-         curationTypeId = value)
+    -name,
+    curationTypeId = value
+  )
 
 data_cleaned_temp <- inhouseDbMinimal_complemented %>%
   left_join(.,
-            organism_cleaned,
-            by = c("organismCleaned" = "name")) %>%
-  select(organismCleanedId = id,
-         everything()) %>%
+    organism_cleaned,
+    by = c("organismCleaned" = "name")
+  ) %>%
+  select(
+    organismCleanedId = id,
+    everything()
+  ) %>%
   left_join(
     .,
     structure_cleaned %>%
-      distinct(id,
-               inchikey,
-               inchi,
-               smiles),
+      distinct(
+        id,
+        inchikey,
+        inchi,
+        smiles
+      ),
     by = c(
       "structureCleanedSmiles" = "smiles",
       "structureCleanedInchi" = "inchi",
       "structureCleanedInchikey" = "inchikey"
     )
   ) %>%
-  select(structureCleanedId = id,
-         everything()) %>%
+  select(
+    structureCleanedId = id,
+    everything()
+  ) %>%
   left_join(.,
-            reference_cleaned %>% distinct(id, title),
-            by = c("referenceCleanedTitle" = "title")) %>%
-  select(referenceCleanedId = id,
-         everything()) %>%
+    reference_cleaned %>% distinct(id, title),
+    by = c("referenceCleanedTitle" = "title")
+  ) %>%
+  select(
+    referenceCleanedId = id,
+    everything()
+  ) %>%
   distinct(
     database,
     organismType,
@@ -746,16 +833,20 @@ data_cleaned_temp <- inhouseDbMinimal_complemented %>%
   )
 
 data_cleaned <- data_cleaned_temp %>%
-  distinct(organismCleanedId,
-           structureCleanedId,
-           referenceCleanedId,
-           curationTypeId)
+  distinct(
+    organismCleanedId,
+    structureCleanedId,
+    referenceCleanedId,
+    curationTypeId
+  )
 
-data_cleaned_old <- dbGetQuery(conn = db,
-                               statement = "
+data_cleaned_old <- dbGetQuery(
+  conn = db,
+  statement = "
                                SELECT
                                *
-                               FROM data_cleaned")
+                               FROM data_cleaned"
+)
 
 data_cleaned <- data_cleaned %>%
   anti_join(., data_cleaned_old) %>%
@@ -769,18 +860,22 @@ dbWriteTable(
   append = TRUE
 )
 
-data_cleaned <- dbGetQuery(conn = db,
-                           statement = "
+data_cleaned <- dbGetQuery(
+  conn = db,
+  statement = "
                            SELECT
                            *
-                           FROM data_cleaned")
+                           FROM data_cleaned"
+)
 
 data_source__data_cleaned_old <-
-  dbGetQuery(conn = db,
-             statement = "
+  dbGetQuery(
+    conn = db,
+    statement = "
              SELECT
              *
-             FROM data_source__data_cleaned")
+             FROM data_source__data_cleaned"
+  )
 
 data_source <- dbGetQuery(
   conn = db,
@@ -811,13 +906,19 @@ data_source <- dbGetQuery(
 )
 
 data_source__data_cleaned <- data_cleaned_temp %>%
-  left_join(.,
-            data_source %>%
-              select(dataSourceId = id,
-                     everything())) %>%
+  left_join(
+    .,
+    data_source %>%
+      select(
+        dataSourceId = id,
+        everything()
+      )
+  ) %>%
   left_join(., data_cleaned %>%
-              select(dataCleanedId = id,
-                     everything())) %>%
+    select(
+      dataCleanedId = id,
+      everything()
+    )) %>%
   filter(!is.na(dataCleanedId)) %>%
   distinct(dataSourceId, dataCleanedId) %>%
   anti_join(., data_source__data_cleaned_old) %>%

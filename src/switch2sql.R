@@ -1539,7 +1539,7 @@ if (db_mode == "fromScratch") {
     row.names = FALSE,
     append = TRUE
   )
-  
+
   dbWriteTable(
     conn = db,
     name = "ott_taxonomy",
