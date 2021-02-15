@@ -1679,3 +1679,8 @@ pathTestsReferences <- file.path(
   pathDataInterimTables,
   "5_expectation/references.tsv"
 )
+
+path_accepted_fields <- file.path(
+  "1_gathering",
+  "accepted_fields.tsv"
+)

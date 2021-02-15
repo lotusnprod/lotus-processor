@@ -1,6 +1,13 @@
 source("paths.R")
 library(tidyverse)
 
+accepted_fields <- read_tsv(file = path_accepted_fields)
+
+accepted_fields <- paste(accepted_fields$object,
+  accepted_fields$type,
+  sep = "_"
+)
+
 #' Title
 #'
 #' @param data_selected
@@ -16,30 +23,10 @@ library(tidyverse)
 standardizing_original <- function(data_selected,
                                    db,
                                    organism_field,
-                                   # possibilities: c("organism_clean","organism_dirty")
                                    structure_field,
-                                   # possibilities: c("structure_inchi","structure_smiles","structure_name")
-                                   reference_field)
-# possibilities: c("reference_authors","reference_doi","reference_external","reference_isbn","reference_journal", "reference_original","reference_publishingDetails","reference_pubmed","reference_split","reference_title")
-{
+                                   reference_field) {
   data_selected[setdiff(
-    c(
-      "structure_name",
-      "structure_inchi",
-      "structure_smiles",
-      "organism_clean",
-      "organism_dirty",
-      "reference_authors",
-      "reference_doi",
-      "reference_external",
-      "reference_isbn",
-      "reference_journal",
-      "reference_original",
-      "reference_publishingDetails",
-      "reference_pubmed",
-      "reference_split",
-      "reference_title"
-    ),
+    accepted_fields,
     names(data_selected)
   )] <- NA
 
@@ -83,7 +70,11 @@ standardizing_original <- function(data_selected,
     })
 
   data_standard <- data_standard %>%
-    mutate_all(~ iconv(x = ., from = "utf-8", to = "utf-8//ignore")) %>%
+    mutate_all(~ iconv(
+      x = .,
+      from = "utf-8",
+      to = "utf-8//ignore"
+    )) %>%
     mutate_all(
       .tbl = .,
       .funs = trimws
