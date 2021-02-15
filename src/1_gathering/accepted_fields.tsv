@@ -1,0 +1,16 @@
+object	type
+structure	inchi
+structure	smiles
+structure	name
+organism	clean
+organism	dirty
+reference	authors
+reference	doi
+reference	external
+reference	isbn
+reference	journal
+reference	original
+reference	publishingDetails
+reference	pubmed
+reference	split
+reference	title
