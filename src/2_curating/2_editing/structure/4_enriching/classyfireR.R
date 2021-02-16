@@ -20,7 +20,7 @@ structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
 structuresForClassification <- structureCounted %>%
-  distinct(structure)
+  distinct(inchikeySanitized)
 
 inchikeys <- structuresForClassification$inchikeySanitized
 
