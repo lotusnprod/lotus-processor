@@ -165,3 +165,8 @@ orca(
 #   width = 1600,
 #   height = 900
 # )
+
+htmlwidgets::saveWidget(
+  widget = as_widget(fig2),
+  file = file.path(pathDataProcessedFiguresHtml,"violin.html")
+)
