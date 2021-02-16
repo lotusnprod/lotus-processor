@@ -1,0 +1,45 @@
+LOAD DATABASE
+FROM sqlite://lotus.sqlite
+INTO postgresql://lotusdata@127.0.0.1:5433/lotustest
+including only table names like 'curation_type', 'structure_cleaned', 'structure_information_type', 'structure_type', 'organism_database', 'reference_cleaned', 'reference_database', 'reference_type', 'database_type', 'organism_type'
+CAST
+type real to numeric     using float-to-string
+WITH
+include no drop, create no tables, create no indexes, no foreign keys, quote identifiers, reset sequences
+SET
+work_mem to '16MB', maintenance_work_mem to '512 MB';
+
+LOAD DATABASE
+FROM sqlite://lotus.sqlite
+INTO postgresql://lotusdata@127.0.0.1:5433/lotustest
+including only table names like 'structure_source', 'organism_cleaned', 'reference_information', 'reference_source', 'database_source', 'organism_source'
+CAST
+type real to numeric     using float-to-string
+WITH
+include no drop, create no tables, create no indexes, no foreign keys, quote identifiers, reset sequences
+SET
+work_mem to '16MB', maintenance_work_mem to '512 MB';
+
+
+LOAD DATABASE
+FROM sqlite://lotus.sqlite
+INTO postgresql://lotusdata@127.0.0.1:5433/lotustest
+including only table names like 'structure_information', 'organism_synonym', 'organism_information', 'data_source', 'data_cleaned'
+CAST
+type real to numeric     using float-to-string
+WITH
+include no drop, create no tables, create no indexes, no foreign keys, quote identifiers, reset sequences
+SET
+work_mem to '16MB', maintenance_work_mem to '512 MB';
+
+LOAD DATABASE
+FROM sqlite://lotus.sqlite
+INTO postgresql://lotusdata@127.0.0.1:5433/lotustest
+including only table names like 'structure_cleaned__structure_information', 'data_source__data_cleaned', 'ott_taxonomy'
+CAST
+type real to numeric     using float-to-string
+WITH
+include no drop, create no tables, create no indexes, no foreign keys, quote identifiers, reset sequences
+SET
+work_mem to '16MB', maintenance_work_mem to '512 MB';
+
