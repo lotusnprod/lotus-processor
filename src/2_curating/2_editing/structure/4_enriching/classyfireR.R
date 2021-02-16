@@ -19,8 +19,16 @@ cat("...  counted structures \n")
 structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
-structuresForClassification <- structureCounted %>%
-  distinct(inchikeySanitized)
+old <-
+  vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz") %>%
+  distinct(inchikey)
+
+structuresForClassification <-
+  anti_join(
+    structureCounted,
+    old %>% select(structureCleanedInchikey = inchikey)
+  ) %>%
+  distinct(inchikeySanitized = structureCleanedInchikey)
 
 inchikeys <- structuresForClassification$inchikeySanitized
 
