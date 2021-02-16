@@ -7,18 +7,18 @@ create table curation_type
 create table structure_cleaned
 (
     id                              serial primary key,
-    "traditionalName"               text,
-    "iupacName"                     text,
+    traditional_name                text,
+    iupac_name                      text,
     inchikey                        text,
-    "inchikey2D"                    text,
+    inchikey2d                      text,
     inchi                           text,
-    "inchi2D"                       text,
+    inchi2d                         text,
     smiles                          text,
-    "smiles2D"                      text,
-    "stereocentersTotal"            integer,
-    "stereocentersUnspecified"      integer,
-    "molecularFormula"              text,
-    "exactMass"                     numeric,
+    smiles2d                        text,
+    stereocenters_total             integer,
+    stereocenters_unspecified       integer,
+    molecular_formula               text,
+    exact_mass                      numeric,
     xlogp                           numeric
 );
 
@@ -31,12 +31,12 @@ create table structure_information_type
 create table structure_information
 (
     id                              serial primary key,
-    "structureInformationTypeId"    integer
+    structure_information_type_id   integer
                                     constraint structure_information_structure_information_type_id_fk
                                                 references structure_information_type,
-    "valueString"                   text,
-    "valueInt"                      integer,
-    "valueReal"                     numeric
+    value_string                    text,
+    value_int                       integer,
+    value_real                      numeric
 );
 
 create table structure_type
@@ -49,7 +49,7 @@ create table structure_source
 (
     id                              serial primary key,
     value                           text,
-    "structureTypeId"               integer
+    structure_type_id               integer
                                     constraint structure_source_structure_type_id_fk
                                                 references structure_type
 );
@@ -57,10 +57,10 @@ create table structure_source
 create table structure_cleaned__structure_information
 (
     id                              serial primary key,
-    "structureCleanedId"            integer
+    structure_cleaned_id            integer
                                     constraint structure_cleaned__structure_information_structure_cleaned_id_f
                                                 references structure_cleaned,
-    "structureInformationId"        integer
+    structure_information_id          integer
                                     constraint structure_cleaned__structure_information_structure_information_
                                                 references structure_information
 );
@@ -75,7 +75,7 @@ create table organism_synonym
 (
     id                              serial primary key,
     name                            text,
-    "organismCleanedId"             integer
+    organism_cleaned_id             integer
                                     constraint organism_synonym_organism_cleaned_id_fk
                                                 references organism_cleaned
 );
@@ -89,13 +89,13 @@ create table organism_database
 create table organism_information
 (
     id                              serial primary key,
-    "organismCleanedId"             integer
+    organism_cleaned_id             integer
                                     constraint organism_information_organism_cleaned_id_fk
                                                 references organism_cleaned,
-    "organismDatabaseId"            integer
+    organism_database_id            integer
                                     constraint organism_information_organism_database_id_fk
                                                 references organism_database,
-    "taxonId"                       text,
+    taxon_id                        text,
     ranks                           text,
     taxonomy                        text,
     rank                            text
@@ -119,13 +119,13 @@ create table reference_database
 create table reference_information
 (
     id                              serial primary key,
-    "referenceCleanedId"            integer
+    reference_cleaned_id            integer
                                     constraint reference_information_reference_cleaned_id_fk
                                                 references reference_cleaned,
-    "referenceDatabaseId"           integer
+    reference_database_id           integer
                                     constraint reference_information_reference_database_id_fk
                                                 references reference_database,
-    "referenceId"                   text,
+    reference_id                    text,
     data                            text
 );
 
@@ -139,7 +139,7 @@ create table reference_source
 (
     id                              serial primary key,
     value                           text,
-    "referenceTypeId"               integer
+    reference_type_id               integer
                                     constraint reference_source_reference_type_id_fk
                                                 references reference_type
 );
@@ -147,16 +147,16 @@ create table reference_source
 create table data_cleaned
 (
     id                              serial primary key,
-    "structureCleanedId"            integer
+    structure_cleaned_id            integer
                                     constraint data_cleaned_structure_cleaned_id_fk
                                                 references structure_cleaned,
-    "organismCleanedId"             integer
+    organism_cleaned_id             integer
                                     constraint data_cleaned_organism_cleaned_id_fk
                                                 references organism_cleaned,
-    "referenceCleanedId"            integer
+    reference_cleaned_id            integer
                                     constraint data_cleaned_reference_cleaned_id_fk
                                                 references reference_cleaned,
-    "curationTypeId"                integer
+    curation_type_id                integer
                                     constraint data_cleaned_curation_type_id_fk
                                                 references curation_type
 );
@@ -171,7 +171,7 @@ create table database_source
 (
     id                              serial primary key,
     name                            text,
-    "databaseTypeId"                integer
+    database_type_id                 integer
                                     constraint database_source_database_type_id_fk
                                                 references database_type
 );
@@ -186,7 +186,7 @@ create table organism_source
 (
     id                              serial primary key,
     value                           text,
-    "organismTypeId"                integer
+    organism_type_id                integer
                                     constraint organism_source_organism_type_id_fk
                                                 references organism_type
 );
@@ -194,16 +194,16 @@ create table organism_source
 create table data_source
 (
     id                              serial primary key,
-    "databaseSourceId"              integer
+    database_source_id              integer
                                     constraint data_source_database_source_id_fk
                                                 references database_source,
-    "organismSourceId"              integer
+    organism_source_id              integer
                                     constraint data_source_organism_source_id_fk
                                                 references organism_source,
-    "structureSourceId"             integer
+    structure_source_id             integer
                                     constraint data_source_structure_source_id_fk
                                                 references structure_source,
-    "referenceSourceId"             integer
+    reference_source_id             integer
                                     constraint data_source_reference_source_id_fk
                                                 references reference_source
 );
@@ -211,10 +211,10 @@ create table data_source
 create table data_source__data_cleaned
 (
     id                              serial primary key,
-    "dataSourceId"                  integer
+    data_source_id                  integer
                                     constraint data_source__data_cleaned_data_source_id_fk
                                                 references data_source,
-    "dataCleanedId"                 integer
+    data_cleaned_id                 integer
                                     constraint data_source__data_cleaned_data_cleaned_id_fk
                                                 references data_cleaned
 );
