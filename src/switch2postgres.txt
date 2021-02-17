@@ -1,9 +1,0 @@
-LOAD DATABASE
-     FROM sqlite:////Users/rutza/GitLab/lotus/lotusProcessor/data/processed/lotus.sqlite
-     INTO postgresql:///lotus
-CAST
-	type real to numeric     using float-to-string
-WITH 
-	include drop, quote identifiers, create tables, create indexes, reset sequences
-SET 
-	work_mem to '16MB', maintenance_work_mem to '512 MB';
