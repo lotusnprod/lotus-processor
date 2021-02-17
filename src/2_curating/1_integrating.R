@@ -18,28 +18,45 @@ cat("loading ... \n")
 cat("... libraries \n")
 library(data.table)
 library(DBI)
-library(RSQLite)
 library(tidyverse)
 
 cat("... files ... \n")
 cat("... DBs \n")
 
 if (mode == "full") {
-  # work in progress for SQLite integration
-  cat("... connecting to SQLite database ...")
-  drv <- SQLite()
+  if (db_type == "sqlite") {
+    library(RSQLite)
 
-  db <- dbConnect(
-    drv = drv,
-    dbname = lotusDB
-  )
+    drv <- SQLite()
+
+    cat("... connecting to the database \n")
+    db <- dbConnect(
+      drv = drv,
+      dbname = lotusDB
+    )
+  }
+
+  if (db_type == "postgresql") {
+    library(RPostgreSQL)
+
+    drv <- PostgreSQL()
+
+    cat("... connecting to the database \n")
+    db <- dbConnect(
+      drv = drv,
+      dbname = "lotus",
+      user = "rutza",
+      host = "localhost"
+    )
+  }
 
   cat("... listing remote objects")
   dbListObjects(db)
 
-  oldTable <- RSQLite::dbGetQuery(
+  cat("... extracting already processed data")
+  oldTable <- dbGetQuery(
     conn = db,
-    statement = sqlFromFile("queries_db/0001_extract_data_source.sql")
+    statement = sqlFromFile("queries_db/extract_data_source.sql")
   )
 }
 
@@ -187,7 +204,8 @@ if (mode == "full") {
   originalTable <- anti_join(
     originalTable,
     oldTable %>%
-      select(database,
+      select(
+        database,
         organismValue = organism_value,
         organismType = organism_type,
         referenceValue = reference_value,

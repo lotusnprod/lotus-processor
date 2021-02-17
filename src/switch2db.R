@@ -43,7 +43,7 @@ if (db_type == "postgresql") {
   db <- dbConnect(
     drv = drv,
     dbname = "lotus",
-    user = "adafede",
+    user = "rutza",
     host = "localhost"
   )
 }
