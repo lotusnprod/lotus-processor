@@ -8,6 +8,8 @@ mode <- Sys.getenv("MODE", unset = "full")
 
 db_mode <- "normal" ## "fromScratch"
 
+db_type <- "sqlite" ## "postgresql"
+
 works_locally_only <- TRUE
 ## for steps where paths need to be adapted locally or related ot other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"

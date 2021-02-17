@@ -10,7 +10,7 @@
 #' @examples
 sqlFromFile <- function(file) {
   require(stringr)
-  sql <- readLines(file)
+  sql <- suppressWarnings(readLines(file))
   sql <- unlist(str_split(paste(sql, collapse = " "), ";"))
   sql <- sql[grep("^ *$", sql, invert = TRUE)]
   sql

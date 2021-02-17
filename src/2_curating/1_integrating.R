@@ -39,7 +39,7 @@ if (mode == "full") {
 
   oldTable <- RSQLite::dbGetQuery(
     conn = db,
-    statement = sqlFromFile("schema_db/0001_extract_data_source.sql")
+    statement = sqlFromFile("queries_db/0001_extract_data_source.sql")
   )
 }
 
@@ -184,7 +184,18 @@ originalTable <- dbTable %>%
 
 if (mode == "full") {
   cat("new entries only ... \n")
-  originalTable <- anti_join(originalTable, oldTable)
+  originalTable <- anti_join(
+    originalTable,
+    oldTable %>%
+      select(database,
+        organismValue = organism_value,
+        organismType = organism_type,
+        referenceValue = reference_value,
+        referenceType = reference_type,
+        structureValue = structure_value,
+        structureType = structure_type
+      )
+  )
 }
 
 cat("keeping entries not previously curated only ... \n")
