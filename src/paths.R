@@ -8,7 +8,7 @@ mode <- Sys.getenv("MODE", unset = "full")
 
 db_mode <- "normal" ## "fromScratch"
 
-db_type <- "sqlite" ## "postgresql"
+db_type <- "postgresql" ## "sqlite"
 
 works_locally_only <- TRUE
 ## for steps where paths need to be adapted locally or related ot other repos
