@@ -1,9 +1,5 @@
 == Miscellaneous
 
-=== Minimal working example
-A minimal working example containing XXX entries coming from various DB's is proposed.
-Use this example to check if all steps are running correctly on your machine.
-
 === Molconvert issue
 At the moment, we use molconvert (commercial) for structure to chemical name conversion. Since we cannot disseminate it, you won't be able to proceed to the translation except if you modify following variables in src/paths.R accordingly:
 
@@ -21,13 +17,4 @@ yarn global add @mermaid-js/mermaid-cli
 mmdc -i docs/flowchart.mmd -o img/flowchart.svg
 ----
 
-=== To build a graph from the make
-(
-  Requires remake and gprof2dot <https://github.com/jrfonseca/gprof2dot>
-)
-
-[source,console]
-----
-remake --profile -B curating
-gprof2dot -f callgrind callgrind.out.50802 | dot -Tpng -o output_full.png
-----
+See https://github.com/mermaid-js/mermaid-cli for more info
