@@ -66,26 +66,26 @@ initial_stats <- dbTable %>%
   group_by(database) %>%
   count(name = "initial retrieved unique observations")
 
-cleaned_stats <- inhouseDbMinimal %>%
+cleaned_stats_3D <- inhouseDbMinimal %>%
   group_by(database) %>%
   distinct(
     organismCleaned,
     structureCleanedInchikey,
     referenceCleanedTitle
-  ) %>% ## we should decide if 2 or 3D
+  ) %>%
   count(name = "cleaned documented structure-organism pairs")
 
-final_stats <- openDb %>%
+final_stats_3D <- openDb %>%
   group_by(database) %>%
   distinct(
     organismCleaned,
     structureCleanedInchikey,
     referenceCleanedTitle
-  ) %>% ## we should decide if 2 or 3D
+  ) %>%
   count(name = "pairs validated for wikidata export")
 
-stats_table <- left_join(initial_stats, cleaned_stats) %>%
-  left_join(., final_stats)
+stats_table <- left_join(initial_stats, cleaned_stats_3D) %>%
+  left_join(., final_stats_3D)
 
 dataset <- dataset %>%
   left_join(., stats_table) %>%
@@ -98,7 +98,15 @@ dataset <- dataset %>%
     everything()
   )
 
-pairsOpenDb <- openDb %>%
+pairsOpenDb_3D <- openDb %>%
+  filter(!is.na(organismCleaned) &
+    !is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey,
+    organismCleaned,
+    .keep_all = TRUE
+  )
+
+pairsOpenDb_2D <- openDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D,
@@ -106,7 +114,16 @@ pairsOpenDb <- openDb %>%
     .keep_all = TRUE
   )
 
-pairsOutsideDnp <- inhouseDb %>%
+pairsOutsideDnp_3D <- inhouseDb %>%
+  filter(!is.na(organismCleaned) &
+    !is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey,
+    organismCleaned,
+    .keep_all = TRUE
+  ) %>%
+  filter(database != "dnp")
+
+pairsOutsideDnp_2D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D,
@@ -115,7 +132,15 @@ pairsOutsideDnp <- inhouseDb %>%
   ) %>%
   filter(database != "dnp")
 
-pairsFull <- bind_rows(openDb, dnpDb) %>%
+pairsFull_3D <- bind_rows(openDb, dnpDb) %>%
+  filter(!is.na(organismCleaned) &
+    !is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey,
+    organismCleaned,
+    .keep_all = TRUE
+  )
+
+pairsFull_2D <- bind_rows(openDb, dnpDb) %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D,
@@ -123,13 +148,24 @@ pairsFull <- bind_rows(openDb, dnpDb) %>%
     .keep_all = TRUE
   )
 
-pairsDNP <- dnpDb %>%
+pairsDNP_3D <- dnpDb %>%
+  distinct(structureCleanedInchikey,
+    organismCleaned,
+    .keep_all = TRUE
+  )
+
+pairsDNP_2D <- dnpDb %>%
   distinct(structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   )
 
-stats <- pairsOutsideDnp %>%
+stats_3D <- pairsOutsideDnp_3D %>%
+  group_by(database) %>%
+  count() %>%
+  arrange(desc(n))
+
+stats_2D <- pairsOutsideDnp_2D %>%
   group_by(database) %>%
   count() %>%
   arrange(desc(n))
@@ -162,250 +198,152 @@ dnpDbOrganism <- dnpDb %>%
 cat(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms \n", sep = " "))
 
 ## structures
-cat("analysing unique structures per db \n")
+cat("analysing unique structures (2D) per db \n")
 ### open NP DB
-openDbStructure <- openDb %>%
+openDbStructure_3D <- openDb %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey, .keep_all = TRUE)
+
+### inhouseDB
+inhouseDbStructure_3D <- inhouseDb %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey, .keep_all = TRUE)
+
+cat(paste(
+  "inhouse:",
+  nrow(inhouseDbStructure_3D),
+  "distinct structures (3D) \n",
+  sep = " "
+))
+
+cat("analysing unique structures (2D) per db \n")
+### open NP DB
+openDbStructure_2D <- openDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
 ### inhouseDB
-inhouseDbStructure <- inhouseDb %>%
+inhouseDbStructure_2D <- inhouseDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
 cat(paste(
   "inhouse:",
-  nrow(inhouseDbStructure),
-  "distinct structures \n",
+  nrow(inhouseDbStructure_2D),
+  "distinct structures (2D) \n",
   sep = " "
 ))
 
 ### DNP
-dnpDbStructure <- dnpDb %>%
+dnpDbStructure_3D <- dnpDb %>%
+  filter(!is.na(structureCleanedInchikey)) %>%
+  distinct(structureCleanedInchikey, .keep_all = TRUE)
+
+cat(paste(
+  "dnp:",
+  nrow(dnpDbStructure_3D),
+  "distinct structures (3D) \n",
+  sep = " "
+))
+
+dnpDbStructure_2D <- dnpDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
-cat(paste("dnp:", nrow(dnpDbStructure), "distinct structures \n", sep = " "))
+cat(paste(
+  "dnp:",
+  nrow(dnpDbStructure_2D),
+  "distinct structures (2D) \n",
+  sep = " "
+))
 
-structuresPerOrganism <- pairsOpenDb %>%
-  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+structuresPerOrganism_3D <- pairsOpenDb_3D %>%
+  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  distinct(organismCleaned, structureCleanedInchikey) %>%
+  group_by(organismCleaned) %>%
+  count()
+
+structuresPerOrganism_2D <- pairsOpenDb_2D %>%
+  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(organismCleaned) %>%
   count()
 
-tableStructures <-
+tableStructures_3D <-
   c(
-    "only001_structure" = sum(structuresPerOrganism$n == 1),
-    "between001and010_structures" = sum(structuresPerOrganism$n >= 1 &
-      structuresPerOrganism$n <= 9),
-    "between010and100_structures" = sum(structuresPerOrganism$n >= 10 &
-      structuresPerOrganism$n <= 99),
-    "above100_structures" = sum(structuresPerOrganism$n >= 100)
+    "only001_structure" = sum(structuresPerOrganism_3D$n == 1),
+    "between001and010_structures" = sum(
+      structuresPerOrganism_3D$n >= 1 &
+        structuresPerOrganism_3D$n <= 9
+    ),
+    "between010and100_structures" = sum(
+      structuresPerOrganism_3D$n >= 10 &
+        structuresPerOrganism_3D$n <= 99
+    ),
+    "above100_structures" = sum(structuresPerOrganism_3D$n >= 100)
   ) %>%
   data.frame()
-colnames(tableStructures)[1] <- "organisms"
+colnames(tableStructures_3D)[1] <- "organisms"
 
-organismsPerStructure <- pairsOpenDb %>%
-  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+tableStructures_2D <-
+  c(
+    "only001_structure" = sum(structuresPerOrganism_2D$n == 1),
+    "between001and010_structures" = sum(
+      structuresPerOrganism_2D$n >= 1 &
+        structuresPerOrganism_2D$n <= 9
+    ),
+    "between010and100_structures" = sum(
+      structuresPerOrganism_2D$n >= 10 &
+        structuresPerOrganism_2D$n <= 99
+    ),
+    "above100_structures" = sum(structuresPerOrganism_2D$n >= 100)
+  ) %>%
+  data.frame()
+colnames(tableStructures_2D)[1] <- "organisms"
+
+organismsPerStructure_3D <- pairsOpenDb_3D %>%
+  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  distinct(organismCleaned, structureCleanedInchikey) %>%
+  group_by(structureCleanedInchikey) %>%
+  count()
+
+organismsPerStructure_2D <- pairsOpenDb_2D %>%
+  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(structureCleaned_inchikey2D) %>%
   count()
 
-tableOrganisms <-
+tableOrganisms_3D <-
   c(
-    "only001_organism" = sum(organismsPerStructure$n == 1),
-    "between001and010_organisms" = sum(organismsPerStructure$n >= 1 &
-      organismsPerStructure$n <= 9),
-    "between010and100_organisms" = sum(organismsPerStructure$n >= 10 &
-      organismsPerStructure$n <= 99),
-    "above100_organisms" = sum(organismsPerStructure$n >= 100)
+    "only001_organism" = sum(organismsPerStructure_3D$n == 1),
+    "between001and010_organisms" = sum(
+      organismsPerStructure_3D$n >= 1 &
+        organismsPerStructure_3D$n <= 9
+    ),
+    "between010and100_organisms" = sum(
+      organismsPerStructure_3D$n >= 10 &
+        organismsPerStructure_3D$n <= 99
+    ),
+    "above100_organisms" = sum(organismsPerStructure_3D$n >= 100)
   ) %>%
   data.frame()
-colnames(tableOrganisms)[1] <- "structures"
+colnames(tableOrganisms_3D)[1] <- "structures"
 
-# writing tabular stats
-## species by kingdom
-# cat("analysing species by kingdom \n")
-# inhouseSpeciesByKingdom <- openDbTripletsGoldMeta %>%
-#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
-#   distinct(organismCleaned_dbTaxo_7species, .keep_all = TRUE) %>%
-#   count(organismCleaned_dbTaxo_1kingdom) %>%
-#   ungroup() %>%
-#   mutate(speciesPercent = 100 * n / sum(n)) %>%
-#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
-#          species = n,
-#          speciesPercent) %>%
-#   arrange(desc(speciesPercent)) %>%
-#   head(10)
-
-## structures by class
-# inhouseStructuresByClass <- openDbTripletsGoldMeta %>%
-#   group_by(structureCleaned_3class) %>%
-#   distinct(structureCleanedInchikey, .keep_all = TRUE) %>%
-#   count(structureCleaned_3class) %>%
-#   ungroup() %>%
-#   mutate(structuresPercent = 100 * n / sum(n)) %>%
-#   select(class = structureCleaned_3class,
-#          structures = n,
-#          structuresPercent) %>%
-#   arrange(desc(structuresPercent)) %>%
-#   head(10)
-
-## structures by kingdom
-# cat("analysing structures by kingdom \n")
-# inhouseStructuresByOrganismKingdom <- openDbTripletsGoldMeta %>%
-#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
-#   distinct(structureCleanedInchikey, organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
-#   count(organismCleaned_dbTaxo_1kingdom) %>%
-#   ungroup() %>%
-#   mutate(structuresPercent = 100 * n / sum(n)) %>%
-#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
-#          structures = n,
-#          structuresPercent) %>%
-#   arrange(desc(structuresPercent)) %>%
-#   head(10)
-
-## unique structures per kingdom
-# cat("analysing unique structures by kingdom \n")
-# inhouseUniqueStructuresPerKingdom <- openDbTripletsGoldMeta %>%
-#   group_by(structureCleanedInchikey) %>%
-#   add_count(structureCleanedInchikey) %>%
-#   ungroup() %>%
-#   filter(n == 1) %>%
-#   select(-n) %>%
-#   group_by(organismCleaned_dbTaxo_1kingdom) %>%
-#   distinct(structureCleanedInchikey, organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
-#   count(organismCleaned_dbTaxo_1kingdom) %>%
-#   ungroup() %>%
-#   select(kingdom = organismCleaned_dbTaxo_1kingdom,
-#          specificStructures = n) %>%
-#   arrange(desc(specificStructures)) %>%
-#   head(10)
-
-## structures by kingdom
-# cat("joining \n")
-# inhouseStructuresByKingdom <-
-#   full_join(inhouseSpeciesByKingdom,
-#             inhouseStructuresByOrganismKingdom) %>%
-#   mutate(strucuresPerSpecies = structures / species)
-#
-# inhouseStructuresByKingdom <-
-#   full_join(inhouseStructuresByKingdom,
-#             inhouseUniqueStructuresPerKingdom) %>%
-#   mutate(structuresSpecificity = 100 * specificStructures / structures) %>%
-#   select(1, 2, 3, 4, 7, 8, 5, 6)
-
-## unique structures per species
-# cat("analysing unique structures by species \n")
-# inhouseUniqueStructuresPerSpecies <- openDbTripletsGoldMeta %>%
-#   group_by(structureCleanedInchikey) %>%
-#   add_count(structureCleanedInchikey) %>%
-#   ungroup() %>%
-#   filter(n == 1) %>%
-#   select(-n) %>%
-#   group_by(organismCleaned_dbTaxo_7species) %>%
-#   distinct(structureCleanedInchikey, organismCleaned_dbTaxo_7species, .keep_all = TRUE) %>%
-#   count(organismCleaned_dbTaxo_7species) %>%
-#   ungroup() %>%
-#   select(species = organismCleaned_dbTaxo_7species,
-#          specificStructures = n) %>%
-#   arrange(desc(specificStructures)) %>%
-#   filter(!is.na(species)) %>%
-#   head(10)
-
-## widespread metabolites
-# cat("analysing widespread metabolites \n")
-# openDbWidespread <- inhouseDbTripletsGoldMeta %>%
-#   group_by(structureCleanedInchikey) %>%
-#   filter(!is.na(organismCleaned_dbTaxo_1kingdom)) %>%
-#   distinct(organismCleaned_dbTaxo_1kingdom, .keep_all = TRUE) %>%
-#   add_count() %>%
-#   ungroup() %>%
-#   filter(n >= 6) %>%
-#   arrange(structureCleanedInchikey)
-
-## word(species,1) != genus
-# cat("analysing mismatched genera \n")
-# mismatchedGenera <- inhouseDbOrganism %>%
-#   filter(word(organism_7_species, 1) != organism_6_genus)
-
-## redundancy table
-# heavy process not bringing much for now
-# cat("analysing redundant entries \n")
-# redundancydf  <- inhouseDb %>%
-#   filter(!is.na(organismLowestTaxon) &
-#            !is.na(inchikeySanitized)) %>%
-#   distinct(organismLowestTaxon,
-#            inchikeySanitized,
-#            database,
-#            .keep_all = TRUE) %>%
-#   group_by(organismLowestTaxon, inchikeySanitized) %>%
-#   add_count() %>%
-#   ungroup() %>%
-#   filter(n >= 5) %>%
-#   select(
-#     database,
-#     structureOriginal_inchi,
-#     structureOriginal_smiles,
-#     structureOriginal_nominal,
-#     organismOriginal,
-#     organismLowestTaxon,
-#     inchikeySanitized,
-#     n
-#   )
-
-# exporting
-# # stats
-# ## structures by kingdom
-
-# write.table(
-#   x = inhouseStructuresByKingdom,
-#   file = pathDataInterimTablesAnalysedStructuresByKingdom,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-### unique structures per species
-# write.table(
-#   x = inhouseUniqueStructuresPerSpecies,
-#   file = pathDataInterimTablesAnalysedUniqueStructuresBySpecies,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-### widespread metabolites
-# write.table(
-#   x = openDbWidespread,
-#   file = pathDataInterimTablesAnalysedWidespreadStructures,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-### mismatched genera
-# write.table(
-#   x = mismatchedGenera,
-#   file = pathDataInterimTablesAnalysedMismatchedGenera,
-#   row.names = TRUE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-
-### redundancy table
-# write.table(
-#   x = redundancydf,
-#   file = pathDataInterimTablesAnalysedRedundancyTable,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
+tableOrganisms_2D <-
+  c(
+    "only001_organism" = sum(organismsPerStructure_2D$n == 1),
+    "between001and010_organisms" = sum(
+      organismsPerStructure_2D$n >= 1 &
+        organismsPerStructure_2D$n <= 9
+    ),
+    "between010and100_organisms" = sum(
+      organismsPerStructure_2D$n >= 10 &
+        organismsPerStructure_2D$n <= 99
+    ),
+    "above100_organisms" = sum(organismsPerStructure_2D$n >= 100)
+  ) %>%
+  data.frame()
+colnames(tableOrganisms_2D)[1] <- "structures"
 
 if (mode == "FULL" | mode == "full") {
   write.table(
@@ -419,36 +357,42 @@ if (mode == "FULL" | mode == "full") {
 
   cat(
     paste(
-      nrow(pairsOpenDb),
-      "unique (2D) referenced structure-organism pairs. \n",
+      nrow(pairsOpenDb_3D),
+      "|",
+      nrow(pairsOpenDb_2D),
+      "(3D|2D)",
+      "unique referenced structure-organism pairs. \n",
       "They consist of \n",
-      nrow(openDbStructure),
-      "unique (2D) curated structures and \n",
+      nrow(openDbStructure_3D),
+      "|",
+      nrow(openDbStructure_2D),
+      "(3D|2D)",
+      "unique curated structures and \n",
       nrow(openDbOrganism),
       "unique organisms,\n",
       "originating from \n",
-      nrow(pairsOpenDb %>% distinct(database)),
+      nrow(pairsOpenDb_2D %>% distinct(database)),
       "initial open databases. \n",
       "\n",
-      "Among structures, \n",
-      tableOrganisms[1, 1],
+      "Among 2D structures, \n",
+      tableOrganisms_2D[1, 1],
       "are present in only 1 organism, \n",
-      tableOrganisms[2, 1],
+      tableOrganisms_2D[2, 1],
       "are present in between 1 and 10 organisms, \n",
-      tableOrganisms[3, 1],
+      tableOrganisms_2D[3, 1],
       "are present in between 10 and 100 organisms, \n",
-      tableOrganisms[4, 1],
+      tableOrganisms_2D[4, 1],
       "are present in more than 100 organisms. \n",
       "\n",
       "Among organisms, \n",
-      tableStructures[1, 1],
-      "contain only 1 structure, \n",
-      tableStructures[2, 1],
-      "contain between 1 and 10 structures, \n",
-      tableStructures[3, 1],
-      "contain between 10 and 100 structures, \n",
-      tableStructures[4, 1],
-      "contain more than 100 structures. \n",
+      tableStructures_2D[1, 1],
+      "contain only 1 2D structure, \n",
+      tableStructures_2D[2, 1],
+      "contain between 1 and 10 2D structures, \n",
+      tableStructures_2D[3, 1],
+      "contain between 10 and 100 2D structures, \n",
+      tableStructures_2D[4, 1],
+      "contain more than 100 2D structures. \n",
       sep = " "
     ),
     file = "../docs/metrics.adoc"

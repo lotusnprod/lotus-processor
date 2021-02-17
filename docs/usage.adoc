@@ -51,6 +51,9 @@ make docker-bash
 
 This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
 
+==== Additional MAKE Readme
+If you want more informations regarding how to use MAKE, please have a look at xref:makefile.adoc[the specific documentation]
+
 ==== Conda environement
 A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory.
 
