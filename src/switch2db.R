@@ -9,7 +9,6 @@ source("paths.R")
 cat("... libraries \n")
 library(data.table)
 library(DBI)
-library(RSQLite)
 library(tidyverse)
 source("r/vroom_safe.R")
 source("r/sqlFromFile.R")
@@ -18,23 +17,47 @@ source("r/dbSendQueries.R")
 ## chemical support tables to discuss and do
 ## references support tables to discuss and do
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   cat("... creating  the database \n")
   file.create(lotusDB)
 }
 
-drv <- SQLite()
+if (db_type == "sqlite") {
+  library(RSQLite)
 
-cat("... connecting to the database \n")
-db <- dbConnect(
-  drv = drv,
-  dbname = lotusDB
-)
+  drv <- SQLite()
 
-if (db_mode == "fromScratch") {
+  cat("... connecting to the database \n")
+  db <- dbConnect(
+    drv = drv,
+    dbname = lotusDB
+  )
+}
+
+if (db_type == "postgresql") {
+  library(RPostgreSQL)
+
+  drv <- PostgreSQL()
+
+  cat("... connecting to the database \n")
+  db <- dbConnect(
+    drv = drv,
+    dbname = "lotus",
+    user = "adafede",
+    host = "localhost"
+  )
+}
+
+if (db_type == "sqlite" &
+  db_mode == "fromScratch") {
   dbSendQueries(
     conn = db,
     sql = sqlFromFile("schema_db/0000_create_initial_tables.sql")
+  )
+
+  dbSendQueries(
+    conn = db,
+    sql = sqlFromFile("schema_db/0001_rename_columns.sql")
   )
 }
 
@@ -104,14 +127,18 @@ curation_type <-
 if (db_mode == "normal") {
   curation_type_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    *
-    FROM curation_type"
+    statement = sqlFromFile(file = "queries_db/extract_curation_type.sql")
   )
 
   curation_type <- curation_type %>%
     anti_join(., curation_type_old) %>%
     distinct(name)
+
+  cat(
+    "writing",
+    nrow(curation_type),
+    "new rows to 'curation_type' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -123,12 +150,9 @@ if (db_mode == "normal") {
 
   curation_type <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    *
-    FROM curation_type"
+    statement = sqlFromFile(file = "queries_db/extract_curation_type.sql")
   )
 }
-
 
 structureOld <-
   left_join(
@@ -142,7 +166,7 @@ organismOld <-
     organismMetadata
   )
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
   dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
@@ -197,7 +221,7 @@ if (db_mode == "normal") {
     vroom_read_safe(path = pathDataInterimTablesOriginalTable)
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   database_source <- originalTable %>%
     distinct(database) %>%
     mutate(databaseSourceId = row_number()) %>%
@@ -213,10 +237,7 @@ if (db_mode == "normal") {
 
   database_type_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    database_type.id AS databaseTypeId,
-    database_type.name AS type
-    FROM database_type"
+    statement = sqlFromFile(file = "queries_db/extract_database_type.sql")
   )
 
   database_type_new <- database_type_old %>%
@@ -226,6 +247,12 @@ if (db_mode == "normal") {
   database_type <- database_type_new %>%
     anti_join(., database_type_old) %>%
     select(name = type)
+
+  cat(
+    "writing",
+    nrow(database_type),
+    "new rows to 'database_type' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -243,29 +270,30 @@ if (db_mode == "normal") {
 
   database_type <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    database_type.id AS databaseTypeId,
-    database_type.name AS type
-    FROM database_type"
+    statement = sqlFromFile(file = "queries_db/extract_database_type.sql")
   )
 
   database_source <- database_source %>%
     left_join(., database_type) %>%
     select(
       name = database,
-      databaseTypeId
+      database_type_id
     )
 
   database_source_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    name
-    FROM database_source"
+    statement = sqlFromFile(file = "queries_db/extract_database_source.sql")
   )
 
   database_source <- database_source %>%
-    anti_join(., database_source_old) %>%
+    anti_join(., database_source_old %>% select(name)) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(database_source),
+    "new rows to 'database_source' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -276,7 +304,7 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   organism_source <- originalTable %>%
     distinct(organismType, organismValue) %>%
     mutate(organismSourceId = row_number()) %>%
@@ -287,14 +315,12 @@ if (db_mode == "fromScratch") {
 
 if (db_mode == "normal") {
   organism_type <- originalTable %>%
-    distinct(organismType)
+    distinct(organismType) %>%
+    select(organism_type = organismType)
 
   organism_type_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    organism_type.id AS organismTypeId,
-    organism_type.name AS organismType
-    FROM organism_type"
+    statement = sqlFromFile(file = "queries_db/extract_organism_type.sql")
   )
 
   organism_type_new <- organism_type_old %>%
@@ -303,8 +329,14 @@ if (db_mode == "normal") {
 
   organism_type <- organism_type_new %>%
     anti_join(., organism_type_old) %>%
-    select(name = organismType) %>%
+    select(name = organism_type) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_type),
+    "new rows to 'organism_type' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -318,29 +350,33 @@ if (db_mode == "normal") {
 if (db_mode == "normal") {
   organism_type <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    organism_type.id AS organismTypeId,
-    organism_type.name AS organismType
-    FROM organism_type"
+    statement = sqlFromFile(file = "queries_db/extract_organism_type.sql")
   )
 
   organism_source_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM organism_source"
+    statement = sqlFromFile(file = "queries_db/extract_organism_source.sql")
   )
 
   organism_source <- originalTable %>%
     distinct(organismType, organismValue) %>%
+    select(
+      organism_type = organismType,
+      organism_value = organismValue
+    ) %>%
     left_join(., organism_type) %>%
     select(
-      value = organismValue,
-      organismTypeId
+      value = organism_value,
+      organism_type_id
     ) %>%
     anti_join(., organism_source_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_source),
+    "new rows to 'organism_source' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -351,7 +387,7 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   structure_source <- originalTable %>%
     distinct(structureType, structureValue) %>%
     mutate(structureSourceId = row_number()) %>%
@@ -362,14 +398,12 @@ if (db_mode == "fromScratch") {
 
 if (db_mode == "normal") {
   structure_type <- originalTable %>%
-    distinct(structureType)
+    distinct(structureType) %>%
+    select(structure_type = structureType)
 
   structure_type_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    structure_type.id AS structureTypeId,
-    structure_type.name AS structureType
-    FROM structure_type"
+    statement = sqlFromFile(file = "queries_db/extract_structure_type.sql")
   )
 
   structure_type_new <- structure_type_old %>%
@@ -378,8 +412,14 @@ if (db_mode == "normal") {
 
   structure_type <- structure_type_new %>%
     anti_join(., structure_type_old) %>%
-    select(name = structureType) %>%
+    select(name = structure_type) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(structure_type),
+    "new rows to 'structure_type' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -393,29 +433,33 @@ if (db_mode == "normal") {
 if (db_mode == "normal") {
   structure_type <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    structure_type.id AS structureTypeId,
-    structure_type.name AS structureType
-    FROM structure_type"
+    statement = sqlFromFile(file = "queries_db/extract_structure_type.sql")
   )
 
   structure_source_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM structure_source"
+    statement = sqlFromFile(file = "queries_db/extract_structure_source.sql")
   )
 
   structure_source <- originalTable %>%
     distinct(structureType, structureValue) %>%
+    select(
+      structure_type = structureType,
+      structure_value = structureValue
+    ) %>%
     left_join(., structure_type) %>%
     select(
-      value = structureValue,
-      structureTypeId
+      value = structure_value,
+      structure_type_id
     ) %>%
     anti_join(., structure_source_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(structure_source),
+    "new rows to 'structure_source' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -426,7 +470,7 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   reference_source <- originalTable %>%
     distinct(referenceType, referenceValue) %>%
     mutate(referenceSourceId = row_number()) %>%
@@ -437,14 +481,12 @@ if (db_mode == "fromScratch") {
 
 if (db_mode == "normal") {
   reference_type <- originalTable %>%
-    distinct(referenceType)
+    distinct(referenceType) %>%
+    select(reference_type = referenceType)
 
   reference_type_old <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    reference_type.id AS referenceTypeId,
-    reference_type.name AS referenceType
-    FROM reference_type"
+    statement = sqlFromFile(file = "queries_db/extract_reference_type.sql")
   )
 
   reference_type_new <- reference_type_old %>%
@@ -453,8 +495,14 @@ if (db_mode == "normal") {
 
   reference_type <- reference_type_new %>%
     anti_join(., reference_type_old) %>%
-    select(name = referenceType) %>%
+    select(name = reference_type) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(reference_type),
+    "new rows to 'reference_type' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -468,29 +516,33 @@ if (db_mode == "normal") {
 if (db_mode == "normal") {
   reference_type <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-    reference_type.id AS referenceTypeId,
-    reference_type.name AS referenceType
-    FROM reference_type"
+    statement = sqlFromFile(file = "queries_db/extract_reference_type.sql")
   )
 
   reference_source_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM reference_source"
+    statement = sqlFromFile(file = "queries_db/extract_reference_source.sql")
   )
 
   reference_source <- originalTable %>%
     distinct(referenceType, referenceValue) %>%
+    select(
+      reference_type = referenceType,
+      reference_value = referenceValue
+    ) %>%
     left_join(., reference_type) %>%
     select(
-      value = referenceValue,
-      referenceTypeId
+      value = reference_value,
+      reference_type_id
     ) %>%
     anti_join(., reference_source_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(reference_source),
+    "new rows to 'reference_source' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -501,7 +553,7 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   database_type <- database_source %>%
     select(
       id = databaseTypeId,
@@ -509,9 +561,7 @@ if (db_mode == "fromScratch") {
     ) %>%
     distinct() %>%
     arrange(id)
-}
 
-if (db_mode == "fromScratch") {
   organism_type <- organism_source %>%
     select(
       id = organismTypeId,
@@ -519,9 +569,7 @@ if (db_mode == "fromScratch") {
     ) %>%
     distinct() %>%
     arrange(id)
-}
 
-if (db_mode == "fromScratch") {
   structure_type <- structure_source %>%
     select(
       id = structureTypeId,
@@ -529,9 +577,7 @@ if (db_mode == "fromScratch") {
     ) %>%
     distinct() %>%
     arrange(id)
-}
 
-if (db_mode == "fromScratch") {
   reference_type <- reference_source %>%
     select(
       id = referenceTypeId,
@@ -541,45 +587,49 @@ if (db_mode == "fromScratch") {
     arrange(id)
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   data_source <- originalTable %>%
     left_join(., database_source %>% select(-databaseTypeId)) %>%
     left_join(., organism_source %>% select(-organismTypeId)) %>%
     left_join(., structure_source %>% select(-structureTypeId)) %>%
     left_join(., reference_source %>% select(-referenceTypeId)) %>%
-    mutate(id = row_number())
+    mutate(id = row_number()) %>%
+    select(
+      id,
+      type,
+      database,
+      organism_type = organismType,
+      organism_value = organismValue,
+      reference_type = referenceType,
+      reference_vaue = referenceValue,
+      structure_type = structureType,
+      structure_value = structureValue,
+      database_source_id = databaseSourceId,
+      organism_source_id = organismSourceId,
+      structure_source_id = structureSourceId,
+      reference_source_id = referenceSourceId
+    )
 }
 
 if (db_mode == "normal") {
   database_source <- dbGetQuery(
     conn = db,
-    statement = "
-                                SELECT
-                                *
-                                FROM database_source"
+    statement = sqlFromFile(file = "queries_db/extract_database_source.sql")
   )
 
   organism_source <- dbGetQuery(
     conn = db,
-    statement = "
-                                SELECT
-                                *
-                                FROM organism_source"
+    statement = sqlFromFile(file = "queries_db/extract_organism_source.sql")
   )
 
   structure_source <- dbGetQuery(
     conn = db,
-    statement = "
-                                 SELECT
-                                 *
-                                 FROM structure_source"
+    statement = sqlFromFile(file = "queries_db/extract_structure_source.sql")
   )
 
   reference_source <- dbGetQuery(
     conn = db,
-    statement = "SELECT
-                      *
-                      FROM reference_source"
+    statement = sqlFromFile(file = "queries_db/extract_reference_source.sql")
   )
 
   data_source <- originalTable %>%
@@ -620,19 +670,28 @@ if (db_mode == "normal") {
       organismSourceId,
       structureSourceId,
       referenceSourceId
+    ) %>%
+    select(
+      database_source_id = databaseSourceId,
+      organism_source_id = organismSourceId,
+      structure_source_id = structureSourceId,
+      reference_source_id = referenceSourceId
     )
 
   data_source_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM data_source"
+    statement = sqlFromFile(file = "queries_db/extract_data_source_full.sql")
   )
 
   data_source <- data_source %>%
     anti_join(., data_source_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(data_source),
+    "new rows to 'data_source' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -644,40 +703,37 @@ if (db_mode == "normal") {
 
   data_source <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM data_source"
+    statement = sqlFromFile(file = "queries_db/extract_data_source.sql")
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   database_source <- database_source %>%
     select(
       id = databaseSourceId,
       name = database,
-      databaseTypeId
+      database_type_id = databaseTypeId
     )
 
   organism_source <- organism_source %>%
     select(
       id = organismSourceId,
       value = organismValue,
-      organismTypeId
+      organism_type_id = organismTypeId
     )
 
   structure_source <- structure_source %>%
     select(
       id = structureSourceId,
       value = structureValue,
-      structureTypeId
+      structure_type_id = structureTypeId
     )
 
   reference_source <- reference_source %>%
     select(
       id = referenceSourceId,
       value = referenceValue,
-      referenceTypeId
+      reference_type_id = referenceTypeId
     )
 }
 
@@ -687,25 +743,27 @@ organism_detected <- organismOld %>%
     organismCleaned
   ) %>%
   mutate(id = row_number()) %>%
-  select(
-    id,
-    organismDetected,
-    organismCleaned
+  select(id,
+    organism_detected = organismDetected,
+    organism_cleaned = organismCleaned
   )
 
 if (db_mode == "normal") {
   organism_cleaned_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    name
-    FROM organism_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_organism_cleaned.sql")
   )
 
   organism_cleaned <- organismOld %>%
     select(name = organismCleaned) %>%
     anti_join(., organism_cleaned_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_cleaned),
+    "new rows to 'organism_cleaned' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -717,15 +775,11 @@ if (db_mode == "normal") {
 
   organism_cleaned <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    id,
-    name
-    FROM organism_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_organism_cleaned.sql")
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   organism_cleaned <- organismOld %>%
     distinct(organismCleaned) %>%
     mutate(id = row_number()) %>%
@@ -737,28 +791,33 @@ if (db_mode == "fromScratch") {
 organism_synonym <- organism_detected %>%
   left_join(.,
     organism_cleaned,
-    by = c("organismCleaned" = "name")
+    by = c("organism_cleaned" = "name")
   ) %>%
   select(
     id = id.x,
-    name = organismDetected,
-    organismCleanedId = id.y
+    name = organism_detected,
+    organism_cleaned_id = id.y
   )
 
 if (db_mode == "normal") {
   organism_synonym_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    name,
-    organismCleanedId
-    FROM organism_synonym"
+    statement = sqlFromFile(file = "queries_db/extract_organism_synonym.sql")
   )
 
   organism_synonym <- organism_synonym %>%
-    select(name, organismCleanedId) %>%
+    select(
+      name,
+      organism_cleaned_id
+    ) %>%
     anti_join(., organism_synonym_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_synonym),
+    "new rows to 'organism_synonym' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -770,10 +829,7 @@ if (db_mode == "normal") {
 
   organism_database_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    name
-    FROM organism_database"
+    statement = sqlFromFile(file = "queries_db/extract_organism_database.sql")
   )
 
   organism_database <- organismOld %>%
@@ -781,6 +837,12 @@ if (db_mode == "normal") {
     select(name = organismCleaned_dbTaxo) %>%
     anti_join(., organism_database_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_database),
+    "new rows to 'organism_database' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -792,14 +854,11 @@ if (db_mode == "normal") {
 
   organism_database <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM organism_database"
+    statement = sqlFromFile(file = "queries_db/extract_organism_database.sql")
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   organism_database <- organismOld %>%
     distinct(organismCleaned_dbTaxo) %>%
     group_by(organismCleaned_dbTaxo) %>%
@@ -813,15 +872,7 @@ if (db_mode == "fromScratch") {
 if (db_mode == "normal") {
   organism_information_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-      organismCleanedId,
-      organismDatabaseId,
-      taxonId,
-      ranks,
-      taxonomy,
-      rank
-    FROM organism_information"
+    statement = sqlFromFile(file = "queries_db/extract_organism_information.sql")
   )
 
   organism_information <- organismOld %>%
@@ -830,7 +881,7 @@ if (db_mode == "normal") {
       by = c("organismCleaned" = "name")
     ) %>%
     select(
-      organismCleanedId = id,
+      organism_cleaned_id = id,
       everything()
     ) %>%
     left_join(.,
@@ -838,23 +889,29 @@ if (db_mode == "normal") {
       by = c("organismCleaned_dbTaxo" = "name")
     ) %>%
     select(
-      organismDatabaseId = id,
+      organism_database_id = id,
       everything()
     ) %>%
-    distinct(organismCleanedId,
-      organismDatabaseId,
+    distinct(organism_cleaned_id,
+      organism_database_id,
       .keep_all = TRUE
     ) %>%
     anti_join(organism_information_old) %>%
     select(
-      organismCleanedId,
-      organismDatabaseId,
-      taxonId = organismCleaned_id,
+      organism_cleaned_id,
+      organism_database_id,
+      taxon_id = organismCleaned_id,
       ranks = organismCleaned_dbTaxoTaxonRanks,
       taxonomy = organismCleaned_dbTaxoTaxonomy,
       rank = organismCleaned_rank
     ) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(organism_information),
+    "new rows to 'organism_information' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -865,14 +922,14 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   organism_information <- organismOld %>%
     left_join(.,
       organism_cleaned,
       by = c("organismCleaned" = "name")
     ) %>%
     select(
-      organismCleanedId = id,
+      organism_cleaned_id = id,
       everything()
     ) %>%
     left_join(.,
@@ -880,19 +937,19 @@ if (db_mode == "fromScratch") {
       by = c("organismCleaned_dbTaxo" = "name")
     ) %>%
     select(
-      organismDatabaseId = id,
+      organism_database_id = id,
       everything()
     ) %>%
-    distinct(organismCleanedId,
-      organismDatabaseId,
+    distinct(organism_cleaned_id,
+      organism_database_id,
       .keep_all = TRUE
     ) %>%
     mutate(id = row_number()) %>%
     select(
       id,
-      organismCleanedId,
-      organismDatabaseId,
-      taxonId = organismCleaned_id,
+      organism_cleaned_id,
+      organism_database_id,
+      taxon_id = organismCleaned_id,
       ranks = organismCleaned_dbTaxoTaxonRanks,
       taxonomy = organismCleaned_dbTaxoTaxonomy,
       rank = organismCleaned_rank
@@ -902,10 +959,7 @@ if (db_mode == "fromScratch") {
 if (db_mode == "normal") {
   reference_cleaned_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM reference_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_reference_cleaned.sql")
   )
 
   reference_cleaned <- referenceOrganismDictionary %>%
@@ -926,6 +980,12 @@ if (db_mode == "normal") {
     anti_join(., reference_cleaned_old) %>%
     distinct()
 
+  cat(
+    "writing",
+    nrow(reference_cleaned),
+    "new rows to 'reference_cleaned' table \n"
+  )
+
   dbWriteTable(
     conn = db,
     name = "reference_cleaned",
@@ -936,14 +996,11 @@ if (db_mode == "normal") {
 
   reference_cleaned <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM reference_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_reference_cleaned.sql")
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   reference_cleaned <- referenceOrganismDictionary %>%
     filter(!is.na(referenceCleanedTitle)) %>%
     distinct(
@@ -967,10 +1024,7 @@ if (db_mode == "fromScratch") {
 if (db_mode == "normal") {
   structure_cleaned_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM structure_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_structure_cleaned.sql")
   )
 
   structure_cleaned <- structureOld %>%
@@ -996,22 +1050,28 @@ if (db_mode == "normal") {
       xlogp = as.numeric(structureCleaned_xlogp)
     ) %>%
     select(
-      traditionalName = structureCleaned_nameTraditional,
-      iupacName = structureCleaned_nameIupac,
+      traditional_name = structureCleaned_nameTraditional,
+      iupac_name = structureCleaned_nameIupac,
       inchikey = structureCleanedInchikey,
-      inchikey2D = structureCleaned_inchikey2D,
+      inchikey2d = structureCleaned_inchikey2D,
       inchi = structureCleanedInchi,
-      inchi2D = structureCleaned_inchi2D,
+      inchi2d = structureCleaned_inchi2D,
       smiles = structureCleanedSmiles,
-      smiles2D = structureCleaned_smiles2D,
-      stereocentersTotal,
-      stereocentersUnspecified,
-      molecularFormula = structureCleaned_molecularFormula,
-      exactMass,
+      smiles2d = structureCleaned_smiles2D,
+      stereocenters_total = stereocentersTotal,
+      stereocenters_unspecified = stereocentersUnspecified,
+      molecular_formula = structureCleaned_molecularFormula,
+      exact_mass = exactMass,
       xlogp
     ) %>%
     anti_join(., structure_cleaned_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(structure_cleaned),
+    "new rows to 'structure_cleaned' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -1023,14 +1083,11 @@ if (db_mode == "normal") {
 
   structure_cleaned <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM structure_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_structure_cleaned.sql")
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   structure_cleaned <- structureOld %>%
     distinct(
       structureCleanedSmiles,
@@ -1056,23 +1113,23 @@ if (db_mode == "fromScratch") {
     distinct() %>%
     select(
       id,
-      traditionalName = structureCleaned_nameTraditional,
-      iupacName = structureCleaned_nameIupac,
+      traditional_name = structureCleaned_nameTraditional,
+      iupac_name = structureCleaned_nameIupac,
       inchikey = structureCleanedInchikey,
-      inchikey2D = structureCleaned_inchikey2D,
+      inchikey2d = structureCleaned_inchikey2D,
       inchi = structureCleanedInchi,
-      inchi2D = structureCleaned_inchi2D,
+      inchi2d = structureCleaned_inchi2D,
       smiles = structureCleanedSmiles,
-      smiles2D = structureCleaned_smiles2D,
-      stereocentersTotal = structureCleaned_stereocenters_total,
-      stereocentersUnspecified = structureCleaned_stereocenters_unspecified,
-      molecularFormula = structureCleaned_molecularFormula,
-      exactMass = structureCleaned_exactMass,
+      smiles2d = structureCleaned_smiles2D,
+      stereocenters_total = structureCleaned_stereocenters_total,
+      stereocenters_unspecified = structureCleaned_stereocenters_unspecified,
+      molecular_formula = structureCleaned_molecularFormula,
+      exact_mass = structureCleaned_exactMass,
       xlogp = structureCleaned_xlogp
     )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   inhouseDbMinimal_complemented <- inhouseDbMinimal %>%
     mutate(curationTypeId_4 = 4) %>%
     left_join(., manuallyValidated) %>%
@@ -1169,38 +1226,41 @@ data_cleaned_temp <- inhouseDbMinimal_complemented %>%
   ) %>%
   distinct(
     database,
-    organismType,
-    organismValue,
-    referenceType,
-    referenceValue,
-    structureType,
-    structureValue,
-    organismCleanedId,
-    structureCleanedId,
-    referenceCleanedId,
-    curationTypeId
+    organism_type = organismType,
+    organism_value = organismValue,
+    reference_type = referenceType,
+    reference_vaue = referenceValue,
+    structure_type = structureType,
+    structure_value = structureValue,
+    organism_cleaned_id = organismCleanedId,
+    structure_cleaned_id = structureCleanedId,
+    reference_cleaned_id = referenceCleanedId,
+    curation_type_id = curationTypeId
   )
 
 if (db_mode == "normal") {
   data_cleaned <- data_cleaned_temp %>%
     distinct(
-      organismCleanedId,
-      structureCleanedId,
-      referenceCleanedId,
-      curationTypeId
+      organism_cleaned_id,
+      structure_cleaned_id,
+      reference_cleaned_id,
+      curation_type_id
     )
 
   data_cleaned_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM data_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_data_cleaned.sql")
   )
 
   data_cleaned <- data_cleaned %>%
     anti_join(., data_cleaned_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(data_cleaned),
+    "new rows to 'data_cleaned' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -1212,25 +1272,19 @@ if (db_mode == "normal") {
 
   data_cleaned <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM data_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_data_cleaned.sql")
   )
 }
 
 if (db_mode == "normal") {
   data_source__data_cleaned_old <- dbGetQuery(
     conn = db,
-    statement = "
-    SELECT
-    *
-    FROM data_source__data_cleaned"
+    statement = sqlFromFile(file = "queries_db/extract_data_source__data_cleaned.sql")
   )
 
   data_source <- dbGetQuery(
     conn = db,
-    statement = sqlFromFile("schema_db/0001_extract_data_source.sql")
+    statement = sqlFromFile(file = "queries_db/extract_data_source.sql")
   )
 
   data_source__data_cleaned <- data_cleaned_temp %>%
@@ -1238,21 +1292,27 @@ if (db_mode == "normal") {
       .,
       data_source %>%
         select(
-          dataSourceId = id,
+          data_source_id = id,
           everything()
         )
     ) %>%
     left_join(., data_cleaned %>%
       select(
-        dataCleanedId = id,
+        data_cleaned_id = id,
         everything()
       )) %>%
-    filter(!is.na(dataCleanedId)) %>%
-    distinct(dataSourceId, dataCleanedId)
+    filter(!is.na(data_cleaned_id)) %>%
+    distinct(data_source_id, data_cleaned_id)
 
   data_source__data_cleaned <- data_source__data_cleaned %>%
     anti_join(., data_source__data_cleaned_old) %>%
     distinct()
+
+  cat(
+    "writing",
+    nrow(data_source__data_cleaned),
+    "new rows to 'data_source__data_cleaned' table \n"
+  )
 
   dbWriteTable(
     conn = db,
@@ -1263,13 +1323,13 @@ if (db_mode == "normal") {
   )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   data_cleaned <- data_cleaned_temp %>%
     distinct(
-      organismCleanedId,
-      structureCleanedId,
-      referenceCleanedId,
-      curationTypeId
+      organism_cleaned_id,
+      structure_cleaned_id,
+      reference_cleaned_id,
+      curation_type_id
     ) %>%
     mutate(id = row_number()) %>%
     left_join(., data_cleaned_temp)
@@ -1294,35 +1354,27 @@ if (db_mode == "fromScratch") {
 
   data_source__data_cleaned <- data_source__data_cleaned %>%
     mutate(id = row_number()) %>%
-    select(
-      id,
-      dataSourceId,
-      dataCleanedId
+    select(id,
+      data_source_id = dataSourceId,
+      data_cleaned_id = dataCleanedId
     )
 
   data_cleaned <- data_cleaned %>%
     distinct(
       id,
-      structureCleanedId,
-      organismCleanedId,
-      referenceCleanedId,
-      curationTypeId
-    ) %>%
-    select(
-      id,
-      structureCleanedId,
-      organismCleanedId,
-      referenceCleanedId,
-      curationTypeId
+      organism_cleaned_id,
+      structure_cleaned_id,
+      reference_cleaned_id,
+      curation_type_id
     )
 
   data_source <- data_source %>%
-    select(
+    distinct(
       id,
-      databaseSourceId,
-      organismSourceId,
-      structureSourceId,
-      referenceSourceId
+      database_source_id,
+      organism_source_id,
+      structure_source_id,
+      reference_source_id
     )
 
   reference_cleaned <- reference_cleaned %>%
@@ -1335,7 +1387,7 @@ if (db_mode == "fromScratch") {
     )
 }
 
-if (db_mode == "fromScratch") {
+if (db_type == "sqlite" & db_mode == "fromScratch") {
   rm(
     automaticallyValidated,
     dbList,
