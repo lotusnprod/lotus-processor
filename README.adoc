@@ -8,9 +8,9 @@ include::docs/data_availability.adoc[]
 == Dataset list
 All data used for this study is listed under xref:docs/dataset.tsv[docs/dataset.csv]
 
-[%header,format=tsv]
+[%header,format=csv]
 |===
-include::docs/dataset.tsv[]
+include::docs/dataset.csv[]
 |===
 
 include::docs/requirements.adoc[]
