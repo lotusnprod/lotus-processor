@@ -14,8 +14,8 @@ source("r/vroom_safe.R")
 cat("loading ... \n")
 cat("databases list ... \n")
 dataset <- read_delim(
-  file = "../docs/dataset.tsv",
-  delim = "\t"
+  file = "../docs/dataset.csv",
+  delim = ","
 ) %>%
   select(
     -`initial retrieved unique observations`,
@@ -348,10 +348,10 @@ colnames(tableOrganisms_2D)[1] <- "structures"
 if (mode == "FULL" | mode == "full") {
   write.table(
     x = dataset,
-    file = "../docs/dataset.tsv",
+    file = "../docs/dataset.csv",
     row.names = FALSE,
     quote = FALSE,
-    sep = "\t",
+    sep = ",",
     fileEncoding = "UTF-8"
   )
 
