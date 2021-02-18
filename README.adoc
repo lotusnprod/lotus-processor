@@ -6,7 +6,7 @@ include::docs/intro.adoc[]
 include::docs/data_availability.adoc[]
 
 == Dataset list
-All data used for this study is listed under xref:docs/dataset.tsv[docs/dataset.tsv]
+All data used for this study is listed under xref:docs/dataset.tsv[docs/dataset.csv]
 
 [%header,format=tsv]
 |===

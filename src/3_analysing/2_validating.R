@@ -909,7 +909,7 @@ if (mode == "full") {
     file = "../data/validation/tableStats.csv",
     row.names = FALSE,
     quote = FALSE,
-    sep = "\t",
+    sep = ",",
     fileEncoding = "UTF-8"
   )
 }
