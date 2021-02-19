@@ -6,9 +6,9 @@ source("r/database.R")
 
 mode <- Sys.getenv("MODE", unset = "full")
 
-mode <- switch(mode_test,
-               "TRUE" = "test",
-               "FALSE" = mode)
+if (exists("mode_test")) {
+  mode <- "test"
+}
 
 db_mode <- "normal" ## "fromScratch"
 
