@@ -1,5 +1,7 @@
 # setwd(dir = "~/gitlab/opennaturalproductsdb/src")
 
+mode_test <- TRUE
+
 library(testthat)
 library(tidyverse)
 source("paths.R")
