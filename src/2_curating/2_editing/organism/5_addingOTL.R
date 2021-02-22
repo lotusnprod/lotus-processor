@@ -13,6 +13,7 @@ source("r/vroom_safe.R")
 cat("loading ... \n")
 cat("... libraries \n")
 library(DBI)
+library(pbmcapply)
 library(rotl)
 library(RSQLite)
 library(tidyverse)
@@ -98,33 +99,35 @@ dbWriteTable(
 
 new_matched_names <- taxa_names$search_string
 
-new_matched_otl_exact <- tnrs_match_names(
-  names = new_matched_names,
-  do_approximate_matching = FALSE,
-  include_suppressed = FALSE
-)
-
-taxa_approx <- new_matched_otl_exact %>%
-  filter(is.na(unique_name)) %>%
-  drop_na(search_string) %>%
-  distinct(search_string)
-
-new_matched_otl_exact <- new_matched_otl_exact %>%
-  filter(!is.na(unique_name))
-
-## very doubtful quality
-if (length(taxa_approx != 0)) {
-  new_matched_otl_approx <- tnrs_match_names(
-    names = taxa_approx$search_string,
-    do_approximate_matching = TRUE,
+if (is_empty(new_matched_names) == FALSE) {
+  new_matched_otl_exact <- tnrs_match_names(
+    names = new_matched_names,
+    do_approximate_matching = FALSE,
     include_suppressed = FALSE
   )
-}
 
-## not joining it for now since results of fuzzy seem really bad
-new_matched_otl <-
-  bind_rows(new_matched_otl_exact) %>% ## new_matched_otl_approx
-  data.frame() ## loosing some comments with df conversion
+  taxa_approx <- new_matched_otl_exact %>%
+    filter(is.na(unique_name)) %>%
+    drop_na(search_string) %>%
+    distinct(search_string)
+
+  new_matched_otl_exact <- new_matched_otl_exact %>%
+    filter(!is.na(unique_name))
+
+  ## very doubtful quality
+  if (length(taxa_approx != 0)) {
+    new_matched_otl_approx <- tnrs_match_names(
+      names = taxa_approx$search_string,
+      do_approximate_matching = TRUE,
+      include_suppressed = FALSE
+    )
+  }
+
+  ## not joining it for now since results of fuzzy seem really bad
+  new_matched_otl <-
+    bind_rows(new_matched_otl_exact) %>% ## new_matched_otl_approx
+    data.frame() ## loosing some comments with df conversion
+}
 
 dbWriteTable(
   conn = db,
@@ -134,27 +137,53 @@ dbWriteTable(
   append = TRUE
 )
 
-## Not needed anymore?
+new_ott_id <- new_matched_otl %>%
+  distinct(ott_id)
 
-# new_ott_id <- new_matched_otl %>%
-#   distinct(ott_id)
-#
-# new_matched_meta_list <-
-#   taxonomy_taxon_info(ott_ids = new_ott_id$ott_id,
-#                       include_lineage = TRUE,
-#                       include_terminal_descendants = TRUE
-#                         ) %>%
-#   tax_lineage()
-#
-# new_matched_meta <- bind_rows(new_matched_meta_list,
-#                               .id = "id")
-#
-# dbWriteTable(
-#   conn = db,
-#   name = "taxa_meta",
-#   value = new_matched_meta,
-#   row.names = FALSE,
-#   append = TRUE
-# )
+X <- seq_along(1:round(nrow(new_ott_id) / 100))
+
+ott_list <- list()
+for (i in X) {
+  ott_list[[i]] <-
+    new_ott_id$ott_id[(i * 100 - 99):(i * 100)][!is.na(new_ott_id$ott_id[(i *
+      100 - 99):(i * 100)])]
+}
+
+get_otl_lineage <- function(X) {
+  tryCatch({
+    taxonomy_taxon_info(
+      ott_ids = ott_list[[X]],
+      include_lineage = TRUE,
+      include_terminal_descendants = TRUE
+    ) %>%
+      tax_lineage()
+  })
+
+
+  new_matched_meta_list <-
+    pbmclapply(
+      FUN = get_otl_lineage,
+      X = X,
+      mc.preschedule = TRUE,
+      mc.set.seed = TRUE,
+      mc.silent = TRUE,
+      mc.cores = (parallel::detectCores() - 2),
+      mc.cleanup = TRUE,
+      mc.allow.recursive = TRUE,
+      ignore.interactive = TRUE
+    )
+
+  new_matched_meta <- bind_rows(flatten(new_matched_meta_list),
+    .id = "id"
+  )
+
+  dbWriteTable(
+    conn = db,
+    name = "taxa_meta",
+    value = new_matched_meta,
+    row.names = FALSE,
+    append = TRUE
+  )
+}
 
 dbDisconnect(db)
