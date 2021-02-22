@@ -20,79 +20,21 @@ structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
 old <-
-  vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz") %>%
+  vroom_read_safe(path = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz") %>%
   distinct(inchikey)
 
 structuresForClassification <-
   anti_join(
     structureCounted,
-    old %>% select(structureCleanedInchikey = inchikey)
+    old %>% select(inchikeySanitized = inchikey)
   ) %>%
-  distinct(inchikeySanitized = structureCleanedInchikey)
+  distinct(inchikeySanitized)
 
 inchikeys <- structuresForClassification$inchikeySanitized
 
 clasification_list_inchikey <-
   purrr::map(inchikeys, get_classification)
 
-# cat("exporting partial results to Rdata for the moment \n")
-
-# save(list = ls(.GlobalEnv), file = "../data/interim/temp.Rdata")
-#
-# smiles <- structuresForClassification$smilesSanitized
-#
-# for (i in seq_len(length(clasification_list_inchikey))) {
-#   smiles[[i]] <-
-#     ifelse(
-#       test = is.null(clasification_list_inchikey[[i]]),
-#       yes = smiles[[i]],
-#       no = NA
-#     )
-# }
-#
-# names(smiles) <- structuresForClassification$inchikeySanitized
-#
-# smiles <- smiles[!is.na(smiles)]
-#
-# Sys.sleep(10)
-#
-# cat("following error is expected because of strange behaviour of the function \n")
-# try({
-#   classification_list_smiles <- submit_query(label = "query_test",
-#                                              input = smiles,
-#                                              type = "STRUCTURE")
-# })
-#
-# Sys.sleep(10)
-#
-# cat("this one too \n ")
-# if (exists("classification_list_smiles") != TRUE) {
-#   try({
-#     classification_list_smiles <- submit_query(label = "query_test",
-#                                                input = smiles,
-#                                                type = "STRUCTURE")
-#   })
-# }
-#
-# Sys.sleep(10)
-#
-# cat("once again for safety \n ")
-# if (exists("classification_list_smiles") != TRUE) {
-#   try({
-#     classification_list_smiles <- submit_query(label = "query_test",
-#                                                input = smiles,
-#                                                type = "STRUCTURE")
-#   })
-# }
-#
-# Sys.sleep(10)
-#
-# cat("should work now \n")
-# if (exists("classification_list_smiles") != TRUE) {
-#   classification_list_smiles <- submit_query(label = "query_test",
-#                                              input = smiles,
-#                                              type = "STRUCTURE")
-# }
 cat("worked! \n")
 
 ## see accessor methods later on
@@ -169,13 +111,17 @@ alternative_parents <- invisible(
 )
 
 alternative_parents <-
-  bind_rows(alternative_parents[alternative_parents != "Error"]) %>%
-  mutate(inchikey = gsub(
-    pattern = "InChIKey=",
-    replacement = "",
-    x = inchikey,
-    fixed = TRUE
-  ))
+  bind_rows(alternative_parents[alternative_parents != "Error"])
+
+if (nrow(alternative_parents != 0)) {
+  alternative_parents <- alternative_parents %>%
+    mutate(inchikey = gsub(
+      pattern = "InChIKey=",
+      replacement = "",
+      x = inchikey,
+      fixed = TRUE
+    ))
+}
 
 chebi <- invisible(
   pbmclapply(
@@ -191,14 +137,17 @@ chebi <- invisible(
   )
 )
 
-chebi <-
-  bind_rows(chebi[chebi != "Error"]) %>%
-  mutate(inchikey = gsub(
-    pattern = "InChIKey=",
-    replacement = "",
-    x = inchikey,
-    fixed = TRUE
-  ))
+chebi <- bind_rows(chebi[chebi != "Error"])
+
+if (nrow(chebi != 0)) {
+  chebi <- chebi %>%
+    mutate(inchikey = gsub(
+      pattern = "InChIKey=",
+      replacement = "",
+      x = inchikey,
+      fixed = TRUE
+    ))
+}
 
 direct_parent <- invisible(
   pbmclapply(
@@ -215,13 +164,17 @@ direct_parent <- invisible(
 )
 
 direct_parent <-
-  bind_rows(direct_parent[direct_parent != "Error"]) %>%
-  mutate(inchikey = gsub(
-    pattern = "InChIKey=",
-    replacement = "",
-    x = inchikey,
-    fixed = TRUE
-  ))
+  bind_rows(direct_parent[direct_parent != "Error"])
+
+if (nrow(direct_parent != 0)) {
+  direct_parent <- direct_parent %>%
+    mutate(inchikey = gsub(
+      pattern = "InChIKey=",
+      replacement = "",
+      x = inchikey,
+      fixed = TRUE
+    ))
+}
 
 cat("exporting Rdata for the moment before deciding what to do \n")
 
