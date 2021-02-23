@@ -20,7 +20,7 @@ structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
 old <-
-  vroom_read_safe(path = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz") %>%
+  vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz") %>%
   distinct(inchikey)
 
 structuresForClassification <-
