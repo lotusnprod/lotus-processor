@@ -10,6 +10,7 @@ cat("... libraries \n")
 library(data.table)
 library(pbmcapply)
 library(tidyverse)
+library(RCurl)
 
 cat("... functions \n")
 source("r/getClass.R")
@@ -20,6 +21,10 @@ smiles <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureSmiles) %>%
   distinct() %>%
   tibble()
+# smiles <-
+#   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
+#   distinct(smiles = structureCleanedSmiles) %>%
+#   tibble()
 
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-
@@ -51,10 +56,11 @@ old <-
   tibble()
 
 new <- anti_join(smiles, old)
+# new <- smiles
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
-queries <- new$smiles
+queries <- curlEscape(new$smiles)
 cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
