@@ -205,3 +205,7 @@ if (is_empty(new_matched_names) == FALSE) {
 }
 
 dbDisconnect(db)
+
+end <- Sys.time()
+
+cat("Script finished in", format(end - start), "\n")
