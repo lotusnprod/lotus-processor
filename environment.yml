@@ -26,7 +26,11 @@ dependencies:
   - r-gdata
   - r-ggalluvial
   - r-ggfittext
+  - r-ggnewscale
   - r-ggraph
+  - r-ggstar
+  - r-ggtree
+  - r-ggtreeExtra
   - r-hmisc
   - r-jsonlite
   - r-pbmcapply
@@ -41,6 +45,7 @@ dependencies:
   - r-stringdist
   - r-stringi
   - r-tidyverse
+  - r-treeio
   - r-upsetr
   - r-vroom<=1.3.2 # since for the moment 1.4.0 is not able to read quoted gzip properly 
   - r-webchem
