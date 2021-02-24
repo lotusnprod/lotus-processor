@@ -258,13 +258,13 @@ cat(paste(
 ))
 
 structuresPerOrganism_3D <- pairsOpenDb_3D %>%
-  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleanedInchikey) %>%
   group_by(organismCleaned) %>%
   count()
 
 structuresPerOrganism_2D <- pairsOpenDb_2D %>%
-  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(organismCleaned) %>%
   count()
@@ -302,13 +302,13 @@ tableStructures_2D <-
 colnames(tableStructures_2D)[1] <- "organisms"
 
 organismsPerStructure_3D <- pairsOpenDb_3D %>%
-  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleanedInchikey) %>%
   group_by(structureCleanedInchikey) %>%
   count()
 
 organismsPerStructure_2D <- pairsOpenDb_2D %>%
-  # filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(structureCleaned_inchikey2D) %>%
   count()
@@ -398,6 +398,22 @@ if (mode == "FULL" | mode == "full") {
     file = "../docs/metrics.adoc"
   )
 }
+
+fwrite(
+  x = structuresPerOrganism_3D,
+  file = file.path(
+    pathDataProcessed,
+    "structuresPerOrganism.tsv.gz"
+  )
+)
+
+fwrite(
+  x = organismsPerStructure_3D,
+  file = file.path(
+    pathDataProcessed,
+    "organismsPerStructure.tsv.gz"
+  )
+)
 
 end <- Sys.time()
 
