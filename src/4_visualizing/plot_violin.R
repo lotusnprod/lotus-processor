@@ -19,7 +19,7 @@ organismsPerStructure_3D <-
 structuresPerOrganism_3D <-
   fread(file = file.path(
     pathDataProcessed,
-    "organismsPerStructure.tsv.gz"
+    "structuresPerOrganism.tsv.gz"
   ))
 # needs 3_metrics
 fig1 <- plot_ly(type = "violin") %>%

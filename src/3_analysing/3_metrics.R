@@ -273,14 +273,14 @@ tableStructures_3D <-
   c(
     "only001_structure" = sum(structuresPerOrganism_3D$n == 1),
     "between001and010_structures" = sum(
-      structuresPerOrganism_3D$n >= 1 &
-        structuresPerOrganism_3D$n <= 9
+      structuresPerOrganism_3D$n > 1 &
+        structuresPerOrganism_3D$n <= 10
     ),
     "between010and100_structures" = sum(
-      structuresPerOrganism_3D$n >= 10 &
-        structuresPerOrganism_3D$n <= 99
+      structuresPerOrganism_3D$n > 10 &
+        structuresPerOrganism_3D$n <= 100
     ),
-    "above100_structures" = sum(structuresPerOrganism_3D$n >= 100)
+    "above100_structures" = sum(structuresPerOrganism_3D$n > 100)
   ) %>%
   data.frame()
 colnames(tableStructures_3D)[1] <- "organisms"
@@ -289,14 +289,14 @@ tableStructures_2D <-
   c(
     "only001_structure" = sum(structuresPerOrganism_2D$n == 1),
     "between001and010_structures" = sum(
-      structuresPerOrganism_2D$n >= 1 &
-        structuresPerOrganism_2D$n <= 9
+      structuresPerOrganism_2D$n > 1 &
+        structuresPerOrganism_2D$n <= 10
     ),
     "between010and100_structures" = sum(
-      structuresPerOrganism_2D$n >= 10 &
-        structuresPerOrganism_2D$n <= 99
+      structuresPerOrganism_2D$n > 10 &
+        structuresPerOrganism_2D$n <= 100
     ),
-    "above100_structures" = sum(structuresPerOrganism_2D$n >= 100)
+    "above100_structures" = sum(structuresPerOrganism_2D$n > 100)
   ) %>%
   data.frame()
 colnames(tableStructures_2D)[1] <- "organisms"
@@ -317,14 +317,14 @@ tableOrganisms_3D <-
   c(
     "only001_organism" = sum(organismsPerStructure_3D$n == 1),
     "between001and010_organisms" = sum(
-      organismsPerStructure_3D$n >= 1 &
-        organismsPerStructure_3D$n <= 9
+      organismsPerStructure_3D$n > 1 &
+        organismsPerStructure_3D$n <= 10
     ),
     "between010and100_organisms" = sum(
-      organismsPerStructure_3D$n >= 10 &
-        organismsPerStructure_3D$n <= 99
+      organismsPerStructure_3D$n > 10 &
+        organismsPerStructure_3D$n <= 100
     ),
-    "above100_organisms" = sum(organismsPerStructure_3D$n >= 100)
+    "above100_organisms" = sum(organismsPerStructure_3D$n > 100)
   ) %>%
   data.frame()
 colnames(tableOrganisms_3D)[1] <- "structures"
@@ -333,14 +333,14 @@ tableOrganisms_2D <-
   c(
     "only001_organism" = sum(organismsPerStructure_2D$n == 1),
     "between001and010_organisms" = sum(
-      organismsPerStructure_2D$n >= 1 &
-        organismsPerStructure_2D$n <= 9
+      organismsPerStructure_2D$n > 1 &
+        organismsPerStructure_2D$n <= 10
     ),
     "between010and100_organisms" = sum(
-      organismsPerStructure_2D$n >= 10 &
-        organismsPerStructure_2D$n <= 99
+      organismsPerStructure_2D$n > 10 &
+        organismsPerStructure_2D$n <= 100
     ),
-    "above100_organisms" = sum(organismsPerStructure_2D$n >= 100)
+    "above100_organisms" = sum(organismsPerStructure_2D$n > 100)
   ) %>%
   data.frame()
 colnames(tableOrganisms_2D)[1] <- "structures"
