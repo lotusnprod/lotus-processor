@@ -336,16 +336,10 @@ globalSample$database <- stri_replace_all_regex(
 )
 
 cat("adding metadata \n")
-cat("... structures \n")
-inhouseDbFull <-
-  left_join(inhouseDbMinimal, structureMetadata)
-
-cat("... organisms \n")
-inhouseDbFull <-
-  left_join(inhouseDbFull, organismMetadata)
-
-cat("... references \n")
-inhouseDbFull <- left_join(inhouseDbFull, referenceMetadata)
+inhouseDbFull <- inhouseDbMinimal %>%
+  left_join(., structureMetadata) %>%
+  left_join(., organismMetadata) %>%
+  left_join(., referenceMetadata)
 
 cat("joining manual validation results with documented pairs \n")
 realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
@@ -486,7 +480,6 @@ f1Table <- full_join(old, new) %>%
   replace(is.na(.), 0)
 
 beta <- 0.5
-# β is chosen such that recall is considered β times as important as precision
 
 cat("... precision, recall and Fbeta", beta, "score \n")
 f1Table <- full_join(f1Table, anti) %>%
@@ -748,8 +741,36 @@ validationSetFilled_2 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
+if (mode != "test") {
+  set.seed(
+    seed = 42,
+    kind = "Mersenne-Twister",
+    normal.kind = "Inversion"
+  )
+  validationSet3 <-
+    anti_join(openDbClean, validationSetFilled_1) %>%
+    anti_join(., validationSetFilled_2) %>%
+    sample_n(19)
+}
+
+cat("loading validation set ter \n")
+validationSetFilled_3 <-
+  read_delim(
+    file = "../data/validation/validationSetTer.tsv",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    escape_double = FALSE,
+    trim_ws = TRUE
+  ) %>%
+  filter(!is.na(validated)) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+
 validationSetFilled <-
-  bind_rows(validationSetFilled_1, validationSetFilled_2) %>%
+  bind_rows(
+    validationSetFilled_1,
+    validationSetFilled_2,
+    validationSetFilled_3
+  ) %>%
   mutate(organismValue = organismOriginal) %>%
   select(
     structureCleanedInchikey = structureCleanedInchikey3D,
@@ -961,6 +982,20 @@ if (exists("validationSet2")) {
     file = file.path(
       pathDataInterimTablesAnalysed,
       "validationSetBis.tsv"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+}
+
+if (exists("validationSet3")) {
+  write.table(
+    x = validationSet3,
+    file = file.path(
+      pathDataInterimTablesAnalysed,
+      "validationSetTer.tsv"
     ),
     row.names = FALSE,
     quote = FALSE,
