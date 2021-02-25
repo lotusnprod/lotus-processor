@@ -6,6 +6,8 @@ cat("It currently needs 'temp_classyfireTaxonomy.R' to be run before. \n")
 
 start <- Sys.time()
 
+safety <- FALSE
+
 cat("sourcing ... \n")
 cat("... paths \n")
 source("paths.R")
@@ -28,12 +30,32 @@ platinum_pairs <-
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
     reference_doi = referenceCleanedDoi
-  )
+  ) %>%
+  tibble()
 
 cat(
   "We have",
   nrow(platinum_pairs),
   "unique inchikey-taxon-doi vaidated triplets in our SSOT \n"
+)
+
+manually_validated_pairs <-
+  fread(file = "../data/validation/manuallyValidated.tsv.gz") %>%
+  distinct(
+    structure_inchikey = structureCleanedInchikey,
+    organism_name = organismCleaned,
+    reference_doi = referenceCleanedDoi
+  ) %>%
+  mutate(manual_validation = "Y") %>%
+  tibble()
+
+platinum_pairs <-
+  left_join(platinum_pairs, manually_validated_pairs)
+
+cat(
+  "Of which",
+  nrow(platinum_pairs %>% filter(manual_validation == "Y")),
+  "manually validated. \n"
 )
 
 wikidata_pairs <-
@@ -52,7 +74,8 @@ wikidata_pairs <-
     reference_wikidata = reference,
     reference_doi,
     reference_title
-  )
+  ) %>%
+  tibble()
 
 cat(
   "We have",
@@ -71,7 +94,8 @@ chemical_metadata <-
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
-  ) ## needed
+  ) %>% ## needed
+  tibble()
 
 cat(
   "We have",
@@ -107,11 +131,13 @@ chemical_taxonomy_1 <-
       x = paste(.x, collapse = "|")
     )
   )) %>%
+  ungroup() %>%
   mutate(across(
     everything(),
     ~ y_as_na(x = .x, y = "")
   )) %>%
-  distinct()
+  distinct() %>%
+  tibble()
 
 cat(
   "We have",
@@ -130,7 +156,8 @@ chemical_taxonomy_2 <- classy_temp %>%
     structure_taxonomy_classyfire_02superclass = `02superclass`,
     structure_taxonomy_classyfire_03class = `03class`,
     structure_taxonomy_classyfire_04directparent = direct_parent,
-  )
+  ) %>%
+  tibble()
 
 cat(
   "We have",
@@ -206,7 +233,8 @@ biological_metadata <- left_join(names, otl) %>%
     organism_taxonomy_10varietas = name_varietas
   ) %>%
   map_df(rev) %>%
-  coalesce()
+  coalesce() %>%
+  tibble()
 
 cat(
   "We have",
@@ -215,7 +243,7 @@ cat(
 )
 
 platinum_u_wd <-
-  inner_join(wikidata_pairs, platinum_pairs) %>%
+  inner_join(platinum_pairs, wikidata_pairs) %>%
   distinct(
     structure_wikidata,
     structure_inchikey,
@@ -223,7 +251,8 @@ platinum_u_wd <-
     organism_name,
     reference_wikidata,
     reference_doi,
-    reference_title
+    reference_title,
+    manual_validation
   )
 
 cat(
@@ -282,40 +311,43 @@ platinum_u_wd_complete <- platinum_u_wd %>%
     organism_taxonomy_10varietas,
     reference_wikidata,
     reference_doi,
-    reference_title
+    reference_title,
+    manual_validation
   )
 
-cat(
-  "Exporting to",
-  file.path(
-    pathDataProcessed,
-    "210223_frozen.csv.gz"
+if (safety == TRUE) {
+  cat(
+    "Exporting to",
+    file.path(
+      pathDataProcessed,
+      "210223_frozen.csv.gz"
+    )
   )
-)
 
-fwrite(
-  x = platinum_u_wd,
-  file = file.path(
-    pathDataProcessed,
-    "210223_frozen.csv.gz"
+  fwrite(
+    x = platinum_u_wd,
+    file = file.path(
+      pathDataProcessed,
+      "210223_frozen.csv.gz"
+    )
   )
-)
 
-cat(
-  "Exporting to",
-  file.path(
-    pathDataProcessed,
-    "210223_frozen_metadata.csv.gz"
+  cat(
+    "Exporting to",
+    file.path(
+      pathDataProcessed,
+      "210223_frozen_metadata.csv.gz"
+    )
   )
-)
 
-fwrite(
-  x = platinum_u_wd_complete,
-  file = file.path(
-    pathDataProcessed,
-    "210223_frozen_metadata.csv.gz"
+  fwrite(
+    x = platinum_u_wd_complete,
+    file = file.path(
+      pathDataProcessed,
+      "210223_frozen_metadata.csv.gz"
+    )
   )
-)
+}
 
 end <- Sys.time()
 

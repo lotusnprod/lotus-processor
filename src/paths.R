@@ -15,7 +15,7 @@ db_mode <- "normal" ## "fromScratch"
 db_type <- "postgresql" ## "sqlite"
 
 works_locally_only <- TRUE
-## for steps where paths need to be adapted locally or related ot other repos
+## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterPath <- "../../wikidataLotusExporter"
 wikidataLotusExporterDataPath <-
