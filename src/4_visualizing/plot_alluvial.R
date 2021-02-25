@@ -253,7 +253,7 @@ legend_v <- with(sunk, reorder(validation, desc(count)))
 cat("drawing alluvial \n")
 
 pdf(
-  file = file.path(pathDataProcessedFigures, "alluvial.pdf"),
+  file = file.path("../res", "alluvial.pdf"),
   width = 96,
   height = 54
 )

@@ -9,14 +9,14 @@
 getGraphChemicalClass <- function(subclass) {
   inhouseDb_most_chemical_class_2plot <-
     inhouseDbMeta %>%
-    filter(structureCleaned_classyfire_4subclass == subclass) %>%
-    distinct(structureCleanedInchikey2D,
-      organismCleaned,
+    filter(structure_taxonomy_npclassifier_03class == subclass) %>%
+    distinct(structure_inchikey_2D,
+      organism_name,
       database,
       .keep_all = TRUE
     ) %>%
-    group_by(organismCleaned_dbTaxo_5family, database) %>%
-    count(structureCleanedInchikey2D) %>%
+    group_by(organism_taxonomy_06family, database) %>%
+    count(structure_inchikey_2D) %>%
     ungroup()
 
   inhouseDb_most_chemical_class_2plot_wide <-
@@ -45,14 +45,14 @@ getGraphChemicalClass <- function(subclass) {
 
   dbnumostchemicalclass <- as.numeric(nrow(
     inhouseDbMeta %>%
-      filter(structureCleaned_classyfire_4subclass == subclass) %>%
+      filter(structure_taxonomy_npclassifier_03class == subclass) %>%
       distinct(database)
   ))
 
   mostfamilies <-
     inhouseDb_most_chemical_class_2plot_wide %>%
-    filter(!is.na(organismCleaned_dbTaxo_5family)) %>%
-    count(organismCleaned_dbTaxo_5family) %>%
+    filter(!is.na(organism_taxonomy_06family)) %>%
+    count(organism_taxonomy_06family) %>%
     arrange(desc(n)) %>%
     head(10)
 
@@ -64,7 +64,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -85,7 +85,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -105,7 +105,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -124,7 +124,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -142,7 +142,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -159,7 +159,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -176,7 +176,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -191,7 +191,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1],
@@ -205,7 +205,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           c(
             mostfamilies[1, 1],
             mostfamilies[2, 1]
@@ -219,7 +219,7 @@ getGraphChemicalClass <- function(subclass) {
       list(
         query = elements,
         params = list(
-          "organismCleaned_dbTaxo_5family",
+          "organism_taxonomy_06family",
           mostfamilies[1, 1]
         ),
         active = TRUE,

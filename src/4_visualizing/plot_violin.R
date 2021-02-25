@@ -62,7 +62,7 @@ fig1
 
 orca(
   p = fig1,
-  file = file.path(pathDataProcessedFigures, "violin.pdf")
+  file = file.path("../res", "violin.pdf")
 )
 
 fig2 <- plot_ly(type = "violin") %>%
@@ -106,12 +106,13 @@ fig2
 
 orca(
   p = fig2,
-  file = file.path(pathDataProcessedFigures, "violin_zoomed.pdf")
+  file = file.path("../res", "violin_zoomed.pdf")
 )
 
+setwd("../res/html")
 htmlwidgets::saveWidget(
   widget = as_widget(fig2),
-  file = file.path(pathDataProcessedFiguresHtml, "violin.html")
+  file = "violin.html"
 )
 
 end <- Sys.time()
