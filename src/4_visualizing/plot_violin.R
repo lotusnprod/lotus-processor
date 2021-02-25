@@ -47,11 +47,11 @@ fig1 <- plot_ly(type = "violin") %>%
   ) %>%
   layout(
     yaxis = list(
-      title = "",
+      title = "Count",
       zeroline = FALSE
     ),
     xaxis = list(
-      title = "",
+      title = "Density",
       zeroline = FALSE,
       showline = FALSE,
       showticklabels = FALSE,
@@ -91,11 +91,11 @@ fig2 <- plot_ly(type = "violin") %>%
   layout(
     yaxis = list(
       range = c(0, 200),
-      title = "",
+      title = "Count",
       zeroline = FALSE
     ),
     xaxis = list(
-      title = "",
+      title = "Density",
       zeroline = FALSE,
       showline = FALSE,
       showticklabels = FALSE,

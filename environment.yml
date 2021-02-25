@@ -20,7 +20,6 @@ dependencies:
   - r-base
   - r-chorddiag
   - r-codetools
-  - r-collapsibletree
   - r-data.table
   - r-DBI
   - r-gdata
