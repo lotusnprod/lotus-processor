@@ -491,53 +491,6 @@ htmlwidgets::saveWidget(
   file = "chord_24.html"
 )
 
-cat("Also exporting static \n")
-
-orca(
-  p = chord_24,
-  file = file.path("..", "chord_24.pdf")
-)
-
-orca(
-  p = chord_12,
-  file = file.path("..", "chord_12.pdf")
-)
-
-orca(
-  p = chord_06,
-  file = file.path("..", "chord_06.pdf")
-)
-
-orca(
-  p = chord_big,
-  file = file.path("..", "chord_big.pdf")
-)
-
-orca(
-  p = chord_med,
-  file = file.path("..", "chord_med.pdf")
-)
-
-orca(
-  p = chord_sma,
-  file = file.path("..", "chord_sma.pdf")
-)
-
-orca(
-  p = chord_ranunculaceae,
-  file = file.path("..", "chord_ranunculaceae.pdf")
-)
-
-orca(
-  p = chord_papaveraceae,
-  file = file.path("..", "chord_papaveraceae.pdf")
-)
-
-orca(
-  p = chord_gentianaceae,
-  file = file.path("..", "chord_gentianaceae.pdf")
-)
-
 end <- Sys.time()
 
 cat("Script finished in", format(end - start), "\n")
