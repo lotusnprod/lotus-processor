@@ -1,4 +1,4 @@
-cat("This script plots the wonderful tree. \n")
+cat("This script plots the magic tree. \n")
 
 start <- Sys.time()
 
@@ -278,7 +278,7 @@ p <- p %<+%
 p
 
 ggsave(
-  filename = file.path(pathDataProcessedFigures, "magicTree.pdf"),
+  filename = file.path("../res", "magicTree.pdf"),
   plot = p,
   width = 100,
   height = 100,

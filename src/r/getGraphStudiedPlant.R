@@ -9,17 +9,17 @@
 getGraphStudiedPlant <- function(plant) {
   try({
     mostplant <-
-      as.character(inhouseDb_most_plant[inhouseDb_most_plant$organismCleaned == plant, 1])
+      as.character(inhouseDb_most_plant[inhouseDb_most_plant$organism_name == plant, 1])
     inhouseDb_most_organism_2plot <-
       inhouseDbMeta %>%
-      filter(organismCleaned == mostplant) %>%
-      distinct(structureCleanedInchikey2D,
-        organismCleaned,
+      filter(organism_name == mostplant) %>%
+      distinct(structure_inchikey_2D,
+        organism_name,
         database,
         .keep_all = TRUE
       ) %>%
-      group_by(organismCleaned, database) %>%
-      count(structureCleanedInchikey2D) %>%
+      group_by(organism_name, database) %>%
+      count(structure_inchikey_2D) %>%
       ungroup()
     inhouseDb_most_organism_2plot_wide <-
       inhouseDb_most_organism_2plot %>%
@@ -49,20 +49,20 @@ getGraphStudiedPlant <- function(plant) {
         inhouseDb_most_organism_2plot_wide,
         chemo
       ) %>%
-      distinct(structureCleanedInchikey2D,
-        organismCleaned,
+      distinct(structure_inchikey_2D,
+        organism_name,
         .keep_all = TRUE
       )
     dbnumostorganism <- as.numeric(nrow(
       inhouseDbMeta %>%
-        filter(organismCleaned == mostplant) %>%
+        filter(organism_name == mostplant) %>%
         distinct(database)
     ))
     mostsuperclasses <- inhouseDb_most_organism_2plot_wide %>%
-      filter(!is.na(structureCleaned_classyfire_2superclass)) %>%
-      count(structureCleaned_classyfire_2superclass) %>%
+      filter(!is.na(structure_taxonomy_npclassifier_01pathway)) %>%
+      count(structure_taxonomy_npclassifier_01pathway) %>%
       arrange(desc(n)) %>%
-      head(10)
+      head(7)
     upset(
       inhouseDb_most_organism_2plot_wide,
       nsets = 10,
@@ -71,67 +71,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
-            c(
-              mostsuperclasses[1, 1],
-              mostsuperclasses[2, 1],
-              mostsuperclasses[3, 1],
-              mostsuperclasses[4, 1],
-              mostsuperclasses[5, 1],
-              mostsuperclasses[6, 1],
-              mostsuperclasses[7, 1],
-              mostsuperclasses[8, 1],
-              mostsuperclasses[9, 1],
-              mostsuperclasses[10, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#6a3d9a",
-          query.name = mostsuperclasses[10, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "structureCleaned_classyfire_2superclass",
-            c(
-              mostsuperclasses[1, 1],
-              mostsuperclasses[2, 1],
-              mostsuperclasses[3, 1],
-              mostsuperclasses[4, 1],
-              mostsuperclasses[5, 1],
-              mostsuperclasses[6, 1],
-              mostsuperclasses[7, 1],
-              mostsuperclasses[8, 1],
-              mostsuperclasses[9, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#cab2d6",
-          query.name = mostsuperclasses[9, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "structureCleaned_classyfire_2superclass",
-            c(
-              mostsuperclasses[1, 1],
-              mostsuperclasses[2, 1],
-              mostsuperclasses[3, 1],
-              mostsuperclasses[4, 1],
-              mostsuperclasses[5, 1],
-              mostsuperclasses[6, 1],
-              mostsuperclasses[7, 1],
-              mostsuperclasses[8, 1]
-            )
-          ),
-          active = TRUE,
-          color = "#ff7f00",
-          query.name = mostsuperclasses[8, 1]
-        ),
-        list(
-          query = elements,
-          params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1],
@@ -149,7 +89,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1],
@@ -166,7 +106,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1],
@@ -183,7 +123,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1],
@@ -198,7 +138,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1],
@@ -212,7 +152,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             c(
               mostsuperclasses[1, 1],
               mostsuperclasses[2, 1]
@@ -225,7 +165,7 @@ getGraphStudiedPlant <- function(plant) {
         list(
           query = elements,
           params = list(
-            "structureCleaned_classyfire_2superclass",
+            "structure_taxonomy_npclassifier_01pathway",
             mostsuperclasses[1, 1]
           ),
           active = TRUE,

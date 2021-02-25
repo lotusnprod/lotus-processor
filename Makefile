@@ -177,6 +177,3 @@ analysing-metrics:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/examples.R
-
-visualizing:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
-	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/visualizing.R

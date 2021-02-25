@@ -80,9 +80,10 @@ chord_big <- draw_chord(
   palette = paired_palette_med
 )
 
+setwd("../res/html")
 htmlwidgets::saveWidget(
   widget = as_widget(chord_big),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_big.html")
+  file = "chord_big.html"
 )
 
 cat("... drawing medium chord diagram \n")
@@ -126,7 +127,7 @@ chord_med <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_med),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_med.html")
+  file = "chord_med.html"
 )
 
 cat("... drawing small chord diagram \n")
@@ -176,7 +177,7 @@ chord_sma <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_sma),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_sma.html")
+  file = "chord_sma.html"
 )
 
 cat("... drawing Ranunculaceae chord diagram \n")
@@ -227,7 +228,7 @@ chord_ranunculaceae <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_ranunculaceae),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_ranunculaceae.html")
+  file = "chord_ranunculaceae.html"
 )
 
 cat("... drawing Papaveraceae chord diagram \n")
@@ -278,7 +279,7 @@ chord_papaveraceae <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_papaveraceae),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_papaveraceae.html")
+  file = "chord_papaveraceae.html"
 )
 
 cat("... drawing Gentianaceae chord diagram \n")
@@ -330,7 +331,7 @@ chord_gentianaceae <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_gentianaceae),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_gentianaceae.html")
+  file = "chord_gentianaceae.html"
 )
 
 cat("... drawing top N chord diagrams ... \n")
@@ -383,7 +384,7 @@ chord_06 <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_06),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_06.html")
+  file = "chord_06.html"
 )
 
 cat("... top 12 \n")
@@ -435,7 +436,7 @@ chord_12 <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_12),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_12.html")
+  file = "chord_12.html"
 )
 
 cat("... top 24 \n")
@@ -487,7 +488,7 @@ chord_24 <- draw_chord(
 
 htmlwidgets::saveWidget(
   widget = as_widget(chord_24),
-  file = file.path(pathDataProcessedFiguresHtml, "Chord_24.html")
+  file = "chord_24.html"
 )
 
 end <- Sys.time()
