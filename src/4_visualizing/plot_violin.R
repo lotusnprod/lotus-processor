@@ -21,7 +21,7 @@ structuresPerOrganism_3D <-
     pathDataProcessed,
     "structuresPerOrganism.tsv.gz"
   ))
-# needs 3_metrics
+
 fig1 <- plot_ly(type = "violin") %>%
   add_trace(
     x = 0,
