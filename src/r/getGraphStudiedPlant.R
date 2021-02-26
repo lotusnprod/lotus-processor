@@ -183,7 +183,8 @@ getGraphStudiedPlant <- function(plant) {
       text.scale = 2,
       mainbar.y.label = "Unique structures per intersection",
       sets.x.label = "Unique structures per database",
-      set_size.show = TRUE
+      set_size.show = TRUE,
+      set_size.scale_max = 400
     )
   })
 }
