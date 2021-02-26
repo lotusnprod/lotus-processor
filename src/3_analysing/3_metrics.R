@@ -55,10 +55,30 @@ openDb <-
   vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   tibble()
 
+cat("exported ... \n")
+wikidata_pairs <-
+  fread(file = file.path(
+    pathDataExternalDbSource,
+    "210223_wikidata_query.tsv"
+  )) %>%
+  filter(!is.na(structure_inchikey) &
+    !is.na(taxon_name) &
+    !is.na(reference_doi)) %>%
+  distinct(
+    structureCleanedInchikey = structure_inchikey,
+    organismCleaned = taxon_name,
+    referenceCleanedDoi = reference_doi
+  ) %>%
+  tibble()
+
 cat("... dnp db \n")
 dnpDb <-
   vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
   data.frame()
+
+cat("performing inner join with uploaded entries \n")
+openDb <- openDb %>%
+  inner_join(., wikidata_pairs)
 
 inhouseDb <- bind_rows(dnpDb, openDb)
 
@@ -400,18 +420,18 @@ if (mode == "FULL" | mode == "full") {
 }
 
 fwrite(
-  x = structuresPerOrganism_3D,
+  x = structuresPerOrganism_2D,
   file = file.path(
     pathDataProcessed,
-    "structuresPerOrganism.tsv.gz"
+    "structures2DPerOrganism.tsv.gz"
   )
 )
 
 fwrite(
-  x = organismsPerStructure_3D,
+  x = organismsPerStructure_2D,
   file = file.path(
     pathDataProcessed,
-    "organismsPerStructure.tsv.gz"
+    "organismsPerStructure2D.tsv.gz"
   )
 )
 

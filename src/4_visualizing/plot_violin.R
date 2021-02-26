@@ -13,13 +13,13 @@ library(plotly)
 organismsPerStructure_3D <-
   fread(file = file.path(
     pathDataProcessed,
-    "organismsPerStructure.tsv.gz"
+    "organismsPerStructure2D.tsv.gz"
   ))
 
 structuresPerOrganism_3D <-
   fread(file = file.path(
     pathDataProcessed,
-    "structuresPerOrganism.tsv.gz"
+    "structures2DPerOrganism.tsv.gz"
   ))
 
 fig1 <- plot_ly(type = "violin") %>%
@@ -32,7 +32,7 @@ fig1 <- plot_ly(type = "violin") %>%
     side = "negative",
     box = list(visible = TRUE),
     meanline = list(visible = TRUE),
-    color = I("#a6cee3")
+    color = I("#2994D2")
   ) %>%
   add_trace(
     x = 0,
@@ -43,7 +43,7 @@ fig1 <- plot_ly(type = "violin") %>%
     side = "positive",
     box = list(visible = TRUE),
     meanline = list(visible = TRUE),
-    color = I("#1f78b4")
+    color = I("#08589B")
   ) %>%
   layout(
     yaxis = list(
@@ -75,7 +75,7 @@ fig2 <- plot_ly(type = "violin") %>%
     side = "negative",
     box = list(visible = TRUE),
     meanline = list(visible = TRUE),
-    color = I("#a6cee3")
+    color = I("#2994D2")
   ) %>%
   add_trace(
     x = 0,
@@ -86,7 +86,7 @@ fig2 <- plot_ly(type = "violin") %>%
     side = "positive",
     box = list(visible = TRUE),
     meanline = list(visible = TRUE),
-    color = I("#1f78b4")
+    color = I("#08589B")
   ) %>%
   layout(
     yaxis = list(
