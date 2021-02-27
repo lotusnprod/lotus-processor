@@ -252,11 +252,13 @@ legend_v <- with(sunk, reorder(validation, desc(count)))
 
 cat("drawing alluvial \n")
 
-pdf(
-  file = file.path("../res", "alluvial.pdf"),
-  width = 96,
-  height = 54
-)
+if (mode == "full") {
+  pdf(
+    file = file.path("../res", "alluvial.pdf"),
+    width = 96,
+    height = 54
+  )
+}
 
 ggplot(
   as.data.frame(sunk),

@@ -80,12 +80,6 @@ chord_big <- draw_chord(
   palette = paired_palette_med
 )
 
-setwd("../res/html")
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_big),
-  file = "chord_big.html"
-)
-
 cat("... drawing medium chord diagram \n")
 top_organism_med <- pairs_metadata %>%
   filter(!is.na(organism_taxonomy_06family)) %>%
@@ -123,11 +117,6 @@ chord_med <- draw_chord(
   biological_filter_value = top_organism_med,
   biological_filter_level = "organism_taxonomy_06family",
   palette = paired_palette_30
-)
-
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_med),
-  file = "chord_med.html"
 )
 
 cat("... drawing small chord diagram \n")
@@ -173,11 +162,6 @@ chord_sma <- draw_chord(
   biological_filter_value = top_organism_sma,
   biological_filter_level = "organism_taxonomy_09species",
   palette = paired_palette_big
-)
-
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_sma),
-  file = "chord_sma.html"
 )
 
 cat("... drawing Ranunculaceae chord diagram \n")
@@ -226,11 +210,6 @@ chord_ranunculaceae <- draw_chord(
   palette = paired_palette_big
 )
 
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_ranunculaceae),
-  file = "chord_ranunculaceae.html"
-)
-
 cat("... drawing Papaveraceae chord diagram \n")
 top_organism_papaveraceae <- pairs_metadata %>%
   filter(
@@ -275,11 +254,6 @@ chord_papaveraceae <- draw_chord(
   biological_filter_value = top_organism_papaveraceae,
   biological_filter_level = "organism_taxonomy_09species",
   palette = paired_palette_big
-)
-
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_papaveraceae),
-  file = "chord_papaveraceae.html"
 )
 
 cat("... drawing Gentianaceae chord diagram \n")
@@ -327,11 +301,6 @@ chord_gentianaceae <- draw_chord(
   biological_filter_value = top_organism_gentianaceae,
   biological_filter_level = "organism_taxonomy_09species",
   palette = paired_palette_big
-)
-
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_gentianaceae),
-  file = "chord_gentianaceae.html"
 )
 
 cat("... drawing top N chord diagrams ... \n")
@@ -382,11 +351,6 @@ chord_06 <- draw_chord(
   palette = paired_palette_sma
 )
 
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_06),
-  file = "chord_06.html"
-)
-
 cat("... top 12 \n")
 top_organism_12 <- pairs_metadata %>%
   filter(
@@ -432,11 +396,6 @@ chord_12 <- draw_chord(
   biological_filter_value = top_organism_12,
   biological_filter_level = "organism_taxonomy_09species",
   palette = paired_palette_big
-)
-
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_12),
-  file = "chord_12.html"
 )
 
 cat("... top 24 \n")
@@ -486,11 +445,53 @@ chord_24 <- draw_chord(
   palette = paired_palette_meg
 )
 
-htmlwidgets::saveWidget(
-  widget = as_widget(chord_24),
-  file = "chord_24.html"
-)
+if (mode == "full") {
+  setwd("../res/html")
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_big),
+    file = "chord_big.html"
+  )
 
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_med),
+    file = "chord_med.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_sma),
+    file = "chord_sma.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_ranunculaceae),
+    file = "chord_ranunculaceae.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_papaveraceae),
+    file = "chord_papaveraceae.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_gentianaceae),
+    file = "chord_gentianaceae.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_06),
+    file = "chord_06.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_12),
+    file = "chord_12.html"
+  )
+
+  htmlwidgets::saveWidget(
+    widget = as_widget(chord_24),
+    file = "chord_24.html"
+  )
+}
 end <- Sys.time()
 
 cat("Script finished in", format(end - start), "\n")

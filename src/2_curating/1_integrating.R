@@ -128,7 +128,7 @@ if (mode != "test") {
 }
 
 if (mode == "test") {
-  dbTable <- vroom_read_safe(path = pathTests) %>%
+  dbTable <- vroom_read_safe(path = pathTestsFile) %>%
     pivot_wider(
       names_from = "organismType",
       values_from = "organismValue",

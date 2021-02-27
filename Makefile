@@ -95,10 +95,10 @@ curating-editing-structure-stereocounting: ${INTERIM_TABLE_CLEANED_STRUCTURE_PAT
 ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
 	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz smilesSanitized
 
-curating-editing-structure-naming: 
+curating-editing-structure-naming: # add dependent files
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/naming.R
 
-curating-editing-structure-classifying: 
+curating-editing-structure-classifying: # add dependent files
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/np_classifier.R
 
 curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
@@ -177,3 +177,20 @@ analysing-metrics:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/examples.R
+
+visualizing: visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-violin
+
+visualizing-alluvial:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_alluvial.R
+
+visualizing-chord:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_chordDiagrams.R
+
+visualizing-tree:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_magicTree.R
+
+visualizing-upset:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_upset.R
+
+visualizing-violin:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_violin.R
