@@ -69,7 +69,7 @@ vroom_write_safe_append <- function(x, path) {
     quote = "all",
     escape = "double",
     delim = "\t",
-    col_names = FALSE,
+    col_names = !file.exists(path),
     progress = TRUE,
     append = TRUE
   )

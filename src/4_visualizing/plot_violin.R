@@ -60,11 +60,6 @@ fig1 <- plot_ly(type = "violin") %>%
   )
 fig1
 
-orca(
-  p = fig1,
-  file = file.path("../res", "violin.pdf")
-)
-
 fig2 <- plot_ly(type = "violin") %>%
   add_trace(
     x = 0,
@@ -104,16 +99,23 @@ fig2 <- plot_ly(type = "violin") %>%
   )
 fig2
 
-orca(
-  p = fig2,
-  file = file.path("../res", "violin_zoomed.pdf")
-)
+if (mode == "full") {
+  orca(
+    p = fig1,
+    file = file.path("../res", "violin.pdf")
+  )
 
-setwd("../res/html")
-htmlwidgets::saveWidget(
-  widget = as_widget(fig2),
-  file = "violin.html"
-)
+  orca(
+    p = fig2,
+    file = file.path("../res", "violin_zoomed.pdf")
+  )
+
+  setwd("../res/html")
+  htmlwidgets::saveWidget(
+    widget = as_widget(fig2),
+    file = "violin.html"
+  )
+}
 
 end <- Sys.time()
 

@@ -11,9 +11,8 @@ library(tidyverse)
 source("r/vroom_safe.R")
 
 cat("loading db, if running fullmode, this may take a while \n")
-openDbMinimal <- vroom_read_safe(
-  path = pathDataInterimTablesCuratedTable
-) %>%
+openDbMinimal <-
+  vroom_read_safe(path = pathDataInterimTablesCuratedTable) %>%
   data.frame()
 
 cat("sampling ... \n")
@@ -442,3 +441,8 @@ if (exists("additionalSetTer")) {
     fileEncoding = "UTF-8"
   )
 }
+
+
+end <- Sys.time()
+
+cat("Script finished in", format(end - start), "\n")

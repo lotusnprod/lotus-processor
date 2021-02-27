@@ -4,7 +4,7 @@
 
 source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "test")
 
 if (exists("mode_test")) {
   mode <- "test"
@@ -1669,21 +1669,25 @@ pathGnverifyScript <- switch(mode,
   "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_test.sh"
 )
 
-pathTests <- file.path(pathDataInterimTablesOriginal, "tests.tsv")
+pathTests <- file.path("../tests")
+
+pathTestsFile <- file.path(pathTests, "tests.tsv")
+
+pathTestsExpectations <- file.path(pathTests, "expectations")
 
 pathTestsOrganisms <- file.path(
-  pathDataInterimTables,
-  "5_expectation/organisms.tsv"
+  pathTestsExpectations,
+  "organisms.tsv"
 )
 
 pathTestsStructures <- file.path(
-  pathDataInterimTables,
-  "5_expectation/structures.tsv"
+  pathTestsExpectations,
+  "structures.tsv"
 )
 
 pathTestsReferences <- file.path(
-  pathDataInterimTables,
-  "5_expectation/references.tsv"
+  pathTestsExpectations,
+  "references.tsv"
 )
 
 path_accepted_fields <- file.path(

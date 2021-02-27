@@ -1,0 +1,33 @@
+database	organismType	organismValue	structureType	structureValue	referenceType	referenceValue
+tests	clean	Callichroma iris	nominal	Foo	split	Bar 
+tests	clean	Iris	nominal	BERBERINE	split	"; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163"
+tests	clean	Iris pallida	nominal	"AMYRIN,BETA:ACETATE"	title	SWERTIAJAPONIN FROM IRIS LACTEA
+tests	clean	Iris hybr	nominal	water	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK
+tests	clean	Iris florentina	smiles	NCCCCCN(C(=O)CCC(=O)NCCCCCN(C(=O)CCC(=O)NCCCCCN(C(=O)C)O)O)O.[Fe]	publishingDetails	(J Nat Prod) 43: 97-102
+tests	clean	Iris persiminima	smiles	[C]=NC1C2c3c([nH]c4ccccc34)C(C)(C)C2CC(Cl)C1(C)C=C	title	(J Nat Prod) 43: 97-102
+tests	clean	Ficus variegata	smiles	[N-]=[N+]=c1c2=c(c3c1[C@@H](O)[C@]([C@@H]([C@H]3O)O)(C)O)c(=O)c1c(c2=O)c(O)ccc1	pubmed	1234
+tests	clean	Ficus	smiles	O[C@@H](CC(=O)C(=O)[O-])CNC(=[NH2+])N	pubmed	31708947
+tests	dirty	kiwi	smiles	C[C@@H]1O[C@H](OC2=C(OC3=CC(O)=CC([O-])=C3C2=O)C2=CC=C(O)C=C2)[C@H](O)[C@H](O)[C@H]1O	title	31708947
+tests	clean	Kiwi	nominal	Pseudoionone;ψ-ionone;psi-ionone;Citrylideneacetone	doi	31708947
+tests	clean	Kiwi canterberus	nominal	"3-Hexen-1-ol; (Z)-form, O-[β-D-Xylopyranosyl-(1->6)-β-D-glucopyranoside]"	doi	10.1080/00071618200650061 .
+tests	clean	Rose apple	nominal	α-Terpinene	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ejoc73%3e3.0.co;2-f
+tests	clean	Rose	nominal	β-Terpinene	publishingDetails	HelloWorld!
+tests	clean	Apple	nominal	γ-Terpinene	original	HelloWorld!
+tests	dirty	"Rose, apple"	nominal	δ-Terpinene	doi	HelloWorld!
+tests	dirty	Rice Bean	nominal	δ-cadinene	doi	HelloWorld!
+tests	dirty	"Rice, Bean"	nominal	(+)-δ-cadinene	doi	HelloWorld!
+tests	clean	Rice	nominal	(-)-δ-cadinene	doi	HelloWorld!
+tests	dirty	Olive	inchi	"InChI=1/C26H36O8.C25H34O8/c1-13-19(32-6)17(21(27)28)16-18(23(30)34-22(16)29)20(13)33-12-15-25(4)10-7-9-24(2,3)14(25)8-11-26(15,5)31;1-12-18(26)16-15(21(29)33-22(16)30)17(20(27)28)19(12)32-11-14-24(4)9-6-8-23(2,3)13(24)7-10-25(14,5)31/h14-15,22,29,31H,7-12H2,1-6H3,(H,27,28);13-14,21,26,29,31H,6-11H2,1-5H3,(H,27,28)"	doi	HelloWorld!
+tests	dirty	African olive	inchi	"InChI=1/C25H38O5S.C8H11N/c1-23(2)12-5-13-25(4)21(23)10-14-24(3)20(8-6-18-11-15-29-16-18)19(7-9-22(24)25)17-30-31(26,27)28;1-7(9)8-5-3-2-4-6-8/h11,15-17,20-22H,5-10,12-14H2,1-4H3,(H,26,27,28);2-7H,9H2,1H3/b19-17-;"	doi	HelloWorld!
+tests	clean	Astragali radix	inchi	C[C@@H]1O[C@H](OC2=C(OC3=CC(O)=CC([O-])=C3C2=O)C2=CC=C(O)C=C2)[C@H](O)[C@H](O)[C@H]1O	doi	HelloWorld!
+tests	clean	Lini Semen	smiles	(-)-δ-cadinene	doi	HelloWorld!
+tests	clean	Lini semen	smiles	"InChI=1/C25H38O5S.C8H11N/c1-23(2)12-5-13-25(4)21(23)10-14-24(3)20(8-6-18-11-15-29-16-18)19(7-9-22(24)25)17-30-31(26,27)28;1-7(9)8-5-3-2-4-6-8/h11,15-17,20-22H,5-10,12-14H2,1-4H3,(H,26,27,28);2-7H,9H2,1H3/b19-17-;"	doi	HelloWorld!
+tests	clean	Piper	nominal	C[C@@H]1O[C@H](OC2=C(OC3=CC(O)=CC([O-])=C3C2=O)C2=CC=C(O)C=C2)[C@H](O)[C@H](O)[C@H]1O	doi	HelloWorld!
+tests	clean	Piperis	nominal	"InChI=1/C25H38O5S.C8H11N/c1-23(2)12-5-13-25(4)21(23)10-14-24(3)20(8-6-18-11-15-29-16-18)19(7-9-22(24)25)17-30-31(26,27)28;1-7(9)8-5-3-2-4-6-8/h11,15-17,20-22H,5-10,12-14H2,1-4H3,(H,26,27,28);2-7H,9H2,1H3/b19-17-;"	doi	HelloWorld!
+tests	clean	Lecidea piperis	smiles	HelloWorld!	doi	HelloWorld!
+tests	clean	Radix Piperis longi	smiles	HelloWorld!	doi	HelloWorld!
+tests	clean	Radix	smiles	HelloWorld!	doi	HelloWorld!
+tests	clean	Pepper	smiles	HelloWorld!	doi	HelloWorld!
+tests	dirty	Black pepper	smiles	HelloWorld!	doi	HelloWorld!
+tests	dirty	Green bell pepper	smiles	HelloWorld!	original	"Aasen,Acta Chem. Scand. Ser. B,29,(1975),51"
+tests	clean	Nicotiana tabacum	smiles	HelloWorld!	original	"Aasen,Acta Chem. Scand. Ser. B,29,(1975),51"
