@@ -258,67 +258,66 @@ if (mode == "full") {
     width = 96,
     height = 54
   )
-}
 
-ggplot(
-  as.data.frame(sunk),
-  aes(
-    y = count,
-    axis1 = database,
-    axis2 = originalType,
-    axis3 = cleanedType
-  )
-) +
-  geom_stratum(
-    width = 1 / 2,
-    aes(size = 1),
-    decreasing = TRUE
-  ) +
-  geom_alluvium(
-    width = 1 / 2,
-    aes(fill = legend_v),
-    aes.bind = "alluvia",
-    lode.guidance = "forward",
-    decreasing = TRUE
-  ) +
-  geom_flow(
-    width = 1 / 2,
+  ggplot(
+    as.data.frame(sunk),
     aes(
-      fill = legend_v,
-      colour = legend_v
-    ),
-    aes.bind = "alluvia",
-    aes.flow = "forward",
-    stat = after_stat("alluvium"),
-    decreasing = TRUE
+      y = count,
+      axis1 = database,
+      axis2 = originalType,
+      axis3 = cleanedType
+    )
   ) +
-  geom_fit_text(
-    stat = "stratum",
-    min.size = 0,
-    grow = TRUE,
-    width = 1 / 2,
-    aes(label = after_stat(stratum)),
-    decreasing = TRUE
-  ) +
-  scale_x_discrete(limits = c("database", "original", "cleaned")) +
-  # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-  scale_fill_manual(values = c("#D71D62", "#08589B")) +
-  scale_colour_manual(values = c("#D71D62", "#08589B")) +
-  theme(
-    panel.grid.major = element_blank(),
-    panel.grid.minor = element_blank(),
-    panel.background = element_blank(),
-    # axis.text.y = element_blank(),
-    axis.text.y = element_text(size = rel(7)),
-    axis.title.y = element_text(size = rel(1)),
-    # axis.ticks = element_blank(),
-    axis.text.x = element_text(size = rel(7)),
-    axis.title.x = element_blank(),
-    legend.title = element_blank(),
-    legend.text = element_text(size = rel(5)),
-  )
-dev.off()
-
+    geom_stratum(
+      width = 1 / 2,
+      aes(size = 1),
+      decreasing = TRUE
+    ) +
+    geom_alluvium(
+      width = 1 / 2,
+      aes(fill = legend_v),
+      aes.bind = "alluvia",
+      lode.guidance = "forward",
+      decreasing = TRUE
+    ) +
+    geom_flow(
+      width = 1 / 2,
+      aes(
+        fill = legend_v,
+        colour = legend_v
+      ),
+      aes.bind = "alluvia",
+      aes.flow = "forward",
+      stat = after_stat("alluvium"),
+      decreasing = TRUE
+    ) +
+    geom_fit_text(
+      stat = "stratum",
+      min.size = 0,
+      grow = TRUE,
+      width = 1 / 2,
+      aes(label = after_stat(stratum)),
+      decreasing = TRUE
+    ) +
+    scale_x_discrete(limits = c("database", "original", "cleaned")) +
+    # scale_y_continuous(trans = 'log10', name = "log10(count)") +
+    scale_fill_manual(values = c("#D71D62", "#08589B")) +
+    scale_colour_manual(values = c("#D71D62", "#08589B")) +
+    theme(
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      panel.background = element_blank(),
+      # axis.text.y = element_blank(),
+      axis.text.y = element_text(size = rel(7)),
+      axis.title.y = element_text(size = rel(1)),
+      # axis.ticks = element_blank(),
+      axis.text.x = element_text(size = rel(7)),
+      axis.title.x = element_blank(),
+      legend.title = element_blank(),
+      legend.text = element_text(size = rel(5)),
+    )
+  dev.off()
+}
 ## interactive alternative
 
 # library(easyalluvial)

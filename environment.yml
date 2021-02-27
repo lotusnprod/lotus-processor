@@ -40,6 +40,7 @@ dependencies:
   - r-splitstackshape
   - r-stringdist
   - r-stringi
+  - r-testthat
   - r-tidyverse
   - r-upsetr
   - r-vroom<=1.3.2 # since for the moment 1.4.0 is not able to read quoted gzip properly 
