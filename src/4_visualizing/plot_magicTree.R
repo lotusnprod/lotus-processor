@@ -61,7 +61,7 @@ families_matched_restricted <- families_matched_restricted %>%
 
 tr_restricted <- tol_induced_subtree(ott_ids = ott_in_tree)
 
-test <- pairs_metadata %>%
+specific_classes <- pairs_metadata %>%
   cSplit(
     splitCols = colnames(.)[.[, grepl(
       pattern = "structure_taxonomy_npclassifier_",
@@ -147,7 +147,7 @@ info <- taxonomy %>%
   mutate(Kingdom = fct_reorder(Kingdom, !is.na(Domain))) %>%
   mutate(Phylum = fct_reorder(Phylum, !is.na(Kingdom)))
 
-bar_data <- test %>%
+bar_data <- specific_classes %>%
   select(
     id = organism_taxonomy_06family,
     everything(),
@@ -187,6 +187,165 @@ tr_temp$tip.label <-
     replacement = "",
     x = tr_temp$tip.label
   )
+
+sitosterol_3D <- pairs_metadata %>%
+  mutate(structure_inchikey = ifelse(
+    test = grepl(
+      pattern = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
+      x = structure_inchikey,
+      fixed = TRUE
+    ),
+    yes = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
+    no = NA
+  )) %>%
+  group_by(organism_taxonomy_06family) %>%
+  fill(structure_inchikey, .direction = "downup") %>%
+  distinct(organism_taxonomy_06family, structure_inchikey) %>%
+  left_join(families_matched_restricted,
+    .,
+    by = c("unique_name" = "organism_taxonomy_06family")
+  ) %>%
+  mutate(structure_inchikey = ifelse(
+    test = !is.na(structure_inchikey),
+    yes = structure_inchikey,
+    no = "noSitosterol_3D"
+  )) %>%
+  mutate(key = gsub(
+    pattern = " .*",
+    replacement = "",
+    x = key
+  )) %>%
+  relocate(key, .before = search_string) %>%
+  data.frame()
+
+sitosterol_2D <- pairs_metadata %>%
+  mutate(structure_inchikey = ifelse(
+    test = grepl(
+      pattern = "KZJWDPNRJALLNS",
+      x = structure_inchikey,
+      fixed = TRUE
+    ),
+    yes = "KZJWDPNRJALLNS",
+    no = NA
+  )) %>%
+  group_by(organism_taxonomy_06family) %>%
+  fill(structure_inchikey, .direction = "downup") %>%
+  distinct(organism_taxonomy_06family, structure_inchikey) %>%
+  left_join(families_matched_restricted,
+    .,
+    by = c("unique_name" = "organism_taxonomy_06family")
+  ) %>%
+  mutate(structure_inchikey = ifelse(
+    test = !is.na(structure_inchikey),
+    yes = structure_inchikey,
+    no = "noSitosterol_2D"
+  )) %>%
+  mutate(key = gsub(
+    pattern = " .*",
+    replacement = "",
+    x = key
+  )) %>%
+  relocate(key, .before = search_string) %>%
+  data.frame()
+
+stigmastanes <- pairs_metadata %>%
+  mutate(
+    structure_taxonomy_npclassifier_03class = ifelse(
+      test = structure_taxonomy_npclassifier_03class == "Stigmastane steroids",
+      yes = structure_taxonomy_npclassifier_03class,
+      no = NA
+    )
+  ) %>%
+  group_by(organism_taxonomy_06family) %>%
+  fill(structure_taxonomy_npclassifier_03class, .direction = "downup") %>%
+  distinct(
+    organism_taxonomy_06family,
+    structure_taxonomy_npclassifier_03class
+  ) %>%
+  left_join(families_matched_restricted,
+    .,
+    by = c("unique_name" = "organism_taxonomy_06family")
+  ) %>%
+  mutate(
+    structure_taxonomy_npclassifier_03class = ifelse(
+      test = !is.na(structure_taxonomy_npclassifier_03class),
+      yes = structure_taxonomy_npclassifier_03class,
+      no = "zNo_stigmastane_steroids"
+    )
+  ) %>%
+  mutate(key = gsub(
+    pattern = " .*",
+    replacement = "",
+    x = key
+  )) %>%
+  relocate(key, .before = search_string) %>%
+  data.frame()
+
+steroids <- pairs_metadata %>%
+  mutate(
+    structure_taxonomy_npclassifier_02superclass = ifelse(
+      test = structure_taxonomy_npclassifier_02superclass == "Steroids",
+      yes = structure_taxonomy_npclassifier_02superclass,
+      no = NA
+    )
+  ) %>%
+  group_by(organism_taxonomy_06family) %>%
+  fill(structure_taxonomy_npclassifier_02superclass, .direction = "downup") %>%
+  distinct(
+    organism_taxonomy_06family,
+    structure_taxonomy_npclassifier_02superclass
+  ) %>%
+  left_join(families_matched_restricted,
+    .,
+    by = c("unique_name" = "organism_taxonomy_06family")
+  ) %>%
+  mutate(
+    structure_taxonomy_npclassifier_02superclass = ifelse(
+      test = !is.na(structure_taxonomy_npclassifier_02superclass),
+      yes = structure_taxonomy_npclassifier_02superclass,
+      no = "zNo_steroids"
+    )
+  ) %>%
+  mutate(key = gsub(
+    pattern = " .*",
+    replacement = "",
+    x = key
+  )) %>%
+  relocate(key, .before = search_string) %>%
+  data.frame()
+
+terpenoids <- pairs_metadata %>%
+  mutate(
+    structure_taxonomy_npclassifier_01pathway = ifelse(
+      test = structure_taxonomy_npclassifier_01pathway == "Terpenoids",
+      yes = structure_taxonomy_npclassifier_01pathway,
+      no = NA
+    )
+  ) %>%
+  group_by(organism_taxonomy_06family) %>%
+  fill(structure_taxonomy_npclassifier_01pathway, .direction = "downup") %>%
+  distinct(
+    organism_taxonomy_06family,
+    structure_taxonomy_npclassifier_01pathway
+  ) %>%
+  left_join(families_matched_restricted,
+    .,
+    by = c("unique_name" = "organism_taxonomy_06family")
+  ) %>%
+  mutate(
+    structure_taxonomy_npclassifier_01pathway = ifelse(
+      test = !is.na(structure_taxonomy_npclassifier_01pathway),
+      yes = structure_taxonomy_npclassifier_01pathway,
+      no = "zNo_terpenoids"
+    )
+  ) %>%
+  mutate(key = gsub(
+    pattern = " .*",
+    replacement = "",
+    x = key
+  )) %>%
+  relocate(key, .before = search_string) %>%
+  data.frame()
 
 p <- ggtree(tr = tr_temp, layout = "circular")
 
@@ -275,13 +434,96 @@ p <- p %<+%
     legend.text = element_text(size = rel(2)),
   )
 
-p
+q <- tree %<+% sitosterol_3D +
+  geom_tree(mapping = aes(color = structure_inchikey)) +
+  scale_color_manual(
+    values = c("#08589B", "#D71D62"),
+    na.value = "grey"
+  ) +
+  theme(legend.position = "none")
+
+r <- tree %<+% sitosterol_2D +
+  geom_tree(mapping = aes(color = structure_inchikey)) +
+  scale_color_manual(
+    values = c("#08589B", "#D71D62"),
+    na.value = "grey"
+  ) +
+  theme(legend.position = "none")
+
+s <- tree %<+% stigmastanes +
+  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_03class)) +
+  scale_color_manual(
+    values = c("#08589B", "#D71D62"),
+    na.value = "grey"
+  ) +
+  theme(legend.position = "none")
+
+t <- tree %<+% steroids +
+  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_02superclass)) +
+  scale_color_manual(
+    values = c("#08589B", "#D71D62"),
+    na.value = "grey"
+  ) +
+  theme(legend.position = "none")
+
+u <- tree %<+% terpenoids +
+  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_01pathway)) +
+  scale_color_manual(
+    values = c("#08589B", "#D71D62"),
+    na.value = "grey"
+  ) +
+  theme(legend.position = "none")
 
 ggsave(
   filename = file.path("../res", "magicTree.pdf"),
   plot = p,
   width = 100,
   height = 100,
+  units = "in",
+  limitsize = FALSE
+)
+
+ggsave(
+  filename = file.path("../res", "tree_sitosterol_3D.pdf"),
+  plot = q,
+  width = 10,
+  height = 10,
+  units = "in",
+  limitsize = FALSE
+)
+
+ggsave(
+  filename = file.path("../res", "tree_sitosterol_2D.pdf"),
+  plot = r,
+  width = 10,
+  height = 10,
+  units = "in",
+  limitsize = FALSE
+)
+
+ggsave(
+  filename = file.path("../res", "tree_stigmastanes.pdf"),
+  plot = s,
+  width = 10,
+  height = 10,
+  units = "in",
+  limitsize = FALSE
+)
+
+ggsave(
+  filename = file.path("../res", "tree_steroids.pdf"),
+  plot = t,
+  width = 10,
+  height = 10,
+  units = "in",
+  limitsize = FALSE
+)
+
+ggsave(
+  filename = file.path("../res", "tree_terpenoids.pdf"),
+  plot = u,
+  width = 10,
+  height = 10,
   units = "in",
   limitsize = FALSE
 )
