@@ -1,9 +1,12 @@
+"
+",
 Questions,Wikidata SPARQL query
-What are the compounds present in Mouse-ear cress (Arabidopsis thaliana) ?,https://w.wiki/32y8
-Which organisms contain the 2D structure of beta-sitosterol ?,https://w.wiki/32yC
-Which taxa have chemical compounds related to (but different from) beta-sitosterol ?,https://w.wiki/32$G
-What are examples of organisms where compounds were reported to be produced by a sister organism but not the organism itself ?,https://w.wiki/32yN
-Give a count of compounds structurally similar to compounds labelled as antibiotics per parent taxon they were found in.,https://w.wiki/32Qb
-Return all the compounds found to be present in any biological organism.,https://w.wiki/32FE
-Return a list of all the compounds with an indolic scaffold,https://w.wiki/32KZ
-"Return a count of structure-organism pairs referenced by authors (here we compare two senior NPs chemists, co-authors of this paper and the late Ferdinand Bohlmann).",https://w.wiki/32$m
+What are the compounds present in Mouse-ear cress (Arabidopsis thaliana)?,https://w.wiki/32y8
+Which organisms are known to contain the 2D structure of beta-sitosterol?,https://w.wiki/334q
+Which taxa have chemical compounds related to (but different from) beta-sitosterol?,https://w.wiki/334s
+What are examples of organisms where compounds were reported to be produced by a sister organism but not the organism itself?,https://w.wiki/3359
+Which Zephyranthes species lack compounds known from at least two sister species?,https://w.wiki/335x
+How many compounds are structurally similar to compounds labelled as antibiotics? Results are grouped by the parent taxon of the organism they were found in.,https://w.wiki/32Qb
+"Which compounds are found in a biological organism, according to which references?",https://w.wiki/335C
+Which compounds have an indolic scaffold?,https://w.wiki/32KZ
+"How many structure-organism pairs have been referenced by these authors? (Here, we compare two senior natural products chemists and co-authors of this paper with the late Ferdinand Bohlmann).",https://w.wiki/32$m
