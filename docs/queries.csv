@@ -1,0 +1,9 @@
+Questions,Wikidata SPARQL query
+What are the compounds present in Mouse-ear cress (Arabidopsis thaliana) ?,https://w.wiki/32y8
+Which organisms contain the 2D structure of beta-sitosterol ?,https://w.wiki/32yC
+Which taxa have chemical compounds related to (but different from) beta-sitosterol ?,https://w.wiki/32$G
+What are examples of organisms where compounds were reported to be produced by a sister organism but not the organism itself ?,https://w.wiki/32yN
+Give a count of compounds structurally similar to compounds labelled as antibiotics per parent taxon they were found in.,https://w.wiki/32Qb
+Return all the compounds found to be present in any biological organism.,https://w.wiki/32FE
+Return a list of all the compounds with an indolic scaffold,https://w.wiki/32KZ
+"Return a count of structure-organism pairs referenced by authors (here we compare two senior NPs chemists, co-authors of this paper and the late Ferdinand Bohlmann).",https://w.wiki/32$m
