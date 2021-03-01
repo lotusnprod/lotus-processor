@@ -301,8 +301,8 @@ if (mode == "full") {
     ) +
     scale_x_discrete(limits = c("database", "original", "cleaned")) +
     # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-    scale_fill_manual(values = c("#D71D62", "#08589B")) +
-    scale_colour_manual(values = c("#D71D62", "#08589B")) +
+    scale_fill_manual(values = c("#861450", "#2994D2")) +
+    scale_colour_manual(values = c("#861450", "#2994D2")) +
     theme(
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),

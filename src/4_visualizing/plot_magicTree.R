@@ -211,7 +211,7 @@ sitosterol_3D <- pairs_metadata %>%
     no = "noSitosterol_3D"
   )) %>%
   mutate(key = gsub(
-    pattern = " .*",
+    pattern = "_.*",
     replacement = "",
     x = key
   )) %>%
@@ -241,7 +241,7 @@ sitosterol_2D <- pairs_metadata %>%
     no = "noSitosterol_2D"
   )) %>%
   mutate(key = gsub(
-    pattern = " .*",
+    pattern = "_.*",
     replacement = "",
     x = key
   )) %>%
@@ -274,7 +274,7 @@ stigmastanes <- pairs_metadata %>%
     )
   ) %>%
   mutate(key = gsub(
-    pattern = " .*",
+    pattern = "_.*",
     replacement = "",
     x = key
   )) %>%
@@ -307,7 +307,7 @@ steroids <- pairs_metadata %>%
     )
   ) %>%
   mutate(key = gsub(
-    pattern = " .*",
+    pattern = "_.*",
     replacement = "",
     x = key
   )) %>%
@@ -340,16 +340,16 @@ terpenoids <- pairs_metadata %>%
     )
   ) %>%
   mutate(key = gsub(
-    pattern = " .*",
+    pattern = "_.*",
     replacement = "",
     x = key
   )) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
-p <- ggtree(tr = tr_temp, layout = "circular")
+tree <- ggtree(tr = tr_temp, layout = "circular")
 
-p <- p %<+%
+p <- tree %<+%
   info_temp +
   # geom_label(aes(x=branch, label=Order)) +
   geom_tiplab(
@@ -437,15 +437,15 @@ p <- p %<+%
 q <- tree %<+% sitosterol_3D +
   geom_tree(mapping = aes(color = structure_inchikey)) +
   scale_color_manual(
-    values = c("#08589B", "#D71D62"),
+    values = c("#2994D2", "#861450"),
     na.value = "grey"
   ) +
   theme(legend.position = "none")
 
-r <- tree %<+% sitosterol_2D +
+r <- ggtree(tr = tr_temp, layout = "circular") %<+% sitosterol_2D +
   geom_tree(mapping = aes(color = structure_inchikey)) +
   scale_color_manual(
-    values = c("#08589B", "#D71D62"),
+    values = c("#2994D2", "#861450"),
     na.value = "grey"
   ) +
   theme(legend.position = "none")
@@ -453,7 +453,7 @@ r <- tree %<+% sitosterol_2D +
 s <- tree %<+% stigmastanes +
   geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_03class)) +
   scale_color_manual(
-    values = c("#08589B", "#D71D62"),
+    values = c("#2994D2", "#861450"),
     na.value = "grey"
   ) +
   theme(legend.position = "none")
@@ -461,7 +461,7 @@ s <- tree %<+% stigmastanes +
 t <- tree %<+% steroids +
   geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_02superclass)) +
   scale_color_manual(
-    values = c("#08589B", "#D71D62"),
+    values = c("#2994D2", "#861450"),
     na.value = "grey"
   ) +
   theme(legend.position = "none")
@@ -469,7 +469,7 @@ t <- tree %<+% steroids +
 u <- tree %<+% terpenoids +
   geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_01pathway)) +
   scale_color_manual(
-    values = c("#08589B", "#D71D62"),
+    values = c("#2994D2", "#861450"),
     na.value = "grey"
   ) +
   theme(legend.position = "none")
