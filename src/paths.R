@@ -1572,7 +1572,7 @@ pathDataInterimTablesAnalysedInhouseDbTriplets <-
 pathDataInterimTablesAnalysedDnpDbTriplets <-
   file.path(
     pathDataInterimTablesAnalysed,
-    "dnpDbTriplets.tsv.gz"
+    "dnp.tsv.gz"
   )
 
 ## structures by kingdom
