@@ -157,7 +157,7 @@ databases$add(
 
 databases$add(
   name = "cyanometdb",
-  sourceFiles = list(tsv = "media-1.csv"),
+  sourceFiles = list(tsv = "1-s2.0-S0043135421002153-mmc4.zip"),
   interimFile = "cyanometdb.tsv.gz"
 )
 
@@ -647,18 +647,10 @@ pathDataExternalTranslationSourceCommonDrdukeScientific <-
   )
 
 ###### gbif
-####### vernacular
-pathDataExternalTranslationSourceCommonGbifVernacular <-
+pathDataExternalTranslationSourceCommonGbif <-
   file.path(
     pathDataExternalTranslationSourceCommon,
-    "backbone-current/VernacularName.tsv.zip"
-  )
-
-####### scientific
-pathDataExternalTranslationSourceCommonGbifScientific <-
-  file.path(
-    pathDataExternalTranslationSourceCommon,
-    "backbone-current/Taxon.tsv.zip"
+    "backbone-current.zip"
   )
 
 ##### tcm
