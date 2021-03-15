@@ -67,7 +67,7 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
 #### taxa
 taxa <-
   vroom(
-    file = pathDataExternalTranslationSourceCommonGbifScientific,
+    file = unz(pathDataExternalTranslationSourceCommonGbif, "Taxon.tsv"),
     delim = "\t",
     quote = ""
   ) %>%
@@ -85,7 +85,10 @@ taxa <-
 
 #### taxa
 vernacular <- vroom(
-  file = pathDataExternalTranslationSourceCommonGbifVernacular,
+  file = unz(
+    pathDataExternalTranslationSourceCommonGbif,
+    "VernacularName.tsv"
+  ),
   delim = "\t",
   quote = ""
 ) %>%
@@ -100,10 +103,11 @@ vernacular <- vroom(
   ))
 
 ### manually subtracted entries
-manualSubtraction <- vroom(
-  file = pathDataInterimDictionariesCommonManualSubtraction,
-  delim = "\t"
-)
+manualSubtraction <-
+  vroom(
+    file = pathDataInterimDictionariesCommonManualSubtraction,
+    delim = "\t"
+  )
 
 # removing parts of PhenolExplorer names
 commonSciPhe$vernacularName <-
@@ -403,7 +407,13 @@ common2Sci <- commonSciSub %>%
     canonicalName
   ) %>%
   filter(!grepl("\\?", canonicalName)) %>%
-  filter(!grepl("\\)", vernacularName))
+  filter(!grepl("\\)", vernacularName)) %>%
+  cSplit(
+    "vernacularName",
+    sep = "   ",
+    fixed = TRUE,
+    direction = "long"
+  )
 
 # exporting
 vroom_write(
