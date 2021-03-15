@@ -33,7 +33,7 @@ data_manipulated <- data_original %>%
     ),
     sep = " "
     ),
-    inchi = Inchl,
+    inchi = InChI,
     smiles = `SMILES (canonical or isomeric)`
   )
 
@@ -41,21 +41,30 @@ data_manipulated$biologicalsource <-
   y_as_na(data_manipulated$biologicalsource, " ")
 
 data_selected <- data_manipulated %>%
-  mutate(reference = `Reference_Text Title; Journal; Vol,; Issue; pages; year; type; DOI; author1; authors2; etc.`) %>%
-  cSplit("reference", sep = ";") %>%
   select(
     structure_name = name,
     organism_clean = biologicalsource,
     structure_inchi = inchi,
     structure_smiles = smiles,
-    reference_doi = `DOI   `,
-    reference_title = reference_01,
-    reference_journal = reference_02
+    reference_doi_1 = `DOI_No1`,
+    reference_doi_2 = `DOI_No2`,
+    reference_doi_3 = `DOI_No3`,
   ) %>%
+  pivot_longer(5:7) %>%
+  filter(!is.na(value)) %>%
+  select(structure_name,
+    organism_clean,
+    structure_inchi,
+    structure_smiles,
+    reference_doi = value
+  ) %>%
+  mutate(organism_clean = gsub(
+    pattern = "n.a.",
+    replacement = "",
+    x = organism_clean,
+    fixed = TRUE
+  )) %>%
   data.frame()
-
-data_selected$organism_clean <-
-  y_as_na(data_selected$organism_clean, "N/A")
 
 # standardizing
 data_standard <-
@@ -64,7 +73,7 @@ data_standard <-
     db = "cyanometdb",
     structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
     organism_field = "organism_clean",
-    reference_field = c("reference_doi", "reference_title", "reference_journal")
+    reference_field = c("reference_doi")
   )
 
 # exporting
