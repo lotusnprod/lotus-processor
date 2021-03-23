@@ -68,7 +68,8 @@ chemical_metadata <-
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
-  ) %>% ## needed
+  ) %>%
+  ## needed
   tibble()
 
 cat(
@@ -186,7 +187,8 @@ biological_metadata <- left_join(names, otl) %>%
     )
   ) %>%
   distinct() %>%
-  map_df(rev) %>% ## feeling it is better that way
+  map_df(rev) %>%
+  ## feeling it is better that way
   distinct(ott_id, rank, .keep_all = TRUE) %>%
   pivot_wider(
     names_from = "rank",

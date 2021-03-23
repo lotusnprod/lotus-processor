@@ -168,7 +168,6 @@ getGraphChemicalClass <- function(subclass) {
             mostfamilies[5, 1]
           )
         ),
-
         active = TRUE,
         color = "#fb9a99",
         query.name = mostfamilies[5, 1]
@@ -212,7 +211,6 @@ getGraphChemicalClass <- function(subclass) {
           )
         ),
         active = TRUE,
-
         color = "#1f78b4",
         query.name = mostfamilies[2, 1]
       ),

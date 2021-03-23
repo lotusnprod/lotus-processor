@@ -156,7 +156,8 @@ manipulating_taxo <- function(dfsel, dic) {
       names_from = rank,
       values_from = name
     ) %>%
-    arrange(desc(level)) %>% ## because of Open Tree of Life taxonomy
+    arrange(desc(level)) %>%
+    ## because of Open Tree of Life taxonomy
     select(-level)
 
   # pivoting (long)

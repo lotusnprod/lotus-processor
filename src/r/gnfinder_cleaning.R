@@ -88,8 +88,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   ) %>%
     mutate_all(as.character)
 
-  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(
-    organismCol,
+  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(organismCol,
     "organismValue" = paste0("\"", organismCol, "\""),
     "organismInterim" = "organismInterim"
   )]), ]
