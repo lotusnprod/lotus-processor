@@ -10,6 +10,10 @@ source(file = "paths.R")
 source(file = "r/vroom_safe.R")
 
 cat("... open DB \n")
+prettyNames <-
+  vroom_read_safe(path = "../docs/prettyDBNames.tsv")
+
+cat("... open DB \n")
 openDbMetaValidated <-
   vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   filter(
@@ -180,63 +184,63 @@ sunk <- ready_2 %>%
   )) %>%
   mutate(
     validation = gsub(
-      pattern = "notValidated",
-      replacement = "not_validated",
+      pattern = "not_validated",
+      replacement = "not validated",
       x = validation
     ),
     originalType = gsub(
       pattern = "organismClean",
-      replacement = "organism_clean",
+      replacement = "organism clean",
       x = originalType
     ),
     originalType = gsub(
       pattern = "organismDirty",
-      replacement = "organism_dirty",
+      replacement = "organism dirty",
       x = originalType
     ),
     originalType = gsub(
       pattern = "structureSmiles",
-      replacement = "structure_smiles",
+      replacement = "structure smiles",
       x = originalType
     ),
     originalType = gsub(
       pattern = "structureInchi",
-      replacement = "structure_inchi",
+      replacement = "structure inchi",
       x = originalType
     ),
     originalType = gsub(
       pattern = "structureNominal",
-      replacement = "structure_name",
+      replacement = "structure name",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referenceDoi",
-      replacement = "reference_doi",
+      replacement = "reference doi",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referencePmid",
-      replacement = "reference_pmid",
+      replacement = "reference pmid",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referencePublishingDetails",
-      replacement = "reference_publishing_details",
+      replacement = "reference publishing details",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referenceOriginal",
-      replacement = "reference_original",
+      replacement = "reference original",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referenceSplit",
-      replacement = "reference_split",
+      replacement = "reference split",
       x = originalType
     ),
     originalType = gsub(
       pattern = "referenceTitle",
-      replacement = "reference_title",
+      replacement = "reference title",
       x = originalType
     ),
     cleanedType = gsub(
@@ -244,9 +248,11 @@ sunk <- ready_2 %>%
       replacement = "",
       x = cleanedType
     ),
-  )
+  ) %>% 
+  left_join(.,prettyNames) %>% 
+  select(-database)
 
-legend <- with(sunk, reorder(database, count))
+legend <- with(sunk, reorder(prettyDataBase, count))
 
 legend_v <- with(sunk, reorder(validation, desc(count)))
 
@@ -255,33 +261,29 @@ cat("drawing alluvial \n")
 if (mode == "full") {
   pdf(
     file = file.path("../res", "alluvial.pdf"),
-    width = 96,
-    height = 54
+    width = 16,
+    height = 9
   )
 
   ggplot(
     as.data.frame(sunk),
     aes(
       y = count,
-      axis1 = database,
+      axis1 = prettyDataBase,
       axis2 = originalType,
       axis3 = cleanedType
     )
   ) +
     geom_stratum(
-      width = 1 / 2,
-      aes(size = 1),
       decreasing = TRUE
     ) +
     geom_alluvium(
-      width = 1 / 2,
       aes(fill = legend_v),
       aes.bind = "alluvia",
       lode.guidance = "forward",
       decreasing = TRUE
     ) +
     geom_flow(
-      width = 1 / 2,
       aes(
         fill = legend_v,
         colour = legend_v
@@ -293,28 +295,23 @@ if (mode == "full") {
     ) +
     geom_fit_text(
       stat = "stratum",
-      min.size = 0,
-      grow = TRUE,
-      width = 1 / 2,
+      min.size = 0, 
+      fullheight = TRUE,
+      reflow = TRUE,
+      width = 1 / 4,
       aes(label = after_stat(stratum)),
       decreasing = TRUE
     ) +
     scale_x_discrete(limits = c("database", "original", "cleaned")) +
     # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-    scale_fill_manual(values = c("#861450", "#2994D2")) +
-    scale_colour_manual(values = c("#861450", "#2994D2")) +
+    scale_fill_manual(values = c("#2994D2", "#7CB13F")) +
+    scale_colour_manual(values = c("#2994D2", "#7CB13F")) +
     theme(
       panel.grid.major = element_blank(),
       panel.grid.minor = element_blank(),
       panel.background = element_blank(),
-      # axis.text.y = element_blank(),
-      axis.text.y = element_text(size = rel(7)),
-      axis.title.y = element_text(size = rel(1)),
-      # axis.ticks = element_blank(),
-      axis.text.x = element_text(size = rel(7)),
       axis.title.x = element_blank(),
       legend.title = element_blank(),
-      legend.text = element_text(size = rel(5)),
     )
   dev.off()
 }
