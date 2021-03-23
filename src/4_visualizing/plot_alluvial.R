@@ -275,6 +275,7 @@ if (mode == "full") {
     )
   ) +
     geom_stratum(
+      width = 1 / 3,
       decreasing = TRUE
     ) +
     geom_alluvium(
@@ -311,7 +312,7 @@ if (mode == "full") {
       panel.grid.minor = element_blank(),
       panel.background = element_blank(),
       axis.title.x = element_blank(),
-      legend.title = element_blank(),
+      legend.position = "none"
     )
   dev.off()
 }
