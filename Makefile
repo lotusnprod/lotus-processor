@@ -9,7 +9,7 @@ include paths.mk
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
 .PHONY : cleaning-organism-interim
-.PHONY : curating-and-analysing-and-visalizing visualizing
+.PHONY : curating-and-analysing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -178,7 +178,7 @@ analysing-metrics:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 analysing-examples:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/examples.R
 
-visualizing: visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-violin
+visualizing: visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 
 visualizing-alluvial:
 	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_alluvial.R
@@ -192,5 +192,5 @@ visualizing-tree:
 visualizing-upset:
 	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_upset.R
 
-visualizing-violin:
-	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_violin.R
+visualizing-distribution:
+	cd	src	&&	Rscript	${SRC_VISUALIZING_PATH}/plot_distribution.R
