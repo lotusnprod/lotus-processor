@@ -248,8 +248,8 @@ sunk <- ready_2 %>%
       replacement = "",
       x = cleanedType
     ),
-  ) %>% 
-  left_join(.,prettyNames) %>% 
+  ) %>%
+  left_join(., prettyNames) %>%
   select(-database)
 
 legend <- with(sunk, reorder(prettyDataBase, count))
@@ -295,7 +295,7 @@ if (mode == "full") {
     ) +
     geom_fit_text(
       stat = "stratum",
-      min.size = 0, 
+      min.size = 0,
       fullheight = TRUE,
       reflow = TRUE,
       width = 1 / 4,

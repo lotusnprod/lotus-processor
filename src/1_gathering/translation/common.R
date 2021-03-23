@@ -400,8 +400,10 @@ commonSciSub$canonicalName <-
 ## sorting in appropriate order
 common2Sci <- commonSciSub %>%
   mutate(n = str_count(string = vernacularName)) %>%
-  arrange(desc(n)) %>% # sorting for replacements like "sea cucumber" and so on...
-  filter(n >= 4) %>% # names with 3 char are not enough
+  arrange(desc(n)) %>%
+  # sorting for replacements like "sea cucumber" and so on...
+  filter(n >= 4) %>%
+  # names with 3 char are not enough
   select(
     vernacularName,
     canonicalName

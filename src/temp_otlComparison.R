@@ -75,7 +75,8 @@ gnverifyStrepto
 cat("so when keeping only one name per ID... \n")
 
 otlVersionDistinct <- otlVersion %>%
-  left_join(., gnverifyVersion %>% mutate(isInBoth = "Y")) %>% ## to keep the same synonym for both
+  left_join(., gnverifyVersion %>% mutate(isInBoth = "Y")) %>%
+  ## to keep the same synonym for both
   arrange(isInBoth) %>%
   distinct(organismCleanedId, .keep_all = TRUE)
 cat(nrow(otlVersionDistinct), "distinct IDs for rotl API version \n")

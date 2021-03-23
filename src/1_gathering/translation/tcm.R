@@ -358,7 +358,8 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
 # sorting in appropriate order
 tcmNamesDicCurated <- tcmNamesDicCurated %>%
   mutate(n = str_count(string = common)) %>%
-  arrange(desc(n)) %>% # sorting for replacements like "sea cucumber" and so on...
+  arrange(desc(n)) %>%
+  # sorting for replacements like "sea cucumber" and so on...
   select(
     vernacularName = common,
     canonicalName = biologicalsource,

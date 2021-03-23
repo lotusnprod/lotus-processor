@@ -925,8 +925,7 @@ pathDataInterimDbUnpd <-
   )
 
 #### dictionaries
-pathDataInterimDictionaries <- switch(
-  mode,
+pathDataInterimDictionaries <- switch(mode,
   "full" = file.path(
     pathDataInterim,
     "dictionaries"
@@ -1180,8 +1179,7 @@ pathDataInterimDictionariesTcmNames <-
   )
 
 #### tables
-pathDataInterimTables <- switch(
-  mode,
+pathDataInterimTables <- switch(mode,
   "full" = file.path(
     pathDataInterim,
     "tables"
@@ -1197,8 +1195,7 @@ pathDataInterimTables <- switch(
 )
 
 #### tables
-pathDataProcessedTables <- switch(
-  mode,
+pathDataProcessedTables <- switch(mode,
   "full" = file.path(
     pathDataProcessed,
     "tables"
@@ -1214,8 +1211,7 @@ pathDataProcessedTables <- switch(
 )
 
 #### figures
-pathDataProcessedFigures <- switch(
-  mode,
+pathDataProcessedFigures <- switch(mode,
   "full" = file.path(
     pathDataProcessed,
     "figures"

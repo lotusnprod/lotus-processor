@@ -115,7 +115,6 @@ getGraphStudiedPlant <- function(plant) {
               mostsuperclasses[5, 1]
             )
           ),
-
           active = TRUE,
           color = "#fb9a99",
           query.name = mostsuperclasses[5, 1]
