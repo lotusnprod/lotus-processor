@@ -1,0 +1,207 @@
+cat("This script draws the distribution of organisms per structure and vice versa \n")
+
+start <- Sys.time()
+
+cat("sourcing ... \n")
+cat("... paths \n")
+source("paths.R")
+
+cat("... libraries \n")
+library(data.table)
+library(plotly)
+
+organismsPerStructure_2D <-
+  fread(file = file.path(
+    pathDataProcessed,
+    "organismsPerStructure2D.tsv.gz"
+  ))
+
+structuresPerOrganism_2D <-
+  fread(file = file.path(
+    pathDataProcessed,
+    "structures2DPerOrganism.tsv.gz"
+  ))
+
+organismsPerStructure_2D_cum <- organismsPerStructure_2D %>%
+  ungroup() %>%
+  arrange(n) %>%
+  mutate(cum_sum = cumsum(n)) %>%
+  mutate(
+    per_x = n / max(n) * 100,
+    per_y = cum_sum / max(cum_sum) * 100
+  ) %>%
+  distinct(per_x, .keep_all = TRUE)
+
+structuresPerOrganism_2D_cum <- structuresPerOrganism_2D %>%
+  ungroup() %>%
+  arrange(n) %>%
+  mutate(cum_sum = cumsum(n)) %>%
+  mutate(
+    per_x = n / max(n) * 100,
+    per_y = cum_sum / max(cum_sum) * 100
+  ) %>%
+  distinct(per_x, .keep_all = TRUE)
+
+top_structure <-
+  organismsPerStructure_2D_cum[which.max(organismsPerStructure_2D_cum$n), ]
+
+## actually third but better to ilustrate
+top_organism <-
+  structuresPerOrganism_2D_cum[structuresPerOrganism_2D_cum$organismCleaned == "Arabidopsis thaliana", ]
+
+a <- list(
+  x = top_organism$per_x,
+  y = top_organism$per_y,
+  text = paste(top_organism$organismCleaned, "\n N =", top_organism$n),
+  xref = "x",
+  yref = "y",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = -60,
+  ay = 40,
+  font = list(color = "#2994D2"),
+  arrowcolor = "#2994D2"
+)
+
+b <- list(
+  x = top_structure$per_x,
+  y = top_structure$per_y,
+  text = paste(
+    top_structure$structureCleaned_inchikey2D,
+    "\n N =",
+    top_structure$n
+  ),
+  xref = "x",
+  yref = "y",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = 0,
+  ay = 40,
+  font = list(color = "#7CB13F"),
+  arrowcolor = "#7CB13F"
+)
+
+c <- list(
+  x = "per organism",
+  y = mean(structuresPerOrganism_2D$n),
+  text = paste("mean : ", round(mean(
+    structuresPerOrganism_2D$n
+  ), 2)),
+  xref = "x2",
+  yref = "y2",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = 45,
+  ay = -40,
+  font = list(color = "#2994D2"),
+  arrowcolor = "#2994D2"
+)
+
+d <- list(
+  x = "per structure",
+  y = mean(organismsPerStructure_2D$n),
+  text = paste("mean : ", round(mean(
+    organismsPerStructure_2D$n
+  ), 2)),
+  xref = "x2",
+  yref = "y2",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = -45,
+  ay = -40,
+  font = list(color = "#7CB13F"),
+  arrowcolor = "#7CB13F"
+)
+
+# initialize plot
+fig <- plot_ly() %>%
+  add_lines(
+    data = organismsPerStructure_2D_cum,
+    name = "organisms per structure",
+    x = ~per_x,
+    y = ~per_y,
+    mode = "line",
+    color = I("#7CB13F"),
+    showlegend = FALSE
+  ) %>%
+  add_lines(
+    data = structuresPerOrganism_2D_cum,
+    name = "structures per organism",
+    x = ~per_x,
+    y = ~per_y,
+    mode = "line",
+    color = I("#2994D2"),
+    showlegend = FALSE
+  ) %>%
+  add_trace(
+    data = structuresPerOrganism_2D,
+    name = "structures per organism",
+    x = "per organism",
+    y = ~n,
+    type = "box",
+    quartilemethod = "inclusive",
+    boxmean = TRUE,
+    xaxis = "x2",
+    yaxis = "y2",
+    color = I("#2994D2")
+  ) %>%
+  add_trace(
+    data = organismsPerStructure_2D,
+    name = "organisms per structure",
+    x = "per structure",
+    y = ~n,
+    type = "box",
+    quartilemethod = "inclusive",
+    boxmean = TRUE,
+    xaxis = "x2",
+    yaxis = "y2",
+    color = I("#7CB13F")
+  ) %>%
+  layout(
+    annotations = list(a, b, c, d),
+    font = list(family = "helvetica neue"),
+    yaxis = list(title = "Percentage of individuals"),
+    xaxis = list(title = "Percentage of maximal contribution"),
+    yaxis2 = list(
+      title = "Number of individuals",
+      mirror = TRUE,
+      showline = TRUE,
+      zeroline = FALSE,
+      showline = FALSE,
+      showgrid = FALSE,
+      range = c(0, 25),
+      domain = c(0.3, 0.7),
+      anchor = "x2"
+    ),
+    xaxis2 = list(
+      mirror = TRUE,
+      showline = TRUE,
+      zeroline = FALSE,
+      showline = FALSE,
+      showticklabels = TRUE,
+      showgrid = FALSE,
+      domain = c(0.4, 1),
+      anchor = "y2"
+    )
+  )
+
+fig
+
+if (mode == "full") {
+  orca(
+    p = fig,
+    file = file.path("../res", "distribution.pdf"),
+    width = 800,
+    height = 450
+  )
+
+  setwd("../res/html")
+  htmlwidgets::saveWidget(
+    widget = as_widget(fig),
+    file = "distribution.html"
+  )
+}
+
+end <- Sys.time()
+
+cat("Script finished in", format(end - start), "\n")
