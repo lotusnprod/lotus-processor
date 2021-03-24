@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - bioconda
   - defaults
+  - tmap
 dependencies:
   - beautifulsoup4
   - cirpy
@@ -17,6 +18,13 @@ dependencies:
   - requests-cache
   - urllib3
   - bioconductor-chemminer
+  - tmap
+  - scipy
+  - mhfp
+  - matplotlib
+  - pip
+  - pip:
+    - faerun
   - r-base
   - r-chorddiag
   - r-codetools
