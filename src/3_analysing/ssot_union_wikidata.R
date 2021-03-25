@@ -90,7 +90,10 @@ chemical_metadata <-
     structure_inchi = structureCleanedInchi,
     structure_smiles = structureCleanedSmiles,
     structure_molecular_formula = structureCleaned_molecularFormula,
-    structure_exact_mass = structureCleaned_exactMass
+    structure_exact_mass = structureCleaned_exactMass,
+    structure_smiles_2D = structureCleaned_smiles2D,
+    structure_stereocenters_total = structureCleaned_stereocenters_total,
+    structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
@@ -290,6 +293,9 @@ platinum_u_wd_complete <- platinum_u_wd %>%
     structure_smiles,
     structure_molecular_formula,
     structure_exact_mass,
+    structure_smiles_2D,
+    structure_stereocenters_total,
+    structure_stereocenters_unspecified,
     structure_taxonomy_npclassifier_01pathway,
     structure_taxonomy_npclassifier_02superclass,
     structure_taxonomy_npclassifier_03class,
@@ -338,7 +344,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210223_frozen_metadata.csv.gz"
+      "210325_frozen_metadata.csv.gz"
     )
   )
 
@@ -346,7 +352,7 @@ if (safety == TRUE) {
     x = platinum_u_wd_complete,
     file = file.path(
       pathDataProcessed,
-      "210223_frozen_metadata.csv.gz"
+      "210325_frozen_metadata.csv.gz"
     )
   )
 }
