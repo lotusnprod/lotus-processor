@@ -19,6 +19,11 @@ if (mode == "full") {
   source("r/y_as_na.R")
 
   cat("loading files, this may take a while ... \n")
+
+  cat("... pretty names \n")
+  prettyNames <-
+    vroom_read_safe(path = "../docs/prettyDBNames.tsv")
+
   cat("... open DB \n")
   openDb <-
     vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
@@ -78,7 +83,13 @@ if (mode == "full") {
     })
 
   cat("joining DNP and openDB \n")
-  inhouseDb <- bind_rows(dnpDb, openDb)
+  inhouseDb <- bind_rows(dnpDb, openDb) %>%
+    left_join(., prettyNames) %>%
+    select(-database) %>%
+    select(
+      database = prettyDataBase,
+      everything()
+    )
 
   cat("counting sub-DBs \n")
   dbNum <-
@@ -100,14 +111,12 @@ if (mode == "full") {
   upset(
     inhouseDb_structures_2plot_wide,
     nsets = 10,
-    # mb.ratio = c(0.7, 0.3),
     order.by = "freq",
     nintersects = 20,
-    # empty.intersections = "on",
     number.angles = 30,
     point.size = 5,
     line.size = 2,
-    text.scale = 2,
+    text.scale = 1.6,
     mainbar.y.label = "Unique structures per intersection",
     sets.x.label = "Unique structures per database",
     set_size.scale_max = 250000,
@@ -167,10 +176,11 @@ if (mode == "full") {
     number.angles = 30,
     point.size = 5,
     line.size = 2,
-    text.scale = 2,
+    text.scale = 1.6,
     mainbar.y.label = "Unique pairs per intersection",
     sets.x.label = "Unique pairs per database",
-    set_size.show = TRUE
+    set_size.show = TRUE,
+    set_size.scale_max = 300000
   )
   dev.off()
 
