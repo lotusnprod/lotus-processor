@@ -9,7 +9,7 @@ library(tidyverse)
 source(file = "paths.R")
 source(file = "r/vroom_safe.R")
 
-cat("... open DB \n")
+cat("... pretty names \n")
 prettyNames <-
   vroom_read_safe(path = "../docs/prettyDBNames.tsv")
 
