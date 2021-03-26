@@ -25,6 +25,7 @@ dependencies:
   - pip
   - pip:
     - faerun
+    - git+https://github.com/reymond-group/map4
   - r-base
   - r-chorddiag
   - r-codetools
