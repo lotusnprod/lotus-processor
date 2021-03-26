@@ -57,7 +57,7 @@ a <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -60,
+  ax = -200,
   ay = 40,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
@@ -75,7 +75,7 @@ b <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = 0,
+  ax = -100,
   ay = 40,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
@@ -84,14 +84,14 @@ b <- list(
 c <- list(
   x = "per organism",
   y = mean(structuresPerOrganism_2D$n),
-  text = paste("mean : ", round(mean(
+  text = paste("mean ", round(mean(
     structuresPerOrganism_2D$n
   ), 2)),
   xref = "x2",
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = 45,
+  ax = 57,
   ay = -40,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
@@ -100,17 +100,45 @@ c <- list(
 d <- list(
   x = "per structure",
   y = mean(organismsPerStructure_2D$n),
-  text = paste("mean : ", round(mean(
+  text = paste("mean ", round(mean(
     organismsPerStructure_2D$n
   ), 2)),
   xref = "x2",
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -45,
+  ax = -57,
   ay = -40,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
+)
+
+e <- list(
+  x = "per structure",
+  y = median(organismsPerStructure_2D$n),
+  text = paste("median ", median(organismsPerStructure_2D$n)),
+  xref = "x2",
+  yref = "y2",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = -90,
+  ay = -5,
+  font = list(color = "#7CB13F"),
+  arrowcolor = "#7CB13F"
+)
+
+f <- list(
+  x = "per organism",
+  y = median(structuresPerOrganism_2D$n),
+  text = paste("median ", median(structuresPerOrganism_2D$n)),
+  xref = "x2",
+  yref = "y2",
+  showarrow = TRUE,
+  arrowhead = 1,
+  ax = -100,
+  ay = 0,
+  font = list(color = "#2994D2"),
+  arrowcolor = "#2994D2"
 )
 
 # initialize plot
@@ -158,8 +186,8 @@ fig <- plot_ly() %>%
     color = I("#7CB13F")
   ) %>%
   layout(
-    annotations = list(a, b, c, d),
-    font = list(family = "helvetica neue"),
+    annotations = list(a, b, c, d, e, f),
+    font = list(family = "helvetica neue", size = 18),
     yaxis = list(title = "Percentage of individuals"),
     xaxis = list(title = "Percentage of maximal contribution"),
     yaxis2 = list(
@@ -178,10 +206,15 @@ fig <- plot_ly() %>%
       showline = TRUE,
       zeroline = FALSE,
       showline = FALSE,
-      showticklabels = TRUE,
+      showticklabels = FALSE,
       showgrid = FALSE,
-      domain = c(0.4, 1),
+      domain = c(0.4, 0.99),
       anchor = "y2"
+    ),
+    legend = list(
+      x = 0.4,
+      y = 0.25,
+      orientation = "h"
     )
   )
 
