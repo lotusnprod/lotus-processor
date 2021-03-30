@@ -52,7 +52,7 @@ top_organism <-
 a <- list(
   x = top_organism$per_x,
   y = top_organism$per_y,
-  text = paste(top_organism$organismCleaned, "\n N =", top_organism$n),
+  text = paste("<i>",top_organism$organismCleaned, "</i> \n N =", top_organism$n),
   xref = "x",
   yref = "y",
   showarrow = TRUE,
