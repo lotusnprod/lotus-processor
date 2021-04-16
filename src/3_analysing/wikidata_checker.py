@@ -1,13 +1,9 @@
 # %%
 # ## generic modules
-import re
-import pandas as pd
-import numpy as np
-import plotly.express as px
-import plotly.graph_objects as go
-from functools import reduce
 import gzip
 
+import pandas as pd
+import plotly.express as px
 
 # loading the input dataframes
 
@@ -19,7 +15,6 @@ opennpdb_table_path = gzip.open(
 wikidata_inchilist_path = (
     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/external/query.tsv"
 )
-
 
 # %%
 df_onpdb_table = pd.read_csv(

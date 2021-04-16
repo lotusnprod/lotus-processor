@@ -2,13 +2,10 @@
 # Converting from SDF to csv
 
 # loading packages
-from rdkit import Chem
 from rdkit.Chem import PandasTools
-import zipfile
 
 # file path
 my_sdf_file = '../data/external/dbSource/coconut/COCONUT_DB.sdf'
-
 
 # converting
 sdf_frame = PandasTools.LoadSDF(my_sdf_file,
