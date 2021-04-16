@@ -22,6 +22,8 @@ help:
 	@echo "databases: build the databases (no scraping)"
 	@echo "databases-rescrape: rescrape the databases (when possible)"
 	@echo ""
+	@echo "get-bins: download gnfinder, gnverify and opsin"
+	@echo ""
 	@echo "gathering-full: Run the 1_gathering scripts"
 	@echo "curating: Run the 2_curating scripts"
 	@echo "analysing: Run the 3_analysing scripts"
@@ -35,25 +37,23 @@ docker-bash:
 
 get-bins: get-gnfinder get-gnverifier get-opsin
 
-## won't actually work for Windows
-get-gnfinder:
-ifeq ($(UNAME), Linux)
-	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-v-linux.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-linux.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-linux.tar.gz
-endif
-ifeq ($(UNAME), Darwin)
-	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-mac.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-mac.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-mac.tar.gz
-endif
+get-gnfinder: bin/gnfinder
+get-gnverifier: bin/gnverifier
+get-opsin: bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 
-get-gnverifier:
-ifeq ($(UNAME), Linux)
-	wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz
-endif
-ifeq ($(UNAME), Darwin)
-	 wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz
-endif
+bin/gnfinder:
+	mkdir -p bin
+	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnfinder > bin/gnfinder
+	chmod +x bin/gnfinder
 
-get-opsin:
-	wget https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar && mv opsin-${OPSIN_VERSION}-jar-with-dependencies.jar bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
+bin/gnverifier:
+	mkdir -p bin
+	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnverifier > bin/gnverifier
+	chmod +x bin/gnverifier
+
+bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar:
+	mkdir -p bin
+	curl -o bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 
 tests:
 	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
@@ -86,7 +86,7 @@ curating-and-analysing-and-visualizing: curating analysing visualizing
 
 curating-and-analysing: curating analysing
 
-curating: curating-1-integrating curating-editing curating-3-integrating
+curating: get-bins curating-1-integrating curating-editing curating-3-integrating
 
 curating-1-integrating: ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
 ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz: ${DATABASES} paths.mk ${SRC_PATH}/paths.R ${SRC_CURATING_PATH}/1_integrating.R
@@ -187,7 +187,7 @@ curating-3-integrating:	${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_PATH}/3_integrating.R
 
-analysing: analysing-sampling analysing-validating analysing-metrics analysing-examples
+analysing: get-bins analysing-sampling analysing-validating analysing-metrics analysing-examples
 
 analysing-sampling:	# ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 	cd	src	&&	Rscript	${SRC_ANALYSING_PATH}/1_sampling.R
