@@ -1,4 +1,4 @@
-= LOTUS: a curated naturaL prOducTs occUrrences databaSe
+= The LOTUS Initiative
 :toc:
 
 include::docs/intro.adoc[]
