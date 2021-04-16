@@ -1645,16 +1645,16 @@ pathTranslatedGnfinderScript <- switch(mode,
   "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 )
 
-pathOriginalGnverifyScript <- switch(mode,
-  "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_full.sh",
-  "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_min.sh",
-  "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_original_test.sh"
+pathOriginalGnverifierScript <- switch(mode,
+  "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_test.sh"
 )
 
-pathGnverifyScript <- switch(mode,
-  "full" = "2_curating/2_editing/organism/shell/gnverifyLauncher_full.sh",
-  "min" = "2_curating/2_editing/organism/shell/gnverifyLauncher_min.sh",
-  "test" = "2_curating/2_editing/organism/shell/gnverifyLauncher_test.sh"
+pathGnverifierScript <- switch(mode,
+  "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_test.sh"
 )
 
 pathTests <- file.path("../tests")

@@ -8,7 +8,7 @@ settings.json
 **/0_initial_files/
 .log
 *~
-bin/gnfinder
+bin/
 ci_env
 default.profraw
 callgrind.*
