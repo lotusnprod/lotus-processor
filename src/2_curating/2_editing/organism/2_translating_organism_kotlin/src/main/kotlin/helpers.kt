@@ -40,7 +40,7 @@ fun parseTSVZFile(file: String): List<Record>? = parseTSVFile(GZIPRead(file))
 /**
  * Get a list of records from the filename pointing to a TSV file
  */
-fun parseTSVFile(file: String): List<Record>? =  parseTSVFile(File(file).bufferedReader())
+fun parseTSVFile(file: String): List<Record>? = parseTSVFile(File(file).bufferedReader())
 
 /**
  * A really basic logger to avoid having to load slf4j

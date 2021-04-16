@@ -5,14 +5,12 @@
 
 # loading packages
 import errno
+import gzip
 import os
 import sys
-from rdkit import Chem
+
 import pandas as pd
-import gzip
-from rdkit.Chem import PandasTools
-from rdkit.Chem import Descriptors
-import numpy as np
+from rdkit import Chem
 
 # here we deine input, outputs and other variables as sys arguments
 try:
@@ -28,8 +26,8 @@ try:
           + 'Proceeding to the the ROMol object conversion and returning the InChI in file : \n'
           + ouput_file_path)
 except:
-    print('Please add input and output file path as first and second argument and SMILES column header as third argument. \n')
-
+    print(
+        'Please add input and output file path as first and second argument and SMILES column header as third argument. \n')
 
 # loading data
 myZip = gzip.open(input_file_path)

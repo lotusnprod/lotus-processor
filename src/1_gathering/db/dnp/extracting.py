@@ -2,9 +2,10 @@
 # Also it is far from capturing everything
 
 
-import zipfile
 import glob
 import re
+import zipfile
+
 import pandas as pd
 from lxml import etree
 
@@ -20,8 +21,8 @@ def outstatus(message, color='red'):
     ENDC = '\033[0m'
 
     if color == 'red':
-        return('{} {} {}'.format(FAIL, message, ENDC))
-    return('{} {} {}'.format(OK, message, ENDC))
+        return ('{} {} {}'.format(FAIL, message, ENDC))
+    return ('{} {} {}'.format(OK, message, ENDC))
 
 
 def treat_file(content):
@@ -124,6 +125,7 @@ def subsuck(data, element, parname=''):
             inchi |= subsuck(data, child, parname)
     return inchi
 
+
 # The main part of the program
 
 
@@ -153,10 +155,10 @@ for filename in glob.glob('../data/external/dbSource/dnp/29_2/JAR/*.jar'):
             # A dirty trick to put progress bars
             if (
                     int(100.0 * (count) / num_files) % 10 == 0 or
-                    count >= num_files-1):
+                    count >= num_files - 1):
                 print('\r - {}  {}'.format(
                     filename.split("/")[2],
-                    '#'*int(100.0*(count+1)/num_files)), end='')
+                    '#' * int(100.0 * (count + 1) / num_files)), end='')
             count += 1
         if status is True:
             print(outstatus(' OK for {} files'.format(success), 'green'))
