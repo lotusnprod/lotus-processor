@@ -58,8 +58,8 @@ ifelse(
     )
 )
 
-cat("submitting to GNVerify \n")
-system(command = paste("bash", pathOriginalGnverifyScript))
+cat("submitting to GNVerifier \n")
+system(command = paste("bash", pathOriginalGnverifierScript))
 
 verified <-
   stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedOriginalTable))

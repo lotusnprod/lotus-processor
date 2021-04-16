@@ -50,10 +50,10 @@ vroom_write(
   progress = TRUE,
   append = FALSE
 )
-## because gnverify does not parse quotes
+## because gnverifier does not parse quotes
 
-cat("submitting to GNVerify \n")
-system(command = paste("bash", pathGnverifyScript))
+cat("submitting to GNVerifier \n")
+system(command = paste("bash", pathGnverifierScript))
 
 verified <-
   stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))

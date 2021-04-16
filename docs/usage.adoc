@@ -73,11 +73,22 @@ source ~/anaconda3/etc/profile.d/conda.sh
 conda activate lotus_env
 ----
 
-Your R working directory should be 'src'
+==== Additional bins
+There are some additional bins you'll need. Easy install is available for Linux and MacOS. For Windows, please refer to their own solutions.
+
+[source,console]
+----
+make get-gnfinder-gnverifier-linux
+# make get-gnfinder-gnverifier-mac
+make get-opsin
+----
+
+==== Working directory
+Your working directory should be 'src'
 
 [source,console]
 ----
 cd src
 ----
 
-If you are using Visual Studio be sure to set your R path in the settings option to reflect your created conda environment.
+If you are using Visual Studio be sure to set your R and python path in the settings option to reflect your created conda environment.
