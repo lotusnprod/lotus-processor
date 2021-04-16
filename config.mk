@@ -7,3 +7,5 @@ export DATA_PATH ?= ${PWD}/data
 export SRC_PATH ?= ${PWD}/src
 export BIN_PATH ?= ${PWD}/bin
 export TESTS_PATH ?= ${PWD}/tests
+
+export UNAME := $(shell uname)

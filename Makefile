@@ -8,8 +8,9 @@ include paths.mk
 .PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
 .PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
-.PHONY : cleaning-organism-interim
-.PHONY : curating-and-analysing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
+.PHONY: cleaning-organism-interim
+.PHONY: curating-and-analysing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
+.PHONY: get-gnfinder get-gnverifier get-opsin get-bins
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -32,15 +33,27 @@ docker-build:
 docker-bash:
 	docker run -it --rm -v $$PWD:/srv/onpdb onpdb-environment
 
-get-gnfinder-gnverifier-linux:
-	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-v-linux.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-linux.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-linux.tar.gz && wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz
+get-bins: get-gnfinder get-gnverifier get-opsin
 
-get-gnfinder-gnverifier-mac:
-	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-mac.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-mac.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-mac.tar.gz && wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz
+## won't actually work for Windows
+get-gnfinder:
+ifeq ($(UNAME), Linux)
+	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-v-linux.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-linux.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-linux.tar.gz
+endif
+ifeq ($(UNAME), Darwin)
+	wget https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-mac.tar.gz && tar -xzvf gnfinder-${GNFINDER_VERSION}-mac.tar.gz && mv gnfinder bin/gnfinder && rm gnfinder-${GNFINDER_VERSION}-mac.tar.gz
+endif
+
+get-gnverifier:
+ifeq ($(UNAME), Linux)
+	wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-linux.tar.gz
+endif
+ifeq ($(UNAME), Darwin)
+	 wget https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && tar -xzvf gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz && mv gnverifier bin/gnverifier && rm gnverifier-${GNVERIFIER_VERSION}-mac.tar.gz
+endif
 
 get-opsin:
 	wget https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar && mv opsin-${OPSIN_VERSION}-jar-with-dependencies.jar bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
-
 
 tests:
 	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
