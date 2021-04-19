@@ -1646,9 +1646,9 @@ pathTranslatedGnfinderScript <- switch(mode,
 )
 
 pathOriginalGnverifierScript <- switch(mode,
-  "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_full.sh",
-  "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_min.sh",
-  "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_original_test.sh"
+  "full" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_full.sh",
+  "min" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_min.sh",
+  "test" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_test.sh"
 )
 
 pathGnverifierScript <- switch(mode,
