@@ -10,7 +10,7 @@ cat("... functions \n")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
 source("r/vroom_safe.R")
-source("r/split_data_table_quote.R")
+source("r/split_data_table.R")
 source("r/y_as_na.R")
 
 cat("loading ... \n")
@@ -118,9 +118,10 @@ dataOrganismVerified <- dataOrganismVerified %>%
 cat(pathDataInterimTablesOriginalOrganism, "\n")
 
 if (nrow(dataOrganismNoVerified) != 0) {
-  split_data_table_quote(
+  split_data_table(
     x = dataOrganismNoVerified,
-    no_rows_per_frame = 10000,
+    no_rows_per_frame = 2000,
+    # else verification takes too long and gnverifier times out
     text = "",
     path_to_store = pathDataInterimTablesOriginalOrganism
   )
@@ -136,7 +137,8 @@ length <-
     pattern = "^[0-9]{6}.tsv"
   ))
 
-cut <- 10000
+cut <-
+  2000 # else verification takes too long and gnverifier times out
 
 if (length != 0) {
   num <- as.integer(seq(

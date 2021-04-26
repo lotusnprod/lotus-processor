@@ -64,18 +64,8 @@ gnfinder_cleaning <- function(num, organismCol) {
       )
   }
 
-  data_bio <- vroom(
-    file = inpath_organism_f,
-    delim = "\t",
-    escape_double = TRUE,
-    escape_backslash = TRUE,
-    col_types = cols(.default = "c"),
-    num_threads = 1
-  ) %>%
-    mutate_all(as.character)
-
   ## because gnfinder reads it that way for counting chars
-  data_bio_2 <- vroom(
+  data_bio <- vroom(
     file = inpath_organism_f,
     delim = "\t",
     quote = "",
@@ -87,11 +77,6 @@ gnfinder_cleaning <- function(num, organismCol) {
     num_threads = 1
   ) %>%
     mutate_all(as.character)
-
-  data_bio_2 <- data_bio_2[!is.na(data_bio_2[, switch(organismCol,
-    "organismValue" = paste0("\"", organismCol, "\""),
-    "organismInterim" = "organismInterim"
-  )]), ]
 
   if (fromJSON(
     txt = inpath_gnfinder_f,
@@ -109,7 +94,6 @@ gnfinder_cleaning <- function(num, organismCol) {
     data_bio_clean <- biocleaning(
       gnfound = gnfound,
       names = data_bio,
-      names_quotes = data_bio_2,
       organismCol = organismCol
     )
   } else {
