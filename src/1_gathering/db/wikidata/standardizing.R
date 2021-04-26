@@ -37,7 +37,10 @@ data_triples <-
 
 data_temp <-
   vroom(
-    file = "../../wikidataLotusExporter/data/output/query.tsv",
+    file = file.path(
+      pathDataExternalDbSource,
+      "210426_wikidata_query.tsv"
+    ),
     delim = "\t"
   )
 
