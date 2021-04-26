@@ -26,6 +26,8 @@ wikidataLotusExporterDataOutputTaxaPath <-
   file.path(wikidataLotusExporterDataOutputPath, "taxa.tsv")
 wikidataLotusExporterDataOutputStructuresPath <-
   file.path(wikidataLotusExporterDataOutputPath, "compounds.tsv")
+wikidataLotusExporterDataOutputReferencesPath <-
+  file.path(wikidataLotusExporterDataOutputPath, "references.tsv")
 wikidataLotusExporterDataOutputTriplesPath <-
   file.path(
     wikidataLotusExporterDataOutputPath,
@@ -137,16 +139,6 @@ databases$add(
 )
 
 databases$add(
-  name = "cmaup",
-  sourceFiles = list(
-    tsvIngredients = "CMAUPv1.0_download_Ingredients_All.txt",
-    tsvPlants = "CMAUPv1.0_download_Plants.txt",
-    tsvAssociations = "CMAUPv1.0_download_Plant_Ingredient_Associations_allIngredients.txt"
-  ),
-  interimFile = "cmaup.tsv.gz"
-)
-
-databases$add(
   name = "coconut",
   sourceFiles = list(
     sdf = "COCONUT_DB.sdf",
@@ -191,12 +183,6 @@ databases$add(
 )
 
 databases$add(
-  name = "etcm",
-  sourceFiles = list(data = "data.zip"),
-  interimFile = "etcm.tsv.gz"
-)
-
-databases$add(
   name = "foodb",
   sourceFiles = list(
     tsvCompoundsFlavors = "foodb_2020_04_07_csv/CompoundsFlavor_copy.csv",
@@ -226,20 +212,6 @@ databases$add(
   sourceFiles = list(xmlComplete = "eb-eye_metabolights_complete.xml"),
   interimFile = "metabolights.tsv.gz"
 )
-
-###### COMMENT Not clean #######
-pathDataExternalDbSourceMetabolights <-
-  file.path(
-    pathDataExternalDbSource,
-    "metabolights"
-  )
-
-###### studies scraped directory
-pathDataExternalDbSourceMetabolightsStudiesScrapedDir <-
-  file.path(
-    pathDataExternalDbSourceMetabolights,
-    "studiesScraped"
-  )
 
 databases$add(
   name = "mibig",
@@ -325,29 +297,6 @@ databases$add(
   interimFile = "pamdb.tsv.gz"
 )
 
-##### pharmdbk
-pathDataExternalDbSourcePharmdbk <-
-  file.path(
-    pathDataExternalDbSource,
-    "pharmdbk"
-  )
-
-databases$add(
-  name = "pharmdbk",
-  sourceFiles = list(tsvPath = file.path(
-    "pharmdbk_raw",
-    list.files(
-      path = file.path(
-        pathDataExternalDbSourcePharmdbk,
-        "pharmdbk_raw"
-      ),
-      pattern = "*.json.gz",
-      full.names = FALSE
-    )
-  )),
-  interimFile = "pharmdbk.tsv.gz"
-)
-
 databases$add(
   name = "phenolexplorer",
   sourceFiles = list(
@@ -369,28 +318,6 @@ databases$add(
   sourceFiles = list(tsv = "phytohubScraped.tsv.gz"),
   interimFile = "phytohub.tsv.gz"
 )
-
-##### plantcyc
-pathDataExternalDbSourcePlantcyc <-
-  file.path(
-    pathDataExternalDbSource,
-    "plantcyc"
-  )
-
-###### directory
-pathDataExternalDbSourcePlantcycDir <-
-  file.path(
-    pathDataExternalDbSourcePlantcyc,
-    "0_data"
-  )
-
-###### original
-pathDataExternalDbSourcePlantcycOriginal <-
-  list.files(
-    path = pathDataExternalDbSourcePlantcyc,
-    pattern = "*.tsv.gz",
-    full.names = TRUE
-  )
 
 databases$add(
   name = "procardb",
@@ -457,48 +384,6 @@ databases$add(
 )
 
 databases$add(
-  name = "symmap",
-  sourceFiles = list(
-    data = "data.zip",
-    bio = "SymMap v1.0, SMHB file.xlsx",
-    chemo = "SymMap v1.0, SMIT file.xlsx"
-  ),
-  interimFile = "symmap.tsv.gz"
-)
-
-##### tipdb
-pathDataExternalDbSourceTipdb <-
-  file.path(
-    pathDataExternalDbSource,
-    "tipdb"
-  )
-
-# databases$add(
-#   name = "tipdb",
-#   sourceFiles = list(
-#     json = file.path(
-#       "tipdb_raw",
-#       list.files(
-#         path = file.path(pathDataExternalDbSourceTipdb,
-#                          "tipdb_raw"),
-#         pattern = "^chemical_TIP",
-#         full.names = FALSE
-#       )
-#     ),
-#     mol = file.path(
-#       "tipdb_raw",
-#       list.files(
-#         path = file.path(pathDataExternalDbSourceTipdb,
-#                          "tipdb_raw"),
-#         pattern = "^TIP",
-#         full.names = FALSE
-#       )
-#     )
-#   ),
-#   interimFile = "tipdb.tsv.gz"
-# )
-
-databases$add(
   name = "tmdb",
   sourceFiles = list(tsv = "tmdbScraped.tsv.gz"),
   interimFile = "tmdb.tsv.gz"
@@ -516,29 +401,6 @@ databases$add(
   interimFile = "tppt.tsv.gz"
 )
 
-##### triforc
-pathDataExternalDbSourceTriforc <-
-  file.path(
-    pathDataExternalDbSource,
-    "triforc"
-  )
-
-##### to get
-pathDataExternalDbSourceTriforcToGet <-
-  file.path(
-    pathDataExternalDbSourceTriforc,
-    "triforcToGet.tsv"
-  )
-
-databases$add(
-  name = "triforc",
-  sourceFiles = list(
-    tsv1 = "triforcOriginal.tsv",
-    tsv2 = "triforcBis.tsv"
-  ),
-  interimFile = "triforc.tsv.gz"
-)
-
 ##### unpd
 pathDataExternalDbSourceUnpd <-
   file.path(
@@ -546,7 +408,7 @@ pathDataExternalDbSourceUnpd <-
     "unpd"
   )
 
-##### compiled
+##### integrated
 pathDataExternalDbSourceUnpdIntegrated <-
   file.path(
     pathDataExternalDbSourceUnpd,
@@ -567,6 +429,13 @@ databases$add(
   name = "wakankensaku",
   sourceFiles = list(tsv = "wakankensakuScraped.tsv.gz"),
   interimFile = "wakankensaku.tsv.gz"
+)
+
+##### wikidata
+databases$add(
+  name = "wikidata",
+  sourceFiles = list(tsv = "wikidata.tsv.gz"),
+  interimFile = "wikidata.tsv.gz"
 )
 
 #### translation source
@@ -678,251 +547,6 @@ pathDataExternalTranslationSourceTcmCmba <-
 #### dir
 pathDataInterimDbDir <-
   Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
-
-##### biofacquim
-pathDataInterimDbBiofacquim <-
-  file.path(
-    pathDataInterimDb,
-    "biofacquim.tsv.gz"
-  )
-
-##### biophytmol
-pathDataInterimDbBiophytmol <-
-  file.path(
-    pathDataInterimDb,
-    "biophytmol.tsv.gz"
-  )
-
-##### carotenoiddb
-pathDataInterimDbCarotenoiddb <-
-  file.path(
-    pathDataInterimDb,
-    "carotenoiddb.tsv.gz"
-  )
-
-##### cmaup
-pathDataInterimDbCmaup <-
-  file.path(
-    pathDataInterimDb,
-    "cmaup.tsv.gz"
-  )
-
-##### coconut
-pathDataInterimDbCoconut <-
-  file.path(
-    pathDataInterimDb,
-    "coconut.tsv.gz"
-  )
-
-##### cyanometdb
-pathDataInterimDbCyanometdb <-
-  file.path(
-    pathDataInterimDb,
-    "cyanometdb.tsv.gz"
-  )
-
-##### dnp
-pathDataInterimDbDnp <-
-  file.path(
-    pathDataInterimDb,
-    "dnp.tsv.gz"
-  )
-
-##### drduke
-pathDataInterimDbDrduke <-
-  file.path(
-    pathDataInterimDb,
-    "drduke.tsv.gz"
-  )
-
-##### etcm
-pathDataInterimDbEtcm <-
-  file.path(
-    pathDataInterimDb,
-    "etcm.tsv.gz"
-  )
-
-##### foodb
-pathDataInterimDbFoodb <-
-  file.path(
-    pathDataInterimDb,
-    "foodb.tsv.gz"
-  )
-
-##### inflamnat
-pathDataInterimDbInflamnat <-
-  file.path(
-    pathDataInterimDb,
-    "inflamnat.tsv.gz"
-  )
-
-##### knapsack
-pathDataInterimDbKnapsack <-
-  file.path(
-    pathDataInterimDb,
-    "knapsack.tsv.gz"
-  )
-
-##### metabolights
-pathDataInterimDbMetabolights <-
-  file.path(
-    pathDataInterimDb,
-    "metabolights.tsv.gz"
-  )
-
-##### mibig
-pathDataInterimDbMibig <-
-  file.path(
-    pathDataInterimDb,
-    "mibig.tsv.gz"
-  )
-
-##### mitishamba
-pathDataInterimDbMitishamba <-
-  file.path(
-    pathDataInterimDb,
-    "mitishamba.tsv.gz"
-  )
-
-##### nanpdb
-pathDataInterimDbNanpdb <-
-  file.path(
-    pathDataInterimDb,
-    "nanpdb.tsv.gz"
-  )
-
-##### npass
-pathDataInterimDbNpass <-
-  file.path(
-    pathDataInterimDb,
-    "npass.tsv.gz"
-  )
-
-##### npatlas
-pathDataInterimDbNpatlas <-
-  file.path(
-    pathDataInterimDb,
-    "npatlas.tsv.gz"
-  )
-
-##### npcare
-pathDataInterimDbNpcare <-
-  file.path(
-    pathDataInterimDb,
-    "npcare.tsv.gz"
-  )
-
-##### npedia
-pathDataInterimDbNpedia <-
-  file.path(
-    pathDataInterimDb,
-    "npedia.tsv.gz"
-  )
-
-##### pamdb
-pathDataInterimDbPamdb <-
-  file.path(
-    pathDataInterimDb,
-    "pamdb.tsv.gz"
-  )
-
-##### phenolexplorer
-pathDataInterimDbPhenolexplorer <-
-  file.path(
-    pathDataInterimDb,
-    "phenolexplorer.tsv.gz"
-  )
-
-##### phytohub
-pathDataInterimDbPhytohub <-
-  file.path(
-    pathDataInterimDb,
-    "phytohub.tsv.gz"
-  )
-
-##### plantcyc
-pathDataInterimDbPlantcyc <-
-  file.path(
-    pathDataInterimDb,
-    "plantcyc.tsv.gz"
-  )
-
-##### procardb
-pathDataInterimDbProcardb <-
-  file.path(
-    pathDataInterimDb,
-    "procardb.tsv.gz"
-  )
-
-##### respect
-pathDataInterimDbRespect <-
-  file.path(
-    pathDataInterimDb,
-    "respect.tsv.gz"
-  )
-
-##### sancdb
-pathDataInterimDbSancdb <-
-  file.path(
-    pathDataInterimDb,
-    "sancdb.tsv.gz"
-  )
-
-##### streptomedb
-pathDataInterimDbStreptomedb <-
-  file.path(
-    pathDataInterimDb,
-    "streptomedb.tsv.gz"
-  )
-
-##### swmd
-pathDataInterimDbSwmd <-
-  file.path(
-    pathDataInterimDb,
-    "swmd.tsv.gz"
-  )
-
-##### symmap
-pathDataInterimDbSymmap <-
-  file.path(
-    pathDataInterimDb,
-    "symmap.tsv.gz"
-  )
-
-##### tmdb
-pathDataInterimDbTmdb <-
-  file.path(
-    pathDataInterimDb,
-    "tmdb.tsv.gz"
-  )
-
-##### tmmc
-pathDataInterimDbTmmc <-
-  file.path(
-    pathDataInterimDb,
-    "tmmc.tsv.gz"
-  )
-
-##### tppt
-pathDataInterimDbTmmc <-
-  file.path(
-    pathDataInterimDb,
-    "tppt.tsv.gz"
-  )
-
-##### triforc
-pathDataInterimDbTriforc <-
-  file.path(
-    pathDataInterimDb,
-    "triforc.tsv.gz"
-  )
-
-##### unpd
-pathDataInterimDbUnpd <-
-  file.path(
-    pathDataInterimDb,
-    "unpd.tsv.gz"
-  )
 
 #### dictionaries
 pathDataInterimDictionaries <- switch(mode,
@@ -1271,25 +895,9 @@ pathDataInterimTablesOriginalOrganismFull <-
 pathDataInterimTablesOriginalReference <-
   file.path(pathDataInterimTablesOriginal, "reference")
 
-# ### authors
-# pathDataInterimTablesOriginalReferenceAuthors <-
-#   file.path(pathDataInterimTablesOriginalReference, "authors.tsv.gz")
-
 ### DOI
 pathDataInterimTablesOriginalReferenceDoi <-
   file.path(pathDataInterimTablesOriginalReference, "doi.tsv.gz")
-
-# ### external
-# pathDataInterimTablesOriginalReferenceExternal <-
-#   file.path(pathDataInterimTablesOriginalReference, "external.tsv.gz")
-
-# ### isbn
-# pathDataInterimTablesOriginalReferenceIsbn <-
-#   file.path(pathDataInterimTablesOriginalReference, "isbn.tsv.gz")
-
-# ### journal
-# pathDataInterimTablesOriginalReferenceJournal <-
-#   file.path(pathDataInterimTablesOriginalReference, "journal.tsv.gz")
 
 ### original
 pathDataInterimTablesOriginalReferenceOriginalFolder <-
