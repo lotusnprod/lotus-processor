@@ -7,14 +7,13 @@ source("r/homemadeShift.R")
 #'
 #' @param gnfound
 #' @param names
-#' @param names_quotes
 #' @param organismCol
 #'
 #' @return
 #' @export
 #'
 #' @examples
-biocleaning <- function(gnfound, names, names_quotes, organismCol) {
+biocleaning <- function(gnfound, names, organismCol) {
   log_debug("Biocleaning")
   log_debug("Biocleaning: finished creating dataframe")
   # extracting preferred results data table
@@ -39,7 +38,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
     mutate(
       kingdom = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "kingdom",
             "Kingdom",
@@ -49,7 +48,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       phylum = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "phylum",
             "Phylum",
@@ -59,7 +58,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       class = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "class",
             "Class",
@@ -69,7 +68,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       order = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "order",
             "Order",
@@ -79,7 +78,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       family = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "family",
             "Family",
@@ -89,7 +88,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       genus = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "genus",
             "Genus"
@@ -98,7 +97,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       species = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "species",
             "Species",
@@ -109,7 +108,7 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
       )),
       variety = sum(as.numeric(
         stri_detect(
-          str = classificationRank,
+          str = classificationRanks,
           fixed = c(
             "variety",
             "varietas",
@@ -206,57 +205,48 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
     x = c(
       "matchedCanonicalFull",
       "currentCanonicalFull",
-      "taxonId",
-      "dataSourceTitle",
+      "curation",
+      "recordId",
+      "dataSourceTitleShort",
       "classificationPath",
-      "classificationRank",
+      "classificationRanks",
       "classificationIds"
     ),
     y = names(taxo)
   )] <- NA
 
-  taxo <- taxo %>%
+  taxoEnhanced <- taxo %>%
     select(
       canonicalname = matchedCanonicalFull,
       canonicalnameCurrent = currentCanonicalFull,
-      taxonId,
-      dbTaxo = dataSourceTitle,
+      taxonId = recordId,
+      dbTaxo = dataSourceTitleShort,
+      dbQuality = curation,
       taxonomy = classificationPath,
-      rank = classificationRank,
+      rank = classificationRanks,
       ids = classificationIds,
       sum
     )
 
   log_debug("Biocleaning: finished joining")
 
-  dbQuality <- gnfound$names.verification$dataSourceQuality
-  dbTaxo <- gnfound$
-    names.verification$
-    bestResult$
-    dataSourceTitle
-
-  dfQuality <- data.frame(dbTaxo, dbQuality) %>%
-    distinct(dbTaxo, .keep_all = TRUE)
-
-  taxoEnhanced <- left_join(taxo, dfQuality)
-
   # computing sum of characters to match with GNFinder results
   if (organismCol == "organismValue") {
-    names_quotes$nchar <-
-      nchar(x = names_quotes$`"organismValue"`)
+    names$nchar <-
+      nchar(x = names$organismValue)
   }
 
   if (organismCol == "organismInterim") {
-    names_quotes$nchar <-
-      nchar(x = names_quotes$organismInterim)
+    names$nchar <-
+      nchar(x = names$organismInterim)
   }
 
-  names_quotes[1, "sum"] <- nchar(colnames(names_quotes)[1]) + 1
-  for (i in 2:nrow(names_quotes)) {
-    names_quotes[i, "sum"] <-
-      names_quotes[i - 1, "nchar"] +
+  names[1, "sum"] <- nchar(colnames(names)[1]) + 1
+  for (i in 2:nrow(names)) {
+    names[i, "sum"] <-
+      names[i - 1, "nchar"] +
       1 +
-      names_quotes[i - 1, "sum"]
+      names[i - 1, "sum"]
   }
 
   # adding min and max to merge
@@ -268,8 +258,9 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
     data.table()
 
   # filtering non-empty values
-  y_2 <- names_quotes %>%
-    mutate(value_min = sum)
+  y_2 <- names %>%
+    mutate(value_min = sum) %>%
+    data.table()
 
   # filling sum values
   y_2$value_min <- as.numeric(y_2$value_min)
@@ -280,14 +271,6 @@ biocleaning <- function(gnfound, names, names_quotes, organismCol) {
   if (organismCol == "organismInterim") {
     y_2 <- y_2 %>% select(-organismInterim)
   }
-
-  y_2 <- y_2 %>%
-    bind_cols(., names) %>%
-    select(switch(organismCol,
-      "organismValue" = "organismValue",
-      "organismInterim" = "organismInterim"
-    ), nchar, sum, value_min, value_max) %>%
-    data.table()
 
   # setting joining keys
   setkey(taxoEnhanced, value_min, value_max)
