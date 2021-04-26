@@ -59,13 +59,13 @@ cat("exported ... \n")
 wikidata_pairs <-
   fread(file = file.path(
     pathDataExternalDbSource,
-    "210223_wikidata_query.tsv"
+    "210426_wikidata_query.tsv"
   )) %>%
-  filter(!is.na(structure_inchikey) &
+  filter(!is.na(compound_inchikey) &
     !is.na(taxon_name) &
     !is.na(reference_doi)) %>%
   distinct(
-    structureCleanedInchikey = structure_inchikey,
+    structureCleanedInchikey = compound_inchikey,
     organismCleaned = taxon_name,
     referenceCleanedDoi = reference_doi
   ) %>%
