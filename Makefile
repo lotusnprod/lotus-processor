@@ -53,8 +53,8 @@ bin/gnverifier:
 
 bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar:
 	mkdir -p bin
-	curl -o bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
-
+	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
+	chmod +x bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 tests:
 	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
 
