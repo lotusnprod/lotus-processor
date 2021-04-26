@@ -7,7 +7,7 @@ channels:
 dependencies:
   - beautifulsoup4
   - cirpy
-  - dvc>=2.0.7
+  - dvc>=2.0.18
   - ipykernel
   - lxml
   - molvs
