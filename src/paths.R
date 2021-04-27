@@ -10,11 +10,8 @@ if (exists("mode_test")) {
   mode <- "test"
 }
 
-db_mode <- "normal" ## "fromScratch"
-
-db_type <- "postgresql" ## "sqlite"
-
 works_locally_only <- TRUE
+
 ## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterPath <- "../../wikidataLotusExporter"
@@ -33,7 +30,6 @@ wikidataLotusExporterDataOutputTriplesPath <-
     wikidataLotusExporterDataOutputPath,
     "compound_reference_taxon.tsv"
   )
-##
 
 # databases for which we have no right to disseminate the data
 forbidden_export <- c("dnp", "foodb")
@@ -82,9 +78,6 @@ pathDataProcessed <-
     pathData,
     "processed"
   )
-
-## sqlite
-lotusDB <- file.path(pathDataProcessed, "lotus.sqlite")
 
 #### db
 pathDataInterimDb <-
@@ -325,7 +318,6 @@ databases$add(
   interimFile = "procardb.tsv.gz"
 )
 
-##### respect
 pathDataExternalDbSourceRespect <-
   file.path(
     pathDataExternalDbSource,
@@ -363,14 +355,12 @@ databases$add(
   interimFile = "streptomedb.tsv.gz"
 )
 
-##### swmd
 pathDataExternalDbSourceSwmd <-
   file.path(
     pathDataExternalDbSource,
     "swmd"
   )
 
-##### directory
 pathDataExternalDbSourceSwmdDirectory <-
   file.path(
     pathDataExternalDbSourceSwmd,
@@ -401,14 +391,12 @@ databases$add(
   interimFile = "tppt.tsv.gz"
 )
 
-##### unpd
 pathDataExternalDbSourceUnpd <-
   file.path(
     pathDataExternalDbSource,
     "unpd"
   )
 
-##### integrated
 pathDataExternalDbSourceUnpdIntegrated <-
   file.path(
     pathDataExternalDbSourceUnpd,
@@ -424,14 +412,12 @@ databases$add(
   interimFile = "unpd.tsv.gz"
 )
 
-##### wakankensaku
 databases$add(
   name = "wakankensaku",
   sourceFiles = list(tsv = "wakankensakuScraped.tsv.gz"),
   interimFile = "wakankensaku.tsv.gz"
 )
 
-##### wikidata
 databases$add(
   name = "wikidata",
   sourceFiles = list(tsv = "wikidata.tsv.gz"),
