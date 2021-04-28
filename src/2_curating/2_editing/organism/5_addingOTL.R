@@ -1,17 +1,18 @@
-cat("This script retrieves data from Open Tree of Life (OTL) \n")
+source("r/log_debug.R")
+log_debug("This script retrieves data from Open Tree of Life (OTL)")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/log.R")
 source("r/vroom_safe.R")
 
-cat("loading ... \n")
-cat("... libraries \n")
+log_debug("loading ...")
+log_debug("... libraries")
 library(DBI)
 library(pbmcapply)
 library(rotl)
@@ -208,4 +209,4 @@ dbDisconnect(db)
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

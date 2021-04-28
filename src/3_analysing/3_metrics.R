@@ -1,18 +1,19 @@
-cat("This script outputs some metrics related to the DB \n")
+source("r/log_debug.R")
+log_debug("This script outputs some metrics related to the DB")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(data.table)
 source("r/vroom_safe.R")
 
-cat("loading ... \n")
-cat("databases list ... \n")
+log_debug("loading ...")
+log_debug("databases list ...")
 dataset <- read_delim(
   file = "../docs/dataset.csv",
   delim = ","
@@ -23,7 +24,7 @@ dataset <- read_delim(
     -`pairs validated for wikidata export`
   )
 
-cat("initial table ... \n")
+log_debug("initial table ...")
 dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
   rbindlist(l = ., fill = TRUE) %>%
   select(
@@ -46,16 +47,16 @@ dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
   ) %>%
   tibble()
 
-cat("final table ... \n")
+log_debug("final table ...")
 inhouseDbMinimal <-
   vroom_read_safe(path = pathDataInterimTablesCuratedTable)
 
-cat("validated for export ... \n")
+log_debug("validated for export ...")
 openDb <-
   vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   tibble()
 
-cat("exported ... \n")
+log_debug("exported ...")
 wikidata_pairs <-
   fread(file = file.path(
     pathDataExternalDbSource,
@@ -71,12 +72,12 @@ wikidata_pairs <-
   ) %>%
   tibble()
 
-cat("... dnp db \n")
+log_debug("... dnp db")
 dnpDb <-
   vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
   data.frame()
 
-cat("performing inner join with uploaded entries \n")
+log_debug("performing inner join with uploaded entries")
 openDb <- openDb %>%
   inner_join(., wikidata_pairs)
 
@@ -191,7 +192,7 @@ stats_2D <- pairsOutsideDnp_2D %>%
   arrange(desc(n))
 
 # unique
-cat("analysing unique organisms per db \n")
+log_debug("analysing unique organisms per db")
 ## biological taxa
 ### open NP DB
 openDbOrganism <- openDb %>%
@@ -203,10 +204,10 @@ inhouseDbOrganism <- inhouseDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-cat(paste(
+log_debug(paste(
   "inhouse:",
   nrow(inhouseDbOrganism),
-  "distinct organisms \n",
+  "distinct organisms",
   sep = " "
 ))
 
@@ -215,10 +216,10 @@ dnpDbOrganism <- dnpDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-cat(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms \n", sep = " "))
+log_debug(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms", sep = " "))
 
 ## structures
-cat("analysing unique structures (2D) per db \n")
+log_debug("analysing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_3D <- openDb %>%
   filter(!is.na(structureCleanedInchikey)) %>%
@@ -229,14 +230,14 @@ inhouseDbStructure_3D <- inhouseDb %>%
   filter(!is.na(structureCleanedInchikey)) %>%
   distinct(structureCleanedInchikey, .keep_all = TRUE)
 
-cat(paste(
+log_debug(paste(
   "inhouse:",
   nrow(inhouseDbStructure_3D),
-  "distinct structures (3D) \n",
+  "distinct structures (3D)",
   sep = " "
 ))
 
-cat("analysing unique structures (2D) per db \n")
+log_debug("analysing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_2D <- openDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
@@ -247,10 +248,10 @@ inhouseDbStructure_2D <- inhouseDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
-cat(paste(
+log_debug(paste(
   "inhouse:",
   nrow(inhouseDbStructure_2D),
-  "distinct structures (2D) \n",
+  "distinct structures (2D)",
   sep = " "
 ))
 
@@ -259,10 +260,10 @@ dnpDbStructure_3D <- dnpDb %>%
   filter(!is.na(structureCleanedInchikey)) %>%
   distinct(structureCleanedInchikey, .keep_all = TRUE)
 
-cat(paste(
+log_debug(paste(
   "dnp:",
   nrow(dnpDbStructure_3D),
-  "distinct structures (3D) \n",
+  "distinct structures (3D)",
   sep = " "
 ))
 
@@ -270,10 +271,10 @@ dnpDbStructure_2D <- dnpDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
-cat(paste(
+log_debug(paste(
   "dnp:",
   nrow(dnpDbStructure_2D),
-  "distinct structures (2D) \n",
+  "distinct structures (2D)",
   sep = " "
 ))
 
@@ -375,7 +376,7 @@ if (mode == "FULL" | mode == "full") {
     fileEncoding = "UTF-8"
   )
 
-  cat(
+  log_debug(
     paste(
       nrow(pairsOpenDb_3D),
       "|",
@@ -437,4 +438,4 @@ fwrite(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

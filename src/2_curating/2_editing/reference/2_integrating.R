@@ -1,17 +1,18 @@
-cat("This script integrates all reference translations together \n")
+source("r/log_debug.R")
+log_debug("This script integrates all reference translations together")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("... files ... \n")
-cat("... DOI \n")
+log_debug("... files ...")
+log_debug("... DOI")
 dataDoi <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceDoi) %>%
   select(
@@ -35,7 +36,7 @@ dataDoi <-
   mutate(level = 1) %>%
   mutate_all(as.character)
 
-cat("... original references \n")
+log_debug("... original references")
 dataOriginal <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceOriginal) %>%
   select(
@@ -62,7 +63,7 @@ dataOriginal <-
   ) %>%
   mutate_all(as.character)
 
-cat("... PMID \n")
+log_debug("... PMID")
 dataPubmed <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePubmed) %>%
   select(
@@ -86,7 +87,7 @@ dataPubmed <-
   mutate(level = 1) %>%
   mutate_all(as.character)
 
-cat("... publishing details \n")
+log_debug("... publishing details")
 dataPublishingDetails <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePublishingDetails) %>%
   select(
@@ -113,7 +114,7 @@ dataPublishingDetails <-
   ) %>%
   mutate_all(as.character)
 
-cat("... titles \n")
+log_debug("... titles")
 dataTitle <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceTitle) %>%
   select(
@@ -140,7 +141,7 @@ dataTitle <-
   ) %>%
   mutate_all(as.character)
 
-cat("... split \n")
+log_debug("... split")
 dataSplit <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceSplit) %>%
   select(
@@ -167,13 +168,13 @@ dataSplit <-
   ) %>%
   mutate_all(as.character)
 
-cat("... full references \n")
+log_debug("... full references")
 dataFull <-
   vroom_read_safe(path = pathDataInterimTablesOriginalReferenceFull) %>%
   mutate_all(as.character)
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  cat("...  cleaned organisms \n")
+  log_debug("...  cleaned organisms")
 }
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated_old <-
@@ -211,7 +212,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  cat("... cleaned organisms \n")
+  log_debug("... cleaned organisms")
 }
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
@@ -229,15 +230,15 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  cat("... reference dictionary, this may take a while \n")
+  log_debug("... reference dictionary, this may take a while")
 }
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   referenceDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary)
 }
 
-cat("joining ... \n")
-cat("... all reference types \n")
+log_debug("joining ...")
+log_debug("... all reference types")
 dataCrossref <- bind_rows(
   dataDoi,
   dataOriginal,
@@ -261,7 +262,7 @@ dataCrossref <- dataCrossref %>%
     level
   )
 
-cat("... with organisms \n")
+log_debug("... with organisms")
 dataJoined <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
@@ -285,7 +286,7 @@ rm(
   dataCleanedOrganismManipulated
 )
 
-cat("... with reference dictionary \n")
+log_debug("... with reference dictionary")
 dataTranslated <- left_join(dataJoined,
   dataCrossref,
   by = c("referenceValue" = "referenceOriginal")
@@ -310,7 +311,7 @@ dataTranslated <- left_join(dataJoined,
 
 rm(dataJoined)
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 
 ifelse(
   test = !dir.exists(pathDataInterimDictionaries),
@@ -324,14 +325,14 @@ ifelse(
   no = paste(pathDataInterimDictionariesReference, "exists")
 )
 
-cat("exporting, this may take a while if running full mode \n")
-cat(pathDataInterimTablesTranslatedReferenceFile, "\n")
+log_debug("exporting, this may take a while if running full mode")
+log_debug(pathDataInterimTablesTranslatedReferenceFile)
 vroom_write_safe(
   x = dataTranslated,
   path = pathDataInterimTablesTranslatedReferenceFile
 )
 
-cat(pathDataInterimDictionariesReferenceDictionary, "\n")
+log_debug(pathDataInterimDictionariesReferenceDictionary)
 vroom_write_safe(
   x = dataCrossref,
   path = pathDataInterimDictionariesReferenceDictionary
@@ -341,4 +342,4 @@ rm(dataCrossref)
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

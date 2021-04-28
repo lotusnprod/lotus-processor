@@ -1,27 +1,27 @@
 ## this is very dirty for now, I'll be cleaning it later on
-
-cat(
-  "This script aims to establish filtering criteria to validate \n",
-  "documented pairs according to manually analyzed ones \n"
+source("r/log_debug.R")
+log_debug(
+  "This script aims to establish filtering criteria to validate",
+  "documented pairs according to manually analyzed ones"
 )
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(stringi)
 library(tidyverse)
 library(plotly)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/filter_dirty.R")
 source("r/myDirtyValidationFig.R")
 source("r/vroom_safe.R")
 
-cat("loading files ... \n")
+log_debug("loading files ...")
 oldDbNames <-
   read_delim(
     file = "../data/interim/dictionaries/dbNames.tsv",
@@ -120,11 +120,11 @@ sampleCondifent_PMA <-
   filter(curator == "PMA") %>%
   mutate(curator = "PMA2")
 
-cat("... documented pairs \n")
+log_debug("... documented pairs")
 inhouseDbMinimal <-
   vroom_read_safe(path = pathDataInterimTablesCuratedTable)
 
-cat("... reference metadata \n")
+log_debug("... reference metadata")
 structureMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
   distinct(
@@ -140,7 +140,7 @@ structureMetadata <-
     structureCleaned_nameTraditional
   )
 
-cat("... organism metadata \n")
+log_debug("... organism metadata")
 organismMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata) %>%
   distinct(
@@ -152,7 +152,7 @@ organismMetadata <-
     organismCleaned_dbTaxoTaxonomy
   )
 
-cat("... reference metadata \n")
+log_debug("... reference metadata")
 referenceMetadata <-
   vroom_read_safe(path = pathDataInterimDictionariesReferenceMetadata) %>%
   distinct(
@@ -335,13 +335,13 @@ globalSample$database <- stri_replace_all_regex(
   vectorize_all = FALSE
 )
 
-cat("adding metadata \n")
+log_debug("adding metadata")
 inhouseDbFull <- inhouseDbMinimal %>%
   left_join(., structureMetadata) %>%
   left_join(., organismMetadata) %>%
   left_join(., referenceMetadata)
 
-cat("joining manual validation results with documented pairs \n")
+log_debug("joining manual validation results with documented pairs")
 realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
   distinct(
     database,
@@ -364,39 +364,39 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
     .keep_all = TRUE
   )
 
-cat("filtering results ... \n")
-cat("... validated set \n")
+log_debug("filtering results ...")
+log_debug("... validated set")
 realSampleFiltered <-
   filter_dirty(dataframe = realMetaSample)
 
-cat("... rejected set \n")
+log_debug("... rejected set")
 antiFilter <- anti_join(realMetaSample, realSampleFiltered)
 
-cat("counting results ... \n")
-cat("... per category on validation set \n")
+log_debug("counting results ...")
+log_debug("... per category on validation set")
 table_count <- myDirtyF(table = realMetaSample)
 
-cat("... global on validation set \n")
+log_debug("... global on validation set")
 table_count_global <- myDirtyC(table = realMetaSample)
 
-cat("... per category on validated set \n")
+log_debug("... per category on validated set")
 tableFiltered_count <-
   myDirtyF(table = realSampleFiltered)
 
-cat("... global on validated set \n")
+log_debug("... global on validated set")
 tableFiltered_count_global <-
   myDirtyC(table = realSampleFiltered)
 
-cat("... per category on rejected set \n")
+log_debug("... per category on rejected set")
 tableAntiFiltered_count <-
   myDirtyF(table = antiFilter)
 
-cat("... global on rejected set \n")
+log_debug("... global on rejected set")
 tableAntiFiltered_count_global <-
   myDirtyC(table = antiFilter)
 
-cat("visualizing ... \n")
-cat("... validation set per category \n")
+log_debug("visualizing ...")
+log_debug("... validation set per category")
 fig_full <-
   myDirtyP(
     table = table_count,
@@ -405,7 +405,7 @@ fig_full <-
   )
 fig_full
 
-cat("... validated set per category \n")
+log_debug("... validated set per category")
 fig_filtered <-
   myDirtyP(
     table = tableFiltered_count,
@@ -414,7 +414,7 @@ fig_filtered <-
   )
 fig_filtered
 
-cat("... rejected set per category \n")
+log_debug("... rejected set per category")
 fig_anti <-
   myDirtyP(
     table = tableAntiFiltered_count,
@@ -423,7 +423,7 @@ fig_anti <-
   )
 fig_anti
 
-cat("... validation set global \n")
+log_debug("... validation set global")
 newfull <- myDirtyQ(
   table = table_count_global,
   yaxismax = 550,
@@ -431,7 +431,7 @@ newfull <- myDirtyQ(
 )
 newfull
 
-cat("... validated set global \n")
+log_debug("... validated set global")
 newfiltered <- myDirtyQ(
   table = tableFiltered_count_global,
   yaxismax = 550,
@@ -439,7 +439,7 @@ newfiltered <- myDirtyQ(
 )
 newfiltered
 
-cat("... rejected set global \n")
+log_debug("... rejected set global")
 antifull <- myDirtyQ(
   table = tableAntiFiltered_count_global,
   yaxismax = 550,
@@ -447,7 +447,7 @@ antifull <- myDirtyQ(
 )
 antifull
 
-cat("calculating statistics ... \n")
+log_debug("calculating statistics ...")
 old <- table_count %>%
   select(referenceType,
     tot,
@@ -456,7 +456,7 @@ old <- table_count %>%
     ratio1 = ratio
   )
 
-cat("... true positives and false positives \n")
+log_debug("... true positives and false positives")
 new <- tableFiltered_count %>%
   select(
     referenceType,
@@ -466,7 +466,7 @@ new <- tableFiltered_count %>%
     ratio2 = ratio
   )
 
-cat("... true negatives and false negatives \n")
+log_debug("... true negatives and false negatives")
 anti <- tableAntiFiltered_count %>%
   select(
     referenceType,
@@ -481,7 +481,7 @@ f1Table <- full_join(old, new) %>%
 
 beta <- 0.5
 
-cat("... precision, recall and Fbeta", beta, "score \n")
+log_debug("... precision, recall and Fbeta", beta, "score")
 f1Table <- full_join(f1Table, anti) %>%
   mutate(
     tpfn = tp + fn,
@@ -502,7 +502,7 @@ f1Table <- full_join(f1Table, anti) %>%
   replace(. == "NaN", 0)
 
 
-cat("... correcting with references ratios \n")
+log_debug("... correcting with references ratios")
 refRatios <- inhouseDbFull %>%
   filter(database != "dnp") %>%
   group_by(referenceType) %>%
@@ -568,7 +568,7 @@ f2Table_reworked <- f2Table %>%
     `F0.5 score`,
   )
 
-cat("applying the filtering criteria to the whole DB, this may take a while \n")
+log_debug("applying the filtering criteria to the whole DB, this may take a while")
 openDb <- inhouseDbFull %>%
   filter_dirty() %>%
   distinct(
@@ -625,7 +625,7 @@ openDb <- inhouseDbFull %>%
     referenceCleanedTitle
   )
 
-cat("outputting dnp pairs")
+log_debug("outputting dnp pairs")
 dnpDb <- inhouseDbFull %>%
   filter(database == "dnp") %>%
   distinct(
@@ -686,11 +686,11 @@ dnpDb <- inhouseDbFull %>%
     referenceCleanedTitle
   )
 
-cat("outputing correct entries from manually validated set \n")
+log_debug("outputing correct entries from manually validated set")
 manuallyValidatedSet <- realMetaSample %>%
   filter(validated == "Y")
 
-cat("outputing incorrect entries from validated set \n")
+log_debug("outputing incorrect entries from validated set")
 manuallyRemovedEntries <- realMetaSample %>%
   filter(validated != "Y")
 
@@ -706,7 +706,7 @@ if (mode != "test") {
     sample_n(100)
 }
 
-cat("loading validation set \n")
+log_debug("loading validation set")
 validationSetFilled_1 <-
   read_delim(
     file = "../data/validation/validationSet.tsv",
@@ -729,7 +729,7 @@ if (mode != "test") {
     sample_n(13)
 }
 
-cat("loading validation set bis \n")
+log_debug("loading validation set bis")
 validationSetFilled_2 <-
   read_delim(
     file = "../data/validation/validationSetBis.tsv",
@@ -753,7 +753,7 @@ if (mode != "test") {
     sample_n(19)
 }
 
-cat("loading validation set ter \n")
+log_debug("loading validation set ter")
 validationSetFilled_3 <-
   read_delim(
     file = "../data/validation/validationSetTer.tsv",
@@ -872,14 +872,14 @@ finalStats_reworked <- finalStats %>%
 finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
   mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
 
-cat("outputing correct entries from manually validated set \n")
+log_debug("outputing correct entries from manually validated set")
 manuallyValidatedSet2 <- realValidationSetFilled %>%
   filter(validated == "Y")
 
 manuallyValidatedSet3 <-
   bind_rows(manuallyValidatedSet, manuallyValidatedSet2)
 
-cat("outputing incorrect entries from validated set \n")
+log_debug("outputing incorrect entries from validated set")
 manuallyRemovedEntries2 <- realValidationSetFilled %>%
   filter(validated != "Y")
 
@@ -889,9 +889,9 @@ manuallyRemovedEntries3 <-
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
   filter(!database %in% forbidden_export)
 
-cat("exporting \n")
+log_debug("exporting")
 if (mode == "full") {
-  cat("../data/validation/manuallyValidated.tsv.gz", "\n")
+  log_debug("../data/validation/manuallyValidated.tsv.gz")
 }
 if (mode == "full") {
   write.table(
@@ -909,7 +909,7 @@ if (mode == "full") {
 }
 
 if (mode == "full") {
-  cat("../data/validation/manuallyRemoved.tsv.gz", "\n")
+  log_debug("../data/validation/manuallyRemoved.tsv.gz")
 }
 if (mode == "full") {
   write.table(
@@ -935,25 +935,22 @@ if (mode == "full") {
   )
 }
 
-cat(pathDataInterimTablesAnalysedPlatinum, "\n")
+log_debug(pathDataInterimTablesAnalysedPlatinum)
 vroom_write_safe(
   x = openDbClean2,
   path = pathDataInterimTablesAnalysedPlatinum
 )
 
-cat(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"), "\n")
+log_debug(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"))
 vroom_write_safe(
   x = dnpDb,
   path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
 )
 
-cat(
-  file.path(
-    pathDataInterimTablesAnalysed,
-    "validationSet.tsv"
-  ),
-  "\n"
-)
+log_debug(file.path(
+  pathDataInterimTablesAnalysed,
+  "validationSet.tsv"
+), )
 if (exists("validationSet")) {
   write.table(
     x = validationSet,
@@ -968,13 +965,10 @@ if (exists("validationSet")) {
   )
 }
 
-cat(
-  file.path(
-    pathDataInterimTablesAnalysed,
-    "validationSetBis.tsv"
-  ),
-  "\n"
-)
+log_debug(file.path(
+  pathDataInterimTablesAnalysed,
+  "validationSetBis.tsv"
+), )
 
 if (exists("validationSet2")) {
   write.table(
@@ -1006,4 +1000,4 @@ if (exists("validationSet3")) {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

@@ -1,17 +1,18 @@
-cat("This script compares OTL (Open Tree of Life) IDs obtained via gnverify and via rotl API \n")
+source("r/log_debug.R")
+log_debug("This script compares OTL (Open Tree of Life) IDs obtained via gnverify and via rotl API")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/log.R")
 source("r/vroom_safe.R")
 
-cat("loading ... \n")
-cat("... libraries \n")
+log_debug("loading ...")
+log_debug("... libraries")
 library(DBI)
 library(rotl)
 library(RSQLite)
@@ -42,7 +43,7 @@ otlVersion <- dbGetQuery(
   filter(!is.na(organismCleanedId)) %>%
   distinct()
 
-cat(nrow(otlVersion), "for rotl API version \n")
+log_debug(nrow(otlVersion), "for rotl API version")
 
 gnverifyVersion <- fullOrganisms %>%
   filter(organismCleaned_dbTaxo == "Open Tree of Life") %>%
@@ -50,43 +51,43 @@ gnverifyVersion <- fullOrganisms %>%
   distinct(organismCleaned, organismCleaned_id) %>%
   mutate(organismCleanedId = as.integer(organismCleaned_id))
 
-cat(nrow(gnverifyVersion), "for gnverify version \n")
+log_debug(nrow(gnverifyVersion), "for gnverify version")
 
 diff <- anti_join(otlVersion, gnverifyVersion)
 
-cat("so it seems that rotl version has \n", nrow(diff), "more results \n")
+log_debug("so it seems that rotl version has \n", nrow(diff), "more results")
 
-cat("but then if we have a closer look and only go for distinct IDs... \n")
-cat("just an example to show what is meant: \n")
-cat("applying filter(organismCleanedId == \"65272\") to both tables \n")
+log_debug("but then if we have a closer look and only go for distinct IDs...")
+log_debug("just an example to show what is meant:")
+log_debug("applying filter(organismCleanedId == \"65272\") to both tables")
 
 otlStrepto <- otlVersion %>%
   filter(organismCleanedId == "65272")
 
-cat("rotl table \n")
+log_debug("rotl table")
 otlStrepto
 
 gnverifyStrepto <- gnverifyVersion %>%
   filter(organismCleanedId == "65272")
 
-cat("gnverify table \n")
+log_debug("gnverify table")
 gnverifyStrepto
 
-cat("so when keeping only one name per ID... \n")
+log_debug("so when keeping only one name per ID...")
 
 otlVersionDistinct <- otlVersion %>%
   left_join(., gnverifyVersion %>% mutate(isInBoth = "Y")) %>%
   ## to keep the same synonym for both
   arrange(isInBoth) %>%
   distinct(organismCleanedId, .keep_all = TRUE)
-cat(nrow(otlVersionDistinct), "distinct IDs for rotl API version \n")
+log_debug(nrow(otlVersionDistinct), "distinct IDs for rotl API version")
 
 gnverifyVersionDistinct <- gnverifyVersion %>%
   distinct(organismCleanedId, .keep_all = TRUE)
 
-cat(
+log_debug(
   nrow(gnverifyVersionDistinct),
-  "distinct IDs for gnverify version \n"
+  "distinct IDs for gnverify version"
 )
 
 diffDistinct_1 <-
@@ -95,19 +96,19 @@ diffDistinct_1 <-
 diffDistinct_2 <-
   anti_join(gnverifyVersionDistinct, otlVersionDistinct)
 
-cat(
+log_debug(
   "so it seems that rotl version has \n",
   nrow(diffDistinct_1),
-  "names that are not in gnverify \n"
+  "names that are not in gnverify"
 )
-cat(
+log_debug(
   "and that gnverify version has \n",
   nrow(diffDistinct_2),
-  "names that are not in rotl \n"
+  "names that are not in rotl"
 )
 
-cat("Conclusion: almost the same but very interesting for synonyms filtering \n")
+log_debug("Conclusion: almost the same but very interesting for synonyms filtering")
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

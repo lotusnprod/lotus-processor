@@ -1,22 +1,23 @@
-cat("This script samples some entries to then manually check their validity. \n")
+source("r/log_debug.R")
+log_debug("This script samples some entries to then manually check their validity.")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading db, if running fullmode, this may take a while \n")
+log_debug("loading db, if running fullmode, this may take a while")
 openDbMinimal <-
   vroom_read_safe(path = pathDataInterimTablesCuratedTable) %>%
   data.frame()
 
-cat("sampling ... \n")
-cat("... DOI \n")
+log_debug("sampling ...")
+log_debug("... DOI")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -34,7 +35,7 @@ if (nrow(openDbMinimal %>%
     )
 }
 
-cat("... original \n")
+log_debug("... original")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -52,7 +53,7 @@ if (nrow(openDbMinimal %>%
     )
 }
 
-cat("... PMID \n")
+log_debug("... PMID")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -70,7 +71,7 @@ if (nrow(openDbMinimal %>%
     )
 }
 
-cat("... split \n")
+log_debug("... split")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -88,7 +89,7 @@ if (nrow(openDbMinimal %>%
     )
 }
 
-cat("... title \n")
+log_debug("... title")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -106,7 +107,7 @@ if (nrow(openDbMinimal %>%
     )
 }
 
-cat("... publishing details \n")
+log_debug("... publishing details")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -135,7 +136,7 @@ sampleONPDB <- bind_rows(
 ) %>%
   mutate_all(as.character)
 
-cat("... attributing curator \n")
+log_debug("... attributing curator")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -149,7 +150,7 @@ sampleONPDB[51:100, "curator"] <- "JB"
 
 sampleONPDB[101:150, "curator"] <- "PMA"
 
-cat("... knapsack entries \n")
+log_debug("... knapsack entries")
 # set.seed(seed = 42,
 #          kind = "Mersenne-Twister",
 #          normal.kind = "Inversion")
@@ -164,7 +165,7 @@ cat("... knapsack entries \n")
 #     comments = NA
 #   )
 
-cat("... additional entries \n")
+log_debug("... additional entries")
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -287,15 +288,15 @@ if (exists("realMetaSample")) {
     )
 }
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesAnalysed),
   yes = dir.create(pathDataInterimTablesAnalysed),
   no = paste(pathDataInterimTablesAnalysed, "exists")
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesAnalysedSampleAllONPDB, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesAnalysedSampleAllONPDB)
 if (exists("sampleONPDB")) {
   write.table(
     x = sampleONPDB,
@@ -307,7 +308,7 @@ if (exists("sampleONPDB")) {
   )
 }
 
-cat(pathDataInterimTablesAnalysedSampleKnapsack, "\n")
+log_debug(pathDataInterimTablesAnalysedSampleKnapsack)
 if (exists("sampleKnapsack")) {
   write.table(
     x = sampleKnapsack,
@@ -319,13 +320,10 @@ if (exists("sampleKnapsack")) {
   )
 }
 
-cat(
-  file.path(
-    pathDataInterimTablesAnalysed,
-    "samplePublishingDetails.tsv"
-  ),
-  "\n"
-)
+log_debug(file.path(
+  pathDataInterimTablesAnalysed,
+  "samplePublishingDetails.tsv"
+))
 if (exists("sampleONPDB_publishingDetails")) {
   write.table(
     x = sampleONPDB_publishingDetails,
@@ -340,13 +338,11 @@ if (exists("sampleONPDB_publishingDetails")) {
   )
 }
 
-cat(
-  file.path(
-    pathDataInterimTablesAnalysed,
-    "additionalSet.tsv"
-  ),
-  "\n"
-)
+log_debug(file.path(
+  pathDataInterimTablesAnalysed,
+  "additionalSet.tsv"
+))
+
 if (exists("additionalSet")) {
   write.table(
     x = additionalSet,
@@ -445,4 +441,4 @@ if (exists("additionalSetTer")) {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

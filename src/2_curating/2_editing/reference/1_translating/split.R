@@ -1,25 +1,26 @@
-cat("This script performs split references translation from crossRef \n")
+source("r/log_debug.R")
+log_debug("This script performs split references translation from crossRef")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(pbmcapply)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
 source("r/vroom_safe.R")
 
-cat("loading split references list \n")
+log_debug("loading split references list")
 dataSplit <-
   vroom_read_safe(path = pathDataInterimTablesOriginalReferenceSplit)
 
-cat("submitting to crossRef \n")
+log_debug("submitting to crossRef")
 if (nrow(dataSplit) != 1) {
   reflist <- invisible(
     pbmclapply(
@@ -36,7 +37,7 @@ if (nrow(dataSplit) != 1) {
   )
 }
 
-cat("This may take several minutes \n")
+log_debug("This may take several minutes")
 
 if (nrow(dataSplit) != 1) {
   dataSplit <- getAllReferences(
@@ -60,7 +61,7 @@ if (nrow(dataSplit) == 1) {
     )
 }
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesTranslated),
   yes = dir.create(pathDataInterimTablesTranslated),
@@ -73,8 +74,8 @@ ifelse(
   no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedReferenceSplit, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedReferenceSplit)
 vroom_write_safe(
   x = dataSplit,
   path = pathDataInterimTablesTranslatedReferenceSplit
@@ -82,4 +83,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

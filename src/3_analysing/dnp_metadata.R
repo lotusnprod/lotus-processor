@@ -1,12 +1,13 @@
-cat("This script formats dnp as per ssot_union_wikidata. \n")
-cat("It currently needs 'temp_classyfireTaxonomy.R' to be run before. \n")
+source("r/log_debug.R")
+log_debug("This script formats dnp as per ssot_union_wikidata.")
+log_debug("It currently needs 'temp_classyfireTaxonomy.R' to be run before.")
 
 start <- Sys.time()
 
 safety <- FALSE
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 source("r/y_as_na.R")
 
@@ -15,7 +16,7 @@ library(DBI)
 library(RSQLite)
 library(tidyverse)
 
-cat("importing ... \n")
+log_debug("importing ...")
 dnp_pairs <-
   fread(file = pathDataInterimTablesAnalysedDnpDbTriplets) %>%
   filter(!is.na(structureCleanedInchikey) &
@@ -26,10 +27,10 @@ dnp_pairs <-
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "DNP has",
   nrow(dnp_pairs),
-  "unique inchikey-taxon pairs \n"
+  "unique inchikey-taxon pairs"
 )
 
 wikidata_pairs <-
@@ -51,10 +52,10 @@ wikidata_pairs <-
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(wikidata_pairs),
-  "unique inchikey-taxon-doi vaidated triplets in wikidata \n"
+  "unique inchikey-taxon-doi vaidated triplets in wikidata"
 )
 
 chemical_metadata <-
@@ -72,10 +73,10 @@ chemical_metadata <-
   ## needed
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_metadata),
-  "metadata for structures \n"
+  "metadata for structures"
 )
 
 chemical_taxonomy_1 <-
@@ -114,10 +115,10 @@ chemical_taxonomy_1 <-
   distinct() %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_taxonomy_1),
-  "npclassifier classifications for structures \n"
+  "npclassifier classifications for structures"
 )
 
 chemical_taxonomy_2 <- classy_temp %>%
@@ -134,10 +135,10 @@ chemical_taxonomy_2 <- classy_temp %>%
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_taxonomy_2),
-  "classyfire classifications for structures \n"
+  "classyfire classifications for structures"
 )
 
 drv <- SQLite()
@@ -212,10 +213,10 @@ biological_metadata <- left_join(names, otl) %>%
   coalesce() %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(biological_metadata),
-  "Open Tree of Life classifications for organisms \n"
+  "Open Tree of Life classifications for organisms"
 )
 
 dnp_u_wd <-
@@ -230,27 +231,27 @@ dnp_u_wd <-
     reference_title
   )
 
-cat(
+log_debug(
   "We have",
   nrow(dnp_u_wd),
-  "unique inchikey-taxon-doi vaidated triplets in dnp \n"
+  "unique inchikey-taxon-doi vaidated triplets in dnp"
 )
 
 dnp_only <-
   anti_join(dnp_pairs, wikidata_pairs) %>% distinct()
 
-# cat("We have",
+# log_debug("We have",
 #     nrow(platinum_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in platinum \n")
+#     "unique inchikey-taxon-doi vaidated triplets present only in platinum")
 
 # wd_only <-
 #   anti_join(wikidata_pairs, platinum_pairs) %>% distinct()
 
-# cat("We have",
+# log_debug("We have",
 #     nrow(wd_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in wikidata \n")
+#     "unique inchikey-taxon-doi vaidated triplets present only in wikidata")
 
-cat("Adding useful metadata")
+log_debug("Adding useful metadata")
 dnp_complete <- dnp_only %>%
   left_join(., biological_metadata) %>%
   left_join(., chemical_metadata) %>%
@@ -285,7 +286,7 @@ dnp_complete <- dnp_only %>%
   )
 
 if (safety == TRUE) {
-  cat(
+  log_debug(
     "Exporting to",
     file.path(
       pathDataProcessed,
@@ -304,4 +305,4 @@ if (safety == TRUE) {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

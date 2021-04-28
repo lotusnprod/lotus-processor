@@ -1,12 +1,13 @@
-cat("This script draws the distribution of organisms per structure and vice versa \n")
+source("r/log_debug.R")
+log_debug("This script draws the distribution of organisms per structure and vice versa")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(data.table)
 library(plotly)
 
@@ -237,4 +238,4 @@ if (mode == "full") {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

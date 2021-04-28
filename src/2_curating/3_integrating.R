@@ -1,55 +1,56 @@
-cat("This script integrates all results together. \n")
+source("r/log_debug.R")
+log_debug("This script integrates all results together.")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading files ... \n")
-cat("... original table \n")
+log_debug("loading files ...")
+log_debug("... original table")
 originalTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalTable)
 
 originalStructureTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
 
-cat("loading dictionaries ... \n")
+log_debug("loading dictionaries ...")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-  cat("... structures \n")
+  log_debug("... structures")
   structureDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-  cat("... organisms \n")
+  log_debug("... organisms")
   organismDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
-  cat("... references \n")
+  log_debug("... references")
   referenceOrganismDictionary <-
     vroom_read_safe(path = pathDataInterimDictionariesReferenceOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
-  cat("... structures metadata \n")
+  log_debug("... structures metadata")
   structureMetadata <-
     vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
-  cat("... organisms metadata \n")
+  log_debug("... organisms metadata")
   organismMetadata <-
     vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata)
 }
 
-cat("... cleaned organisms \n")
+log_debug("... cleaned organisms")
 organismTableFull <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
   select(
@@ -74,11 +75,11 @@ organismTableFull <-
   ) %>%
   distinct()
 
-cat("... translated structures \n")
+log_debug("... translated structures")
 translatedStructureTable <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureFinal)
 
-cat("... cleaned structures \n")
+log_debug("... cleaned structures")
 cleanedStructureTableFull <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureNamed) %>%
   select(
@@ -99,34 +100,34 @@ cleanedStructureTableFull <-
     structureCleaned_nameTraditional
   )
 
-cat("... cleaned references \n")
+log_debug("... cleaned references")
 referenceTableFull <-
   vroom_read_safe(path = pathDataInterimTablesCleanedReferenceFile) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
-cat("joining ... \n")
+log_debug("joining ...")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
-  cat("... previously cleaned organisms with metadata \n")
+  log_debug("... previously cleaned organisms with metadata")
   organismOld <-
     left_join(organismDictionary, organismMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
-  cat("... previously cleaned structures with metadata \n")
+  log_debug("... previously cleaned structures with metadata")
   structureOld <-
     left_join(structureDictionary, structureMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
-  cat("... previously cleaned organism with new ones \n")
+  log_debug("... previously cleaned organism with new ones")
   organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
     distinct()
 }
 
-cat("... translated structures with cleaned ones ... \n")
+log_debug("... translated structures with cleaned ones ...")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
   select(-structureTranslated) %>%
@@ -142,7 +143,7 @@ structureFull <-
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
-  cat("... previously cleaned structures \n")
+  log_debug("... previously cleaned structures")
   structureFull <- bind_rows(structureFull, structureOld) %>%
     distinct(
       structureType,
@@ -155,7 +156,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
-  cat("... previously cleaned references \n")
+  log_debug("... previously cleaned references")
   referenceTableFull <-
     bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
     distinct()
@@ -169,8 +170,8 @@ rm(
   referenceOrganismDictionary
 )
 
-cat("splitting metadata from minimal columns ... \n")
-cat("... structures \n")
+log_debug("splitting metadata from minimal columns ...")
+log_debug("... structures")
 structureMinimal <- structureFull %>%
   filter(!is.na(structureCleanedInchikey)) %>%
   distinct(
@@ -190,7 +191,7 @@ structureMetadata <- structureFull %>%
     .keep_all = TRUE
   )
 
-cat("... organisms \n")
+log_debug("... organisms")
 organismMinimal <- organismTableFull %>%
   filter(!is.na(organismCleaned)) %>%
   filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
@@ -227,7 +228,7 @@ organismMetadata <- organismTableFull %>%
     organismCleaned_dbTaxo_8variety
   )
 
-cat("... references \n")
+log_debug("... references")
 referenceMinimal <- referenceTableFull %>%
   filter(
     !is.na(referenceCleanedDoi) |
@@ -276,7 +277,7 @@ referenceMetadata <- referenceTableFull %>%
     referenceCleaned_score_complementTotal
   )
 
-cat("cleaning memory ... \n")
+log_debug("cleaning memory ...")
 gc(
   verbose = TRUE,
   reset = TRUE,
@@ -284,7 +285,7 @@ gc(
 )
 rm(organismTableFull)
 
-cat("joining minimal table ... \n")
+log_debug("joining minimal table ...")
 inhouseDbMinimal <-
   left_join(originalTable, structureMinimal) %>%
   filter(!is.na(structureCleanedInchikey)) %>%
@@ -317,7 +318,7 @@ inhouseDbMinimal <-
     referenceCleanedTitle
   )
 
-cat("outputting table with missing empty translations (for later on) ... \n")
+log_debug("outputting table with missing empty translations (for later on) ...")
 openDbMaximal <- originalTable %>%
   distinct(
     database,
@@ -333,9 +334,9 @@ openDbMaximal <- originalTable %>%
   filter(referenceType != "external") %>%
   filter(referenceType != "isbn")
 
-cat(
+log_debug(
   "generating list with chemical names having no translation \n",
-  "to avoid translating them again (since process is long) \n"
+  "to avoid translating them again (since process is long)"
 )
 structureNA <- anti_join(
   x = originalStructureTable,
@@ -363,7 +364,7 @@ structureNA <- left_join(structureNA, structureFull) %>%
   ) %>%
   distinct()
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesCurated),
   yes = dir.create(pathDataInterimTablesCurated),
@@ -388,59 +389,58 @@ ifelse(
   no = paste(pathDataInterimDictionariesReference, "exists")
 )
 
-cat("writing the monster table, if running fullmode, this may take a while \n")
-cat(pathDataInterimTablesCuratedTable, "\n")
+log_debug("writing the monster table, if running fullmode, this may take a while")
+log_debug(pathDataInterimTablesCuratedTable)
 vroom_write_safe_append(
   x = inhouseDbMinimal,
   path = pathDataInterimTablesCuratedTable
 )
 
-cat(pathDataInterimDictionariesStructureDictionary, "\n")
+log_debug(pathDataInterimDictionariesStructureDictionary)
 vroom_write_safe(
   x = structureMinimal,
   path = pathDataInterimDictionariesStructureDictionary
 )
 
-cat(pathDataInterimDictionariesStructureAntiDictionary, "\n")
+log_debug(pathDataInterimDictionariesStructureAntiDictionary)
 vroom_write_safe_append(
   x = structureNA,
   path = pathDataInterimDictionariesStructureAntiDictionary
 )
 
-cat(pathDataInterimDictionariesOrganismDictionary, "\n")
+log_debug(pathDataInterimDictionariesOrganismDictionary)
 vroom_write_safe(
   x = organismMinimal,
   path = pathDataInterimDictionariesOrganismDictionary
 )
 
-cat(
-  pathDataInterimDictionariesReferenceOrganismDictionary,
-  "\n"
+log_debug(
+  pathDataInterimDictionariesReferenceOrganismDictionary
 )
 vroom_write_safe(
   x = referenceTableFull,
   path = pathDataInterimDictionariesReferenceOrganismDictionary
 )
 
-cat(pathDataInterimDictionariesStructureMetadata, "\n")
+log_debug(pathDataInterimDictionariesStructureMetadata)
 vroom_write_safe(
   x = structureMetadata,
   path = pathDataInterimDictionariesStructureMetadata
 )
 
-cat(pathDataInterimDictionariesOrganismMetadata, "\n")
+log_debug(pathDataInterimDictionariesOrganismMetadata)
 vroom_write_safe(
   x = organismMetadata,
   path = pathDataInterimDictionariesOrganismMetadata
 )
 
-cat(pathDataInterimDictionariesReferenceMetadata, "\n")
+log_debug(pathDataInterimDictionariesReferenceMetadata)
 vroom_write_safe(
   x = referenceMetadata,
   path = pathDataInterimDictionariesReferenceMetadata
 )
 
-cat(pathDataInterimTablesCuratedTableMaximal, "\n")
+log_debug(pathDataInterimTablesCuratedTableMaximal)
 vroom_write_safe_append(
   x = openDbMaximal,
   path = pathDataInterimTablesCuratedTableMaximal
@@ -448,4 +448,4 @@ vroom_write_safe_append(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

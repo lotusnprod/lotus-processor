@@ -1,4 +1,5 @@
-cat("This script plots the interactive chord diagrams (for the SI) \n")
+source("r/log_debug.R")
+log_debug("This script plots the interactive chord diagrams (for the SI)")
 
 start <- Sys.time()
 library(chorddiag)
@@ -38,7 +39,7 @@ pairs_metadata[] <-
     y_as_na(x, "")
   })
 
-cat("... drawing big chord diagram \n")
+log_debug("... drawing big chord diagram")
 top_big_chord_bio <- pairs_metadata %>%
   filter(
     !is.na(organism_taxonomy_01domain) &
@@ -80,7 +81,7 @@ chord_big <- draw_chord(
   palette = paired_palette_med
 )
 
-cat("... drawing medium chord diagram \n")
+log_debug("... drawing medium chord diagram")
 top_organism_med <- pairs_metadata %>%
   filter(!is.na(organism_taxonomy_06family)) %>%
   filter(structure_taxonomy_npclassifier_01pathway == "Alkaloids") %>%
@@ -119,7 +120,7 @@ chord_med <- draw_chord(
   palette = paired_palette_30
 )
 
-cat("... drawing small chord diagram \n")
+log_debug("... drawing small chord diagram")
 top_organism_sma <- pairs_metadata %>%
   filter(
     !is.na(structure_taxonomy_npclassifier_03class) &
@@ -164,7 +165,7 @@ chord_sma <- draw_chord(
   palette = paired_palette_big
 )
 
-cat("... drawing Ranunculaceae chord diagram \n")
+log_debug("... drawing Ranunculaceae chord diagram")
 top_organism_ranunculaceae <- pairs_metadata %>%
   filter(
     !is.na(structure_taxonomy_npclassifier_03class) &
@@ -210,7 +211,7 @@ chord_ranunculaceae <- draw_chord(
   palette = paired_palette_big
 )
 
-cat("... drawing Papaveraceae chord diagram \n")
+log_debug("... drawing Papaveraceae chord diagram")
 top_organism_papaveraceae <- pairs_metadata %>%
   filter(
     !is.na(structure_taxonomy_npclassifier_03class) &
@@ -256,7 +257,7 @@ chord_papaveraceae <- draw_chord(
   palette = paired_palette_big
 )
 
-cat("... drawing Gentianaceae chord diagram \n")
+log_debug("... drawing Gentianaceae chord diagram")
 top_organism_gentianaceae <- pairs_metadata %>%
   filter(
     !is.na(structure_taxonomy_npclassifier_03class) &
@@ -303,8 +304,8 @@ chord_gentianaceae <- draw_chord(
   palette = paired_palette_big
 )
 
-cat("... drawing top N chord diagrams ... \n")
-cat("... top 06 \n")
+log_debug("... drawing top N chord diagrams ...")
+log_debug("... top 06")
 top_organism_06 <- pairs_metadata %>%
   filter(
     !is.na(organism_taxonomy_09species) &
@@ -351,7 +352,7 @@ chord_06 <- draw_chord(
   palette = paired_palette_sma
 )
 
-cat("... top 12 \n")
+log_debug("... top 12")
 top_organism_12 <- pairs_metadata %>%
   filter(
     !is.na(organism_taxonomy_09species) &
@@ -398,7 +399,7 @@ chord_12 <- draw_chord(
   palette = paired_palette_big
 )
 
-cat("... top 24 \n")
+log_debug("... top 24")
 top_organism_24 <- pairs_metadata %>%
   filter(
     !is.na(organism_taxonomy_09species) &
@@ -494,4 +495,4 @@ if (mode == "full") {
 }
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

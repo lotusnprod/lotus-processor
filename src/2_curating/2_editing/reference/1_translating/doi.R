@@ -1,24 +1,25 @@
-cat("This script performs DOI translation from crossRef \n")
+source("r/log_debug.R")
+log_debug("This script performs DOI translation from crossRef")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(pbmcapply)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/getrefDoi.R")
 source("r/vroom_safe.R")
 
-cat("loading DOI list \n")
+log_debug("loading DOI list")
 dataDoi <-
   vroom_read_safe(path = pathDataInterimTablesOriginalReferenceDoi)
 
-cat("submitting to crossRef \n")
+log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 1) {
   reflistDoi <-
     pbmclapply(
@@ -34,7 +35,7 @@ if (nrow(dataDoi) != 1) {
     )
 }
 
-cat("joining results with original list \n")
+log_debug("joining results with original list")
 if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDoi"] <-
@@ -154,7 +155,7 @@ if (nrow(dataDoi) == 1) {
     )
 }
 
-cat("removing unfriendly characters \n")
+log_debug("removing unfriendly characters")
 dataDoi <- dataDoi %>%
   mutate_all(as.character)
 
@@ -175,7 +176,7 @@ dataDoi[] <-
     gsub("\t", " ", x)
   })
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesTranslated),
   yes = dir.create(pathDataInterimTablesTranslated),
@@ -188,8 +189,8 @@ ifelse(
   no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedReferenceDoi, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedReferenceDoi)
 vroom_write_safe(
   x = dataDoi,
   path = pathDataInterimTablesTranslatedReferenceDoi
@@ -197,4 +198,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

@@ -1,16 +1,17 @@
-cat("This script helps finding nice examples \n")
+source("r/log_debug.R")
+log_debug("This script helps finding nice examples")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 
-cat("loading ... \n")
-cat("... validated db, if running fullmode, this may take a while \n")
+log_debug("loading ...")
+log_debug("... validated db, if running fullmode, this may take a while")
 openDb <- read_delim(
   file = gzfile(pathDataInterimTablesAnalysedPlatinum),
   col_types = cols(.default = "c"),
@@ -148,3 +149,7 @@ pairTest <- openDb %>%
     organismType,
     organismValue, structureValue, organismCleaned
   )
+
+end <- Sys.time()
+
+log_debug("Script finished in", format(end - start))

@@ -1,21 +1,22 @@
-cat("This script performs title translation from crossRef \n")
+source("r/log_debug.R")
+log_debug("This script performs title translation from crossRef")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(pbmcapply)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
 source("r/vroom_safe.R")
 
-cat("loading title lists \n")
+log_debug("loading title lists")
 length <-
   length(
     list.files(
@@ -32,7 +33,7 @@ num <- as.integer(seq(
   by = cut
 ))
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesTranslated),
   yes = dir.create(pathDataInterimTablesTranslated),
@@ -61,20 +62,31 @@ ifelse(
 )
 
 for (i in num) {
-  inpath <- paste0(pathDataInterimTablesOriginalReferenceTitleFolder, "/", str_pad(
-    string = i,
-    width = 6,
-    pad = "0"
-  ), ".tsv")
+  inpath <-
+    paste0(
+      pathDataInterimTablesOriginalReferenceTitleFolder,
+      "/",
+      str_pad(
+        string = i,
+        width = 6,
+        pad = "0"
+      ),
+      ".tsv"
+    )
 
   outpath <-
-    paste0(pathDataInterimTablesTranslatedReferenceTitleFolder, "/", str_pad(
-      string = i,
-      width = 6,
-      pad = "0"
-    ), ".tsv.gz")
+    paste0(
+      pathDataInterimTablesTranslatedReferenceTitleFolder,
+      "/",
+      str_pad(
+        string = i,
+        width = 6,
+        pad = "0"
+      ),
+      ".tsv.gz"
+    )
 
-  cat(paste("step", i / cut, "of", length, "\n"))
+  log_debug(paste("step", i / cut, "of", length))
 
   dataTitle <- read_delim(
     file = inpath,
@@ -83,7 +95,7 @@ for (i in num) {
     trim_ws = TRUE
   )
 
-  cat("submitting to crossRef \n")
+  log_debug("submitting to crossRef")
   if (nrow(dataTitle) != 1) {
     reflist <- invisible(
       pbmclapply(
@@ -104,7 +116,7 @@ for (i in num) {
     reflist <- list(NA)
   }
 
-  cat("treating results, may take a while if full mode \n")
+  log_debug("treating results, may take a while if full mode")
   if (nrow(dataTitle) != 0) {
     dataTitle2 <-
       getAllReferences(
@@ -128,7 +140,7 @@ for (i in num) {
       )
   }
 
-  cat("exporting ... \n")
+  log_debug("exporting ...")
   vroom_write_safe(
     x = dataTitle2,
     path = outpath
@@ -142,7 +154,7 @@ for (i in num) {
   )
 }
 
-cat("joining results with original lists \n")
+log_debug("joining results with original lists")
 dataTitle3 <- do.call(
   "rbind",
   lapply(
@@ -165,8 +177,8 @@ dataTitle3 <- do.call(
   )
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedReferenceTitle, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedReferenceTitle)
 vroom_write_safe(
   x = dataTitle3,
   path = pathDataInterimTablesTranslatedReferenceTitle
@@ -174,4 +186,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

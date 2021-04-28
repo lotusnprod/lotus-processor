@@ -1,12 +1,13 @@
-cat("This script outputs tabular classyfire taxonomy from json \n")
+source("r/log_debug.R")
+log_debug("This script outputs tabular classyfire taxonomy from json")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(data.table)
 library(jsonlite)
 library(tidyverse)
@@ -304,7 +305,8 @@ classyfire_taxonomy_wide <- classyfire_full %>%
   pivot_wider()
 
 classy_temp <-
-  left_join(classyfire_direct_parent,
+  left_join(
+    classyfire_direct_parent,
     classyfire_taxonomy_wide,
     by = c("chemontId" = "chemont_id")
   ) %>%
@@ -321,4 +323,4 @@ classy_temp <-
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

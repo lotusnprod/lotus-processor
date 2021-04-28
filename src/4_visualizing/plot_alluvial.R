@@ -1,4 +1,5 @@
-cat("This script plots the alluvial plot ... \n")
+source("r/log_debug.R")
+log_debug("This script plots the alluvial plot ...")
 
 start <- Sys.time()
 library(data.table)
@@ -9,11 +10,11 @@ library(tidyverse)
 source(file = "paths.R")
 source(file = "r/vroom_safe.R")
 
-cat("... pretty names \n")
+log_debug("... pretty names")
 prettyNames <-
   vroom_read_safe(path = "../docs/prettyDBNames.tsv")
 
-cat("... open DB \n")
+log_debug("... open DB")
 openDbMetaValidated <-
   vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
   filter(
@@ -256,7 +257,7 @@ legend <- with(sunk, reorder(prettyDataBase, count))
 
 legend_v <- with(sunk, reorder(validation, desc(count)))
 
-cat("drawing alluvial \n")
+log_debug("drawing alluvial")
 
 if (mode == "full") {
   pdf(
@@ -316,6 +317,7 @@ if (mode == "full") {
     )
   dev.off()
 }
+
 ## interactive alternative
 
 # library(easyalluvial)
@@ -406,3 +408,7 @@ if (mode == "full") {
 #   width = 1600,
 #   height = 900
 # )
+
+end <- Sys.time()
+
+log_debug("Script finished in", format(end - start))

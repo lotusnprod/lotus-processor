@@ -1,12 +1,13 @@
-cat("This script performs taxonomy cleaning and alignment. \n")
+source("r/log_debug.R")
+log_debug("This script performs taxonomy cleaning and alignment. ")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ... ")
+log_debug("... paths ")
 source("paths.R")
 
-cat("... functions \n")
+log_debug("... functions ")
 source("r/log.R")
 source("r/y_as_na.R")
 source("r/manipulating_taxo.R")
@@ -14,19 +15,19 @@ source("r/taxo_cleaning_auto.R")
 source("r/rank_order.R")
 source("r/vroom_safe.R")
 
-cat("loading ... \n")
-cat("... libraries \n")
+log_debug("loading ... ")
+log_debug("... libraries ")
 library(tidyverse)
 library(jsonlite)
 
 log_debug(" Step 4")
-cat("... files ... \n")
-cat("... cleaned organisms \n")
+log_debug("... files ... ")
+log_debug("... cleaned organisms ")
 dataCleanedOrganism <-
   vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedTable) %>%
   distinct()
 
-cat(" ... taxa ranks dictionary \n")
+log_debug(" ... taxa ranks dictionary ")
 taxaRanksDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
@@ -52,7 +53,7 @@ vroom_write(
 )
 ## because gnverifier does not parse quotes
 
-cat("submitting to GNVerifier \n")
+log_debug("submitting to GNVerifier")
 system(command = paste("bash", pathGnverifierScript))
 
 verified <-
@@ -112,7 +113,7 @@ if (nrow(indexFungorum != 0)) {
     bind_rows(., indexFungorum)
 }
 
-cat("manipulating taxonomic levels \n")
+log_debug("manipulating taxonomic levels ")
 if (nrow(dataCleanedOrganism) != 0) {
   dataCleanedOrganismManipulated <-
     manipulating_taxo(
@@ -190,7 +191,7 @@ dataCleanedOrganismManipulated_clean_2 <-
 dataCuratedOrganismAuto <-
   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated_clean_2)
 
-cat("selecting \n")
+log_debug("selecting ")
 dataCuratedOrganismAuto[setdiff(
   x = c(
     "organismType",
@@ -260,8 +261,8 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   ) %>%
   filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesCleanedOrganismFinal, "\n")
+log_debug("exporting ... ")
+log_debug(pathDataInterimTablesCleanedOrganismFinal)
 vroom_write_safe(
   x = dataCuratedOrganismAuto,
   path = pathDataInterimTablesCleanedOrganismFinal
@@ -269,4 +270,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

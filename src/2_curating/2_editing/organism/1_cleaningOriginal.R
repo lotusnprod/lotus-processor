@@ -1,25 +1,26 @@
-cat("This script performs canonical name recognition on the original organism field. \n")
+source("r/log_debug.R")
+log_debug("This script performs canonical name recognition on the original organism field.")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("...paths \n")
+log_debug("sourcing ...")
+log_debug("...paths")
 source("paths.R")
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/log.R")
 source("r/gnfinder_cleaning.R")
 source("r/vroom_safe.R")
 source("r/split_data_table.R")
 source("r/y_as_na.R")
 
-cat("loading ... \n")
-cat("... libraries \n")
+log_debug("loading ...")
+log_debug("... libraries")
 library(data.table)
 library(tidyverse)
 
 log_debug("  Step 1")
-cat("... taxa ranks dictionary \n")
+log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
   vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
 
@@ -31,7 +32,7 @@ organismTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFull) %>%
   distinct()
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesCleaned),
   yes = dir.create(pathDataInterimTablesCleaned),
@@ -58,7 +59,7 @@ ifelse(
     )
 )
 
-cat("submitting to GNVerifier \n")
+log_debug("submitting to GNVerifier")
 system(command = paste("bash", pathOriginalGnverifierScript))
 
 verified <-
@@ -115,7 +116,7 @@ dataOrganismNoVerified <- dataOrganismVerified %>%
 dataOrganismVerified <- dataOrganismVerified %>%
   filter(!is.na(organismDbTaxo))
 
-cat(pathDataInterimTablesOriginalOrganism, "\n")
+log_debug(pathDataInterimTablesOriginalOrganism)
 
 if (nrow(dataOrganismNoVerified) != 0) {
   split_data_table(
@@ -127,10 +128,10 @@ if (nrow(dataOrganismNoVerified) != 0) {
   )
 }
 
-cat("submitting to GNFinder \n")
+log_debug("submitting to GNFinder")
 system(command = paste("bash", pathOriginalGnfinderScript))
 
-cat("treating GNFinder results \n")
+log_debug("treating GNFinder results")
 length <-
   length(list.files(
     path = pathDataInterimTablesOriginalOrganism,
@@ -150,11 +151,11 @@ if (length != 0) {
 
 dataCleanOriginalOrganism <- list()
 
-cat("cleaning GNFinder output \n")
+log_debug("cleaning GNFinder output")
 if (length != 0) {
   for (i in num) {
     j <- i / cut
-    cat(paste("step", j, "of", length, "\n"))
+    log_debug(paste("step", j, "of", length))
     tryCatch(
       {
         dataCleanOriginalOrganism[[j]] <-
@@ -164,13 +165,13 @@ if (length != 0) {
           )
       },
       error = function(e) {
-        cat("ERROR :", conditionMessage(e), "\n")
+        log_debug("ERROR :", conditionMessage(e))
       }
     )
   }
 }
 
-cat("selecting and reordering \n")
+log_debug("selecting and reordering")
 if (length(dataCleanOriginalOrganism) != 0) {
   dataCleanedOriginalOrganism <-
     bind_rows(dataCleanOriginalOrganism) %>%
@@ -200,9 +201,9 @@ if (length(dataCleanOriginalOrganism) == 0) {
 dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism %>%
   distinct(organismValue, organismCleaned, .keep_all = TRUE)
 
-cat("exporting ... \n")
+log_debug("exporting ...")
 if (length != 0) {
-  cat(pathDataInterimTablesCleanedOrganismOriginalTable, "\n")
+  log_debug(pathDataInterimTablesCleanedOrganismOriginalTable)
 }
 
 if (length != 0) {
@@ -213,9 +214,8 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  cat(
-    pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
-    "\n"
+  log_debug(
+    pathDataInterimTablesCleanedOrganismOriginalUniqueTable
   )
 }
 
@@ -246,4 +246,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

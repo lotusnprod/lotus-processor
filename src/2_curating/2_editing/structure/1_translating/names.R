@@ -1,24 +1,25 @@
-cat("This script performs chemical name translation. \n")
+source("r/log_debug.R")
+log_debug("This script performs chemical name translation.")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(Hmisc)
 library(tidyverse)
 library(pbmcapply)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/y_as_na.R")
 source("r/preparing_name.R")
 source("r/name2inchi_cactus.R")
 source("r/name2inchi_cts.R")
 source("r/vroom_safe.R")
 
-cat("loading chemical names lists \n")
+log_debug("loading chemical names lists")
 dataOriginal <-
   vroom_read_safe(path = pathDataInterimTablesOriginalStructureNominal)
 
@@ -29,13 +30,13 @@ if (nrow(dataOriginal) == 0) {
 ## to avoid errors if dataframe not empty at the begining but filled with NA
 colnames(dataOriginal)[1] <- "structureOriginal_nominal"
 
-cat("preparing names \n")
+log_debug("preparing names")
 dataPreparedNames <- preparing_name(x = dataOriginal)
 
 dataPreparedNamesDistinct <- dataPreparedNames %>%
   distinct(nameCleaned)
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesTranslated),
   yes = dir.create(pathDataInterimTablesTranslated),
@@ -48,8 +49,8 @@ ifelse(
   no = paste(pathDataInterimTablesTranslatedStructure, "exists")
 )
 
-cat("exporting prepared names ... \n")
-cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
+log_debug("exporting prepared names ...")
+log_debug(pathDataInterimTablesTranslatedStructureNominal)
 
 write.table(
   x = dataPreparedNamesDistinct,
@@ -61,8 +62,8 @@ write.table(
   fileEncoding = "UTF-8"
 )
 
-cat("translating names ... \n")
-cat("... with OPSIN (very fast but limited) \n")
+log_debug("translating names ...")
+log_debug("... with OPSIN (very fast but limited)")
 
 system(
   command = paste(
@@ -74,7 +75,7 @@ system(
   )
 )
 
-cat("loading opsin results \n")
+log_debug("loading opsin results")
 dataOpsin <-
   read_delim(
     file = pathDataInterimTablesTranslatedStructureOpsin,
@@ -90,8 +91,8 @@ dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
 
 dataInterim <- left_join(dataPreparedNames, dataInterim)
 
-cat("exporting interim ... \n")
-cat(pathDataInterimTablesTranslatedStructureNominal_opsin, "\n")
+log_debug("exporting interim ...")
+log_debug(pathDataInterimTablesTranslatedStructureNominal_opsin)
 vroom_write_safe(
   x = dataInterim,
   path = pathDataInterimTablesTranslatedStructureNominal_opsin
@@ -102,7 +103,7 @@ dataForCTS <- dataInterim %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
   select(structureOriginal_nominal, nameCleaned)
 
-cat("translating structures with CTS (slow but better results) \n")
+log_debug("translating structures with CTS (slow but better results)")
 if (nrow(dataForCTS) == 0) {
   dataForCTS[1, "nameCleaned"] <- NA
 }
@@ -142,10 +143,9 @@ dataInterim_2 <- left_join(
   dataTranslatedNominal_cts
 )
 
-cat("exporting interim ... \n")
-cat(
-  pathDataInterimTablesTranslatedStructureNominal_cts,
-  "\n"
+log_debug("exporting interim ...")
+log_debug(
+  pathDataInterimTablesTranslatedStructureNominal_cts
 )
 vroom_write_safe(
   x = dataInterim_2,
@@ -162,7 +162,7 @@ dataForCTS_2 <- dataInterim_2 %>%
   filter(is.na(inchiNominal_cts)) %>%
   filter(nameCleaned_capitalized != nameCleaned)
 
-cat("translating structures with CTS again (capitalized) \n")
+log_debug("translating structures with CTS again (capitalized)")
 if (nrow(dataForCTS_2) == 0) {
   dataForCTS_2[1, "nameCleaned_capitalized"] <- NA
 }
@@ -202,10 +202,9 @@ dataInterim_3 <- left_join(
   dataTranslatedNominal_cts_2
 )
 
-cat("exporting interim ... \n")
-cat(
-  pathDataInterimTablesTranslatedStructureNominal_cts_2,
-  "\n"
+log_debug("exporting interim ...")
+log_debug(
+  pathDataInterimTablesTranslatedStructureNominal_cts_2
 )
 vroom_write_safe(
   x = dataInterim_3,
@@ -230,7 +229,7 @@ if (nrow(dataForCactus) == 0) {
   dataForCactus[1, "nameCleaned"] <- NA
 }
 
-cat("... with cactus (fast) \n")
+log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus %>%
   select(-structureOriginal_nominal) %>%
   mutate(inchiNominal_cactus = invisible(
@@ -300,8 +299,8 @@ dataTranslated <- left_join(
     )
   ))
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedStructureNominal, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedStructureNominal)
 vroom_write_safe(
   x = dataTranslated,
   path = pathDataInterimTablesTranslatedStructureNominal
@@ -312,4 +311,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))
