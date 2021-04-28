@@ -1,29 +1,30 @@
-cat("This script integrates all chemical translations. \n")
+source("r/log_debug.R")
+log_debug("This script integrates all chemical translations.")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading files ... \n")
-cat("... whole chemicals list \n")
+log_debug("loading files ...")
+log_debug("... whole chemicals list")
 originalTable <-
   vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
 
-cat("... chemical names list \n")
+log_debug("... chemical names list")
 nominalStructureTable <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal)
 
-cat("... SMILES list \n")
+log_debug("... SMILES list")
 smilesStructureTable <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureSmiles)
 
-cat("joining \n")
+log_debug("joining")
 translatedStructureTable <-
   left_join(
     originalTable,
@@ -61,7 +62,7 @@ if (nrow(translatedStructureTable) == 0) {
   )] <- NA
 }
 
-cat("outputing unique structures \n")
+log_debug("outputing unique structures")
 translatedStructureTableUnique <- translatedStructureTable %>%
   filter(!is.na(structureTranslated)) %>%
   distinct(structureTranslated)
@@ -70,14 +71,14 @@ if (nrow(translatedStructureTableUnique) == 0) {
   translatedStructureTableUnique[1, "structureTranslated"] <- NA
 }
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedStructureFinal, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedStructureFinal)
 vroom_write(
   x = translatedStructureTable,
   path = pathDataInterimTablesTranslatedStructureFinal
 )
 
-cat(pathDataInterimTablesTranslatedStructureUnique, "\n")
+log_debug(pathDataInterimTablesTranslatedStructureUnique)
 vroom_write(
   x = translatedStructureTableUnique,
   path = pathDataInterimTablesTranslatedStructureUnique
@@ -85,4 +86,4 @@ vroom_write(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

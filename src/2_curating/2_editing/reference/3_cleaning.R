@@ -1,24 +1,25 @@
-cat("This script checks for organism presence in cleaned reference title \n")
+source("r/log_debug.R")
+log_debug("This script checks for organism presence in cleaned reference title")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(data.table)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/y_as_na.R")
 source("r/vroom_safe.R")
 
-cat("loading crossref translations file, this may take a while \n")
+log_debug("loading crossref translations file, this may take a while")
 dataTranslated <-
   vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceFile)
 
-cat("cleaning \n")
+log_debug("cleaning")
 dataCleaned <- dataTranslated %>%
   filter(!is.na(referenceTranslatedType)) %>%
   filter(!is.na(referenceTranslatedValue)) %>%
@@ -33,7 +34,7 @@ dataCleaned <- dataTranslated %>%
 
 rm(dataTranslated)
 
-cat("checking for organism in title, may take a while if running full mode \n")
+log_debug("checking for organism in title, may take a while if running full mode")
 dataCleanedScore <- dataCleaned %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismValue) &
@@ -117,7 +118,7 @@ rm(
 
 gc()
 
-cat("manipulating and keeping best result only (long step) \n")
+log_debug("manipulating and keeping best result only (long step)")
 dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
   pivot_wider(
     names_from = referenceCleanedType,
@@ -234,7 +235,7 @@ subDataClean_pmid <- dataCleanedJoinedWideScore %>%
   mutate_all(as.character)
 
 if (mode != "test") {
-  cat("loading pmcid file, this may take a while \n")
+  log_debug("loading pmcid file, this may take a while")
   # here because of memory
   PMC_ids <- vroom(
     file = pathDataExternalTranslationSourcePubmedFile,
@@ -266,7 +267,7 @@ if (mode != "test") {
     tibble()
 }
 
-cat("adding PMID and PMCID \n")
+log_debug("adding PMID and PMCID")
 df_doi <- left_join(subDataClean_doi,
   PMC_ids,
   by = c("referenceCleaned_doi" = "DOI")
@@ -331,7 +332,7 @@ referenceTable <-
   distinct() %>%
   mutate(across(everything(), ~ y_as_na(.x, "NULL")))
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesCleaned),
   yes = dir.create(pathDataInterimTablesCleaned),
@@ -344,8 +345,8 @@ ifelse(
   no = paste(pathDataInterimTablesCleanedReference, "exists")
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesCleanedReferenceFile, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesCleanedReferenceFile)
 vroom_write_safe(
   x = referenceTable,
   path = pathDataInterimTablesCleanedReferenceFile
@@ -353,4 +354,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

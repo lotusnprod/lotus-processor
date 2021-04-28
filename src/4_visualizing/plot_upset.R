@@ -1,13 +1,14 @@
-cat("This script plots the upset plots ... \n")
+source("r/log_debug.R")
+log_debug("This script plots the upset plots ...")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
 if (mode == "full") {
-  cat("... libraries \n")
+  log_debug("... libraries")
   library(data.table)
   library(splitstackshape)
   library(tidyverse)
@@ -18,13 +19,13 @@ if (mode == "full") {
   source("r/prepare_upset.R")
   source("r/y_as_na.R")
 
-  cat("loading files, this may take a while ... \n")
+  log_debug("loading files, this may take a while ...")
 
-  cat("... pretty names \n")
+  log_debug("... pretty names")
   prettyNames <-
     vroom_read_safe(path = "../docs/prettyDBNames.tsv")
 
-  cat("... open DB \n")
+  log_debug("... open DB")
   openDb <-
     vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
     distinct(
@@ -36,12 +37,12 @@ if (mode == "full") {
     ) %>%
     tibble()
 
-  cat("... open DB \n")
+  log_debug("... open DB")
   openDbMaximal <-
     vroom_read_safe(path = pathDataInterimTablesCuratedTableMaximal) %>%
     tibble()
 
-  cat("... DNP DB \n")
+  log_debug("... DNP DB")
   dnpDb <-
     vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
     distinct(
@@ -53,7 +54,7 @@ if (mode == "full") {
     ) %>%
     tibble()
 
-  cat("... metadata ... \n")
+  log_debug("... metadata ...")
   pairs_metadata <- fread(
     input = file.path(
       pathDataProcessed,
@@ -82,7 +83,7 @@ if (mode == "full") {
       y_as_na(x, "")
     })
 
-  cat("joining DNP and openDB \n")
+  log_debug("joining DNP and openDB")
   inhouseDb <- bind_rows(dnpDb, openDb) %>%
     left_join(., prettyNames) %>%
     select(-database) %>%
@@ -91,12 +92,12 @@ if (mode == "full") {
       everything()
     )
 
-  cat("counting sub-DBs \n")
+  log_debug("counting sub-DBs")
   dbNum <-
     as.numeric(nrow(inhouseDb %>%
       distinct(inhouseDb$database)))
 
-  cat("drawing upset plot of structures repartition in sub-DBs \n")
+  log_debug("drawing upset plot of structures repartition in sub-DBs")
   inhouseDb_structures_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
@@ -124,7 +125,7 @@ if (mode == "full") {
   )
   dev.off()
 
-  cat("drawing upset plot of organisms repartition in sub-DBs \n")
+  log_debug("drawing upset plot of organisms repartition in sub-DBs")
   inhouseDb_organism_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
@@ -154,7 +155,7 @@ if (mode == "full") {
   )
   dev.off()
 
-  cat("drawing upset plot of pairs repartition in sub-DBs \n")
+  log_debug("drawing upset plot of pairs repartition in sub-DBs")
   inhouseDbPairs_2plot_wide <-
     prepare_upset(
       table = inhouseDb,
@@ -184,8 +185,8 @@ if (mode == "full") {
   )
   dev.off()
 
-  cat("adding metadata for more detailed analysis ... \n")
-  cat("... classyfire \n")
+  log_debug("adding metadata for more detailed analysis ...")
+  log_debug("... classyfire")
   inhouseDbMeta <- left_join(
     inhouseDb %>% distinct(
       database,
@@ -217,7 +218,7 @@ if (mode == "full") {
       organism_taxonomy_03phylum
     )
 
-  cat("drawing upset plot of stigmastenol repartition in sub-DBs \n")
+  log_debug("drawing upset plot of stigmastenol repartition in sub-DBs")
   inhouseDb_most_structures <- inhouseDbMeta %>%
     filter(!is.na(structure_inchikey_2D)) %>%
     count(structure_inchikey_2D) %>%
@@ -320,14 +321,14 @@ if (mode == "full") {
   )
   dev.off()
 
-  cat("getting list of most studied plants for exploration \n")
+  log_debug("getting list of most studied plants for exploration")
   inhouseDb_most_plant <- inhouseDbMeta %>%
     filter(!is.na(organism_name)) %>%
     filter(organism_taxonomy_02kingdom == "Archaeplastida") %>%
     count(organism_name) %>%
     arrange(desc(n))
 
-  cat("... drawing Cannabis sativa metabolites repartition \n")
+  log_debug("... drawing Cannabis sativa metabolites repartition")
   pdf(
     file = file.path("../res", "upset_cannabisSativa.pdf"),
     width = 16,
@@ -336,7 +337,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Cannabis sativa")
   dev.off()
 
-  cat("... drawing Tripterygium wilfordii metabolites repartition \n")
+  log_debug("... drawing Tripterygium wilfordii metabolites repartition")
   pdf(
     file = file.path("../res", "upset_tripterygiumWilfordii.pdf"),
     width = 16,
@@ -345,7 +346,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Tripterygium wilfordii")
   dev.off()
 
-  cat("... drawing Citrus aurantium metabolites repartition \n")
+  log_debug("... drawing Citrus aurantium metabolites repartition")
   pdf(
     file = file.path("../res", "upset_citrusAurantium.pdf"),
     width = 16,
@@ -354,7 +355,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Citrus aurantium")
   dev.off()
 
-  cat("... drawing Camellia sinensis metabolites repartition \n")
+  log_debug("... drawing Camellia sinensis metabolites repartition")
   pdf(
     file = file.path("../res", "upset_camelliaSinensis.pdf"),
     width = 16,
@@ -363,7 +364,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Camellia sinensis")
   dev.off()
 
-  cat("... drawing Panax ginseng metabolites repartition \n")
+  log_debug("... drawing Panax ginseng metabolites repartition")
   pdf(
     file = file.path("../res", "upset_panaxGinseng.pdf"),
     width = 16,
@@ -372,7 +373,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Panax ginseng")
   dev.off()
 
-  cat("... drawing Vitis vinifera metabolites repartition \n")
+  log_debug("... drawing Vitis vinifera metabolites repartition")
   pdf(
     file = file.path("../res", "upset_vitisVinifera.pdf"),
     width = 16,
@@ -381,7 +382,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Vitis vinifera")
   dev.off()
 
-  cat("... drawing Zingiber officinale metabolites repartition \n")
+  log_debug("... drawing Zingiber officinale metabolites repartition")
   pdf(
     file = file.path("../res", "upset_zingiberOfficinale.pdf"),
     width = 16,
@@ -390,7 +391,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Zingiber officinale")
   dev.off()
 
-  cat("... drawing Capsicum annuum metabolites repartition \n")
+  log_debug("... drawing Capsicum annuum metabolites repartition")
   pdf(
     file = file.path("../res", "upset_capsicumAnnuum.pdf"),
     width = 16,
@@ -399,7 +400,7 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Capsicum annuum")
   dev.off()
 
-  cat("... drawing Arabidopsis thaliana metabolites repartition \n")
+  log_debug("... drawing Arabidopsis thaliana metabolites repartition")
   pdf(
     file = file.path("../res", "upset_arabidopsisThaliana.pdf"),
     width = 16,
@@ -408,13 +409,13 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Arabidopsis thaliana")
   dev.off()
 
-  cat("getting list of most studied chemical subclasses for exploration \n")
+  log_debug("getting list of most studied chemical subclasses for exploration")
   inhouseDb_most_chemical_subclass <- inhouseDbMeta %>%
     filter(!is.na(structure_taxonomy_npclassifier_03class)) %>%
     count(structure_taxonomy_npclassifier_03class) %>%
     arrange(desc(n))
 
-  cat("... drawing flavonols repartition \n")
+  log_debug("... drawing flavonols repartition")
   pdf(
     file = file.path("../res", "upset_flavonols.pdf"),
     width = 16,
@@ -423,7 +424,7 @@ if (mode == "full") {
   getGraphChemicalClass(subclass = "Flavonols")
   dev.off()
 
-  cat("... drawing Iridoids monoterpenoids repartition \n")
+  log_debug("... drawing Iridoids monoterpenoids repartition")
   pdf(
     file = file.path("../res", "upset_iridoids.pdf"),
     width = 16,
@@ -432,7 +433,7 @@ if (mode == "full") {
   getGraphChemicalClass(subclass = "Iridoids monoterpenoids")
   dev.off()
 
-  cat("... drawing Limonoids repartition \n")
+  log_debug("... drawing Limonoids repartition")
   pdf(
     file = file.path("../res", "upset_limonoids.pdf"),
     width = 16,
@@ -441,7 +442,7 @@ if (mode == "full") {
   getGraphChemicalClass(subclass = "Limonoids")
   dev.off()
 
-  cat("... drawing Quassinoids repartition \n")
+  log_debug("... drawing Quassinoids repartition")
   pdf(
     file = file.path("../res", "upset_quassinoids.pdf"),
     width = 16,
@@ -453,4 +454,4 @@ if (mode == "full") {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

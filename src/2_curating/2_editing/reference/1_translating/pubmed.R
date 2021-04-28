@@ -1,26 +1,27 @@
-cat("This script performs PMID translation from pubmed API \n")
+source("r/log_debug.R")
+log_debug("This script performs PMID translation from pubmed API")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 library(pbmcapply)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/getrefPubmed.R")
 source("r/vroom_safe.R")
 
-cat("loading PMID list \n")
+log_debug("loading PMID list")
 dataPubmed <-
   vroom_read_safe(path = pathDataInterimTablesOriginalReferencePubmed)
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
-cat("submitting to entrez \n")
+log_debug("submitting to entrez")
 if (nrow(dataPubmed) != 1) {
   reflistPubmed <- invisible(
     pbmclapply(
@@ -46,7 +47,7 @@ if (nrow(dataPubmed) != 1) {
   }
 }
 
-cat("joining results with original list \n")
+log_debug("joining results with original list")
 if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedDoi"] <-
@@ -103,7 +104,7 @@ if (nrow(dataPubmed) == 1) {
     )
 }
 
-cat("removing unfriendly characters \n")
+log_debug("removing unfriendly characters")
 dataPubmed <- dataPubmed %>%
   mutate_all(as.character)
 
@@ -124,7 +125,7 @@ dataPubmed[] <-
     gsub("\t", " ", x)
   })
 
-cat("ensuring directories exist \n")
+log_debug("ensuring directories exist")
 ifelse(
   test = !dir.exists(pathDataInterimTablesTranslated),
   yes = dir.create(pathDataInterimTablesTranslated),
@@ -137,8 +138,8 @@ ifelse(
   no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-cat("exporting ... \n")
-cat(pathDataInterimTablesTranslatedReferencePubmed, "\n")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesTranslatedReferencePubmed)
 vroom_write_safe(
   x = dataPubmed,
   path = pathDataInterimTablesTranslatedReferencePubmed
@@ -146,4 +147,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

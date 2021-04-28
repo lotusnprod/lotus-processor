@@ -1,4 +1,5 @@
-cat("This script plots the magic tree. \n")
+source("r/log_debug.R")
+log_debug("This script plots the magic tree.")
 
 start <- Sys.time()
 
@@ -535,4 +536,4 @@ ggsave(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

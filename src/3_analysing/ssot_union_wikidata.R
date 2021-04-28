@@ -1,15 +1,16 @@
-cat(
-  "This script verifies what we uploaded on Wikidata \n",
+source("r/log_debug.R")
+log_debug(
+  "This script verifies what we uploaded on Wikidata",
   "and compements it with some metadata."
 )
-cat("It currently needs 'temp_classyfireTaxonomy.R' to be run before. \n")
+log_debug("It currently needs 'temp_classyfireTaxonomy.R' to be run before.")
 
 start <- Sys.time()
 
 safety <- FALSE
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 source("r/y_as_na.R")
 
@@ -18,7 +19,7 @@ library(DBI)
 library(RSQLite)
 library(tidyverse)
 
-cat("importing ... \n")
+log_debug("importing ...")
 platinum_pairs <-
   fread(file = pathDataInterimTablesAnalysedPlatinum) %>%
   filter(
@@ -33,10 +34,10 @@ platinum_pairs <-
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(platinum_pairs),
-  "unique inchikey-taxon-doi vaidated triplets in our SSOT \n"
+  "unique inchikey-taxon-doi vaidated triplets in our SSOT"
 )
 
 manually_validated_pairs <-
@@ -52,10 +53,10 @@ manually_validated_pairs <-
 platinum_pairs <-
   left_join(platinum_pairs, manually_validated_pairs)
 
-cat(
+log_debug(
   "Of which",
   nrow(platinum_pairs %>% filter(manual_validation == "Y")),
-  "manually validated. \n"
+  "manually validated."
 )
 
 wikidata_pairs <-
@@ -77,10 +78,10 @@ wikidata_pairs <-
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(wikidata_pairs),
-  "unique inchikey-taxon-doi vaidated triplets in wikidata \n"
+  "unique inchikey-taxon-doi vaidated triplets in wikidata"
 )
 
 chemical_metadata <-
@@ -101,10 +102,10 @@ chemical_metadata <-
   ## needed
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_metadata),
-  "metadata for structures \n"
+  "metadata for structures"
 )
 
 chemical_taxonomy_1 <-
@@ -143,10 +144,10 @@ chemical_taxonomy_1 <-
   distinct() %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_taxonomy_1),
-  "npclassifier classifications for structures \n"
+  "npclassifier classifications for structures"
 )
 
 chemical_taxonomy_2 <- classy_temp %>%
@@ -163,10 +164,10 @@ chemical_taxonomy_2 <- classy_temp %>%
   ) %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(chemical_taxonomy_2),
-  "classyfire classifications for structures \n"
+  "classyfire classifications for structures"
 )
 
 drv <- SQLite()
@@ -241,10 +242,10 @@ biological_metadata <- left_join(names, otl) %>%
   coalesce() %>%
   tibble()
 
-cat(
+log_debug(
   "We have",
   nrow(biological_metadata),
-  "Open Tree of Life classifications for organisms \n"
+  "Open Tree of Life classifications for organisms"
 )
 
 platinum_u_wd <-
@@ -260,27 +261,27 @@ platinum_u_wd <-
     manual_validation
   )
 
-cat(
+log_debug(
   "We have",
   nrow(platinum_u_wd),
-  "unique inchikey-taxon-doi vaidated triplets in both platinum and wikidata \n"
+  "unique inchikey-taxon-doi vaidated triplets in both platinum and wikidata"
 )
 
 platinum_only <-
   anti_join(platinum_pairs, wikidata_pairs) %>% distinct()
 
-# cat("We have",
+# log_debug("We have",
 #     nrow(platinum_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in platinum \n")
+#     "unique inchikey-taxon-doi vaidated triplets present only in platinum")
 
 # wd_only <-
 #   anti_join(wikidata_pairs, platinum_pairs) %>% distinct()
 
-# cat("We have",
+# log_debug("We have",
 #     nrow(wd_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in wikidata \n")
+#     "unique inchikey-taxon-doi vaidated triplets present only in wikidata")
 
-cat("Adding useful metadata")
+log_debug("Adding useful metadata")
 platinum_u_wd_complete <- platinum_u_wd %>%
   left_join(., biological_metadata) %>%
   left_join(., chemical_metadata) %>%
@@ -324,7 +325,7 @@ platinum_u_wd_complete <- platinum_u_wd %>%
   )
 
 if (safety == TRUE) {
-  cat(
+  log_debug(
     "Exporting to",
     file.path(
       pathDataProcessed,
@@ -340,7 +341,7 @@ if (safety == TRUE) {
     )
   )
 
-  cat(
+  log_debug(
     "Exporting to",
     file.path(
       pathDataProcessed,
@@ -359,4 +360,4 @@ if (safety == TRUE) {
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

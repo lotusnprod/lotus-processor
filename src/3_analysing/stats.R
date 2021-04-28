@@ -1,14 +1,15 @@
+source("r/log_debug.R")
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading db, if running fullmode, this may take a while \n")
+log_debug("loading db, if running fullmode, this may take a while")
 inhouseDbMinimal <-
   vroom_read_safe(path = pathDataInterimTablesCuratedTable) %>%
   filter(database != "dnp" & database != "foodb") %>%
@@ -62,21 +63,24 @@ nominal_cleaned_3D <-
   filter(structureCleaned_stereocenters_unspecified == 0)
 
 inchi_frozen <-
-  semi_join(inchi_cleaned,
+  semi_join(
+    inchi_cleaned,
     frozen_metadata %>% distinct(structure_inchikey),
     by = c("structureCleanedInchikey" = "structure_inchikey")
   ) %>%
   distinct(structureCleanedInchikey)
 
 smiles_frozen <-
-  semi_join(smiles_cleaned,
+  semi_join(
+    smiles_cleaned,
     frozen_metadata %>% distinct(structure_inchikey),
     by = c("structureCleanedInchikey" = "structure_inchikey")
   ) %>%
   distinct(structureCleanedInchikey)
 
 nominal_frozen <-
-  semi_join(nominal_cleaned,
+  semi_join(
+    nominal_cleaned,
     frozen_metadata %>% distinct(structure_inchikey),
     by = c("structureCleanedInchikey" = "structure_inchikey")
   ) %>%
@@ -106,14 +110,16 @@ organism_dirty_cleaned <- organism_dirty %>%
   distinct(organismCleaned, .keep_all = TRUE)
 
 organism_clean_frozen <-
-  semi_join(organism_clean_cleaned,
+  semi_join(
+    organism_clean_cleaned,
     frozen_metadata %>% distinct(organism_name),
     by = c("organismCleaned" = "organism_name")
   ) %>%
   distinct(organismCleaned)
 
 organism_dirty_frozen <-
-  semi_join(organism_dirty_cleaned,
+  semi_join(
+    organism_dirty_cleaned,
     frozen_metadata %>% distinct(organism_name),
     by = c("organismCleaned" = "organism_name")
   ) %>%
@@ -191,43 +197,53 @@ reference_publishingDetails_cleaned_plus <-
   filter(referenceCleaned_score_titleOrganism == 1)
 
 reference_original_frozen <-
-  semi_join(reference_original_cleaned,
+  semi_join(
+    reference_original_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
 
 reference_pubmed_frozen <-
-  semi_join(reference_pubmed_cleaned,
+  semi_join(
+    reference_pubmed_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
 
 reference_doi_frozen <-
-  semi_join(reference_doi_cleaned,
+  semi_join(
+    reference_doi_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
 
 reference_title_frozen <-
-  semi_join(reference_title_cleaned,
+  semi_join(
+    reference_title_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
 
 reference_split_frozen <-
-  semi_join(reference_split_cleaned,
+  semi_join(
+    reference_split_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
 
 reference_publishingDetails_frozen <-
-  semi_join(reference_publishingDetails_cleaned,
+  semi_join(
+    reference_publishingDetails_cleaned,
     frozen_metadata %>% distinct(reference_title),
     by = c("referenceCleanedTitle" = "reference_title")
   ) %>%
   distinct(referenceCleanedTitle)
+
+end <- Sys.time()
+
+log_debug("Script finished in", format(end - start))

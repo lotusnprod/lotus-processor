@@ -1,22 +1,23 @@
-cat("This script adds np-classifier classes to structures dictionary \n")
+source("r/log_debug.R")
+log_debug("This script adds np-classifier classes to structures dictionary")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(data.table)
 library(pbmcapply)
 library(tidyverse)
 library(RCurl)
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/getClass.R")
 source("r/vroom_safe.R")
 
-cat("loading smiles ... \n")
+log_debug("loading smiles ...")
 smiles <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureSmiles) %>%
   distinct() %>%
@@ -95,4 +96,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

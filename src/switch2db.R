@@ -1,12 +1,13 @@
-cat("This script is the first attempt to create the tables for sql use \n")
+source("r/log_debug.R")
+log_debug("This script is the first attempt to create the tables for sql use")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(data.table)
 library(DBI)
 library(RPostgreSQL)
@@ -20,7 +21,7 @@ source("r/dbSendQueries.R")
 
 drv <- PostgreSQL()
 
-cat("... connecting to the database \n")
+log_debug("... connecting to the database")
 db <- dbConnect(
   drv = drv,
   dbname = "lotus",
@@ -28,10 +29,10 @@ db <- dbConnect(
   host = "localhost"
 )
 
-cat("... listing objects \n")
+log_debug("... listing objects")
 dbListObjects(db)
 
-cat("... loading files ... \n")
+log_debug("... loading files ...")
 
 dbTypes <- read_delim(
   file = "../docs/dataset.tsv",
@@ -122,10 +123,10 @@ database_type <- database_type_new %>%
   anti_join(., database_type_old) %>%
   select(name = type)
 
-cat(
+log_debug(
   "writing",
   nrow(database_type),
-  "new rows to 'database_type' table \n"
+  "new rows to 'database_type' table"
 )
 
 dbWriteTable(
@@ -161,10 +162,10 @@ database_source <- database_source %>%
   anti_join(., database_source_old %>% select(name)) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(database_source),
-  "new rows to 'database_source' table \n"
+  "new rows to 'database_source' table"
 )
 
 dbWriteTable(
@@ -193,10 +194,10 @@ organism_type <- organism_type_new %>%
   select(name = organism_type) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_type),
-  "new rows to 'organism_type' table \n"
+  "new rows to 'organism_type' table"
 )
 
 dbWriteTable(
@@ -231,10 +232,10 @@ organism_source <- originalTable %>%
   anti_join(., organism_source_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_source),
-  "new rows to 'organism_source' table \n"
+  "new rows to 'organism_source' table"
 )
 
 dbWriteTable(
@@ -263,10 +264,10 @@ structure_type <- structure_type_new %>%
   select(name = structure_type) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(structure_type),
-  "new rows to 'structure_type' table \n"
+  "new rows to 'structure_type' table"
 )
 
 dbWriteTable(
@@ -301,10 +302,10 @@ structure_source <- originalTable %>%
   anti_join(., structure_source_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(structure_source),
-  "new rows to 'structure_source' table \n"
+  "new rows to 'structure_source' table"
 )
 
 dbWriteTable(
@@ -333,10 +334,10 @@ reference_type <- reference_type_new %>%
   select(name = reference_type) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(reference_type),
-  "new rows to 'reference_type' table \n"
+  "new rows to 'reference_type' table"
 )
 
 dbWriteTable(
@@ -371,10 +372,10 @@ reference_source <- originalTable %>%
   anti_join(., reference_source_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(reference_source),
-  "new rows to 'reference_source' table \n"
+  "new rows to 'reference_source' table"
 )
 
 dbWriteTable(
@@ -460,10 +461,10 @@ data_source <- data_source %>%
   anti_join(., data_source_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(data_source),
-  "new rows to 'data_source' table \n"
+  "new rows to 'data_source' table"
 )
 
 dbWriteTable(
@@ -501,10 +502,10 @@ organism_cleaned <- organismOld %>%
   anti_join(., organism_cleaned_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_cleaned),
-  "new rows to 'organism_cleaned' table \n"
+  "new rows to 'organism_cleaned' table"
 )
 
 dbWriteTable(
@@ -544,10 +545,10 @@ organism_synonym <- organism_synonym %>%
   anti_join(., organism_synonym_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_synonym),
-  "new rows to 'organism_synonym' table \n"
+  "new rows to 'organism_synonym' table"
 )
 
 dbWriteTable(
@@ -569,10 +570,10 @@ organism_database <- organismOld %>%
   anti_join(., organism_database_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_database),
-  "new rows to 'organism_database' table \n"
+  "new rows to 'organism_database' table"
 )
 
 dbWriteTable(
@@ -625,10 +626,10 @@ organism_information <- organismOld %>%
   ) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(organism_information),
-  "new rows to 'organism_information' table \n"
+  "new rows to 'organism_information' table"
 )
 
 dbWriteTable(
@@ -662,10 +663,10 @@ reference_cleaned <- referenceOrganismDictionary %>%
   anti_join(., reference_cleaned_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(reference_cleaned),
-  "new rows to 'reference_cleaned' table \n"
+  "new rows to 'reference_cleaned' table"
 )
 
 dbWriteTable(
@@ -726,10 +727,10 @@ structure_cleaned <- structureOld %>%
   anti_join(., structure_cleaned_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(structure_cleaned),
-  "new rows to 'structure_cleaned' table \n"
+  "new rows to 'structure_cleaned' table"
 )
 
 dbWriteTable(
@@ -840,10 +841,10 @@ data_cleaned <- data_cleaned %>%
   anti_join(., data_cleaned_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(data_cleaned),
-  "new rows to 'data_cleaned' table \n"
+  "new rows to 'data_cleaned' table"
 )
 
 dbWriteTable(
@@ -890,10 +891,10 @@ data_source__data_cleaned <- data_source__data_cleaned %>%
   anti_join(., data_source__data_cleaned_old) %>%
   distinct()
 
-cat(
+log_debug(
   "writing",
   nrow(data_source__data_cleaned),
-  "new rows to 'data_source__data_cleaned' table \n"
+  "new rows to 'data_source__data_cleaned' table"
 )
 
 dbWriteTable(
@@ -908,4 +909,4 @@ dbDisconnect(db)
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

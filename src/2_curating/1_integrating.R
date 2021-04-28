@@ -1,59 +1,46 @@
-cat(
-  "This script aligns all DBs with previous results and outputs files \n",
-  "containing new entries for editing \n"
+source("r/log_debug.R")
+log_debug(
+  "This script aligns all sources with previous results and outputs files \n",
+  "containing new entries for editing"
 )
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... functions \n")
+log_debug("... functions")
 source("r/split_data_table_quote.R")
 source("r/sqlFromFile.R")
 source("r/vroom_safe.R")
 
-cat("loading ... \n")
-cat("... libraries \n")
+log_debug("loading ...")
+log_debug("... libraries")
 library(data.table)
 library(DBI)
 library(tidyverse)
 
-cat("... files ... \n")
-cat("... DBs \n")
+log_debug("... files ...")
+log_debug("... DBs")
 
 if (mode == "full") {
-  if (db_type == "sqlite") {
-    library(RSQLite)
+  library(RPostgreSQL)
 
-    drv <- SQLite()
+  drv <- PostgreSQL()
 
-    cat("... connecting to the database \n")
-    db <- dbConnect(
-      drv = drv,
-      dbname = lotusDB
-    )
-  }
+  log_debug("... connecting to the database")
+  db <- dbConnect(
+    drv = drv,
+    dbname = "lotus",
+    user = "rutza",
+    host = "localhost"
+  )
 
-  if (db_type == "postgresql") {
-    library(RPostgreSQL)
-
-    drv <- PostgreSQL()
-
-    cat("... connecting to the database \n")
-    db <- dbConnect(
-      drv = drv,
-      dbname = "lotus",
-      user = "rutza",
-      host = "localhost"
-    )
-  }
-
-  cat("... listing remote objects")
+  log_debug("... listing remote objects")
   dbListObjects(db)
 
-  cat("... extracting already processed data")
+  log_debug("... extracting already processed data")
   oldTable <- dbGetQuery(
     conn = db,
     statement = sqlFromFile("queries_db/extract_data_source.sql")
@@ -61,39 +48,39 @@ if (mode == "full") {
 }
 
 if (mode != "test") {
-  cat("... list of source databases")
+  log_debug("... list of source databases")
   dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
 
-  cat("... dictionaries ... \n")
+  log_debug("... dictionaries ...")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
-    cat("... structures \n")
+    log_debug("... structures")
     structureDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
       tibble()
   }
 
   if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-    cat("... previously unsucessfully querried structures \n")
+    log_debug("... previously unsucessfully querried structures")
     structureAntiDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesStructureAntiDictionary) %>%
       tibble()
   }
 
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
-    cat("... organisms \n")
+    log_debug("... organisms")
     organismDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
       tibble()
   }
 
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-    cat("... references \n")
+    log_debug("... references")
     referenceDictionary <-
       vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary) %>%
       data.table()
   }
 
-  cat("renaming and selecting columns \n")
+  log_debug("renaming and selecting columns")
   dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
     select(
       database,
@@ -116,7 +103,7 @@ if (mode != "test") {
     tibble()
 
   if (mode == "min") {
-    cat("sampling rows for min mode \n")
+    log_debug("sampling rows for min mode")
     set.seed(
       seed = 42,
       kind = "Mersenne-Twister",
@@ -172,7 +159,7 @@ if (mode == "test") {
     tibble()
 }
 
-cat("... full original table \n")
+log_debug("... full original table")
 originalTable <- dbTable %>%
   select(database, everything()) %>%
   pivot_longer(
@@ -200,7 +187,7 @@ originalTable <- dbTable %>%
   distinct()
 
 if (mode == "full") {
-  cat("new entries only ... \n")
+  log_debug("new entries only ...")
   originalTable <- anti_join(
     originalTable,
     oldTable %>%
@@ -216,8 +203,8 @@ if (mode == "full") {
   )
 }
 
-cat("keeping entries not previously curated only ... \n")
-cat("... inchi table \n")
+log_debug("keeping entries not previously curated only ...")
+log_debug("... inchi table")
 structureTable_inchi <- originalTable %>%
   filter(structureType == "inchi") %>%
   filter(!is.na(structureValue)) %>%
@@ -248,7 +235,7 @@ if (nrow(structureTable_inchi) == 0) {
   structureTable_inchi <- data.frame(structureOriginal_inchi = NA)
 }
 
-cat("... smiles table \n")
+log_debug("... smiles table")
 structureTable_smiles <- originalTable %>%
   filter(structureType == "smiles") %>%
   filter(!is.na(structureValue)) %>%
@@ -279,7 +266,7 @@ if (nrow(structureTable_smiles) == 0) {
   structureTable_smiles <- data.frame(structureOriginal_smiles = NA)
 }
 
-cat("... chemical names table \n")
+log_debug("... chemical names table")
 structureTable_nominal <- originalTable %>%
   filter(structureType == "nominal") %>%
   filter(!is.na(structureValue)) %>%
@@ -310,7 +297,7 @@ if (nrow(structureTable_nominal) == 0) {
   structureTable_nominal <- data.frame(structureOriginal_nominal = NA)
 }
 
-cat("... structures table \n")
+log_debug("... structures table")
 structureTable_full <-
   bind_rows(
     structureTable_inchi %>%
@@ -335,8 +322,8 @@ if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
 }
 
-cat("... organisms tables ... \n")
-cat("... clean \n")
+log_debug("... organisms tables ...")
+log_debug("... clean")
 organismTable_clean <- originalTable %>%
   filter(organismType == "clean") %>%
   filter(!is.na(organismValue)) %>%
@@ -346,7 +333,7 @@ if (nrow(organismTable_clean) == 0) {
   organismTable_clean[1, "organismValue"] <- NA
 }
 
-cat("... dirty \n")
+log_debug("... dirty")
 organismTable_dirty <- originalTable %>%
   filter(organismType == "dirty") %>%
   filter(!is.na(organismValue)) %>%
@@ -377,7 +364,7 @@ organismTable_dirty <- organismTable_dirty %>%
   select(organismOriginal_dirty = organismValue) %>%
   data.table()
 
-cat("... structures table \n")
+log_debug("... structures table")
 organismTable_full <- bind_rows(
   organismTable_clean %>%
     mutate(organismType = "clean") %>%
@@ -392,8 +379,8 @@ organismTable_full <- bind_rows(
 ) %>%
   distinct()
 
-cat("... references tables ... \n")
-cat("... DOI table \n")
+log_debug("... references tables ...")
+log_debug("... DOI table")
 referenceTable_doi <- dbTable %>%
   filter(!is.na(referenceOriginal_doi)) %>%
   distinct(referenceOriginal_doi) %>%
@@ -415,7 +402,7 @@ if (nrow(referenceTable_doi) == 0) {
   referenceTable_doi[1, ] <- NA
 }
 
-cat("... PMID table \n")
+log_debug("... PMID table")
 referenceTable_pubmed <- dbTable %>%
   filter(!is.na(referenceOriginal_pubmed)) %>%
   distinct(referenceOriginal_pubmed) %>%
@@ -442,7 +429,7 @@ if (nrow(referenceTable_pubmed) != 1) {
     referenceTable_pubmed$referenceOriginal_pubmed
 }
 
-cat("... reference title table \n")
+log_debug("... reference title table")
 referenceTable_title <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -467,7 +454,7 @@ if (nrow(referenceTable_title) == 0) {
   referenceTable_title[1, ] <- NA
 }
 
-cat(".. reference publishing details table \n")
+log_debug(".. reference publishing details table")
 referenceTable_publishingDetails <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -495,7 +482,7 @@ if (nrow(referenceTable_publishingDetails) == 0) {
     rbind(referenceTable_publishingDetails, list(NA))
 }
 
-cat("... reference split table \n")
+log_debug("... reference split table")
 referenceTable_split <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -523,7 +510,7 @@ if (nrow(referenceTable_split) == 0) {
     rbind(referenceTable_split, list(NA))
 }
 
-cat("... original references table \n")
+log_debug("... original references table")
 referenceTable_original <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
   filter(is.na(referenceOriginal_pubmed)) %>%
@@ -553,7 +540,7 @@ if (nrow(referenceTable_original) == 0) {
     rbind(referenceTable_original, list(NA))
 }
 
-cat("... full references table \n")
+log_debug("... full references table")
 referenceTable_full <- originalTable %>%
   select(
     organismType,
@@ -569,7 +556,7 @@ referenceTable_full <- originalTable %>%
 # )
 
 
-cat("ensuring directories exist ... \n")
+log_debug("ensuring directories exist ...")
 ifelse(
   test = !dir.exists(pathDataInterimTables),
   yes = dir.create(pathDataInterimTables),
@@ -643,7 +630,7 @@ ifelse(
   no = paste(pathDataInterimTablesOriginalStructure, "exists")
 )
 
-cat("exporting ... \n")
+log_debug("exporting ...")
 if (nrow(organismTable_clean) != 0) {
   vroom_write(
     x = organismTable_clean,
@@ -664,25 +651,25 @@ if (nrow(organismTable_clean) != 0) {
   ## because gnverify does not parse quotes
 }
 
-cat(pathDataInterimTablesOriginal, "\n")
+log_debug(pathDataInterimTablesOriginal)
 vroom_write_safe(
   x = organismTable_full,
   path = pathDataInterimTablesOriginalOrganismFull
 )
 
-cat(pathDataInterimTablesOriginalReferenceDoi, "\n")
+log_debug(pathDataInterimTablesOriginalReferenceDoi)
 vroom_write_safe(
   x = referenceTable_doi,
   path = pathDataInterimTablesOriginalReferenceDoi
 )
 
-cat(pathDataInterimTablesOriginalReferencePubmed, "\n")
+log_debug(pathDataInterimTablesOriginalReferencePubmed)
 vroom_write_safe(
   x = referenceTable_pubmed,
   path = pathDataInterimTablesOriginalReferencePubmed
 )
 
-cat(pathDataInterimTablesOriginalReferenceTitleFolder, "\n")
+log_debug(pathDataInterimTablesOriginalReferenceTitleFolder)
 split_data_table_quote(
   x = referenceTable_title,
   no_rows_per_frame = 1000,
@@ -690,7 +677,7 @@ split_data_table_quote(
   path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
-cat(
+log_debug(
   pathDataInterimTablesOriginalReferencePublishingDetails,
   "\n"
 )
@@ -699,13 +686,13 @@ vroom_write_safe(
   path = pathDataInterimTablesOriginalReferencePublishingDetails
 )
 
-cat(pathDataInterimTablesOriginalReferenceSplit, "\n")
+log_debug(pathDataInterimTablesOriginalReferenceSplit)
 vroom_write_safe(
   x = referenceTable_split,
   path = pathDataInterimTablesOriginalReferenceSplit
 )
 
-cat(pathDataInterimTablesOriginalReferenceOriginalFolder, "\n")
+log_debug(pathDataInterimTablesOriginalReferenceOriginalFolder)
 split_data_table_quote(
   x = referenceTable_original,
   no_rows_per_frame = 1000,
@@ -713,37 +700,37 @@ split_data_table_quote(
   path_to_store = pathDataInterimTablesOriginalReferenceOriginalFolder
 )
 
-cat(pathDataInterimTablesOriginalReferenceFull, "\n")
+log_debug(pathDataInterimTablesOriginalReferenceFull)
 vroom_write_safe(
   x = referenceTable_full,
   path = pathDataInterimTablesOriginalReferenceFull
 )
 
-cat(pathDataInterimTablesOriginalStructureInchi, "\n")
+log_debug(pathDataInterimTablesOriginalStructureInchi)
 vroom_write_safe(
   x = structureTable_inchi,
   path = pathDataInterimTablesOriginalStructureInchi
 )
 
-cat(pathDataInterimTablesOriginalStructureNominal, "\n")
+log_debug(pathDataInterimTablesOriginalStructureNominal)
 vroom_write_safe(
   x = structureTable_nominal,
   path = pathDataInterimTablesOriginalStructureNominal
 )
 
-cat(pathDataInterimTablesOriginalStructureSmiles, "\n")
+log_debug(pathDataInterimTablesOriginalStructureSmiles)
 vroom_write_safe(
   x = structureTable_smiles,
   path = pathDataInterimTablesOriginalStructureSmiles
 )
 
-cat(pathDataInterimTablesOriginalStructureFull, "\n")
+log_debug(pathDataInterimTablesOriginalStructureFull)
 vroom_write_safe(
   x = structureTable_full,
   path = pathDataInterimTablesOriginalStructureFull
 )
 
-cat(pathDataInterimTablesOriginalTable, "\n")
+log_debug(pathDataInterimTablesOriginalTable)
 vroom_write_safe(
   x = originalTable,
   path = pathDataInterimTablesOriginalTable
@@ -751,4 +738,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

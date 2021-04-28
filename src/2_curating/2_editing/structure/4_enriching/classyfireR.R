@@ -1,21 +1,21 @@
 # load("../data/interim/temp.Rdata")
-
-cat("This script adds chemical taxonomy to structures dictionary \n")
+source("r/log_debug.R")
+log_debug("This script adds chemical taxonomy to structures dictionary")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(classyfireR)
 library(pbmcapply)
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading files ... \n")
-cat("...  counted structures \n")
+log_debug("loading files ...")
+log_debug("...  counted structures")
 structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
@@ -35,7 +35,7 @@ inchikeys <- structuresForClassification$inchikeySanitized
 clasification_list_inchikey <-
   purrr::map(inchikeys, get_classification)
 
-cat("worked! \n")
+log_debug("worked!")
 
 ## see accessor methods later on
 # classyfireR::alternative_parents(object = clasification_list_inchikey[[1]])
@@ -176,7 +176,7 @@ if (nrow(direct_parent != 0)) {
     ))
 }
 
-cat("exporting Rdata for the moment before deciding what to do \n")
+log_debug("exporting Rdata for the moment before deciding what to do")
 
 vroom_write_safe_append(
   x = alternative_parents,
@@ -197,4 +197,4 @@ vroom_write_safe_append(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))

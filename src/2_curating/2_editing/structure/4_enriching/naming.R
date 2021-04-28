@@ -1,33 +1,34 @@
-cat("This script adds chemical names to structures dictionary \n")
+source("r/log_debug.R")
+log_debug("This script adds chemical names to structures dictionary")
 
 start <- Sys.time()
 
-cat("sourcing ... \n")
-cat("... paths \n")
+log_debug("sourcing ...")
+log_debug("... paths")
 source("paths.R")
 
-cat("... libraries \n")
+log_debug("... libraries")
 library(tidyverse)
 source("r/vroom_safe.R")
 
-cat("loading files ... \n")
-cat("...  counted structures \n")
+log_debug("loading files ...")
+log_debug("...  counted structures")
 structureCounted <-
   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
 
-cat("keeping smiles only ... \n")
+log_debug("keeping smiles only ...")
 smilesDictionary <- structureCounted %>%
   distinct(smilesSanitized) %>%
   select(smiles = smilesSanitized)
 
-cat("writing the smiles table \n")
+log_debug("writing the smiles table")
 vroom_write_safe(
   x = smilesDictionary,
   path = pathDataInterimTablesCleanedStructureSmiles
 )
 
 if (works_locally_only == FALSE) {
-  cat("submitting to molconvert (traditional names) (no worries...running long) \n")
+  log_debug("submitting to molconvert (traditional names) (no worries...running long)")
   system(
     command = paste(
       "bash",
@@ -40,7 +41,7 @@ if (works_locally_only == FALSE) {
     )
   )
 
-  cat("submitting to molconvert (iupac) (no worries...running long) \n")
+  log_debug("submitting to molconvert (iupac) (no worries...running long)")
   system(
     command = paste(
       "bash",
@@ -53,7 +54,7 @@ if (works_locally_only == FALSE) {
     )
   )
 
-  # cat("submitting to molconvert (common name) \n")
+  # log_debug("submitting to molconvert (common name)")
   # system(
   #   command = paste(
   #     "bash",
@@ -66,7 +67,7 @@ if (works_locally_only == FALSE) {
   #   )
   # )
 
-  # cat("submitting to molconvert (all common name) \n")
+  # log_debug("submitting to molconvert (all common name)")
   # system(
   #   command = paste(
   #     "bash",
@@ -79,7 +80,7 @@ if (works_locally_only == FALSE) {
   #   )
   # )
 
-  cat("loading files ... \n")
+  log_debug("loading files ...")
   structureNamesTraditional <- read_delim(
     file = pathDataInterimTablesCleanedStructureSmiles_1,
     delim = "\t",
@@ -186,9 +187,9 @@ structureNamed_undefined <- structureNamed %>%
 structureNamed_cleaned <-
   bind_rows(structureNamed_defined, structureNamed_undefined)
 
-cat("ensuring directories exist \n")
-cat("exporting ... \n")
-cat(pathDataInterimTablesCleanedStructureNamed, "\n")
+log_debug("ensuring directories exist")
+log_debug("exporting ...")
+log_debug(pathDataInterimTablesCleanedStructureNamed)
 
 vroom_write_safe(
   x = structureNamed_cleaned,
@@ -197,4 +198,4 @@ vroom_write_safe(
 
 end <- Sys.time()
 
-cat("Script finished in", format(end - start), "\n")
+log_debug("Script finished in", format(end - start))
