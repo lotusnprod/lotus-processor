@@ -17,7 +17,7 @@ library(tidyverse)
 library(plotly)
 
 cat("... functions \n")
-source("r/filter.R")
+source("r/filter_dirty.R")
 source("r/myDirtyValidationFig.R")
 source("r/vroom_safe.R")
 
