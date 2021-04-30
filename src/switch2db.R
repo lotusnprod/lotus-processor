@@ -35,8 +35,8 @@ dbListObjects(db)
 log_debug("... loading files ...")
 
 dbTypes <- read_delim(
-  file = "../docs/dataset.tsv",
-  delim = "\t"
+  file = "../docs/dataset.csv",
+  delim = ","
 ) %>%
   select(
     database,
@@ -479,7 +479,6 @@ data_source <- dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_source.sql")
 )
-
 
 organism_detected <- organismOld %>%
   distinct(
