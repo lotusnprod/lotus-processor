@@ -48,7 +48,8 @@ if (works_locally_only == FALSE) {
     distinct(smiles)
 
   smiles <- smiles %>%
-    bind_rows(., postWikidata)
+    bind_rows(., postWikidata) %>%
+    distinct()
 }
 
 old <-

@@ -28,6 +28,7 @@ structuresForClassification <-
     structureCounted,
     old %>% select(inchikeySanitized = inchikey)
   ) %>%
+  filter(!is.na(inchikeySanitized)) %>% 
   distinct(inchikeySanitized)
 
 inchikeys <- structuresForClassification$inchikeySanitized
@@ -176,7 +177,7 @@ if (nrow(direct_parent != 0)) {
     ))
 }
 
-log_debug("exporting Rdata for the moment before deciding what to do")
+log_debug("exporting")
 
 vroom_write_safe_append(
   x = alternative_parents,

@@ -20,7 +20,13 @@ getClass <- function(X) {
         fromJSON()
 
       df <- data.frame(
-        smiles = queries[[X]],
+        smiles = new$smiles[[X]],
+        pathway = ifelse(
+          test = is_empty(result$pathway_results),
+          yes = NA,
+          no = result$pathway_results
+        ),
+        query = queries[[X]],
         pathway = ifelse(
           test = is_empty(result$pathway_results),
           yes = NA,

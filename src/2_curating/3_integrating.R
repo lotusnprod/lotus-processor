@@ -184,6 +184,7 @@ structureMinimal <- structureFull %>%
 
 structureMetadata <- structureFull %>%
   filter(!is.na(structureCleanedInchikey)) %>%
+  select(-structureType, -structureValue) %>%
   distinct(
     structureCleanedInchi,
     structureCleanedInchikey,
