@@ -189,8 +189,8 @@ fig <- plot_ly() %>%
   layout(
     annotations = list(a, b, c, d, e, f),
     font = list(family = "helvetica neue", size = 18),
-    yaxis = list(title = "Percentage of individuals"),
-    xaxis = list(title = "Percentage of maximal contribution"),
+    yaxis = list(title = "Percentage of maximal contribution"),
+    xaxis = list(title = "Percentage of individuals"),
     yaxis2 = list(
       title = "Number of individuals",
       mirror = TRUE,
