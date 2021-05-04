@@ -219,7 +219,7 @@ biological_metadata <- left_join(names, otl) %>%
   distinct() %>%
   map_df(rev) %>%
   ## feeling it is better that way
-  distinct(ott_id, rank, .keep_all = TRUE) %>%
+  distinct(canonical_name, ott_id, rank, .keep_all = TRUE) %>% ## canonical_name important for synonyms
   pivot_wider(
     names_from = "rank",
     values_from = c("name", "unique_name.y", "ott_id.y")
