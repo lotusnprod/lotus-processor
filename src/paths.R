@@ -1276,3 +1276,7 @@ path_accepted_fields <- file.path(
   "1_gathering",
   "accepted_fields.tsv"
 )
+
+pathLastWdExport <- "210505_wikidata_query.tsv"
+
+pathLastFrozen <- "210505_frozen_metadata.csv.gz"

@@ -34,10 +34,13 @@ log_debug(
 )
 
 wikidata_pairs <-
-  fread(file = file.path(
-    pathDataExternalDbSource,
-    "210223_wikidata_query.tsv"
-  )) %>%
+  fread(
+    file = file.path(
+      pathDataExternalDbSource,
+      pathLastWdExport
+    ),
+    quote = ""
+  ) %>%
   filter(!is.na(structure_inchikey) &
     !is.na(taxon_name) &
     !is.na(reference_doi)) %>%
@@ -48,7 +51,6 @@ wikidata_pairs <-
     organism_name = taxon_name,
     reference_wikidata = reference,
     reference_doi,
-    reference_title
   ) %>%
   tibble()
 
@@ -227,8 +229,7 @@ dnp_u_wd <-
     organism_wikidata,
     organism_name,
     reference_wikidata,
-    reference_doi,
-    reference_title
+    reference_doi
   )
 
 log_debug(
@@ -290,7 +291,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210311_dnp_metadata.csv.gz"
+      "210505_dnp_metadata.csv.gz"
     )
   )
 
@@ -298,7 +299,7 @@ if (safety == TRUE) {
     x = dnp_complete,
     file = file.path(
       pathDataProcessed,
-      "210311_dnp_metadata.csv.gz"
+      "210505_dnp_metadata.csv.gz"
     )
   )
 }

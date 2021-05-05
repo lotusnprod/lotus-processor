@@ -58,15 +58,18 @@ openDb <-
 
 log_debug("exported ...")
 wikidata_pairs <-
-  fread(file = file.path(
-    pathDataExternalDbSource,
-    "210426_wikidata_query.tsv"
-  )) %>%
-  filter(!is.na(compound_inchikey) &
+  fread(
+    file = file.path(
+      pathDataExternalDbSource,
+      pathLastWdExport
+    ),
+    quote = ""
+  ) %>%
+  filter(!is.na(structure_inchikey) &
     !is.na(taxon_name) &
     !is.na(reference_doi)) %>%
   distinct(
-    structureCleanedInchikey = compound_inchikey,
+    structureCleanedInchikey = structure_inchikey,
     organismCleaned = taxon_name,
     referenceCleanedDoi = reference_doi
   ) %>%

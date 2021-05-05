@@ -35,11 +35,7 @@ if (mode == "full") {
       referenceCleanedTitle,
       .keep_all = TRUE
     ) %>%
-    tibble()
-
-  log_debug("... open DB")
-  openDbMaximal <-
-    vroom_read_safe(path = pathDataInterimTablesCuratedTableMaximal) %>%
+    filter(database != "wikidata") %>%
     tibble()
 
   log_debug("... DNP DB")

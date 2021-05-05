@@ -60,10 +60,13 @@ log_debug(
 )
 
 wikidata_pairs <-
-  fread(file = file.path(
-    pathDataExternalDbSource,
-    "210223_wikidata_query.tsv"
-  )) %>%
+  fread(
+    file = file.path(
+      pathDataExternalDbSource,
+      pathLastWdExport
+    ),
+    quote = ""
+  ) %>%
   filter(!is.na(structure_inchikey) &
     !is.na(taxon_name) &
     !is.na(reference_doi)) %>%
@@ -74,7 +77,6 @@ wikidata_pairs <-
     organism_name = taxon_name,
     reference_wikidata = reference,
     reference_doi,
-    reference_title
   ) %>%
   tibble()
 
@@ -219,7 +221,8 @@ biological_metadata <- left_join(names, otl) %>%
   distinct() %>%
   map_df(rev) %>%
   ## feeling it is better that way
-  distinct(canonical_name, ott_id, rank, .keep_all = TRUE) %>% ## canonical_name important for synonyms
+  distinct(canonical_name, ott_id, rank, .keep_all = TRUE) %>%
+  ## canonical_name important for synonyms
   pivot_wider(
     names_from = "rank",
     values_from = c("name", "unique_name.y", "ott_id.y")
@@ -257,7 +260,6 @@ platinum_u_wd <-
     organism_name,
     reference_wikidata,
     reference_doi,
-    reference_title,
     manual_validation
   )
 
@@ -320,7 +322,6 @@ platinum_u_wd_complete <- platinum_u_wd %>%
     organism_taxonomy_10varietas,
     reference_wikidata,
     reference_doi,
-    reference_title,
     manual_validation
   )
 
@@ -329,7 +330,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210223_frozen.csv.gz"
+      "210505_frozen.csv.gz"
     )
   )
 
@@ -337,7 +338,7 @@ if (safety == TRUE) {
     x = platinum_u_wd,
     file = file.path(
       pathDataProcessed,
-      "210223_frozen.csv.gz"
+      "210505_frozen.csv.gz"
     )
   )
 
@@ -345,7 +346,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210325_frozen_metadata.csv.gz"
+      "210505_frozen_metadata.csv.gz"
     )
   )
 
@@ -353,7 +354,7 @@ if (safety == TRUE) {
     x = platinum_u_wd_complete,
     file = file.path(
       pathDataProcessed,
-      "210325_frozen_metadata.csv.gz"
+      "210505_frozen_metadata.csv.gz"
     )
   )
 }

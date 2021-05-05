@@ -22,11 +22,13 @@ openDbMetaValidated <-
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
   ) %>%
+  filter(database != "wikidata") %>%
   mutate(validation = "validated") %>%
   tibble()
 
 openDbMaximal <-
   vroom_read_safe(path = pathDataInterimTablesCuratedTableMaximal) %>%
+  filter(database != "wikidata") %>%
   tibble()
 
 full <- left_join(openDbMaximal, openDbMetaValidated) %>%
