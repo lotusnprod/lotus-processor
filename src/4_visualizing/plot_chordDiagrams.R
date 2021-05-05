@@ -15,7 +15,7 @@ source("r/y_as_na.R")
 pairs_metadata <- fread(
   input = file.path(
     pathDataProcessed,
-    "210223_frozen_metadata.csv.gz"
+    pathLastFrozen
   ),
   na.strings = ""
 ) %>%

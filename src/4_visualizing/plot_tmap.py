@@ -65,11 +65,11 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 
 
 ########################################################
-### PART 1: LOAD Lotus DB and transform for plotting ###
+### PART 1: LOAD Lotus and transform for plotting ###
 ########################################################
 
-# Load lotus_db
-df_meta = pd.read_csv('210325_frozen_metadata.csv.gz', sep=",")
+# Load lotus
+df_meta = pd.read_csv('../data/processed/210505_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -287,8 +287,8 @@ lf.batch_add(fps)
 lf.index()
 
 # Store lsh forest and structure metadata
-# lf.store("210325_lotus_db_2D_map4.dat")
-# with open("210325_lotus_db_2D_map4.pickle", "wb+") as f:
+# lf.store("../data/interim/tmap/210505_lotus_2D_map4.dat")
+# with open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "wb+") as f:
 #     pickle.dump(
 #         (hac, c_frac, ring_atom_frac, largest_ring_size),
 #         f,
@@ -310,7 +310,7 @@ x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("coords_210325_lotus_db_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 del (lf)
@@ -321,10 +321,10 @@ del (lf)
 
 lf = tm.LSHForest(1024, 64)
 lf.restore(
-    "210325_lotus_db_2D_map4.dat")  # Version "210312_lotus_db.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+    "../data/interim/tmap/210505_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("210325_lotus_db_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "rb")
 )
 c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 
@@ -346,7 +346,7 @@ x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("coords_210325_lotus_db_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 del (lf)
@@ -356,11 +356,11 @@ del (lf)
 # AND CHEMICAL DESCRIPTORS
 ########################################################
 
-x, y, s, t = pickle.load(open("coords_210325_lotus_db_2D_map4.dat",
-                              "rb"))  # Version "coords_210312_lotus_db.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+x, y, s, t = pickle.load(open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat",
+                              "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("210325_lotus_db_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "rb")
 )
 c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 
@@ -371,7 +371,7 @@ c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 # Plotting function
 f = Faerun(view="front", coords=False, clear_color='#ffffff')
 f.add_scatter(
-    "lotus_db",
+    "lotus",
     {
         "x": x,
         "y": y,
@@ -504,5 +504,5 @@ f.add_scatter(
     ],
     has_legend=True,
 )
-f.add_tree("lotus_db_tree", {"from": s, "to": t}, point_helper="lotus_db", color='#e6e6e6')
-f.plot('210408_lotus_db_map4_2D', template="smiles")
+f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
+f.plot('../res/html/210505_lotus_map4_2D', template="smiles")
