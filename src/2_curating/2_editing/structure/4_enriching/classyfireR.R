@@ -28,7 +28,7 @@ structuresForClassification <-
     structureCounted,
     old %>% select(inchikeySanitized = inchikey)
   ) %>%
-  filter(!is.na(inchikeySanitized)) %>% 
+  filter(!is.na(inchikeySanitized)) %>%
   distinct(inchikeySanitized)
 
 inchikeys <- structuresForClassification$inchikeySanitized

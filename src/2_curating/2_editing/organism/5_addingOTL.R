@@ -39,7 +39,7 @@ if (works_locally_only == FALSE) {
     select(organismCleaned = names_pipe_separated)
 
   dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
-    bind_rows(., postWikidata) %>% 
+    bind_rows(., postWikidata) %>%
     distinct()
 }
 
