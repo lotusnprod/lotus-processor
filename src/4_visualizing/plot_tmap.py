@@ -70,7 +70,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../../data/processed/210505_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/210505_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -163,19 +163,19 @@ structure_taxo = ['structure_taxonomy_npclassifier_01pathway_first',
 
 for dic in dic_mean_specificity:
     for level in structure_taxo:
-        print(str(dic)+'_<lambda_2>')
-        df_gb['counter_sum'] = df_gb.groupby(by = [level])[str(dic)+'_<lambda_2>'].transform('sum')
+        print(str(dic) + '_<lambda_2>')
+        df_gb['counter_sum'] = df_gb.groupby(by=[level])[str(dic) + '_<lambda_2>'].transform('sum')
         df_gb['counter_sum_values'] = df_gb['counter_sum'].apply(lambda x: sum(x.values()))
         df_gb['counter_sum'] = df_gb['counter_sum'].apply(lambda x: x.most_common(1)[0])
         df_gb['specificity_taxon'] = df_gb['counter_sum'].apply(lambda x: x[0])
         df_gb['specificity_score'] = df_gb['counter_sum'].apply(lambda x: x[1])
-        df_gb['specificity_score'] = df_gb['specificity_score']/df_gb['counter_sum_values']
+        df_gb['specificity_score'] = df_gb['specificity_score'] / df_gb['counter_sum_values']
 
-        dic_mean_specificity[dic][level+'_score'] = df_gb['specificity_score']
-        dic_mean_specificity[dic][level+'_taxon'] = df_gb['specificity_taxon']
+        dic_mean_specificity[dic][level + '_score'] = df_gb['specificity_score']
+        dic_mean_specificity[dic][level + '_taxon'] = df_gb['specificity_taxon']
 
-        df_gb.drop(['counter_sum', 'counter_sum_values','specificity_taxon', 'specificity_score'], axis=1, inplace=True)
-
+        df_gb.drop(['counter_sum', 'counter_sum_values', 'specificity_taxon', 'specificity_score'], axis=1,
+                   inplace=True)
 
 # Generating class for plotting
 dic_categories = {
@@ -298,8 +298,8 @@ lf.batch_add(fps)
 lf.index()
 
 # Store lsh forest and structure metadata
-# lf.store("../../data/interim/tmap/210506_lotus_2D_map4.dat")
-# with open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "wb+") as f:
+# lf.store("../data/interim/tmap/210506_lotus_2D_map4.dat")
+# with open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "wb+") as f:
 #     pickle.dump(
 #         (hac, c_frac, ring_atom_frac, largest_ring_size),
 #         f,
@@ -323,7 +323,7 @@ x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../../data/interim/tmap/210506_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/210506_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 del (lf)
@@ -334,10 +334,10 @@ del (lf)
 
 lf = tm.LSHForest(1024, 64)
 lf.restore(
-    "../../data/interim/tmap/210506_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+    "../data/interim/tmap/210506_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
 )
 
 # tmap configuration
@@ -368,11 +368,11 @@ del (lf)
 # AND CHEMICAL DESCRIPTORS
 ########################################################
 
-x, y, s, t = pickle.load(open("../../data/interim/tmap/210506_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../data/interim/tmap/210506_coords_lotus_2D_map4.dat",
                               "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
 )
 
 ########################################################
@@ -515,4 +515,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../../res/html/210506_lotus_map4_2D', template="smiles")
+f.plot('../res/html/210506_lotus_map4_2D', template="smiles")
