@@ -1,4 +1,5 @@
 import pickle
+import sys
 from collections import Counter
 from time import sleep
 
@@ -69,7 +70,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/210505_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../../data/processed/210505_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -98,20 +99,20 @@ df_gb = df_meta.groupby('structure_wikidata').agg(
      'structure_taxonomy_classyfire_02superclass': 'first',
      'structure_taxonomy_classyfire_03class': 'first',
      'structure_taxonomy_classyfire_04directparent': 'first',
-     'organism_taxonomy_02kingdom': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join, 'count',
-                                     'nunique'],
-     'organism_taxonomy_03phylum': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                    'nunique'],
-     'organism_taxonomy_04class': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                   'nunique'],
-     'organism_taxonomy_05order': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                   'nunique'],
-     'organism_taxonomy_06family': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                    'nunique'],
-     'organism_taxonomy_08genus': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                   'nunique'],
-     'organism_taxonomy_09species': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), '|'.join,
-                                     'nunique'],
+     'organism_taxonomy_02kingdom': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), 'count',
+                                     'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_03phylum': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                    'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_04class': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                   'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_05order': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                   'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_06family': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                    'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_08genus': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                   'nunique', lambda x: Counter(x)],
+     'organism_taxonomy_09species': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
+                                     'nunique', lambda x: Counter(x)],
      })
 
 del (df_meta)
@@ -150,21 +151,31 @@ values = {'structure_taxonomy_npclassifier_01pathway_first': 'Unknown',
 df_gb.fillna(value=values, inplace=True)
 
 # Generating mean specificity score by taxonomical level and class, with a minimal score for plotting, set it to 0 not to use it. 
+
 dic_mean_specificity = {
-    'organism_taxonomy_02kingdom_specificity': {'min': 0.9},
-    'organism_taxonomy_06family_specificity': {'min': 0.8},
-    'organism_taxonomy_08genus_specificity': {'min': 0.8},
+    'organism_taxonomy_02kingdom': {'min': 0},
+    'organism_taxonomy_06family': {'min': 0},
+    'organism_taxonomy_08genus': {'min': 0},
 }
 structure_taxo = ['structure_taxonomy_npclassifier_01pathway_first',
-                  'structure_taxonomy_npclassifier_02superclass_first', 'structure_taxonomy_npclassifier_03class_first']
+                  'structure_taxonomy_npclassifier_02superclass_first',
+                  'structure_taxonomy_npclassifier_03class_first']
 
 for dic in dic_mean_specificity:
     for level in structure_taxo:
-        df_gb['mean'] = df_gb.groupby([level])[str(dic)].transform('mean')
-        df_gb.loc[df_gb[level] == 'Unknown', 'mean'] = df_gb["mean"].mean()
-        df_gb.loc[df_gb['mean'] < dic_mean_specificity[dic]['min'], 'mean'] = dic_mean_specificity[dic]['min']
-        dic_mean_specificity[dic][level] = df_gb['mean']
-        df_gb.drop('mean', axis=1, inplace=True)
+        print(str(dic)+'_<lambda_2>')
+        df_gb['counter_sum'] = df_gb.groupby(by = [level])[str(dic)+'_<lambda_2>'].transform('sum')
+        df_gb['counter_sum_values'] = df_gb['counter_sum'].apply(lambda x: sum(x.values()))
+        df_gb['counter_sum'] = df_gb['counter_sum'].apply(lambda x: x.most_common(1)[0])
+        df_gb['specificity_taxon'] = df_gb['counter_sum'].apply(lambda x: x[0])
+        df_gb['specificity_score'] = df_gb['counter_sum'].apply(lambda x: x[1])
+        df_gb['specificity_score'] = df_gb['specificity_score']/df_gb['counter_sum_values']
+
+        dic_mean_specificity[dic][level+'_score'] = df_gb['specificity_score']
+        dic_mean_specificity[dic][level+'_taxon'] = df_gb['specificity_taxon']
+
+        df_gb.drop(['counter_sum', 'counter_sum_values','specificity_taxon', 'specificity_score'], axis=1, inplace=True)
+
 
 # Generating class for plotting
 dic_categories = {
@@ -208,8 +219,8 @@ NPclass_data, NPclass_labels = keep_only_given_class([
     'Guaiane sesquiterpenoids', 'Flavones', 'Colensane and Clerodane diterpenoids',
     'Quassinoids'], data, labels)
 
-count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
-simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
+# count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
+# simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
 
 # Generating colormaps for plotting
 cmap = mcolors.ListedColormap(["gainsboro", "peachpuff", "salmon", "tomato"])
@@ -287,8 +298,8 @@ lf.batch_add(fps)
 lf.index()
 
 # Store lsh forest and structure metadata
-# lf.store("../data/interim/tmap/210505_lotus_2D_map4.dat")
-# with open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "wb+") as f:
+# lf.store("../../data/interim/tmap/210506_lotus_2D_map4.dat")
+# with open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "wb+") as f:
 #     pickle.dump(
 #         (hac, c_frac, ring_atom_frac, largest_ring_size),
 #         f,
@@ -297,6 +308,8 @@ lf.index()
 
 # tmap configuration
 cfg = tm.LayoutConfiguration()
+cfg.k = 20
+cfg.sl_extra_scaling_steps = 10
 cfg.node_size = 1 / 50
 cfg.mmm_repeats = 2
 cfg.sl_repeats = 2
@@ -310,7 +323,7 @@ x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../../data/interim/tmap/210506_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 del (lf)
@@ -321,12 +334,11 @@ del (lf)
 
 lf = tm.LSHForest(1024, 64)
 lf.restore(
-    "../data/interim/tmap/210505_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+    "../../data/interim/tmap/210506_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "rb")
+    open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
 )
-c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 
 # tmap configuration
 
@@ -356,17 +368,17 @@ del (lf)
 # AND CHEMICAL DESCRIPTORS
 ########################################################
 
-x, y, s, t = pickle.load(open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../../data/interim/tmap/210506_coords_lotus_2D_map4.dat",
                               "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210505_lotus_2D_map4.pickle", "rb")
+    open("../../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
 )
-c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 
 ########################################################
 # COMMON PART: PLOT THE TMAP
 ########################################################
+c_frak_ranked = ss.rankdata(np.array(c_frac) / max(c_frac)) / len(c_frac)
 
 # Plotting function
 f = Faerun(view="front", coords=False, clear_color='#ffffff')
@@ -400,25 +412,24 @@ f.add_scatter(
             dic_categories['organism_taxonomy_09species_nunique_cat']['data'],
             simaroubaceae_data,
             NPclass_data,
-            simaroubaceae_specificity,
-            dic_mean_specificity['organism_taxonomy_02kingdom_specificity'][
-                'structure_taxonomy_npclassifier_01pathway_first'],
-            dic_mean_specificity['organism_taxonomy_02kingdom_specificity'][
-                'structure_taxonomy_npclassifier_02superclass_first'],
-            dic_mean_specificity['organism_taxonomy_02kingdom_specificity'][
-                'structure_taxonomy_npclassifier_03class_first'],
-            dic_mean_specificity['organism_taxonomy_06family_specificity'][
-                'structure_taxonomy_npclassifier_01pathway_first'],
-            dic_mean_specificity['organism_taxonomy_06family_specificity'][
-                'structure_taxonomy_npclassifier_02superclass_first'],
-            dic_mean_specificity['organism_taxonomy_06family_specificity'][
-                'structure_taxonomy_npclassifier_03class_first'],
-            dic_mean_specificity['organism_taxonomy_08genus_specificity'][
-                'structure_taxonomy_npclassifier_01pathway_first'],
-            dic_mean_specificity['organism_taxonomy_08genus_specificity'][
-                'structure_taxonomy_npclassifier_02superclass_first'],
-            dic_mean_specificity['organism_taxonomy_08genus_specificity'][
-                'structure_taxonomy_npclassifier_03class_first'],
+            dic_mean_specificity['organism_taxonomy_02kingdom'][
+                'structure_taxonomy_npclassifier_01pathway_first_score'],
+            dic_mean_specificity['organism_taxonomy_02kingdom'][
+                'structure_taxonomy_npclassifier_02superclass_first_score'],
+            dic_mean_specificity['organism_taxonomy_02kingdom'][
+                'structure_taxonomy_npclassifier_03class_first_score'],
+            dic_mean_specificity['organism_taxonomy_06family'][
+                'structure_taxonomy_npclassifier_01pathway_first_score'],
+            dic_mean_specificity['organism_taxonomy_06family'][
+                'structure_taxonomy_npclassifier_02superclass_first_score'],
+            dic_mean_specificity['organism_taxonomy_06family'][
+                'structure_taxonomy_npclassifier_03class_first_score'],
+            dic_mean_specificity['organism_taxonomy_08genus'][
+                'structure_taxonomy_npclassifier_01pathway_first_score'],
+            dic_mean_specificity['organism_taxonomy_08genus'][
+                'structure_taxonomy_npclassifier_02superclass_first_score'],
+            dic_mean_specificity['organism_taxonomy_08genus'][
+                'structure_taxonomy_npclassifier_03class_first_score'],
             hac,
             c_frak_ranked,
             ring_atom_frac,
@@ -457,10 +468,10 @@ f.add_scatter(
     ],
     categorical=[True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                  True, True, True, True, True, True, True,
-                 False, False, False, False, False, False, False, False, False, False, False, False, False],
+                 False, False, False, False, False, False, False, False, False, False, False, False],
     colormap=["tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
               "tab20", "tab20", "tab20", cmap, cmap2, cmap, cmap, cmap, cmap, cmap, cmap, cmap3, cmap4,
-              "viridis", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno",
+              "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno",
               "inferno", "rainbow", "rainbow", "rainbow", "Blues"],
     series_title=[
         "chemo_np_classifier_pathway",
@@ -487,16 +498,15 @@ f.add_scatter(
         "species_nunique",
         "Simaroubaceae vs others",
         "Top8 classes, quassinoids and carotenoids",
-        "Simaroubaceae specificity",
-        "Pathway kingdom specificity mean",
-        "Superclass kingdom specificity mean",
-        "Class kingdom specificity mean",
-        "Pathway family specificity mean",
-        "Superclass family specificity mean",
-        "Class family specificity mean",
-        "Pathway genus specificity mean",
-        "Superclass genus specificity mean",
-        "Class genus specificity mean",
+        "Pathway kingdom specificity",
+        "Superclass kingdom specificity",
+        "Class kingdom specificity",
+        "Pathway family specificity",
+        "Superclass family specificity",
+        "Class family specificity",
+        "Pathway genus specificity",
+        "Superclass genus specificity",
+        "Class genus specificity",
         "HAC",
         "C Frac",
         "Ring Atom Frac",
@@ -505,4 +515,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/210505_lotus_map4_2D', template="smiles")
+f.plot('../../res/html/210506_lotus_map4_2D', template="smiles")
