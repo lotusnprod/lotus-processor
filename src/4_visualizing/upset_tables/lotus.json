@@ -1,5 +1,5 @@
 {
-    "file": "https://raw.githubusercontent.com/oolonek/upset_test/main/lotus_upset.csv?token=AAVB24LOIQ5TVXE5GA7LWVDATK3JC",
+    "file": "https://gitlab.com/lotus7/lotusProcessor/-/raw/main/src/4_visualizing/upset_tables/lotus_upset.csv",
     "name": "TestLotus",
     "header": 0,
     "separator": ",",
