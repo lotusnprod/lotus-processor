@@ -18,7 +18,7 @@ inhouseDbMinimal <-
 frozen_metadata <-
   read_csv(file = file.path(
     pathDataProcessed,
-    "210325_frozen_metadata.csv.gz"
+    pathLastFrozen
   ))
 
 structureMetadata <-
