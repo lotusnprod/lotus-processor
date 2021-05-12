@@ -54,7 +54,7 @@ if (mode == "full") {
   pairs_metadata <- fread(
     input = file.path(
       pathDataProcessed,
-      "210223_frozen_metadata.csv.gz"
+      pathLastFrozen
     ),
     na.strings = ""
   ) %>%
