@@ -14,6 +14,7 @@ library(tidyverse)
 library(treeio)
 source(file = "paths.R")
 source(file = "r/colors.R")
+source(file = "r/tree_presence_absence.R")
 
 pairs_metadata <- fread(
   input = file.path(
@@ -435,50 +436,15 @@ p <- p %<+%
     legend.text = element_text(size = rel(2)),
   )
 
-q <-
-  ggtree(tr = tr_temp, layout = "circular", size = 0) %<+% sitosterol_3D +
-  geom_tree(mapping = aes(color = structure_inchikey)) +
-  scale_color_manual(
-    values = c("#2994D2", "#861450"),
-    na.value = "grey"
-  ) +
-  theme(legend.position = "none")
+q <- tree_presence_absence(table = sitosterol_3D, level = "structure_inchikey")
 
-r <-
-  ggtree(tr = tr_temp, layout = "circular", size = 0) %<+% sitosterol_2D +
-  geom_tree(mapping = aes(color = structure_inchikey)) +
-  scale_color_manual(
-    values = c("#2994D2", "#861450"),
-    na.value = "grey"
-  ) +
-  theme(legend.position = "none")
+r <- tree_presence_absence(table = sitosterol_2D, level = "structure_inchikey")
 
-s <-
-  ggtree(tr = tr_temp, layout = "circular", size = 0) %<+% stigmastanes +
-  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_03class)) +
-  scale_color_manual(
-    values = c("#2994D2", "#861450"),
-    na.value = "grey"
-  ) +
-  theme(legend.position = "none")
+s <- tree_presence_absence(table = stigmastanes, level = "structure_taxonomy_npclassifier_03class")
 
-t <-
-  ggtree(tr = tr_temp, layout = "circular", size = 0) %<+% steroids +
-  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_02superclass)) +
-  scale_color_manual(
-    values = c("#2994D2", "#861450"),
-    na.value = "grey"
-  ) +
-  theme(legend.position = "none")
+t <- tree_presence_absence(table = steroids, level = "structure_taxonomy_npclassifier_02superclass")
 
-u <-
-  ggtree(tr = tr_temp, layout = "circular", size = 0) %<+% terpenoids +
-  geom_tree(mapping = aes(color = structure_taxonomy_npclassifier_01pathway)) +
-  scale_color_manual(
-    values = c("#2994D2", "#861450"),
-    na.value = "grey"
-  ) +
-  theme(legend.position = "none")
+u <- tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
 
 ggsave(
   filename = file.path("../res", "magicTree.pdf"),
@@ -492,8 +458,8 @@ ggsave(
 ggsave(
   filename = file.path("../res", "tree_sitosterol_3D.pdf"),
   plot = q,
-  width = 10,
-  height = 10,
+  width = 25,
+  height = 25,
   units = "in",
   limitsize = FALSE
 )
@@ -501,8 +467,8 @@ ggsave(
 ggsave(
   filename = file.path("../res", "tree_sitosterol_2D.pdf"),
   plot = r,
-  width = 10,
-  height = 10,
+  width = 25,
+  height = 25,
   units = "in",
   limitsize = FALSE
 )
@@ -510,8 +476,8 @@ ggsave(
 ggsave(
   filename = file.path("../res", "tree_stigmastanes.pdf"),
   plot = s,
-  width = 10,
-  height = 10,
+  width = 25,
+  height = 25,
   units = "in",
   limitsize = FALSE
 )
@@ -519,8 +485,8 @@ ggsave(
 ggsave(
   filename = file.path("../res", "tree_steroids.pdf"),
   plot = t,
-  width = 10,
-  height = 10,
+  width = 25,
+  height = 25,
   units = "in",
   limitsize = FALSE
 )
@@ -528,8 +494,8 @@ ggsave(
 ggsave(
   filename = file.path("../res", "tree_terpenoids.pdf"),
   plot = u,
-  width = 10,
-  height = 10,
+  width = 25,
+  height = 25,
   units = "in",
   limitsize = FALSE
 )
