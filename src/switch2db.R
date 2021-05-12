@@ -22,11 +22,20 @@ source("r/dbSendQueries.R")
 drv <- PostgreSQL()
 
 log_debug("... connecting to the database")
+# db <- dbConnect(
+#   drv = drv,
+#   dbname = "lotus",
+#   user = "rutza",
+#   host = "localhost",
+# )
+
 db <- dbConnect(
   drv = drv,
   dbname = "lotus",
-  user = "rutza",
-  host = "localhost"
+  user = "lotusadmin",
+  host = "127.0.0.1",
+  port = 9999,
+  password = Sys.getenv("LOTUS_DB_PWD")
 )
 
 log_debug("... listing objects")
