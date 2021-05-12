@@ -30,6 +30,7 @@ dependencies:
   - r-chorddiag
   - r-codetools
   - r-data.table
+  - r-dplyr<=1.0.5 # since for the moment ggplot2 has issues with new one
   - r-DBI
   - r-gdata
   - r-ggalluvial
