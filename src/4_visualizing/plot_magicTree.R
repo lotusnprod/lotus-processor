@@ -79,35 +79,42 @@ specific_classes <- pairs_metadata %>%
   ) %>%
   mutate_all(as.character) %>%
   filter(organism_taxonomy_06family %in% families_matched_restricted$unique_name) %>%
-  # filter(!is.na(`03class`)) %>%
   filter(!is.na(structure_taxonomy_npclassifier_03class)) %>%
   distinct(organism_taxonomy_06family,
     structure_inchikey,
     .keep_all = TRUE
-  ) %>%
+  )
+
+specific_classes_n <- specific_classes %>%
   group_by(organism_taxonomy_06family) %>%
-  add_count(name = "n") %>%
-  # group_by(`03class`) %>%
+  count(name = "n") %>%
+  ungroup()
+
+specific_classes_m <- specific_classes %>%
   group_by(structure_taxonomy_npclassifier_03class) %>%
-  add_count(name = "m") %>%
-  group_by(
-    organism_taxonomy_06family,
-    organism_taxonomy_08genus
-  ) %>%
-  add_count(name = "o") %>%
-  # group_by(Family, `03class`) %>%
+  count(name = "m") %>%
+  ungroup()
+
+specific_classes_o <- specific_classes %>%
+  group_by(organism_taxonomy_06family) %>%
+  distinct(organism_taxonomy_08genus, .keep_all = TRUE) %>%
+  count(name = "o") %>%
+  ungroup()
+
+specific_classes_p <- specific_classes %>%
   group_by(
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_03class
   ) %>%
-  add_count(name = "p") %>%
+  count(name = "p") %>%
+  ungroup()
+
+specific_classes <- specific_classes %>%
+  left_join(., specific_classes_n) %>%
+  left_join(., specific_classes_m) %>%
+  left_join(., specific_classes_o) %>%
+  left_join(., specific_classes_p) %>%
   mutate(q = p^2 / (m * n)) %>%
-  # distinct(Family,
-  #   `03class`,
-  #   q,
-  #   o,
-  #   .keep_all = TRUE
-  # ) %>%
   distinct(
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_03class,
@@ -353,7 +360,6 @@ tree <- ggtree(tr = tr_temp, layout = "circular")
 
 p <- tree %<+%
   info_temp +
-  # geom_label(aes(x=branch, label=Order)) +
   geom_tiplab(
     aes(color = Kingdom),
     align = TRUE,
@@ -371,7 +377,6 @@ p <- tree %<+%
       aes(
         y = id,
         x = q,
-        # fill = `02superclass`
         fill = structure_taxonomy_npclassifier_01pathway
       ),
     offset = rel(0.2),
@@ -400,9 +405,6 @@ p <- tree %<+%
     direction = "vertical",
     guide = guide_legend(order = 3)
   ) +
-  # scale_fill_manual(
-  # values = strsplit(
-  # x = paired[4:18],
   scale_fill_manual(
     values = strsplit(
       x = paired[4:12],
@@ -436,15 +438,20 @@ p <- p %<+%
     legend.text = element_text(size = rel(2)),
   )
 
-q <- tree_presence_absence(table = sitosterol_3D, level = "structure_inchikey")
+q <-
+  tree_presence_absence(table = sitosterol_3D, level = "structure_inchikey")
 
-r <- tree_presence_absence(table = sitosterol_2D, level = "structure_inchikey")
+r <-
+  tree_presence_absence(table = sitosterol_2D, level = "structure_inchikey")
 
-s <- tree_presence_absence(table = stigmastanes, level = "structure_taxonomy_npclassifier_03class")
+s <-
+  tree_presence_absence(table = stigmastanes, level = "structure_taxonomy_npclassifier_03class")
 
-t <- tree_presence_absence(table = steroids, level = "structure_taxonomy_npclassifier_02superclass")
+t <-
+  tree_presence_absence(table = steroids, level = "structure_taxonomy_npclassifier_02superclass")
 
-u <- tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
+u <-
+  tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
 
 ggsave(
   filename = file.path("../res", "magicTree.pdf"),
