@@ -47,8 +47,10 @@ families_restricted <- families_restricted %>%
   filter(organism_taxonomy_06family %in% names(ott_in_tree))
 
 families_matched_restricted <-
-  tnrs_match_names(names = families_restricted$organism_taxonomy_06family,
-                   do_approximate_matching = FALSE)
+  tnrs_match_names(
+    names = families_restricted$organism_taxonomy_06family,
+    do_approximate_matching = FALSE
+  )
 
 families_matched_restricted <- families_matched_restricted %>%
   mutate(key = paste(
