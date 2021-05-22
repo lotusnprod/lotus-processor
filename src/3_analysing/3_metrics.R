@@ -379,7 +379,7 @@ if (mode == "FULL" | mode == "full") {
     fileEncoding = "UTF-8"
   )
 
-  log_debug(
+  cat(
     paste(
       nrow(pairsOpenDb_3D),
       "|",
