@@ -13,6 +13,8 @@ log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
 source("r/y_as_na.R")
+source("r/treat_npclassifier_taxonomy.R")
+source("temp_classyfireTaxonomy.R")
 
 library(data.table)
 library(DBI)
@@ -111,60 +113,15 @@ log_debug(
 )
 
 chemical_taxonomy_1 <-
-  fread(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
-  filter(!is.na(pathway)) %>%
-  filter(
-    pathway != "Fatty acids" |
-      superclass != "Fatty acyls" |
-      class != "Halogenated hydrocarbons" |
-      grepl(pattern = "Cl|Br|I|F", x = smiles) ## because actually returned instead of NA/null
-  ) %>%
-  distinct(
-    structure_smiles = smiles,
-    structure_taxonomy_npclassifier_01pathway = pathway,
-    structure_taxonomy_npclassifier_02superclass = superclass,
-    structure_taxonomy_npclassifier_03class = class
-  ) %>%
-  group_by(structure_smiles) %>%
-  summarize(across(
-    c(
-      "structure_taxonomy_npclassifier_01pathway",
-      "structure_taxonomy_npclassifier_02superclass",
-      "structure_taxonomy_npclassifier_03class"
-    ),
-    ~ gsub(
-      pattern = "\\bNA\\b",
-      replacement = "",
-      x = paste(.x, collapse = "|")
-    )
-  )) %>%
-  ungroup() %>%
-  mutate(across(
-    everything(),
-    ~ y_as_na(x = .x, y = "")
-  )) %>%
-  distinct() %>%
-  tibble()
+  fread(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+
+chemical_taxonomy_1 <- treat_npclassifier_taxonomy()
 
 log_debug(
   "We have",
   nrow(chemical_taxonomy_1),
   "npclassifier classifications for structures"
 )
-
-chemical_taxonomy_2 <- classy_temp %>%
-  mutate(direct_parent = apply(.[, 3:13], 1, function(x) {
-    tail(na.omit(x), 1)
-  })) %>%
-  distinct(
-    structure_inchikey = inchikey,
-    structure_taxonomy_classyfire_chemontid = chemont_id,
-    structure_taxonomy_classyfire_01kingdom = `01kingdom`,
-    structure_taxonomy_classyfire_02superclass = `02superclass`,
-    structure_taxonomy_classyfire_03class = `03class`,
-    structure_taxonomy_classyfire_04directparent = direct_parent,
-  ) %>%
-  tibble()
 
 log_debug(
   "We have",
@@ -271,17 +228,6 @@ log_debug(
 
 platinum_only <-
   anti_join(platinum_pairs, wikidata_pairs) %>% distinct()
-
-# log_debug("We have",
-#     nrow(platinum_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in platinum")
-
-# wd_only <-
-#   anti_join(wikidata_pairs, platinum_pairs) %>% distinct()
-
-# log_debug("We have",
-#     nrow(wd_only),
-#     "unique inchikey-taxon-doi vaidated triplets present only in wikidata")
 
 log_debug("Adding useful metadata")
 platinum_u_wd_complete <- platinum_u_wd %>%

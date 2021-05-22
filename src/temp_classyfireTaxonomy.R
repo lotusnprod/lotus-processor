@@ -321,6 +321,20 @@ classy_temp <-
     chemont_id, everything(), -chemontId
   )
 
+chemical_taxonomy_2 <- classy_temp %>%
+  mutate(direct_parent = apply(.[, 3:13], 1, function(x) {
+    tail(na.omit(x), 1)
+  })) %>%
+  distinct(
+    structure_inchikey = inchikey,
+    structure_taxonomy_classyfire_chemontid = chemont_id,
+    structure_taxonomy_classyfire_01kingdom = `01kingdom`,
+    structure_taxonomy_classyfire_02superclass = `02superclass`,
+    structure_taxonomy_classyfire_03class = `03class`,
+    structure_taxonomy_classyfire_04directparent = direct_parent,
+  ) %>%
+  tibble()
+
 end <- Sys.time()
 
 log_debug("Script finished in", format(end - start))

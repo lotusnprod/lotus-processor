@@ -20,8 +20,8 @@ getClass <- function(X) {
         fromJSON()
 
       df <- data.frame(
-        smiles = new$smiles[[X]],
-        query = queries[[X]],
+        structure_smiles_2D = new$structure_smiles_2D[[X]],
+        query = new$query[[X]],
         pathway = ifelse(
           test = is_empty(result$pathway_results),
           yes = NA,
@@ -47,8 +47,8 @@ getClass <- function(X) {
     },
     error = function(e) {
       df <- data.frame(
-        smiles = new$smiles[[X]],
-        query = queries[[X]],
+        structure_smiles_2D = new$structure_smiles_2D[[X]],
+        query = new$query[[X]],
         pathway = NA,
         superclass = NA,
         class = NA,

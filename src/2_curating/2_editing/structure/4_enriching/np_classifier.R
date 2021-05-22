@@ -21,12 +21,12 @@ source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
 smiles <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureSmiles) %>%
-  distinct() %>%
+  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted) %>%
+  distinct(structure_smiles_2D = smilesSanitizedFlat) %>%
   tibble()
 # smiles <-
-#   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
-#   distinct(smiles = structureCleanedSmiles) %>%
+#   vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
+#   distinct(structure_smiles_2D = structureCleaned_smiles2D) %>%
 #   tibble()
 
 log_debug("loading npClassifier taxonomy ...")
@@ -39,44 +39,19 @@ taxonomy <- fromJSON(txt = list.files(
   full.names = TRUE
 ))
 
-if (works_locally_only == FALSE) {
-  triplesPostWikidata <-
-    vroom_read_safe(path = wikidataLotusExporterDataOutputTriplesPath)
-
-  structuresPostWikidata <-
-    vroom_read_safe(path = wikidataLotusExporterDataOutputStructuresPath)
-
-  postWikidata <- left_join(
-    triplesPostWikidata %>%
-      distinct(compound),
-    structuresPostWikidata %>%
-      distinct(wikidataId, isomericSmiles, canonicalSmiles),
-    by = c("compound" = "wikidataId")
-  ) %>%
-    mutate(smiles = ifelse(
-      test = !is.na(isomericSmiles),
-      yes = isomericSmiles,
-      no = canonicalSmiles
-    )) %>%
-    drop_na(smiles) %>%
-    distinct(smiles)
-
-  smiles <- smiles %>%
-    bind_rows(., postWikidata) %>%
-    distinct()
-}
-
 old <-
   vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
   distinct() %>%
   tibble()
 
 new <- anti_join(smiles, old)
-# new <- smiles
+new <- smiles
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
-queries <- curlEscape(new$smiles)
+new <- new %>%
+  mutate(query = curlEscape(smiles))
+queries <- new$query
 cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
