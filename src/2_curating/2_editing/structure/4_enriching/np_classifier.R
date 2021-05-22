@@ -31,8 +31,10 @@ smiles <-
 
 log_debug("loading npClassifier taxonomy ...")
 taxonomy <- fromJSON(txt = list.files(
-  path = file.path(pathDataExternal,
-                   "taxonomySource/structure/npclassifier/"),
+  path = file.path(
+    pathDataExternal,
+    "taxonomySource/structure/npclassifier/"
+  ),
   pattern = ".json",
   full.names = TRUE
 ))
@@ -40,13 +42,15 @@ taxonomy <- fromJSON(txt = list.files(
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-
     vroom_read_safe(path = wikidataLotusExporterDataOutputTriplesPath)
-  
+
   structuresPostWikidata <-
     vroom_read_safe(path = wikidataLotusExporterDataOutputStructuresPath)
-  
+
   postWikidata <- left_join(
-    triplesPostWikidata %>% distinct(compound),
-    structuresPostWikidata %>% distinct(wikidataId, isomericSmiles, canonicalSmiles),
+    triplesPostWikidata %>%
+      distinct(compound),
+    structuresPostWikidata %>%
+      distinct(wikidataId, isomericSmiles, canonicalSmiles),
     by = c("compound" = "wikidataId")
   ) %>%
     mutate(smiles = ifelse(
@@ -56,7 +60,7 @@ if (works_locally_only == FALSE) {
     )) %>%
     drop_na(smiles) %>%
     distinct(smiles)
-  
+
   smiles <- smiles %>%
     bind_rows(., postWikidata) %>%
     distinct()
@@ -69,8 +73,6 @@ old <-
 
 new <- anti_join(smiles, old)
 # new <- smiles
-# new <- full_join(smiles, old) %>%
-#   distinct(smiles)
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
@@ -79,7 +81,7 @@ cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
   X <- (seq_along(queries))
-  
+
   list_df <- invisible(
     pbmclapply(
       FUN = getClass,
@@ -93,9 +95,10 @@ if (length(queries) != 0) {
       ignore.interactive = TRUE
     )
   )
-  
-  df_new <- bind_rows(list_df) %>% mutate_all(as.character)
-  
+
+  df_new <- bind_rows(list_df) %>%
+    mutate_all(as.character)
+
   df <- bind_rows(old, df_new) %>%
     distinct()
 } else {
@@ -106,11 +109,13 @@ taxonomy_semiclean <- treat_npclassifier_json()
 
 df_semiclean <- df %>%
   select(-pathway, -superclass) %>%
-  full_join(taxonomy_semiclean) # %>% 
-  # distinct(smiles, class, glycoside, query, superclass, pathway)
+  full_join(taxonomy_semiclean) # %>%
+# distinct(smiles, class, glycoside, query, superclass, pathway)
 
-vroom_write_safe(x = df_semiclean,
-                 path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+vroom_write_safe(
+  x = df_semiclean,
+  path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+)
 
 end <- Sys.time()
 
