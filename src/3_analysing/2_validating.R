@@ -889,6 +889,20 @@ manuallyRemovedEntries3 <-
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
   filter(!database %in% forbidden_export)
 
+log_debug("removing dimers")
+## at the moment no solution for it so discarding for safety
+openDbClean3 <- openDbClean2 %>%
+  filter(!grepl(
+    pattern = "\\.",
+    x = structureCleanedSmiles
+  ))
+
+dnpDb3 <- dnpDb %>%
+  filter(!grepl(
+    pattern = "\\.",
+    x = structureCleanedSmiles
+  ))
+
 log_debug("exporting")
 if (mode == "full") {
   log_debug("../data/validation/manuallyValidated.tsv.gz")
@@ -937,13 +951,13 @@ if (mode == "full") {
 
 log_debug(pathDataInterimTablesAnalysedPlatinum)
 vroom_write_safe(
-  x = openDbClean2,
+  x = openDbClean3,
   path = pathDataInterimTablesAnalysedPlatinum
 )
 
 log_debug(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"))
 vroom_write_safe(
-  x = dnpDb,
+  x = dnpDb3,
   path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
 )
 
