@@ -21,11 +21,6 @@ getClass <- function(X) {
 
       df <- data.frame(
         smiles = new$smiles[[X]],
-        pathway = ifelse(
-          test = is_empty(result$pathway_results),
-          yes = NA,
-          no = result$pathway_results
-        ),
         query = queries[[X]],
         pathway = ifelse(
           test = is_empty(result$pathway_results),
@@ -53,6 +48,7 @@ getClass <- function(X) {
     error = function(e) {
       df <- data.frame(
         smiles = new$smiles[[X]],
+        query = queries[[X]],
         pathway = NA,
         superclass = NA,
         class = NA,
