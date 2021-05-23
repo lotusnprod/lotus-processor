@@ -198,51 +198,51 @@ reference_publishingDetails_cleaned_plus <-
 
 reference_original_frozen <-
   semi_join(
-    reference_original_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_original_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 reference_pubmed_frozen <-
   semi_join(
-    reference_pubmed_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_pubmed_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 reference_doi_frozen <-
   semi_join(
-    reference_doi_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_doi_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 reference_title_frozen <-
   semi_join(
-    reference_title_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_title_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 reference_split_frozen <-
   semi_join(
-    reference_split_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_split_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 reference_publishingDetails_frozen <-
   semi_join(
-    reference_publishingDetails_cleaned,
-    frozen_metadata %>% distinct(reference_title),
-    by = c("referenceCleanedTitle" = "reference_title")
+    reference_publishingDetails_cleaned_plus,
+    frozen_metadata %>% distinct(reference_doi),
+    by = c("referenceCleanedDoi" = "reference_doi")
   ) %>%
-  distinct(referenceCleanedTitle)
+  distinct(referenceCleanedDoi)
 
 end <- Sys.time()
 
