@@ -69,7 +69,10 @@ chemical_metadata <-
     structure_inchi = structureCleanedInchi,
     structure_smiles = structureCleanedSmiles,
     structure_molecular_formula = structureCleaned_molecularFormula,
-    structure_exact_mass = structureCleaned_exactMass
+    structure_exact_mass = structureCleaned_exactMass,
+    structure_smiles_2D = structureCleaned_smiles2D,
+    structure_stereocenters_total = structureCleaned_stereocenters_total,
+    structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
@@ -251,7 +254,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210505_dnp_metadata.csv.gz"
+      pathLastFrozenDnp
     )
   )
 
@@ -259,7 +262,7 @@ if (safety == TRUE) {
     x = dnp_complete,
     file = file.path(
       pathDataProcessed,
-      "210505_dnp_metadata.csv.gz"
+      pathLastFrozenDnp
     )
   )
 }

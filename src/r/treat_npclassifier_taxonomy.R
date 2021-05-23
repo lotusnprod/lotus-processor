@@ -11,15 +11,15 @@ treat_npclassifier_taxonomy <- function() {
       pathway != "Fatty acids" |
         superclass != "Fatty acyls" |
         class != "Halogenated hydrocarbons" |
-        grepl(pattern = "Cl|Br|I|F", x = smiles) ## because actually returned instead of NA/null
+        grepl(pattern = "Cl|Br|I|F", x = structure_smiles_2D) ## because actually returned instead of NA/null
     ) %>%
     distinct(
-      structure_smiles = smiles,
+      structure_smiles_2D,
       structure_taxonomy_npclassifier_01pathway = pathway,
       structure_taxonomy_npclassifier_02superclass = superclass,
       structure_taxonomy_npclassifier_03class = class
     ) %>%
-    group_by(structure_smiles) %>%
+    group_by(structure_smiles_2D) %>%
     summarize(across(
       c(
         "structure_taxonomy_npclassifier_01pathway",
