@@ -70,7 +70,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/210505_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/210523_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -298,13 +298,13 @@ lf.batch_add(fps)
 lf.index()
 
 # Store lsh forest and structure metadata
-# lf.store("../data/interim/tmap/210506_lotus_2D_map4.dat")
-# with open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "wb+") as f:
-#     pickle.dump(
-#         (hac, c_frac, ring_atom_frac, largest_ring_size),
-#         f,
-#         protocol=pickle.HIGHEST_PROTOCOL,
-#     )
+lf.store("../data/interim/tmap/210523_lotus_2D_map4.dat")
+with open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "wb+") as f:
+    pickle.dump(
+        (hac, c_frac, ring_atom_frac, largest_ring_size),
+        f,
+        protocol=pickle.HIGHEST_PROTOCOL,
+    )
 
 # tmap configuration
 cfg = tm.LayoutConfiguration()
@@ -318,13 +318,13 @@ cfg.sl_repeats = 2
 x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 
 # To store coordinates
-# x = list(x)
-# y = list(y)
-# s = list(s)
-# t = list(t)
-# pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/210506_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
-# )
+x = list(x)
+y = list(y)
+s = list(s)
+t = list(t)
+pickle.dump(
+    (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+)
 
 del (lf)
 
@@ -334,10 +334,10 @@ del (lf)
 
 lf = tm.LSHForest(1024, 64)
 lf.restore(
-    "../data/interim/tmap/210506_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+    "../data/interim/tmap/210523_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
 )
 
 # tmap configuration
@@ -353,13 +353,13 @@ cfg.sl_repeats = 2
 x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 
 # To store coordinates
-# x = list(x)
-# y = list(y)
-# s = list(s)
-# t = list(t)
-# pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/210505_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
-# )
+x = list(x)
+y = list(y)
+s = list(s)
+t = list(t)
+pickle.dump(
+    (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+)
 
 del (lf)
 
@@ -368,11 +368,11 @@ del (lf)
 # AND CHEMICAL DESCRIPTORS
 ########################################################
 
-x, y, s, t = pickle.load(open("../data/interim/tmap/210506_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat",
                               "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210506_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
 )
 
 ########################################################
@@ -515,4 +515,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/210506_lotus_map4_2D', template="smiles")
+f.plot('../res/html/210523_lotus_map4_2D', template="smiles")

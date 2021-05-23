@@ -276,7 +276,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210505_frozen.csv.gz"
+      "210523_frozen.csv.gz"
     )
   )
 
@@ -284,7 +284,7 @@ if (safety == TRUE) {
     x = platinum_u_wd,
     file = file.path(
       pathDataProcessed,
-      "210505_frozen.csv.gz"
+      "210523_frozen.csv.gz"
     )
   )
 
@@ -292,7 +292,7 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      "210505_frozen_metadata.csv.gz"
+      pathLastFrozen
     )
   )
 
