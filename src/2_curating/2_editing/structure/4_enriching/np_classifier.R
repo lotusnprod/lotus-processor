@@ -45,12 +45,12 @@ old <-
   tibble()
 
 new <- anti_join(smiles, old)
-new <- smiles
+# new <- smiles
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
 new <- new %>%
-  mutate(query = curlEscape(smiles))
+  mutate(query = curlEscape(structure_smiles_2D))
 queries <- new$query
 cached <- "&cached" # actually return wrong results?
 
@@ -64,7 +64,7 @@ if (length(queries) != 0) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 10,
+      mc.cores = parallel::detectCores() - 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
