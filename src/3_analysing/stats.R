@@ -150,50 +150,60 @@ reference_publishingDetails <- inhouseDbMinimal %>%
   filter(referenceType == "publishingDetails") %>%
   distinct(organismValue, .keep_all = TRUE)
 
-reference_original_cleaned <- reference_original %>%
+reference_original_cleaned <- left_join(
+  reference_original,
+  referenceOrganismDictionary
+) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
-reference_pubmed_cleaned <- reference_pubmed %>%
+reference_pubmed_cleaned <- left_join(
+  reference_pubmed,
+  referenceOrganismDictionary
+) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
-reference_doi_cleaned <- reference_doi %>%
+reference_doi_cleaned <- left_join(
+  reference_doi,
+  referenceOrganismDictionary
+) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
-reference_title_cleaned <- reference_title %>%
+reference_title_cleaned <- left_join(
+  reference_title,
+  referenceOrganismDictionary
+) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
-reference_split_cleaned <- reference_split %>%
+reference_split_cleaned <- left_join(
+  reference_split,
+  referenceOrganismDictionary
+) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
 reference_publishingDetails_cleaned <-
-  reference_publishingDetails %>%
+  left_join(
+    reference_publishingDetails,
+    referenceOrganismDictionary
+  ) %>%
   distinct(referenceCleanedTitle, .keep_all = TRUE)
 
-reference_original_cleaned_plus <-
-  left_join(reference_original_cleaned, referenceOrganismDictionary) %>%
+reference_original_cleaned_plus <- reference_original_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
-reference_pubmed_cleaned_plus <-
-  left_join(reference_pubmed_cleaned, referenceOrganismDictionary) %>%
+reference_pubmed_cleaned_plus <- reference_pubmed_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
-reference_doi_cleaned_plus <-
-  left_join(reference_doi_cleaned, referenceOrganismDictionary) %>%
+reference_doi_cleaned_plus <- reference_doi_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
-reference_title_cleaned_plus <-
-  left_join(reference_title_cleaned, referenceOrganismDictionary) %>%
+reference_title_cleaned_plus <- reference_title_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
-reference_split_cleaned_plus <-
-  left_join(reference_split_cleaned, referenceOrganismDictionary) %>%
+reference_split_cleaned_plus <- reference_split_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
 reference_publishingDetails_cleaned_plus <-
-  left_join(
-    reference_publishingDetails_cleaned,
-    referenceOrganismDictionary
-  ) %>%
+  reference_publishingDetails_cleaned %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
 reference_original_frozen <-
