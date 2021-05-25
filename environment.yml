@@ -8,6 +8,7 @@ dependencies:
   - beautifulsoup4
   - cirpy
   - dvc>=2.1.0
+  - dvc-s3
   - ipykernel
   - lxml
   - molvs
