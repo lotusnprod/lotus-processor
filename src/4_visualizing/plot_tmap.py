@@ -214,10 +214,10 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
-    'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Carotenoids (C40, β-β)',
-    'Flavonols', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Cyclic peptides',
-    'Guaiane sesquiterpenoids', 'Flavones', 'Colensane and Clerodane diterpenoids',
-    'Quassinoids'], data, labels)
+    'Oleanane triterpenoids', 'Cyclic peptides', 'Flavonols', 'Germacrane sesquiterpenoids',
+    'Flavones', 'Lanostane, Tirucallane and Euphane triterpenoids','Guaiane sesquiterpenoids',
+    'Cinnamic acids and derivatives','Quassinoids', 'Carotenoids (C40, β-β)'
+    ], data, labels)
 
 # count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
 # simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
@@ -225,10 +225,10 @@ NPclass_data, NPclass_labels = keep_only_given_class([
 # Generating colormaps for plotting
 cmap = mcolors.ListedColormap(["gainsboro", "peachpuff", "salmon", "tomato"])
 cmap2 = mcolors.ListedColormap(["gainsboro", "tomato"])
-cmap3 = mcolors.ListedColormap(["lightgray", "firebrick"])
+cmap3 = mcolors.ListedColormap(["gainsboro", "#b15928"])
 cmap4 = mcolors.ListedColormap(
-    ["gainsboro", "#83C644", "#04AC6E", "#00ff99", "#008ECA", "#008C83", "#D61E1E", "#006A7A", "#00B2C4", "#2F4858",
-     "#EAD400"])
+    ["gainsboro", "#8cd17d", "#4e79a7", "#e15759", "#499894", "#ff9d9a", 
+    "#86bcb6", "#b6992d", "#d37295", "#59a14f", "#f1ce63"])
 
 # Generate a labels column
 df_gb["labels"] = (
@@ -363,10 +363,10 @@ pickle.dump(
 
 del (lf)
 
-########################################################
-# OPTION 3: LOAD PRE-COMPUTED COORDINATES, SOURCES AND TARGETS
-# AND CHEMICAL DESCRIPTORS
-########################################################
+# ########################################################
+# # OPTION 3: LOAD PRE-COMPUTED COORDINATES, SOURCES AND TARGETS
+# # AND CHEMICAL DESCRIPTORS
+# ########################################################
 
 x, y, s, t = pickle.load(open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat",
                               "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
@@ -474,21 +474,21 @@ f.add_scatter(
               "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno",
               "inferno", "rainbow", "rainbow", "rainbow", "Blues"],
     series_title=[
-        "chemo_np_classifier_pathway",
-        "chemo_np_classifier_superclass",
-        "chemo_np_classifier_class",
-        "chemo_cf_kingdom",
-        "chemo_cf_superclass",
-        "chemo_cf_class",
-        "chemo_cf_parent",
-        "kingdom_bio",
-        "phylum_bio",
-        "class_bio",
-        "order_bio",
-        "family_bio",
-        "genus_bio",
-        "species_bio",
-        "biosource_count",
+        "Chemical pathway",
+        "Chemical superclass",
+        "Chemical class",
+        "Chemical kingdom (Classyfire)",
+        "Chemical superclass (Classyfire)",
+        "Chemical class (Classyfire)",
+        "Chemical parent (Classyfire)",
+        "Biological kingdom (OTL)",
+        "Biological phylum (OTL)",
+        "Biological class (OTL)",
+        "Biological order (OTL)",
+        "Biological family (OTL)",
+        "Biological genus (OTL)",
+        "Biological species (OTL)",
+        "Biological occurrences",
         "kingdom_nunique",
         "phylum_nunique",
         "class_nunique",
@@ -496,8 +496,8 @@ f.add_scatter(
         "family_nunique",
         "genus_nunique",
         "species_nunique",
-        "Simaroubaceae vs others",
-        "Top8 classes, quassinoids and carotenoids",
+        "Simaroubaceae",
+        "Top 8 chemical classes, quassinoids and carotenoids",
         "Pathway kingdom specificity",
         "Superclass kingdom specificity",
         "Class kingdom specificity",
