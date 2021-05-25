@@ -8,7 +8,6 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... functions")
-source("r/log.R")
 source("r/vroom_safe.R")
 
 log_debug("loading ...")

@@ -8,7 +8,6 @@ log_debug("... paths ")
 source("paths.R")
 
 log_debug("... functions ")
-source("r/log.R")
 source("r/y_as_na.R")
 source("r/manipulating_taxo.R")
 source("r/taxo_cleaning_auto.R")
