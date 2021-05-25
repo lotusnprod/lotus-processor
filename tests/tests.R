@@ -5,7 +5,7 @@ mode_test <- TRUE
 library(testthat)
 library(tidyverse)
 source("paths.R")
-source("r/log.R")
+source("r/log_debug.R")
 
 log_debug("loading ...")
 log_debug("... initial table")
