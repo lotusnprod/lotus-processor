@@ -8,7 +8,7 @@ dependencies:
   - beautifulsoup4
   - cirpy
   - dvc>=2.1.0
-  - dvc-s3
+  - dvc-s3 ## needed by the new versions of dvc
   - ipykernel
   - lxml
   - molvs
@@ -47,6 +47,7 @@ dependencies:
   - r-rotl
   - r-RPostgreSQL
   - r-RSQLite
+  - r-R.utils ## needed for new version of data.tabel to read .gz
   - r-rvest
   - r-splitstackshape
   - r-stringdist
