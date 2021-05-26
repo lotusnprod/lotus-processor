@@ -27,6 +27,7 @@ dependencies:
   - pip:
     - faerun
     - git+https://github.com/reymond-group/map4
+  - r-aplot ## needed by ggtree
   - r-base
   - r-chorddiag
   - r-codetools
@@ -48,6 +49,7 @@ dependencies:
   - r-RPostgreSQL
   - r-RSQLite
   - r-R.utils ## needed for new version of data.tabel to read .gz
+  - r-rvcheck ## needed by ggtree
   - r-rvest
   - r-splitstackshape
   - r-stringdist
