@@ -20,7 +20,7 @@ dataset <- read_delim(
 ) %>%
   select(
     -`initial retrieved unique observations`,
-    -`cleaned documented structure-organism pairs`,
+    -`cleaned referenced structure-organism pairs`,
     -`pairs validated for wikidata export`
   )
 
@@ -97,7 +97,7 @@ cleaned_stats_3D <- inhouseDbMinimal %>%
     structureCleanedInchikey,
     referenceCleanedTitle
   ) %>%
-  count(name = "cleaned documented structure-organism pairs")
+  count(name = "cleaned referenced structure-organism pairs")
 
 final_stats_3D <- openDb %>%
   group_by(database) %>%
@@ -117,7 +117,7 @@ dataset <- dataset %>%
     database,
     `type`,
     `initial retrieved unique observations`,
-    `cleaned documented structure-organism pairs`,
+    `cleaned referenced structure-organism pairs`,
     `pairs validated for wikidata export`,
     everything()
   )
