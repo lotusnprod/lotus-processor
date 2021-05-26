@@ -964,7 +964,7 @@ vroom_write_safe(
 log_debug(file.path(
   pathDataInterimTablesAnalysed,
   "validationSet.tsv"
-), )
+))
 if (exists("validationSet")) {
   write.table(
     x = validationSet,
@@ -982,7 +982,7 @@ if (exists("validationSet")) {
 log_debug(file.path(
   pathDataInterimTablesAnalysed,
   "validationSetBis.tsv"
-), )
+))
 
 if (exists("validationSet2")) {
   write.table(
