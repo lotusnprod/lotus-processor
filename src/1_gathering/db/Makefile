@@ -76,7 +76,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/coconut/coconutConverted.tsv.gz: # ${EXTERNAL_DB_SOUR
 	cd	${PWD}/src	&&	python	${SRC_GATHERING_DB_PATH}/coconut/converting.py
 
 cyanometdb: ${INTERIM_DB_PATH}/cyanometdb.tsv.gz
-${INTERIM_DB_PATH}/cyanometdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/media-1.csv ${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
+${INTERIM_DB_PATH}/cyanometdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/1-s2.0-S0043135421002153-mmc4.zip ${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
 
 datawarrior: ${INTERIM_DB_PATH}/datawarrior.tsv.gz
