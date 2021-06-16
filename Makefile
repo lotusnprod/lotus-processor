@@ -41,20 +41,24 @@ get-gnfinder: bin/gnfinder
 get-gnverifier: bin/gnverifier
 get-opsin: bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 
-bin/gnfinder:
+bin/gnfinder: ${BIN_PATH}/gnfinder
+${BIN_PATH}/gnfinder: config.mk
 	mkdir -p bin
 	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnfinder > bin/gnfinder
 	chmod +x bin/gnfinder
 
-bin/gnverifier:
+bin/gnverifier: ${BIN_PATH}/gnverifier
+${BIN_PATH}/gnverifier: config.mk
 	mkdir -p bin
 	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnverifier > bin/gnverifier
 	chmod +x bin/gnverifier
 
-bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar:
+bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
+${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 	mkdir -p bin
 	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 	chmod +x bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
+
 tests:
 	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
 
