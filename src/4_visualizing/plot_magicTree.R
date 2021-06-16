@@ -455,60 +455,61 @@ t <-
 u <-
   tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
 
-ggsave(
-  filename = file.path("../res", "magicTree.pdf"),
-  plot = p,
-  width = 100,
-  height = 100,
-  units = "in",
-  limitsize = FALSE
-)
+if (mode == "full") {
+  ggsave(
+    filename = file.path("../res", "magicTree.pdf"),
+    plot = p,
+    width = 100,
+    height = 100,
+    units = "in",
+    limitsize = FALSE
+  )
 
-ggsave(
-  filename = file.path("../res", "tree_sitosterol_3D.pdf"),
-  plot = q,
-  width = 25,
-  height = 25,
-  units = "in",
-  limitsize = FALSE
-)
+  ggsave(
+    filename = file.path("../res", "tree_sitosterol_3D.pdf"),
+    plot = q,
+    width = 25,
+    height = 25,
+    units = "in",
+    limitsize = FALSE
+  )
 
-ggsave(
-  filename = file.path("../res", "tree_sitosterol_2D.pdf"),
-  plot = r,
-  width = 25,
-  height = 25,
-  units = "in",
-  limitsize = FALSE
-)
+  ggsave(
+    filename = file.path("../res", "tree_sitosterol_2D.pdf"),
+    plot = r,
+    width = 25,
+    height = 25,
+    units = "in",
+    limitsize = FALSE
+  )
 
-ggsave(
-  filename = file.path("../res", "tree_stigmastanes.pdf"),
-  plot = s,
-  width = 25,
-  height = 25,
-  units = "in",
-  limitsize = FALSE
-)
+  ggsave(
+    filename = file.path("../res", "tree_stigmastanes.pdf"),
+    plot = s,
+    width = 25,
+    height = 25,
+    units = "in",
+    limitsize = FALSE
+  )
 
-ggsave(
-  filename = file.path("../res", "tree_steroids.pdf"),
-  plot = t,
-  width = 25,
-  height = 25,
-  units = "in",
-  limitsize = FALSE
-)
+  ggsave(
+    filename = file.path("../res", "tree_steroids.pdf"),
+    plot = t,
+    width = 25,
+    height = 25,
+    units = "in",
+    limitsize = FALSE
+  )
 
-ggsave(
-  filename = file.path("../res", "tree_terpenoids.pdf"),
-  plot = u,
-  width = 25,
-  height = 25,
-  units = "in",
-  limitsize = FALSE
-)
-
+  ggsave(
+    filename = file.path("../res", "tree_terpenoids.pdf"),
+    plot = u,
+    width = 25,
+    height = 25,
+    units = "in",
+    limitsize = FALSE
+  )
+}
 end <- Sys.time()
 
 log_debug("Script finished in", format(end - start))
