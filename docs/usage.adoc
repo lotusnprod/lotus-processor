@@ -1,12 +1,14 @@
 == Getting started
 
 === Instructions
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ==== Access to metabomaps
-You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data
-from scratch.
+
+You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data from scratch.
 Add this to your
+
 [source]
 ----
 ~/.ssh/config
@@ -22,6 +24,7 @@ Host metabomaps
 ----
 
 ==== Pull the repository
+
 [source,console]
 ----
 git pull https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb.git
@@ -31,17 +34,19 @@ dvc pull  // This will take a while
 ----
 
 ==== Having the data in a different place
+
 If you want to have the data in a different place (for example for running a test), you can set the environment variable **DATA_PATH**.
 
 ==== If you want to build only a simple DB
+
 [source,console]
 ----
 make -C src/1_gathering/db -B alkamid
 ----
 
 ==== Use docker to build
-Install docker on your machine, make sure it is on your path
-then
+
+Install docker on your machine, make sure it is on your path then
 
 [source,console]
 ----
@@ -52,12 +57,16 @@ make docker-bash
 This will bring you in a container that will already have all the dependencies installed so you can run your commands in it.
 
 ==== Additional MAKE Readme
+
 If you want more informations regarding how to use MAKE, please have a look at xref:docs/makefile.adoc[the specific documentation]
 
 ==== Conda environement
-A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install. Install it by running in the home directory.
 
-We will also create another environment for strict mirroring of the installed packages. (TO DO)
+A "loose" environment.yml file is created and should allow to recreate a working env formthe project without beeing too restrictive on the versions to install.
+Install it by running in the home directory.
+
+We will also create another environment for strict mirroring of the installed packages.
+(TO DO)
 
 [source,console]
 ----
@@ -74,6 +83,7 @@ conda activate lotus_env
 ----
 
 ==== Additional bins
+
 There are some additional bins you'll need.
 
 [source,console]
@@ -82,6 +92,7 @@ make get-bins
 ----
 
 ==== Working directory
+
 Your working directory should be 'src'
 
 [source,console]
