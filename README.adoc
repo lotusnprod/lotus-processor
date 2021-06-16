@@ -22,6 +22,8 @@ image:res/flowchart.svg[Embedded,1600,opts=inline]
 
 include::docs/usage.adoc[]
 
+include::docs/makefile.adoc[]
+
 include::docs/misc.adoc[]
 
 include::docs/faq.adoc[]
