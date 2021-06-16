@@ -74,13 +74,11 @@ conda activate lotus_env
 ----
 
 ==== Additional bins
-There are some additional bins you'll need. Easy install is available for Linux and MacOS. For Windows, please refer to their own solutions.
+There are some additional bins you'll need.
 
 [source,console]
 ----
-make get-gnfinder-gnverifier-linux
-# make get-gnfinder-gnverifier-mac
-make get-opsin
+make get-bins
 ----
 
 ==== Working directory
