@@ -4,6 +4,6 @@
 
 include::metrics.adoc[]
 
-It represents the most exhaustive open DB of natural products (NP) occurrences. 
+It represents the most exhaustive open DB of natural products (NP) occurrences.
 
 Within the frame of current computational approaches to guide NP’s research, all these elements should allow a more complete understanding of organisms and their metabolites.
