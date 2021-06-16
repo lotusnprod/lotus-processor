@@ -20,6 +20,8 @@ build-docker:
         - src/**/*
         - Dockerfile
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
 
 test-docker:
@@ -32,6 +34,8 @@ test-docker:
         - src/**/*
         - Dockerfile
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
 
 pull-data:
@@ -52,8 +56,9 @@ build-tests:
         - data/*.dvc
         - src/**/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
-
 
 test-tests:
   stage: test-tests
@@ -64,8 +69,9 @@ test-tests:
         - data/*.dvc
         - src/**/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
-
 
 build-databases:
   stage: build-databases
@@ -76,8 +82,9 @@ build-databases:
         - data/*.dvc
         - src/1_gathering/db/**/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
-
 
 build-translation:
   stage: build-translation
@@ -88,6 +95,8 @@ build-translation:
         - data/*.dvc
         - src/1_gathering/translation/**/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
 
 build-curating:
@@ -99,6 +108,8 @@ build-curating:
         - data/*.dvc
         - src/2_curating/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
 
 build-analysing:
@@ -110,6 +121,8 @@ build-analysing:
         - data/*.dvc
         - src/3_analysing/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
 
 build-visualizing:
@@ -121,4 +134,6 @@ build-visualizing:
         - data/*.dvc
         - src/4_visualizing/*
         - Makefile
+        - config.mk
+        - environment.yml
         - .gitlab-ci.yml
