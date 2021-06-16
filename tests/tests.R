@@ -1,4 +1,4 @@
-# setwd(dir = "~/gitlab/opennaturalproductsdb/src")
+# setwd(dir = "~/git/lotus-processor/src")
 
 mode_test <- TRUE
 
