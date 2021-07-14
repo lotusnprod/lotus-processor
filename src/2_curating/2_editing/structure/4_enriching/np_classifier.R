@@ -20,14 +20,14 @@ source("r/vroom_safe.R")
 source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
-smiles <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted) %>%
-  distinct(structure_smiles_2D = smilesSanitizedFlat) %>%
-  tibble()
 # smiles <-
-#   vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
-#   distinct(structure_smiles_2D = structureCleaned_smiles2D) %>%
+#   vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted) %>%
+#   distinct(structure_smiles_2D = smilesSanitizedFlat) %>%
 #   tibble()
+smiles <-
+  vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
+  distinct(structure_smiles_2D = structureCleaned_smiles2D) %>%
+  tibble()
 
 log_debug("loading npClassifier taxonomy ...")
 taxonomy <- fromJSON(txt = list.files(
@@ -44,8 +44,8 @@ old <-
   distinct() %>%
   tibble()
 
-new <- anti_join(smiles, old)
-# new <- smiles
+# new <- anti_join(smiles, old)
+new <- smiles
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
@@ -82,10 +82,23 @@ if (length(queries) != 0) {
 
 taxonomy_semiclean <- treat_npclassifier_json()
 
-df_semiclean <- df %>%
+df_semiclean_1 <- df %>%
+  filter(!is.na(class)) %>%
   select(-pathway, -superclass) %>%
-  full_join(taxonomy_semiclean) # %>%
-# distinct(smiles, class, glycoside, query, superclass, pathway)
+  full_join(taxonomy_semiclean, by = c("class" = "class"))
+
+df_semiclean_2 <- df %>%
+  filter(is.na(class) & !is.na(superclass)) %>%
+  select(-pathway) %>%
+  full_join(taxonomy_semiclean, by = c("superclass" = "superclass")) %>%
+  select(-class.y) %>%
+  rename(class = class.x)
+
+df_semiclean_3 <- df %>%
+  filter(is.na(class) & is.na(superclass))
+
+df_semiclean <-
+  rbind(df_semiclean_1, df_semiclean_2, df_semiclean_3)
 
 vroom_write_safe(
   x = df_semiclean,
