@@ -1279,6 +1279,6 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "210505_wikidata_query.tsv"
 
-pathLastFrozen <- "210523_frozen_metadata.csv.gz"
+pathLastFrozen <- "210715_frozen_metadata.csv.gz"
 
-pathLastFrozenDnp <- "210523_dnp_metadata.csv.gz"
+pathLastFrozenDnp <- "210715_dnp_metadata.csv.gz"
