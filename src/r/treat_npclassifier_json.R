@@ -44,7 +44,7 @@ treat_npclassifier_json <- function() {
   id_superclass <- list()
   id_class <- list()
 
-  for (i in seq_along(1:length(taxonomy_hierarchy_class))) {
+  for (i in seq_len(length(taxonomy_hierarchy_class))) {
     id_pathway[[i]] <- taxonomy_hierarchy_class[[i]]$Pathway
     id_superclass[[i]] <- taxonomy_hierarchy_class[[i]]$Superclass
     id_class[[i]] <- names(taxonomy_hierarchy_class[i])
@@ -61,7 +61,7 @@ treat_npclassifier_json <- function() {
 
   taxonomy_hierarchy_superclass <- taxonomy$Super_hierarchy
 
-  for (i in seq_along(1:length(taxonomy_hierarchy_superclass))) {
+  for (i in seq_len(length(taxonomy_hierarchy_superclass))) {
     id_pathway_2[[i]] <- taxonomy_hierarchy_superclass[[i]]$Pathway
     id_superclass[[i]] <- names(taxonomy_hierarchy_superclass[i])
   }
