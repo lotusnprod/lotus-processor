@@ -160,7 +160,7 @@ databases$add(
 
 databases$add(
   name = "dnp",
-  sourceFiles = list(tsv = "29_2/full_set.csv"),
+  sourceFiles = list(tsv = "30_1/full_set.csv"),
   interimFile = "dnp.tsv.gz"
 )
 
