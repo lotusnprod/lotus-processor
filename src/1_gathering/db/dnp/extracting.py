@@ -28,15 +28,18 @@ def outstatus(message, color='red'):
 def treat_file(content):
     """We use the XML parser to read the string 'content' containing the xml
     file content"""
-    tree = etree.XML(content)
+    try:
+        tree = etree.XML(content)
     # We call the subsuck function that will extract data (not everything) from
     # the XML
-    inchi = subsuck(data, tree)
+        inchi = subsuck(data, tree)
     # If the inchi is not here, add it to a list of problematic files (we don't
     # do anything with that yet)
-    if inchi is False:
-        problem_files.append(filename)
-    return inchi
+        if inchi is False:
+            problem_files.append(filename)
+        return inchi
+    except: print("error")
+
 
 
 def remove_tags(raw_html):
@@ -132,7 +135,7 @@ def subsuck(data, element, parname=''):
 print('DNP Cleaner')
 print('- Treating jar files')
 # We grab all the jar files
-for filename in glob.glob('../data/external/dbSource/dnp/29_2/JAR/*.jar'):
+for filename in glob.glob('../data/external/dbSource/dnp/30_1/xmlfiles/*.jar'):
     count = 0
     # We open the zip files
     with zipfile.ZipFile(filename, 'r') as zip:
@@ -145,7 +148,10 @@ for filename in glob.glob('../data/external/dbSource/dnp/29_2/JAR/*.jar'):
             # If the file is a cache file we do something with it
             if '.cache' in file.filename:
                 output = treat_file(zip.open(file.filename).read())
-                status = status & output
+                if output == True:
+                    status = status & output
+                else:
+                    status = status
                 if output is True:
                     success += 1
                 else:
@@ -176,13 +182,13 @@ order_rows = ["InChIKey", "MolfileName", "CRC_Number", "Molecule_Name",
               "Optical_Rotation", "Biological_Use", "Toxicity", "Use"]
 # Any compound with an inchi gets exported in full_set
 df[df.MolfileName.notnull()][order_rows].to_csv(
-    "../data/external/dbSource/dnp/29_2/full_set.csv", index=False)
+    "../data/external/dbSource/dnp/30_1/full_set.csv", index=False)
 
 print("- Generating the CSV with the InChi")
 order_rows_small = ["CRC_Number", "Molecule_Name",
                     "MolfileName"]
 # This is just a file with less columns, not really useful
-df[df.MolfileName.notnull()][order_rows_small].to_csv("../data/external/dbSource/dnp/29_2/id_inchi.csv",
+df[df.MolfileName.notnull()][order_rows_small].to_csv("../data/external/dbSource/dnp/30_1/id_inchi.csv",
                                                       index=False)
 # If there is last year data
 try:
