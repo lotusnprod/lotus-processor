@@ -8,8 +8,8 @@ export SRC_PATH ?= ${PWD}/src
 export BIN_PATH ?= ${PWD}/bin
 export TESTS_PATH ?= ${PWD}/tests
 
-export GNFINDER_VERSION = v0.14.1
-export GNVERIFIER_VERSION = v0.3.1
+export GNFINDER_VERSION = v0.15.0
+export GNVERIFIER_VERSION = v0.3.3
 export OPSIN_VERSION = 2.5.0
 
 export UNAME := $(shell uname)
