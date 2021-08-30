@@ -37,6 +37,7 @@ def MolFromInchi_fun(inchi):
         return m
     return None
 
+
 # def MolFromInchi_fun(inchi):
 #     m = Chem.MolFromInchi(inchi)
 #     if m:
@@ -90,6 +91,7 @@ def MolToIK_fun_safe(smiles, romol):
         print('Sayonara Babeee !')
         return None
 
+
 # It looks like the  Chem.RemoveStereochemistry should be defined this way and not assigned to a variable. See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
 
 def MolToFlatMol_fun(romol):
@@ -120,6 +122,7 @@ def MolToLogP_fun(romol):
 
 # defining the validator log output format
 fmt = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
+
 
 # save the Standardizer and LargestFragmentChooser classes as variables
 

@@ -37,8 +37,8 @@ try:
           + 'Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :'
           + ouput_file_path)
 except:
-    print('Please add input and output file path as first and second argument and SMILES and InChI column header as third and forth argument.')
-
+    print(
+        'Please add input and output file path as first and second argument and SMILES and InChI column header as third and forth argument.')
 
 # This load the associated params.yaml file were we can specify some variables of the script, here (head_lenght)
 # The pipeline can then just be rerunned using dvc repro
@@ -56,7 +56,7 @@ df = pd.read_csv(
     sep='\t')
 
 # eventually filter display some info, comment according to your needs
-#df = df[df['originaldb'] == 'tcm']
+# df = df[df['originaldb'] == 'tcm']
 # df = df.head(head_lenght)
 df.columns
 df.info()
@@ -67,7 +67,7 @@ fmt = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
 # save the Standardizer and LargestFragmentChooser classes as variables
 validator = Validator(log_format=fmt)
 s = Standardizer()
-#lf = LargestFragmentChooser()
+# lf = LargestFragmentChooser()
 lf = FragmentRemover()
 uc = Uncharger()
 
@@ -84,7 +84,7 @@ df = df[~df['ROMol'].isnull()]
 # Note that these are sequentially applied
 df['validatorLog'] = df['ROMol'].apply(validator.validate)
 df['ROMolSanitized'] = df['ROMol'].apply(s.standardize)
-#df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.choose)
+# df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.choose)
 df['ROMolSanitizedLargestFragment'] = df['ROMolSanitized'].apply(lf.remove)
 df['ROMolSanitizedLargestFragmentUncharged'] = df['ROMolSanitizedLargestFragment'].apply(
     uc.uncharge)

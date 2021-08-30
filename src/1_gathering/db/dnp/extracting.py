@@ -30,16 +30,16 @@ def treat_file(content):
     file content"""
     try:
         tree = etree.XML(content)
-    # We call the subsuck function that will extract data (not everything) from
-    # the XML
+        # We call the subsuck function that will extract data (not everything) from
+        # the XML
         inchi = subsuck(data, tree)
-    # If the inchi is not here, add it to a list of problematic files (we don't
-    # do anything with that yet)
+        # If the inchi is not here, add it to a list of problematic files (we don't
+        # do anything with that yet)
         if inchi is False:
             problem_files.append(filename)
         return inchi
-    except: print("error")
-
+    except:
+        print("error")
 
 
 def remove_tags(raw_html):

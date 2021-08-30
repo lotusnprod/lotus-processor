@@ -1,17 +1,41 @@
 {
-    "file": "https://gitlab.com/lotus7/lotusProcessor/-/raw/main/src/4_visualizing/upset_tables/lotus_upset.csv",
-    "name": "TestLotus",
-    "header": 0,
-    "separator": ",",
-    "skip": 0,
-    "meta": [
-        { "type": "id", "index": 1, "name": "structure_inchikey" },
-    { "type": "string", "index": 2, "name": "structure_molecular_formula" },
-    { "type": "string", "index": 4, "name": "structure_taxonomy_npclassifier_01pathway" },
-    { "type": "string", "index": 5, "name": "structure_taxonomy_npclassifier_02superclass" },
-    { "type": "string", "index": 6, "name": "structure_taxonomy_npclassifier_03class" }
-    ],
-    "sets": [
-        { "format": "binary", "start": 27, "end": 34 }
-    ]
+  "file": "https://gitlab.com/lotus7/lotusProcessor/-/raw/main/src/4_visualizing/upset_tables/lotus_upset.csv",
+  "name": "TestLotus",
+  "header": 0,
+  "separator": ",",
+  "skip": 0,
+  "meta": [
+    {
+      "type": "id",
+      "index": 1,
+      "name": "structure_inchikey"
+    },
+    {
+      "type": "string",
+      "index": 2,
+      "name": "structure_molecular_formula"
+    },
+    {
+      "type": "string",
+      "index": 4,
+      "name": "structure_taxonomy_npclassifier_01pathway"
+    },
+    {
+      "type": "string",
+      "index": 5,
+      "name": "structure_taxonomy_npclassifier_02superclass"
+    },
+    {
+      "type": "string",
+      "index": 6,
+      "name": "structure_taxonomy_npclassifier_03class"
+    }
+  ],
+  "sets": [
+    {
+      "format": "binary",
+      "start": 27,
+      "end": 34
+    }
+  ]
 }

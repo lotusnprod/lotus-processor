@@ -215,9 +215,9 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
     'Oleanane triterpenoids', 'Cyclic peptides', 'Flavonols', 'Germacrane sesquiterpenoids',
-    'Flavones', 'Lanostane, Tirucallane and Euphane triterpenoids','Guaiane sesquiterpenoids',
-    'Cinnamic acids and derivatives','Quassinoids', 'Carotenoids (C40, β-β)'
-    ], data, labels)
+    'Flavones', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Guaiane sesquiterpenoids',
+    'Cinnamic acids and derivatives', 'Quassinoids', 'Carotenoids (C40, β-β)'
+], data, labels)
 
 # count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
 # simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
@@ -227,8 +227,8 @@ cmap = mcolors.ListedColormap(["gainsboro", "peachpuff", "salmon", "tomato"])
 cmap2 = mcolors.ListedColormap(["gainsboro", "tomato"])
 cmap3 = mcolors.ListedColormap(["gainsboro", "#b15928"])
 cmap4 = mcolors.ListedColormap(
-    ["gainsboro", "#8cd17d", "#4e79a7", "#e15759", "#499894", "#ff9d9a", 
-    "#86bcb6", "#b6992d", "#d37295", "#59a14f", "#f1ce63"])
+    ["gainsboro", "#8cd17d", "#4e79a7", "#e15759", "#499894", "#ff9d9a",
+     "#86bcb6", "#b6992d", "#d37295", "#59a14f", "#f1ce63"])
 
 # Generate a labels column
 df_gb["labels"] = (

@@ -17,11 +17,13 @@ data_original <- read_delim(file = gzfile(database$sourceFiles$tsv)) %>%
 
 # selecting
 data_selected <- data_original %>%
-  select(uniqueid,
-         name,
-         smiles,
-         biologicalsource,
-         reference) %>%
+  select(
+    uniqueid,
+    name,
+    smiles,
+    biologicalsource,
+    reference
+  ) %>%
   cSplit("biologicalsource", "     ") %>%
   cSplit("reference", "§") %>%
   cSplit("reference_1", ",", direction = "long") %>%

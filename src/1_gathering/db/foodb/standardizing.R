@@ -5,49 +5,43 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
+library(stringr)
+library(tidyr)
 
 # get paths
 database <- databases$get("foodb")
 
 # files
 compounds_flavors <-
-  vroom(
-    file = database$sourceFiles$tsvCompoundsFlavors,
-    delim = ","
+  read_delim(
+    file = database$sourceFiles$tsvCompoundsFlavors
   ) %>%
   mutate_all(as.character)
 
 compounds <- read_delim(
-  file = database$sourceFiles$tsvCompounds,
-  delim = ","
+  file = database$sourceFiles$tsvCompounds
 ) %>%
   mutate_all(as.character)
 
-contents <- vroom(
-  file = database$sourceFiles$tsvContent,
-  delim = ","
+contents <- read_delim(
+  file = database$sourceFiles$tsvContent
 ) %>%
   mutate_all(as.character)
 
-flavors <- vroom(
-  file = database$sourceFiles$tsvFlavor,
-  delim = ","
+flavors <- read_delim(
+  file = database$sourceFiles$tsvFlavor
 ) %>%
   mutate_all(as.character)
 
-foods <- vroom(
-  file = database$sourceFiles$tsvFood,
-  delim = ",",
-  quote = ""
+foods <- read_delim(
+  file = database$sourceFiles$tsvFood
 ) %>%
   mutate_all(as.character)
 
-references <- vroom(
+references <- read_delim(
   file = database$sourceFiles$tsvReference,
-  delim = ","
 ) %>%
   mutate_all(as.character)
 

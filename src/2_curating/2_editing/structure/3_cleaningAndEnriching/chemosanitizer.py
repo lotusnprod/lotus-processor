@@ -14,11 +14,10 @@ Copyright (c) 2020 Your Company
 HISTORY:
 '''
 
-
 # importing packages
 import errno
 import os
-import chemosanitizer_functions
+
 from chemosanitizer_functions import *
 
 # defining the command line arguments
@@ -85,7 +84,6 @@ for i in range(0, len(list_df)):
     if __name__ == "__main__":
         # with multiprocessing.Pool(multiprocessing.cpu_count() - 2 ) as pool:
         with multiprocessing.Pool(int(cpus)) as pool:
-
             # list_df[i].to_csv(
             #     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/2_cleaned/structure/outfirst38%i.csv" % i ,
             #     sep = '\t',
@@ -122,12 +120,13 @@ for i in range(0, len(list_df)):
 
             # Below we flatten the ROMol object and generate corresponding SMILES and InChI encodings
             list_df[i]['flatROMol'] = pool.map(MolToFlatMol_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            #print(list_df[i]['flatROMol'])
+            # print(list_df[i]['flatROMol'])
             list_df[i]['smilesSanitizedFlat'] = pool.map(MolToSmiles_fun, list_df[i]['flatROMol'])
-            list_df[i]['inchiSanitizedFlat'] = pool.starmap(MolToInchi_fun_safe, zip(list_df[i]['smilesSanitizedFlat'], list_df[i]['flatROMol']))
+            list_df[i]['inchiSanitizedFlat'] = pool.starmap(MolToInchi_fun_safe, zip(list_df[i]['smilesSanitizedFlat'],
+                                                                                     list_df[i]['flatROMol']))
             list_df[i].drop('flatROMol', axis=1, inplace=True)
 
-            #list_df[i]['inchikeySanitized'] = pool.map(MolToIK_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
+            # list_df[i]['inchikeySanitized'] = pool.map(MolToIK_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
             list_df[i]['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(
                 list_df[i]['smilesSanitized'], list_df[i]['ROMolSanitizedLargestFragmentUncharged']))
             list_df[i]['shortikSanitized'] = list_df[i]['inchikeySanitized'].str.split(
