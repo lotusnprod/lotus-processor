@@ -4,10 +4,10 @@
 source("paths.R")
 source("r/parallel.R")
 
-library(tidyverse)
-library(pbmcapply)
-library(parallel)
 library(data.table)
+library(dplyr)
+library(parallel)
+library(pbmcapply)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
 

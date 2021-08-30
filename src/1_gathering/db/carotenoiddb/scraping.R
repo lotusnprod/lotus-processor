@@ -4,12 +4,12 @@
 source("paths.R")
 source("r/parallel.R")
 
-library(pbmcapply)
-library(parallel)
 library(data.table)
-library(splitstackshape) # provides cSplit
+library(dplyr)
+library(parallel)
+library(pbmcapply)
 library(rvest) # provides read_html
-library(tidyverse) # provides pivot_wider
+library(tidyr) # provides pivot_wider
 
 # get paths
 database <- databases$get("carotenoiddb")
@@ -17,10 +17,7 @@ database <- databases$get("carotenoiddb")
 ## files
 ids <- read_delim(
   file = database$sourceFiles$tsvInchi,
-  delim = "\t",
-  escape_double = FALSE,
   col_names = FALSE,
-  trim_ws = TRUE
 ) %>%
   mutate_all(as.character)
 

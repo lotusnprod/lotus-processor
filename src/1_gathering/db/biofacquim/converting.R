@@ -4,8 +4,6 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
 library(ChemmineR)
 
 # get paths

@@ -12,10 +12,7 @@ library(vroom)
 database <- databases$get("npatlas")
 
 ## files
-data_original <- vroom(
-  file = database$sourceFiles$tsv,
-  delim = "\t"
-)
+data_original <- read_delim(file = database$sourceFiles$tsv)
 
 # selecting
 data_selected <- data_original %>%

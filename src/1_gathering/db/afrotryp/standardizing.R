@@ -2,22 +2,18 @@
 
 # loading paths
 source("paths.R")
-source("r/database.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(Hmisc)
-library(tidyverse)
-library(vroom)
+library(readr)
 
 # get paths
 database <- databases$get("afrotryp")
 
 # files
 data_original <-
-  vroom(
-    file = unz(database$sourceFiles$tsv, "AFROTRYP.tsv"),
-    delim = "\t",
-  ) %>%
+  read_delim(file = unz(database$sourceFiles$tsv, "AFROTRYP.tsv")) %>%
   mutate_all(as.character)
 
 # selecting
