@@ -4,19 +4,18 @@
 ## paths
 source("paths.R")
 
+library(dplyr)
 library(Hmisc)
+library(readr)
 library(readxl)
 library(splitstackshape)
 library(stringi)
 library(tidyverse)
-library(vroom)
 
 ## functions
-source("r/database.R")
 source("r/y_as_na.R")
 source("r/tcm_cleaning.R")
 source("r/tcm_inverting.R")
-source("r/vroom_safe.R")
 
 ## files
 ### dictionary from TMMC
@@ -33,9 +32,8 @@ tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
   distinct(biologicalsource, .keep_all = TRUE)
 
 ### dictionary from TCMID
-tcmNamesDic_2 <- vroom(
+tcmNamesDic_2 <- read_delim(
   file = pathDataExternalTranslationSourceTcmTcmid,
-  delim = "\t"
 ) %>%
   select(
     latin = `Latin Name`,
@@ -66,8 +64,6 @@ tcmNamesDic_3 <-
 latinGenitiveIDic <- read_delim(
   file = pathDataInterimDictionariesLatinGenitiveI,
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
 ) %>%
   mutate(n = str_count(string = genitive)) %>%
   arrange(desc(n)) %>%
@@ -77,8 +73,6 @@ latinGenitiveIDic <- read_delim(
 latinGenitiveIsDic <- read_delim(
   file = pathDataInterimDictionariesLatinGenitiveIs,
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
 ) %>%
   mutate(n = str_count(string = genitive)) %>%
   arrange(desc(n)) %>%
@@ -88,16 +82,12 @@ latinGenitiveIsDic <- read_delim(
 latinGenitivePartsDic <- read_delim(
   file = pathDataInterimDictionariesLatinPlantParts,
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
 )
 
 ## manually subtracted entries
 manualSubtraction <- read_delim(
   file = pathDataInterimDictionariesTcmManualSubtraction,
   delim = "\t",
-  escape_double = FALSE,
-  trim_ws = TRUE
 )
 
 # cleaning
@@ -369,20 +359,14 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
   filter(vernacularName != canonicalName | is.na(newCanonicalName))
 
 # exporting
-vroom_write(
+write_delim(
   x = tcmNamesDicCurated,
-  path = gzfile(
+  file = gzfile(
     description = pathDataInterimDictionariesTcmNames,
     compression = 9,
     encoding = "UTF-8"
   ),
-  num_threads = 1,
-  bom = TRUE,
   quote = "none",
-  escape = "double",
-  delim = "\t",
-  col_names = TRUE,
-  progress = TRUE,
-  append = FALSE
+  escape = "double"
 )
 ## because of univocity parser settings

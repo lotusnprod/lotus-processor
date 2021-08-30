@@ -1,5 +1,7 @@
 # title: "wakankensaku scrapeR"
 
+## NOT WORKING ANYMORE
+
 # loading paths
 source("paths.R")
 source("r/parallel.R")
@@ -9,7 +11,7 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
-library(tidyverse) # provides pivot_wider
+library(xml2)
 
 # get paths
 database <- databases$get("wakankensaku")
