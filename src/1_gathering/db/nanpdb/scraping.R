@@ -10,6 +10,7 @@ library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
+library(xml2)
 
 # get paths
 database <- databases$get("nanpdb")

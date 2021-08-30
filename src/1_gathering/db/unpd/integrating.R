@@ -4,25 +4,19 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
+library(dplyr)
+library(readr)
 
 # get paths
 database <- databases$get("unpd")
 
 ## files
 data_original <- read_delim(
-  file = database$sourceFiles$tsvJo,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE
+  file = database$sourceFiles$tsvJo
 )
 
 data_original_ISDB <- read_delim(
-  file = database$sourceFiles$tsvPm,
-  delim = ",",
-  escape_double = FALSE,
-  trim_ws = TRUE
+  file = database$sourceFiles$tsvPm
 )
 
 # selecting

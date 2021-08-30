@@ -5,17 +5,16 @@ source("paths.R")
 source("r/standardizing_original.R")
 source("r/y_as_na.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
+library(stringr)
 
 # get paths
 database <- databases$get("npcare")
 
 ## files
-data_original <- vroom(
+data_original <- read_delim(
   file = database$sourceFiles$tsv,
-  delim = ";",
   col_types = cols(.default = "c")
 )
 

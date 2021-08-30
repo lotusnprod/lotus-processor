@@ -4,17 +4,17 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
+library(tidyr)
 
 # get paths
 database <- databases$get("phytohub")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  quote = ""
+  file = gzfile(database$sourceFiles$tsv)
 ) %>%
   mutate_all(as.character)
 

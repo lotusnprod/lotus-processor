@@ -4,18 +4,16 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
 
 # get paths
 database <- databases$get("streptomedb")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  quote = ""
+data_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsv)
 )
 
 ## selecting

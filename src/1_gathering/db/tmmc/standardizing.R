@@ -4,9 +4,11 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(readxl)
 library(splitstackshape)
-library(tidyverse)
+library(stringr)
+library(tidyr)
 
 # get paths
 database <- databases$get("tmmc")

@@ -4,9 +4,9 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(Hmisc)
-library(tidyverse)
-library(vroom)
+library(readr)
 
 # get paths
 database <- databases$get("napralert")
@@ -14,7 +14,6 @@ database <- databases$get("napralert")
 ## files
 dataOriginal <- read_delim(
   file = gzfile(database$sourceFiles$tsvOriginal),
-  delim = "\t",
   col_types = cols(.default = "c")
 ) %>%
   mutate(
@@ -36,9 +35,8 @@ dataOriginal <- read_delim(
     reference_journal = `?journal`
   )
 
-dataMatched <- vroom(
+dataMatched <- read_delim(
   file = gzfile(database$sourceFiles$tsvMatched),
-  delim = "\t",
   col_types = cols(.default = "c")
 ) %>%
   mutate(

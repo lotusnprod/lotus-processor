@@ -4,9 +4,10 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(readxl)
 library(splitstackshape)
-library(tidyverse)
+library(stringr)
 
 # get paths
 database <- databases$get("pamdb")
@@ -30,10 +31,9 @@ data_selected <- data_original %>%
 
 data_manipulated <- data_selected %>%
   cSplit("reference",
-    sep = "Pubmed:",
-    fixed = TRUE,
-    stripWhite = FALSE
-  ) %>%
+         sep = "Pubmed:",
+         fixed = TRUE,
+         stripWhite = FALSE) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_title = str_extract(string = reference_1, pattern = "\".*\""),
@@ -44,10 +44,9 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   cSplit("reference_2",
-    sep = " ",
-    fixed = TRUE,
-    stripWhite = FALSE
-  ) %>%
+         sep = " ",
+         fixed = TRUE,
+         stripWhite = FALSE) %>%
   mutate_all(as.character) %>%
   select(
     uniqueid,
@@ -69,11 +68,9 @@ data_standard <-
     db = "pamdb",
     structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
     organism_field = "organism_clean",
-    reference_field = c(
-      "reference_original",
-      "reference_pubmed",
-      "reference_title"
-    )
+    reference_field = c("reference_original",
+                        "reference_pubmed",
+                        "reference_title")
   )
 
 # exporting

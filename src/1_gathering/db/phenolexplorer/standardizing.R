@@ -4,57 +4,50 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(splitstackshape)
-library(tidyverse)
+library(readr)
 library(readxl)
-library(vroom)
+library(tidyr)
 
 # get paths
 database <- databases$get("phenolexplorer")
 
 # loading all files
 compounds_classification <-
-  vroom(
-    file = database$sourceFiles$tsvCompoundsClassification,
-    delim = ","
+  read_delim(
+    file = database$sourceFiles$tsvCompoundsClassification
   )
 
 compounds_structures <-
-  vroom(
-    file = database$sourceFiles$tsvCompoundsStructures,
-    delim = ","
+  read_delim(
+    file = database$sourceFiles$tsvCompoundsStructures
   )
 
-compounds <- vroom(
-  file = database$sourceFiles$tsvCompounds,
-  delim = ","
+compounds <- read_delim(
+  file = database$sourceFiles$tsvCompounds
 )
 
 foods_classification <-
-  vroom(
-    file = database$sourceFiles$tsvFoodsClassification,
-    delim = ","
+  read_delim(
+    file = database$sourceFiles$tsvFoodsClassification
   )
 
-foods <- vroom(
-  file = database$sourceFiles$tsvFoods,
-  delim = ","
+foods <- read_delim(
+  file = database$sourceFiles$tsvFoods
 )
 
 metabolites_structures <-
-  vroom(
-    file = database$sourceFiles$tsvMetabolitesStructures,
-    delim = ","
+  read_delim(
+    file = database$sourceFiles$tsvMetabolitesStructures
   )
 
-metabolites <- vroom(
-  file = database$sourceFiles$tsvMetabolites,
-  delim = ","
+metabolites <- read_delim(
+  file = database$sourceFiles$tsvMetabolites
 )
 
-publications <- vroom(
-  file = database$sourceFiles$tsvPublications,
-  delim = ","
+publications <- read_delim(
+  file = database$sourceFiles$tsvPublications
 )
 
 composition <-

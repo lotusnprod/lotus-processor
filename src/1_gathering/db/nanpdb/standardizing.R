@@ -4,17 +4,16 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(readr)
 
 # get paths
 database <- databases$get("nanpdb")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t"
+data_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsv)
 ) %>%
   mutate_all(as.character) %>%
   mutate(id = row.names(.))

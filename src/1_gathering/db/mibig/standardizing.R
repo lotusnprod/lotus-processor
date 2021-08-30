@@ -5,11 +5,12 @@ source("paths.R")
 source("r/standardizing_original.R")
 source("r/parallel.R")
 
+library(dplyr)
 library(jsonlite)
 library(parallel)
 library(pbmcapply)
 library(splitstackshape)
-library(tidyverse)
+library(tidyr)
 
 # get paths
 database <- databases$get("mibig")

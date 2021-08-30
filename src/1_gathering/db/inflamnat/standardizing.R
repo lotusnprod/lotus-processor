@@ -4,9 +4,10 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(readxl)
 library(splitstackshape)
-library(tidyverse)
+library(stringr)
 
 # get paths
 database <- databases$get("inflamnat")

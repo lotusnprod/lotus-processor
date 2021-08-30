@@ -4,44 +4,39 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
 
 # get paths
 database <- databases$get("wikidata")
 
 ## files
 data_organism <-
-  vroom(
-    file = wikidataLotusExporterDataOutputTaxaPath,
-    delim = "\t"
+  read_delim(
+    file = wikidataLotusExporterDataOutputTaxaPath
   )
 
 data_structures <-
-  vroom(
-    file = wikidataLotusExporterDataOutputStructuresPath,
-    delim = "\t"
+  read_delim(
+    file = wikidataLotusExporterDataOutputStructuresPath
   )
 
 data_references <-
-  vroom(
-    file = wikidataLotusExporterDataOutputReferencesPath,
-    delim = "\t"
+  read_delim(
+    file = wikidataLotusExporterDataOutputReferencesPath
   )
 
 data_triples <-
-  vroom(
-    file = wikidataLotusExporterDataOutputTriplesPath,
-    delim = "\t"
+  read_delim(
+    file = wikidataLotusExporterDataOutputTriplesPath
   )
 
 data_temp <-
-  vroom(
+  read_delim(
     file = file.path(
       pathDataExternalDbSource,
-      "210426_wikidata_query.tsv"
-    ),
-    delim = "\t"
+      "210505_wikidata_query.tsv"
+    )
   )
 
 # manipulating

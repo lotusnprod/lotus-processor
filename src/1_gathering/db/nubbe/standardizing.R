@@ -5,26 +5,15 @@ source("paths.R")
 source("r/parallel.R")
 source("r/standardizing_original.R")
 
-library(data.table)
+library(dplyr)
 library(splitstackshape) # provides cSplit
-library(rvest) # provides read_html
-library(tidyverse) # provides pivot_wider
 library(XML)
 
 # get paths
 database <- databases$get("nubbe")
 
 ## files
-ids <- read_delim(
-  file = database$sourceFiles$tsv,
-  delim = "\t",
-  escape_double = FALSE,
-  col_names = FALSE,
-  trim_ws = TRUE
-) %>%
-  mutate_all(as.character)
-
-X <- ids$X1
+X <- database$sourceFiles$tsv
 
 list <- list()
 

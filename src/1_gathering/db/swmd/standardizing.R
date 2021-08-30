@@ -4,15 +4,14 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
 
 # get paths
 database <- databases$get("swmd")
 
 ## files
-data_original <- vroom(
+data_original <- read_delim(
   file = gzfile(database$sourceFiles$tsv),
   delim = "\t"
 )
