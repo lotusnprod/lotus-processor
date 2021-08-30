@@ -5,17 +5,17 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(tidyr)
 
 # get paths
 database <- databases$get("cyanometdb")
 
 ## files
-data_original <- vroom(
+data_original <- read_delim(
   file = database$sourceFiles$tsv,
-  delim = ",",
   trim_ws = FALSE
 ) %>%
   mutate_all(as.character)

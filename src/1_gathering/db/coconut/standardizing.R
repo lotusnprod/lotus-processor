@@ -5,18 +5,17 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(stringr)
 
 # get paths
 database <- databases$get("coconut")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  quote = ""
+data_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsv)
 )
 
 # selecting

@@ -14,11 +14,10 @@ Copyright (c) 2020 Your Company
 HISTORY:
 '''
 
-
 # importing packages
 import errno
 import os
-import chemosanitizer_functions
+
 from chemosanitizer_functions import *
 
 # defining the command line arguments

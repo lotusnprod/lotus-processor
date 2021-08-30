@@ -4,19 +4,18 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(stringr)
+library(tidyr)
 
 # get paths
 database <- databases$get("carotenoiddb")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  quote = ""
-) %>%
+data_original <-
+  read_delim(file = gzfile(database$sourceFiles$tsv)) %>%
   mutate_all(as.character)
 
 # manipulating

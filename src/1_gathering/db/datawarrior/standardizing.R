@@ -4,18 +4,15 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
 
 # get paths
 database <- databases$get("datawarrior")
 
 ## files
-data_original <- vroom(
-  file = database$sourceFiles$tsv,
-  delim = "\t"
-) %>%
+data_original <- read_delim(file = database$sourceFiles$tsv) %>%
   mutate_all(as.character)
 
 # manipulating

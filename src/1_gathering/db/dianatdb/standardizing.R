@@ -4,8 +4,8 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(readxl)
-library(tidyverse)
 
 # get paths
 database <- databases$get("dianatdb")

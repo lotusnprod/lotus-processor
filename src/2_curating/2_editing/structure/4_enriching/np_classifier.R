@@ -100,7 +100,9 @@ df_semiclean_3 <- df %>%
 df_semiclean <-
   rbind(df_semiclean_1, df_semiclean_2, df_semiclean_3) %>%
   filter(!is.na(query)) %>%
-  filter(!is.na(class) | !is.na(superclass) | !is.na(pathway)) %>%
+  filter(!is.na(class) |
+    !is.na(superclass) |
+    !is.na(pathway)) %>%
   distinct()
 
 vroom_write_safe(

@@ -4,35 +4,35 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(readr)
 
 # get paths
 database <- databases$get("drduke")
 
 ## files
-data_common <- vroom(
+data_common <- read_delim(
   file = database$sourceFiles$tsvCommon,
   delim = ",",
   col_types = cols(.default = "c")
 ) %>%
   select(FNFNUM, CNNAM)
 
-data_farmacy <- vroom(
+data_farmacy <- read_delim(
   file = database$sourceFiles$tsvFarmacy,
   delim = ",",
   col_types = cols(.default = "c")
 )
 
-data_fntax <- vroom(
+data_fntax <- read_delim(
   file = database$sourceFiles$tsvTaxa,
   delim = ",",
   col_types = cols(.default = "c")
 ) %>%
   select(FNFNUM, TAXON)
 
-data_reference <- vroom(
+data_reference <- read_delim(
   file = database$sourceFiles$tsvReference,
   delim = ",",
   col_types = cols(.default = "c")

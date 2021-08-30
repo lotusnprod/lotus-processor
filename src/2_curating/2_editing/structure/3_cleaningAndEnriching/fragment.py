@@ -13,11 +13,9 @@ This module contains tools for dealing with molecules with more than one covalen
 
 import logging
 
+from molvs.utils import memoized_property
 from rdkit import Chem
 from rdkit.Chem import rdMolDescriptors
-
-from molvs.utils import memoized_property
-
 
 log = logging.getLogger(__name__)
 
@@ -134,7 +132,8 @@ REMOVE_FRAGMENTS = (
     FragmentPattern('2-Methyl-2-butene',
                     '[#6]-[#6]=[#6](-[#6])-[#6]'),  # added pma
     FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol',
-                    '[#6]-[#6]-1=[#6](-[#6](=[#8])-[#7](-[#7]-1)-c2ccc(cc2)-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]'),  # added pma
+                    '[#6]-[#6]-1=[#6](-[#6](=[#8])-[#7](-[#7]-1)-c2ccc(cc2)-[#7+](=[#8])-[#8-])-[#7+](=[#8])-[#8-]'),
+    # added pma
     FragmentPattern('3-Methyl-4-nitro-1-(4-nitrophenyl)-1H-pyrazol-5-ol ion',
                     '[#6]-c1nn(c(c1-[#7+](-[#8-])=[#8])-[#8])-c2ccc(cc2)-[#7+](-[#8-])=[#8]'),  # added pma
     FragmentPattern(
