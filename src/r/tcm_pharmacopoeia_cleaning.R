@@ -1,5 +1,5 @@
-" Title
-#"
+#' Title
+#'
 #' @param x
 #'
 #' @return

@@ -7,21 +7,18 @@ log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
 
-log_debug("... functions")
-source("r/log.R")
-source("r/vroom_safe.R")
-
 log_debug("loading ...")
 log_debug("... libraries")
 library(DBI)
+library(dplyr)
+library(readr)
 library(rotl)
 library(RSQLite)
-library(tidyverse)
 
 canonical_name_colname <- "organismCleaned"
 
 fullOrganisms <-
-  vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
+  read_delim(file = pathDataInterimDictionariesOrganismDictionary)
 
 drv <- SQLite()
 
