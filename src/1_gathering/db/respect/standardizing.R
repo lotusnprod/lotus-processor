@@ -5,9 +5,11 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(gdata)
 library(splitstackshape)
-library(tidyverse)
+library(stringr)
+library(tibble)
 
 # get paths
 database <- databases$get("respect")

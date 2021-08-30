@@ -4,9 +4,8 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
 
 # get paths
 database <- databases$get("npatlas")

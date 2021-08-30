@@ -5,23 +5,17 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
+library(stringr)
+library(tidyr)
 
 # get paths
 database <- databases$get("sancdb")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+data_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsv)
 )
 
 #  cleaning

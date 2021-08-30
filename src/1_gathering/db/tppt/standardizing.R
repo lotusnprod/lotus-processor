@@ -5,10 +5,9 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(readxl)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
 
 # get paths
 database <- databases$get("tppt")

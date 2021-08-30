@@ -5,39 +5,33 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
-library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(dplyr)
+library(readr)
 
 # get paths
 database <- databases$get("npass")
 
 ## files
-data_original_1 <- vroom(
-  file = database$sourceFiles$tsvGeneral,
-  delim = "\t",
-  quote = ""
+data_original_1 <- read_delim(
+  file = database$sourceFiles$tsvGeneral
 ) %>%
   mutate_all(as.character) %>%
   data.frame()
 
-data_original_2 <- vroom(
-  file = database$sourceFiles$tsvProperties,
-  delim = "\t"
+data_original_2 <- read_delim(
+  file = database$sourceFiles$tsvProperties
 ) %>%
   mutate_all(as.character) %>%
   data.frame()
 
-data_original_3 <- vroom(
+data_original_3 <- read_delim(
   file = database$sourceFiles$tsvSpeciesInfo,
-  delim = "\t",
   col_types = cols(.default = "c")
 ) %>%
   data.frame()
 
-data_original_4 <- vroom(
+data_original_4 <- read_delim(
   file = database$sourceFiles$tsvSpeciesPair,
-  delim = "\t",
   col_types = cols(.default = "c")
 ) %>%
   data.frame()

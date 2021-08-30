@@ -11,6 +11,7 @@ library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
 library(rvest) # provides read_html
+library(xml2)
 
 # get paths
 database <- databases$get("knapsack")
@@ -18,7 +19,7 @@ database <- databases$get("knapsack")
 url <-
   "http://www.knapsackfamily.com/knapsack_core/information.jsp?word=C00"
 
-X <- 1:52045
+X <- 1:58823
 
 GetKnapSackTable <- function(X) {
   tryCatch(
