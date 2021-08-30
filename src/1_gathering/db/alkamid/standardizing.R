@@ -4,32 +4,24 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(readr)
+library(tidyr)
 
 # get paths
 database <- databases$get("alkamid")
 
 ## db
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t",
-  quote = ""
+data_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsv)
 ) %>%
   mutate_all(as.character) %>%
   mutate(id = row.names(.))
 
 ## ref
-ref_original <- vroom(
-  file = gzfile(database$sourceFiles$tsvRef),
-  delim = "\t",
-  col_names = TRUE,
-  id = NULL,
-  progress = TRUE,
-  escape_double = FALSE,
-  trim_ws = TRUE,
-  quote = ""
+ref_original <- read_delim(
+  file = gzfile(database$sourceFiles$tsvRef)
 ) %>%
   mutate_all(as.character)
 

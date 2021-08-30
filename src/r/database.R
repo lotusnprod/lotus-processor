@@ -1,4 +1,4 @@
-library(vroom)
+library(readr)
 
 # These are helpers functions and classes to handle the databases
 
@@ -17,20 +17,13 @@ Database <-
     ),
     methods = list(
       writeFile = function(file, data) {
-        vroom_write(
+        write_delim(
           x = data,
-          path = gzfile(
+          file = gzfile(
             description = file,
             compression = 9,
             encoding = "UTF-8"
-          ),
-          num_threads = 1,
-          bom = TRUE,
-          quote = "needed",
-          delim = "\t",
-          col_names = TRUE,
-          progress = TRUE,
-          append = FALSE
+          )
         )
       },
       writeInterim = function(data) {

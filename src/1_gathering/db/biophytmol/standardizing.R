@@ -4,29 +4,24 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
+library(dplyr)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
 
 # get paths
 database <- databases$get("biophytmol")
 
 ## files
-data_original <- vroom(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t"
-) %>%
+data_original <- read_delim(file = gzfile(database$sourceFiles$tsv)) %>%
   mutate_all(as.character)
 
 # selecting
 data_selected <- data_original %>%
-  select(
-    uniqueid,
-    name,
-    smiles,
-    biologicalsource,
-    reference
-  ) %>%
+  select(uniqueid,
+         name,
+         smiles,
+         biologicalsource,
+         reference) %>%
   cSplit("biologicalsource", "     ") %>%
   cSplit("reference", "§") %>%
   cSplit("reference_1", ",", direction = "long") %>%

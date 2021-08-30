@@ -4,12 +4,12 @@
 source("paths.R")
 source("r/parallel.R")
 
-library(pbmcapply)
-library(parallel)
 library(data.table)
-library(splitstackshape) # provides cSplit
+library(dplyr)
+library(parallel)
+library(pbmcapply)
 library(rvest) # provides read_html
-library(tidyverse) # provides pivot_wider
+library(tidyr) # provides pivot_wider
 
 # get paths
 database <- databases$get("biophytmol")
