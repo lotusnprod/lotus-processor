@@ -8,13 +8,13 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(data.table)
+library(dplyr)
 library(jsonlite)
-library(tidyverse)
-source("r/vroom_safe.R")
+library(readr)
+library(tidyr)
 
 classyfire_old <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryClassyfireFile) %>%
+  read_delim(file = pathDataInterimDictionariesStructureDictionaryClassyfireFile) %>%
   distinct(structureCleanedInchikey3D, .keep_all = TRUE) %>%
   select(
     structureCleanedInchikey = structureCleanedInchikey3D,
@@ -23,20 +23,23 @@ classyfire_old <-
     structureCleaned_classyfire_3class = structureCleaned_3class,
     structureCleaned_classyfire_4subclass = structureCleaned_4subclass,
     structureCleaned_classyfire_5directParent = structureCleaned_5directParent
-  ) %>%
-  tibble()
+  )
 
 classyfire_json <-
   fromJSON(txt = "../data/external/taxonomySource/structure/classyfire/tax_nodes.json")
 
 classyfire_direct_parent <-
-  vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz") %>%
+  read_delim(
+    file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+    delim = "\t"
+  ) %>%
   distinct(inchikey,
     chemontId = directParent
   )
 
 # classyfire_alternative_parent <-
-#   vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz") %>%
+#   read_delim(file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz",
+#              delim = "\t") %>%
 #   distinct(inchikey,
 #            chemontId)
 #
@@ -332,8 +335,7 @@ chemical_taxonomy_2 <- classy_temp %>%
     structure_taxonomy_classyfire_02superclass = `02superclass`,
     structure_taxonomy_classyfire_03class = `03class`,
     structure_taxonomy_classyfire_04directparent = direct_parent,
-  ) %>%
-  tibble()
+  )
 
 end <- Sys.time()
 

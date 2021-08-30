@@ -7,7 +7,7 @@ channels:
 dependencies:
   - beautifulsoup4
   - cirpy
-  - dvc>=2.5.0
+  - dvc>=2.6.4
   - dvc-s3 ## needed by the new versions of dvc
   - ipykernel
   - lxml
@@ -35,15 +35,19 @@ dependencies:
   - r-data.table
   - r-dplyr
   - r-DBI
+  - r-forcats
   - r-gdata
   - r-ggalluvial
   - r-ggfittext
   - r-ggnewscale
+  - r-ggplot2
   - r-ggraph
   - r-hmisc
   - r-jsonlite
   - r-pbmcapply
   - r-plotly
+  - r-purrr
+  - r-readr
   - r-readxl
   - r-rentrez
   - r-rotl
@@ -55,11 +59,12 @@ dependencies:
   - r-splitstackshape
   - r-stringdist
   - r-stringi
+  - r-stringr
   - r-testthat
+  - r-tibble
   - r-tidytree ## needed by ggtree
-  - r-tidyverse
+  - r-tidyr
   - r-upsetr
-  - r-vroom>=1.5.0 # since 1.4.0 was not able to read quoted gzip properly 
   - r-webchem
   - r-XML
   - r-xml2

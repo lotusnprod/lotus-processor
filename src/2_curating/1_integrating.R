@@ -13,13 +13,14 @@ source("paths.R")
 log_debug("... functions")
 source("r/split_data_table_quote.R")
 source("r/sqlFromFile.R")
-source("r/vroom_safe.R")
 
 log_debug("loading ...")
 log_debug("... libraries")
 library(data.table)
 library(DBI)
-library(tidyverse)
+library(dplyr)
+library(readr)
+library(tidyr)
 
 log_debug("... files ...")
 log_debug("... DBs")
@@ -30,11 +31,20 @@ if (mode == "full") {
   drv <- PostgreSQL()
 
   log_debug("... connecting to the database")
+  # db <- dbConnect(
+  #   drv = drv,
+  #   dbname = "lotus",
+  #   user = "rutza",
+  #   host = "localhost",
+  # )
+
   db <- dbConnect(
     drv = drv,
     dbname = "lotus",
-    user = "rutza",
-    host = "localhost"
+    user = "lotusadmin",
+    host = "10.9.0.1",
+    port = 5432,
+    password = Sys.getenv("LOTUS_DB_PWD")
   )
 
   log_debug("... listing remote objects")
@@ -49,34 +59,34 @@ if (mode == "full") {
 
 if (mode != "test") {
   log_debug("... list of source databases")
-  dbList <- lapply(pathDataInterimDbDir, vroom_read_safe)
+  dbList <- lapply(pathDataInterimDbDir, read_delim)
 
   log_debug("... dictionaries ...")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
     log_debug("... structures")
     structureDictionary <-
-      vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary) %>%
-      tibble()
+      read_delim(file = pathDataInterimDictionariesStructureDictionary)
   }
 
   if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
     log_debug("... previously unsucessfully querried structures")
     structureAntiDictionary <-
-      vroom_read_safe(path = pathDataInterimDictionariesStructureAntiDictionary) %>%
-      tibble()
+      read_delim(
+        file = pathDataInterimDictionariesStructureAntiDictionary,
+        delim = "\t"
+      )
   }
 
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     log_debug("... organisms")
     organismDictionary <-
-      vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
-      tibble()
+      read_delim(file = pathDataInterimDictionariesOrganismDictionary)
   }
 
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     log_debug("... references")
     referenceDictionary <-
-      vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary) %>%
+      read_delim(file = pathDataInterimDictionariesReferenceDictionary) %>%
       data.table()
   }
 
@@ -100,7 +110,7 @@ if (mode != "test") {
       referenceOriginal_split = reference_split,
       referenceOriginal_title = reference_title,
     ) %>%
-    tibble()
+    mutate(referenceOriginal_pubmed = as.character(referenceOriginal_pubmed))
 
   if (mode == "min") {
     log_debug("sampling rows for min mode")
@@ -115,7 +125,7 @@ if (mode != "test") {
 }
 
 if (mode == "test") {
-  dbTable <- vroom_read_safe(path = pathTestsFile) %>%
+  dbTable <- read_delim(file = pathTestsFile) %>%
     pivot_wider(
       names_from = "organismType",
       values_from = "organismValue",
@@ -155,8 +165,7 @@ if (mode == "test") {
       referenceOriginal_publishingDetails,
       referenceOriginal_split,
       referenceOriginal_title,
-    ) %>%
-    tibble()
+    )
 }
 
 log_debug("... full original table")
@@ -632,41 +641,35 @@ ifelse(
 
 log_debug("exporting ...")
 if (nrow(organismTable_clean) != 0) {
-  vroom_write(
+  write_delim(
     x = organismTable_clean,
-    path = gzfile(
+    file = gzfile(
       description = pathDataInterimTablesOriginalOrganismFile,
       compression = 9,
       encoding = "UTF-8"
     ),
-    num_threads = 1,
-    bom = TRUE,
     quote = "none",
-    escape = "double",
-    delim = "\t",
-    col_names = TRUE,
-    progress = TRUE,
-    append = FALSE
+    escape = "double"
   )
   ## because gnverify does not parse quotes
 }
 
 log_debug(pathDataInterimTablesOriginal)
-vroom_write_safe(
+write_delim(
   x = organismTable_full,
-  path = pathDataInterimTablesOriginalOrganismFull
+  file = pathDataInterimTablesOriginalOrganismFull
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceDoi)
-vroom_write_safe(
+write_delim(
   x = referenceTable_doi,
-  path = pathDataInterimTablesOriginalReferenceDoi
+  file = pathDataInterimTablesOriginalReferenceDoi
 )
 
 log_debug(pathDataInterimTablesOriginalReferencePubmed)
-vroom_write_safe(
+write_delim(
   x = referenceTable_pubmed,
-  path = pathDataInterimTablesOriginalReferencePubmed
+  file = pathDataInterimTablesOriginalReferencePubmed
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceTitleFolder)
@@ -681,15 +684,15 @@ log_debug(
   pathDataInterimTablesOriginalReferencePublishingDetails,
   "\n"
 )
-vroom_write_safe(
+write_delim(
   x = referenceTable_publishingDetails,
-  path = pathDataInterimTablesOriginalReferencePublishingDetails
+  file = pathDataInterimTablesOriginalReferencePublishingDetails
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceSplit)
-vroom_write_safe(
+write_delim(
   x = referenceTable_split,
-  path = pathDataInterimTablesOriginalReferenceSplit
+  file = pathDataInterimTablesOriginalReferenceSplit
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceOriginalFolder)
@@ -701,39 +704,39 @@ split_data_table_quote(
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceFull)
-vroom_write_safe(
+write_delim(
   x = referenceTable_full,
-  path = pathDataInterimTablesOriginalReferenceFull
+  file = pathDataInterimTablesOriginalReferenceFull
 )
 
 log_debug(pathDataInterimTablesOriginalStructureInchi)
-vroom_write_safe(
+write_delim(
   x = structureTable_inchi,
-  path = pathDataInterimTablesOriginalStructureInchi
+  file = pathDataInterimTablesOriginalStructureInchi
 )
 
 log_debug(pathDataInterimTablesOriginalStructureNominal)
-vroom_write_safe(
+write_delim(
   x = structureTable_nominal,
-  path = pathDataInterimTablesOriginalStructureNominal
+  file = pathDataInterimTablesOriginalStructureNominal
 )
 
 log_debug(pathDataInterimTablesOriginalStructureSmiles)
-vroom_write_safe(
+write_delim(
   x = structureTable_smiles,
-  path = pathDataInterimTablesOriginalStructureSmiles
+  file = pathDataInterimTablesOriginalStructureSmiles
 )
 
 log_debug(pathDataInterimTablesOriginalStructureFull)
-vroom_write_safe(
+write_delim(
   x = structureTable_full,
-  path = pathDataInterimTablesOriginalStructureFull
+  file = pathDataInterimTablesOriginalStructureFull
 )
 
 log_debug(pathDataInterimTablesOriginalTable)
-vroom_write_safe(
+write_delim(
   x = originalTable,
-  path = pathDataInterimTablesOriginalTable
+  file = pathDataInterimTablesOriginalTable
 )
 
 end <- Sys.time()

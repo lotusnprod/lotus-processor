@@ -8,51 +8,51 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading files ...")
 log_debug("... original table")
 originalTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalTable)
+  read_delim(file = pathDataInterimTablesOriginalTable)
 
 originalStructureTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
+  read_delim(file = pathDataInterimTablesOriginalStructureFull)
 
 log_debug("loading dictionaries ...")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   log_debug("... structures")
   structureDictionary <-
-    vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary)
+    read_delim(file = pathDataInterimDictionariesStructureDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... organisms")
   organismDictionary <-
-    vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
+    read_delim(file = pathDataInterimDictionariesOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... references")
   referenceOrganismDictionary <-
-    vroom_read_safe(path = pathDataInterimDictionariesReferenceOrganismDictionary)
+    read_delim(file = pathDataInterimDictionariesReferenceOrganismDictionary)
 }
 
 if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... structures metadata")
   structureMetadata <-
-    vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata)
+    read_delim(file = pathDataInterimDictionariesStructureMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   log_debug("... organisms metadata")
   organismMetadata <-
-    vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata)
+    read_delim(file = pathDataInterimDictionariesOrganismMetadata)
 }
 
 log_debug("... cleaned organisms")
 organismTableFull <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
+  read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
   select(
     organismType,
     organismValue,
@@ -77,11 +77,11 @@ organismTableFull <-
 
 log_debug("... translated structures")
 translatedStructureTable <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedStructureFinal)
+  read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
 
 log_debug("... cleaned structures")
 cleanedStructureTableFull <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureNamed) %>%
+  read_delim(file = pathDataInterimTablesCleanedStructureNamed) %>%
   select(
     structureTranslated,
     structureCleanedSmiles = smilesSanitized,
@@ -102,7 +102,7 @@ cleanedStructureTableFull <-
 
 log_debug("... cleaned references")
 referenceTableFull <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedReferenceFile) %>%
+  read_delim(file = pathDataInterimTablesCleanedReferenceFile) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 log_debug("joining ...")
@@ -392,59 +392,62 @@ ifelse(
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
-vroom_write_safe_append(
+write_delim(
   x = inhouseDbMinimal,
-  path = pathDataInterimTablesCuratedTable
+  file = pathDataInterimTablesCuratedTable,
+  append = TRUE 
 )
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
-vroom_write_safe(
+write_delim(
   x = structureMinimal,
-  path = pathDataInterimDictionariesStructureDictionary
+  file = pathDataInterimDictionariesStructureDictionary
 )
 
 log_debug(pathDataInterimDictionariesStructureAntiDictionary)
-vroom_write_safe_append(
+write_delim(
   x = structureNA,
-  path = pathDataInterimDictionariesStructureAntiDictionary
+  file = pathDataInterimDictionariesStructureAntiDictionary,
+  append = TRUE 
 )
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
-vroom_write_safe(
+write_delim(
   x = organismMinimal,
-  path = pathDataInterimDictionariesOrganismDictionary
+  file = pathDataInterimDictionariesOrganismDictionary
 )
 
 log_debug(
   pathDataInterimDictionariesReferenceOrganismDictionary
 )
-vroom_write_safe(
+write_delim(
   x = referenceTableFull,
-  path = pathDataInterimDictionariesReferenceOrganismDictionary
+  file = pathDataInterimDictionariesReferenceOrganismDictionary
 )
 
 log_debug(pathDataInterimDictionariesStructureMetadata)
-vroom_write_safe(
+write_delim(
   x = structureMetadata,
-  path = pathDataInterimDictionariesStructureMetadata
+  file = pathDataInterimDictionariesStructureMetadata
 )
 
 log_debug(pathDataInterimDictionariesOrganismMetadata)
-vroom_write_safe(
+write_delim(
   x = organismMetadata,
-  path = pathDataInterimDictionariesOrganismMetadata
+  file = pathDataInterimDictionariesOrganismMetadata
 )
 
 log_debug(pathDataInterimDictionariesReferenceMetadata)
-vroom_write_safe(
+write_delim(
   x = referenceMetadata,
-  path = pathDataInterimDictionariesReferenceMetadata
+  file = pathDataInterimDictionariesReferenceMetadata
 )
 
 log_debug(pathDataInterimTablesCuratedTableMaximal)
-vroom_write_safe_append(
+write_delim(
   x = openDbMaximal,
-  path = pathDataInterimTablesCuratedTableMaximal
+  file = pathDataInterimTablesCuratedTableMaximal,
+  append = TRUE
 )
 
 end <- Sys.time()

@@ -8,11 +8,10 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(data.table)
 library(DBI)
+library(dplyr)
+library(readr)
 library(RPostgreSQL)
-library(tidyverse)
-source("r/vroom_safe.R")
 source("r/sqlFromFile.R")
 source("r/dbSendQueries.R")
 
@@ -33,8 +32,8 @@ db <- dbConnect(
   drv = drv,
   dbname = "lotus",
   user = "lotusadmin",
-  host = "127.0.0.1",
-  port = 9999,
+  host = "10.9.0.1",
+  port = 5432,
   password = Sys.getenv("LOTUS_DB_PWD")
 )
 
@@ -53,39 +52,39 @@ dbTypes <- read_delim(
   )
 
 structureDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureDictionary)
+  read_delim(file = pathDataInterimDictionariesStructureDictionary)
 
 organismDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary)
+  read_delim(file = pathDataInterimDictionariesOrganismDictionary)
 
 ## temp path
 ott_taxonomy <-
-  vroom(file = "../data/external/taxonomySource/organism/taxonomy.tsv")
+  read_delim(file = "../data/external/taxonomySource/organism/taxonomy.tsv")
 
 referenceOrganismDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesReferenceOrganismDictionary)
+  read_delim(file = pathDataInterimDictionariesReferenceOrganismDictionary)
 
 structureMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata)
+  read_delim(file = pathDataInterimDictionariesStructureMetadata)
 
 organismMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata)
+  read_delim(file = pathDataInterimDictionariesOrganismMetadata)
 
 inhouseDbMinimal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTable)
+  read_delim(file = pathDataInterimTablesCuratedTable)
 
 manuallyValidated <-
-  vroom_read_safe(path = "../data/validation/manuallyValidated.tsv.gz") %>%
+  read_delim(file = "../data/validation/manuallyValidated.tsv.gz") %>%
   select(colnames(inhouseDbMinimal)) %>%
   mutate(curationTypeId_1 = 1)
 
 automaticallyValidated <-
-  vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
+  read_delim(file = pathDataInterimTablesAnalysedPlatinum) %>%
   select(colnames(inhouseDbMinimal)) %>%
   mutate(curationTypeId_2 = 2)
 
 manuallyRemoved <-
-  vroom_read_safe(path = "../data/validation/manuallyRemoved.tsv.gz") %>%
+  read_delim(file = "../data/validation/manuallyRemoved.tsv.gz") %>%
   select(colnames(inhouseDbMinimal)) %>%
   mutate(curationTypeId_3 = 3)
 
@@ -114,7 +113,7 @@ organismOld <-
   )
 
 originalTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalTable)
+  read_delim(file = pathDataInterimTablesOriginalTable)
 
 database_type <- dbTypes %>%
   distinct(type)

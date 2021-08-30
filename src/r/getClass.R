@@ -1,6 +1,5 @@
 source("paths.R")
 library(jsonlite)
-library(tidyverse)
 library(rvest)
 
 #' Title
