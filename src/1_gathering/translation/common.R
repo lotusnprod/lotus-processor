@@ -4,20 +4,19 @@
 ## paths
 source("paths.R")
 
+library(dplyr)
 library(Hmisc)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
+library(stringr)
 
 source("r/y_as_na.R")
-source("r/vroom_safe.R")
 
 ##  files
 ### common names from PhenolExplorer
 commonSciPhe <-
-  vroom(
-    file = pathDataExternalTranslationSourceCommonPhenolexplorer,
-    delim = ","
+  read_delim(
+    file = pathDataExternalTranslationSourceCommonPhenolexplorer
   ) %>%
   select(
     vernacularName = name,
@@ -27,10 +26,8 @@ commonSciPhe <-
 
 ### common names from FooDB
 commonSciFoo <-
-  vroom(
-    file = pathDataExternalTranslationSourceCommonFoodb,
-    delim = ",",
-    quote = ""
+  read_delim(
+    file = pathDataExternalTranslationSourceCommonFoodb
   ) %>%
   select(
     vernacularName = name,
@@ -40,9 +37,8 @@ commonSciFoo <-
 
 ### common names from DrDuke
 commonDuk <-
-  vroom(
-    file = pathDataExternalTranslationSourceCommonDrdukeCommon,
-    delim = ","
+  read_delim(
+    file = pathDataExternalTranslationSourceCommonDrdukeCommon
   ) %>%
   select(
     vernacularName = CNNAM,
@@ -51,9 +47,8 @@ commonDuk <-
 
 ### scientific names from DrDuke
 sciDuk <-
-  vroom(
-    file = pathDataExternalTranslationSourceCommonDrdukeScientific,
-    delim = ","
+  read_delim(
+    file = pathDataExternalTranslationSourceCommonDrdukeScientific
   ) %>%
   select(FNFNUM,
     canonicalName = TAXON
@@ -66,10 +61,8 @@ commonSciDuk <- left_join(sciDuk, commonDuk) %>%
 ### GBIF
 #### taxa
 taxa <-
-  vroom(
-    file = unz(pathDataExternalTranslationSourceCommonGbif, "Taxon.tsv"),
-    delim = "\t",
-    quote = ""
+  read_delim(
+    file = unz(pathDataExternalTranslationSourceCommonGbif, "Taxon.tsv")
   ) %>%
   filter(!is.na(canonicalName)) %>%
   distinct(
@@ -84,13 +77,11 @@ taxa <-
   ))
 
 #### taxa
-vernacular <- vroom(
+vernacular <- read_delim(
   file = unz(
     pathDataExternalTranslationSourceCommonGbif,
     "VernacularName.tsv"
-  ),
-  delim = "\t",
-  quote = ""
+  )
 ) %>%
   filter(language == "en") %>%
   distinct(
@@ -104,7 +95,7 @@ vernacular <- vroom(
 
 ### manually subtracted entries
 manualSubtraction <-
-  vroom(
+  read_delim(
     file = pathDataInterimDictionariesCommonManualSubtraction,
     delim = "\t"
   )
@@ -418,20 +409,14 @@ common2Sci <- commonSciSub %>%
   )
 
 # exporting
-vroom_write(
+write_delim(
   x = common2Sci,
-  path = gzfile(
+  file = gzfile(
     description = pathDataInterimDictionariesCommonNames,
     compression = 9,
     encoding = "UTF-8"
   ),
-  num_threads = 1,
-  bom = TRUE,
   quote = "none",
-  escape = "double",
-  delim = "\t",
-  col_names = TRUE,
-  progress = TRUE,
-  append = FALSE
+  escape = "double"
 )
 ## because of univocity parser settings
