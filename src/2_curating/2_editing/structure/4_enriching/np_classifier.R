@@ -9,25 +9,23 @@ source("paths.R")
 
 log_debug("... libraries")
 library(data.table)
+library(dplyr)
 library(jsonlite)
 library(pbmcapply)
-library(tidyverse)
 library(RCurl)
+library(readr)
 
 log_debug("... functions")
 source("r/getClass.R")
-source("r/vroom_safe.R")
 source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
 smiles <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted) %>%
-  distinct(structure_smiles_2D = smilesSanitizedFlat) %>%
-  tibble()
+  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted) %>%
+  distinct(structure_smiles_2D = smilesSanitizedFlat)
 # smiles <-
-#   vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
-#   distinct(structure_smiles_2D = structureCleaned_smiles2D) %>%
-#   tibble()
+#   read_delim(file = pathDataInterimDictionariesStructureMetadata) %>%
+#   distinct(structure_smiles_2D = structureCleaned_smiles2D)
 
 log_debug("loading npClassifier taxonomy ...")
 taxonomy <- fromJSON(txt = list.files(
@@ -40,9 +38,8 @@ taxonomy <- fromJSON(txt = list.files(
 ))
 
 old <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
-  distinct() %>%
-  tibble()
+  read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
+  distinct()
 
 new <- anti_join(smiles, old)
 # new <- smiles
@@ -55,7 +52,7 @@ queries <- new$query
 cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
-  X <- (seq_along(queries))
+  X <- seq_len(length(queries))
 
   list_df <- invisible(
     pbmclapply(
@@ -105,9 +102,9 @@ df_semiclean <-
     !is.na(pathway)) %>%
   distinct()
 
-vroom_write_safe(
+write_delim(
   x = df_semiclean,
-  path = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+  file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
 )
 
 end <- Sys.time()
