@@ -47,7 +47,7 @@ dependencies:
   - r-pbmcapply
   - r-plotly
   - r-purrr
-  - r-readr
+  - r-readr>=2.0.1
   - r-readxl
   - r-rentrez
   - r-rotl
