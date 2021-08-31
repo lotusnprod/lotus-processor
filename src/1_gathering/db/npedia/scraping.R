@@ -28,7 +28,7 @@ getnpedia <- function(X) {
       url_id <- paste(url, cd_id, "&TAB=Basic")
       url_id <- gsub("\\s", "", url_id)
       df1 <- read_html(url_id) %>%
-        html_node(xpath = "/html/body/table[2]") %>%
+        html_element(xpath = "/html/body/table[2]") %>%
         html_table(., fill = TRUE)
 
       return(df1)
@@ -78,7 +78,7 @@ getnpedia_2 <- function(X) {
       url_id <- paste(url, cd_id, "&TAB=Origin")
       url_id <- gsub("\\s", "", url_id)
       df1 <- read_html(url_id) %>%
-        html_node(xpath = "/html/body/table[2]") %>%
+        html_element(xpath = "/html/body/table[2]") %>%
         html_table(., fill = TRUE)
 
       return(df1)

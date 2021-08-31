@@ -29,7 +29,7 @@ GetKnapSackTable <- function(X) {
       url_id <- gsub("\\s", "", url_id)
 
       df0 <- read_html(url_id) %>%
-        html_node(xpath = "/html/body/div/div[2]/div[2]/table") %>%
+        html_element(xpath = "/html/body/div/div[2]/div[2]/table") %>%
         xml_child(2) %>%
         xml_child(1) %>%
         xml_child(1)
@@ -73,7 +73,7 @@ GetKnapSackRef <- function(X) {
   tryCatch(
     {
       df3 <- read_html(X) %>%
-        html_node(xpath = "/html/body/div/div[2]/div[2]/table") %>%
+        html_element(xpath = "/html/body/div/div[2]/div[2]/table") %>%
         xml_child(2) %>%
         xml_child(2) %>%
         xml_child(7) %>%

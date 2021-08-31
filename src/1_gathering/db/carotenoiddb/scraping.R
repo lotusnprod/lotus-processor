@@ -10,6 +10,7 @@ library(parallel)
 library(pbmcapply)
 library(rvest) # provides read_html
 library(tidyr) # provides pivot_wider
+library(xml2)
 
 # get paths
 database <- databases$get("carotenoiddb")
@@ -31,9 +32,9 @@ getcarotenoid <- function(X) {
     url_id <- paste(url, cd_id, ".html")
     url_id <- gsub("\\s", "", url_id)
     df1 <- read_html(url_id) %>%
-      html_node("body") %>%
-      html_node("div") %>%
-      html_node("td.fr2") %>%
+      html_element("body") %>%
+      html_element("div") %>%
+      html_element("td.fr2") %>%
       xml_child(1) %>%
       html_table(fill = TRUE)
   })

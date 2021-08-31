@@ -32,7 +32,7 @@ getprocardb <- function(X) {
       url_id <- paste(url, cd_id)
       url_id <- gsub("\\s", "", url_id)
       df1 <- read_html(url_id) %>%
-        html_node(xpath = "/html/body/div[3]/div/div/table") %>%
+        html_element(xpath = "/html/body/div[3]/div/div/table") %>%
         html_table(., fill = TRUE)
 
       return(df1)
@@ -84,7 +84,7 @@ getprocardb_bio <- function(X_bio) {
       url_id_bio <- paste(url_bio, cd_id_bio)
       url_id_bio <- gsub("\\s", "", url_id_bio)
       df1 <- read_html(url_id_bio) %>%
-        html_node(xpath = "/html/body/div[3]/div/div/div[2]/table") %>%
+        html_element(xpath = "/html/body/div[3]/div/div/div[2]/table") %>%
         html_table(., fill = TRUE)
 
       return(df1)
@@ -120,7 +120,7 @@ getprocardb_names <- function(X_bio) {
       url_id_bio <- paste(url_bio, cd_id_bio)
       url_id_bio <- gsub("\\s", "", url_id_bio)
       df1 <- read_html(url_id_bio) %>%
-        html_node(xpath = "/html/body/div[3]/div/div/div") %>%
+        html_element(xpath = "/html/body/div[3]/div/div/div") %>%
         html_text()
 
       return(df1)

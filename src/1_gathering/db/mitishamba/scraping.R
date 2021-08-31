@@ -27,8 +27,8 @@ GetMitishamba <- function(X) {
       url_id <- paste(url, cd_id)
       url_id <- gsub("\\s", "", url_id)
       df1 <- read_html(url_id) %>%
-        html_node("body") %>%
-        html_node(xpath = '//*[@id="wrapper-search"]') %>%
+        html_element("body") %>%
+        html_element(xpath = '//*[@id="wrapper-search"]') %>%
         xml_child(5) %>%
         html_table()
 

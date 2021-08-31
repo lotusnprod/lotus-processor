@@ -26,8 +26,8 @@ getnanp <- function(X) {
       url_id <- paste(url, cd_id, "/")
       url_id <- gsub("\\s", "", url_id)
       df1 <- read_html(url_id) %>%
-        html_node("body") %>%
-        html_node(xpath = "/html/body/div[3]/div/div[2]") %>%
+        html_element("body") %>%
+        html_element(xpath = "/html/body/div[3]/div/div[2]") %>%
         xml_child(2) %>%
         xml_child(1) %>%
         html_table()

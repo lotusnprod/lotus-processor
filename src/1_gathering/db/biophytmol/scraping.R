@@ -10,6 +10,7 @@ library(parallel)
 library(pbmcapply)
 library(rvest) # provides read_html
 library(tidyr) # provides pivot_wider
+library(xml2)
 
 # get paths
 database <- databases$get("biophytmol")
@@ -25,7 +26,7 @@ getbiophyt <- function(X) {
     url_id <- paste(url, cd_id, "&type=compound_id")
     url_id <- gsub("\\s", "", url_id)
     df1 <- read_html(url_id) %>%
-      html_node("body") %>%
+      html_element("body") %>%
       xml_child("table[3]") %>%
       html_table(., fill = TRUE)
   })

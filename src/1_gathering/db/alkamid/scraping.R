@@ -22,13 +22,13 @@ getalkamid <- function(X) {
   cd_id <- X
   url_id <- paste(url, cd_id, "&typegroup=genusgroup")
   url_id <- gsub("\\s", "", url_id)
-  html <- read_html(url_id) %>% html_node("body")
+  html <- read_html(url_id) %>% html_element("body")
   data <-
     html %>%
-    html_node(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div") %>%
+    html_element(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div") %>%
     html_text()
   ref <- html %>%
-    html_node(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div[8]/div[2]/table") %>%
+    html_element(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div[8]/div[2]/table") %>%
     html_table() %>%
     mutate_all(as.character)
   list(data = data, ref = ref)
