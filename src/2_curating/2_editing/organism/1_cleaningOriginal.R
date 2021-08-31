@@ -9,26 +9,27 @@ source("paths.R")
 
 log_debug("... functions")
 source("r/gnfinder_cleaning.R")
-source("r/vroom_safe.R")
 source("r/split_data_table.R")
 source("r/y_as_na.R")
 
 log_debug("loading ...")
 log_debug("... libraries")
 library(data.table)
-library(tidyverse)
+library(dplyr)
+library(readr)
 
 log_debug("  Step 1")
 log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
+  read_delim(file = pathDataInterimDictionariesTaxaRanks)
 
 wrongVerifiedDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesTaxaWrongVerified) %>%
+  read_delim(file = pathDataInterimDictionariesTaxaWrongVerified, 
+             delim = "\t") %>%
   as.list()
 
 organismTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFull) %>%
+  read_delim(file = pathDataInterimTablesOriginalOrganismFull) %>%
   distinct()
 
 log_debug("ensuring directories exist")
@@ -206,9 +207,9 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  vroom_write_safe(
+  write_delim(
     x = dataCleanedOriginalOrganism,
-    path = pathDataInterimTablesCleanedOrganismOriginalTable
+    file = pathDataInterimTablesCleanedOrganismOriginalTable
   )
 }
 
@@ -219,28 +220,22 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  vroom_write(
+  write_delim(
     x = dataCleanedOriginalOrganismUnique,
-    path = gzfile(
+    file = gzfile(
       description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
       compression = 9,
       encoding = "UTF-8"
     ),
-    num_threads = 1,
-    bom = TRUE,
     quote = "none",
-    escape = "double",
-    delim = "\t",
-    col_names = TRUE,
-    progress = TRUE,
-    append = FALSE
+    escape = "double"
   )
   ## because of univocity parser settings
 }
 
-vroom_write_safe(
+write_delim(
   x = dataOrganismVerified,
-  path = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable
+  file = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable
 )
 
 end <- Sys.time()

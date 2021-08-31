@@ -8,17 +8,17 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(pbmcapply)
+library(tidyr)
 
 log_debug("... functions")
 source("r/getref_noLimit_publishingDetails.R")
 source("r/getAllReferences.R")
-source("r/vroom_safe.R")
 
 log_debug("loading publishing details list")
 dataPublishingDetails <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalReferencePublishingDetails)
+  read_delim(file = pathDataInterimTablesOriginalReferencePublishingDetails)
 
 log_debug("submitting to crossRef")
 if (nrow(dataPublishingDetails) != 1) {
@@ -80,9 +80,9 @@ log_debug("exporting ...")
 log_debug(
   pathDataInterimTablesTranslatedReferencePublishingDetails
 )
-vroom_write_safe(
+write_delim(
   x = dataPublishingDetails,
-  path = pathDataInterimTablesTranslatedReferencePublishingDetails
+  file = pathDataInterimTablesTranslatedReferencePublishingDetails
 )
 
 end <- Sys.time()

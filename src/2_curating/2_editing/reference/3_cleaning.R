@@ -8,16 +8,18 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(data.table)
+library(readr)
+library(stringr)
+library(tidyr)
 
 log_debug("... functions")
 source("r/y_as_na.R")
-source("r/vroom_safe.R")
 
 log_debug("loading crossref translations file, this may take a while")
 dataTranslated <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceFile)
+  read_delim(file = pathDataInterimTablesTranslatedReferenceFile)
 
 log_debug("cleaning")
 dataCleaned <- dataTranslated %>%
@@ -237,14 +239,10 @@ subDataClean_pmid <- dataCleanedJoinedWideScore %>%
 if (mode != "test") {
   log_debug("loading pmcid file, this may take a while")
   # here because of memory
-  PMC_ids <- vroom(
+  PMC_ids <- read_delim(
     file = pathDataExternalTranslationSourcePubmedFile,
     delim = ",",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    quote = "",
-    trim_ws = TRUE,
-    num_threads = 1
+    col_types = cols(.default = "c")
   ) %>%
     filter(!is.na(DOI) | !is.na(PMID)) %>%
     select(
@@ -347,9 +345,9 @@ ifelse(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesCleanedReferenceFile)
-vroom_write_safe(
+write_delim(
   x = referenceTable,
-  path = pathDataInterimTablesCleanedReferenceFile
+  file = pathDataInterimTablesCleanedReferenceFile
 )
 
 end <- Sys.time()

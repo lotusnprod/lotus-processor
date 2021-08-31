@@ -8,13 +8,13 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
+  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted)
 
 log_debug("keeping smiles only ...")
 smilesDictionary <- structureCounted %>%
@@ -22,9 +22,9 @@ smilesDictionary <- structureCounted %>%
   select(smiles = smilesSanitized)
 
 log_debug("writing the smiles table")
-vroom_write_safe(
+write_delim(
   x = smilesDictionary,
-  path = pathDataInterimTablesCleanedStructureSmiles
+  file = pathDataInterimTablesCleanedStructureSmiles
 )
 
 if (works_locally_only == FALSE) {
@@ -191,9 +191,9 @@ log_debug("ensuring directories exist")
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesCleanedStructureNamed)
 
-vroom_write_safe(
+write_delim(
   x = structureNamed_cleaned,
-  path = pathDataInterimTablesCleanedStructureNamed
+  file = pathDataInterimTablesCleanedStructureNamed
 )
 
 end <- Sys.time()

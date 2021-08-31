@@ -1,3 +1,5 @@
+library(stringr)
+
 #' Title
 #'
 #' @param x

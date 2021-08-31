@@ -8,21 +8,21 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading files ...")
 log_debug("... whole chemicals list")
 originalTable <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalStructureFull)
+  read_delim(file = pathDataInterimTablesOriginalStructureFull)
 
 log_debug("... chemical names list")
 nominalStructureTable <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal)
+  read_delim(file = pathDataInterimTablesTranslatedStructureNominal)
 
 log_debug("... SMILES list")
 smilesStructureTable <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedStructureSmiles)
+  read_delim(file = pathDataInterimTablesTranslatedStructureSmiles)
 
 log_debug("joining")
 translatedStructureTable <-
@@ -73,15 +73,15 @@ if (nrow(translatedStructureTableUnique) == 0) {
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureFinal)
-vroom_write(
+write_delim(
   x = translatedStructureTable,
-  path = pathDataInterimTablesTranslatedStructureFinal
+  file = pathDataInterimTablesTranslatedStructureFinal
 )
 
 log_debug(pathDataInterimTablesTranslatedStructureUnique)
-vroom_write(
+write_delim(
   x = translatedStructureTableUnique,
-  path = pathDataInterimTablesTranslatedStructureUnique
+  file = pathDataInterimTablesTranslatedStructureUnique
 )
 
 end <- Sys.time()

@@ -8,20 +8,20 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
+library(dplyr)
 library(Hmisc)
-library(tidyverse)
 library(pbmcapply)
+library(readr)
 
 log_debug("... functions")
 source("r/y_as_na.R")
 source("r/preparing_name.R")
 source("r/name2inchi_cactus.R")
 source("r/name2inchi_cts.R")
-source("r/vroom_safe.R")
 
 log_debug("loading chemical names lists")
 dataOriginal <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalStructureNominal)
+  read_delim(file = pathDataInterimTablesOriginalStructureNominal)
 
 if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
@@ -93,9 +93,9 @@ dataInterim <- left_join(dataPreparedNames, dataInterim)
 
 log_debug("exporting interim ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal_opsin)
-vroom_write_safe(
+write_delim(
   x = dataInterim,
-  path = pathDataInterimTablesTranslatedStructureNominal_opsin
+  file = pathDataInterimTablesTranslatedStructureNominal_opsin
 )
 
 dataForCTS <- dataInterim %>%
@@ -147,13 +147,13 @@ log_debug("exporting interim ...")
 log_debug(
   pathDataInterimTablesTranslatedStructureNominal_cts
 )
-vroom_write_safe(
+write_delim(
   x = dataInterim_2,
-  path = pathDataInterimTablesTranslatedStructureNominal_cts
+  file = pathDataInterimTablesTranslatedStructureNominal_cts
 )
 
 # dataInterim_2 <-
-#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cts)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts)
 
 dataInterim_2 <- dataInterim_2 %>%
   mutate(nameCleaned_capitalized = capitalize(nameCleaned))
@@ -206,13 +206,13 @@ log_debug("exporting interim ...")
 log_debug(
   pathDataInterimTablesTranslatedStructureNominal_cts_2
 )
-vroom_write_safe(
+write_delim(
   x = dataInterim_3,
-  path = pathDataInterimTablesTranslatedStructureNominal_cts_2
+  file = pathDataInterimTablesTranslatedStructureNominal_cts_2
 )
 
 # dataInterim_3 <-
-#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal_cts_2)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts_2)
 
 ## cactus is the lowest quality but allows retrieving important structures also
 ## some incorrect spotted...
@@ -301,13 +301,13 @@ dataTranslated <- left_join(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal)
-vroom_write_safe(
+write_delim(
   x = dataTranslated,
-  path = pathDataInterimTablesTranslatedStructureNominal
+  file = pathDataInterimTablesTranslatedStructureNominal
 )
 
 # dataTranslated <-
-#   vroom_read_safe(path = pathDataInterimTablesTranslatedStructureNominal)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal)
 
 end <- Sys.time()
 
