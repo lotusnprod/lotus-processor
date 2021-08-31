@@ -9,34 +9,33 @@ source("paths.R")
 
 log_debug("... functions")
 source("r/gnfinder_cleaning.R")
-source("r/vroom_safe.R")
 
 log_debug("loading ...")
 log_debug("... libraries")
-library(data.table)
-library(tidyverse)
+library(dplyr)
+library(readr)
 
 log_debug("  Step 3")
 log_debug("... files ...")
 log_debug("full")
 organismTable_full <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalOrganismFull)
+  read_delim(file = pathDataInterimTablesOriginalOrganismFull)
 
 log_debug("... translated organisms")
 dataInterimOrganismToFill <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedInterim)
+  read_delim(file = pathDataInterimTablesCleanedOrganismTranslatedInterim)
 
 log_debug("... cleaned original organisms")
 dataCleanedOriginalOrganism <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismOriginalTable)
+  read_delim(file = pathDataInterimTablesCleanedOrganismOriginalTable)
 
 log_debug("... verified original organisms")
 dataVerifiedOriginalOrganism <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable)
+  read_delim(file = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable)
 
 log_debug(" ... taxa ranks dictionary")
 taxaRanksDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
+  read_delim(file = pathDataInterimDictionariesTaxaRanks)
 
 log_debug("ensuring directories exist")
 ifelse(
@@ -205,9 +204,9 @@ dataCleanedOrganism <- dataCleanedOrganism %>%
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesCleanedOrganismTranslatedTable)
-vroom_write_safe(
+write_delim(
   x = dataCleanedOrganism,
-  path = pathDataInterimTablesCleanedOrganismTranslatedTable
+  file = pathDataInterimTablesCleanedOrganismTranslatedTable
 )
 
 end <- Sys.time()

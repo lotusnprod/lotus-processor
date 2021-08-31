@@ -14,6 +14,7 @@ library(jsonlite)
 library(pbmcapply)
 library(RCurl)
 library(readr)
+library(tidyr)
 
 log_debug("... functions")
 source("r/getClass.R")
@@ -39,7 +40,8 @@ taxonomy <- fromJSON(txt = list.files(
 
 old <-
   read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
-  distinct()
+  distinct() %>%
+  mutate_all(as.character)
 
 new <- anti_join(smiles, old)
 # new <- smiles

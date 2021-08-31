@@ -8,16 +8,16 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(pbmcapply)
+library(readr)
 
 log_debug("... functions")
 source("r/getrefDoi.R")
-source("r/vroom_safe.R")
 
 log_debug("loading DOI list")
 dataDoi <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceDoi)
+  read_delim(file = pathDataInterimTablesOriginalReferenceDoi)
 
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 1) {
@@ -191,9 +191,9 @@ ifelse(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceDoi)
-vroom_write_safe(
+write_delim(
   x = dataDoi,
-  path = pathDataInterimTablesTranslatedReferenceDoi
+  file = pathDataInterimTablesTranslatedReferenceDoi
 )
 
 end <- Sys.time()

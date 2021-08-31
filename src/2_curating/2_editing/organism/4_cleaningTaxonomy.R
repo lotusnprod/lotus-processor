@@ -12,43 +12,38 @@ source("r/y_as_na.R")
 source("r/manipulating_taxo.R")
 source("r/taxo_cleaning_auto.R")
 source("r/rank_order.R")
-source("r/vroom_safe.R")
 
 log_debug("loading ... ")
 log_debug("... libraries ")
-library(tidyverse)
+library(dplyr)
 library(jsonlite)
+library(readr)
+library(tidyr)
 
 log_debug(" Step 4")
 log_debug("... files ... ")
 log_debug("... cleaned organisms ")
 dataCleanedOrganism <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismTranslatedTable) %>%
+  read_delim(file = pathDataInterimTablesCleanedOrganismTranslatedTable) %>%
   distinct()
 
 log_debug(" ... taxa ranks dictionary ")
 taxaRanksDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesTaxaRanks)
+  read_delim(file = pathDataInterimDictionariesTaxaRanks)
 
 dataCleanedOrganismVerify <- dataCleanedOrganism %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-vroom_write(
+write_delim(
   x = dataCleanedOrganismVerify,
-  path = gzfile(
+  file = gzfile(
     description = pathDataInterimTablesCleanedOrganismVerifyTable,
     compression = 9,
     encoding = "UTF-8"
   ),
-  num_threads = 1,
-  bom = TRUE,
   quote = "none",
-  escape = "double",
-  delim = "\t",
-  col_names = TRUE,
-  progress = TRUE,
-  append = FALSE
+  escape = "double"
 )
 ## because gnverifier does not parse quotes
 
@@ -262,9 +257,9 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
 
 log_debug("exporting ... ")
 log_debug(pathDataInterimTablesCleanedOrganismFinal)
-vroom_write_safe(
+write_delim(
   x = dataCuratedOrganismAuto,
-  path = pathDataInterimTablesCleanedOrganismFinal
+  file = pathDataInterimTablesCleanedOrganismFinal
 )
 
 end <- Sys.time()

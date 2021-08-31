@@ -7,28 +7,26 @@ log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
 
-log_debug("... functions")
-source("r/vroom_safe.R")
-
 log_debug("loading ...")
 log_debug("... libraries")
 library(DBI)
+library(dplyr)
 library(pbmcapply)
+library(readr)
 library(rotl)
 library(RSQLite)
-library(tidyverse)
 
 canonical_name_colname <- "organismCleaned"
 
 dataCuratedOrganismAuto <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal)
+  read_delim(file = pathDataInterimTablesCleanedOrganismFinal)
 
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-
-    vroom_read_safe(path = wikidataLotusExporterDataOutputTriplesPath)
+    read_delim(file = wikidataLotusExporterDataOutputTriplesPath)
 
   organismsPostWikidata <-
-    vroom_read_safe(path = wikidataLotusExporterDataOutputTaxaPath)
+    read_delim(file = wikidataLotusExporterDataOutputTaxaPath)
 
   postWikidata <- left_join(
     triplesPostWikidata %>% distinct(taxon),

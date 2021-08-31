@@ -10,17 +10,19 @@ source("paths.R")
 
 log_debug("... libraries")
 library(classyfireR)
+library(dplyr)
 library(pbmcapply)
-library(tidyverse)
-source("r/vroom_safe.R")
+library(purrr)
+library(readr)
 
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  vroom_read_safe(path = pathDataInterimTablesCleanedStructureStereoCounted)
+  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted)
 
 old <-
-  vroom_read_safe(path = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz") %>%
+  read_delim(file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+             delim = "\t") %>%
   distinct(inchikey)
 
 structuresForClassification <-
@@ -179,19 +181,22 @@ if (nrow(direct_parent != 0)) {
 
 log_debug("exporting")
 
-vroom_write_safe_append(
+write_delim(
   x = alternative_parents,
-  path = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz"
+  file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz",
+  append = TRUE
 )
 
-vroom_write_safe_append(
+write_delim(
   x = direct_parent,
-  path = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz"
+  file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+  append = TRUE
 )
 
-vroom_write_safe_append(
+write_delim(
   x = chebi,
-  path = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz"
+  file = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz",
+  append = TRUE
 )
 
 # save(list = ls(.GlobalEnv), file = "../data/interim/temp.Rdata")

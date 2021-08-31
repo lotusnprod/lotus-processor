@@ -8,16 +8,16 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(pbmcapply)
+library(readr)
 
 log_debug("... functions")
 source("r/getrefPubmed.R")
-source("r/vroom_safe.R")
 
 log_debug("loading PMID list")
 dataPubmed <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalReferencePubmed)
+  read_delim(file = pathDataInterimTablesOriginalReferencePubmed)
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
@@ -139,9 +139,9 @@ ifelse(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferencePubmed)
-vroom_write_safe(
+write_delim(
   x = dataPubmed,
-  path = pathDataInterimTablesTranslatedReferencePubmed
+  file = pathDataInterimTablesTranslatedReferencePubmed
 )
 
 end <- Sys.time()

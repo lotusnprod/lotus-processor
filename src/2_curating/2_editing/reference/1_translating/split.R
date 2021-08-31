@@ -8,17 +8,17 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(pbmcapply)
+library(readr)
 
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
-source("r/vroom_safe.R")
 
 log_debug("loading split references list")
 dataSplit <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceSplit)
+  read_delim(file = pathDataInterimTablesOriginalReferenceSplit)
 
 log_debug("submitting to crossRef")
 if (nrow(dataSplit) != 1) {
@@ -76,9 +76,9 @@ ifelse(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceSplit)
-vroom_write_safe(
+write_delim(
   x = dataSplit,
-  path = pathDataInterimTablesTranslatedReferenceSplit
+  file = pathDataInterimTablesTranslatedReferenceSplit
 )
 
 end <- Sys.time()

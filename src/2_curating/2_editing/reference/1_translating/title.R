@@ -8,13 +8,14 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(pbmcapply)
+library(readr)
+library(stringr)
 
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
-source("r/vroom_safe.R")
 
 log_debug("loading title lists")
 length <-
@@ -141,9 +142,9 @@ for (i in num) {
   }
 
   log_debug("exporting ...")
-  vroom_write_safe(
+  write_delim(
     x = dataTitle2,
-    path = outpath
+    file = outpath
   )
 
   ## cleaning memory
@@ -179,9 +180,9 @@ dataTitle3 <- do.call(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceTitle)
-vroom_write_safe(
+write_delim(
   x = dataTitle3,
-  path = pathDataInterimTablesTranslatedReferenceTitle
+  file = pathDataInterimTablesTranslatedReferenceTitle
 )
 
 end <- Sys.time()

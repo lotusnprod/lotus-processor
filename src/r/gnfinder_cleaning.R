@@ -1,5 +1,7 @@
 source("paths.R")
 library(jsonlite)
+library(readr)
+library(stringr)
 source("r/biocleaning.R")
 
 #' Title
@@ -65,7 +67,7 @@ gnfinder_cleaning <- function(num, organismCol) {
   }
 
   ## because gnfinder reads it that way for counting chars
-  data_bio <- vroom(
+  data_bio <- read_delim(
     file = inpath_organism_f,
     delim = "\t",
     quote = "",
@@ -73,8 +75,7 @@ gnfinder_cleaning <- function(num, organismCol) {
     trim_ws = FALSE,
     escape_backslash = FALSE,
     na = "",
-    col_types = cols(.default = "c"),
-    num_threads = 1
+    col_types = cols(.default = "c")
   ) %>%
     mutate_all(as.character)
 

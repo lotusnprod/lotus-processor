@@ -8,13 +8,15 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
+library(stringr)
+library(tidyr)
 
 log_debug("... files ...")
 log_debug("... DOI")
 dataDoi <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceDoi) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferenceDoi) %>%
   select(
     referenceOriginal = referenceOriginal_doi,
     doi_doi = referenceTranslatedDoi,
@@ -38,7 +40,7 @@ dataDoi <-
 
 log_debug("... original references")
 dataOriginal <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceOriginal) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferenceOriginal) %>%
   select(
     referenceOriginal = referenceOriginal_original,
     doi_original = referenceTranslatedDoi,
@@ -65,7 +67,7 @@ dataOriginal <-
 
 log_debug("... PMID")
 dataPubmed <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePubmed) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferencePubmed) %>%
   select(
     referenceOriginal = referenceOriginal_pubmed,
     doi_pubmed = referenceTranslatedDoi,
@@ -89,7 +91,7 @@ dataPubmed <-
 
 log_debug("... publishing details")
 dataPublishingDetails <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferencePublishingDetails) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferencePublishingDetails) %>%
   select(
     referenceOriginal = referenceOriginal_publishingDetails,
     doi_publishingDetails = referenceTranslatedDoi,
@@ -116,7 +118,7 @@ dataPublishingDetails <-
 
 log_debug("... titles")
 dataTitle <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceTitle) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferenceTitle) %>%
   select(
     referenceOriginal = referenceOriginal_title,
     doi_title = referenceTranslatedDoi,
@@ -143,7 +145,7 @@ dataTitle <-
 
 log_debug("... split")
 dataSplit <-
-  vroom_read_safe(path = pathDataInterimTablesTranslatedReferenceSplit) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferenceSplit) %>%
   select(
     referenceOriginal = referenceOriginal_split,
     doi_split = referenceTranslatedDoi,
@@ -170,15 +172,15 @@ dataSplit <-
 
 log_debug("... full references")
 dataFull <-
-  vroom_read_safe(path = pathDataInterimTablesOriginalReferenceFull) %>%
-  mutate_all(as.character)
+  read_delim(file = pathDataInterimTablesOriginalReferenceFull,
+             col_types = cols(.default = "c"))
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
 }
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated_old <-
-    vroom_read_safe(path = pathDataInterimDictionariesOrganismDictionary) %>%
+    read_delim(file = pathDataInterimDictionariesOrganismDictionary) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -191,7 +193,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     mutate_all(as.character)
 
   dataCleanedOrganismManipulated_new <-
-    vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -216,7 +218,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
-    vroom_read_safe(path = pathDataInterimTablesCleanedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -234,7 +236,7 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 }
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   referenceDictionary <-
-    vroom_read_safe(path = pathDataInterimDictionariesReferenceDictionary)
+    read_delim(file = pathDataInterimDictionariesReferenceDictionary)
 }
 
 log_debug("joining ...")
@@ -327,15 +329,15 @@ ifelse(
 
 log_debug("exporting, this may take a while if running full mode")
 log_debug(pathDataInterimTablesTranslatedReferenceFile)
-vroom_write_safe(
+write_delim(
   x = dataTranslated,
-  path = pathDataInterimTablesTranslatedReferenceFile
+  file = pathDataInterimTablesTranslatedReferenceFile
 )
 
 log_debug(pathDataInterimDictionariesReferenceDictionary)
-vroom_write_safe(
+write_delim(
   x = dataCrossref,
-  path = pathDataInterimDictionariesReferenceDictionary
+  file = pathDataInterimDictionariesReferenceDictionary
 )
 
 rm(dataCrossref)
