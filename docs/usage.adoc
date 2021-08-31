@@ -71,6 +71,7 @@ We will also create another environment for strict mirroring of the installed pa
 [source,console]
 ----
 conda env create -f environment.yml
+bash environment_non_conda.sh
 ----
 
 If your environement is not directly sources by your default bash run the following lines
