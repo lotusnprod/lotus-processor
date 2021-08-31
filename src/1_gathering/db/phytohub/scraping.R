@@ -28,17 +28,17 @@ getphytohub <- function(X) {
       url_id <- gsub("\\s", "", url_id)
       sample <- read_html(url_id)
       scrape1 <-
-        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]") %>%
+        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]") %>%
         html_text()
       scrape2 <-
-        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[10]/pre/small") %>%
+        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[10]/pre/small") %>%
         html_text()
       scrape3 <-
-        html_nodes(sample, xpath = "//*[@id=\"fs\"]/div/div/div/table") %>%
+        html_element(sample, xpath = "//*[@id=\"fs\"]/div/div/div/table") %>%
         html_table()
       scrape4 <- scrape3[[1]]
       scrape5 <-
-        html_nodes(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre") %>%
+        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre") %>%
         html_text()
 
       df <- cbind(scrape1, scrape2, scrape5, scrape4)
@@ -98,10 +98,10 @@ getphytohubref <- function(X) {
       url_id <- gsub("\\s", "", url_id)
       sample <- read_html(url_id)
       scrape1 <-
-        html_nodes(sample, xpath = "/html/body/main/div/h1") %>%
+        html_elements(sample, xpath = "/html/body/main/div/h1") %>%
         html_text()
       scrape2 <-
-        html_nodes(sample, xpath = "/html/body/main/blockquote") %>%
+        html_elements(sample, xpath = "/html/body/main/blockquote") %>%
         html_text()
 
       df <- cbind(scrape1, scrape2)

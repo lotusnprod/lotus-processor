@@ -26,7 +26,7 @@ gettmdb <- function(X) {
       url_id <- gsub("\\s", "", url_id)
       sample <- read_html(url_id)
       scrape1 <-
-        html_nodes(sample, xpath = "/html/body/div[1]/div/table") %>%
+        html_elements(sample, xpath = "/html/body/div[1]/div/table") %>%
         html_table(., fill = TRUE)
 
       scrape2 <- scrape1[[1]]

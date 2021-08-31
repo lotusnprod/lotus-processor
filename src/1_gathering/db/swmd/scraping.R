@@ -32,19 +32,19 @@ getswmd <- function(X) {
     url_id <- paste0(url, cd_id)
 
     df0 <- read_html(url_id) %>%
-      html_node(xpath = "body")
+      html_element(xpath = "body")
 
     df1 <- df0 %>%
-      html_node(xpath = "div[1]/table[3]") %>%
+      html_element(xpath = "div[1]/table[3]") %>%
       html_table(fill = TRUE) %>%
       select(1, 2)
 
     df2 <- df0 %>%
-      html_node(xpath = "div[2]/table") %>%
+      html_element(xpath = "div[2]/table") %>%
       html_table(fill = TRUE)
 
     df3 <- df0 %>%
-      html_node(xpath = "div[4]/div/table") %>%
+      html_element(xpath = "div[4]/div/table") %>%
       html_table(fill = TRUE)
 
     df4 <- rbind(df1, df2, df3)

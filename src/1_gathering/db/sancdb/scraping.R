@@ -24,10 +24,10 @@ getsanc <- function(X) {
     url_id <- paste(url, cd_id, "/")
     url_id <- gsub("\\s", "", url_id)
     df1 <- read_html(url_id) %>%
-      html_node("body") %>%
-      html_node("div#wrap") %>%
-      html_node("div#content.content") %>%
-      html_node("div#pt-main.pt-perspective") %>%
+      html_element("body") %>%
+      html_element("div#wrap") %>%
+      html_element("div#content.content") %>%
+      html_element("div#pt-main.pt-perspective") %>%
       html_text()
   })
 }
