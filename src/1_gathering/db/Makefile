@@ -1,3 +1,4 @@
+include	../../../config.mk
 include	../../../paths.mk
 
 DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dianatdb dnp drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
