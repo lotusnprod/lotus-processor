@@ -10,7 +10,10 @@ data class Dictionaries(
      */
     @Suppress("NOTHING_TO_INLINE")
     inline fun processRecord(record: Map<String, String>): String {
-        var newTerm = record["organismValue"]!!.replace(Regex("[. _]"), " ")
+        require(record.containsKey("organismValue")) { "The map given should have an organismValue" }
+        require(record.containsKey("organismCleaned")) { "The map given should have an organismCleaned" }
+
+        var newTerm = record["organismValue"]?.replace(Regex("[. _]"), " ") ?: return ""
 
         // We process the term with the exclusion dictionary
 
@@ -25,7 +28,7 @@ data class Dictionaries(
         // If we have an organism Cleaned, we check if we are not equal, in which case we have nothing to do
         // if not, we remove it from the string anyway to not have duplicates
 
-        val orgCleaned = record["organismCleaned"]!!
+        val orgCleaned = record["organismCleaned"] ?: return ""
         if (orgCleaned == newTerm) return ""
 
 

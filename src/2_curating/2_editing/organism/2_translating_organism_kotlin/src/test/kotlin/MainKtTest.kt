@@ -6,8 +6,8 @@ internal class CleaningTest {
     fun processRecordOk() {
         val dics = Dictionaries()
         dics.combinedDic.add((Regex("""\bRose Apple\b""", RegexOption.IGNORE_CASE) to "Syzygium jambos"))
-        val out = dics.processRecord(mapOf("organismOriginal" to "from Rose apple", "organismCleaned" to ""))
-        println(out)
+        val records = mapOf("organismValue" to "from Rose apple", "organismCleaned" to "")
+        val out = dics.processRecord(records)
         assertEquals("Syzygium jambos", out)
     }
 
@@ -17,7 +17,7 @@ internal class CleaningTest {
         dics.combinedDic.add((Regex("""\bRose Apple\b""", RegexOption.IGNORE_CASE) to "Syzygium jambos"))
         val out = dics.processRecord(
             mapOf(
-                "organismOriginal" to "from Syzygium, Rose apple",
+                "organismValue" to "from Syzygium, Rose apple",
                 "organismCleaned" to "Syzygium"
             )
         )
