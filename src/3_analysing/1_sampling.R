@@ -8,12 +8,12 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading db, if running fullmode, this may take a while")
 openDbMinimal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTable) %>%
+  read_delim(file = pathDataInterimTablesCuratedTable) %>%
   data.frame()
 
 log_debug("sampling ...")

@@ -8,9 +8,9 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
 library(data.table)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading ...")
 log_debug("databases list ...")
@@ -25,7 +25,7 @@ dataset <- read_delim(
   )
 
 log_debug("initial table ...")
-dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
+dbTable <- lapply(pathDataInterimDbDir, read_delim) %>%
   rbindlist(l = ., fill = TRUE) %>%
   select(
     database,
@@ -44,26 +44,27 @@ dbTable <- lapply(pathDataInterimDbDir, vroom_read_safe) %>%
     referenceOriginal_publishingDetails = reference_publishingDetails,
     referenceOriginal_split = reference_split,
     referenceOriginal_title = reference_title,
-  ) %>%
-  tibble()
+  )
 
 log_debug("final table ...")
 inhouseDbMinimal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTable)
+  read_delim(file = pathDataInterimTablesCuratedTable,
+             col_types = cols(.default = "c"))
 
 log_debug("validated for export ...")
 openDb <-
-  vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
-  tibble()
+  read_delim(file = pathDataInterimTablesAnalysedPlatinum,
+             col_types = cols(.default = "c"))
 
 log_debug("exported ...")
 wikidata_pairs <-
-  fread(
+  read_delim(
     file = file.path(
       pathDataExternalDbSource,
       pathLastWdExport
     ),
-    quote = ""
+    quote = "",
+    col_types = cols(.default = "c")
   ) %>%
   filter(!is.na(structure_inchikey) &
     !is.na(taxon_name) &
@@ -72,12 +73,12 @@ wikidata_pairs <-
     structureCleanedInchikey = structure_inchikey,
     organismCleaned = taxon_name,
     referenceCleanedDoi = reference_doi
-  ) %>%
-  tibble()
+  )
 
 log_debug("... dnp db")
 dnpDb <-
-  vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
+  read_delim(file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"),
+             col_types = cols(.default = "c")) %>%
   data.frame()
 
 log_debug("performing inner join with uploaded entries")
