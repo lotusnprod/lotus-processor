@@ -3,33 +3,32 @@ log_debug("This script plots the alluvial plot ...")
 
 start <- Sys.time()
 library(data.table)
+library(dplyr)
 library(ggalluvial)
 library(ggfittext)
+library(readr)
 library(splitstackshape)
-library(tidyverse)
+library(tidyr)
 source(file = "paths.R")
-source(file = "r/vroom_safe.R")
 
 log_debug("... pretty names")
 prettyNames <-
-  vroom_read_safe(path = "../docs/prettyDBNames.tsv")
+  read_delim(file = "../docs/prettyDBNames.tsv")
 
 log_debug("... open DB")
 openDbMetaValidated <-
-  vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
+  read_delim(file = pathDataInterimTablesAnalysedPlatinum) %>%
   filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
   ) %>%
   filter(database != "wikidata") %>%
-  mutate(validation = "validated") %>%
-  tibble()
+  mutate(validation = "validated")
 
 openDbMaximal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTableMaximal) %>%
-  filter(database != "wikidata") %>%
-  tibble()
+  read_delim(file = pathDataInterimTablesCuratedTableMaximal) %>%
+  filter(database != "wikidata")
 
 full <- left_join(openDbMaximal, openDbMetaValidated) %>%
   mutate(
