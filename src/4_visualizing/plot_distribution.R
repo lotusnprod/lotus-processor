@@ -8,17 +8,18 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(data.table)
+library(dplyr)
 library(plotly)
+library(readr)
 
 organismsPerStructure_2D <-
-  fread(file = file.path(
+  read_delim(file = file.path(
     pathDataProcessed,
     "organismsPerStructure2D.tsv.gz"
   ))
 
 structuresPerOrganism_2D <-
-  fread(file = file.path(
+  read_delim(file = file.path(
     pathDataProcessed,
     "structures2DPerOrganism.tsv.gz"
   ))

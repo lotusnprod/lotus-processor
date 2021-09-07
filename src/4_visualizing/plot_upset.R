@@ -13,7 +13,6 @@ if (mode == "full") {
   library(splitstackshape)
   library(tidyverse)
   library(UpSetR)
-  source("r/vroom_safe.R")
   source("r/getGraphChemicalClass.R")
   source("r/getGraphStudiedPlant.R")
   source("r/prepare_upset.R")
@@ -23,11 +22,11 @@ if (mode == "full") {
 
   log_debug("... pretty names")
   prettyNames <-
-    vroom_read_safe(path = "../docs/prettyDBNames.tsv")
+    read_delim(file = "../docs/prettyDBNames.tsv")
 
   log_debug("... open DB")
   openDb <-
-    vroom_read_safe(path = pathDataInterimTablesAnalysedPlatinum) %>%
+    read_delim(file = pathDataInterimTablesAnalysedPlatinum) %>%
     distinct(
       database,
       organismCleaned,
@@ -35,28 +34,25 @@ if (mode == "full") {
       referenceCleanedTitle,
       .keep_all = TRUE
     ) %>%
-    filter(database != "wikidata") %>%
-    tibble()
+    filter(database != "wikidata")
 
   log_debug("... DNP DB")
   dnpDb <-
-    vroom_read_safe(path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
+    read_delim(file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
     distinct(
       database,
       organismCleaned,
       structureCleanedInchikey,
       structureCleaned_inchikey2D,
       .keep_all = TRUE
-    ) %>%
-    tibble()
+    )
 
   log_debug("... metadata ...")
-  pairs_metadata <- fread(
-    input = file.path(
+  pairs_metadata <- read_delim(
+    file = file.path(
       pathDataProcessed,
       pathLastFrozen
-    ),
-    na.strings = ""
+    )
   ) %>%
     cSplit(
       splitCols = colnames(.)[.[, grepl(
@@ -71,8 +67,7 @@ if (mode == "full") {
         !is.na(structure_taxonomy_npclassifier_02superclass) &
         !is.na(structure_taxonomy_npclassifier_03class)
     ) %>%
-    mutate_all(as.character) %>%
-    tibble()
+    mutate_all(as.character)
 
   pairs_metadata[] <-
     lapply(pairs_metadata, function(x) {
