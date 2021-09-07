@@ -27,7 +27,10 @@ dataInterimOrganismToFill <-
 
 log_debug("... cleaned original organisms")
 dataCleanedOriginalOrganism <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismOriginalTable)
+  read_delim(
+    file = pathDataInterimTablesCleanedOrganismOriginalTable,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("... verified original organisms")
 dataVerifiedOriginalOrganism <-

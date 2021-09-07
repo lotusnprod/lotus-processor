@@ -17,8 +17,10 @@ source("r/getrefDoi.R")
 
 log_debug("loading DOI list")
 dataDoi <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceDoi,
-             delim = "\t")
+  read_delim(
+    file = pathDataInterimTablesOriginalReferenceDoi,
+    delim = "\t"
+  )
 
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 1) {

@@ -48,13 +48,17 @@ dbTable <- lapply(pathDataInterimDbDir, read_delim) %>%
 
 log_debug("final table ...")
 inhouseDbMinimal <-
-  read_delim(file = pathDataInterimTablesCuratedTable,
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimTablesCuratedTable,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("validated for export ...")
 openDb <-
-  read_delim(file = pathDataInterimTablesAnalysedPlatinum,
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimTablesAnalysedPlatinum,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("exported ...")
 wikidata_pairs <-
@@ -77,8 +81,10 @@ wikidata_pairs <-
 
 log_debug("... dnp db")
 dnpDb <-
-  read_delim(file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"),
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"),
+    col_types = cols(.default = "c")
+  ) %>%
   data.frame()
 
 log_debug("performing inner join with uploaded entries")

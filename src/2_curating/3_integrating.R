@@ -14,45 +14,69 @@ library(readr)
 log_debug("loading files ...")
 log_debug("... original table")
 originalTable <-
-  read_delim(file = pathDataInterimTablesOriginalTable)
+  read_delim(
+    file = pathDataInterimTablesOriginalTable,
+    col_types = cols(.default = "c")
+  )
 
 originalStructureTable <-
-  read_delim(file = pathDataInterimTablesOriginalStructureFull)
+  read_delim(
+    file = pathDataInterimTablesOriginalStructureFull,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("loading dictionaries ...")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   log_debug("... structures")
   structureDictionary <-
-    read_delim(file = pathDataInterimDictionariesStructureDictionary)
+    read_delim(
+      file = pathDataInterimDictionariesStructureDictionary,
+      col_types = cols(.default = "c")
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... organisms")
   organismDictionary <-
-    read_delim(file = pathDataInterimDictionariesOrganismDictionary)
+    read_delim(
+      file = pathDataInterimDictionariesOrganismDictionary,
+      col_types = cols(.default = "c")
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... references")
   referenceOrganismDictionary <-
-    read_delim(file = pathDataInterimDictionariesReferenceOrganismDictionary)
+    read_delim(
+      file = pathDataInterimDictionariesReferenceOrganismDictionary,
+      col_types = cols(.default = "c")
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... structures metadata")
   structureMetadata <-
-    read_delim(file = pathDataInterimDictionariesStructureMetadata)
+    read_delim(
+      file = pathDataInterimDictionariesStructureMetadata,
+      col_types = cols(.default = "c")
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   log_debug("... organisms metadata")
   organismMetadata <-
-    read_delim(file = pathDataInterimDictionariesOrganismMetadata)
+    read_delim(
+      file = pathDataInterimDictionariesOrganismMetadata,
+      col_types = cols(.default = "c")
+    )
 }
 
 log_debug("... cleaned organisms")
 organismTableFull <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
+  read_delim(
+    file = pathDataInterimTablesCleanedOrganismFinal,
+    col_types = cols(.default = "c")
+  ) %>%
   select(
     organismType,
     organismValue,
@@ -77,11 +101,17 @@ organismTableFull <-
 
 log_debug("... translated structures")
 translatedStructureTable <-
-  read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
+  read_delim(
+    file = pathDataInterimTablesTranslatedStructureFinal,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("... cleaned structures")
 cleanedStructureTableFull <-
-  read_delim(file = pathDataInterimTablesCleanedStructureNamed) %>%
+  read_delim(
+    file = pathDataInterimTablesCleanedStructureNamed,
+    col_types = cols(.default = "c")
+  ) %>%
   select(
     structureTranslated,
     structureCleanedSmiles = smilesSanitized,
@@ -102,7 +132,10 @@ cleanedStructureTableFull <-
 
 log_debug("... cleaned references")
 referenceTableFull <-
-  read_delim(file = pathDataInterimTablesCleanedReferenceFile) %>%
+  read_delim(
+    file = pathDataInterimTablesCleanedReferenceFile,
+    col_types = cols(.default = "c")
+  ) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 log_debug("joining ...")
@@ -395,7 +428,7 @@ log_debug(pathDataInterimTablesCuratedTable)
 write_delim(
   x = inhouseDbMinimal,
   file = pathDataInterimTablesCuratedTable,
-  append = TRUE 
+  append = TRUE
 )
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
@@ -408,7 +441,7 @@ log_debug(pathDataInterimDictionariesStructureAntiDictionary)
 write_delim(
   x = structureNA,
   file = pathDataInterimDictionariesStructureAntiDictionary,
-  append = TRUE 
+  append = TRUE
 )
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)

@@ -18,12 +18,16 @@ library(readr)
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted,
-             delim = "\t")
+  read_delim(
+    file = pathDataInterimTablesCleanedStructureStereoCounted,
+    delim = "\t"
+  )
 
 old <-
-  read_delim(file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
-             delim = "\t") %>%
+  read_delim(
+    file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+    delim = "\t"
+  ) %>%
   distinct(inchikey)
 
 structuresForClassification <-

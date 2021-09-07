@@ -28,8 +28,9 @@ if (mode == "full") {
 
   log_debug("... open DB")
   openDb <-
-    read_delim(file = pathDataInterimTablesAnalysedPlatinum,
-               col_types = cols(.default = "c")
+    read_delim(
+      file = pathDataInterimTablesAnalysedPlatinum,
+      col_types = cols(.default = "c")
     ) %>%
     distinct(
       database,

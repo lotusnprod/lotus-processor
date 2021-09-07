@@ -7,6 +7,7 @@ channels:
 dependencies:
   - beautifulsoup4
   - cirpy
+  - cmcrameri
   - dvc>=2.6.4
   - dvc-s3 ## needed by the new versions of dvc
   - ipykernel

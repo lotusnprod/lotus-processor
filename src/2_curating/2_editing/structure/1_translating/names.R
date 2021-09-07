@@ -23,8 +23,10 @@ source("r/y_as_na.R")
 
 log_debug("loading chemical names lists")
 dataOriginal <-
-  read_delim(file = pathDataInterimTablesOriginalStructureNominal,
-             delim = "\t")
+  read_delim(
+    file = pathDataInterimTablesOriginalStructureNominal,
+    delim = "\t"
+  )
 
 if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
