@@ -5,11 +5,11 @@
 source("paths.R")
 
 library(dplyr)
-library(Hmisc)
 library(readr)
 library(splitstackshape)
 library(stringr)
 
+source("r/capitalize.R")
 source("r/y_as_na.R")
 
 ##  files
@@ -411,6 +411,7 @@ common2Sci <- commonSciSub %>%
 # exporting
 write_delim(
   x = common2Sci,
+  delim = "\t",
   file = gzfile(
     description = pathDataInterimDictionariesCommonNames,
     compression = 9,

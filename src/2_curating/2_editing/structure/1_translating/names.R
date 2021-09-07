@@ -9,19 +9,22 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(Hmisc)
 library(pbmcapply)
 library(readr)
+library(stringr)
 
 log_debug("... functions")
-source("r/y_as_na.R")
-source("r/preparing_name.R")
+source("r/capitalize.R")
 source("r/name2inchi_cactus.R")
 source("r/name2inchi_cts.R")
+source("r/preparing_name.R")
+source("r/y_as_na.R")
+
 
 log_debug("loading chemical names lists")
 dataOriginal <-
-  read_delim(file = pathDataInterimTablesOriginalStructureNominal)
+  read_delim(file = pathDataInterimTablesOriginalStructureNominal,
+             delim = "\t")
 
 if (nrow(dataOriginal) == 0) {
   dataOriginal[1, "structureOriginal_nominal"] <- NA
@@ -85,7 +88,7 @@ dataOpsin <-
     trim_ws = TRUE
   ) %>%
   mutate_all(as.character) %>%
-  select(inchiNominal_opsin = X1)
+  select(inchiNominal_opsin = `...1`)
 
 dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
 

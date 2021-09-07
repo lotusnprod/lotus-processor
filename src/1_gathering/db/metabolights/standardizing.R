@@ -2,12 +2,12 @@
 
 # loading paths
 source("paths.R")
+source("r/capitalize.R")
 source("r/parallel.R")
 source("r/standardizing_original.R")
 
 library(dplyr)
 library(parallel)
-library(Hmisc)
 library(pbmcapply)
 library(splitstackshape)
 library(tidyverse)

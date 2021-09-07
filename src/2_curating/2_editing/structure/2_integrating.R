@@ -14,7 +14,8 @@ library(readr)
 log_debug("loading files ...")
 log_debug("... whole chemicals list")
 originalTable <-
-  read_delim(file = pathDataInterimTablesOriginalStructureFull)
+  read_delim(file = pathDataInterimTablesOriginalStructureFull,
+             delim = "\t")
 
 log_debug("... chemical names list")
 nominalStructureTable <-

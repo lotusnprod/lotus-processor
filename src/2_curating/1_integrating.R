@@ -643,6 +643,7 @@ log_debug("exporting ...")
 if (nrow(organismTable_clean) != 0) {
   write_delim(
     x = organismTable_clean,
+    delim = "\t",
     file = gzfile(
       description = pathDataInterimTablesOriginalOrganismFile,
       compression = 9,
@@ -657,18 +658,21 @@ if (nrow(organismTable_clean) != 0) {
 log_debug(pathDataInterimTablesOriginal)
 write_delim(
   x = organismTable_full,
+  delim = "\t",
   file = pathDataInterimTablesOriginalOrganismFull
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceDoi)
 write_delim(
   x = referenceTable_doi,
+  delim = "\t",
   file = pathDataInterimTablesOriginalReferenceDoi
 )
 
 log_debug(pathDataInterimTablesOriginalReferencePubmed)
 write_delim(
   x = referenceTable_pubmed,
+  delim = "\t",
   file = pathDataInterimTablesOriginalReferencePubmed
 )
 
@@ -686,12 +690,14 @@ log_debug(
 )
 write_delim(
   x = referenceTable_publishingDetails,
+  delim = "\t",
   file = pathDataInterimTablesOriginalReferencePublishingDetails
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceSplit)
 write_delim(
   x = referenceTable_split,
+  delim = "\t",
   file = pathDataInterimTablesOriginalReferenceSplit
 )
 
@@ -706,36 +712,42 @@ split_data_table_quote(
 log_debug(pathDataInterimTablesOriginalReferenceFull)
 write_delim(
   x = referenceTable_full,
+  delim = "\t",
   file = pathDataInterimTablesOriginalReferenceFull
 )
 
 log_debug(pathDataInterimTablesOriginalStructureInchi)
 write_delim(
   x = structureTable_inchi,
+  delim = "\t",
   file = pathDataInterimTablesOriginalStructureInchi
 )
 
 log_debug(pathDataInterimTablesOriginalStructureNominal)
 write_delim(
   x = structureTable_nominal,
+  delim = "\t",
   file = pathDataInterimTablesOriginalStructureNominal
 )
 
 log_debug(pathDataInterimTablesOriginalStructureSmiles)
 write_delim(
   x = structureTable_smiles,
+  delim = "\t",
   file = pathDataInterimTablesOriginalStructureSmiles
 )
 
 log_debug(pathDataInterimTablesOriginalStructureFull)
 write_delim(
   x = structureTable_full,
+  delim = "\t",
   file = pathDataInterimTablesOriginalStructureFull
 )
 
 log_debug(pathDataInterimTablesOriginalTable)
 write_delim(
   x = originalTable,
+  delim = "\t",
   file = pathDataInterimTablesOriginalTable
 )
 

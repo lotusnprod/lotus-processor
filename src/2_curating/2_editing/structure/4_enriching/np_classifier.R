@@ -22,7 +22,8 @@ source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
 smiles <-
-  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted) %>%
+  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted,
+             delim = "\t") %>%
   distinct(structure_smiles_2D = smilesSanitizedFlat)
 # smiles <-
 #   read_delim(file = pathDataInterimDictionariesStructureMetadata) %>%
@@ -39,7 +40,8 @@ taxonomy <- fromJSON(txt = list.files(
 ))
 
 old <-
-  read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile) %>%
+  read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
+             delim = "\t") %>%
   distinct() %>%
   mutate_all(as.character)
 
@@ -106,6 +108,7 @@ df_semiclean <-
 
 write_delim(
   x = df_semiclean,
+  delim = "\t",
   file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
 )
 
