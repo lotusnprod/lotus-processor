@@ -17,7 +17,8 @@ source("r/getrefDoi.R")
 
 log_debug("loading DOI list")
 dataDoi <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceDoi)
+  read_delim(file = pathDataInterimTablesOriginalReferenceDoi,
+             delim = "\t")
 
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 1) {
@@ -193,6 +194,7 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceDoi)
 write_delim(
   x = dataDoi,
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceDoi
 )
 
