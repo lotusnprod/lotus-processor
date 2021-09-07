@@ -4,24 +4,26 @@ log_debug("This script plots the magic tree.")
 start <- Sys.time()
 
 library(data.table)
+library(dplyr)
+library(forcats)
+library(ggplot2)
 library(ggtree)
 library(ggtreeExtra)
 library(ggstar)
 library(ggnewscale)
+library(readr)
 library(rotl)
 library(splitstackshape)
-library(tidyverse)
+library(tidyr)
 source(file = "paths.R")
 source(file = "r/colors.R")
 source(file = "r/tree_presence_absence.R")
 
-pairs_metadata <- fread(
-  input = file.path(
-    pathDataProcessed,
-    pathLastFrozen
-  ),
-  na.strings = ""
-)
+pairs_metadata <- read_delim(file = file.path(
+  pathDataProcessed,
+  pathLastFrozen
+)) %>%
+  data.table()
 
 n_min <- 50
 
@@ -111,12 +113,49 @@ specific_classes_p <- specific_classes %>%
   count(name = "p") %>%
   ungroup()
 
-specific_classes <- specific_classes %>%
+specific_classes_old <- specific_classes %>%
   left_join(., specific_classes_n) %>%
   left_join(., specific_classes_m) %>%
   left_join(., specific_classes_o) %>%
   left_join(., specific_classes_p) %>%
   mutate(q = p^2 / (m * n)) %>%
+  distinct(
+    organism_taxonomy_06family,
+    structure_taxonomy_npclassifier_03class,
+    q,
+    o,
+    .keep_all = TRUE
+  ) %>%
+  group_by(organism_taxonomy_06family) %>%
+  filter(q == max(q)) %>%
+  ungroup() %>%
+  distinct(organism_taxonomy_06family, q, .keep_all = TRUE)
+
+specific_classes_jaccard <- specific_classes %>%
+  left_join(., specific_classes_n) %>%
+  left_join(., specific_classes_m) %>%
+  left_join(., specific_classes_o) %>%
+  left_join(., specific_classes_p) %>%
+  mutate(q = p / (n + m - p)) %>%
+  distinct(
+    organism_taxonomy_06family,
+    structure_taxonomy_npclassifier_03class,
+    q,
+    o,
+    .keep_all = TRUE
+  ) %>%
+  group_by(organism_taxonomy_06family) %>%
+  filter(q == max(q)) %>%
+  ungroup() %>%
+  distinct(organism_taxonomy_06family, q, .keep_all = TRUE)
+
+specific_classes_overlap <- specific_classes %>%
+  left_join(., specific_classes_n) %>%
+  left_join(., specific_classes_m) %>%
+  left_join(., specific_classes_o) %>%
+  left_join(., specific_classes_p) %>%
+  rowwise() %>%
+  mutate(q = p / min(m, n)) %>%
   distinct(
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_03class,
@@ -158,7 +197,7 @@ info <- taxonomy %>%
   mutate(Kingdom = fct_reorder(Kingdom, !is.na(Domain))) %>%
   mutate(Phylum = fct_reorder(Phylum, !is.na(Kingdom)))
 
-bar_data <- specific_classes %>%
+bar_data_old <- specific_classes_old %>%
   select(
     id = organism_taxonomy_06family,
     everything(),
@@ -180,23 +219,99 @@ bar_data <- specific_classes %>%
     !is.na(structure_taxonomy_npclassifier_02superclass)
   ))
 
-bar_data_temp <- bar_data
+bar_data_jaccard <- specific_classes_jaccard %>%
+  select(
+    id = organism_taxonomy_06family,
+    everything(),
+    -organism_taxonomy_01domain,
+    -organism_taxonomy_02kingdom,
+    -organism_taxonomy_03phylum,
+    -organism_taxonomy_05order
+  ) %>%
+  # mutate(`02superclass` = fct_reorder(`02superclass`, `01kingdom`)) %>%
+  # mutate(`03class` = fct_reorder(`03class`, !is.na(`02superclass`)))
+  mutate(
+    superclass = fct_reorder(
+      structure_taxonomy_npclassifier_02superclass,
+      structure_taxonomy_npclassifier_01pathway
+    )
+  ) %>%
+  mutate(class = fct_reorder(
+    structure_taxonomy_npclassifier_03class,
+    !is.na(structure_taxonomy_npclassifier_02superclass)
+  ))
 
-info_temp <- info %>%
-  filter(id %in% bar_data_temp$id)
+bar_data_overlap <- specific_classes_overlap %>%
+  select(
+    id = organism_taxonomy_06family,
+    everything(),
+    -organism_taxonomy_01domain,
+    -organism_taxonomy_02kingdom,
+    -organism_taxonomy_03phylum,
+    -organism_taxonomy_05order
+  ) %>%
+  # mutate(`02superclass` = fct_reorder(`02superclass`, `01kingdom`)) %>%
+  # mutate(`03class` = fct_reorder(`03class`, !is.na(`02superclass`)))
+  mutate(
+    superclass = fct_reorder(
+      structure_taxonomy_npclassifier_02superclass,
+      structure_taxonomy_npclassifier_01pathway
+    )
+  ) %>%
+  mutate(class = fct_reorder(
+    structure_taxonomy_npclassifier_03class,
+    !is.na(structure_taxonomy_npclassifier_02superclass)
+  ))
 
-ott_temp <-
-  ott_in_tree[names(ott_in_tree) %in% bar_data_temp$id]
+info_old <- info %>%
+  filter(id %in% bar_data_old$id)
 
-ott_temp <- ott_temp[!duplicated(ott_temp)]
+info_jaccard <- info %>%
+  filter(id %in% bar_data_jaccard$id)
 
-tr_temp <- tol_induced_subtree(ott_ids = ott_temp)
+info_overlap <- info %>%
+  filter(id %in% bar_data_overlap$id)
 
-tr_temp$tip.label <-
+ott_old <-
+  ott_in_tree[names(ott_in_tree) %in% bar_data_old$id]
+
+ott_old <- ott_old[!duplicated(ott_old)]
+
+ott_jaccard <-
+  ott_in_tree[names(ott_in_tree) %in% bar_data_jaccard$id]
+
+ott_jaccard <- ott_jaccard[!duplicated(ott_jaccard)]
+
+ott_overlap <-
+  ott_in_tree[names(ott_in_tree) %in% bar_data_overlap$id]
+
+ott_overlap <- ott_overlap[!duplicated(ott_overlap)]
+
+tr_old <- tol_induced_subtree(ott_ids = ott_old)
+
+tr_old$tip.label <-
   gsub(
     pattern = "_.*",
     replacement = "",
-    x = tr_temp$tip.label
+    x = tr_old$tip.label
+  )
+
+tr_jaccard <- tol_induced_subtree(ott_ids = ott_jaccard)
+
+tr_jaccard$tip.label <-
+  gsub(
+    pattern = "_.*",
+    replacement = "",
+    x = tr_jaccard$tip.label
+  )
+
+tr_overlap <- tol_induced_subtree(ott_ids = ott_overlap)
+
+tr_overlap$tip.label <-
+  gsub(
+    pattern = "_.*",
+    replacement = "",
+    x = tr_overlap$tip.label
   )
 
 sitosterol_3D <- pairs_metadata %>%
@@ -358,10 +473,10 @@ terpenoids <- pairs_metadata %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
-tree <- ggtree(tr = tr_temp, layout = "circular")
+tree_old <- ggtree(tr = tr_old, layout = "circular")
 
-p <- tree %<+%
-  info_temp +
+p_old <- tree_old %<+%
+  info_old +
   geom_tiplab(
     aes(color = Kingdom),
     align = TRUE,
@@ -373,7 +488,7 @@ p <- tree %<+%
     na.value = "grey"
   ) +
   geom_fruit(
-    data = bar_data_temp,
+    data = bar_data_old,
     geom = geom_bar,
     mapping =
       aes(
@@ -415,8 +530,172 @@ p <- tree %<+%
     na.value = "grey"
   )
 
-p <- p %<+%
-  bar_data_temp +
+p_old <- p_old %<+%
+  bar_data_old +
+  geom_tippoint(mapping = aes(color = Kingdom, size = o)) +
+  new_scale_fill() +
+  scale_fill_discrete(
+    name = "Biological kingdom",
+    guide = guide_legend(
+      order = 1,
+      ncol = 2
+    )
+  ) +
+  scale_size_continuous(
+    name = "Genera in biological family",
+    guide = guide_legend(
+      order = 2,
+      direction = "horizontal"
+    )
+  ) +
+  theme(
+    legend.position = c(0.5, 0.05),
+    legend.background = element_rect(fill = NA),
+    legend.title = element_text(size = rel(3)),
+    legend.text = element_text(size = rel(2)),
+  )
+
+tree_jaccard <- ggtree(tr = tr_jaccard, layout = "circular")
+
+p_jaccard <- tree_jaccard %<+%
+  info_jaccard +
+  geom_tiplab(
+    aes(color = Kingdom),
+    align = TRUE,
+    size = rel(5),
+    offset = rel(1)
+  ) +
+  scale_color_manual(
+    values = strsplit(x = paired, split = " "),
+    na.value = "grey"
+  ) +
+  geom_fruit(
+    data = bar_data_jaccard,
+    geom = geom_bar,
+    mapping =
+      aes(
+        y = id,
+        x = q,
+        fill = structure_taxonomy_npclassifier_01pathway
+      ),
+    offset = rel(0.2),
+    pwidth = rel(1.6),
+    orientation = "y",
+    stat = "identity",
+  ) +
+  geom_tiplab(
+    mapping = aes(
+      # label = paste(`02superclass`, `03class`, sep = " - "),
+      label = paste(
+        structure_taxonomy_npclassifier_02superclass,
+        structure_taxonomy_npclassifier_03class,
+        sep = " - "
+      ),
+      x = 33 + 75 * q ## to adapt with the data
+    ),
+    linetype = "blank",
+    linesize = 0,
+    align = TRUE,
+    size = rel(5),
+    offset = rel(12)
+  ) +
+  scale_fill_discrete(
+    name = "Chemical pathway",
+    direction = "vertical",
+    guide = guide_legend(order = 3)
+  ) +
+  scale_fill_manual(
+    values = strsplit(
+      x = paired[4:12],
+      split = " "
+    ),
+    na.value = "grey"
+  )
+
+p_jaccard <- p_jaccard %<+%
+  bar_data_jaccard +
+  geom_tippoint(mapping = aes(color = Kingdom, size = o)) +
+  new_scale_fill() +
+  scale_fill_discrete(
+    name = "Biological kingdom",
+    guide = guide_legend(
+      order = 1,
+      ncol = 2
+    )
+  ) +
+  scale_size_continuous(
+    name = "Genera in biological family",
+    guide = guide_legend(
+      order = 2,
+      direction = "horizontal"
+    )
+  ) +
+  theme(
+    legend.position = c(0.5, 0.05),
+    legend.background = element_rect(fill = NA),
+    legend.title = element_text(size = rel(3)),
+    legend.text = element_text(size = rel(2)),
+  )
+
+tree_overlap <- ggtree(tr = tr_overlap, layout = "circular")
+
+p_overlap <- tree_overlap %<+%
+  info_overlap +
+  geom_tiplab(
+    aes(color = Kingdom),
+    align = TRUE,
+    size = rel(5),
+    offset = rel(1)
+  ) +
+  scale_color_manual(
+    values = strsplit(x = paired, split = " "),
+    na.value = "grey"
+  ) +
+  geom_fruit(
+    data = bar_data_overlap,
+    geom = geom_bar,
+    mapping =
+      aes(
+        y = id,
+        x = q,
+        fill = structure_taxonomy_npclassifier_01pathway
+      ),
+    offset = rel(0.2),
+    pwidth = rel(1.6),
+    orientation = "y",
+    stat = "identity",
+  ) +
+  geom_tiplab(
+    mapping = aes(
+      # label = paste(`02superclass`, `03class`, sep = " - "),
+      label = paste(
+        structure_taxonomy_npclassifier_02superclass,
+        structure_taxonomy_npclassifier_03class,
+        sep = " - "
+      ),
+      x = 33 + 75 * q ## to adapt with the data
+    ),
+    linetype = "blank",
+    linesize = 0,
+    align = TRUE,
+    size = rel(5),
+    offset = rel(12)
+  ) +
+  scale_fill_discrete(
+    name = "Chemical pathway",
+    direction = "vertical",
+    guide = guide_legend(order = 3)
+  ) +
+  scale_fill_manual(
+    values = strsplit(
+      x = paired[4:12],
+      split = " "
+    ),
+    na.value = "grey"
+  )
+
+p_overlap <- p_overlap %<+%
+  bar_data_overlap +
   geom_tippoint(mapping = aes(color = Kingdom, size = o)) +
   new_scale_fill() +
   scale_fill_discrete(
@@ -457,8 +736,26 @@ u <-
 
 if (mode == "full") {
   ggsave(
-    filename = file.path("../res", "magicTree.pdf"),
-    plot = p,
+    filename = file.path("../res", "magicTree_old.pdf"),
+    plot = p_old,
+    width = 100,
+    height = 100,
+    units = "in",
+    limitsize = FALSE
+  )
+
+  ggsave(
+    filename = file.path("../res", "magicTree_jaccard.pdf"),
+    plot = p_jaccard,
+    width = 100,
+    height = 100,
+    units = "in",
+    limitsize = FALSE
+  )
+
+  ggsave(
+    filename = file.path("../res", "magicTree_overlap.pdf"),
+    plot = p_overlap,
     width = 100,
     height = 100,
     units = "in",

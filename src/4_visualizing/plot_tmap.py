@@ -1,6 +1,11 @@
 import pickle
 import sys
+
 from collections import Counter
+from cmcrameri import cm
+from faerun import Faerun
+from map4 import MAP4Calculator
+from rdkit.Chem import AllChem
 from time import sleep
 
 import matplotlib.colors as mcolors
@@ -8,9 +13,6 @@ import numpy as np
 import pandas as pd
 import scipy.stats as ss
 import tmap as tm
-from faerun import Faerun
-from map4 import MAP4Calculator
-from rdkit.Chem import AllChem
 
 
 # Define useful functions:
@@ -70,7 +72,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/210523_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/210715_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -214,21 +216,36 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
-    'Oleanane triterpenoids', 'Cyclic peptides', 'Flavonols', 'Germacrane sesquiterpenoids',
-    'Flavones', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Guaiane sesquiterpenoids',
-    'Cinnamic acids and derivatives', 'Quassinoids', 'Carotenoids (C40, β-β)'
-], data, labels)
+    'Isoquinoline alkaloids', 'Carboline alkaloids', 'Pyridine alkaloids', 'Aporphine alkaloids', 'Corynanthe type',
+    'Cyclic peptides', 'Aminoacids', 'Linear peptides', 'Dipeptides', 'Cyanogenic glycosides', 
+    'Polysaccharides', 'Disaccharides', 'Monosaccharides', 'Amino cyclitols', 'Aminosugars',
+    'Fatty alcohols', 'Wax monoesters', 'Hydrocarbons', 'Oxygenated hydrocarbons', 'Unsaturated fatty acids',
+    'Anthraquinones and anthrones', 'Naphthoquinones', 'Open-chain polyketides', 'Angucyclines', 'Chromones',
+    'Flavonols', 'Flavones', 'Cinnamic acids and derivatives', 'Flavanones', 'Simple coumarins',
+    'Quassinoids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Carotenoids (C40, β-β)'
+    # quassinoids and carotenoids actually not 1st and 5th
+    ], data, labels)
 
 # count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
 # simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
 
 # Generating colormaps for plotting
+cmap_batlowS = cm.batlowS
+cmap_batlow = cm.batlow
+cm_roma = cm.roma
 cmap = mcolors.ListedColormap(["gainsboro", "peachpuff", "salmon", "tomato"])
 cmap2 = mcolors.ListedColormap(["gainsboro", "tomato"])
 cmap3 = mcolors.ListedColormap(["gainsboro", "#b15928"])
 cmap4 = mcolors.ListedColormap(
-    ["gainsboro", "#8cd17d", "#4e79a7", "#e15759", "#499894", "#ff9d9a",
-     "#86bcb6", "#b6992d", "#d37295", "#59a14f", "#f1ce63"])
+    ## adapted from https://github.com/KarstensLab/microshades
+    ["gainsboro",
+     "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3",
+     "#D8C7BE", "#CAA995", "#B78560", "#9E5C00", "#7D3200",
+     "#EFB6D6", "#E794C1", "#CC79A7", "#A1527F", "#7D3560",
+     "#A3E4D7", "#48C9B0", "#43BA8F", "#009E73", "#148F77",
+     "#E7F4FF", "#BCE1FF", "#7DCCFF", "#56B4E9", "#098BD9",
+     "#FFD5AF", "#FCB076", "#F09163", "#C17754", "#9D654C",
+     "#DDFFA0", "#BDEC6F", "#97CE2F", "#6D9F06", "#4E7705"])
 
 # Generate a labels column
 df_gb["labels"] = (
@@ -248,120 +265,120 @@ df_gb["labels"] = (
 # OPTION 1: START FROM SCRATCH AND GENERATE LSH FOREST AND TMAP FROM SMILES, PLUS CHEMICAL DESCRIPTORS
 ########################################################
 
-MAP4 = MAP4Calculator(dimensions=1024)
-# ENC = tm.Minhash(1024)
+# MAP4 = MAP4Calculator(dimensions=1024)
+# # ENC = tm.Minhash(1024)
 
-# enc = MHFPEncoder(1024)
-lf = tm.LSHForest(1024, 64)
+# # enc = MHFPEncoder(1024)
+# lf = tm.LSHForest(1024, 64)
 
-fps = []
-hac = []
-c_frac = []
-ring_atom_frac = []
-largest_ring_size = []
+# fps = []
+# hac = []
+# c_frac = []
+# ring_atom_frac = []
+# largest_ring_size = []
 
-n_iter = len(df_gb)
-for i, row in df_gb.iterrows():
-    j = (i + 1) / n_iter
-    sys.stdout.write('\r')
-    sys.stdout.write(f"[{'=' * int(50 * j):{50}s}] {round((100 * j), 2)}%")
-    sys.stdout.flush()
-    sleep(0.05)
+# n_iter = len(df_gb)
+# for i, row in df_gb.iterrows():
+#     j = (i + 1) / n_iter
+#     sys.stdout.write('\r')
+#     sys.stdout.write(f"[{'=' * int(50 * j):{50}s}] {round((100 * j), 2)}%")
+#     sys.stdout.flush()
+#     sleep(0.05)
 
-    mol = AllChem.MolFromSmiles(row["structure_smiles_2D_first"])
-    atoms = mol.GetAtoms()
-    size = mol.GetNumHeavyAtoms()
-    n_c = 0
-    n_ring_atoms = 0
-    for atom in atoms:
-        if atom.IsInRing():
-            n_ring_atoms += 1
-        if atom.GetSymbol().lower() == "c":
-            n_c += 1
+#     mol = AllChem.MolFromSmiles(row["structure_smiles_2D_first"])
+#     atoms = mol.GetAtoms()
+#     size = mol.GetNumHeavyAtoms()
+#     n_c = 0
+#     n_ring_atoms = 0
+#     for atom in atoms:
+#         if atom.IsInRing():
+#             n_ring_atoms += 1
+#         if atom.GetSymbol().lower() == "c":
+#             n_c += 1
 
-    c_frac.append(n_c / size if size != 0 else 0)
+#     c_frac.append(n_c / size if size != 0 else 0)
 
-    ring_atom_frac.append(n_ring_atoms / size if size != 0 else 0)
+#     ring_atom_frac.append(n_ring_atoms / size if size != 0 else 0)
 
-    sssr = AllChem.GetSymmSSSR(mol)
-    if len(sssr) > 0:
-        largest_ring_size.append(max([len(s) for s in sssr]))
-    else:
-        largest_ring_size.append(0)
-    hac.append(size)
-    fps.append(mol)
-    # fps.append(tm.VectorUint(enc.encode_mol(mol)))
-    # fps.append(tm.VectorUint(MAP4.calculate(mol)))
+#     sssr = AllChem.GetSymmSSSR(mol)
+#     if len(sssr) > 0:
+#         largest_ring_size.append(max([len(s) for s in sssr]))
+#     else:
+#         largest_ring_size.append(0)
+#     hac.append(size)
+#     fps.append(mol)
+#     # fps.append(tm.VectorUint(enc.encode_mol(mol)))
+#     # fps.append(tm.VectorUint(MAP4.calculate(mol)))
 
-fps = MAP4.calculate_many(fps)
-lf.batch_add(fps)
-lf.index()
+# fps = MAP4.calculate_many(fps)
+# lf.batch_add(fps)
+# lf.index()
 
-# Store lsh forest and structure metadata
-lf.store("../data/interim/tmap/210523_lotus_2D_map4.dat")
-with open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "wb+") as f:
-    pickle.dump(
-        (hac, c_frac, ring_atom_frac, largest_ring_size),
-        f,
-        protocol=pickle.HIGHEST_PROTOCOL,
-    )
+# # Store lsh forest and structure metadata
+# lf.store("../data/interim/tmap/210523_lotus_2D_map4.dat")
+# with open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "wb+") as f:
+#     pickle.dump(
+#         (hac, c_frac, ring_atom_frac, largest_ring_size),
+#         f,
+#         protocol=pickle.HIGHEST_PROTOCOL,
+#     )
 
-# tmap configuration
-cfg = tm.LayoutConfiguration()
-cfg.k = 20
-cfg.sl_extra_scaling_steps = 10
-cfg.node_size = 1 / 50
-cfg.mmm_repeats = 2
-cfg.sl_repeats = 2
+# # tmap configuration
+# cfg = tm.LayoutConfiguration()
+# cfg.k = 20
+# cfg.sl_extra_scaling_steps = 10
+# cfg.node_size = 1 / 50
+# cfg.mmm_repeats = 2
+# cfg.sl_repeats = 2
 
-# tmap generation
-x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
+# # tmap generation
+# x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 
-# To store coordinates
-x = list(x)
-y = list(y)
-s = list(s)
-t = list(t)
-pickle.dump(
-    (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
-)
+# # To store coordinates
+# x = list(x)
+# y = list(y)
+# s = list(s)
+# t = list(t)
+# pickle.dump(
+#     (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+# )
 
-del (lf)
+# del (lf)
 
 ########################################################
 # OPTION 2: LOAD PRE_COMPUTED LSH FOREST AND CHEMICAL DESCRIPTORS
 ########################################################
 
-lf = tm.LSHForest(1024, 64)
-lf.restore(
-    "../data/interim/tmap/210523_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+# lf = tm.LSHForest(1024, 64)
+# lf.restore(
+#     "../data/interim/tmap/210523_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
 
-hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
-)
+# hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
+#     open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
+# )
 
-# tmap configuration
+# # tmap configuration
 
-cfg = tm.LayoutConfiguration()
-cfg.k = 20
-cfg.sl_extra_scaling_steps = 10
-cfg.node_size = 1 / 50
-cfg.mmm_repeats = 2
-cfg.sl_repeats = 2
+# cfg = tm.LayoutConfiguration()
+# cfg.k = 20
+# cfg.sl_extra_scaling_steps = 10
+# cfg.node_size = 1 / 50
+# cfg.mmm_repeats = 2
+# cfg.sl_repeats = 2
 
-# tmap generation
-x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
+# # tmap generation
+# x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 
-# To store coordinates
-x = list(x)
-y = list(y)
-s = list(s)
-t = list(t)
-pickle.dump(
-    (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
-)
+# # To store coordinates
+# x = list(x)
+# y = list(y)
+# s = list(s)
+# t = list(t)
+# pickle.dump(
+#     (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+# )
 
-del (lf)
+# del (lf)
 
 # ########################################################
 # # OPTION 3: LOAD PRE-COMPUTED COORDINATES, SOURCES AND TARGETS
@@ -369,7 +386,7 @@ del (lf)
 # ########################################################
 
 x, y, s, t = pickle.load(open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat",
-                              "rb"))  # Version "coords_210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+                              "rb"))
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
     open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
@@ -469,10 +486,13 @@ f.add_scatter(
     categorical=[True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                  True, True, True, True, True, True, True,
                  False, False, False, False, False, False, False, False, False, False, False, False],
-    colormap=["tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
-              "tab20", "tab20", "tab20", cmap, cmap2, cmap, cmap, cmap, cmap, cmap, cmap, cmap3, cmap4,
-              "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno", "inferno",
-              "inferno", "rainbow", "rainbow", "rainbow", "Blues"],
+    colormap=[cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS,
+              cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS,
+              cmap, cmap2, cmap, cmap, cmap, cmap, cmap, cmap, cmap3, cmap4,
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow,
+              cmap_batlow,
+              cm_roma, cm_roma, cm_roma,
+              cmap_batlow],
     series_title=[
         "Chemical pathway",
         "Chemical superclass",
@@ -515,4 +535,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/210523_lotus_map4_2D', template="smiles")
+f.plot('../res/html/210907_lotus_map4_2D', template="smiles")
