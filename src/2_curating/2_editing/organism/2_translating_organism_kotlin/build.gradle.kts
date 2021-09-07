@@ -1,16 +1,15 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val univocityParserVersion = "2.9.0"
-val junitApiVersion = "5.6.0"
+val univocityParserVersion = "2.9.1"
+val junitApiVersion = "5.7.2"
 
 group = "net.nprod.onpdb"
-version = "0.4-SNAPSHOT"
+version = "0.5-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "1.4.21"
+    kotlin("jvm") version "1.5.30"
     application
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("name.remal.check-updates") version "1.1.6"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
 repositories {
@@ -25,17 +24,17 @@ dependencies {
 
     // Univocity is a fast TSV reader/writer
     implementation("com.univocity", "univocity-parsers", univocityParserVersion)
-    implementation("org.junit.jupiter:junit-jupiter:5.4.2")
+    implementation("org.junit.jupiter", "junit-jupiter", junitApiVersion)
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:$junitApiVersion")
-    testImplementation("org.junit.jupiter:junit-jupiter:$junitApiVersion")
+    testImplementation("org.junit.jupiter", "junit-jupiter-api", junitApiVersion)
+    testImplementation("org.junit.jupiter", "junit-jupiter", junitApiVersion)
 }
 
 /**
  * We need to compile for the outdated conda java version
  */
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "14"
 }
 
 /**
@@ -73,7 +72,4 @@ tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
 
 tasks.test {
     useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
 }
