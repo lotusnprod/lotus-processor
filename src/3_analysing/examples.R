@@ -8,7 +8,8 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
+library(readr)
 
 log_debug("loading ...")
 log_debug("... validated db, if running fullmode, this may take a while")
@@ -18,8 +19,7 @@ openDb <- read_delim(
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE
-) %>%
-  data.frame()
+)
 
 structureSearch_1 <- openDb %>%
   filter(structureType == "nominal") %>%

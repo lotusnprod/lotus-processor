@@ -18,8 +18,10 @@ source("temp_classyfireTaxonomy.R")
 
 library(data.table)
 library(DBI)
+library(dplyr)
+library(purrr)
 library(RSQLite)
-library(tidyverse)
+library(tidyr)
 
 log_debug("importing ...")
 platinum_pairs <-
@@ -33,8 +35,7 @@ platinum_pairs <-
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
     reference_doi = referenceCleanedDoi
-  ) %>%
-  tibble()
+  )
 
 log_debug(
   "We have",
@@ -49,8 +50,7 @@ manually_validated_pairs <-
     organism_name = organismCleaned,
     reference_doi = referenceCleanedDoi
   ) %>%
-  mutate(manual_validation = "Y") %>%
-  tibble()
+  mutate(manual_validation = "Y")
 
 platinum_pairs <-
   left_join(platinum_pairs, manually_validated_pairs)
@@ -79,8 +79,7 @@ wikidata_pairs <-
     organism_name = taxon_name,
     reference_wikidata = reference,
     reference_doi,
-  ) %>%
-  tibble()
+  )
 
 log_debug(
   "We have",
@@ -102,9 +101,7 @@ chemical_metadata <-
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
-  ) %>%
-  ## needed
-  tibble()
+  )
 
 log_debug(
   "We have",
@@ -199,8 +196,7 @@ biological_metadata <- left_join(names, otl) %>%
     organism_taxonomy_10varietas = name_varietas
   ) %>%
   map_df(rev) %>%
-  coalesce() %>%
-  tibble()
+  coalesce()
 
 log_debug(
   "We have",

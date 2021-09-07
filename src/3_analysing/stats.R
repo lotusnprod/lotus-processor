@@ -6,12 +6,12 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
-source("r/vroom_safe.R")
+library(dplyr)
+library(readr)
 
 log_debug("loading db, if running fullmode, this may take a while")
 inhouseDbMinimal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTable) %>%
+  read_delim(file = pathDataInterimTablesCuratedTable) %>%
   filter(database != "dnp" & database != "foodb") %>%
   data.frame()
 
@@ -22,11 +22,11 @@ frozen_metadata <-
   ))
 
 structureMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
+  read_delim(file = pathDataInterimDictionariesStructureMetadata) %>%
   filter(structureCleaned_stereocenters_unspecified == 0)
 
 referenceOrganismDictionary <-
-  vroom_read_safe(path = pathDataInterimDictionariesReferenceOrganismDictionary) %>%
+  read_delim(file = pathDataInterimDictionariesReferenceOrganismDictionary) %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
 ## structures

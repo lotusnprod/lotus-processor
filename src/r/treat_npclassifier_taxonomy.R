@@ -37,8 +37,7 @@ treat_npclassifier_taxonomy <- function() {
       everything(),
       ~ y_as_na(x = .x, y = "")
     )) %>%
-    distinct() %>%
-    tibble()
+    distinct()
 
   return(chemical_taxonomy_1)
 }
