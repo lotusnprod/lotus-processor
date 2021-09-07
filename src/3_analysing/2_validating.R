@@ -127,8 +127,10 @@ inhouseDbMinimal <-
 
 log_debug("... reference metadata")
 structureMetadata <-
-  read_delim(file = pathDataInterimDictionariesStructureMetadata,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimDictionariesStructureMetadata,
+    col_types = cols(.default = "c")
+  ) %>%
   distinct(
     structureCleanedSmiles,
     structureCleaned_smiles2D,
@@ -144,8 +146,10 @@ structureMetadata <-
 
 log_debug("... organism metadata")
 organismMetadata <-
-  read_delim(file = pathDataInterimDictionariesOrganismMetadata,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimDictionariesOrganismMetadata,
+    col_types = cols(.default = "c")
+  ) %>%
   distinct(
     organismCleaned,
     organismCleaned_id,
@@ -157,8 +161,10 @@ organismMetadata <-
 
 log_debug("... reference metadata")
 referenceMetadata <-
-  read_delim(file = pathDataInterimDictionariesReferenceMetadata,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimDictionariesReferenceMetadata,
+    col_types = cols(.default = "c")
+  ) %>%
   distinct(
     organismType,
     organismValue,

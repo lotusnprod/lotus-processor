@@ -18,8 +18,10 @@ source("r/getAllReferences.R")
 
 log_debug("loading split references list")
 dataSplit <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceSplit,
-             delim = "\t")
+  read_delim(
+    file = pathDataInterimTablesOriginalReferenceSplit,
+    delim = "\t"
+  )
 
 log_debug("submitting to crossRef")
 if (nrow(dataSplit) != 1) {

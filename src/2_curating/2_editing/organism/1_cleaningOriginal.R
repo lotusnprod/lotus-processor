@@ -25,13 +25,17 @@ taxaRanksDictionary <-
   read_delim(file = pathDataInterimDictionariesTaxaRanks)
 
 wrongVerifiedDictionary <-
-  read_delim(file = pathDataInterimDictionariesTaxaWrongVerified, 
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimDictionariesTaxaWrongVerified,
+    delim = "\t"
+  ) %>%
   as.list()
 
 organismTable <-
-  read_delim(file = pathDataInterimTablesOriginalOrganismFull,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesOriginalOrganismFull,
+    delim = "\t"
+  ) %>%
   distinct()
 
 log_debug("ensuring directories exist")
@@ -225,7 +229,7 @@ if (length != 0) {
 if (length != 0) {
   write_delim(
     x = dataCleanedOriginalOrganismUnique,
-    delim = "t",
+    delim = "\t",
     file = gzfile(
       description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
       compression = 9,

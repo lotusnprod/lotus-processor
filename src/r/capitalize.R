@@ -3,7 +3,7 @@
 
 #' Title
 #'
-#' @param string 
+#' @param string
 #'
 #' @return
 #' @export

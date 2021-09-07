@@ -16,8 +16,10 @@ library(tidyr)
 log_debug("... files ...")
 log_debug("... DOI")
 dataDoi <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceDoi,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferenceDoi,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_doi,
     doi_doi = referenceTranslatedDoi,
@@ -41,8 +43,10 @@ dataDoi <-
 
 log_debug("... original references")
 dataOriginal <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceOriginal,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferenceOriginal,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_original,
     doi_original = referenceTranslatedDoi,
@@ -69,8 +73,10 @@ dataOriginal <-
 
 log_debug("... PMID")
 dataPubmed <-
-  read_delim(file = pathDataInterimTablesTranslatedReferencePubmed,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferencePubmed,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_pubmed,
     doi_pubmed = referenceTranslatedDoi,
@@ -94,8 +100,10 @@ dataPubmed <-
 
 log_debug("... publishing details")
 dataPublishingDetails <-
-  read_delim(file = pathDataInterimTablesTranslatedReferencePublishingDetails,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferencePublishingDetails,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_publishingDetails,
     doi_publishingDetails = referenceTranslatedDoi,
@@ -122,8 +130,10 @@ dataPublishingDetails <-
 
 log_debug("... titles")
 dataTitle <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceTitle,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferenceTitle,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_title,
     doi_title = referenceTranslatedDoi,
@@ -150,8 +160,10 @@ dataTitle <-
 
 log_debug("... split")
 dataSplit <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceSplit,
-             delim = "\t") %>%
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferenceSplit,
+    delim = "\t"
+  ) %>%
   select(
     referenceOriginal = referenceOriginal_split,
     doi_split = referenceTranslatedDoi,
@@ -178,9 +190,11 @@ dataSplit <-
 
 log_debug("... full references")
 dataFull <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceFull,
-             delim = "\t",
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimTablesOriginalReferenceFull,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
@@ -243,9 +257,11 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 }
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   referenceDictionary <-
-    read_delim(file = pathDataInterimDictionariesReferenceDictionary,
-               delim = "\t",
-               col_types = cols(.default = "c"))
+    read_delim(
+      file = pathDataInterimDictionariesReferenceDictionary,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    )
 }
 
 log_debug("joining ...")
