@@ -15,8 +15,10 @@ source("temp_classyfireTaxonomy.R")
 
 library(data.table)
 library(DBI)
+library(dplyr)
+library(purrr)
 library(RSQLite)
-library(tidyverse)
+library(tidyr)
 
 log_debug("importing ...")
 dnp_pairs <-
@@ -26,8 +28,7 @@ dnp_pairs <-
   distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned
-  ) %>%
-  tibble()
+  )
 
 log_debug(
   "DNP has",
@@ -53,8 +54,7 @@ wikidata_pairs <-
     organism_name = taxon_name,
     reference_wikidata = reference,
     reference_doi,
-  ) %>%
-  tibble()
+  )
 
 log_debug(
   "We have",
@@ -76,9 +76,7 @@ chemical_metadata <-
   ) %>%
   distinct(structure_inchikey,
     .keep_all = TRUE
-  ) %>%
-  ## needed
-  tibble()
+  )
 
 log_debug(
   "We have",
@@ -172,8 +170,7 @@ biological_metadata <- left_join(names, otl) %>%
     organism_taxonomy_10varietas = name_varietas
   ) %>%
   map_df(rev) %>%
-  coalesce() %>%
-  tibble()
+  coalesce()
 
 log_debug(
   "We have",

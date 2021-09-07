@@ -6,9 +6,9 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(tidyverse)
+library(dplyr)
 library(splitstackshape)
-source("r/vroom_safe.R")
+library(readr)
 
 safety <- FALSE
 
