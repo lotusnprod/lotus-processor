@@ -10,8 +10,10 @@ source("paths.R")
 if (mode == "full") {
   log_debug("... libraries")
   library(data.table)
+  library(dplyr)
   library(splitstackshape)
-  library(tidyverse)
+  library(readr)
+  library(tidyr)
   library(UpSetR)
   source("r/getGraphChemicalClass.R")
   source("r/getGraphStudiedPlant.R")
@@ -26,7 +28,9 @@ if (mode == "full") {
 
   log_debug("... open DB")
   openDb <-
-    read_delim(file = pathDataInterimTablesAnalysedPlatinum) %>%
+    read_delim(file = pathDataInterimTablesAnalysedPlatinum,
+               col_types = cols(.default = "c")
+    ) %>%
     distinct(
       database,
       organismCleaned,
@@ -48,7 +52,7 @@ if (mode == "full") {
     )
 
   log_debug("... metadata ...")
-  pairs_metadata <- read_delim(
+  pairs_metadata <- fread(
     file = file.path(
       pathDataProcessed,
       pathLastFrozen
