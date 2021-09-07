@@ -5,7 +5,6 @@
 source("paths.R")
 
 library(dplyr)
-library(Hmisc)
 library(readr)
 library(readxl)
 library(splitstackshape)
@@ -13,9 +12,11 @@ library(stringi)
 library(tidyverse)
 
 ## functions
-source("r/y_as_na.R")
+source("r/capitalize.R")
 source("r/tcm_cleaning.R")
 source("r/tcm_inverting.R")
+source("r/y_as_na.R")
+
 
 ## files
 ### dictionary from TMMC
@@ -361,6 +362,7 @@ tcmNamesDicCurated <- tcmNamesDicCurated %>%
 # exporting
 write_delim(
   x = tcmNamesDicCurated,
+  delim = "\t",
   file = gzfile(
     description = pathDataInterimDictionariesTcmNames,
     compression = 9,

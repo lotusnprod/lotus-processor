@@ -24,6 +24,7 @@ smilesDictionary <- structureCounted %>%
 log_debug("writing the smiles table")
 write_delim(
   x = smilesDictionary,
+  delim = "\t",
   file = pathDataInterimTablesCleanedStructureSmiles
 )
 
@@ -193,6 +194,7 @@ log_debug(pathDataInterimTablesCleanedStructureNamed)
 
 write_delim(
   x = structureNamed_cleaned,
+  delim = "\t",
   file = pathDataInterimTablesCleanedStructureNamed
 )
 

@@ -17,6 +17,7 @@ log_debug("... libraries")
 library(data.table)
 library(dplyr)
 library(readr)
+library(tidyr)
 
 log_debug("  Step 1")
 log_debug("... taxa ranks dictionary")
@@ -29,7 +30,8 @@ wrongVerifiedDictionary <-
   as.list()
 
 organismTable <-
-  read_delim(file = pathDataInterimTablesOriginalOrganismFull) %>%
+  read_delim(file = pathDataInterimTablesOriginalOrganismFull,
+             delim = "\t") %>%
   distinct()
 
 log_debug("ensuring directories exist")
@@ -209,6 +211,7 @@ if (length != 0) {
 if (length != 0) {
   write_delim(
     x = dataCleanedOriginalOrganism,
+    delim = "\t",
     file = pathDataInterimTablesCleanedOrganismOriginalTable
   )
 }
@@ -222,6 +225,7 @@ if (length != 0) {
 if (length != 0) {
   write_delim(
     x = dataCleanedOriginalOrganismUnique,
+    delim = "t",
     file = gzfile(
       description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
       compression = 9,
@@ -235,6 +239,7 @@ if (length != 0) {
 
 write_delim(
   x = dataOrganismVerified,
+  delim = "\t",
   file = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable
 )
 

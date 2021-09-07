@@ -2,10 +2,10 @@
 
 # loading paths
 source("paths.R")
+source("r/capitalize.R")
 source("r/standardizing_original.R")
 
 library(dplyr)
-library(Hmisc)
 library(readr)
 
 # get paths
