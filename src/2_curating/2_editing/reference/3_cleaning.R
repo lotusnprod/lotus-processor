@@ -12,6 +12,7 @@ library(dplyr)
 library(data.table)
 library(readr)
 library(stringr)
+library(tibble)
 library(tidyr)
 
 log_debug("... functions")
@@ -19,9 +20,11 @@ source("r/y_as_na.R")
 
 log_debug("loading crossref translations file, this may take a while")
 dataTranslated <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceFile,
-             delim = "t",
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimTablesTranslatedReferenceFile,
+    delim = "t",
+    col_types = cols(.default = "c")
+  )
 
 log_debug("cleaning")
 dataCleaned <- dataTranslated %>%
@@ -132,6 +135,9 @@ dataCleanedJoinedWide <- dataCleanedJoinedUnique %>%
 
 rm(dataCleanedJoinedUnique)
 
+dataCleanedJoinedWide <- dataCleanedJoinedWide %>%
+  union_all(data.frame(referenceCleaned_scoreTitleOrganism = character()))
+
 dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   filter(referenceType == "doi" |
     referenceType == "pubmed" |
@@ -141,8 +147,7 @@ dataCleanedJoinedWide_1 <- dataCleanedJoinedWide %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   arrange(as.numeric(referenceCleaned_scoreDistance)) %>%
   ungroup() %>%
-  distinct(
-    organismType,
+  distinct(organismType,
     organismValue,
     organismDetected,
     referenceValue,
@@ -206,8 +211,7 @@ dataCleanedJoinedWide_2 <- dataCleanedJoinedWide %>%
   arrange(desc(as.numeric(referenceCleaned_scoreComplement_total))) %>%
   arrange(desc(as.numeric(referenceCleaned_scoreTitleOrganism))) %>%
   ungroup() %>%
-  distinct(
-    organismType,
+  distinct(organismType,
     organismValue,
     organismDetected,
     referenceValue,
