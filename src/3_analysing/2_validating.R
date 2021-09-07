@@ -12,14 +12,15 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(stringi)
-library(tidyverse)
+library(dplyr)
 library(plotly)
+library(readr)
+library(stringi)
+library(tidyr)
 
 log_debug("... functions")
 source("r/filter_dirty.R")
 source("r/myDirtyValidationFig.R")
-source("r/vroom_safe.R")
 
 log_debug("loading files ...")
 oldDbNames <-
@@ -122,11 +123,12 @@ sampleCondifent_PMA <-
 
 log_debug("... documented pairs")
 inhouseDbMinimal <-
-  vroom_read_safe(path = pathDataInterimTablesCuratedTable)
+  read_delim(file = pathDataInterimTablesCuratedTable)
 
 log_debug("... reference metadata")
 structureMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesStructureMetadata) %>%
+  read_delim(file = pathDataInterimDictionariesStructureMetadata,
+             col_types = cols(.default = "c")) %>%
   distinct(
     structureCleanedSmiles,
     structureCleaned_smiles2D,
@@ -142,7 +144,8 @@ structureMetadata <-
 
 log_debug("... organism metadata")
 organismMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesOrganismMetadata) %>%
+  read_delim(file = pathDataInterimDictionariesOrganismMetadata,
+             col_types = cols(.default = "c")) %>%
   distinct(
     organismCleaned,
     organismCleaned_id,
@@ -154,7 +157,8 @@ organismMetadata <-
 
 log_debug("... reference metadata")
 referenceMetadata <-
-  vroom_read_safe(path = pathDataInterimDictionariesReferenceMetadata) %>%
+  read_delim(file = pathDataInterimDictionariesReferenceMetadata,
+             col_types = cols(.default = "c")) %>%
   distinct(
     organismType,
     organismValue,
@@ -950,15 +954,17 @@ if (mode == "full") {
 }
 
 log_debug(pathDataInterimTablesAnalysedPlatinum)
-vroom_write_safe(
+write_delim(
   x = openDbClean3,
-  path = pathDataInterimTablesAnalysedPlatinum
+  delim = "\t",
+  file = pathDataInterimTablesAnalysedPlatinum
 )
 
 log_debug(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"))
-vroom_write_safe(
+write_delim(
   x = dnpDb3,
-  path = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
+  delim = "\t",
+  file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
 )
 
 log_debug(file.path(
