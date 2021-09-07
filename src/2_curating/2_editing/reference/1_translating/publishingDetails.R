@@ -18,7 +18,8 @@ source("r/getAllReferences.R")
 
 log_debug("loading publishing details list")
 dataPublishingDetails <-
-  read_delim(file = pathDataInterimTablesOriginalReferencePublishingDetails)
+  read_delim(file = pathDataInterimTablesOriginalReferencePublishingDetails,
+             delim = "\t")
 
 log_debug("submitting to crossRef")
 if (nrow(dataPublishingDetails) != 1) {
@@ -82,6 +83,7 @@ log_debug(
 )
 write_delim(
   x = dataPublishingDetails,
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferencePublishingDetails
 )
 

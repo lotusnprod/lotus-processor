@@ -144,6 +144,7 @@ for (i in num) {
   log_debug("exporting ...")
   write_delim(
     x = dataTitle2,
+    delim = "\t",
     file = outpath
   )
 
@@ -182,6 +183,7 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceTitle)
 write_delim(
   x = dataTitle3,
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceTitle
 )
 

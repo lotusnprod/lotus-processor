@@ -17,7 +17,8 @@ source("r/getrefPubmed.R")
 
 log_debug("loading PMID list")
 dataPubmed <-
-  read_delim(file = pathDataInterimTablesOriginalReferencePubmed)
+  read_delim(file = pathDataInterimTablesOriginalReferencePubmed,
+             delim = "\t")
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
@@ -141,6 +142,7 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferencePubmed)
 write_delim(
   x = dataPubmed,
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferencePubmed
 )
 

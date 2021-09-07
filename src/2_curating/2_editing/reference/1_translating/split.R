@@ -18,7 +18,8 @@ source("r/getAllReferences.R")
 
 log_debug("loading split references list")
 dataSplit <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceSplit)
+  read_delim(file = pathDataInterimTablesOriginalReferenceSplit,
+             delim = "\t")
 
 log_debug("submitting to crossRef")
 if (nrow(dataSplit) != 1) {
@@ -78,6 +79,7 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceSplit)
 write_delim(
   x = dataSplit,
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceSplit
 )
 

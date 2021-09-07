@@ -19,7 +19,9 @@ source("r/y_as_na.R")
 
 log_debug("loading crossref translations file, this may take a while")
 dataTranslated <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceFile)
+  read_delim(file = pathDataInterimTablesTranslatedReferenceFile,
+             delim = "t",
+             col_types = cols(.default = "c"))
 
 log_debug("cleaning")
 dataCleaned <- dataTranslated %>%
