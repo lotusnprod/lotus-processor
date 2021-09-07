@@ -10,7 +10,7 @@
 tree_presence_absence <- function(table, level) {
   q <-
     ggtree(
-      tr = tr_temp,
+      tr = tr_old,
       layout = "circular",
       size = 5,
       aes(color = switch(level,
@@ -26,7 +26,7 @@ tree_presence_absence <- function(table, level) {
       na.value = "grey"
     )
   q <- q %<+%
-    info_temp +
+    info_old +
     new_scale_color() +
     geom_tiplab(
       aes(color = Kingdom),
