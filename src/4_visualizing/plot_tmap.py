@@ -128,7 +128,7 @@ taxo_cols = ['organism_taxonomy_02kingdom', 'organism_taxonomy_03phylum', 'organ
              'organism_taxonomy_09species']
 
 bins = [0, 2, 6, 21, np.inf]
-names = ['1 unique biosource', '2-5 unique biosources', '6-20 unique biosources', '>20 unique biosources']
+names = ['1 unique source', '2-5 sources', '6-20 sources', '>20 sources']
 
 for col in taxo_cols:
     df_gb[col + '_<lambda_0>'] = df_gb[col + '_<lambda_0>'].astype(str)
@@ -136,7 +136,7 @@ for col in taxo_cols:
     df_gb.drop([col + '_<lambda_1>'], axis=1, inplace=True)
     df_gb[col + '_nunique_cat'] = pd.cut(df_gb[col + '_nunique'], bins, labels=names, right=False)
 
-names = ['1 biosource', '2-5 biosources', '6-20 biosources', '>20 biosources']
+names = ['1 unique source', '2-5 sources', '6-20 sources', '>20 sources']
 df_gb['biosource_count_cat'] = pd.cut(df_gb.biosource_count, bins, labels=names, right=False)
 
 df_gb.reset_index(inplace=True)
@@ -181,15 +181,15 @@ for dic in dic_mean_specificity:
 
 # Generating class for plotting
 dic_categories = {
-    'structure_taxonomy_npclassifier_01pathway_first': {'Ncat': 19},
+    'structure_taxonomy_npclassifier_01pathway_first': {'Ncat': 8},
     "structure_taxonomy_npclassifier_02superclass_first": {'Ncat': 19},
     "structure_taxonomy_npclassifier_03class_first": {'Ncat': 19},
     "structure_taxonomy_classyfire_01kingdom_first": {'Ncat': 0},
     "structure_taxonomy_classyfire_02superclass_first": {'Ncat': 19},
     "structure_taxonomy_classyfire_03class_first": {'Ncat': 19},
     "structure_taxonomy_classyfire_04directparent_first": {'Ncat': 19},
-    "organism_taxonomy_02kingdom_<lambda_0>": {'Ncat': 19},
-    "organism_taxonomy_03phylum_<lambda_0>": {'Ncat': 19},
+    "organism_taxonomy_02kingdom_<lambda_0>": {'Ncat': 4},
+    "organism_taxonomy_03phylum_<lambda_0>": {'Ncat': 17},
     "organism_taxonomy_04class_<lambda_0>": {'Ncat': 19},
     "organism_taxonomy_05order_<lambda_0>": {'Ncat': 19},
     "organism_taxonomy_06family_<lambda_0>": {'Ncat': 19},
@@ -216,12 +216,12 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
-    'Isoquinoline alkaloids', 'Carboline alkaloids', 'Pyridine alkaloids', 'Aporphine alkaloids', 'Corynanthe type',
-    'Cyclic peptides', 'Aminoacids', 'Linear peptides', 'Dipeptides', 'Cyanogenic glycosides', 
-    'Polysaccharides', 'Disaccharides', 'Monosaccharides', 'Amino cyclitols', 'Aminosugars',
-    'Fatty alcohols', 'Wax monoesters', 'Hydrocarbons', 'Oxygenated hydrocarbons', 'Unsaturated fatty acids',
-    'Anthraquinones and anthrones', 'Naphthoquinones', 'Open-chain polyketides', 'Angucyclines', 'Chromones',
-    'Flavonols', 'Flavones', 'Cinnamic acids and derivatives', 'Flavanones', 'Simple coumarins',
+    'Isoquinoline alkaloids',
+    'Cyclic peptides', 
+    'Polysaccharides',
+    'Fatty alcohols',
+    'Anthraquinones and anthrones',
+    'Flavonols',
     'Quassinoids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Carotenoids (C40, β-β)'
     # quassinoids and carotenoids actually not 1st and 5th
     ], data, labels)
@@ -230,21 +230,19 @@ NPclass_data, NPclass_labels = keep_only_given_class([
 # simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
 
 # Generating colormaps for plotting
-cmap_batlowS = cm.batlowS
 cmap_batlow = cm.batlow
-cm_roma = cm.roma
-cmap = mcolors.ListedColormap(["gainsboro", "peachpuff", "salmon", "tomato"])
-cmap2 = mcolors.ListedColormap(["gainsboro", "tomato"])
-cmap3 = mcolors.ListedColormap(["gainsboro", "#b15928"])
-cmap4 = mcolors.ListedColormap(
+cmap_1 = mcolors.ListedColormap(["gainsboro", "#001959"])
+cmap_2 = mcolors.ListedColormap(["gainsboro", "#001959","#808133",])
+cmap_3 = mcolors.ListedColormap(["gainsboro", "#001959","#808133","#F9CCF9"])
+cmap_category = mcolors.ListedColormap(
     ## adapted from https://github.com/KarstensLab/microshades
     ["gainsboro",
-     "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3",
-     "#D8C7BE", "#CAA995", "#B78560", "#9E5C00", "#7D3200",
-     "#EFB6D6", "#E794C1", "#CC79A7", "#A1527F", "#7D3560",
-     "#A3E4D7", "#48C9B0", "#43BA8F", "#009E73", "#148F77",
-     "#E7F4FF", "#BCE1FF", "#7DCCFF", "#56B4E9", "#098BD9",
-     "#FFD5AF", "#FCB076", "#F09163", "#C17754", "#9D654C",
+     "#6a51a3",
+     "#7D3560",
+     "#616161",
+     "#148F77",
+     "#098BD9",
+     "#9D654C",
      "#DDFFA0", "#BDEC6F", "#97CE2F", "#6D9F06", "#4E7705"])
 
 # Generate a labels column
@@ -486,13 +484,12 @@ f.add_scatter(
     categorical=[True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True,
                  True, True, True, True, True, True, True,
                  False, False, False, False, False, False, False, False, False, False, False, False],
-    colormap=[cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS,
-              cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS, cmap_batlowS,
-              cmap, cmap2, cmap, cmap, cmap, cmap, cmap, cmap, cmap3, cmap4,
-              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow,
-              cmap_batlow,
-              cm_roma, cm_roma, cm_roma,
-              cmap_batlow],
+    colormap=["tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
+              "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
+              cmap_3, cmap_1, cmap_2, cmap_3, cmap_3, cmap_3, cmap_3, cmap_3, cmap_1,
+              cmap_category,
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow,
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow],
     series_title=[
         "Chemical pathway",
         "Chemical superclass",
@@ -508,16 +505,16 @@ f.add_scatter(
         "Biological family (OTL)",
         "Biological genus (OTL)",
         "Biological species (OTL)",
-        "Biological occurrences",
-        "kingdom_nunique",
-        "phylum_nunique",
-        "class_nunique",
-        "order_nunique",
-        "family_nunique",
-        "genus_nunique",
-        "species_nunique",
+        "Biological sources",
+        "Sources kingdom",
+        "Sources phylum",
+        "Sources class",
+        "Sources order",
+        "Sources family",
+        "Sources genus",
+        "Sources species",
         "Simaroubaceae",
-        "Top 8 chemical classes, quassinoids and carotenoids",
+        "Selected chemical classes",
         "Pathway kingdom specificity",
         "Superclass kingdom specificity",
         "Class kingdom specificity",
