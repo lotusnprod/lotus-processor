@@ -181,7 +181,7 @@ for dic in dic_mean_specificity:
 
 # Generating class for plotting
 dic_categories = {
-    'structure_taxonomy_npclassifier_01pathway_first': {'Ncat': 8},
+    'structure_taxonomy_npclassifier_01pathway_first': {'Ncat': 10},
     "structure_taxonomy_npclassifier_02superclass_first": {'Ncat': 19},
     "structure_taxonomy_npclassifier_03class_first": {'Ncat': 19},
     "structure_taxonomy_classyfire_01kingdom_first": {'Ncat': 0},
@@ -216,14 +216,14 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
-    'Isoquinoline alkaloids',
-    'Cyclic peptides', 
-    'Polysaccharides',
-    'Fatty alcohols',
-    'Anthraquinones and anthrones',
-    'Flavonols',
-    'Quassinoids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Lanostane, Tirucallane and Euphane triterpenoids', 'Carotenoids (C40, β-β)'
-    # quassinoids and carotenoids actually not 1st and 5th
+    'Isoquinoline alkaloids','Carboline alkaloids',
+    'Cyclic peptides', 'Aminoacids',
+    'Polysaccharides', 'Disaccharides',
+    'Fatty alcohols', 'Wax monoesters',
+    'Anthraquinones and anthrones', 'Naphthoquinones',
+    'Flavonols', 'Flavones',
+    'Quassinoids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Carotenoids (C40, β-β)'
+    # quassinoids and carotenoids actually not 1st and 4th
     ], data, labels)
 
 # count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
@@ -235,15 +235,14 @@ cmap_1 = mcolors.ListedColormap(["gainsboro", "#001959"])
 cmap_2 = mcolors.ListedColormap(["gainsboro", "#001959","#808133",])
 cmap_3 = mcolors.ListedColormap(["gainsboro", "#001959","#808133","#F9CCF9"])
 cmap_category = mcolors.ListedColormap(
-    ## adapted from https://github.com/KarstensLab/microshades
     ["gainsboro",
-     "#6a51a3",
-     "#7D3560",
-     "#616161",
-     "#148F77",
-     "#098BD9",
-     "#9D654C",
-     "#DDFFA0", "#BDEC6F", "#97CE2F", "#6D9F06", "#4E7705"])
+     "#4E79A7", "#A0CBE8",
+     "#F28E2B", "#FFBE7D",
+     "#59A14F", "#8CD17D",
+     "#B6992D", "#F1CE63",
+     "#499894", "#86BCB6",
+     "#9D7660", "#D7B5A6",
+     "#D37295", "#FABFD2","#B07AA1", "#D4A6C8"])
 
 # Generate a labels column
 df_gb["labels"] = (
