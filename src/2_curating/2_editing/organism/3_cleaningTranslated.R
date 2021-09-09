@@ -209,6 +209,7 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesCleanedOrganismTranslatedTable)
 write_delim(
   x = dataCleanedOrganism,
+  delim = "\t",
   file = pathDataInterimTablesCleanedOrganismTranslatedTable
 )
 

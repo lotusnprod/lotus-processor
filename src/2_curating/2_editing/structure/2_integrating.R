@@ -78,13 +78,15 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureFinal)
 write_delim(
   x = translatedStructureTable,
-  file = pathDataInterimTablesTranslatedStructureFinal
+  file = pathDataInterimTablesTranslatedStructureFinal,
+  delim = "\t"
 )
 
 log_debug(pathDataInterimTablesTranslatedStructureUnique)
 write_delim(
   x = translatedStructureTableUnique,
-  file = pathDataInterimTablesTranslatedStructureUnique
+  file = pathDataInterimTablesTranslatedStructureUnique,
+  delim = "\t"
 )
 
 end <- Sys.time()
