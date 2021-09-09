@@ -353,7 +353,8 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesCleanedReferenceFile)
 write_delim(
   x = referenceTable,
-  file = pathDataInterimTablesCleanedReferenceFile
+  file = pathDataInterimTablesCleanedReferenceFile,
+  delim = "\t"
 )
 
 end <- Sys.time()

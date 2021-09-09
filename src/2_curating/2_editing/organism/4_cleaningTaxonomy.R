@@ -42,6 +42,7 @@ write_delim(
     compression = 9,
     encoding = "UTF-8"
   ),
+  delim = "\t",
   quote = "none",
   escape = "double"
 )
@@ -259,6 +260,7 @@ log_debug("exporting ... ")
 log_debug(pathDataInterimTablesCleanedOrganismFinal)
 write_delim(
   x = dataCuratedOrganismAuto,
+  delim = "\t",
   file = pathDataInterimTablesCleanedOrganismFinal
 )
 

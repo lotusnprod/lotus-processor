@@ -2,8 +2,9 @@
 
 mode_test <- TRUE
 
+library(dplyr)
+library(readr)
 library(testthat)
-library(tidyverse)
 source("paths.R")
 source("r/log_debug.R")
 
