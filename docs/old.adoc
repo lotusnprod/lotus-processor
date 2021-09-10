@@ -1,0 +1,45 @@
+==== Access to metabomaps
+
+You need to have access to the metabomaps server to be able to pull the data, if you don't you will have to pull all the DBs data from scratch.
+Add this to your
+
+[source]
+----
+~/.ssh/config
+----
+
+[source]
+----
+Host metabomaps
+  IdentityFile /home/<user_local>/.ssh/id_rsa_metabomaps
+  User <user_remote>
+  HostName metabomaps.nprod.net
+  Port 10311
+----
+
+==== If you want to build only a simple DB
+
+[source,console]
+----
+make -C src/1_gathering/db -B alkamid
+----
+
+==== Additional bins
+
+There are some additional bins you'll need.
+
+[source,console]
+----
+make get-bins
+----
+
+==== Working directory
+
+Your working directory should be 'src'
+
+[source,console]
+----
+cd src
+----
+
+If you are using Visual Studio be sure to set your R and python path in the settings option to reflect your created conda environment.
