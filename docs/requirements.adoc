@@ -3,10 +3,9 @@
 You need:
 
 - R
-- python
+- Python 
+- Java >= 15
 - Git
-- https://www.dvc.org[DVC]
-- https://github.com/gnames/gnfinder[gnfinder]
-- https://github.com/gnames/gnverify[gnverify]
+- Conda
 
 - If you want to be able to use the xref:../src/2_curating/2_editing/reference/1_translating/pubmed.R[PMID translation script] with less limitations and it to work correctly, you have to set an API key as described in the following https://cran.r-project.org/web/packages/rentrez/vignettes/rentrez_tutorial.html[vignette]
