@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
 
-# A simple script to use gnverifier
+# A simple script to use gnfinder
 
 source 2_curating/2_editing/organism/shell/gnfinder.sh
 
