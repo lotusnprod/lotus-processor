@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
 NPCLASSIFIER_VERSION="1.5"
 INDEX_VERSION="1"
 

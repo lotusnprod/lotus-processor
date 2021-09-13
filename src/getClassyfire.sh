@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
 if [ ! -f ../data/external/taxonomySource/structure/classyfire/tax_nodes.json ]; then
   echo "Downloading"
   curl -o ../data/external/taxonomySource/structure/classyfire/tax_nodes.json http://classyfire.wishartlab.com/tax_nodes.json
