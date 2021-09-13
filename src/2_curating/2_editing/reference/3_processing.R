@@ -338,22 +338,22 @@ referenceTable <-
 
 log_debug("ensuring directories exist")
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleaned),
-  yes = dir.create(pathDataInterimTablesCleaned),
-  no = paste(pathDataInterimTablesCleaned, "exists")
+  test = !dir.exists(pathDataInterimTablesProcessed),
+  yes = dir.create(pathDataInterimTablesProcessed),
+  no = paste(pathDataInterimTablesProcessed, "exists")
 )
 
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleanedReference),
-  yes = dir.create(pathDataInterimTablesCleanedReference),
-  no = paste(pathDataInterimTablesCleanedReference, "exists")
+  test = !dir.exists(pathDataInterimTablesProcessedReference),
+  yes = dir.create(pathDataInterimTablesProcessedReference),
+  no = paste(pathDataInterimTablesProcessedReference, "exists")
 )
 
 log_debug("exporting ...")
-log_debug(pathDataInterimTablesCleanedReferenceFile)
+log_debug(pathDataInterimTablesProcessedReferenceFile)
 write_delim(
   x = referenceTable,
-  file = pathDataInterimTablesCleanedReferenceFile,
+  file = pathDataInterimTablesProcessedReferenceFile,
   delim = "\t"
 )
 

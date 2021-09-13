@@ -1,17 +1,8 @@
 #!/usr/bin/env python
+# coding: utf-8
 
 '''
-File: /Users/pma/Dropbox/Research_UNIGE/git_repos/chemo_sanitizer/src/chemosanitizer.py
-Project: /Users/pma/Dropbox/Research_UNIGE/git_repos/chemo_sanitizer/src
-Created Date: Monday June 8th 2020
 Author: PMA
------
-Last Modified: Monday June 8th 2020 5:24:23 pm
-Modified By: the developer formerly known as PMA at <you@you.you>
------
-Copyright (c) 2020 Your Company
------
-HISTORY:
 '''
 
 # importing packages
@@ -29,13 +20,13 @@ try:
 
     print('Parsing tab separated file'
           + input_file_path
-          + 'with column: '
+          + ' with column: '
           + inchi_column_header
-          + 'as InChI column.'
-          + 'Parralelized on '
+          + ' as InChI column.'
+          + ' Parralelized on '
           + cpus
           + ' cores.'
-          + 'Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :'
+          + ' Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :'
           + ouput_file_path)
 except:
     print(
@@ -44,8 +35,6 @@ except:
         python chemosanitizer.py ~/translatedStructureRdkit.tsv ./test.tsv structureTranslated 6''')
 
 # Loading the df with inchi columns
-# df = pd.read_csv(input_file_path, sep='\t')
-# input_file_path = '/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/1_translated/structure/unique.tsv.zip'
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
@@ -168,16 +157,14 @@ df = pd.concat(list_df)
 
 df.info()
 
-# exporting df
-filename = ouput_file_path
-if not os.path.exists(os.path.dirname(filename)):
+# exporting
+if not os.path.exists(os.path.dirname(ouput_file_path)):
     try:
-        os.makedirs(os.path.dirname(filename))
+        os.makedirs(os.path.dirname(ouput_file_path))
     except OSError as exc:  # Guard against race condition
         if exc.errno != errno.EEXIST:
             raise
 
-# df.to_csv(ouput_file_path, sep='\t', index=False)
 df.to_csv(
     ouput_file_path,
     sep='\t',

@@ -23,18 +23,18 @@ organismTable_full <-
 
 log_debug("... translated organisms")
 dataInterimOrganismToFill <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismTranslatedInterim)
+  read_delim(file = pathDataInterimTablesProcessedOrganismTranslatedInterim)
 
 log_debug("... cleaned original organisms")
 dataCleanedOriginalOrganism <-
   read_delim(
-    file = pathDataInterimTablesCleanedOrganismOriginalTable,
+    file = pathDataInterimTablesProcessedOrganismOriginalTable,
     col_types = cols(.default = "c")
   )
 
 log_debug("... verified original organisms")
 dataVerifiedOriginalOrganism <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable)
+  read_delim(file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable)
 
 log_debug(" ... taxa ranks dictionary")
 taxaRanksDictionary <-
@@ -42,16 +42,16 @@ taxaRanksDictionary <-
 
 log_debug("ensuring directories exist")
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleanedOrganismTranslated),
-  yes = dir.create(pathDataInterimTablesCleanedOrganismTranslated),
+  test = !dir.exists(pathDataInterimTablesProcessedOrganismTranslated),
+  yes = dir.create(pathDataInterimTablesProcessedOrganismTranslated),
   no = file.remove(
     list.files(
-      path = pathDataInterimTablesCleanedOrganismTranslated,
+      path = pathDataInterimTablesProcessedOrganismTranslated,
       full.names = TRUE
     )
   ) &
     dir.create(
-      pathDataInterimTablesCleanedOrganismTranslated,
+      pathDataInterimTablesProcessedOrganismTranslated,
       showWarnings = FALSE
     )
 )
@@ -206,11 +206,11 @@ dataCleanedOrganism <- dataCleanedOrganism %>%
   distinct()
 
 log_debug("exporting ...")
-log_debug(pathDataInterimTablesCleanedOrganismTranslatedTable)
+log_debug(pathDataInterimTablesProcessedOrganismTranslatedTable)
 write_delim(
   x = dataCleanedOrganism,
   delim = "\t",
-  file = pathDataInterimTablesCleanedOrganismTranslatedTable
+  file = pathDataInterimTablesProcessedOrganismTranslatedTable
 )
 
 end <- Sys.time()

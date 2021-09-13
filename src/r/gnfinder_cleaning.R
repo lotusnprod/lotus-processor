@@ -29,7 +29,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste0(
-        pathDataInterimTablesCleanedOrganismOriginal,
+        pathDataInterimTablesProcessedOrganismOriginal,
         "/",
         str_pad(
           string = num,
@@ -55,7 +55,7 @@ gnfinder_cleaning <- function(num, organismCol) {
 
     inpath_gnfinder_f <-
       paste0(
-        pathDataInterimTablesCleanedOrganismTranslated,
+        pathDataInterimTablesProcessedOrganismTranslated,
         "/",
         str_pad(
           string = num,

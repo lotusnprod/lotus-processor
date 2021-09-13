@@ -5,10 +5,10 @@ include paths.mk
 .PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing  curating-editing-structure-naming curating-editing-structure-classifying
-.PHONY: curating-editing-organism curating-editing-organism-cleaning-original curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
-.PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-cleaning
+.PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
+.PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-processing
 .PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
-.PHONY: cleaning-organism-interim
+.PHONY: processing-organism-interim
 .PHONY: curating-and-analysing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 .PHONY: get-gnfinder get-gnverifier get-opsin get-bins
 .PRECIOUS: %.tsv %.zip %.json %.gz
@@ -114,13 +114,13 @@ curating-editing-structure-integrating: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PAT
 ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_PATH}/2_integrating.R
 
-curating-editing-structure-sanitizing: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
-${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
-	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz structureTranslated 8
+curating-editing-structure-sanitizing: ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz
+${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_PROCESSINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_PROCESSINGANDENRICHING_PATH}/chemosanitizer.py ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz structureTranslated 8
 
-curating-editing-structure-stereocounting: ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz
-${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz
-	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_CLEANINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/counted.tsv.gz smilesSanitized
+curating-editing-structure-stereocounting: ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/counted.tsv.gz
+${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/counted.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_PROCESSINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz
+	cd	src	&&	python	${SRC_CURATING_EDITING_STRUCTURE_PROCESSINGANDENRICHING_PATH}/stereocounter.py ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/counted.tsv.gz smilesSanitized
 
 curating-editing-structure-naming: # add dependent files
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/naming.R
@@ -128,30 +128,30 @@ curating-editing-structure-naming: # add dependent files
 curating-editing-structure-classifying: # add dependent files
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_STRUCTURE_ENRICHING_PATH}/np_classifier.R
 
-curating-editing-organism: curating-editing-organism-cleaning-original cleaning-organism-interim curating-editing-organism-translating curating-editing-organism-cleaning-translated curating-editing-organism-cleaning-taxonomy
+curating-editing-organism: curating-editing-organism-processing-original processing-organism-interim curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
 
-curating-editing-organism-cleaning-original: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/^[0-9]{6}.tsv) ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/1_cleaningOriginal.R
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/1_cleaningOriginal.R
+curating-editing-organism-processing-original: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_TABLE_ORIGINAL_ORGANISM_PATH}/^[0-9]{6}.tsv) ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/1_processingOriginal.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/1_processingOriginal.R
 
-cleaning-organism-interim:
-	-rm edit ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
+processing-organism-interim:
+	-rm edit ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 
-curating-editing-organism-translating: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz
+curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)
 	./gradlew castShadows
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/common/black.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/manualSubtraction.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/names.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/common/black.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/manualSubtraction.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/names.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
 	@java -jar ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${MODE}
 
-curating-editing-organism-cleaning-translated: curating-editing-organism-translating ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.gz
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.gz: $(wildcard ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated/*.json) ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/3_cleaningTranslated.R
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/3_cleaningTranslated.R
+curating-editing-organism-processing-translated: curating-editing-organism-translating ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz: $(wildcard ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated/*.json) ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/3_processingTranslated.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/3_processingTranslated.R
 
-curating-editing-organism-cleaning-taxonomy: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz
-${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz: ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/translated.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/4_cleaningTaxonomy.R
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/4_cleaningTaxonomy.R
+curating-editing-organism-processing-taxonomy: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/4_processingTaxonomy.R
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_ORGANISM_PATH}/4_processingTaxonomy.R
 
-curating-editing-reference: curating-editing-reference-translating curating-editing-reference-integrating curating-editing-reference-cleaning
+curating-editing-reference: curating-editing-reference-translating curating-editing-reference-integrating curating-editing-reference-processing
 
 curating-editing-reference-translating: curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original
 
@@ -183,12 +183,12 @@ curating-editing-reference-integrating: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PAT
 ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/doi.tsv.gz  ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/pubmed.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/title.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/split.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/original.tsv.gz ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/full.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_PATH}/2_integrating.R
 
-curating-editing-reference-cleaning: ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
-${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_PATH}/3_cleaning.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.gz
-	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_PATH}/3_cleaning.R
+curating-editing-reference-processing: ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
+${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_PATH}/3_processing.R ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/integrated.tsv.gz ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.gz
+	cd	src	&&	Rscript	${SRC_CURATING_EDITING_REFERENCE_PATH}/3_processing.R
 
 curating-3-integrating:	${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
-${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_CLEANED_STRUCTURE_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_ORGANISM_PATH}/cleaned.tsv.gz ${INTERIM_TABLE_CLEANED_REFERENCE_PATH}/cleaned.tsv.gz
+${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
 	cd	src	&&	Rscript	${SRC_CURATING_PATH}/3_integrating.R
 
 analysing: get-bins analysing-sampling analysing-validating analysing-metrics analysing-examples

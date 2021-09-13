@@ -23,7 +23,7 @@ source("r/treat_npclassifier_json.R")
 log_debug("loading smiles ...")
 smiles <-
   read_delim(
-    file = pathDataInterimTablesCleanedStructureStereoCounted,
+    file = pathDataInterimTablesProcessedStructureStereoCounted,
     delim = "\t"
   ) %>%
   distinct(structure_smiles_2D = smilesSanitizedFlat)

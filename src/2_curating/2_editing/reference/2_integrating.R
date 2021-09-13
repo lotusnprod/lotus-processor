@@ -214,7 +214,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     mutate_all(as.character)
 
   dataCleanedOrganismManipulated_new <-
-    read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesProcessedOrganismFinal) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -239,7 +239,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
-    read_delim(file = pathDataInterimTablesCleanedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesProcessedOrganismFinal) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)

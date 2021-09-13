@@ -40,27 +40,27 @@ organismTable <-
 
 log_debug("ensuring directories exist")
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleaned),
-  yes = dir.create(pathDataInterimTablesCleaned),
-  no = paste(pathDataInterimTablesCleaned, "exists")
+  test = !dir.exists(pathDataInterimTablesProcessed),
+  yes = dir.create(pathDataInterimTablesProcessed),
+  no = paste(pathDataInterimTablesProcessed, "exists")
 )
 
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleanedOrganism),
-  yes = dir.create(pathDataInterimTablesCleanedOrganism),
-  no = paste(pathDataInterimTablesCleanedOrganism, "exists")
+  test = !dir.exists(pathDataInterimTablesProcessedOrganism),
+  yes = dir.create(pathDataInterimTablesProcessedOrganism),
+  no = paste(pathDataInterimTablesProcessedOrganism, "exists")
 )
 
 ifelse(
-  test = !dir.exists(pathDataInterimTablesCleanedOrganismOriginal),
-  yes = dir.create(pathDataInterimTablesCleanedOrganismOriginal),
+  test = !dir.exists(pathDataInterimTablesProcessedOrganismOriginal),
+  yes = dir.create(pathDataInterimTablesProcessedOrganismOriginal),
   no = file.remove(
     list.files(
-      path = pathDataInterimTablesCleanedOrganismOriginal,
+      path = pathDataInterimTablesProcessedOrganismOriginal,
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesCleanedOrganismOriginal,
+    dir.create(pathDataInterimTablesProcessedOrganismOriginal,
       showWarnings = FALSE
     )
 )
@@ -69,7 +69,7 @@ log_debug("submitting to GNVerifier")
 system(command = paste("bash", pathOriginalGnverifierScript))
 
 verified <-
-  stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedOriginalTable))
+  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedOriginalTable))
 
 verified_df <- verified %>%
   data.frame() %>%
@@ -209,20 +209,20 @@ dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism %>%
 
 log_debug("exporting ...")
 if (length != 0) {
-  log_debug(pathDataInterimTablesCleanedOrganismOriginalTable)
+  log_debug(pathDataInterimTablesProcessedOrganismOriginalTable)
 }
 
 if (length != 0) {
   write_delim(
     x = dataCleanedOriginalOrganism,
     delim = "\t",
-    file = pathDataInterimTablesCleanedOrganismOriginalTable
+    file = pathDataInterimTablesProcessedOrganismOriginalTable
   )
 }
 
 if (length != 0) {
   log_debug(
-    pathDataInterimTablesCleanedOrganismOriginalUniqueTable
+    pathDataInterimTablesProcessedOrganismOriginalUniqueTable
   )
 }
 
@@ -231,7 +231,7 @@ if (length != 0) {
     x = dataCleanedOriginalOrganismUnique,
     delim = "\t",
     file = gzfile(
-      description = pathDataInterimTablesCleanedOrganismOriginalUniqueTable,
+      description = pathDataInterimTablesProcessedOrganismOriginalUniqueTable,
       compression = 9,
       encoding = "UTF-8"
     ),
@@ -244,7 +244,7 @@ if (length != 0) {
 write_delim(
   x = dataOrganismVerified,
   delim = "\t",
-  file = pathDataInterimTablesCleanedOrganismOriginalVerifiedTable
+  file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable
 )
 
 end <- Sys.time()

@@ -39,25 +39,25 @@ fun main(args: Array<String>) {
         else -> throw Exception("This shouldn't have happened, we only know these types of tables")
     }
 
-    val pathDataInterimTablesCleaned = "$pathDataInterimTables/2_cleaned"
-    val pathDataInterimTablesCleanedOrganism = "$pathDataInterimTablesCleaned/organism"
-    val pathDataInterimTablesCleanedOrganismOriginalUniqueTable =
-        "$pathDataInterimTablesCleanedOrganism/originalUnique.tsv.gz"
-    val pathDataInterimTablesCleanedOrganismTranslatedInterim =
-        "$pathDataInterimTablesCleanedOrganism/interim.tsv.gz"
+    val pathDataInterimTablesProcessed = "$pathDataInterimTables/2_processed"
+    val pathDataInterimTablesProcessedOrganism = "$pathDataInterimTablesProcessed/organism"
+    val pathDataInterimTablesProcessedOrganismOriginalUniqueTable =
+        "$pathDataInterimTablesProcessedOrganism/originalUnique.tsv.gz"
+    val pathDataInterimTablesProcessedOrganismTranslatedInterim =
+        "$pathDataInterimTablesProcessedOrganism/interim.tsv.gz"
 
     val pathDataInterimTablesTranslatedOrganism = "$pathDataInterimTables/1_translated/organism"
 
     logger.info("Making sure directories exist")
     File(pathDataInterimTablesTranslatedOrganism).mkdirs()
-    File(pathDataInterimTablesCleanedOrganism).mkdirs()
+    File(pathDataInterimTablesProcessedOrganism).mkdirs()
 
     // Organism List
     //
     // We load the data from the organism list and transform it as a field Map
 
     logger.info("Loading and processing the organism list")
-    val dataCleanedOriginalOrganism = parseTSVZFile(pathDataInterimTablesCleanedOrganismOriginalUniqueTable)?.map {
+    val dataCleanedOriginalOrganism = parseTSVZFile(pathDataInterimTablesProcessedOrganismOriginalUniqueTable)?.map {
         it.toFieldMap()
     } ?: throw Exception("Sorry can't read organism list.")
 
@@ -136,8 +136,8 @@ fun main(args: Array<String>) {
 
     // Writing files
 
-    logger.info("Writing Interim file $pathDataInterimTablesCleanedOrganismTranslatedInterim")
-    val outputWriter = TsvWriter(GZIPWrite(pathDataInterimTablesCleanedOrganismTranslatedInterim), TsvWriterSettings())
+    logger.info("Writing Interim file $pathDataInterimTablesProcessedOrganismTranslatedInterim")
+    val outputWriter = TsvWriter(GZIPWrite(pathDataInterimTablesProcessedOrganismTranslatedInterim), TsvWriterSettings())
     val headers = dataCleanedOriginalOrganism.firstOrNull()?.keys ?: setOf(
         "organismValue", "value_min", "dbQuality", "value_max",
         "rank", "ids", "taxonomy", "organismCleaned", "organismDbTaxo", "taxonId", "organismInterim"
