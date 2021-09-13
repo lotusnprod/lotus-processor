@@ -24,7 +24,7 @@ log_debug(" Step 4")
 log_debug("... files ... ")
 log_debug("... cleaned organisms ")
 dataCleanedOrganism <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismTranslatedTable) %>%
+  read_delim(file = pathDataInterimTablesProcessedOrganismTranslatedTable) %>%
   distinct()
 
 log_debug(" ... taxa ranks dictionary ")
@@ -38,7 +38,7 @@ dataCleanedOrganismVerify <- dataCleanedOrganism %>%
 write_delim(
   x = dataCleanedOrganismVerify,
   file = gzfile(
-    description = pathDataInterimTablesCleanedOrganismVerifyTable,
+    description = pathDataInterimTablesProcessedOrganismVerifyTable,
     compression = 9,
     encoding = "UTF-8"
   ),
@@ -52,7 +52,7 @@ log_debug("submitting to GNVerifier")
 system(command = paste("bash", pathGnverifierScript))
 
 verified <-
-  stream_in(con = file(pathDataInterimTablesCleanedOrganismVerifiedTable))
+  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
 
 verified_df <- verified %>%
   data.frame() %>%
@@ -257,11 +257,11 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 
 log_debug("exporting ... ")
-log_debug(pathDataInterimTablesCleanedOrganismFinal)
+log_debug(pathDataInterimTablesProcessedOrganismFinal)
 write_delim(
   x = dataCuratedOrganismAuto,
   delim = "\t",
-  file = pathDataInterimTablesCleanedOrganismFinal
+  file = pathDataInterimTablesProcessedOrganismFinal
 )
 
 end <- Sys.time()

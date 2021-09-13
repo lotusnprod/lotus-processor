@@ -22,7 +22,7 @@ originalTable <- read_delim(
 log_debug("... results ...")
 log_debug("... organisms")
 organismTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedOrganismFinal),
+  file = gzfile(description = pathDataInterimTablesProcessedOrganismFinal),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -43,7 +43,7 @@ translatedStructureTable <- read_delim(
 
 log_debug("... cleaned")
 cleanedStructureTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedStructureNamed),
+  file = gzfile(description = pathDataInterimTablesProcessedStructureNamed),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,
@@ -55,7 +55,7 @@ cleanedStructureTableFull <- read_delim(
 
 log_debug("... references")
 referenceTableFull <- read_delim(
-  file = gzfile(description = pathDataInterimTablesCleanedReferenceFile),
+  file = gzfile(description = pathDataInterimTablesProcessedReferenceFile),
   delim = "\t",
   col_types = cols(.default = "c"),
   escape_double = FALSE,

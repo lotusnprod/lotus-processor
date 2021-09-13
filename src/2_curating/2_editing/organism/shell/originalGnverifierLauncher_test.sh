@@ -4,4 +4,4 @@
 
 source 2_curating/2_editing/organism/shell/gnverifier_capital.sh
 
-gnverifier_capital ../data/interim/tables_test/0_original/organism/original.tsv.gz ../data/interim/tables_test/2_cleaned/organism/original_verified.json
+gnverifier_capital ../data/interim/tables_test/0_original/organism/original.tsv.gz ../data/interim/tables_test/2_processed/organism/original_verified.json

@@ -4,4 +4,4 @@
 
 source 2_curating/2_editing/organism/shell/gnverifier.sh
 
-gnverifier ../data/interim/tables/2_cleaned/organism/verify.tsv.gz ../data/interim/tables/2_cleaned/organism/verified.json
+gnverifier ../data/interim/tables/2_processed/organism/verify.tsv.gz ../data/interim/tables/2_processed/organism/verified.json

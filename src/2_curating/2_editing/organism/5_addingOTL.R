@@ -19,7 +19,7 @@ library(RSQLite)
 canonical_name_colname <- "organismCleaned"
 
 dataCuratedOrganismAuto <-
-  read_delim(file = pathDataInterimTablesCleanedOrganismFinal)
+  read_delim(file = pathDataInterimTablesProcessedOrganismFinal)
 
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-

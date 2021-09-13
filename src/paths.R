@@ -4,7 +4,7 @@
 
 source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "test")
 
 if (exists("mode_test")) {
   mode <- "test"
@@ -1025,109 +1025,109 @@ pathDataInterimTablesTranslatedStructureUnique <-
 pathDataInterimTablesTranslatedTable <-
   file.path(pathDataInterimTablesTranslated, "table.tsv.gz")
 
-# cleaned fields
-pathDataInterimTablesCleaned <-
-  file.path(pathDataInterimTables, "2_cleaned")
+# processed fields
+pathDataInterimTablesProcessed <-
+  file.path(pathDataInterimTables, "2_processed")
 
 ## organism
-pathDataInterimTablesCleanedOrganism <-
-  file.path(pathDataInterimTablesCleaned, "organism")
+pathDataInterimTablesProcessedOrganism <-
+  file.path(pathDataInterimTablesProcessed, "organism")
 
 ### original
-pathDataInterimTablesCleanedOrganismOriginal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "original")
+pathDataInterimTablesProcessedOrganismOriginal <-
+  file.path(pathDataInterimTablesProcessedOrganism, "original")
 
-pathDataInterimTablesCleanedOrganismOriginalTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "original.tsv.gz")
+pathDataInterimTablesProcessedOrganismOriginalTable <-
+  file.path(pathDataInterimTablesProcessedOrganism, "original.tsv.gz")
 
-pathDataInterimTablesCleanedOrganismOriginalUniqueTable <-
+pathDataInterimTablesProcessedOrganismOriginalUniqueTable <-
   file.path(
-    pathDataInterimTablesCleanedOrganism,
+    pathDataInterimTablesProcessedOrganism,
     "originalUnique.tsv.gz"
   )
 
-pathDataInterimTablesCleanedOrganismOriginalVerifiedTable <-
+pathDataInterimTablesProcessedOrganismOriginalVerifiedTable <-
   file.path(
-    pathDataInterimTablesCleanedOrganism,
+    pathDataInterimTablesProcessedOrganism,
     "originalVerified.tsv.gz"
   )
 
 ### translated
-pathDataInterimTablesCleanedOrganismTranslated <-
-  file.path(pathDataInterimTablesCleanedOrganism, "translated")
+pathDataInterimTablesProcessedOrganismTranslated <-
+  file.path(pathDataInterimTablesProcessedOrganism, "translated")
 
-pathDataInterimTablesCleanedOrganismTranslatedInterim <-
-  file.path(pathDataInterimTablesCleanedOrganism, "interim.tsv.gz")
+pathDataInterimTablesProcessedOrganismTranslatedInterim <-
+  file.path(pathDataInterimTablesProcessedOrganism, "interim.tsv.gz")
 
-pathDataInterimTablesCleanedOrganismTranslatedTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "translated.tsv.gz")
+pathDataInterimTablesProcessedOrganismTranslatedTable <-
+  file.path(pathDataInterimTablesProcessedOrganism, "translated.tsv.gz")
 
-pathDataInterimTablesCleanedOrganismVerifyTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "verify.tsv.gz")
+pathDataInterimTablesProcessedOrganismVerifyTable <-
+  file.path(pathDataInterimTablesProcessedOrganism, "verify.tsv.gz")
 
-pathDataInterimTablesCleanedOrganismVerifiedOriginalTable <-
+pathDataInterimTablesProcessedOrganismVerifiedOriginalTable <-
   file.path(
-    pathDataInterimTablesCleanedOrganism,
+    pathDataInterimTablesProcessedOrganism,
     "original_verified.json"
   )
 
-pathDataInterimTablesCleanedOrganismVerifiedTable <-
-  file.path(pathDataInterimTablesCleanedOrganism, "verified.json")
+pathDataInterimTablesProcessedOrganismVerifiedTable <-
+  file.path(pathDataInterimTablesProcessedOrganism, "verified.json")
 
-### final cleaned organisms
-pathDataInterimTablesCleanedOrganismFinal <-
-  file.path(pathDataInterimTablesCleanedOrganism, "cleaned.tsv.gz")
+### final processed organisms
+pathDataInterimTablesProcessedOrganismFinal <-
+  file.path(pathDataInterimTablesProcessedOrganism, "processed.tsv.gz")
 
-pathDataInterimTablesCleanedOrganismRealDiff <-
+pathDataInterimTablesProcessedOrganismRealDiff <-
   file.path(
-    pathDataInterimTablesCleanedOrganism,
+    pathDataInterimTablesProcessedOrganism,
     "organismsDifferentSpecies.tsv.gz"
   )
 
 ### structure
-pathDataInterimTablesCleanedStructure <-
-  file.path(pathDataInterimTablesCleaned, "structure")
+pathDataInterimTablesProcessedStructure <-
+  file.path(pathDataInterimTablesProcessed, "structure")
 
-pathDataInterimTablesCleanedStructureFile <-
-  file.path(pathDataInterimTablesCleanedStructure, "cleaned.tsv.gz")
+pathDataInterimTablesProcessedStructureFile <-
+  file.path(pathDataInterimTablesProcessedStructure, "processed.tsv.gz")
 
-pathDataInterimTablesCleanedStructureStereoCounted <-
-  file.path(pathDataInterimTablesCleanedStructure, "counted.tsv.gz")
+pathDataInterimTablesProcessedStructureStereoCounted <-
+  file.path(pathDataInterimTablesProcessedStructure, "counted.tsv.gz")
 
-pathDataInterimTablesCleanedStructureSmiles <-
-  file.path(pathDataInterimTablesCleanedStructure, "smiles.tsv.gz")
+pathDataInterimTablesProcessedStructureSmiles <-
+  file.path(pathDataInterimTablesProcessedStructure, "smiles.tsv.gz")
 
-pathDataInterimTablesCleanedStructureSmiles_1 <-
-  file.path(pathDataInterimTablesCleanedStructure, "smiles_1.tsv")
+pathDataInterimTablesProcessedStructureSmiles_1 <-
+  file.path(pathDataInterimTablesProcessedStructure, "smiles_1.tsv")
 
-pathDataInterimTablesCleanedStructureSmiles_2 <-
-  file.path(pathDataInterimTablesCleanedStructure, "smiles_2.tsv")
+pathDataInterimTablesProcessedStructureSmiles_2 <-
+  file.path(pathDataInterimTablesProcessedStructure, "smiles_2.tsv")
 
-pathDataInterimTablesCleanedStructureSmiles_3 <-
-  file.path(pathDataInterimTablesCleanedStructure, "smiles_3.tsv")
+pathDataInterimTablesProcessedStructureSmiles_3 <-
+  file.path(pathDataInterimTablesProcessedStructure, "smiles_3.tsv")
 
-pathDataInterimTablesCleanedStructureSmiles_4 <-
-  file.path(pathDataInterimTablesCleanedStructure, "smiles_4.tsv")
+pathDataInterimTablesProcessedStructureSmiles_4 <-
+  file.path(pathDataInterimTablesProcessedStructure, "smiles_4.tsv")
 
-pathDataInterimTablesCleanedStructureNamed <-
-  file.path(pathDataInterimTablesCleanedStructure, "named.tsv.gz")
+pathDataInterimTablesProcessedStructureNamed <-
+  file.path(pathDataInterimTablesProcessedStructure, "named.tsv.gz")
 
 ## ref
-pathDataInterimTablesCleanedReference <-
-  file.path(pathDataInterimTablesCleaned, "reference")
+pathDataInterimTablesProcessedReference <-
+  file.path(pathDataInterimTablesProcessed, "reference")
 
-pathDataInterimTablesCleanedReferenceFile <-
-  file.path(pathDataInterimTablesCleanedReference, "cleaned.tsv.gz")
+pathDataInterimTablesProcessedReferenceFile <-
+  file.path(pathDataInterimTablesProcessedReference, "processed.tsv.gz")
 
 # curated fields
 pathDataInterimTablesCurated <-
   file.path(pathDataInterimTables, "3_curated")
 
-### final cleaned table
+### final processed table
 pathDataInterimTablesCuratedTable <-
   file.path(pathDataInterimTablesCurated, "table.tsv.gz")
 
-### final cleaned table
+### final processed table
 pathDataInterimTablesCuratedTableMaximal <-
   file.path(pathDataInterimTablesCurated, "tableMaximal.tsv.gz")
 

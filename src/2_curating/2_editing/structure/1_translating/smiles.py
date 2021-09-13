@@ -18,12 +18,15 @@ try:
     ouput_file_path = sys.argv[2]
     smiles_column_header = sys.argv[3]
 
-    print('Parsing gziped tab separated file \n'
+    print('Parsing gziped tab separated file '
+          + '\n'
           + input_file_path
-          + 'with column: \n'
+          + 'with column: '
+          + '\n'
           + smiles_column_header
-          + 'as SMILES column. \n'
-          + 'Proceeding to the the ROMol object conversion and returning the InChI in file : \n'
+          + ' as SMILES column. \n'
+          + ' Proceeding to the the ROMol object conversion and returning the InChI in file : '
+          + '\n'
           + ouput_file_path)
 except:
     print(
@@ -76,12 +79,9 @@ df['structureTranslated_smiles'] = df['inchi']
 df = df.drop(['inchi', 'ROMol'], axis=1)
 
 # exporting
-
-
-filename = ouput_file_path
-if not os.path.exists(os.path.dirname(filename)):
+if not os.path.exists(os.path.dirname(ouput_file_path)):
     try:
-        os.makedirs(os.path.dirname(filename))
+        os.makedirs(os.path.dirname(ouput_file_path))
     except OSError as exc:  # Guard against race condition
         if exc.errno != errno.EEXIST:
             raise

@@ -14,7 +14,7 @@ library(readr)
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  read_delim(file = pathDataInterimTablesCleanedStructureStereoCounted)
+  read_delim(file = pathDataInterimTablesProcessedStructureStereoCounted)
 
 log_debug("keeping smiles only ...")
 smilesDictionary <- structureCounted %>%
@@ -25,7 +25,7 @@ log_debug("writing the smiles table")
 write_delim(
   x = smilesDictionary,
   delim = "\t",
-  file = pathDataInterimTablesCleanedStructureSmiles
+  file = pathDataInterimTablesProcessedStructureSmiles
 )
 
 if (works_locally_only == FALSE) {
@@ -35,9 +35,9 @@ if (works_locally_only == FALSE) {
       "bash",
       molconvertPath,
       "name:t",
-      pathDataInterimTablesCleanedStructureSmiles,
+      pathDataInterimTablesProcessedStructureSmiles,
       "-o",
-      pathDataInterimTablesCleanedStructureSmiles_1,
+      pathDataInterimTablesProcessedStructureSmiles_1,
       "-g"
     )
   )
@@ -48,9 +48,9 @@ if (works_locally_only == FALSE) {
       "bash",
       molconvertPath,
       "name:i",
-      pathDataInterimTablesCleanedStructureSmiles,
+      pathDataInterimTablesProcessedStructureSmiles,
       "-o",
-      pathDataInterimTablesCleanedStructureSmiles_2,
+      pathDataInterimTablesProcessedStructureSmiles_2,
       "-g"
     )
   )
@@ -61,9 +61,9 @@ if (works_locally_only == FALSE) {
   #     "bash",
   #     molconvertPath,
   #     "name:common",
-  #     pathDataInterimTablesCleanedStructureSmiles,
+  #     pathDataInterimTablesProcessedStructureSmiles,
   #     "-o",
-  #     pathDataInterimTablesCleanedStructureSmiles_3,
+  #     pathDataInterimTablesProcessedStructureSmiles_3,
   #     "-g"
   #   )
   # )
@@ -74,16 +74,16 @@ if (works_locally_only == FALSE) {
   #     "bash",
   #     molconvertPath,
   #     "name:common,all",
-  #     pathDataInterimTablesCleanedStructureSmiles,
+  #     pathDataInterimTablesProcessedStructureSmiles,
   #     "-o",
-  #     pathDataInterimTablesCleanedStructureSmiles_4,
+  #     pathDataInterimTablesProcessedStructureSmiles_4,
   #     "-g"
   #   )
   # )
 
   log_debug("loading files ...")
   structureNamesTraditional <- read_delim(
-    file = pathDataInterimTablesCleanedStructureSmiles_1,
+    file = pathDataInterimTablesProcessedStructureSmiles_1,
     delim = "\t",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
@@ -94,7 +94,7 @@ if (works_locally_only == FALSE) {
     select(structureCleaned_nameTraditional = X1)
 
   structureNamesIupac <- read_delim(
-    file = pathDataInterimTablesCleanedStructureSmiles_2,
+    file = pathDataInterimTablesProcessedStructureSmiles_2,
     delim = "\t",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
@@ -105,7 +105,7 @@ if (works_locally_only == FALSE) {
     select(structureCleaned_nameIupac = X1)
 
   # structureNamesCommon <- read_delim(
-  #   file = pathDataInterimTablesCleanedStructureSmiles_3,
+  #   file = pathDataInterimTablesProcessedStructureSmiles_3,
   #   delim = "\t",
   #   col_types = cols(.default = "c"),
   #   escape_double = FALSE,
@@ -116,7 +116,7 @@ if (works_locally_only == FALSE) {
   #   select(structureCleanedNameCommon = X1)
 
   # structureNamesCommonAll <- read_delim(
-  #   file = pathDataInterimTablesCleanedStructureSmiles_4,
+  #   file = pathDataInterimTablesProcessedStructureSmiles_4,
   #   delim = "\t",
   #   col_types = cols(.default = "c"),
   #   escape_double = FALSE,
@@ -190,12 +190,12 @@ structureNamed_cleaned <-
 
 log_debug("ensuring directories exist")
 log_debug("exporting ...")
-log_debug(pathDataInterimTablesCleanedStructureNamed)
+log_debug(pathDataInterimTablesProcessedStructureNamed)
 
 write_delim(
   x = structureNamed_cleaned,
   delim = "\t",
-  file = pathDataInterimTablesCleanedStructureNamed
+  file = pathDataInterimTablesProcessedStructureNamed
 )
 
 end <- Sys.time()

@@ -13,8 +13,9 @@ library(readr)
 
 log_debug("loading db, if running fullmode, this may take a while")
 openDbMinimal <-
-  read_delim(file = pathDataInterimTablesCuratedTable) %>%
-  data.frame()
+  read_delim(file = pathDataInterimTablesCuratedTable, 
+             delim = "\t") %>%
+  distinct()
 
 log_debug("sampling ...")
 log_debug("... DOI")
