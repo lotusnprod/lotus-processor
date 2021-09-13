@@ -1,3 +1,6 @@
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
+
 OTT_VERSION="3.2"
 
 if [ ! -f ../data/external/taxonomySource/organism/ott"$OTT_VERSION".tgz ]; then
