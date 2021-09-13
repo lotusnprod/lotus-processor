@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/usr/bin/env bash
+# -*- coding: utf-8 -*-
 
 # A simple script with a function to launch gnverifier
 
