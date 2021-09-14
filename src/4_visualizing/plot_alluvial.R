@@ -17,8 +17,10 @@ prettyNames <-
 
 log_debug("... open DB")
 openDbMetaValidated <-
-  read_delim(file = pathDataInterimTablesAnalysedPlatinum,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimTablesAnalysedPlatinum,
+    col_types = cols(.default = "c")
+  ) %>%
   filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
@@ -28,8 +30,10 @@ openDbMetaValidated <-
   mutate(validation = "validated")
 
 openDbMaximal <-
-  read_delim(file = pathDataInterimTablesCuratedTableMaximal,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimTablesCuratedTableMaximal,
+    col_types = cols(.default = "c")
+  ) %>%
   filter(database != "wikidata")
 
 full <- left_join(openDbMaximal, openDbMetaValidated) %>%

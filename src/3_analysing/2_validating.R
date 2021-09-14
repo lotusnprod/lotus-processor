@@ -123,8 +123,10 @@ sampleCondifent_PMA <-
 
 log_debug("... documented pairs")
 inhouseDbMinimal <-
-  read_delim(file = pathDataInterimTablesCuratedTable,
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimTablesCuratedTable,
+    col_types = cols(.default = "c")
+  )
 
 log_debug("... reference metadata")
 structureMetadata <-

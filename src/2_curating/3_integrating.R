@@ -425,44 +425,48 @@ ifelse(
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
-if(file.exists(pathDataInterimTablesCuratedTable)) {
+if (file.exists(pathDataInterimTablesCuratedTable)) {
   write_delim(
     x = inhouseDbMinimal,
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
     append = TRUE
   )
-} else{
-  write_delim(x = inhouseDbMinimal,
-              file = pathDataInterimTablesCuratedTable,
-              delim = "\t")
+} else {
+  write_delim(
+    x = inhouseDbMinimal,
+    file = pathDataInterimTablesCuratedTable,
+    delim = "\t"
+  )
 }
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
 write_delim(
   x = structureMinimal,
-  file = pathDataInterimDictionariesStructureDictionary, 
+  file = pathDataInterimDictionariesStructureDictionary,
   delim = "\t"
 )
 
 log_debug(pathDataInterimDictionariesStructureAntiDictionary)
-if(file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
+if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
   write_delim(
     x = structureNA,
     file = pathDataInterimDictionariesStructureAntiDictionary,
     delim = "\t",
     append = TRUE
   )
-} else{
-  write_delim(x = structureNA,
-              file = pathDataInterimDictionariesStructureAntiDictionary,
-              delim = "\t")
+} else {
+  write_delim(
+    x = structureNA,
+    file = pathDataInterimDictionariesStructureAntiDictionary,
+    delim = "\t"
+  )
 }
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
 write_delim(
   x = organismMinimal,
-  file = pathDataInterimDictionariesOrganismDictionary, 
+  file = pathDataInterimDictionariesOrganismDictionary,
   delim = "\t"
 )
 
@@ -471,43 +475,45 @@ log_debug(
 )
 write_delim(
   x = referenceTableFull,
-  file = pathDataInterimDictionariesReferenceOrganismDictionary, 
+  file = pathDataInterimDictionariesReferenceOrganismDictionary,
   delim = "\t"
 )
 
 log_debug(pathDataInterimDictionariesStructureMetadata)
 write_delim(
   x = structureMetadata,
-  file = pathDataInterimDictionariesStructureMetadata, 
+  file = pathDataInterimDictionariesStructureMetadata,
   delim = "\t"
 )
 
 log_debug(pathDataInterimDictionariesOrganismMetadata)
 write_delim(
   x = organismMetadata,
-  file = pathDataInterimDictionariesOrganismMetadata, 
+  file = pathDataInterimDictionariesOrganismMetadata,
   delim = "\t"
 )
 
 log_debug(pathDataInterimDictionariesReferenceMetadata)
 write_delim(
   x = referenceMetadata,
-  file = pathDataInterimDictionariesReferenceMetadata, 
+  file = pathDataInterimDictionariesReferenceMetadata,
   delim = "\t"
 )
 
 log_debug(pathDataInterimTablesCuratedTableMaximal)
-if(file.exists(pathDataInterimTablesCuratedTableMaximal)) {
+if (file.exists(pathDataInterimTablesCuratedTableMaximal)) {
   write_delim(
     x = openDbMaximal,
     file = pathDataInterimTablesCuratedTableMaximal,
     delim = "\t",
     append = TRUE
   )
-} else{
-  write_delim(x = openDbMaximal,
-              file = pathDataInterimTablesCuratedTableMaximal,
-              delim = "\t")
+} else {
+  write_delim(
+    x = openDbMaximal,
+    file = pathDataInterimTablesCuratedTableMaximal,
+    delim = "\t"
+  )
 }
 
 end <- Sys.time()
