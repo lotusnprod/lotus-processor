@@ -19,7 +19,7 @@ Database <-
       writeFile = function(file, data) {
         write_delim(
           x = data,
-          delim = "t",
+          delim = "\t",
           file = gzfile(
             description = file,
             compression = 9,
