@@ -1,1 +1,1 @@
-Only to be used for opennaturalproductsdb internal purposes, not to be diffused outside
+Only to be used for LOTUS internal purposes, not to be diffused outside
