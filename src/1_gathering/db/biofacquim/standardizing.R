@@ -12,7 +12,8 @@ database <- databases$get("biofacquim")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
+  file = gzfile(database$sourceFiles$tsv),
+  delim = "\t"
 ) %>%
   mutate_all(as.character)
 
