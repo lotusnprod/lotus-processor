@@ -186,43 +186,49 @@ if (nrow(direct_parent != 0)) {
 
 log_debug("exporting")
 
-if(file.exists("../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz")) {
+if (file.exists("../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz")) {
   write_delim(
     x = alternative_parents,
     delim = "\t",
     file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz",
     append = TRUE
   )
-} else{
-  write_delim(x = alternative_parents,
-              delim = "\t",
-              file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz")
+} else {
+  write_delim(
+    x = alternative_parents,
+    delim = "\t",
+    file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz"
+  )
 }
 
-if(file.exists("../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz")) {
+if (file.exists("../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz")) {
   write_delim(
     x = direct_parent,
     delim = "\t",
     file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
     append = TRUE
   )
-} else{
-  write_delim(x = direct_parent,
-              delim = "\t",
-              file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz")
+} else {
+  write_delim(
+    x = direct_parent,
+    delim = "\t",
+    file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz"
+  )
 }
 
-if(file.exists("../data/interim/dictionaries/structure/chebi/chebi.tsv.gz")) {
+if (file.exists("../data/interim/dictionaries/structure/chebi/chebi.tsv.gz")) {
   write_delim(
     x = chebi,
     delim = "\t",
     file = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz",
     append = TRUE
   )
-} else{
-  write_delim(x = chebi,
-              delim = "\t",
-              file = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz")
+} else {
+  write_delim(
+    x = chebi,
+    delim = "\t",
+    file = "../data/interim/dictionaries/structure/chebi/chebi.tsv.gz"
+  )
 }
 
 # save(list = ls(.GlobalEnv), file = "../data/interim/temp.Rdata")
