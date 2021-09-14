@@ -3,4 +3,8 @@
 
 mkdir -p ../data/external/dbSource/coconut/
 
-wget "https://zenodo.org/record/3778405/files/COCONUT.sdf.zip?download=1" -O ../data/external/dbSource/coconut/COCONUT_DB.sdf
+wget "https://zenodo.org/record/3778405/files/COCONUT.sdf.zip?download=1" -O ../data/external/dbSource/coconut/COCONUT_DB.sdf.zip
+
+unzip ../data/external/dbSource/coconut/COCONUT_DB.sdf.zip -d ../data/external/dbSource/coconut/
+
+rm ../data/external/dbSource/coconut/COCONUT_DB.sdf.zip
