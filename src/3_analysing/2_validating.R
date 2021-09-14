@@ -514,10 +514,11 @@ f1Table <- full_join(f1Table, anti) %>%
     2) + recall)) %>%
   replace(. == "NaN", 0)
 
+"%ni%" <- Negate("%in%")
 
 log_debug("... correcting with references ratios")
 refRatios <- inhouseDbFull %>%
-  filter(database != "dnp") %>%
+  filter(database %ni% forbidden_export)
   group_by(referenceType) %>%
   count() %>%
   mutate(prop = n / sum(.$n)) %>%
@@ -640,7 +641,7 @@ openDb <- inhouseDbFull %>%
 
 log_debug("outputting dnp pairs")
 dnpDb <- inhouseDbFull %>%
-  filter(database == "dnp") %>%
+  filter(database %in% forbidden_export) %>%
   distinct(
     database,
     organismCleaned,

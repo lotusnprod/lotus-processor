@@ -12,7 +12,7 @@ library(readr)
 log_debug("loading db, if running fullmode, this may take a while")
 inhouseDbMinimal <-
   read_delim(file = pathDataInterimTablesCuratedTable) %>%
-  filter(database != "dnp" & database != "foodb") %>%
+  filter(database %ni% forbidden_export) %>%
   data.frame()
 
 frozen_metadata <-

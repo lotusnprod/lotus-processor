@@ -145,6 +145,8 @@ pairsOpenDb_2D <- openDb %>%
     .keep_all = TRUE
   )
 
+"%ni%" <- Negate("%in%")
+
 pairsOutsideDnp_3D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleanedInchikey)) %>%
@@ -152,7 +154,7 @@ pairsOutsideDnp_3D <- inhouseDb %>%
     organismCleaned,
     .keep_all = TRUE
   ) %>%
-  filter(database != "dnp")
+  filter(database %ni% forbidden_export)
 
 pairsOutsideDnp_2D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
@@ -161,7 +163,7 @@ pairsOutsideDnp_2D <- inhouseDb %>%
     organismCleaned,
     .keep_all = TRUE
   ) %>%
-  filter(database != "dnp")
+  filter(database %ni% forbidden_export)
 
 pairsFull_3D <- bind_rows(openDb, dnpDb) %>%
   filter(!is.na(organismCleaned) &
