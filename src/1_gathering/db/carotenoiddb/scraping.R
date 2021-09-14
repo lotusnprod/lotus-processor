@@ -3,6 +3,7 @@
 # loading paths
 source("paths.R")
 source("r/parallel.R")
+source("r/y_as_na.R")
 
 library(data.table)
 library(dplyr)
