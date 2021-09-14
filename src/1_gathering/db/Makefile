@@ -115,11 +115,11 @@ ${EXTERNAL_DB_SOURCE_PATH}/coconut/COCONUT_DB.sdf: ${SRC_GATHERING_DB_PATH}/coco
 	cd	${PWD}/src	&&	bash	${SRC_GATHERING_DB_PATH}/coconut/downloading.sh
 
 cyanometdb: ${INTERIM_DB_PATH}/cyanometdb.tsv.gz
-${INTERIM_DB_PATH}/cyanometdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/1-s2.0-S0043135421002153-mmc4.zip ${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
+${INTERIM_DB_PATH}/cyanometdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/CyanoMetDB_WR_Feb2021.csv ${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/cyanometdb/standardizing.R
 
-cyanometdb-download: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/1-s2.0-S0043135421002153-mmc4.zip
-${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/1-s2.0-S0043135421002153-mmc4.zip: ${SRC_GATHERING_DB_PATH}/cyanometdb/downloading.sh
+cyanometdb-download: ${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/CyanoMetDB_WR_Feb2021.csv
+${EXTERNAL_DB_SOURCE_PATH}/cyanometdb/CyanoMetDB_WR_Feb2021.csv: ${SRC_GATHERING_DB_PATH}/cyanometdb/downloading.sh
 	cd	${PWD}/src	&&	bash	${SRC_GATHERING_DB_PATH}/cyanometdb/downloading.sh
 
 datawarrior: ${INTERIM_DB_PATH}/datawarrior.tsv.gz

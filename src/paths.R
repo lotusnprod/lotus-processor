@@ -162,7 +162,7 @@ databases$add(
 
 databases$add(
   name = "cyanometdb",
-  sourceFiles = list(tsv = "1-s2.0-S0043135421002153-mmc4.zip"),
+  sourceFiles = list(tsv = "CyanoMetDB_WR_Feb2021.csv"),
   interimFile = "cyanometdb.tsv.gz"
 )
 
