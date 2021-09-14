@@ -64,8 +64,8 @@ alkamid: ${INTERIM_DB_PATH}/alkamid.tsv.gz
 ${INTERIM_DB_PATH}/alkamid.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 
-alkamid-scrape: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
-$(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
+alkamid-scrape: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
+# $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): # ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 
 antibase: 
@@ -91,7 +91,7 @@ ${INTERIM_DB_PATH}/biophytmol.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biop
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biophytmol/standardizing.R
 
 biophytmol-scrape: ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/biophytmol/scraping.R
 
 carotenoiddb: ${INTERIM_DB_PATH}/carotenoiddb.tsv.gz
@@ -174,7 +174,7 @@ ${INTERIM_DB_PATH}/knapsack.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsack
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/standardizing.R
 
 knapsack-scrape: ${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/knapsack/knapsackScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/knapsack/scraping.R
 
 metabolights: ${INTERIM_DB_PATH}/metabolights.tsv.gz
@@ -197,7 +197,7 @@ ${INTERIM_DB_PATH}/mitishamba.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/miti
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/mitishamba/standardizing.R
 
 mitishamba-scrape: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
 
 nanpdb: ${INTERIM_DB_PATH}/nanpdb.tsv.gz
@@ -205,7 +205,7 @@ ${INTERIM_DB_PATH}/nanpdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScrape
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
 
 nanpdb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 
 napralert: ${INTERIM_DB_PATH}/napralert.tsv.gz
@@ -243,7 +243,7 @@ ${INTERIM_DB_PATH}/npedia.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScrape
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npedia/standardizing.R
 
 npedia-scrape: ${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/npedia/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/npedia/npediaScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/npedia/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/npedia/scraping.R
 
 nubbe: ${INTERIM_DB_PATH}/nubbe.tsv.gz
@@ -272,7 +272,7 @@ ${INTERIM_DB_PATH}/phytohub.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohub
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phytohub/standardizing.R
 
 phytohub-scrape: ${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/phytohub/phytohubScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phytohub/scraping.R
 
 procardb: ${INTERIM_DB_PATH}/procardb.tsv.gz
@@ -280,7 +280,7 @@ ${INTERIM_DB_PATH}/procardb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardb
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/procardb/standardizing.R
 
 procardb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz:	${SRC_GATHERING_DB_PATH}/procardb/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/procardb/procardbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/procardb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/procardb/scraping.R
 
 respect: ${INTERIM_DB_PATH}/respect.tsv.gz
@@ -295,7 +295,7 @@ ${INTERIM_DB_PATH}/sancdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScrape
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/sancdb/standardizing.R
 
 sancdb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/sancdb/sancdbScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/sancdb/scraping.R
 
 streptomedb: ${INTERIM_DB_PATH}/streptomedb.tsv.gz
@@ -315,7 +315,7 @@ ${INTERIM_DB_PATH}/swmd.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/swmd/standardizing.R
 
 swmd-scrape: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 
 tmdb: ${INTERIM_DB_PATH}/tmdb.tsv.gz
@@ -323,7 +323,7 @@ ${INTERIM_DB_PATH}/tmdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/tmdb/standardizing.R
 
 tmdb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz:	${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/tmdb/tmdbScraped.tsv.gz:	# ${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/tmdb/scraping.R
 
 tmmc: ${INTERIM_DB_PATH}/tmmc.tsv.gz
@@ -358,5 +358,5 @@ ${INTERIM_DB_PATH}/wakankensaku.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/wakankensaku/standardizing.R
 
 wakankensaku-scrape: ${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
+${EXTERNAL_DB_SOURCE_PATH}/wakankensaku/wakankensakuScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/wakankensaku/scraping.R
