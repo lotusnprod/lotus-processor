@@ -41,16 +41,17 @@ taxonomy <- fromJSON(txt = list.files(
   full.names = TRUE
 ))
 
-old <-
-  read_delim(
-    file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
-    delim = "\t"
-  ) %>%
-  distinct() %>%
-  mutate_all(as.character)
-
-new <- anti_join(smiles, old)
-# new <- smiles
+if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile)) {
+  old <-
+    read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
+               delim = "\t") %>%
+    distinct() %>%
+    mutate_all(as.character)
+  
+  new <- anti_join(smiles, old)
+} else{
+  new <- smiles
+}
 
 url <- "https://npclassifier.ucsd.edu"
 order <- "/classify?smiles="
@@ -79,8 +80,12 @@ if (length(queries) != 0) {
   df_new <- bind_rows(list_df) %>%
     mutate_all(as.character)
 
-  df <- bind_rows(old, df_new) %>%
-    distinct()
+  if (exists('old')) {
+    df <- bind_rows(old, df_new) %>%
+      distinct()
+  } else{
+    df <- df_new
+  }
 } else {
   df <- old
 }
@@ -110,6 +115,27 @@ df_semiclean <-
     !is.na(pathway)) %>%
   distinct()
 
+log_debug("ensuring directories exist")
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionaries),
+  yes = dir.create(pathDataInterimDictionaries),
+  no = paste(pathDataInterimDictionaries, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesStructure),
+  yes = dir.create(pathDataInterimDictionariesStructure),
+  no = paste(pathDataInterimDictionariesStructure, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesStructureDictionaryNpclassifier),
+  yes = dir.create(pathDataInterimDictionariesStructureDictionaryNpclassifier),
+  no = paste(pathDataInterimDictionariesStructureDictionaryNpclassifier, "exists")
+)
+
+log_debug("Exporting")
 write_delim(
   x = df_semiclean,
   delim = "\t",

@@ -109,8 +109,8 @@ fun main(args: Array<String>) {
     // Exclusion list
 
     logger.info("Loading and processing the exclusion list")
-    dics.exclusionDic.addAll(parseTSVFile(pathDataInterimDictionariesCommonBlackDic)?.map {
-        it.getValue<String>("blackName", null)
+    dics.exclusionDic.addAll(parseTSVFile(pathDataInterimDictionariesCommonDenyDic)?.map {
+        it.getValue<String>("denyName", null)
     }?.sortedByDescending { it.length }?.map { Regex("\\b$it\\b", RegexOption.IGNORE_CASE) }?.distinct()
         ?: throw Exception("Sorry can't read exclusion list")
     )
