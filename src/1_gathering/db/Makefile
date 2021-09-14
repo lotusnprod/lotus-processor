@@ -261,7 +261,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/pamdb/PaMet.xlsx: ${SRC_GATHERING_DB_PATH}/pamdb/down
 	cd	${PWD}/src	&&	bash	${SRC_GATHERING_DB_PATH}/pamdb/downloading.sh
 
 phenolexplorer: ${INTERIM_DB_PATH}/phenolexplorer.tsv.gz
-${INTERIM_DB_PATH}/phenolexplorer.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/compounds-classification.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/compounds-structures.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/compounds.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods-classification.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/metabolites-structures.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/metabolites.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/publications.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/composition-data.xlsx ${SRC_GATHERING_DB_PATH}/phenolexplorer/standardizing.R
+${INTERIM_DB_PATH}/phenolexplorer.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/compounds-structures.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/compounds.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/publications.csv ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/composition-data.xlsx ${SRC_GATHERING_DB_PATH}/phenolexplorer/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/phenolexplorer/standardizing.R
 
 phenolexplorer-download: ## TODO target multiple files
