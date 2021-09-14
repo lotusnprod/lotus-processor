@@ -5,7 +5,7 @@
 from rdkit.Chem import PandasTools
 
 # file path
-my_sdf_file = '../data/external/dbSource/coconut/COCONUT.sdf'
+my_sdf_file = '../data/external/dbSource/coconut/COCONUT_DB.sdf'
 
 # converting
 sdf_frame = PandasTools.LoadSDF(my_sdf_file,
