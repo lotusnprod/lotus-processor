@@ -18,6 +18,8 @@ data_original <- read_delim(
   file = gzfile(database$sourceFiles$tsv)
 )
 
+"%ni%" <- Negate("%in%")
+
 # selecting
 data_selected <- data_original %>%
   select(
@@ -28,25 +30,12 @@ data_selected <- data_original %>%
     reference_doi = citationDOI,
     reference_external = found_in_databases
   ) %>%
-  cSplit(
-    "biologicalsource",
-    sep = ",",
-    direction = "long",
-    fixed = TRUE
-  ) %>%
-  cSplit("reference_doi",
-    sep = ",",
-    direction = "long",
-    fixed = TRUE
-  ) %>%
-  # cSplit("reference_external",
-  #        sep = ",",
-  #        direction = "long",
-  #        fixed = TRUE) %>%
+  filter(biologicalsource != "[notax]") %>%
+  filter(biologicalsource != "[]") %>%
+  filter(reference_doi != "[]") %>%
   mutate(
     biologicalsource = gsub("\\[", "", biologicalsource),
     biologicalsource = gsub("\\]", "", biologicalsource),
-    biologicalsource = gsub("notax", "", biologicalsource),
     biologicalsource = gsub("\"", "", biologicalsource),
     reference_doi = gsub("\\[", "", reference_doi),
     reference_doi = gsub("\\]", "", reference_doi),
@@ -55,6 +44,24 @@ data_selected <- data_original %>%
     # reference_external = gsub("\\]", "", reference_external),
     # reference_external = gsub("\"", "", reference_external)
   ) %>%
+  cSplit(
+    "biologicalsource",
+    sep = ",",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
+  group_by(smiles) %>%
+  add_count() %>%
+  ungroup() %>%
+  filter(n == 1 | biologicalsource %ni% c("plants","marine","fungi")) %>%
+  select(-n) %>%
+  cSplit(
+    "reference_doi",
+    sep = ", ",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
+  filter(str_length(reference_doi) >= 8) %>%
   data.frame()
 
 data_corrected <- data_selected %>%
