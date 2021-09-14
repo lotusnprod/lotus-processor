@@ -1,6 +1,6 @@
 # NOTE
 
-Files present in _0_initial_files_ with the suffix _\_copy_ were modified.
+Files with the suffix _\_copy_ were modified.
 
 Reason therefore are characters that prevent proper reading of the files. (and wrongly labelled columns).
 
@@ -21,3 +21,7 @@ replaced ". \n" with ". "
 replaced "\n\n" with " "
 replaced "\)\n" with ") "
 renamed columns (no idea why labels were wrong)
+
+The obtained .tsv's are available at:
+
+//TODO

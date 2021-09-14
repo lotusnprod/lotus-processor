@@ -14,11 +14,6 @@ library(tidyr)
 database <- databases$get("phenolexplorer")
 
 # loading all files
-compounds_classification <-
-  read_delim(
-    file = database$sourceFiles$tsvCompoundsClassification
-  )
-
 compounds_structures <-
   read_delim(
     file = database$sourceFiles$tsvCompoundsStructures
@@ -28,22 +23,8 @@ compounds <- read_delim(
   file = database$sourceFiles$tsvCompounds
 )
 
-foods_classification <-
-  read_delim(
-    file = database$sourceFiles$tsvFoodsClassification
-  )
-
 foods <- read_delim(
   file = database$sourceFiles$tsvFoods
-)
-
-metabolites_structures <-
-  read_delim(
-    file = database$sourceFiles$tsvMetabolitesStructures
-  )
-
-metabolites <- read_delim(
-  file = database$sourceFiles$tsvMetabolites
 )
 
 publications <- read_delim(
@@ -60,7 +41,6 @@ composition <-
 a <- full_join(compounds, compounds_structures)
 b <- full_join(a, composition, by = c("name" = "compound"))
 c <- full_join(b, foods, by = c("food" = "name"))
-
 
 # pivoting to join right references
 colnames(c)[29] <- "publicationids"

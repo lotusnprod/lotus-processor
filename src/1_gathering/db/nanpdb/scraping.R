@@ -124,4 +124,10 @@ NANPDB_2[] <- lapply(NANPDB_2, function(x) {
 })
 
 # exporting
+ifelse(
+  test = !dir.exists(dirname(database$sourceFiles$tsv)),
+  yes = dir.create(dirname(database$sourceFiles$tsv)),
+  no = paste(dirname(database$sourceFiles$tsv), "exists")
+)
+
 database$writeFile(database$sourceFiles$tsv, NANPDB_2)

@@ -1,5 +1,3 @@
-include	../../../paths.mk
-
 .PHONY:	gathering-translation-common	gathering-translation-tcm
 .PRECIOUS: %.tsv %.zip	%.json	%.gz
 

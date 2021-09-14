@@ -1,8 +1,10 @@
 include config.mk
 include paths.mk
+include src/1_gathering/db/Makefile
+include src/1_gathering/translation/Makefile
 
 .PHONY: help docker-build docker-bash tests
-.PHONY: gathering-full gathering-databases-full gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape gathering-translation-full gathering-translation-common gathering-translation-tcm
+.PHONY: gathering-full gathering-databases-full gathering-databases-full-quick gathering-databases gathering-databases-convert gathering-databases-download gathering-databases-integrate gathering-databases-scrape gathering-translation-full gathering-translation-common gathering-translation-tcm
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing  curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
@@ -64,19 +66,27 @@ tests:
 
 gathering-full: gathering-databases-full gathering-translation-full
 
-gathering-databases-full: gathering-databases gathering-databases-reconvert gathering-databases-reintegrate gathering-databases-rescrape
+gathering-databases-full: gathering-databases-scrape gathering-databases-download-modified gathering-databases-convert gathering-databases-integrate gathering-databases
+
+gathering-databases-full-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-convert gathering-databases-integrate gathering-databases
 
 gathering-databases:
 	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases
 
-gathering-databases-reconvert: ${DATABASES_RECONVERT}
-	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-reconvert
+gathering-databases-convert: ${DATABASES_CONVERT}
+	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-convert
 
-gathering-databases-reintegrate: ${DATABASES_REINTEGRATE}
-	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-reintegrate
+gathering-databases-download: ${DATABASES_DOWNLOAD}
+	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-download
 
-gathering-databases-rescrape: ${DATABASES_RESCRAPE}
-	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-rescrape
+gathering-databases-download-modified: ${DATABASES_DOWNLOAD}
+	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-download-modified
+
+gathering-databases-integrate: ${DATABASES_INTEGRATE}
+	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-integrate
+
+gathering-databases-scrape: ${DATABASES_SCRAPE}
+	make	-C	${SRC_GATHERING_DB_PATH}	gathering-databases-scrape
 
 gathering-translation-full: gathering-translation-common gathering-translation-tcm
 
