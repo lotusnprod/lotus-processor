@@ -328,12 +328,12 @@ inhouseDbMinimal <-
   left_join(., referenceMinimal %>%
     select(-organismDetected)) %>%
   filter(!is.na(referenceCleanedTitle) |
-    database == "dnp") %>%
+    database %in% forbidden_export) %>%
   filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid) |
-      database == "dnp"
+      database %in% forbidden_export
   ) %>%
   distinct(
     database,
