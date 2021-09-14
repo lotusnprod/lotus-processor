@@ -64,7 +64,12 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 tests:
 	cd	src	&&	Rscript	${TESTS_PATH}/tests.R 
 
-gathering-full: gathering-databases-full gathering-translation-full
+gathering-full: gathering-custom-dictionaries gathering-databases-full gathering-translation-full
+
+gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full
+
+gathering-custom-dictionaries: 
+	cd src && bash ${SRC_GATHERING_PATH}/gathering_custom_dictionaries.sh
 
 gathering-databases-full: gathering-databases-scrape gathering-databases-download-modified gathering-databases-convert gathering-databases-integrate gathering-databases
 
