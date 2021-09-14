@@ -1,6 +1,6 @@
 DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dianatdb drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
 
-DATABASES_CLOSED = creating-directory-db antibase antimarin dnp
+DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
 
 DATABASES_CONVERT = biofacquim-convert coconut-convert streptomedb-convert
 
@@ -68,11 +68,21 @@ alkamid-scrape: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
 # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): # ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 
-antibase: 
-	echo "TODO"
+antibase: ${INTERIM_DB_PATH}/antibase.tsv.gz
+${INTERIM_DB_PATH}/antibase.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.smi ${SRC_GATHERING_DB_PATH}/antibase/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/antibase/standardizing.R
 
-antimarin: 
-	echo "TODO"
+antibase-convert: ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.smi ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.smi ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/antibase/ANTIBASE_2012_FORM2.sdf ${SRC_GATHERING_DB_PATH}/antibase/converting.py
+	cd	${PWD}/src	&&	python	${SRC_GATHERING_DB_PATH}/antibase/converting.py
+
+antimarin: ${INTERIM_DB_PATH}/antimarin.tsv.gz
+${INTERIM_DB_PATH}/antimarin.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.smi ${SRC_GATHERING_DB_PATH}/antimarin/standardizing.R
+	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/antimarin/standardizing.R
+
+antimarin-convert: ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.smi ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.smi ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarinConverted.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/antimarin/antimarin0311_test.sdf ${SRC_GATHERING_DB_PATH}/antimarin/converting.py
+	cd	${PWD}/src	&&	python	${SRC_GATHERING_DB_PATH}/antimarin/converting.py
 
 biofacquim: ${INTERIM_DB_PATH}/biofacquim.tsv.gz
 ${INTERIM_DB_PATH}/biofacquim.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/biofacquim/biofacquim.tsv.gz ${SRC_GATHERING_DB_PATH}/biofacquim/standardizing.R
@@ -139,7 +149,7 @@ ${EXTERNAL_DB_SOURCE_PATH}/dianatdb/2020_DiaNatDB_336.xlsx: ${SRC_GATHERING_DB_P
 	cd	${PWD}/src	&&	bash	${SRC_GATHERING_DB_PATH}/dianatdb/downloading.sh
 
 dnp: ${INTERIM_DB_PATH}/dnp.tsv.gz
-${INTERIM_DB_PATH}/dnp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dnp/29_2/full_set.csv ${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
+${INTERIM_DB_PATH}/dnp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/dnp/30_1/full_set.csv ${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
 	cd	${PWD}/src	&&	Rscript	${SRC_GATHERING_DB_PATH}/dnp/standardizing.R
 
 ## TODO add dnp extracting step
