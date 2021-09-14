@@ -572,8 +572,8 @@ pathDataInterimDictionaries <- switch(mode,
 
 pathDataInterimDictionariesFix <-
   file.path(
-    pathDataInterim,
-    "dictionaries"
+    pathDataExternal,
+    "dictionarySource"
   )
 
 ##### common
@@ -583,11 +583,11 @@ pathDataInterimDictionariesCommon <-
     "common"
   )
 
-###### black
-pathDataInterimDictionariesCommonBlackDic <-
+###### deny
+pathDataInterimDictionariesCommonDenyDic <-
   file.path(
     pathDataInterimDictionariesCommon,
-    "black.tsv"
+    "deny.tsv"
   )
 
 ###### manual subtraction

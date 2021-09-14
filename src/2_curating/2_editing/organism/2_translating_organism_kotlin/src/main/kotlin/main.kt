@@ -26,11 +26,12 @@ fun main(args: Array<String>) {
     val pathData = args[0]
 
     val pathDataInterim = "$pathData/interim"
+    val pathDataExternal = "$pathData/external"
 
-    val pathDataInterimDictionaries = "$pathDataInterim/dictionaries"
+    val pathDataInterimDictionaries = "$pathDataExternal/dictionarySource"
     val pathDataInterimDictionariesTcmNames = "$pathDataInterimDictionaries/tcm/names.tsv.gz"
     val pathDataInterimDictionariesCommonNames = "$pathDataInterimDictionaries/common/names.tsv.gz"
-    val pathDataInterimDictionariesCommonBlackDic = "$pathDataInterimDictionaries/common/black.tsv"
+    val pathDataInterimDictionariesCommonDenyDic = "$pathDataInterimDictionaries/common/deny.tsv"
 
     val pathDataInterimTables = when (args[1]) {
         "full" -> "$pathData/interim/tables"
