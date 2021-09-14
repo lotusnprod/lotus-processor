@@ -50,4 +50,10 @@ SANCDB <- invisible(
   cSplit("V1", "\n")
 
 # exporting
+ifelse(
+  test = !dir.exists(dirname(database$sourceFiles$tsv)),
+  yes = dir.create(dirname(database$sourceFiles$tsv)),
+  no = paste(dirname(database$sourceFiles$tsv), "exists")
+)
+
 database$writeFile(database$sourceFiles$tsv, SANCDB)

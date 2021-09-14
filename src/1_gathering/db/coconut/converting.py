@@ -14,6 +14,6 @@ sdf_frame = PandasTools.LoadSDF(my_sdf_file,
                                 molColName=None,
                                 includeFingerprints=False)
 
-# sexporting
+# exporting
 sdf_frame.to_csv('../data/external/dbSource/coconut/coconutConverted.tsv.gz',
                  compression='gzip', sep='\t')

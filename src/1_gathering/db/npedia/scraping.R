@@ -127,4 +127,10 @@ NPEDIA_4 <- NPEDIA_4 %>%
 NPEDIA_final <- full_join(NPEDIA_2, NPEDIA_4)
 
 # exporting
+ifelse(
+  test = !dir.exists(dirname(database$sourceFiles$tsv)),
+  yes = dir.create(dirname(database$sourceFiles$tsv)),
+  no = paste(dirname(database$sourceFiles$tsv), "exists")
+)
+
 database$writeFile(database$sourceFiles$tsv, NPEDIA_final)

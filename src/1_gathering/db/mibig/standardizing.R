@@ -10,6 +10,7 @@ library(jsonlite)
 library(parallel)
 library(pbmcapply)
 library(splitstackshape)
+library(stringr)
 library(tidyr)
 
 # get paths
@@ -19,9 +20,9 @@ fileInZip <-
   function(inZip) {
     outFile <- list()
     fileList <- unzip(inZip, list = TRUE)
-    fileList[, 1] <-
-      gsub("__MACOSX/._", "", fileList[, 1]) # error thrown on one line for me otherwise
-    for (i in seq_len(nrow(fileList))) {
+    fileList <- fileList |>
+      filter(Length != 0)
+    for (i in seq_along(fileList$Name)) {
       if (grepl(".json", fileList[i, 1])) {
         oFa <- fromJSON(unz(inZip, fileList[i, 1]))
         outFile[[i]] <- oFa

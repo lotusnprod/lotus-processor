@@ -68,3 +68,4 @@ dependencies:
   - r-webchem
   - r-XML
   - r-xml2
+  - unzip

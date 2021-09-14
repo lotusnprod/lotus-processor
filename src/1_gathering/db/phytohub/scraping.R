@@ -150,4 +150,10 @@ PHYTOHUB_9 <- full_join(PHYTOHUB_7, PHYTOHUB_8) %>%
 PHYTOHUB_9$reference <- y_as_na(PHYTOHUB_9$reference, "")
 
 # exporting
+ifelse(
+  test = !dir.exists(dirname(database$sourceFiles$tsv)),
+  yes = dir.create(dirname(database$sourceFiles$tsv)),
+  no = paste(dirname(database$sourceFiles$tsv), "exists")
+)
+
 database$writeFile(database$sourceFiles$tsv, PHYTOHUB_9)
