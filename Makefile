@@ -155,7 +155,7 @@ processing-organism-interim:
 curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)
 	./gradlew castShadows
-${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/common/black.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/manualSubtraction.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/names.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/common/deny.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/manualSubtraction.tsv ${INTERIM_DICTIONARY_PATH_FIX}/common/names.tsv.gz ${INTERIM_DICTIONARY_PATH_FIX}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
 	@java -jar ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${MODE}
 
 curating-editing-organism-processing-translated: curating-editing-organism-translating ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz

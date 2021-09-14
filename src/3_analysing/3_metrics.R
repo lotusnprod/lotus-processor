@@ -25,7 +25,7 @@ dataset <- read_delim(
   )
 
 log_debug("initial table ...")
-dbTable <- lapply(pathDataInterimDbDir, read_delim) %>%
+dbTable <- lapply(pathDataInterimDbDir, read_delim, delim = "\t") %>%
   rbindlist(l = ., fill = TRUE) %>%
   select(
     database,

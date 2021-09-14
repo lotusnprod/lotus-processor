@@ -25,7 +25,7 @@ source("r/myDirtyValidationFig.R")
 log_debug("loading files ...")
 oldDbNames <-
   read_delim(
-    file = "../data/interim/dictionaries/dbNames.tsv",
+    file = "../data/external/dictionarySource/dbNames.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     escape_double = FALSE,
@@ -518,7 +518,7 @@ f1Table <- full_join(f1Table, anti) %>%
 
 log_debug("... correcting with references ratios")
 refRatios <- inhouseDbFull %>%
-  filter(database %ni% forbidden_export)
+  filter(database %ni% forbidden_export) %>%
   group_by(referenceType) %>%
   count() %>%
   mutate(prop = n / sum(.$n)) %>%

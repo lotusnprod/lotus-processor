@@ -706,7 +706,7 @@ pathDataInterimDictionariesStructureMetadata <-
 
 pathDataInterimDictionariesStructureDictionaryClassyfire <-
   file.path(
-    pathDataInterimDictionariesFix,
+    pathDataInterimDictionaries,
     "structure/classyfire"
   )
 
@@ -718,7 +718,7 @@ pathDataInterimDictionariesStructureDictionaryClassyfireFile <-
 
 pathDataInterimDictionariesStructureDictionaryNpclassifier <-
   file.path(
-    pathDataInterimDictionariesFix,
+    pathDataInterimDictionaries,
     "structure/npclassifier"
   )
 
