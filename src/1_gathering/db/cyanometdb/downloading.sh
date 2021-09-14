@@ -3,4 +3,5 @@
 
 mkdir -p ../data/external/dbSource/cyanometdb/
 
-wget "https://ars.els-cdn.com/content/image/1-s2.0-S0043135421002153-mmc4.zip" -O ../data/external/dbSource/cyanometdb/1-s2.0-S0043135421002153-mmc4.zip
+## Thanks to the Norman suspect list
+wget "https://zenodo.org/record/4562688/files/CyanoMetDB_WR_Feb2021.csv?download=1" -O ../data/external/dbSource/cyanometdb/CyanoMetDB_WR_Feb2021.csv

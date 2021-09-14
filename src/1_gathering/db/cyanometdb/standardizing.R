@@ -5,6 +5,7 @@ source("paths.R")
 source("r/y_as_na.R")
 source("r/standardizing_original.R")
 
+library(data.table)
 library(dplyr)
 library(readr)
 library(splitstackshape)
@@ -14,15 +15,16 @@ library(tidyr)
 database <- databases$get("cyanometdb")
 
 ## files
-data_original <- read_delim(
+data_original <- fread(
   file = database$sourceFiles$tsv,
-  trim_ws = FALSE
+  strip.white = FALSE,
+  encoding = "Latin-1"
 ) %>%
   mutate_all(as.character)
 
 data_manipulated <- data_original %>%
   mutate(
-    name = `Compound name`,
+    name = IUPAC_name,
     biologicalsource = paste(ifelse(is.na(Genus),
       "",
       Genus
@@ -32,10 +34,7 @@ data_manipulated <- data_original %>%
       Species
     ),
     sep = " "
-    ),
-    inchi = InChI,
-    smiles = `SMILES (canonical or isomeric)`
-  )
+    ))
 
 data_manipulated$biologicalsource <-
   y_as_na(data_manipulated$biologicalsource, " ")
@@ -44,8 +43,8 @@ data_selected <- data_manipulated %>%
   select(
     structure_name = name,
     organism_clean = biologicalsource,
-    structure_inchi = inchi,
-    structure_smiles = smiles,
+    structure_inchi = InChI,
+    structure_smiles = SMILES,
     reference_doi_1 = `DOI_No1`,
     reference_doi_2 = `DOI_No2`,
     reference_doi_3 = `DOI_No3`,
