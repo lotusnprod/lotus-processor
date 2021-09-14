@@ -32,7 +32,7 @@ wikidataLotusExporterDataOutputTriplesPath <-
   )
 
 # databases for which we have no right to disseminate the data
-forbidden_export <- c("dnp", "foodb")
+forbidden_export <- c("antibase","antimarin","dnp", "foodb")
 
 # root
 ## bin
@@ -105,6 +105,26 @@ databases$add(
     tsvRef = "alkamidRefScraped.tsv.gz"
   ),
   interimFile = "alkamid.tsv.gz"
+)
+
+databases$add(
+  name = "antibase",
+  sourceFiles = list(
+    sdf = "ANTIBASE_2012_FORM2.sdf",
+    smi = "antibaseConverted.smi",
+    tsv = "antibaseConverted.tsv.gz"
+  ),
+  interimFile = "antibase.tsv.gz"
+)
+
+databases$add(
+  name = "antimarin",
+  sourceFiles = list(
+    sdf = "antimarin0311_test.sdf",
+    smi = "antimarinConverted.smi",
+    tsv = "antimarinConverted.tsv.gz"
+  ),
+  interimFile = "antimarin.tsv.gz"
 )
 
 databases$add(
@@ -208,7 +228,7 @@ databases$add(
 
 databases$add(
   name = "mibig",
-  sourceFiles = list(data = "data.zip"),
+  sourceFiles = list(data = "mibig_json_2.0.zip"),
   interimFile = "mibig.tsv.gz"
 )
 
