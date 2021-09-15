@@ -8,6 +8,7 @@ library(dplyr)
 library(pbmcapply)
 library(parallel)
 library(data.table)
+library(readr)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
 library(rvest) # provides read_html
@@ -79,10 +80,18 @@ GetKnapSackRef <- function(X) {
         xml_child(7) %>%
         html_table(fill = TRUE) %>%
         t()
+
       colnames(df3) <- df3[1, ]
+
       df3 <- data.frame(df3) %>%
         filter(rownames(.) == "X2")
-      return(df3)
+
+      df4 <- cbind(c("link" = X, df3)) %>%
+        t() %>%
+        data.frame() %>%
+        mutate_all(as.character)
+
+      return(df4)
     },
     error = function(e) {
       NA
@@ -97,7 +106,7 @@ df1 <- invisible(
     mc.preschedule = FALSE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
+    mc.cores = 10,
     mc.cleanup = FALSE,
     mc.allow.recursive = FALSE,
     ignore.interactive = TRUE
@@ -115,7 +124,7 @@ df3 <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
+    mc.cores = 10,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
@@ -124,7 +133,13 @@ df3 <- invisible(
 
 df4 <- bind_rows(df3[!is.na(df3)])
 
-KNApSAcK_db <- cbind(KnapSackTable, df4)
+KNApSAcK_db <- full_join(KnapSackTable, df4)
 
 # exporting
+ifelse(
+  test = !dir.exists(dirname(database$sourceFiles$tsv)),
+  yes = dir.create(dirname(database$sourceFiles$tsv)),
+  no = paste(dirname(database$sourceFiles$tsv), "exists")
+)
+
 database$writeFile(database$sourceFiles$tsv, KNApSAcK_db)
