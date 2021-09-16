@@ -122,7 +122,7 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
+      mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
@@ -181,7 +181,7 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
+      mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
@@ -244,7 +244,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 2),
+      mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE
