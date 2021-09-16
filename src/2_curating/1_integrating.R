@@ -26,7 +26,7 @@ log_debug("... files ...")
 log_debug("... DBs")
 
 if (mode == "full") {
-  if (ssot_access = TRUE) {
+  if (ssot_access == TRUE) {
     library(RPostgreSQL)
     
     drv <- PostgreSQL()
