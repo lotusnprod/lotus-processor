@@ -30,11 +30,11 @@ log_debug("... connecting to the database")
 
 db <- dbConnect(
   drv = drv,
-  dbname = "lotus",
-  user = "lotusadmin",
-  host = "10.9.0.1",
-  port = 5432,
-  password = Sys.getenv("LOTUS_DB_PWD")
+  dbname = dbname,
+  user = user,
+  host = host,
+  port = port,
+  password = password
 )
 
 log_debug("... listing objects")
