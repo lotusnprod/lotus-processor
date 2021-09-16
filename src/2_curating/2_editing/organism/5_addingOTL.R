@@ -16,6 +16,7 @@ library(purrr)
 library(readr)
 library(rotl)
 library(RSQLite)
+library(tidyr)
 
 canonical_name_colname <- "organismCleaned"
 
@@ -62,40 +63,46 @@ db <- dbConnect(
   dbname = pathDataInterimDictionariesOrganismDictionaryOTL
 )
 
-previously_matched_names <- dbGetQuery(
-  conn = db,
-  statement = "SELECT * FROM taxa_names"
-)
+if ("taxa_names" %in% dbListTables(db)) {
+  previously_matched_names <- dbGetQuery(
+    conn = db,
+    statement = "SELECT * FROM taxa_names"
+  )
 
-previously_matched_otl <- dbGetQuery(
-  conn = db,
-  statement = "SELECT * FROM taxa_otl"
-)
+  new_matched_names <-
+    anti_join(new_matched_names, previously_matched_names)
+}
 
-previously_matched_meta <- dbGetQuery(
-  conn = db,
-  statement = "SELECT * FROM taxa_meta"
-)
+if ("taxa_otl" %in% dbListTables(db)) {
+  previously_matched_otl <- dbGetQuery(
+    conn = db,
+    statement = "SELECT * FROM taxa_otl"
+  )
+}
 
-# dbListObjects(db)
-
-# dbListFields(db, "taxa_names")
-# dbListFields(db, "taxa_otl")
-# dbListFields(db, "taxa_meta")
-
-new_matched_names <-
-  anti_join(new_matched_names, previously_matched_names)
+if ("taxa_meta" %in% dbListTables(db)) {
+  previously_matched_meta <- dbGetQuery(
+    conn = db,
+    statement = "SELECT * FROM taxa_meta"
+  )
+}
 
 taxa_names <- new_matched_names %>%
   distinct(search_string)
 
-dbWriteTable(
-  conn = db,
-  name = "taxa_names",
-  value = new_matched_names,
-  row.names = FALSE,
-  append = TRUE
-)
+if ("taxa_names" %in% dbListTables(db)) {
+  dbAppendTable(
+    conn = db,
+    name = "taxa_names",
+    value = new_matched_names,
+  )
+} else {
+  dbCreateTable(
+    conn = db,
+    name = "taxa_names",
+    fields = new_matched_names,
+  )
+}
 
 new_matched_names <- taxa_names$search_string
 
@@ -128,14 +135,15 @@ if (is_empty(new_matched_names) == FALSE) {
     bind_rows(new_matched_otl_exact) %>% ## new_matched_otl_approx
     data.frame() ## loosing some comments with df conversion
 
-
-  dbWriteTable(
-    conn = db,
-    name = "taxa_otl",
-    value = new_matched_otl,
-    row.names = FALSE,
-    append = TRUE
-  )
+  if ("taxa_otl" %in% dbListTables(db)) {
+    dbAppendTable(conn = db,
+                  name = "taxa_otl",
+                  value = new_matched_otl)
+  } else {
+    dbCreateTable(conn = db,
+                  name = "taxa_otl",
+                  fields = new_matched_otl)
+  }
 
   new_ott_id <- new_matched_otl %>%
     distinct(ott_id)
