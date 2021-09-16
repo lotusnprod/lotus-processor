@@ -664,8 +664,7 @@ if (nrow(organismTable_clean) != 0) {
       compression = 9,
       encoding = "UTF-8"
     ),
-    quote = "none",
-    escape = "double"
+    quote = "none"
   )
   ## because gnverify does not parse quotes
 }
