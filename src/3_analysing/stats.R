@@ -9,6 +9,8 @@ log_debug("... libraries")
 library(dplyr)
 library(readr)
 
+"%ni%" <- Negate("%in%")
+
 log_debug("loading db, if running fullmode, this may take a while")
 inhouseDbMinimal <-
   read_delim(file = pathDataInterimTablesCuratedTable) %>%
