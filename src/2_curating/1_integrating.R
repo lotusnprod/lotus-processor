@@ -58,21 +58,12 @@ if (mode == "full") {
     oldTable <- data.frame() %>%
       mutate(
         database = NA,
-        organismOriginal_clean = NA,
-        organismOriginal_dirty = NA,
-        structureOriginal_inchi = NA,
-        structureOriginal_nominal = NA,
-        structureOriginal_smiles = NA,
-        referenceOriginal_authors = NA,
-        referenceOriginal_doi = NA,
-        referenceOriginal_external = NA,
-        referenceOriginal_isbn = NA,
-        referenceOriginal_journal = NA,
-        referenceOriginal_original = NA,
-        referenceOriginal_pubmed = NA,
-        referenceOriginal_publishingDetails = NA,
-        referenceOriginal_split = NA,
-        referenceOriginal_title = NA,
+        organism_value = NA,
+        organism_type = NA,
+        reference_value = NA,
+        reference_type = NA,
+        structure_value = NA,
+        structure_type = NA
       ) %>%
       mutate_all(as.character)
   }
