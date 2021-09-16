@@ -38,29 +38,54 @@ Install it by running in the home directory.
 
 environment_strict.yml is corresponds to the exact versions we used. 
 
-[source,console]
-----
-conda env create -f environment.yml
-bash environment_non_conda.sh
-----
-
 If your environement is not directly sources by your default bash run the following lines
 
 [source,console]
 ----
 source ~/anaconda3/etc/profile.d/conda.sh
-
+conda env create -f environment.yml
 conda activate lotus_env
+bash environment_non_conda.sh
 ----
 
 ==== Running the tests
 
-This will get additional bins you need and run the whole pipeline with a small test table.
+First, you need some additional executable files. Following line will help you getting them.
 
 [source,console]
 ----
-make MODE=test curating-and-analysing-and-visualizing ## creating results for a test file, should fail at the last visualization step.
-make tests ## comparing if tests meet expctations ## should fail actually
+make get-bins
+----
+
+Then, you need the data and our custom dictionaries.
+
+[source,console]
+----
+make gathering-databases-download # downloads acessible databases &&
+# make gathering-databases-scrape && # scrapes some other databases, very long step and sometimes servers are not available
+make gathering-databases-download-modified && # downloads some manually modified versions of acessible databases or files we had to correct in a non-programmatic way.
+make gathering-custom-dictionaries &&
+# TODO add for translations
+# Then, you need to convert the format of some of them and start harmonizing the data
+make gathering-databases-convert &&
+make gathering-databases-integrate &&
+make gathering-databases
+----
+
+Globally, you can run this as an easier equivalent:
+
+[source,console]
+----
+make gathering-databases-full-quick
+----
+
+Now, you should be able to process all this data. For all details about the MAKE commands, please have a look at xref:docs/makefile.adoc[the specific documentation].
+To start easy, you can run our tests:
+
+[source,console]
+----
+make MODE=test curating-and-analysing-and-visualizing # creating results for a test file, should fail at the last visualization step.
+make tests ## comparing if tests meet expctations # should fail actually
 ----
 
 Once we will be releasing not only the tests but also the min table (1000 entries), users will be able to run (not working now):
