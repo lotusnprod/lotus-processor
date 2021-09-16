@@ -26,35 +26,56 @@ log_debug("... files ...")
 log_debug("... DBs")
 
 if (mode == "full") {
-  library(RPostgreSQL)
-
-  drv <- PostgreSQL()
-
-  log_debug("... connecting to the database")
-  # db <- dbConnect(
-  #   drv = drv,
-  #   dbname = "lotus",
-  #   user = "rutza",
-  #   host = "localhost",
-  # )
-
-  db <- dbConnect(
-    drv = drv,
-    dbname = "lotus",
-    user = "lotusadmin",
-    host = "10.9.0.1",
-    port = 5432,
-    password = Sys.getenv("LOTUS_DB_PWD")
-  )
-
-  log_debug("... listing remote objects")
-  dbListObjects(db)
-
-  log_debug("... extracting already processed data")
-  oldTable <- dbGetQuery(
-    conn = db,
-    statement = sqlFromFile("queries_db/extract_data_source.sql")
-  )
+  if (ssot_access = TRUE) {
+    library(RPostgreSQL)
+    
+    drv <- PostgreSQL()
+    
+    log_debug("... connecting to the database")
+    # db <- dbConnect(
+    #   drv = drv,
+    #   dbname = "lotus",
+    #   user = "rutza",
+    #   host = "localhost",
+    # )
+    
+    db <- dbConnect(
+      drv = drv,
+      dbname = dbname,
+      user = user,
+      host = host,
+      port = port,
+      password = password
+    )
+    
+    log_debug("... listing remote objects")
+    dbListObjects(db)
+    
+    log_debug("... extracting already processed data")
+    oldTable <- dbGetQuery(conn = db,
+                           statement = sqlFromFile("queries_db/extract_data_source.sql"))
+  } else{
+    oldTable <- data.frame() %>%
+      mutate(
+        database = NA,
+        organismOriginal_clean = NA,
+        organismOriginal_dirty = NA,
+        structureOriginal_inchi = NA,
+        structureOriginal_nominal = NA,
+        structureOriginal_smiles = NA,
+        referenceOriginal_authors = NA,
+        referenceOriginal_doi = NA,
+        referenceOriginal_external = NA,
+        referenceOriginal_isbn = NA,
+        referenceOriginal_journal = NA,
+        referenceOriginal_original = NA,
+        referenceOriginal_pubmed = NA,
+        referenceOriginal_publishingDetails = NA,
+        referenceOriginal_split = NA,
+        referenceOriginal_title = NA,
+      ) %>%
+      mutate_all(as.character)
+  }
 }
 
 if (mode != "test") {
