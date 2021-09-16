@@ -34,7 +34,8 @@ data_manipulated <- data_original %>%
       Species
     ),
     sep = " "
-    ))
+    )
+  )
 
 data_manipulated$biologicalsource <-
   y_as_na(data_manipulated$biologicalsource, " ")
