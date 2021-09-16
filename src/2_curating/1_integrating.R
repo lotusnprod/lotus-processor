@@ -227,6 +227,16 @@ if (mode == "full") {
   )
 }
 
+log_debug("ensuring proper encoding ...")
+originalTable$organismValue <- iconv(x = originalTable$organismValue,
+                                     to = "UTF-8")
+
+originalTable$referenceValue <- iconv(x = originalTable$referenceValue,
+                                     to = "UTF-8")
+
+originalTable$structureValue <- iconv(x = originalTable$structureValue,
+                                      to = "UTF-8")
+
 log_debug("keeping entries not previously curated only ...")
 log_debug("... inchi table")
 structureTable_inchi <- originalTable %>%
