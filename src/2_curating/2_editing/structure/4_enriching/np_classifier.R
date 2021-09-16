@@ -43,13 +43,15 @@ taxonomy <- fromJSON(txt = list.files(
 
 if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile)) {
   old <-
-    read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
-               delim = "\t") %>%
+    read_delim(
+      file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
+      delim = "\t"
+    ) %>%
     distinct() %>%
     mutate_all(as.character)
-  
+
   new <- anti_join(smiles, old)
-} else{
+} else {
   new <- smiles
 }
 
@@ -80,10 +82,10 @@ if (length(queries) != 0) {
   df_new <- bind_rows(list_df) %>%
     mutate_all(as.character)
 
-  if (exists('old')) {
+  if (exists("old")) {
     df <- bind_rows(old, df_new) %>%
       distinct()
-  } else{
+  } else {
     df <- df_new
   }
 } else {

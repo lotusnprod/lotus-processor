@@ -28,9 +28,9 @@ log_debug("... DBs")
 if (mode == "full") {
   if (ssot_access == TRUE) {
     library(RPostgreSQL)
-    
+
     drv <- PostgreSQL()
-    
+
     log_debug("... connecting to the database")
     # db <- dbConnect(
     #   drv = drv,
@@ -38,7 +38,7 @@ if (mode == "full") {
     #   user = "rutza",
     #   host = "localhost",
     # )
-    
+
     db <- dbConnect(
       drv = drv,
       dbname = dbname,
@@ -47,14 +47,16 @@ if (mode == "full") {
       port = port,
       password = password
     )
-    
+
     log_debug("... listing remote objects")
     dbListObjects(db)
-    
+
     log_debug("... extracting already processed data")
-    oldTable <- dbGetQuery(conn = db,
-                           statement = sqlFromFile("queries_db/extract_data_source.sql"))
-  } else{
+    oldTable <- dbGetQuery(
+      conn = db,
+      statement = sqlFromFile("queries_db/extract_data_source.sql")
+    )
+  } else {
     oldTable <- data.frame() %>%
       mutate(
         database = NA,
@@ -71,10 +73,11 @@ if (mode == "full") {
 
 if (mode != "test") {
   log_debug("... list of source databases")
-  dbList <- lapply(pathDataInterimDbDir, 
-                   read_delim, 
-                   delim = "\t",
-                   col_types = cols(.default = "c"))
+  dbList <- lapply(pathDataInterimDbDir,
+    read_delim,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
   log_debug("... dictionaries ...")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
@@ -228,14 +231,20 @@ if (mode == "full") {
 }
 
 log_debug("ensuring proper encoding ...")
-originalTable$organismValue <- iconv(x = originalTable$organismValue,
-                                     to = "UTF-8")
+originalTable$organismValue <- iconv(
+  x = originalTable$organismValue,
+  to = "UTF-8"
+)
 
-originalTable$referenceValue <- iconv(x = originalTable$referenceValue,
-                                     to = "UTF-8")
+originalTable$referenceValue <- iconv(
+  x = originalTable$referenceValue,
+  to = "UTF-8"
+)
 
-originalTable$structureValue <- iconv(x = originalTable$structureValue,
-                                      to = "UTF-8")
+originalTable$structureValue <- iconv(
+  x = originalTable$structureValue,
+  to = "UTF-8"
+)
 
 log_debug("keeping entries not previously curated only ...")
 log_debug("... inchi table")

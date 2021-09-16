@@ -43,7 +43,7 @@ wikidataLotusExporterDataOutputTriplesPath <-
   )
 
 # databases for which we have no right to disseminate the data
-forbidden_export <- c("antibase","antimarin","dnp", "foodb")
+forbidden_export <- c("antibase", "antimarin", "dnp", "foodb")
 
 # root
 ## bin

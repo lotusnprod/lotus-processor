@@ -50,11 +50,13 @@ data_selected <- data_original %>%
 
 data_corrected <- data_selected %>%
   left_join(data_smiles) %>%
-  select(structure_name = name,
-         organism_clean = biologicalsource,
-         organism_dirty = biologicalsource,
-         reference_publishingDetails,
-         structure_smiles = SMILES) %>%
+  select(
+    structure_name = name,
+    organism_clean = biologicalsource,
+    organism_dirty = biologicalsource,
+    reference_publishingDetails,
+    structure_smiles = SMILES
+  ) %>%
   data.frame()
 
 # standardizing

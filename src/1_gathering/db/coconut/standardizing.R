@@ -44,7 +44,7 @@ data_selected <- data_original %>%
     # reference_external = gsub("\\[", "", reference_external),
     # reference_external = gsub("\\]", "", reference_external),
     # reference_external = gsub("\"", "", reference_external)
-  ) 
+  )
 
 data_counted <- data_selected %>%
   rowwise() %>%
@@ -67,8 +67,10 @@ data_hard <- data_counted %>%
 
 data_hard_harborne <- data_hard %>%
   filter(
-    grepl(pattern = "Harborne, The Handbook of Natural Flavonoids, [0-9], \\([0-9]{4}\\), [0-9]{1-3}",
-          x = reference)
+    grepl(
+      pattern = "Harborne, The Handbook of Natural Flavonoids, [0-9], \\([0-9]{4}\\), [0-9]{1-3}",
+      x = reference
+    )
   )
 
 data_hard_harborne_treated <- data_hard_harborne %>%
@@ -89,12 +91,13 @@ data_hard_harborne_treated <- data_hard_harborne %>%
   add_count() %>%
   ungroup() %>%
   filter(n == 1 |
-           biologicalsource %ni% c("plants", "marine", "fungi")) %>%
+    biologicalsource %ni% c("plants", "marine", "fungi")) %>%
   select(-n) %>%
   cSplit("reference",
-         sep = ", ",
-         direction = "long",
-         fixed = TRUE) %>%
+    sep = ", ",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
   filter(!grepl(pattern = "^,", x = reference)) %>%
   filter(!grepl(pattern = "^\\.", x = reference)) %>%
   filter(!grepl(pattern = "^[0-9]{1-3},", x = reference)) %>%
@@ -103,18 +106,24 @@ data_hard_harborne_treated <- data_hard_harborne %>%
   add_count(reference) %>%
   filter(
     n <= 5400 |
-      grepl(pattern = "Molecules_2015;20(8):15330-42",
-            x = reference) |
-      grepl(pattern = "Lu,Phytochem.,59,(2002),117",
-            x = reference)
+      grepl(
+        pattern = "Molecules_2015;20(8):15330-42",
+        x = reference
+      ) |
+      grepl(
+        pattern = "Lu,Phytochem.,59,(2002),117",
+        x = reference
+      )
   ) %>%
   select(-nrefs, -norganisms, -n) %>%
   data.frame()
 
 data_hard_2 <- data_hard %>%
   filter(
-    !grepl(pattern = "Harborne, The Handbook of Natural Flavonoids, [0-9], \\([0-9]{4}\\), [0-9]{1-3}",
-           x = reference)
+    !grepl(
+      pattern = "Harborne, The Handbook of Natural Flavonoids, [0-9], \\([0-9]{4}\\), [0-9]{1-3}",
+      x = reference
+    )
   )
 
 data_nosplit_treated <- data_nosplit %>%
@@ -128,23 +137,26 @@ data_nosplit_treated <- data_nosplit %>%
   add_count() %>%
   ungroup() %>%
   filter(n == 1 |
-           biologicalsource %ni% c("plants", "marine", "fungi")) %>%
+    biologicalsource %ni% c("plants", "marine", "fungi")) %>%
   select(-n) %>%
   cSplit("reference",
-         sep = ", ",
-         direction = "long",
-         fixed = TRUE) %>%
+    sep = ", ",
+    direction = "long",
+    fixed = TRUE
+  ) %>%
   filter(str_length(reference) >= 8) %>%
   select(-nrefs, -norganisms) %>%
   data.frame()
 
 data_easy_treated <- data_easy %>%
   cSplit("biologicalsource",
-         sep = ", ",
-         fixed = TRUE) %>%
+    sep = ", ",
+    fixed = TRUE
+  ) %>%
   cSplit("reference",
-         sep = ", ",
-         fixed = TRUE) %>%
+    sep = ", ",
+    fixed = TRUE
+  ) %>%
   pivot_longer(
     cols = 7:(ncol(.)),
     names_to = c("type", "number"),
@@ -158,7 +170,7 @@ data_easy_treated <- data_easy %>%
   add_count() %>%
   ungroup() %>%
   filter(n == 1 |
-           biologicalsource %ni% c("plants", "marine", "fungi")) %>%
+    biologicalsource %ni% c("plants", "marine", "fungi")) %>%
   select(-n) %>%
   filter(str_length(reference) >= 8) %>%
   select(-nrefs, -norganisms, -number) %>%
@@ -174,7 +186,7 @@ data_hard_treated <- data_hard_2 %>%
   group_by(smiles) %>%
   add_count() %>%
   ungroup() %>%
-  filter(n == 1 | biologicalsource %ni% c("plants","marine","fungi")) %>%
+  filter(n == 1 | biologicalsource %ni% c("plants", "marine", "fungi")) %>%
   select(-n) %>%
   cSplit(
     "reference",
@@ -188,11 +200,13 @@ data_hard_treated <- data_hard_2 %>%
   select(-nrefs, -norganisms, -n) %>%
   data.frame()
 
-data_treated <- rbind(data_nosplit_treated, 
-                      data_easy_treated,
-                      data_hard_harborne_treated,
-                      data_hard_treated) %>%
-  filter(grepl(pattern = "[0-9]",x = reference))
+data_treated <- rbind(
+  data_nosplit_treated,
+  data_easy_treated,
+  data_hard_harborne_treated,
+  data_hard_treated
+) %>%
+  filter(grepl(pattern = "[0-9]", x = reference))
 
 data_corrected <- data_treated %>%
   mutate(
@@ -278,8 +292,8 @@ findCapitals_3 <- full_join(findCapitals_1, findCapitals_2) %>%
   filter(capitals_x > capitals_y)
 
 data_corrected_capitals <- left_join(data_corrected,
-                                     findCapitals_3,
-                                     by = c("biologicalsource" = "x")
+  findCapitals_3,
+  by = c("biologicalsource" = "x")
 ) %>%
   mutate(organism_clean = ifelse(
     test = !is.na(y),
@@ -296,12 +310,12 @@ data_corrected_capitals <- left_join(data_corrected,
   ) %>%
   mutate(n = str_count(organism_clean, "\\S+")) %>%
   mutate(organism_dirty = ifelse(test = n == 1,
-                                 yes = organism_clean,
-                                 no = NA
+    yes = organism_clean,
+    no = NA
   )) %>%
   mutate(organism_clean = ifelse(test = n > 1,
-                                 yes = organism_clean,
-                                 no = NA
+    yes = organism_clean,
+    no = NA
   )) %>%
   select(
     structure_inchi = inchi,
