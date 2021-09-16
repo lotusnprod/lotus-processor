@@ -80,7 +80,10 @@ if (mode == "full") {
 
 if (mode != "test") {
   log_debug("... list of source databases")
-  dbList <- lapply(pathDataInterimDbDir, read_delim)
+  dbList <- lapply(pathDataInterimDbDir, 
+                   read_delim, 
+                   delim = "\t",
+                   col_types = cols(.default = "c"))
 
   log_debug("... dictionaries ...")
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
