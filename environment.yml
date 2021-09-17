@@ -26,8 +26,8 @@ dependencies:
   - matplotlib
   - pip
   - pip:
-    - faerun
-    - git+https://github.com/reymond-group/map4
+      - faerun
+      - git+https://github.com/reymond-group/map4
   - r-aplot ## needed by ggtree
   - r-base
   - r-chorddiag

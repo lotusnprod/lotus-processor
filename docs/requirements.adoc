@@ -3,7 +3,7 @@
 You need:
 
 - R
-- Python 
+- Python
 - Java >= 15
 - Git
 - Conda
