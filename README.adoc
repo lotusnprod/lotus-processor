@@ -6,6 +6,7 @@ include::docs/intro.adoc[]
 include::docs/data_availability.adoc[]
 
 == Dataset list
+
 All data used for this study is listed under xref:docs/dataset.csv[docs/dataset.csv]
 
 [%header,format=csv]
@@ -18,6 +19,7 @@ include::docs/requirements.adoc[]
 == Programs use
 
 === Description
+
 image:res/flowchart.svg[Embedded,1600,opts=inline]
 
 include::docs/usage.adoc[]
@@ -31,9 +33,11 @@ include::docs/faq.adoc[]
 include::docs/references.adoc[]
 
 == Contributing
+
 Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduct, and the process for submitting pull requests to us.
 
 == Authors
+
 - *Adriano Rutz* - _Initial work_ - https://gitlab.unige.ch/Adriano.Rutz[Adriano.Rutz]
 - *Pierre-Marie Allard* - _Investigator_ - https://gitlab.unige.ch/Pierre-Marie.Allard[Pierre-Marie.Allard]
 - *Jonathan Bisson* - _Hacker in Chief_ - https://gitlab.unige.ch/bjo[bjo]
@@ -41,9 +45,11 @@ Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduc
 See also the list of https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members[contributors] who participated in this project.
 
 == Acknowledgments
+
 - Hat tip to anyone whose code was used
 - Inspiration
 - etc.
 
 == License
+
 This project is licensed under the GNU GPLv3 license - see the xref:LICENSE.md[license file] for details

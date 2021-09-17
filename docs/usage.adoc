@@ -17,7 +17,8 @@ If you want to have the data in a different place (for example for running a tes
 
 ==== Use docker to build
 
-Install docker on your machine, make sure it is on your path then. ## WORKING ONLY ON LINUX FOR NOW
+Install docker on your machine, make sure it is on your path then.
+## WORKING ONLY ON LINUX FOR NOW
 
 [source,console]
 ----
@@ -36,7 +37,7 @@ If you want more informations regarding how to use MAKE, please have a look at x
 A "loose" environment.yml file is created and should allow to recreate a working env from he project without beeing too restrictive on the versions to install.
 Install it by running in the home directory.
 
-environment_strict.yml is corresponds to the exact versions we used. 
+environment_strict.yml is corresponds to the exact versions we used.
 
 If your environement is not directly sources by your default bash run the following lines
 
@@ -50,7 +51,8 @@ bash environment_non_conda.sh
 
 ==== Running the tests
 
-First, you need some additional executable files. Following line will help you getting them.
+First, you need some additional executable files.
+Following line will help you getting them.
 
 [source,console]
 ----
@@ -79,7 +81,8 @@ Globally, you can run this as an easier equivalent:
 make gathering-databases-full-quick
 ----
 
-Now, you should be able to process all this data. For all details about the MAKE commands, please have a look at xref:docs/makefile.adoc[the specific documentation].
+Now, you should be able to process all this data.
+For all details about the MAKE commands, please have a look at xref:docs/makefile.adoc[the specific documentation].
 To start easy, you can run our tests:
 
 [source,console]
