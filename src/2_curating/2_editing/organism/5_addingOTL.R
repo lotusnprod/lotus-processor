@@ -136,13 +136,17 @@ if (is_empty(new_matched_names) == FALSE) {
     data.frame() ## loosing some comments with df conversion
 
   if ("taxa_otl" %in% dbListTables(db)) {
-    dbAppendTable(conn = db,
-                  name = "taxa_otl",
-                  value = new_matched_otl)
+    dbAppendTable(
+      conn = db,
+      name = "taxa_otl",
+      value = new_matched_otl
+    )
   } else {
-    dbCreateTable(conn = db,
-                  name = "taxa_otl",
-                  fields = new_matched_otl)
+    dbCreateTable(
+      conn = db,
+      name = "taxa_otl",
+      fields = new_matched_otl
+    )
   }
 
   new_ott_id <- new_matched_otl %>%
