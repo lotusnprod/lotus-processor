@@ -21,8 +21,8 @@ library(RSQLite)
 library(tidyr)
 
 log_debug("importing ...")
-dnp_pairs <-
-  fread(file = pathDataInterimTablesAnalysedDnpDbTriplets) %>%
+closed_pairs <-
+  fread(file = pathDataInterimTablesAnalysedClosedDbTriplets) %>%
   filter(!is.na(structureCleanedInchikey) &
     !is.na(organismCleaned)) %>%
   distinct(
@@ -31,8 +31,8 @@ dnp_pairs <-
   )
 
 log_debug(
-  "DNP has",
-  nrow(dnp_pairs),
+  "Closed DBs have",
+  nrow(closed_pairs),
   "unique inchikey-taxon pairs"
 )
 
@@ -178,8 +178,8 @@ log_debug(
   "Open Tree of Life classifications for organisms"
 )
 
-dnp_u_wd <-
-  left_join(dnp_pairs, wikidata_pairs) %>%
+closed_u_wd <-
+  left_join(closed_pairs, wikidata_pairs) %>%
   distinct(
     structure_wikidata,
     structure_inchikey,
@@ -191,12 +191,12 @@ dnp_u_wd <-
 
 log_debug(
   "We have",
-  nrow(dnp_u_wd),
+  nrow(closed_u_wd),
   "unique inchikey-taxon-doi vaidated triplets in dnp"
 )
 
-dnp_only <-
-  anti_join(dnp_pairs, wikidata_pairs) %>% distinct()
+closed_only <-
+  anti_join(closed_pairs, wikidata_pairs) %>% distinct()
 
 # log_debug("We have",
 #     nrow(platinum_only),
@@ -210,7 +210,7 @@ dnp_only <-
 #     "unique inchikey-taxon-doi vaidated triplets present only in wikidata")
 
 log_debug("Adding useful metadata")
-dnp_complete <- dnp_only %>%
+closed_complete <- closed_only %>%
   left_join(., biological_metadata) %>%
   left_join(., chemical_metadata) %>%
   left_join(., chemical_taxonomy_1) %>%
@@ -251,15 +251,15 @@ if (safety == TRUE) {
     "Exporting to",
     file.path(
       pathDataProcessed,
-      pathLastFrozenDnp
+      pathLastFrozenClosed
     )
   )
 
   fwrite(
-    x = dnp_complete,
+    x = closed_complete,
     file = file.path(
       pathDataProcessed,
-      pathLastFrozenDnp
+      pathLastFrozenClosed
     )
   )
 }
