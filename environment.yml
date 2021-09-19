@@ -45,6 +45,7 @@ dependencies:
   - r-ggraph
   - r-jsonlite
   - r-pbmcapply
+  - r-philentropy
   - r-plotly
   - r-purrr
   - r-readr>=2.0.1
