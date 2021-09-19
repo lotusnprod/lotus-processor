@@ -154,6 +154,26 @@ df_gb.fillna(value=values, inplace=True)
 
 # Generating mean specificity score by taxonomical level and class, with a minimal score for plotting, set it to 0 not to use it. 
 
+# Dirty for now, will see how to integrate later TODO
+dic_jsd_class = pd.read_csv('../data/processed/jsd_class.tsv', sep="\t")
+dic_jsd_superclass = pd.read_csv('../data/processed/jsd_superclass.tsv', sep="\t")
+dic_jsd_pathway = pd.read_csv('../data/processed/jsd_pathway.tsv', sep="\t")
+
+jsd_class = df_gb.merge(dic_jsd_class,
+                    how="left",
+                    left_on=["structure_taxonomy_npclassifier_03class_first"],
+                    right_on=["structure_taxonomy_npclassifier_03class"])
+
+jsd_superclass = df_gb.merge(dic_jsd_superclass,
+                        how="left",
+                        left_on=["structure_taxonomy_npclassifier_02superclass_first"],
+                        right_on=["structure_taxonomy_npclassifier_02superclass"])
+
+jsd_pathway = df_gb.merge(dic_jsd_pathway,
+                        how="left",
+                        left_on=["structure_taxonomy_npclassifier_01pathway_first"],
+                        right_on=["structure_taxonomy_npclassifier_01pathway"])
+
 dic_mean_specificity = {
     'organism_taxonomy_02kingdom': {'min': 0},
     'organism_taxonomy_06family': {'min': 0},
@@ -163,21 +183,21 @@ structure_taxo = ['structure_taxonomy_npclassifier_01pathway_first',
                   'structure_taxonomy_npclassifier_02superclass_first',
                   'structure_taxonomy_npclassifier_03class_first']
 
-for dic in dic_mean_specificity:
-    for level in structure_taxo:
-        print(str(dic) + '_<lambda_2>')
-        df_gb['counter_sum'] = df_gb.groupby(by=[level])[str(dic) + '_<lambda_2>'].transform('sum')
-        df_gb['counter_sum_values'] = df_gb['counter_sum'].apply(lambda x: sum(x.values()))
-        df_gb['counter_sum'] = df_gb['counter_sum'].apply(lambda x: x.most_common(1)[0])
-        df_gb['specificity_taxon'] = df_gb['counter_sum'].apply(lambda x: x[0])
-        df_gb['specificity_score'] = df_gb['counter_sum'].apply(lambda x: x[1])
-        df_gb['specificity_score'] = df_gb['specificity_score'] / df_gb['counter_sum_values']
+# for dic in dic_mean_specificity:
+#     for level in structure_taxo:
+#         print(str(dic) + '_<lambda_2>')
+#         df_gb['counter_sum'] = df_gb.groupby(by=[level])[str(dic) + '_<lambda_2>'].transform('sum')
+#         df_gb['counter_sum_values'] = df_gb['counter_sum'].apply(lambda x: sum(x.values()))
+#         df_gb['counter_sum'] = df_gb['counter_sum'].apply(lambda x: x.most_common(1)[0])
+#         df_gb['specificity_taxon'] = df_gb['counter_sum'].apply(lambda x: x[0])
+#         df_gb['specificity_score'] = df_gb['counter_sum'].apply(lambda x: x[1])
+#         df_gb['specificity_score'] = df_gb['specificity_score'] / df_gb['counter_sum_values']
 
-        dic_mean_specificity[dic][level + '_score'] = df_gb['specificity_score']
-        dic_mean_specificity[dic][level + '_taxon'] = df_gb['specificity_taxon']
+#         dic_mean_specificity[dic][level + '_score'] = df_gb['specificity_score']
+#         dic_mean_specificity[dic][level + '_taxon'] = df_gb['specificity_taxon']
 
-        df_gb.drop(['counter_sum', 'counter_sum_values', 'specificity_taxon', 'specificity_score'], axis=1,
-                   inplace=True)
+#         df_gb.drop(['counter_sum', 'counter_sum_values', 'specificity_taxon', 'specificity_score'], axis=1,
+#                    inplace=True)
 
 # Generating class for plotting
 dic_categories = {
@@ -216,7 +236,7 @@ simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
-    'Isoquinoline alkaloids','Carboline alkaloids',
+    'Isoquinoline alkaloids', 'Carboline alkaloids',
     'Cyclic peptides', 'Aminoacids',
     'Polysaccharides', 'Disaccharides',
     'Fatty alcohols', 'Wax monoesters',
@@ -232,8 +252,8 @@ NPclass_data, NPclass_labels = keep_only_given_class([
 # Generating colormaps for plotting
 cmap_batlow = cm.batlow
 cmap_1 = mcolors.ListedColormap(["gainsboro", "#001959"])
-cmap_2 = mcolors.ListedColormap(["gainsboro", "#001959","#808133",])
-cmap_3 = mcolors.ListedColormap(["gainsboro", "#001959","#808133","#F9CCF9"])
+cmap_2 = mcolors.ListedColormap(["gainsboro", "#001959", "#808133"])
+cmap_3 = mcolors.ListedColormap(["gainsboro", "#001959", "#808133", "#F9CCF9"])
 cmap_category = mcolors.ListedColormap(
     ["gainsboro",
      "#4E79A7", "#A0CBE8",
@@ -242,7 +262,7 @@ cmap_category = mcolors.ListedColormap(
      "#B6992D", "#F1CE63",
      "#499894", "#86BCB6",
      "#9D7660", "#D7B5A6",
-     "#D37295", "#FABFD2","#B07AA1", "#D4A6C8"])
+     "#D37295", "#FABFD2", "#B07AA1", "#D4A6C8"])
 
 # Generate a labels column
 df_gb["labels"] = (
@@ -426,24 +446,15 @@ f.add_scatter(
             dic_categories['organism_taxonomy_09species_nunique_cat']['data'],
             simaroubaceae_data,
             NPclass_data,
-            dic_mean_specificity['organism_taxonomy_02kingdom'][
-                'structure_taxonomy_npclassifier_01pathway_first_score'],
-            dic_mean_specificity['organism_taxonomy_02kingdom'][
-                'structure_taxonomy_npclassifier_02superclass_first_score'],
-            dic_mean_specificity['organism_taxonomy_02kingdom'][
-                'structure_taxonomy_npclassifier_03class_first_score'],
-            dic_mean_specificity['organism_taxonomy_06family'][
-                'structure_taxonomy_npclassifier_01pathway_first_score'],
-            dic_mean_specificity['organism_taxonomy_06family'][
-                'structure_taxonomy_npclassifier_02superclass_first_score'],
-            dic_mean_specificity['organism_taxonomy_06family'][
-                'structure_taxonomy_npclassifier_03class_first_score'],
-            dic_mean_specificity['organism_taxonomy_08genus'][
-                'structure_taxonomy_npclassifier_01pathway_first_score'],
-            dic_mean_specificity['organism_taxonomy_08genus'][
-                'structure_taxonomy_npclassifier_02superclass_first_score'],
-            dic_mean_specificity['organism_taxonomy_08genus'][
-                'structure_taxonomy_npclassifier_03class_first_score'],
+            jsd_pathway['organism_taxonomy_02kingdom_JSD'],
+            jsd_superclass['organism_taxonomy_02kingdom_JSD'],
+            jsd_class['organism_taxonomy_02kingdom_JSD'],
+            jsd_pathway['organism_taxonomy_06family_JSD'],
+            jsd_superclass['organism_taxonomy_06family_JSD'],
+            jsd_class['organism_taxonomy_06family_JSD'],
+            jsd_pathway['organism_taxonomy_08genus_JSD'],
+            jsd_superclass['organism_taxonomy_08genus_JSD'],
+            jsd_class['organism_taxonomy_08genus_JSD'],
             hac,
             c_frak_ranked,
             ring_atom_frac,
@@ -514,15 +525,15 @@ f.add_scatter(
         "Sources species",
         "Simaroubaceae",
         "Selected chemical classes",
-        "Pathway kingdom specificity",
-        "Superclass kingdom specificity",
-        "Class kingdom specificity",
-        "Pathway family specificity",
-        "Superclass family specificity",
-        "Class family specificity",
-        "Pathway genus specificity",
-        "Superclass genus specificity",
-        "Class genus specificity",
+        "Pathway kingdom JSD",
+        "Superclass kingdom JSD",
+        "Class kingdom JSD",
+        "Pathway family JSD",
+        "Superclass family JSD",
+        "Class family JSD",
+        "Pathway genus JSD",
+        "Superclass genus JSD",
+        "Class genus JSD",
         "HAC",
         "C Frac",
         "Ring Atom Frac",
@@ -531,4 +542,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/210907_lotus_map4_2D', template="smiles")
+f.plot('../res/html/210919_lotus_map4_2D', template="smiles")
