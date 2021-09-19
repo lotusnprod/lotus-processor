@@ -1182,10 +1182,10 @@ pathDataInterimTablesAnalysedInhouseDbTriplets <-
   )
 
 ### DNP
-pathDataInterimTablesAnalysedDnpDbTriplets <-
+pathDataInterimTablesAnalysedClosedDbTriplets <-
   file.path(
     pathDataInterimTablesAnalysed,
-    "dnp.tsv.gz"
+    "closed.tsv.gz"
   )
 
 ## structures by kingdom
@@ -1312,4 +1312,4 @@ pathLastWdExport <- "210505_wikidata_query.tsv"
 
 pathLastFrozen <- "210715_frozen_metadata.csv.gz"
 
-pathLastFrozenDnp <- "210715_dnp_metadata.csv.gz"
+pathLastFrozenClosed <- "210715_dnp_metadata.csv.gz"

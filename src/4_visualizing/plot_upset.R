@@ -41,9 +41,9 @@ if (mode == "full") {
     ) %>%
     filter(database != "wikidata")
 
-  log_debug("... DNP DB")
-  dnpDb <-
-    read_delim(file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")) %>%
+  log_debug("... closed DBs")
+  closedDb <-
+    read_delim(file = file.path(pathDataInterimTablesAnalysed, "closed.tsv.gz")) %>%
     distinct(
       database,
       organismCleaned,
@@ -79,8 +79,8 @@ if (mode == "full") {
       y_as_na(x, "")
     })
 
-  log_debug("joining DNP and openDB")
-  inhouseDb <- bind_rows(dnpDb, openDb) %>%
+  log_debug("joining closed DBs and open DB")
+  inhouseDb <- bind_rows(closedDb, openDb) %>%
     left_join(., prettyNames) %>%
     select(-database) %>%
     select(
