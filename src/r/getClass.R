@@ -1,6 +1,7 @@
 source("paths.R")
 library(jsonlite)
 library(rvest)
+library(purrr)
 
 #' Title
 #'
