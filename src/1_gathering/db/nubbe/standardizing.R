@@ -53,7 +53,7 @@ for (i in seq_along(X)) {
     )
   organismFamily <-
     ifelse(
-      test = xml_data$especies == "\n\t",
+      test = xml_data$especies == "\n    ",
       yes = NA,
       no = (ifelse(
         test = is.null(xml_data$especies$origem$familia),
@@ -63,7 +63,7 @@ for (i in seq_along(X)) {
     )
   organismGenus <-
     ifelse(
-      test = xml_data$especies == "\n\t",
+      test = xml_data$especies == "\n    ",
       yes = NA,
       no = (ifelse(
         test = is.null(xml_data$especies$origem$genero),
@@ -72,7 +72,7 @@ for (i in seq_along(X)) {
       ))
     )
   organismSpecies <- ifelse(
-    test = xml_data$especies == "\n\t",
+    test = xml_data$especies == "\n    ",
     yes = NA,
     no = (ifelse(
       test = is.null(xml_data$especies$origem$especie),
