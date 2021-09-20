@@ -3,4 +3,4 @@
 
 mkdir -p ../data/external/dbSource/afrotryp/
 
-# wget "TODO" -O ../data/external/dbSource/afrotryp/afrotryp.tsv.zip
+wget "https://osf.io/q47fd/download" -O ../data/external/dbSource/afrotryp/afrotryp.tsv.zip

@@ -61,11 +61,11 @@ ${EXTERNAL_DB_SOURCE_PATH}/afrotryp/afrotryp.tsv.zip: ${SRC_GATHERING_DB_PATH}/a
 	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/afrotryp/downloading_modified.sh
 
 alkamid: ${INTERIM_DB_PATH}/alkamid.tsv.gz
-${INTERIM_DB_PATH}/alkamid.tsv.gz: $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz) ${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
+${INTERIM_DB_PATH}/alkamid.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/alkamid/standardizing.R
 
-alkamid-scrape: # $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz)
-# $(wildcard ${EXTERNAL_DB_SOURCE_PATH}/alkamid/*.tsv.gz): # ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
+alkamid-scrape: ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 
 antibase: ${INTERIM_DB_PATH}/antibase.tsv.gz
