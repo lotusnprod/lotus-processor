@@ -3,4 +3,4 @@
 
 mkdir -p ../data/external/dbSource/datawarrior/
 
-# wget "TODO" -O ../data/external/dbSource/datawarrior/NaturalProductsNaturalProducts.txt
+wget "https://osf.io/3g75a/download" -O ../data/external/dbSource/datawarrior/NaturalProductsNaturalProducts.txt
