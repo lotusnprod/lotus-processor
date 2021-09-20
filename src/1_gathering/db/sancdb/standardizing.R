@@ -15,7 +15,8 @@ database <- databases$get("sancdb")
 
 ## files
 data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
+  file = gzfile(database$sourceFiles$tsv),
+  col_types = cols(.default = "c")
 )
 
 #  cleaning
