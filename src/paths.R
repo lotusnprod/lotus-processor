@@ -558,7 +558,7 @@ pathDataExternalTranslationSourceTcmTcmid <-
 pathDataExternalTranslationSourceTcmCmba <-
   file.path(
     pathDataExternalTranslationSourceTcm,
-    "Chinese-Medicine-Board---List---Nomenclature-list-of-commonly-used-Chinese-herbal-medicines.XLSX"
+    "Chinese-Medicine-Board---List---Nomenclature-compendium-of-commonly-used-Chinese-herbal-medicines.XLSX"
   )
 
 #### dir
