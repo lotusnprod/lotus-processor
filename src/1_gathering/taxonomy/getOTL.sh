@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
-OTT_VERSION="3.3"
+eval $(../config.mk)
 
 if [ ! -f ../data/external/taxonomySource/organism/ott"$OTT_VERSION".tgz ]; then
+  mkdir -p ../data/external/taxonomySource/organism/
   echo "Downloading"
   curl -o ../data/external/taxonomySource/organism/ott"$OTT_VERSION".tgz https://files.opentreeoflife.org/ott/ott"$OTT_VERSION"/ott"$OTT_VERSION".tgz
 fi

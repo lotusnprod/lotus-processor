@@ -12,6 +12,11 @@ export GNFINDER_VERSION = v0.15.1
 export GNVERIFIER_VERSION = v0.3.3
 export OPSIN_VERSION = 2.5.0
 
+export OTT_VERSION = 3.3
+
+export NPCLASSIFIER_VERSION = 1.5
+export INDEX_VERSION = 1
+
 export UNAME := $(shell uname)
 
 PLATFORM := unsupported
