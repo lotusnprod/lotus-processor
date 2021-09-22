@@ -38,11 +38,11 @@ Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduc
 
 == Authors
 
-- *Adriano Rutz* - _Initial work_ - https://gitlab.unige.ch/Adriano.Rutz[Adriano.Rutz]
-- *Pierre-Marie Allard* - _Investigator_ - https://gitlab.unige.ch/Pierre-Marie.Allard[Pierre-Marie.Allard]
-- *Jonathan Bisson* - _Hacker in Chief_ - https://gitlab.unige.ch/bjo[bjo]
+- *Adriano Rutz* - _Initial work_ - https://gitlab.com/Adafede[Adafede]
+- *Pierre-Marie Allard* - _Investigator_ - https://gitlab.com/oolonek[oolonek]
+- *Jonathan Bisson* - _Hacker in Chief_ - https://gitlab.com/bjonnh[bjonnh]
 
-See also the list of https://gitlab.unige.ch/Adriano.Rutz/opennaturalproductsdb/-/project_members[contributors] who participated in this project.
+See also the list of https://gitlab.com/lotus7/lotus-processor/-/project_members[contributors] who participated in this project.
 
 == Acknowledgments
 
