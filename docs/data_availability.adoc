@@ -1,4 +1,0 @@
-== Data Availability Statements
-
-The data used to support the findings of this study have been deposited on OSF https://osf.io/pmgux/[https://osf.io/pmgux/].
-An snapshot of the repository at the time of publication is also available.
