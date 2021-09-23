@@ -2,7 +2,6 @@
 # Converting from SDF to csv
 
 # loading packages
-from rdkit import rdBase
 from rdkit import Chem
 from rdkit.Chem import PandasTools
 from rdkit.Chem.rdmolfiles import SmilesWriter
@@ -24,7 +23,7 @@ mols = [mol for mol in Chem.SDMolSupplier(my_sdf_file) if mol != None]
 
 # make writer object with a file name.
 writer = SmilesWriter(my_smi_file)
- 
+
 # SetProps method can set properties that will be written to files with SMILES.
 writer.SetProps(['MOL_ID'])
 
@@ -34,5 +33,5 @@ sdf_frame.to_csv(my_tsv_file,
 
 # The way of writing molecules can perform common way.
 for mol in mols:
-    writer.write( mol )
+    writer.write(mol)
 writer.close()

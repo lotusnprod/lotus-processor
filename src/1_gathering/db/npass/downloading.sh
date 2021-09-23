@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
+if [ ! -d ../data/external/dbSource/npass/ ]; then
+
 mkdir -p ../data/external/dbSource/npass/
 
 wget "http://bidd.group/NPASS/downloadFiles/NPASSv1.0_download_naturalProducts_generalInfo.txt" -O ../data/external/dbSource/npass/NPASSv1.0_download_naturalProducts_generalInfo.txt
@@ -11,3 +13,6 @@ wget "http://bidd.group/NPASS/downloadFiles/NPASSv1.0_download_naturalProducts_s
 
 wget "http://bidd.group/NPASS/downloadFiles/NPASSv1.0_download_naturalProducts_species_pair.txt" -O ../data/external/dbSource/npass/NPASSv1.0_download_naturalProducts_species_pair.txt
 
+fi
+
+echo "Done"
