@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
+if [ ! -d ../data/external/dbSource/drduke/Duke-Source-CSV ]; then
+
 mkdir -p ../data/external/dbSource/drduke/Duke-Source-CSV
 
 wget "https://data.nal.usda.gov/system/files/Duke-Source-CSV.zip" -O ../data/external/dbSource/drduke/Duke-Source-CSV.zip
@@ -8,3 +10,7 @@ wget "https://data.nal.usda.gov/system/files/Duke-Source-CSV.zip" -O ../data/ext
 tar -xf ../data/external/dbSource/drduke/Duke-Source-CSV.zip -C ../data/external/dbSource/drduke/Duke-Source-CSV
 
 rm ../data/external/dbSource/drduke/Duke-Source-CSV.zip
+
+fi
+
+echo "Done"

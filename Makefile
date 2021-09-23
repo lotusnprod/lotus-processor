@@ -261,3 +261,7 @@ visualizing-upset:
 
 visualizing-distribution:
 	cd src && Rscript ${SRC_VISUALIZING_PATH}/plot_distribution.R
+
+lotus-quick: gathering-full-quick curating analysing visualizing
+
+lotus: gathering-full curating analysing visualizing

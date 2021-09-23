@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # -*- coding: utf-8 -*-
 
+if [ ! -d ../data/external/dbSource/mibig/ ]; then
+
 mkdir -p ../data/external/dbSource/mibig/
 
 wget "https://dl.secondarymetabolites.org/mibig/mibig_json_2.0.tar.gz" -O ../data/external/dbSource/mibig/mibig_json_2.0.tar.gz
@@ -12,3 +14,7 @@ zip -r ../data/external/dbSource/mibig/mibig_json_2.0.zip ../data/external/dbSou
 rm ../data/external/dbSource/mibig/mibig_json_2.0.tar.gz
 
 rm -r ../data/external/dbSource/mibig/mibig_json_2.0
+
+fi
+
+echo "Done"
