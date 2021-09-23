@@ -1,0 +1,28 @@
+name: Testing the full suite
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 3
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install Python dependencies
+      run: |
+        conda env update --file environment.yml --name base
+    - name: Install R dependencies
+      run: |
+        conda run environment_non_conda.sh
