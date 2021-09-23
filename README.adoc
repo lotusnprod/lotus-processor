@@ -5,7 +5,7 @@
 
 *LOTUS*, actually, consists of
 
-include::metrics.adoc[]
+include::docs/metrics.adoc[]
 
 It represents the most exhaustive resource of documented structure-organism pairs.
 
