@@ -25,4 +25,4 @@ jobs:
         conda env update --file environment.yml --name base
     - name: Install R dependencies
       run: |
-        conda run environment_non_conda.sh
+        bash environment_non_conda.sh
