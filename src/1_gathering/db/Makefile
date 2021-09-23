@@ -1,16 +1,16 @@
 DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dianatdb drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
 
-DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
+DATABASES_CLOSED = antibase-convert antibase antimarin-convert antimarin dnp
 
 DATABASES_CONVERT = biofacquim-convert coconut-convert streptomedb-convert
 
-DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download cyanometdb-download dianatdb-download drduke-download foodb-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download tmmc-download tppt-download unpd-download
+DATABASES_DOWNLOAD = afrotryp-download biofacquim-download coconut-download cyanometdb-download dianatdb-download drduke-download foodb-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download tmmc-download tppt-download unpd-download
 
-DATABASES_DOWNLOAD_MODIFIED = creating-directory-db afrotryp-download-modified datawarrior-download-modified foodb-modified
+DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified foodb-modified
 
 DATABASES_INTEGRATE = unpd-integrate
 
-DATABASES_SCRAPE = creating-directory-db alkamid-scrape biophytmol-scrape carotenoiddb-scrape knapsack-scrape mitishamba-scrape nanpdb-scrape npedia-scrape phytohub-scrape procardb-scrape sancdb-scrape swmd-scrape tmdb-scrape wakankensaku-scrape # nubbe-scrape not done
+DATABASES_SCRAPE = alkamid-scrape biophytmol-scrape carotenoiddb-scrape knapsack-scrape mitishamba-scrape nanpdb-scrape npedia-scrape phytohub-scrape procardb-scrape sancdb-scrape swmd-scrape tmdb-scrape wakankensaku-scrape # nubbe-scrape not done
 
 .PHONY: ${DATABASES} ${DATABATES_CONVERT} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_INTEGRATE} ${DATABASES_SCRAPE}
 .PHONY: gathering-databases gathering-databases-scrape gathering-databases-integrate gathering-databases-convert
@@ -20,17 +20,6 @@ all: ${DATABASES}
 	@echo Cur dir: ${CURDIR}
 	@echo PWD: ${PWD}
 	@echo DB source path: ${EXTERNAL_DB_SOURCE_PATH}
-
-creating-directories: creating-directory-db creating-directory-taxonomy creating-directory-translation
-
-creating-directory-db:
-	cd src && bash ${SRC_GATHERING_PATH}/creating_directory_db.sh
-
-creating-directory-taxonomy:
-	cd src && bash ${SRC_GATHERING_PATH}/creating_directory_taxonomy.sh
-
-creating-directory-translation:
-	cd src && bash ${SRC_GATHERING_PATH}/creating_directory_translation.sh
 
 gathering-databases: ${DATABASES}
 
