@@ -14,12 +14,9 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Add conda to system path
-        run: |
-          echo $CONDA/bin >> $GITHUB_PATH
       - name: Install Python dependencies
         run: |
-          conda env create --file environment.yml --name base
+          $CONDA/bin/conda env create --file environment.yml
       - name: Install R dependencies
         run: |
           bash environment_non_conda.sh
@@ -34,7 +31,7 @@ jobs:
           MODE=test make analyzing
       - name: Install visualizing Python (and some R) dependencies
         run: |
-         conda env create --file environment_visualizing.yml --name base
+         $CONDA/bin/conda env create --file environment_visualizing.yml
       - name: Install visualizing R dependencies
         run: |
           bash environment_visualizing_non_conda.sh
