@@ -1,17 +1,17 @@
-DATABASES_ACCESSIBLE = afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt # cmaup etcm pharmdbk plantcyc symmap triforc
+DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt # cmaup etcm pharmdbk plantcyc symmap triforc
 
 DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat napralert nubbe unpd-integrate unpd
 
-DATABASES_CLOSED = antibase-convert antibase antimarin-convert antimarin dnp
+DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
 
-DATABASES_DOWNLOAD = afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
+DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
 
 DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified foodb-modified
 
-DATABASES_SCRAPE = alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
+DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
 
 .PHONY: ${DATABASES} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_SCRAPE}
-.PHONY: gathering-databases-accessible gathering-databases-scrape gathering-databases-convert
+.PHONY: gathering-databases-accessible gathering-databases-scrape gathering-databases-convert creating-directory-db
 .PRECIOUS: %.tsv %.zip %.json %.gz %.doc %.sdf
 
 all: ${DATABASES}
@@ -32,6 +32,9 @@ gathering-databases-download-modified: ${DATABASES_DOWNLOAD_MODIFIED}
 gathering-databases-scrape: ${DATABASES_SCRAPE}
 
 ${DATABASES}:%:${INTERIM_DB_PATH}/%.tsv.gz
+
+creating-directory-db:
+	mkdir -p ${INTERIM_DB_PATH}
 
 afrotryp: ${INTERIM_DB_PATH}/afrotryp.tsv.gz
 ${INTERIM_DB_PATH}/afrotryp.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/afrotryp/afrotryp.tsv.zip ${SRC_GATHERING_DB_PATH}/afrotryp/standardizing.R
