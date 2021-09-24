@@ -10,8 +10,6 @@ library(dplyr)
 library(parallel)
 library(pbmcapply)
 library(splitstackshape)
-library(tidyverse)
-library(vroom)
 library(XML)
 library(xml2)
 
