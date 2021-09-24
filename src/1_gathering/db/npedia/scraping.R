@@ -46,7 +46,7 @@ NPEDIA <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
+    mc.cores = (parallel::detectCores() - 1),
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE
@@ -96,7 +96,7 @@ NPEDIA_3 <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = (parallel::detectCores() - 2),
+    mc.cores = (parallel::detectCores() - 1),
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE

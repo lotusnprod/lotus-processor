@@ -182,7 +182,7 @@ X <- seq_along(Y)
 class_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2)
+  mc.cores = (parallel::detectCores() - 1)
 )) |>
   rbindlist()
 
@@ -196,7 +196,7 @@ X <- seq_along(Y)
 class_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
@@ -211,7 +211,7 @@ X <- seq_along(Y)
 class_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
@@ -237,7 +237,7 @@ X <- seq_along(Y)
 superclass_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2)
+  mc.cores = (parallel::detectCores() - 1)
 )) |>
   rbindlist()
 
@@ -251,7 +251,7 @@ X <- seq_along(Y)
 superclass_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
@@ -266,7 +266,7 @@ X <- seq_along(Y)
 superclass_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
@@ -292,7 +292,7 @@ X <- seq_along(Y)
 pathway_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2)
+  mc.cores = (parallel::detectCores() - 1)
 )) |>
   rbindlist()
 
@@ -306,7 +306,7 @@ X <- seq_along(Y)
 pathway_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
@@ -321,7 +321,7 @@ X <- seq_along(Y)
 pathway_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   ignore.interactive = TRUE
 )) |>
   rbindlist()
