@@ -20,14 +20,15 @@ jobs:
       - name: Install conda dependencies
         run: |
           $CONDA/bin/conda env create --file environment.yml
-      - name: Initiaize conda environment
+      - name: Initialize conda environment
         run: |
           conda init bash
           exec $SHELL
           conda activate lotus_env
-          conda info
+          echo conda info
       - name: Install non-conda dependencies
         run: |
+          echo conda info
           bash environment_non_conda.sh
       - name: Run gathering
         run: |
