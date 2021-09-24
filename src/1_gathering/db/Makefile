@@ -1,10 +1,10 @@
 DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt # cmaup etcm pharmdbk plantcyc symmap triforc
 
-DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat napralert nubbe unpd-integrate unpd
+DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat-download inflamnat napralert nubbe unpd-integrate unpd
 
 DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
 
-DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
+DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
 
 DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified
 
