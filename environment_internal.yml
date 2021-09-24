@@ -1,0 +1,9 @@
+name: lotus_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - dvc>=2.6.4
+  - dvc-s3 ## needed by the new versions of dvc
+  - lxml
