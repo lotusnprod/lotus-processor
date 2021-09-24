@@ -146,7 +146,8 @@ drduke: ${INTERIM_DB_PATH}/drduke.tsv.gz
 ${INTERIM_DB_PATH}/drduke.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FARMACY_NEW.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/REFERENCES.csv ${SRC_GATHERING_DB_PATH}/drduke/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/drduke/standardizing.R
 
-drduke-download: ## TODO target directory
+drduke-download: ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FARMACY_NEW.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/REFERENCES.csv
+${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FARMACY_NEW.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/REFERENCES.csv: ${SRC_GATHERING_DB_PATH}/drduke/downloading.sh
 	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/drduke/downloading.sh
 
 foodb: ${INTERIM_DB_PATH}/foodb.tsv.gz
