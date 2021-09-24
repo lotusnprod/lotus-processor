@@ -5,8 +5,13 @@ include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
 include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash tests
-.PHONY: gathering-full gathering-full-quick gathering-full-hard gathering-databases-full gathering-databases-full-hard gathering-databases-full-quick gathering-databases gathering-databases-download gathering-databases-download-modified gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
-.PHONY: gathering-custom-dictionaries gathering-translation-full gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire
+.PHONY: gathering-full gathering-full-quick gathering-full-hard 
+.PHONY: gathering-databases-full gathering-databases-full-hard gathering-databases-full-quick 
+.PHONY: gathering-databases gathering-databases-download gathering-databases-download-modified 
+.PHONY: gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
+.PHONY: gathering-custom-dictionaries gathering-pmcid gathering-gbif gathering-chinese-board
+.PHONY: gathering-translation-full gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm 
+.PHONY: gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire gathering-taxonomy-full
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
