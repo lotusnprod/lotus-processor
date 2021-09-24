@@ -6,7 +6,7 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash tests
 .PHONY: gathering-full gathering-full-quick gathering-full-hard gathering-databases-full gathering-databases-full-hard gathering-databases-full-quick gathering-databases gathering-databases-download gathering-databases-download-modified gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
-.PHONY: gathering-custom-dictionaries gathering-translation-full gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire
+.PHONY: gathering-custom-dictionaries gathering-translation-full gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common  gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
@@ -66,7 +66,7 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 tests:
 	cd src && Rscript ${TESTS_PATH}/tests.R 
 
-gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full gathering-taxonomy-full
+gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full-quick gathering-taxonomy-full
 
 gathering-full: gathering-custom-dictionaries gathering-databases-full gathering-translation-full gathering-taxonomy-full
 
@@ -103,10 +103,15 @@ gathering-databases-scrape: ${DATABASES_SCRAPE}
 	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
 
+gathering-translation-full-quick: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm
+
 gathering-translation-full: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm
 
 gathering-translation-common:
 	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-common
+
+gathering-translation-common-quick:
+	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-common-quick
 
 gathering-translation-tcm:
 	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-tcm
