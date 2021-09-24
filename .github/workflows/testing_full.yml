@@ -21,7 +21,8 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install Python dependencies
       run: |
-        conda env update --file environment.yml
+        conda env create --file environment.yml
+        conda install conda-build
     - name: Install R dependencies
       run: |
         bash environment_non_conda.sh
