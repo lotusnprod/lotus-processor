@@ -12,6 +12,7 @@ dependencies:
   - tmap
   - scipy
   - matplotlib
+  - mhfp
   - pip
   - pip:
       - faerun
