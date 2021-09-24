@@ -23,9 +23,9 @@ jobs:
       - name: Initialize conda environment
         run: |
           conda init bash
-          exec $SHELL
-          conda activate lotus_env
-          echo conda info
+          source /home/runner/.bashrc
+          conda activate lotus_env --no-stack
+          conda info
       - name: Install non-conda dependencies
         run: |
           echo conda info
