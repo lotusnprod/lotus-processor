@@ -1,14 +1,14 @@
-DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt # cmaup etcm pharmdbk plantcyc symmap triforc
+DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt# cmaup etcm pharmdbk plantcyc symmap triforc
 
-DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat-download inflamnat napralert nubbe unpd-integrate unpd
+DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat-download inflamnat napralert nubbe unpd-download unpd-integrate unpd
 
 DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
 
-DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
+DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download
 
 DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified
 
-DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
+DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku# nubbe-scrape not done
 
 .PHONY: ${DATABASES} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_SCRAPE}
 .PHONY: gathering-databases-accessible gathering-databases-scrape gathering-databases-convert creating-directory-db
