@@ -1,0 +1,39 @@
+name: lotus_visualizing_env
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+  - tmap
+dependencies:
+  - cmcrameri
+  - pandas
+  - python=3.*
+  - rdkit
+  - tmap
+  - scipy
+  - matplotlib
+  - pip
+  - pip:
+      - faerun
+      - git+https://github.com/reymond-group/map4
+  - r-aplot ## needed by ggtree
+  - r-base
+  - r-chorddiag
+  - r-codetools
+  - r-data.table
+  - r-dplyr
+  - r-forcats
+  - r-ggalluvial
+  - r-ggfittext
+  - r-ggnewscale
+  - r-ggplot2
+  - r-ggraph
+  - r-plotly
+  - r-readr>=2.0.1
+  - r-rotl
+  - r-R.utils ## needed for new version of data.table to read .gz
+  - r-rvcheck ## needed by ggtree
+  - r-splitstackshape
+  - r-tidytree ## needed by ggtree
+  - r-tidyr
+  - r-upsetr
