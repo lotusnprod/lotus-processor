@@ -11,12 +11,17 @@ jobs:
       max-parallel: 3
     steps:
     - uses: actions/checkout@v2
-    - uses: conda-incubator/setup-miniconda@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
       with:
-        activate-environment: lotus_env
-        environment-file: environment.yml
         python-version: 3.8
-        auto-activate-base: false
+    - name: Add conda to system path
+      run: |
+        # $CONDA is an environment variable pointing to the root of the miniconda directory
+        echo $CONDA/bin >> $GITHUB_PATH
+    - name: Install Python dependencies
+      run: |
+        conda env update --file environment.yml --name base
     - name: Install R dependencies
       run: |
         conda activate lotus_env
@@ -32,8 +37,7 @@ jobs:
         MODE=test make analyzing
     - name: Install visualizing Python (and some R) dependencies
       run: |
-        conda env update --file environment.yml --name lotus_visualizing_env
-        conda activate lotus_visualizing_env
+        conda env create --file environment_visualizing.yml --name base
     - name: Install visualizing R dependencies
       run: |
         bash environment_visualizing_non_conda.sh
