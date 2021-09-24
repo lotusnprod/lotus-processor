@@ -7,7 +7,6 @@ channels:
 dependencies:
   - beautifulsoup4
   - cirpy
-  - cmcrameri
   - dvc>=2.6.4
   - dvc-s3 ## needed by the new versions of dvc
   - ipykernel
@@ -20,17 +19,9 @@ dependencies:
   - requests-cache
   - urllib3
   - bioconductor-chemminer
-  - tmap
   - scipy
   - mhfp
-  - matplotlib
-  - pip
-  - pip:
-      - faerun
-      - git+https://github.com/reymond-group/map4
-  - r-aplot ## needed by ggtree
   - r-base
-  - r-chorddiag
   - r-clisymbols ## needed by classyfirer
   - r-codetools
   - r-data.table
@@ -38,11 +29,6 @@ dependencies:
   - r-DBI
   - r-forcats
   - r-gdata
-  - r-ggalluvial
-  - r-ggfittext
-  - r-ggnewscale
-  - r-ggplot2
-  - r-ggraph
   - r-jsonlite
   - r-pbmcapply
   - r-philentropy
@@ -55,7 +41,6 @@ dependencies:
   - r-RPostgreSQL
   - r-RSQLite
   - r-R.utils ## needed for new version of data.table to read .gz
-  - r-rvcheck ## needed by ggtree
   - r-rvest
   - r-splitstackshape
   - r-stringdist
@@ -63,9 +48,7 @@ dependencies:
   - r-stringr
   - r-testthat
   - r-tibble
-  - r-tidytree ## needed by ggtree
   - r-tidyr
-  - r-upsetr
   - r-webchem
   - r-XML
   - r-xml2
