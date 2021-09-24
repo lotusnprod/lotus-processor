@@ -8,18 +8,23 @@ on:
 jobs:
   build-linux:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install Python dependencies
+      - name: Install Conda dependencies
         run: |
           $CONDA/bin/conda env create --file environment.yml
-      - name: Install R dependencies
-        run: |
+          conda init bash
+          exec $SHELL
           conda activate lotus_env
+      - name: Install non-conda dependencies
+        run: |
           bash environment_non_conda.sh
       - name: Run gathering
         run: |
