@@ -17,12 +17,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install Conda dependencies
+      - name: Install conda dependencies
         run: |
           $CONDA/bin/conda env create --file environment.yml
           conda init bash
           exec $SHELL
           conda activate lotus_env
+          conda info
       - name: Install non-conda dependencies
         run: |
           bash environment_non_conda.sh
