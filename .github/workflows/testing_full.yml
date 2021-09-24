@@ -23,7 +23,7 @@ jobs:
       run: |
         conda env update --file environment.yml --name lotus_env
         conda init bash
-        source ~/.bashrc
+        source /home/runner/.bashrc
         conda activate lotus_env
     - name: Install R dependencies
       run: |
