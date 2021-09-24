@@ -7,7 +7,7 @@ mkdir -p ../data/external/dbSource/drduke/Duke-Source-CSV
 
 wget "https://data.nal.usda.gov/system/files/Duke-Source-CSV.zip" -O ../data/external/dbSource/drduke/Duke-Source-CSV.zip
 
-tar -xvzf ../data/external/dbSource/drduke/Duke-Source-CSV.zip -C ../data/external/dbSource/drduke/Duke-Source-CSV
+unzip ../data/external/dbSource/drduke/Duke-Source-CSV.zip -d ../data/external/dbSource/drduke/Duke-Source-CSV
 
 rm ../data/external/dbSource/drduke/Duke-Source-CSV.zip
 
