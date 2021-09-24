@@ -24,7 +24,7 @@ dependencies:
   - r-philentropy
   - r-plotly
   - r-purrr
-  - r-readr>=2.0.1
+  - r-readr
   - r-readxl
   - r-rentrez
   - r-rotl
