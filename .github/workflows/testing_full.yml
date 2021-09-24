@@ -20,31 +20,24 @@ jobs:
       - name: Install conda dependencies
         run: |
           $CONDA/bin/conda env create --file environment.yml
-      - name: Initialize conda environment
-        run: |
-          conda init bash
-          source /home/runner/.bashrc
-          conda activate lotus_env --no-stack
-          conda info
       - name: Install non-conda dependencies
         run: |
-          echo conda info
-          bash environment_non_conda.sh
+          conda run -n lotus_env bash environment_non_conda.sh
       - name: Run gathering
         run: |
-          make gathering-full-quick
+          conda run -n lotus_env make gathering-full-quick
       - name: Run processing
         run: |
-          MODE=test make curating
+          conda run -n lotus_env MODE=test make curating
       - name: Run analyzing
         run: |
-          MODE=test make analyzing
+          conda run -n lotus_env MODE=test make analyzing
       - name: Install visualizing Python (and some R) dependencies
         run: |
          $CONDA/bin/conda env create --file environment_visualizing.yml
       - name: Install visualizing R dependencies
         run: |
-          bash environment_visualizing_non_conda.sh
+          conda run -n lotus_visualizing_env bash environment_visualizing_non_conda.sh
       - name: Run visualizing
         run: |
-          MODE=test make visualizing
+          conda run -n lotus_visualizing_env MODE=test make visualizing
