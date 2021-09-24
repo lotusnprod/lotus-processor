@@ -19,6 +19,7 @@ jobs:
         auto-activate-base: false
     - name: Install R dependencies
       run: |
+        conda activate lotus_env
         bash environment_non_conda.sh
     - name: Run gathering
       run: |
