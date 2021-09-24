@@ -9,7 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 3
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
@@ -20,9 +19,29 @@ jobs:
       run: |
         # $CONDA is an environment variable pointing to the root of the miniconda directory
         echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install Python dependencies
+    - name: Install Python (and some R) dependencies
       run: |
-        conda env update --file environment.yml --name base
+        conda env update --file environment.yml --name lotus_env
+        conda activate lotus_env
     - name: Install R dependencies
       run: |
         bash environment_non_conda.sh
+    - name: Run gathering
+      run: |
+        make gathering-full-quick
+    - name: Run processing
+      run: |
+        MODE=test make curating
+    - name: Run analyzing
+      run: |
+        MODE=test make analyzing
+    - name: Install visualizing Python (and some R) dependencies
+      run: |
+        conda env update --file environment.yml --name lotus_visualizing_env
+        conda activate lotus_visualizing_env
+    - name: Install visualizing R dependencies
+      run: |
+        bash environment_visualizing_non_conda.sh
+    - name: Run visualizing
+      run: |
+        MODE=test make visualizing
