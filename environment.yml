@@ -4,6 +4,7 @@ channels:
   - bioconda
   - defaults
 dependencies:
+  - conda-build
   - molvs
   - pandas
   - python=3.*
