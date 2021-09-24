@@ -22,6 +22,7 @@ jobs:
     - name: Install Python (and some R) dependencies
       run: |
         conda env update --file environment.yml --name lotus_env
+        conda init
         conda activate lotus_env
     - name: Install R dependencies
       run: |
