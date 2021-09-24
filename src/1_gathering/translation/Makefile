@@ -1,4 +1,4 @@
-.PHONY: gathering-translation-common gathering-translation-tcm gathering-gbif gathering-chinese-board gathering-pmcid gathering-translation-tcmid
+.PHONY: gathering-translation-common gathering-translation-common-quick gathering-translation-tcm gathering-gbif gathering-chinese-board gathering-pmcid gathering-translation-tcmid
 .PRECIOUS: %.csv %.tsv %.zip %.json %.gz %.XLSX %.txt %.xlsx
 
 gathering-translation-common: ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz
