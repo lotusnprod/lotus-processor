@@ -7,32 +7,37 @@ on:
       - main
 jobs:
   build-linux:
-    name: Linux
-    runs-on: "ubuntu-latest"
+    runs-on: ubuntu-latest
     steps:
-      - uses: conda-incubator/setup-miniconda@v2
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
         with:
-          miniconda-version: "latest"
-          environment-file: environment.yml
-          activate-environment: lotus_env
-          auto-activate-base: false
-      - name: Testing full workflow
-        shell: bash
+          python-version: 3.8
+      - name: Add conda to system path
+        run: |
+          echo $CONDA/bin >> $GITHUB_PATH
+      - name: Install Python dependencies
+        run: |
+          conda env create --file environment.yml --name base
+      - name: Install R dependencies
         run: |
           bash environment_non_conda.sh
+      - name: Run gathering
+        run: |
           make gathering-full-quick
+      - name: Run processing
+        run: |
           MODE=test make curating
+      - name: Run analyzing
+        run: |
           MODE=test make analyzing
-      - uses: conda-incubator/setup-miniconda@v2
-        with:
-          miniconda-version: "latest"
-          environment-file: environment_visualization.yml
-          activate-environment: lotus_visualization_env
-          auto-activate-base: false
       - name: Install visualizing Python (and some R) dependencies
         run: |
-          $CONDA/bin/conda env create --file environment_visualizing.yml
-      - name: Testing visualization
+         conda env create --file environment_visualizing.yml --name base
+      - name: Install visualizing R dependencies
         run: |
           bash environment_visualizing_non_conda.sh
+      - name: Run visualizing
+        run: |
           MODE=test make visualizing
