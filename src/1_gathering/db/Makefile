@@ -349,7 +349,7 @@ unpd-download: ## TODO target multiple files
 	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/unpd/downloading.sh
 
 unpd-integrate: ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/unpd/UNPD_DB.csv.zip ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpd_final.csv.zip ${SRC_GATHERING_DB_PATH}/unpd/integrating.R
+${EXTERNAL_DB_SOURCE_PATH}/unpd/unpdIntegrated.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/unpd/UNPD_DB.csv.zip ${EXTERNAL_DB_SOURCE_PATH}/unpd/unpd_final.csv.zip ${SRC_GATHERING_DB_PATH}/unpd/integrating.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/unpd/integrating.R
 
 wakankensaku: ${INTERIM_DB_PATH}/wakankensaku.tsv.gz
