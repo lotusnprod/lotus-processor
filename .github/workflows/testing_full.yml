@@ -2,45 +2,43 @@ name: Testing the full suite
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 3
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-    - name: Add conda to system path
-      run: |
-        # $CONDA is an environment variable pointing to the root of the miniconda directory
-        echo $CONDA/bin >> $GITHUB_PATH
-    - name: Install Python dependencies
-      run: |
-        conda env create --file environment.yml
-        conda install conda-build
-    - name: Install R dependencies
-      run: |
-        bash environment_non_conda.sh
-    - name: Run gathering
-      run: |
-        make gathering-full-quick
-    - name: Run processing
-      run: |
-        MODE=test make curating
-    - name: Run analyzing
-      run: |
-        MODE=test make analyzing
-    - name: Install visualizing Python (and some R) dependencies
-      run: |
-        conda env create --file environment_visualizing.yml
-    - name: Install visualizing R dependencies
-      run: |
-        bash environment_visualizing_non_conda.sh
-    - name: Run visualizing
-      run: |
-        MODE=test make visualizing
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install Python dependencies
+        run: |
+          $CONDA/bin/conda env create --file environment.yml
+          $CONDA/bin/conda install conda-build
+      - name: Install R dependencies
+        run: |
+          bash environment_non_conda.sh
+      - name: Run gathering
+        run: |
+          make gathering-full-quick
+      - name: Run processing
+        run: |
+          MODE=test make curating
+      - name: Run analyzing
+        run: |
+          MODE=test make analyzing
+      - name: Install visualizing Python (and some R) dependencies
+        run: |
+          $CONDA/bin/conda env create --file environment_visualizing.yml
+      - name: Install visualizing R dependencies
+        run: |
+          bash environment_visualizing_non_conda.sh
+      - name: Run visualizing
+        run: |
+          MODE=test make visualizing
