@@ -82,12 +82,15 @@ gathering-databases-full: gathering-databases-scrape gathering-databases-full-qu
 gathering-databases-full-hard: gathering-databases-semi gathering-databases-closed gathering-databases-full
 
 gathering-databases-accessible:
+	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-accessible
 
 gathering-databases-semi:
+	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-semi
 
 gathering-databases-closed:
+	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-closed
 
 gathering-databases-download: ${DATABASES_DOWNLOAD}
@@ -97,6 +100,7 @@ gathering-databases-download-modified: ${DATABASES_DOWNLOAD}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-download-modified
 
 gathering-databases-scrape: ${DATABASES_SCRAPE}
+	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
 
 gathering-translation-full: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm

@@ -17,7 +17,6 @@ source("r/tcm_cleaning.R")
 source("r/tcm_inverting.R")
 source("r/y_as_na.R")
 
-
 ## files
 ### dictionary from TMMC
 database <- databases$get("tmmc")
@@ -33,16 +32,17 @@ tcmNamesDic_1 <- read_excel(database$sourceFiles$tsv,
   distinct(biologicalsource, .keep_all = TRUE)
 
 ### dictionary from TCMID
-tcmNamesDic_2 <- read_delim(
-  file = pathDataExternalTranslationSourceTcmTcmid,
-) %>%
-  select(
-    latin = `Latin Name`,
-    common = `English Name`
-  ) %>%
-  filter(!is.na(common) &
-    !is.na(latin)) %>%
-  mutate(biologicalsource = latin)
+if (file.exists(pathDataExternalTranslationSourceTcmTcmid)) {
+  tcmNamesDic_2 <-
+    read_delim(file = pathDataExternalTranslationSourceTcmTcmid) %>%
+    select(
+      latin = `Latin Name`,
+      common = `English Name`
+    ) %>%
+    filter(!is.na(common) &
+      !is.na(latin)) %>%
+    mutate(biologicalsource = latin)
+}
 
 ## dictionary from Chinese Medicine Board of Australia
 tcmNamesDic_3 <-
@@ -182,23 +182,32 @@ tcmNamesDic_1$latin <- capitalize(string = tcmNamesDic_1$latin)
 tcmNamesDic_1$common <- tolower(x = tcmNamesDic_1$common)
 tcmNamesDic_1$common <- capitalize(string = tcmNamesDic_1$common)
 
-tcmNamesDic_2$latin <- tolower(x = tcmNamesDic_2$latin)
-tcmNamesDic_2$latin <- capitalize(string = tcmNamesDic_2$latin)
+if (file.exists(pathDataExternalTranslationSourceTcmTcmid)) {
+  tcmNamesDic_2$latin <- tolower(x = tcmNamesDic_2$latin)
+  tcmNamesDic_2$latin <- capitalize(string = tcmNamesDic_2$latin)
 
-tcmNamesDic_2$common <- tolower(x = tcmNamesDic_2$common)
-tcmNamesDic_2$common <- capitalize(string = tcmNamesDic_2$common)
+  tcmNamesDic_2$common <- tolower(x = tcmNamesDic_2$common)
+  tcmNamesDic_2$common <- capitalize(string = tcmNamesDic_2$common)
 
-# reordering tcm names (eg. not Radix gentianae but Gentianae radix)
-tcmNamesDic_2 <-
-  tcm_inverting(x = tcmNamesDic_2) %>%
-  mutate(latin = biologicalsource) %>%
-  select(
-    latin,
-    common,
-    biologicalsource
-  ) %>%
-  filter(!is.na(biologicalsource)) %>%
-  distinct(biologicalsource, .keep_all = TRUE)
+  # reordering tcm names (eg. not Radix gentianae but Gentianae radix)
+  tcmNamesDic_2 <-
+    tcm_inverting(x = tcmNamesDic_2) %>%
+    mutate(latin = biologicalsource) %>%
+    select(
+      latin,
+      common,
+      biologicalsource
+    ) %>%
+    filter(!is.na(biologicalsource)) %>%
+    distinct(biologicalsource, .keep_all = TRUE)
+
+  tcmNamesDic_2 <-
+    tcm_cleaning(x = tcmNamesDic_2) %>%
+    filter(!is.na(biologicalsource)) %>%
+    distinct(biologicalsource, .keep_all = TRUE) %>%
+    mutate(biologicalsource = latin) %>%
+    select(common, biologicalsource)
+}
 
 # cleaning most occurring biological parts from names (eg. radix, flos, folium, cortrex, ...)
 tcmNamesDic_1 <-
@@ -214,19 +223,14 @@ tcmNamesDic_1_2 <- tcmNamesDic_1 %>%
   select(common, biologicalsource) %>%
   filter(!is.na(common))
 
-tcmNamesDic_2 <-
-  tcm_cleaning(x = tcmNamesDic_2) %>%
-  filter(!is.na(biologicalsource)) %>%
-  distinct(biologicalsource, .keep_all = TRUE) %>%
-  mutate(biologicalsource = latin) %>%
-  select(common, biologicalsource)
-
 # joining
 tcmNamesDic <-
   rbind(
     tcmNamesDic_1_1,
     tcmNamesDic_1_2,
-    tcmNamesDic_2,
+    if (file.exists(pathDataExternalTranslationSourceTcmTcmid)) {
+      tcmNamesDic_2
+    },
     tcmNamesDic_3
   ) %>%
   distinct(common, .keep_all = TRUE) %>%
