@@ -5,6 +5,8 @@ channels:
   - defaults
   - tmap
 dependencies:
+  - bioconductor-ggtree
+  - bioconductor-ggtreeextra 
   - cmcrameri
   - pandas
   - python=3.*
