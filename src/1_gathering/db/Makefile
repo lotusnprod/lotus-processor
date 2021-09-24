@@ -1,19 +1,17 @@
-DATABASES = afrotryp alkamid biofacquim biophytmol carotenoiddb coconut cyanometdb datawarrior dianatdb drduke foodb inflamnat knapsack metabolights mibig mitishamba nanpdb napralert npass npatlas npcare npedia nubbe pamdb phenolexplorer phytohub procardb respect sancdb streptomedb swmd tmdb tmmc tppt unpd wakankensaku # cmaup etcm pharmdbk plantcyc symmap triforc
+DATABASES_ACCESSIBLE = afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt # cmaup etcm pharmdbk plantcyc symmap triforc
+
+DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat napralert nubbe unpd-integrate unpd
 
 DATABASES_CLOSED = antibase-convert antibase antimarin-convert antimarin dnp
 
-DATABASES_CONVERT = biofacquim-convert coconut-convert streptomedb-convert
-
-DATABASES_DOWNLOAD = afrotryp-download biofacquim-download coconut-download cyanometdb-download dianatdb-download drduke-download foodb-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download tmmc-download tppt-download unpd-download
+DATABASES_DOWNLOAD = afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
 
 DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified foodb-modified
 
-DATABASES_INTEGRATE = unpd-integrate
+DATABASES_SCRAPE = alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
 
-DATABASES_SCRAPE = alkamid-scrape biophytmol-scrape carotenoiddb-scrape knapsack-scrape mitishamba-scrape nanpdb-scrape npedia-scrape phytohub-scrape procardb-scrape sancdb-scrape swmd-scrape tmdb-scrape wakankensaku-scrape # nubbe-scrape not done
-
-.PHONY: ${DATABASES} ${DATABATES_CONVERT} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_INTEGRATE} ${DATABASES_SCRAPE}
-.PHONY: gathering-databases gathering-databases-scrape gathering-databases-integrate gathering-databases-convert
+.PHONY: ${DATABASES} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_SCRAPE}
+.PHONY: gathering-databases-accessible gathering-databases-scrape gathering-databases-convert
 .PRECIOUS: %.tsv %.zip %.json %.gz %.doc %.sdf
 
 all: ${DATABASES}
@@ -21,17 +19,15 @@ all: ${DATABASES}
 	@echo PWD: ${PWD}
 	@echo DB source path: ${EXTERNAL_DB_SOURCE_PATH}
 
-gathering-databases: ${DATABASES}
+gathering-databases-accessible: ${DATABASES_ACCESSIBLE}
+
+gathering-databases-semi: ${DATABASES_SEMI}
 
 gathering-databases-closed: ${DATABASES_CLOSED}
-
-gathering-databases-convert: ${DATABASES_CONVERT}
 
 gathering-databases-download: ${DATABASES_DOWNLOAD}
 
 gathering-databases-download-modified: ${DATABASES_DOWNLOAD_MODIFIED}
-
-gathering-databases-integrate: ${DATABASES_INTEGRATE}
 
 gathering-databases-scrape: ${DATABASES_SCRAPE}
 

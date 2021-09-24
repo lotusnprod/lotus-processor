@@ -5,7 +5,7 @@ include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
 include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash tests
-.PHONY: gathering-full gathering-databases-full gathering-databases-full-quick gathering-databases gathering-databases-convert gathering-databases-download gathering-databases-integrate gathering-databases-scrape 
+.PHONY: gathering-full gathering-full-quick gathering-full-hard gathering-databases-full gathering-databases-full-hard gathering-databases-full-quick gathering-databases gathering-databases-download gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
 .PHONY: gathering-custom-dictionaries gathering-translation-full gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
@@ -66,31 +66,35 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 tests:
 	cd src && Rscript ${TESTS_PATH}/tests.R 
 
+gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full gathering-taxonomy-full
+
 gathering-full: gathering-custom-dictionaries gathering-databases-full gathering-translation-full gathering-taxonomy-full
 
-gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full gathering-taxonomy-full
+gathering-full-hard: gathering-custom-dictionaries gathering-databases-full-hard gathering-translation-full gathering-taxonomy-full
 
 gathering-custom-dictionaries: 
 	cd src && bash ${SRC_GATHERING_PATH}/dictionary/gathering_custom_dictionaries.sh
 
-gathering-databases-full: gathering-databases-scrape gathering-databases-download-modified gathering-databases-convert gathering-databases-integrate gathering-databases
+gathering-databases-full-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-accessible
 
-gathering-databases-full-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-convert gathering-databases-integrate gathering-databases
+gathering-databases-full: gathering-databases-scrape gathering-databases-full-quick
 
-gathering-databases:
-	make -C ${SRC_GATHERING_DB_PATH} gathering-databases
+gathering-databases-full-hard: gathering-databases-semi gathering-databases-closed gathering-databases-full
 
-gathering-databases-convert: ${DATABASES_CONVERT}
-	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-convert
+gathering-databases-accessible:
+	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-accessible
+
+gathering-databases-semi:
+	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-semi
+
+gathering-databases-closed:
+	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-closed
 
 gathering-databases-download: ${DATABASES_DOWNLOAD}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-download
 
 gathering-databases-download-modified: ${DATABASES_DOWNLOAD}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-download-modified
-
-gathering-databases-integrate: ${DATABASES_INTEGRATE}
-	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-integrate
 
 gathering-databases-scrape: ${DATABASES_SCRAPE}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
