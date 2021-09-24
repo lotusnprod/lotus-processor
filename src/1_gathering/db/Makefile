@@ -6,7 +6,7 @@ DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-con
 
 DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download inflamnat-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download unpd-download
 
-DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified foodb-modified
+DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified
 
 DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
 
