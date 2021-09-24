@@ -25,6 +25,6 @@ gathering-pmcid: ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.zip
 ${EXTERNAL_TRANSLATION_SOURCE_PATH}/pubmed/PMC-ids.csv.zip: ${SRC_GATHERING_TRANSLATION_PATH}/get_pmcid.sh
 	cd ${PWD}/src && bash ${SRC_GATHERING_TRANSLATION_PATH}/get_pmcid.sh
 
-gathering-translation-tcmid: $(wildcard ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/tcmid/**)
-$(wildcard ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/tcmid/**):	
+gathering-translation-tcmid: # $(wildcard ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/tcmid/**)
+# $(wildcard ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/tcmid/**):	
 	cd ${PWD}/src && bash ${SRC_GATHERING_TRANSLATION_PATH}/get_tcmid.sh
