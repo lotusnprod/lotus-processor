@@ -46,7 +46,7 @@ id <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
@@ -63,7 +63,7 @@ smiles <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
@@ -80,7 +80,7 @@ organism <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
@@ -97,7 +97,7 @@ reference <- pbmclapply(
   mc.preschedule = TRUE,
   mc.set.seed = TRUE,
   mc.silent = TRUE,
-  mc.cores = (parallel::detectCores() - 2),
+  mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
   ignore.interactive = TRUE
