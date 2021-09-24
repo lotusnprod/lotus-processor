@@ -7,6 +7,7 @@ channels:
 dependencies:
   - bioconductor-ggtree
   - bioconductor-ggtreeextra 
+  - conda-build
   - cmcrameri
   - pandas
   - python=3.*
