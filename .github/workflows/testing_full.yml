@@ -21,10 +21,9 @@ jobs:
         echo $CONDA/bin >> $GITHUB_PATH
     - name: Install Python dependencies
       run: |
-        conda env update --file environment.yml --name base
+        conda env update --file environment.yml
     - name: Install R dependencies
       run: |
-        conda activate lotus_env
         bash environment_non_conda.sh
     - name: Run gathering
       run: |
@@ -37,7 +36,7 @@ jobs:
         MODE=test make analyzing
     - name: Install visualizing Python (and some R) dependencies
       run: |
-        conda env create --file environment_visualizing.yml --name base
+        conda env create --file environment_visualizing.yml
     - name: Install visualizing R dependencies
       run: |
         bash environment_visualizing_non_conda.sh
