@@ -1,6 +1,4 @@
-DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tppt# cmaup etcm pharmdbk plantcyc symmap triforc
-
-DATABASES_QUARANTEENED = tmmc
+DATABASES_ACCESSIBLE = creating-directory-db afrotryp biofacquim coconut cyanometdb datawarrior dianatdb drduke metabolights mibig npass npatlas npcare pamdb phenolexplorer respect streptomedb tmmc tppt# cmaup etcm pharmdbk plantcyc symmap triforc
 
 DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat-download inflamnat napralert nubbe unpd-download unpd-integrate unpd
 
