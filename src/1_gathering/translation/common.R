@@ -25,15 +25,15 @@ commonSciPhe <-
   filter(!is.na(vernacularName))
 
 ### common names from FooDB
-commonSciFoo <-
-  read_delim(
-    file = pathDataExternalTranslationSourceCommonFoodb
-  ) %>%
-  select(
-    vernacularName = name,
-    canonicalName = name_scientific
-  ) %>%
-  filter(!is.na(vernacularName))
+if (file.exists(pathDataExternalTranslationSourceCommonFoodb)) {
+  commonSciFoo <-
+    read_delim(file = pathDataExternalTranslationSourceCommonFoodb) %>%
+    select(
+      vernacularName = name,
+      canonicalName = name_scientific
+    ) %>%
+    filter(!is.na(vernacularName))
+}
 
 ### common names from DrDuke
 commonDuk <-
@@ -133,7 +133,11 @@ taxaVernacular <- taxaVernacular %>%
   filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
 
 # joining common names from PhenolExplorer and FooDB
-commonSciPheFoo <- full_join(commonSciPhe, commonSciFoo)
+if (file.exists(pathDataExternalTranslationSourceCommonFoodb)) {
+  commonSciPheFoo <- full_join(commonSciPhe, commonSciFoo)
+} else {
+  commonSciPheFoo <- commonSciPhe
+}
 
 # joining common names from DrDukes
 commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk) %>%
