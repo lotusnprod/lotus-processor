@@ -9,7 +9,7 @@ library(readr)
 library(readxl)
 library(splitstackshape)
 library(stringi)
-library(tidyverse)
+library(stringr)
 
 ## functions
 source("r/capitalize.R")
