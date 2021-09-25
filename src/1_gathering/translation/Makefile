@@ -1,9 +1,9 @@
 .PHONY: gathering-translation-common gathering-translation-common-quick gathering-translation-tcm gathering-gbif gathering-chinese-board gathering-pmcid gathering-translation-tcmid
 .PRECIOUS: %.csv %.tsv %.zip %.json %.gz %.XLSX %.txt %.xlsx
 
-gathering-translation-common: ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz
-${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Food_copy.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip ${SRC_GATHERING_TRANSLATION_PATH}/common.R ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/manualSubtraction.tsv
-	cd ${PWD}/src && Rscript ${SRC_GATHERING_TRANSLATION_PATH}/common.R
+# gathering-translation-common: ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz
+# ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv ${EXTERNAL_DB_SOURCE_PATH}/foodb/foodb_2020_04_07_csv/Food_copy.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip ${SRC_GATHERING_TRANSLATION_PATH}/common.R ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/manualSubtraction.tsv
+# 	cd ${PWD}/src && Rscript ${SRC_GATHERING_TRANSLATION_PATH}/common.R
 
 gathering-translation-common-quick: ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz
 ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/phenolexplorer/foods.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/COMMON_NAMES.csv ${EXTERNAL_DB_SOURCE_PATH}/drduke/Duke-Source-CSV/FNFTAX.csv ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip ${SRC_GATHERING_TRANSLATION_PATH}/common.R ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/manualSubtraction.tsv
