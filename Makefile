@@ -10,7 +10,7 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: gathering-databases gathering-databases-download gathering-databases-download-modified 
 .PHONY: gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
 .PHONY: gathering-custom-dictionaries gathering-pmcid gathering-gbif gathering-chinese-board
-.PHONY: gathering-translation-full gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm 
+.PHONY: gathering-translation-full gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm gathering-translation-tcm-quick
 .PHONY: gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire gathering-taxonomy-full
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
@@ -108,7 +108,7 @@ gathering-databases-scrape: ${DATABASES_SCRAPE}
 	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
 
-gathering-translation-full-quick: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm
+gathering-translation-full-quick: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm-quick
 
 gathering-translation-full: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm
 
@@ -120,6 +120,9 @@ gathering-translation-common-quick:
 
 gathering-translation-tcm:
 	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-tcm
+
+gathering-translation-tcm-quick:
+	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-tcm-quick
 
 gathering-translation-tcmid:
 	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-translation-tcmid
