@@ -1,5 +1,5 @@
 LOAD DATABASE
-FROM sqlite:////Users/rutza/GitLab/lotus/lotusProcessor/data/processed/lotus.sqlite
+FROM sqlite:////Users/rutza/Git/lotus-processor/data/processed/lotus.sqlite
 INTO postgresql://lotusdata@127.0.0.1:5432/lotus
 including only table names like 'curation_type', 'structure_cleaned', 'structure_information_type', 'structure_type', 'organism_database', 'reference_cleaned', 'reference_database', 'reference_type', 'database_type', 'organism_type'
 CAST
@@ -10,7 +10,7 @@ SET
 work_mem to '16MB', maintenance_work_mem to '512 MB';
 
 LOAD DATABASE
-FROM sqlite:////Users/rutza/GitLab/lotus/lotusProcessor/data/processed/lotus.sqlite
+FROM sqlite:////Users/rutza/Git/lotus-processor/data/processed/lotus.sqlite
 INTO postgresql://lotusdata@127.0.0.1:5432/lotus
 including only table names like 'structure_source', 'organism_cleaned', 'reference_information', 'reference_source', 'database_source', 'organism_source'
 CAST
@@ -22,7 +22,7 @@ work_mem to '16MB', maintenance_work_mem to '512 MB';
 
 
 LOAD DATABASE
-FROM sqlite:////Users/rutza/GitLab/lotus/lotusProcessor/data/processed/lotus.sqlite
+FROM sqlite:////Users/rutza/Git/lotus-processor/data/processed/lotus.sqlite
 INTO postgresql://lotusdata@127.0.0.1:5432/lotus
 including only table names like 'structure_information', 'organism_synonym', 'organism_information', 'data_source', 'data_cleaned'
 CAST
@@ -33,7 +33,7 @@ SET
 work_mem to '16MB', maintenance_work_mem to '512 MB';
 
 LOAD DATABASE
-FROM sqlite:////Users/rutza/GitLab/lotus/lotusProcessor/data/processed/lotus.sqlite
+FROM sqlite:////Users/rutza/Git/lotus-processor/data/processed/lotus.sqlite
 INTO postgresql://lotusdata@127.0.0.1:5432/lotus
 including only table names like 'structure_cleaned__structure_information', 'data_source__data_cleaned', 'ott_taxonomy'
 CAST

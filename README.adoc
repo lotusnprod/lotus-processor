@@ -48,7 +48,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 [source,console]
 ----
-git clone git@gitlab.com:lotus7/lotus-processor.git
+git clone git@github.com:lotusnprod/lotus-processor.git
 ----
 
 ==== Having the data in a different place
@@ -276,11 +276,11 @@ Please read xref:CONTRIBUTING.md[contributing] for details on our code of conduc
 
 == Authors
 
-- *Adriano Rutz* - _Initial work_ - https://gitlab.com/Adafede[Adafede]
-- *Pierre-Marie Allard* - _Investigator_ - https://gitlab.com/oolonek[oolonek]
-- *Jonathan Bisson* - _Hacker in Chief_ - https://gitlab.com/bjonnh[bjonnh]
+- *Adriano Rutz* - _Initial work_ - https://github.com/Adafede[Adafede]
+- *Pierre-Marie Allard* - _Investigator_ - https://github.com/oolonek[oolonek]
+- *Jonathan Bisson* - _Hacker in Chief_ - https://github.com/bjonnh[bjonnh]
 
-See also the list of https://gitlab.com/lotus7/lotus-processor/-/project_members[contributors] who participated in this project.
+See also the list of https://github.com/lotusnprod/lotus-processor/-/project_members[contributors] who participated in this project.
 
 == Acknowledgments
 
