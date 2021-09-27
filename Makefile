@@ -283,6 +283,6 @@ visualizing-upset:
 visualizing-distribution:
 	cd src && Rscript ${SRC_VISUALIZING_PATH}/plot_distribution.R
 
-lotus-quick: gathering-translation-full-quick gathering-taxonomy-full curating
+lotus-quick: gathering-custom-dictionaries gathering-translation-full-quick gathering-taxonomy-full curating
 
 lotus: gathering-full curating analysing visualizing
