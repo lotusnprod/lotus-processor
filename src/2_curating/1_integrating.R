@@ -69,11 +69,9 @@ if (mode == "full") {
       ) %>%
       mutate_all(as.character)
   }
-}
-
-if (mode != "test") {
   log_debug("... list of source databases")
-  dbList <- lapply(pathDataInterimDbDir,
+  dbList <- lapply(
+    pathDataInterimDbDir,
     read_delim,
     delim = "\t",
     col_types = cols(.default = "c")
@@ -130,19 +128,43 @@ if (mode != "test") {
     ) %>%
     mutate(referenceOriginal_pubmed = as.character(referenceOriginal_pubmed))
 
-  if (mode == "min") {
-    log_debug("sampling rows for min mode")
-    set.seed(
-      seed = 42,
-      kind = "Mersenne-Twister",
-      normal.kind = "Inversion"
-    )
-    dbTable <- dbTable %>%
-      sample_n(size = 1000)
-  }
-}
-
-if (mode == "test") {
+  log_debug("sampling rows for min mode")
+  "%ni%" <- Negate("%in%")
+  set.seed(
+    seed = 42,
+    kind = "Mersenne-Twister",
+    normal.kind = "Inversion"
+  )
+  dbTable_sampled <- dbTable %>%
+    filter(database %ni% forbidden_export) %>%
+    filter(is.na(referenceOriginal_external)) %>%
+    sample_n(size = 1000)
+  originalTable_sampled <- dbTable_sampled %>%
+    select(database, everything()) %>%
+    pivot_longer(
+      cols = 7:ncol(.),
+      names_to = c("drop", "referenceType"),
+      names_sep = "_",
+      values_to = "referenceValue",
+      values_drop_na = TRUE
+    ) %>%
+    pivot_longer(
+      cols = 4:6,
+      names_to = c("drop2", "structureType"),
+      names_sep = "_",
+      values_to = "structureValue",
+      values_drop_na = TRUE
+    ) %>%
+    pivot_longer(
+      cols = 2:3,
+      names_to = c("drop3", "organismType"),
+      names_sep = "_",
+      values_to = "organismValue",
+      values_drop_na = TRUE
+    ) %>%
+    select(-drop, -drop2, -drop3) %>%
+    distinct()
+} else {
   dbTable <- read_delim(file = pathTestsFile) %>%
     pivot_wider(
       names_from = "organismType",
@@ -782,6 +804,13 @@ write_delim(
   x = originalTable,
   delim = "\t",
   file = pathDataInterimTablesOriginalTable
+)
+
+log_debug(pathTestsFile)
+write_delim(
+  x = originalTable_sampled,
+  delim = "\t",
+  file = pathTestsFile
 )
 
 end <- Sys.time()

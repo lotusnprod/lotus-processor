@@ -23,15 +23,15 @@ jobs:
       - name: Install non-conda dependencies
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
-      - name: Run gathering
-        run: |
-          conda run -n lotus_env make gathering-full-quick
+#      - name: Run gathering
+#        run: |
+#          conda run -n lotus_env make gathering-full-quick
       - name: Run processing
         run: |
-          conda run -n lotus_env MODE=test make curating
+          conda run -n lotus_env MODE=min make curating
       - name: Run analyzing
         run: |
-          conda run -n lotus_env MODE=test make analyzing
+          conda run -n lotus_env MODE=min make analyzing
       - name: Install visualizing conda dependencies
         run: |
          $CONDA/bin/conda env create --file environment_visualizing.yml
@@ -40,4 +40,4 @@ jobs:
           conda run -n lotus_visualizing_env bash environment_visualizing_non_conda.sh
       - name: Run visualizing
         run: |
-          conda run -n lotus_visualizing_env MODE=test make visualizing
+          conda run -n lotus_visualizing_env MODE=min make visualizing
