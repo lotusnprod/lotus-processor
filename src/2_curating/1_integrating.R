@@ -811,12 +811,14 @@ write_delim(
   file = pathDataInterimTablesOriginalTable
 )
 
+if (mode == "full") {
 log_debug(pathTestsFile)
 write_delim(
   x = originalTable_sampled,
   delim = "\t",
   file = pathTestsFile
 )
+}
 
 end <- Sys.time()
 
