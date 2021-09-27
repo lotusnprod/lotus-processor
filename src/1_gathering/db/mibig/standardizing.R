@@ -49,7 +49,9 @@ id <- pbmclapply(
   mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )
 
 getsmiles <- function(x) {
@@ -66,7 +68,9 @@ smiles <- pbmclapply(
   mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )
 
 getorganism <- function(x) {
@@ -83,7 +87,9 @@ organism <- pbmclapply(
   mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )
 
 getreference <- function(x) {
@@ -100,7 +106,9 @@ reference <- pbmclapply(
   mc.cores = (parallel::detectCores() - 1),
   mc.cleanup = TRUE,
   mc.allow.recursive = TRUE,
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )
 
 data <- tibble(id, smiles, organism, reference) %>%

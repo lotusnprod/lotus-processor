@@ -109,7 +109,9 @@ df1 <- invisible(
     mc.cores = 10,
     mc.cleanup = FALSE,
     mc.allow.recursive = FALSE,
-    ignore.interactive = TRUE
+    ignore.interactive = TRUE,
+    mc.style = "txt",
+    mc.substyle = 1
   )
 )
 
@@ -127,7 +129,9 @@ df3 <- invisible(
     mc.cores = 10,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
-    ignore.interactive = TRUE
+    ignore.interactive = TRUE,
+    mc.style = "txt",
+    mc.substyle = 1
   )
 )
 

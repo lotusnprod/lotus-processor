@@ -20,7 +20,6 @@ source("r/name2inchi_cts.R")
 source("r/preparing_name.R")
 source("r/y_as_na.R")
 
-
 log_debug("loading chemical names lists")
 dataOriginal <-
   read_delim(
@@ -125,7 +124,9 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
+      ignore.interactive = TRUE,
+      mc.style = "txt",
+      mc.substyle = 1
     )
   )) %>%
   mutate(inchiNominal_cts = gsub(
@@ -184,7 +185,9 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
       mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
+      ignore.interactive = TRUE,
+      mc.style = "txt",
+      mc.substyle = 1
     )
   )) %>%
   mutate(inchiNominal_cts_2 = gsub(
@@ -247,7 +250,9 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.cores = 2,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
+      ignore.interactive = TRUE,
+      mc.style = "txt",
+      mc.substyle = 1
     )
   )) %>%
   mutate(inchiNominal_cactus = as.character(inchiNominal_cactus)) %>%
