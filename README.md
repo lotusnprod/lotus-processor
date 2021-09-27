@@ -1,10 +1,20 @@
 # The LOTUS Initiative
 
-As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki).
-
 *LOTUS*, actually, represents the most exhaustive resource of documented structure-organism pairs.
 Within the frame of current computational approaches in Natural Produts’s research and related fields, 
 these documented structure-organism pairs should allow a more complete understanding of organisms and their chemistry.
+
+As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki).
+
+## tl;dr
+
+If you are in a hurry and don't want to go through the whole documentation, what you need is:
+
+```
+conda env create --file environment.yml
+conda run -n lotus_env bash environment_non_conda.sh
+conda run -n lotus_env MODE=min make lotus-quick
+```
 
 ## Data Availability Statements
 
