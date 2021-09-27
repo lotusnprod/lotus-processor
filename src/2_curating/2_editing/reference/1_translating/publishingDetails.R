@@ -35,7 +35,10 @@ if (nrow(dataPublishingDetails) != 1) {
       mc.cores = (parallel::detectCores() - 1),
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE
+      ignore.interactive = TRUE,
+      mc.style = "txt",
+      mc.substyle = 1, mc.style = "txt",
+      mc.substyle = 1
     )
   )
 }
