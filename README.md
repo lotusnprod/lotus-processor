@@ -13,7 +13,7 @@ If you are in a hurry and don't want to go through the whole documentation, what
 ```
 conda env create --file environment.yml
 conda run -n lotus_env bash environment_non_conda.sh
-conda run -n lotus_env MODE=min make lotus-quick
+conda run -n lotus_env MODE=min make curating
 ```
 
 ## Data Availability Statements
