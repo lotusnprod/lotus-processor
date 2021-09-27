@@ -197,7 +197,9 @@ class_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 
@@ -212,7 +214,9 @@ class_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 
@@ -252,7 +256,9 @@ superclass_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 
@@ -267,7 +273,9 @@ superclass_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 
@@ -307,7 +315,9 @@ pathway_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 
@@ -322,7 +332,9 @@ pathway_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
   mc.cores = (parallel::detectCores() - 1),
-  ignore.interactive = TRUE
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) |>
   rbindlist()
 

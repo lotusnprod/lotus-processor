@@ -16,9 +16,9 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-processing
-.PHONY: curating-and-analysing analysing analysing-sampling analysing-validating analysing-metrics analysing-examples
+.PHONY: curating-and-analyzing analyzing analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
 .PHONY: processing-organism-interim
-.PHONY: curating-and-analysing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
+.PHONY: curating-and-analyzing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 .PHONY: get-gnfinder get-gnverifier get-opsin get-bins
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
@@ -35,7 +35,7 @@ help:
 	@echo ""
 	@echo "gathering-full: Run the 1_gathering scripts"
 	@echo "curating: Run the 2_curating scripts"
-	@echo "analysing: Run the 3_analysing scripts"
+	@echo "analyzing: Run the 3_analyzing scripts"
 	@echo "visualizing: Run the 4_visualizing scripts"
 
 docker-build:
@@ -147,9 +147,9 @@ gathering-taxonomy-npclassifier:
 gathering-taxonomy-otl:
 	make -C ${SRC_GATHERING_TAXONOMY_PATH} gathering-taxonomy-otl
 
-curating-and-analysing-and-visualizing: curating analysing visualizing
+curating-and-analyzing-and-visualizing: curating analyzing visualizing
 
-curating-and-analysing: curating analysing
+curating-and-analyzing: curating analyzing
 
 curating: get-bins curating-1-integrating curating-editing curating-3-integrating
 
@@ -252,18 +252,18 @@ curating-3-integrating: ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
 	cd src && Rscript ${SRC_CURATING_PATH}/3_integrating.R
 
-analysing: get-bins analysing-sampling analysing-validating analysing-metrics analysing-examples
+analyzing: get-bins analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
 
-analysing-sampling: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
+analyzing-sampling: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 	cd src && Rscript ${SRC_ANALYSING_PATH}/1_sampling.R
 
-analysing-validating: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
+analyzing-validating: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 	cd src && Rscript ${SRC_ANALYSING_PATH}/2_validating.R
 
-analysing-metrics: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
+analyzing-metrics: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 	cd src && Rscript ${SRC_ANALYSING_PATH}/3_metrics.R
 
-analysing-examples: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
+analyzing-examples: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz ${SRC_ANALYSING_PATH}/examples.R
 	cd src && Rscript ${SRC_ANALYSING_PATH}/examples.R
 
 visualizing: visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
@@ -285,4 +285,4 @@ visualizing-distribution:
 
 lotus-quick: gathering-custom-dictionaries gathering-translation-full-quick gathering-taxonomy-full curating
 
-lotus: gathering-full curating analysing visualizing
+lotus: gathering-full curating analyzing visualizing

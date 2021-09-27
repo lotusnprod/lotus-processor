@@ -1162,98 +1162,98 @@ pathDataInterimTablesCuratedTable <-
 pathDataInterimTablesCuratedTableMaximal <-
   file.path(pathDataInterimTablesCurated, "tableMaximal.tsv.gz")
 
-# analysed fields
-pathDataInterimTablesAnalysed <-
-  file.path(pathDataInterimTables, "4_analysed")
+# analyzed fields
+pathDataInterimTablesAnalyzed <-
+  file.path(pathDataInterimTables, "4_analyzed")
 
 ## triplets
 ### open
-pathDataInterimTablesAnalysedOpenDbTriplets <-
+pathDataInterimTablesAnalyzedOpenDbTriplets <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "openDbTriplets.tsv.gz"
   )
 
 ### inhouse
-pathDataInterimTablesAnalysedInhouseDbTriplets <-
+pathDataInterimTablesAnalyzedInhouseDbTriplets <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "inhouseDbTriplets.tsv.gz"
   )
 
 ### DNP
-pathDataInterimTablesAnalysedClosedDbTriplets <-
+pathDataInterimTablesAnalyzedClosedDbTriplets <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "closed.tsv.gz"
   )
 
 ## structures by kingdom
-pathDataInterimTablesAnalysedStructuresByKingdom <-
+pathDataInterimTablesAnalyzedStructuresByKingdom <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "structuresByKingdom.tsv"
   )
 
 ## unique structures by species
-pathDataInterimTablesAnalysedUniqueStructuresBySpecies <-
+pathDataInterimTablesAnalyzedUniqueStructuresBySpecies <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "uniqueStructuresBySpecies.tsv"
   )
 
 ## widespread structures
-pathDataInterimTablesAnalysedWidespreadStructures <-
+pathDataInterimTablesAnalyzedWidespreadStructures <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "widespreadStructures.tsv"
   )
 
 ## mismatched genera
-pathDataInterimTablesAnalysedMismatchedGenera <-
+pathDataInterimTablesAnalyzedMismatchedGenera <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "mismatchedGenera.tsv"
   )
 
 ## redundancy table
-pathDataInterimTablesAnalysedRedundancyTable <-
+pathDataInterimTablesAnalyzedRedundancyTable <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "redundancyTable.tsv"
   )
 
 ## sample ONPDB triplets (all)
-pathDataInterimTablesAnalysedSampleAllONPDB <-
+pathDataInterimTablesAnalyzedSampleAllONPDB <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "sampleAllONPDB.tsv"
   )
 
 ## sample ONPDB triplets (gold)
-pathDataInterimTablesAnalysedGold <-
+pathDataInterimTablesAnalyzedGold <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "gold.tsv.gz"
   )
 
-pathDataInterimTablesAnalysedPlatinum <-
+pathDataInterimTablesAnalyzedPlatinum <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "platinum.tsv.gz"
   )
 
 ## sample ONPDB triplets (gold)
-pathDataInterimTablesAnalysedSampleGoldONPDB <-
+pathDataInterimTablesAnalyzedSampleGoldONPDB <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "sampleGoldONPDB.tsv"
   )
 
 ## sample knapsack triplets
-pathDataInterimTablesAnalysedSampleKnapsack <-
+pathDataInterimTablesAnalyzedSampleKnapsack <-
   file.path(
-    pathDataInterimTablesAnalysed,
+    pathDataInterimTablesAnalyzed,
     "sampleKnapsack.tsv"
   )
 
