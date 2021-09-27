@@ -623,6 +623,11 @@ referenceTable_full <- originalTable %>%
 
 log_debug("ensuring directories exist ...")
 ifelse(
+  test = !dir.exists(pathDataInterim),
+  yes = dir.create(pathDataInterim),
+  no = paste(pathDataInterim, "exists")
+)
+ifelse(
   test = !dir.exists(pathDataInterimTables),
   yes = dir.create(pathDataInterimTables),
   no = paste(pathDataInterimTables, "exists")
