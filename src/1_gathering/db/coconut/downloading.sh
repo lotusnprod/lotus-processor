@@ -5,7 +5,7 @@ if [ ! -f ../data/external/dbSource/coconut/COCONUT_DB.sdf ]; then
 
 mkdir -p ../data/external/dbSource/coconut/
 
-wget "https://coconut.naturalproducts.net/download/sdf" -O ../data/external/dbSource/coconut/COCONUT_DB.sdf
+wget -nv "https://coconut.naturalproducts.net/download/sdf" -O ../data/external/dbSource/coconut/COCONUT_DB.sdf
 
 fi
 

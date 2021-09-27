@@ -5,7 +5,7 @@ if [ ! -d ../data/external/dbSource/mibig/ ]; then
 
 mkdir -p ../data/external/dbSource/mibig/
 
-wget "https://dl.secondarymetabolites.org/mibig/mibig_json_2.0.tar.gz" -O ../data/external/dbSource/mibig/mibig_json_2.0.tar.gz
+wget -nv "https://dl.secondarymetabolites.org/mibig/mibig_json_2.0.tar.gz" -O ../data/external/dbSource/mibig/mibig_json_2.0.tar.gz
 
 tar -xzf ../data/external/dbSource/mibig/mibig_json_2.0.tar.gz -C ../data/external/dbSource/mibig/
 
