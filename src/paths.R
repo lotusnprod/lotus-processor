@@ -1284,7 +1284,12 @@ pathGnverifierScript <- switch(mode,
 
 pathTests <- file.path("../tests")
 
-pathTestsFile <- file.path(pathTests, "tests.tsv")
+pathTestsFile <-
+  file.path(pathTests, switch(mode,
+    "full" = "tests_min.tsv",
+    "min" = "tests_min.tsv",
+    "test" = "tests.tsv"
+  ))
 
 pathTestsExpectations <- file.path(pathTests, "expectations")
 
