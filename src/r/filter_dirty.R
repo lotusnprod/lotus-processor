@@ -7,12 +7,19 @@
 #'
 #' @examples
 filter_dirty <- function(dataframe) {
-  dfDoi <- dataframe %>%
+  
+  dfWiki <- dataframe %>%
+    filter(database == "wikidata")
+  
+  dfRest <- dataframe %>%
+    filter(database != "wikidata")
+  
+  dfDoi <- dfRest %>%
     filter(referenceType == "doi") %>%
     filter(database != "coconut" |
       as.numeric(referenceCleaned_score_titleOrganism) == 1)
 
-  dfOriginal <- dataframe %>%
+  dfOriginal <- dfRest %>%
     filter(referenceType == "original") %>%
     filter(
       (
@@ -36,15 +43,15 @@ filter_dirty <- function(dataframe) {
         as.numeric(referenceCleaned_score_titleOrganism) == 1
     )
 
-  dfPublishingDetails <- dataframe %>%
+  dfPublishingDetails <- dfRest %>%
     filter(referenceType == "publishingDetails") %>%
     filter(as.numeric(referenceCleaned_score_titleOrganism) == 1)
 
-  dfPubmed <- dataframe %>%
+  dfPubmed <- dfRest %>%
     filter(referenceType == "pubmed") %>%
     filter(as.numeric(referenceCleaned_score_titleOrganism) == 1)
 
-  dfSplit <- dataframe %>%
+  dfSplit <- dfRest %>%
     filter(referenceType == "split") %>%
     filter(
       (
@@ -68,12 +75,13 @@ filter_dirty <- function(dataframe) {
         as.numeric(referenceCleaned_score_titleOrganism) == 1
     )
 
-  dfTitle <- dataframe %>%
+  dfTitle <- dfRest %>%
     filter(referenceType == "title") %>%
     filter(as.numeric(referenceCleaned_score_distance) <= 10)
 
   cleanDataframe <-
     bind_rows(
+      dfWiki,
       dfDoi,
       dfPubmed,
       dfTitle,
