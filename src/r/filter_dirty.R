@@ -7,13 +7,12 @@
 #'
 #' @examples
 filter_dirty <- function(dataframe) {
-  
   dfWiki <- dataframe %>%
     filter(database == "wikidata")
-  
+
   dfRest <- dataframe %>%
     filter(database != "wikidata")
-  
+
   dfDoi <- dfRest %>%
     filter(referenceType == "doi") %>%
     filter(database != "coconut" |
