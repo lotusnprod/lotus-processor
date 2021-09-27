@@ -138,7 +138,8 @@ fun main(args: Array<String>) {
     // Writing files
 
     logger.info("Writing Interim file $pathDataInterimTablesProcessedOrganismTranslatedInterim")
-    val outputWriter = TsvWriter(GZIPWrite(pathDataInterimTablesProcessedOrganismTranslatedInterim), TsvWriterSettings())
+    val outputWriter =
+        TsvWriter(GZIPWrite(pathDataInterimTablesProcessedOrganismTranslatedInterim), TsvWriterSettings())
     val headers = dataCleanedOriginalOrganism.firstOrNull()?.keys ?: setOf(
         "organismValue", "value_min", "dbQuality", "value_max",
         "rank", "ids", "taxonomy", "organismCleaned", "organismDbTaxo", "taxonId", "organismInterim"
