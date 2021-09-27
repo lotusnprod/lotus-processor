@@ -29,7 +29,7 @@ if (mode == "full") {
   log_debug("... open DB")
   openDb <-
     read_delim(
-      file = pathDataInterimTablesAnalysedPlatinum,
+      file = pathDataInterimTablesAnalyzedPlatinum,
       col_types = cols(.default = "c")
     ) %>%
     distinct(
@@ -43,7 +43,7 @@ if (mode == "full") {
 
   log_debug("... closed DBs")
   closedDb <-
-    read_delim(file = file.path(pathDataInterimTablesAnalysed, "closed.tsv.gz")) %>%
+    read_delim(file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")) %>%
     distinct(
       database,
       organismCleaned,
@@ -181,7 +181,7 @@ if (mode == "full") {
   )
   dev.off()
 
-  log_debug("adding metadata for more detailed analysis ...")
+  log_debug("adding metadata for more detailed analyzis ...")
   log_debug("... classyfire")
   inhouseDbMeta <- left_join(
     inhouseDb %>% distinct(

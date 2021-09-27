@@ -25,7 +25,7 @@ library(tidyr)
 
 log_debug("importing ...")
 platinum_pairs <-
-  fread(file = pathDataInterimTablesAnalysedPlatinum) %>%
+  fread(file = pathDataInterimTablesAnalyzedPlatinum) %>%
   filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
