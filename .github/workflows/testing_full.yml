@@ -23,12 +23,9 @@ jobs:
       - name: Install non-conda dependencies
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
-#      - name: Run gathering
-#        run: |
-#          conda run -n lotus_env make gathering-full-quick
       - name: Run processing
         run: |
-          conda run -n lotus_env MODE=min make curating
+          conda run -n lotus_env MODE=min make lotus-quick
       - name: Run analyzing
         run: |
           conda run -n lotus_env MODE=min make analyzing
