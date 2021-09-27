@@ -31,15 +31,15 @@ jobs:
       - name: Run processing
         run: |
           conda run -n lotus_env MODE=min make lotus-quick
-      - name: Run analyzing
-        run: |
-          conda run -n lotus_env MODE=min make analyzing
-      - name: Install visualizing conda dependencies
-        run: |
-         $CONDA/bin/conda env create -q --file environment_visualizing.yml
-      - name: Install visualizing non-conda dependencies
-        run: |
-          conda run -n lotus_visualizing_env bash environment_visualizing_non_conda.sh
-      - name: Run visualizing
-        run: |
-          conda run -n lotus_visualizing_env MODE=min make visualizing
+#      - name: Run analyzing
+#        run: |
+#          conda run -n lotus_env MODE=min make analyzing
+#      - name: Install visualizing conda dependencies
+#        run: |
+#         $CONDA/bin/conda env create -q --file environment_visualizing.yml
+#      - name: Install visualizing non-conda dependencies
+#        run: |
+#          conda run -n lotus_visualizing_env bash environment_visualizing_non_conda.sh
+#      - name: Run visualizing
+#        run: |
+#          conda run -n lotus_visualizing_env MODE=min make visualizing
