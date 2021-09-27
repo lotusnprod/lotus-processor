@@ -8,7 +8,7 @@ pluginManagement {
     }
 
 }
-rootProject.name = "onpdb_scripts"
+rootProject.name = "lotus_scripts"
 
 
 includeBuild("src/2_curating/2_editing/organism/2_translating_organism_kotlin")
