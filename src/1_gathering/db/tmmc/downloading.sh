@@ -5,7 +5,7 @@ if [ ! -f ../data/external/dbSource/tmmc/compound.xlsx ]; then
 
 mkdir -p ../data/external/dbSource/tmmc/
 
-wget "http://informatics.kiom.re.kr/compound/download/compound.xlsx" -O ../data/external/dbSource/tmmc/compound.xlsx
+wget -nv "http://informatics.kiom.re.kr/compound/download/compound.xlsx" -O ../data/external/dbSource/tmmc/compound.xlsx
 
 fi
 
