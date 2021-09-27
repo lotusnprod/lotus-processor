@@ -79,7 +79,7 @@ manuallyValidated <-
   mutate(curationTypeId_1 = 1)
 
 automaticallyValidated <-
-  read_delim(file = pathDataInterimTablesAnalysedPlatinum) %>%
+  read_delim(file = pathDataInterimTablesAnalyzedPlatinum) %>%
   select(colnames(inhouseDbMinimal)) %>%
   mutate(curationTypeId_2 = 2)
 

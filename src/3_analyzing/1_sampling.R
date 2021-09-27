@@ -293,17 +293,17 @@ if (exists("realMetaSample")) {
 
 log_debug("ensuring directories exist")
 ifelse(
-  test = !dir.exists(pathDataInterimTablesAnalysed),
-  yes = dir.create(pathDataInterimTablesAnalysed),
-  no = paste(pathDataInterimTablesAnalysed, "exists")
+  test = !dir.exists(pathDataInterimTablesAnalyzed),
+  yes = dir.create(pathDataInterimTablesAnalyzed),
+  no = paste(pathDataInterimTablesAnalyzed, "exists")
 )
 
 log_debug("exporting ...")
-log_debug(pathDataInterimTablesAnalysedSampleAllONPDB)
+log_debug(pathDataInterimTablesAnalyzedSampleAllONPDB)
 if (exists("sampleONPDB")) {
   write.table(
     x = sampleONPDB,
-    file = pathDataInterimTablesAnalysedSampleAllONPDB,
+    file = pathDataInterimTablesAnalyzedSampleAllONPDB,
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -311,11 +311,11 @@ if (exists("sampleONPDB")) {
   )
 }
 
-log_debug(pathDataInterimTablesAnalysedSampleKnapsack)
+log_debug(pathDataInterimTablesAnalyzedSampleKnapsack)
 if (exists("sampleKnapsack")) {
   write.table(
     x = sampleKnapsack,
-    file = pathDataInterimTablesAnalysedSampleKnapsack,
+    file = pathDataInterimTablesAnalyzedSampleKnapsack,
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -324,14 +324,14 @@ if (exists("sampleKnapsack")) {
 }
 
 log_debug(file.path(
-  pathDataInterimTablesAnalysed,
+  pathDataInterimTablesAnalyzed,
   "samplePublishingDetails.tsv"
 ))
 if (exists("sampleONPDB_publishingDetails")) {
   write.table(
     x = sampleONPDB_publishingDetails,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "samplePublishingDetails.tsv"
     ),
     row.names = FALSE,
@@ -342,7 +342,7 @@ if (exists("sampleONPDB_publishingDetails")) {
 }
 
 log_debug(file.path(
-  pathDataInterimTablesAnalysed,
+  pathDataInterimTablesAnalyzed,
   "additionalSet.tsv"
 ))
 
@@ -350,7 +350,7 @@ if (exists("additionalSet")) {
   write.table(
     x = additionalSet,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "additionalSet.tsv"
     ),
     row.names = FALSE,
@@ -364,7 +364,7 @@ if (exists("additionalSetBis")) {
   write.table(
     x = additionalSetBis,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "additionalSetBis.tsv"
     ),
     row.names = FALSE,
@@ -431,7 +431,7 @@ if (exists("additionalSetTer")) {
   write.table(
     x = additionalSetTer,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "additionalSetTer.tsv"
     ),
     row.names = FALSE,

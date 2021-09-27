@@ -22,7 +22,7 @@ library(tidyr)
 
 log_debug("importing ...")
 closed_pairs <-
-  fread(file = pathDataInterimTablesAnalysedClosedDbTriplets) %>%
+  fread(file = pathDataInterimTablesAnalyzedClosedDbTriplets) %>%
   filter(!is.na(structureCleanedInchikey) &
     !is.na(organismCleaned)) %>%
   distinct(

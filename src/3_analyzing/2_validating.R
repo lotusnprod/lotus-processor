@@ -963,29 +963,29 @@ if (mode == "full") {
   )
 }
 
-log_debug(pathDataInterimTablesAnalysedPlatinum)
+log_debug(pathDataInterimTablesAnalyzedPlatinum)
 write_delim(
   x = openDbClean3,
   delim = "\t",
-  file = pathDataInterimTablesAnalysedPlatinum
+  file = pathDataInterimTablesAnalyzedPlatinum
 )
 
-log_debug(file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"))
+log_debug(file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz"))
 write_delim(
   x = dnpDb3,
   delim = "\t",
-  file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz")
+  file = file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz")
 )
 
 log_debug(file.path(
-  pathDataInterimTablesAnalysed,
+  pathDataInterimTablesAnalyzed,
   "validationSet.tsv"
 ))
 if (exists("validationSet")) {
   write.table(
     x = validationSet,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "validationSet.tsv"
     ),
     row.names = FALSE,
@@ -996,7 +996,7 @@ if (exists("validationSet")) {
 }
 
 log_debug(file.path(
-  pathDataInterimTablesAnalysed,
+  pathDataInterimTablesAnalyzed,
   "validationSetBis.tsv"
 ))
 
@@ -1004,7 +1004,7 @@ if (exists("validationSet2")) {
   write.table(
     x = validationSet2,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "validationSetBis.tsv"
     ),
     row.names = FALSE,
@@ -1018,7 +1018,7 @@ if (exists("validationSet3")) {
   write.table(
     x = validationSet3,
     file = file.path(
-      pathDataInterimTablesAnalysed,
+      pathDataInterimTablesAnalyzed,
       "validationSetTer.tsv"
     ),
     row.names = FALSE,

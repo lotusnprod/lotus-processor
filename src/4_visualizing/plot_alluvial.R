@@ -18,7 +18,7 @@ prettyNames <-
 log_debug("... open DB")
 openDbMetaValidated <-
   read_delim(
-    file = pathDataInterimTablesAnalysedPlatinum,
+    file = pathDataInterimTablesAnalyzedPlatinum,
     col_types = cols(.default = "c")
   ) %>%
   filter(

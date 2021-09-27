@@ -60,7 +60,7 @@ inhouseDbMinimal <-
 log_debug("validated for export ...")
 openDb <-
   read_delim(
-    file = pathDataInterimTablesAnalysedPlatinum,
+    file = pathDataInterimTablesAnalyzedPlatinum,
     col_types = cols(.default = "c")
   )
 
@@ -86,7 +86,7 @@ wikidata_pairs <-
 log_debug("... dnp db")
 dnpDb <-
   read_delim(
-    file = file.path(pathDataInterimTablesAnalysed, "dnp.tsv.gz"),
+    file = file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz"),
     col_types = cols(.default = "c")
   ) %>%
   data.frame()
@@ -208,7 +208,7 @@ stats_2D <- pairsOutsideDnp_2D %>%
   arrange(desc(n))
 
 # unique
-log_debug("analysing unique organisms per db")
+log_debug("analyzing unique organisms per db")
 ## biological taxa
 ### open NP DB
 openDbOrganism <- openDb %>%
@@ -235,7 +235,7 @@ dnpDbOrganism <- dnpDb %>%
 log_debug(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms", sep = " "))
 
 ## structures
-log_debug("analysing unique structures (2D) per db")
+log_debug("analyzing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_3D <- openDb %>%
   filter(!is.na(structureCleanedInchikey)) %>%
@@ -253,7 +253,7 @@ log_debug(paste(
   sep = " "
 ))
 
-log_debug("analysing unique structures (2D) per db")
+log_debug("analyzing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_2D <- openDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
