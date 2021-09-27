@@ -24,7 +24,7 @@ jobs:
           python-version: 3.8
       - name: Install conda dependencies
         run: |
-          $CONDA/bin/conda env create --file environment.yml
+          $CONDA/bin/conda env create -q --file environment.yml
       - name: Install non-conda dependencies
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
@@ -36,7 +36,7 @@ jobs:
           conda run -n lotus_env MODE=min make analyzing
       - name: Install visualizing conda dependencies
         run: |
-         $CONDA/bin/conda env create --file environment_visualizing.yml
+         $CONDA/bin/conda env create -q --file environment_visualizing.yml
       - name: Install visualizing non-conda dependencies
         run: |
           conda run -n lotus_visualizing_env bash environment_visualizing_non_conda.sh
