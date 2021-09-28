@@ -24,7 +24,8 @@ dataPublishingDetails <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataPublishingDetails) != 1) {
+if (nrow(dataPublishingDetails) != 1 |
+  !is.na(dataPublishingDetails[, 1])) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit_publishingDetails,
@@ -40,21 +41,16 @@ if (nrow(dataPublishingDetails) != 1) {
       mc.substyle = 1
     )
   )
-}
 
-log_debug("This may take several minutes")
-
-log_debug("joining results with original list")
-if (nrow(dataPublishingDetails) != 1) {
+  log_debug("This may take several minutes")
+  log_debug("joining results with original list")
   dataPublishingDetails <-
     getAllReferences(
       data = dataPublishingDetails,
       referenceType = "publishingDetails",
       method = "osa"
     )
-}
-
-if (nrow(dataPublishingDetails) == 1) {
+} else {
   dataPublishingDetails <- data.frame() %>%
     mutate(
       referenceOriginal_publishingDetails = NA,
@@ -82,9 +78,7 @@ ifelse(
 )
 
 log_debug("exporting ...")
-log_debug(
-  pathDataInterimTablesTranslatedReferencePublishingDetails
-)
+log_debug(pathDataInterimTablesTranslatedReferencePublishingDetails)
 write_delim(
   x = dataPublishingDetails,
   delim = "\t",

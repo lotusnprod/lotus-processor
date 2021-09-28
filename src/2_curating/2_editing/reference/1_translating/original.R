@@ -63,18 +63,29 @@ ifelse(
 )
 
 for (i in num) {
-  inpath <- paste0(pathDataInterimTablesOriginalReferenceOriginalFolder, "/", str_pad(
-    string = i,
-    width = 6,
-    pad = "0"
-  ), ".tsv")
+  inpath <-
+    paste0(
+      pathDataInterimTablesOriginalReferenceOriginalFolder,
+      "/",
+      str_pad(
+        string = i,
+        width = 6,
+        pad = "0"
+      ),
+      ".tsv"
+    )
 
   outpath <-
-    paste0(pathDataInterimTablesTranslatedReferenceOriginalFolder, "/", str_pad(
-      string = i,
-      width = 6,
-      pad = "0"
-    ), ".tsv.gz")
+    paste0(
+      pathDataInterimTablesTranslatedReferenceOriginalFolder,
+      "/",
+      str_pad(
+        string = i,
+        width = 6,
+        pad = "0"
+      ),
+      ".tsv.gz"
+    )
 
   log_debug(paste("step", i / cut, "of", length))
 
@@ -86,7 +97,7 @@ for (i in num) {
   )
 
   log_debug("submitting to crossRef")
-  if (nrow(dataOriginal) != 1) {
+  if (nrow(dataOriginal) != 0) {
     reflist <- invisible(
       pbmclapply(
         FUN = getref_noLimit,
@@ -102,19 +113,14 @@ for (i in num) {
         mc.substyle = 1
       )
     )
-  }
-
-  log_debug("treating results, may take a while if full mode")
-  if (nrow(dataOriginal) != 0) {
+    log_debug("treating results, may take a while if full mode")
     dataOriginal2 <-
       getAllReferences(
         data = dataOriginal,
         referenceType = "original",
         method = "osa"
       )
-  }
-
-  if (nrow(dataOriginal) == 0) {
+  } else {
     dataOriginal2 <- data.frame() %>%
       mutate(
         referenceOriginal_original = NA,

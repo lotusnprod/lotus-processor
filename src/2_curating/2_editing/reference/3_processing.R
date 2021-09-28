@@ -22,7 +22,7 @@ log_debug("loading crossref translations file, this may take a while")
 dataTranslated <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceFile,
-    delim = "t",
+    delim = "\t",
     col_types = cols(.default = "c")
   )
 

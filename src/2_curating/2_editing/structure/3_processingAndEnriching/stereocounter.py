@@ -48,7 +48,7 @@ df = pd.read_csv(
     myZip,
     sep='\t')
 
-if len(df) == 1:
+if (len(df) == 1) and (df.empty):
     df['structureTranslated'] = 'InChI=1S/Pu'
     print('your dataframe is empty, plutonium loaded')
 else:

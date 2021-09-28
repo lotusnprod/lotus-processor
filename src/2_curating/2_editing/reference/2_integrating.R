@@ -356,14 +356,14 @@ log_debug("exporting, this may take a while if running full mode")
 log_debug(pathDataInterimTablesTranslatedReferenceFile)
 write_delim(
   x = dataTranslated,
-  delim = "t",
+  delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceFile
 )
 
 log_debug(pathDataInterimDictionariesReferenceDictionary)
 write_delim(
   x = dataCrossref,
-  delim = "t",
+  delim = "\t",
   file = pathDataInterimDictionariesReferenceDictionary
 )
 

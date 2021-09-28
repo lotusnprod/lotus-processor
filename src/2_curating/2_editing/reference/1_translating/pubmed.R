@@ -25,7 +25,7 @@ dataPubmed <-
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
 log_debug("submitting to entrez")
-if (nrow(dataPubmed) != 1) {
+if (nrow(dataPubmed) != 1 | !is.na(dataPubmed[, 1])) {
   reflistPubmed <- invisible(
     pbmclapply(
       FUN = getrefPubmed,
@@ -41,60 +41,44 @@ if (nrow(dataPubmed) != 1) {
       mc.substyle = 1
     )
   )
-}
 
-if (nrow(dataPubmed) != 1) {
   if (is.null(reflistPubmed$value)) {
     reflistPubmedBound <- bind_rows(reflistPubmed)
   } else {
     reflistPubmedBound <- bind_rows(reflistPubmed$value)
   }
-}
 
-log_debug("joining results with original list")
-if (nrow(dataPubmed) != 1) {
+  log_debug("joining results with original list")
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedDoi"] <-
       reflistPubmedBound[i, "translatedDoi"]
   }
-}
 
-if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedJournal"] <-
       reflistPubmedBound[i, "translatedJournal"]
   }
-}
 
-if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedTitle"] <-
       reflistPubmedBound[i, "translatedTitle"]
   }
-}
 
-if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedAuthor"] <-
       reflistPubmedBound[i, "translatedAuthor"]
   }
-}
 
-if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslatedDate"] <-
       reflistPubmedBound[i, "translatedDate"]
   }
-}
 
-if (nrow(dataPubmed) != 1) {
   for (i in seq_len(nrow(reflistPubmedBound))) {
     dataPubmed[i, "referenceTranslationScoreCrossref"] <- 1
     dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
   }
-}
-
-if (nrow(dataPubmed) == 1) {
+} else {
   dataPubmed <- data.frame() %>%
     mutate(
       referenceOriginal_pubmed = NA,

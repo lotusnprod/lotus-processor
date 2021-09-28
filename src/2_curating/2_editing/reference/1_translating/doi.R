@@ -23,7 +23,7 @@ dataDoi <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataDoi) != 1) {
+if (nrow(dataDoi) != 1 | !is.na(dataDoi[, 1])) {
   reflistDoi <-
     pbmclapply(
       FUN = getrefDoi,
@@ -38,10 +38,8 @@ if (nrow(dataDoi) != 1) {
       mc.style = "txt",
       mc.substyle = 1
     )
-}
 
-log_debug("joining results with original list")
-if (nrow(dataDoi) != 1) {
+  log_debug("joining results with original list")
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDoi"] <-
       as.character(ifelse(
@@ -54,9 +52,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedJournal"] <-
       as.character(ifelse(
@@ -69,9 +65,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedTitle"] <-
       as.character(ifelse(
@@ -84,9 +78,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedDate"] <-
       as.character(ifelse(
@@ -99,9 +91,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslatedAuthor"] <-
       as.character(ifelse(
@@ -114,9 +104,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreCrossref"] <-
       as.character(ifelse(
@@ -129,9 +117,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
 
-if (nrow(dataDoi) != 1) {
   for (i in seq_along(reflistDoi)) {
     dataDoi[i, "referenceTranslationScoreDistance"] <-
       as.character(ifelse(
@@ -144,9 +130,7 @@ if (nrow(dataDoi) != 1) {
         no = NA
       )[1])
   }
-}
-
-if (nrow(dataDoi) == 1) {
+} else {
   dataDoi <- data.frame() %>%
     mutate(
       referenceOriginal_doi = NA,
