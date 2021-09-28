@@ -15,7 +15,7 @@ password <- Sys.getenv("LOTUS_DB_PWD")
 ###############################################################################
 source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "manual")
 
 if (exists("mode_test")) {
   mode <- "test"
@@ -229,6 +229,12 @@ databases$add(
   name = "knapsack",
   sourceFiles = list(tsv = "knapsackScraped.tsv.gz"),
   interimFile = "knapsack.tsv.gz"
+)
+
+databases$add(
+  name = "manual",
+  sourceFiles = NA,
+  interimFile = "../manual/manual.tsv.gz"
 )
 
 databases$add(
@@ -562,23 +568,18 @@ pathDataExternalTranslationSourceTcmCmba <-
   )
 
 #### dir
-pathDataInterimDbDir <-
-  Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
+pathDataInterimDbDir <- switch(mode,
+  "full" =
+    Sys.glob(file.path(paste0(
+      pathDataInterimDb, "/*.tsv.gz"
+    ))),
+  "manual" = file.path(pathDataInterim, "manual", "manual.tsv.gz")
+)
 
 #### dictionaries
-pathDataInterimDictionaries <- switch(mode,
-  "full" = file.path(
-    pathDataInterim,
-    "dictionaries"
-  ),
-  "min" = file.path(
-    pathDataInterim,
-    "dictionaries_min"
-  ),
-  "test" = file.path(
-    pathDataInterim,
-    "dictionaries_test"
-  )
+pathDataInterimDictionaries <- file.path(
+  pathDataInterim,
+  paste("dictionaries", mode, sep = "_")
 )
 
 pathDataInterimDictionariesFix <-
@@ -820,51 +821,21 @@ pathDataInterimDictionariesTcmNames <-
   )
 
 #### tables
-pathDataInterimTables <- switch(mode,
-  "full" = file.path(
-    pathDataInterim,
-    "tables"
-  ),
-  "min" = file.path(
-    pathDataInterim,
-    "tables_min"
-  ),
-  "test" = file.path(
-    pathDataInterim,
-    "tables_test"
-  )
+pathDataInterimTables <- file.path(
+  pathDataInterim,
+  paste("tables", mode, sep = "_")
 )
 
 #### tables
-pathDataProcessedTables <- switch(mode,
-  "full" = file.path(
-    pathDataProcessed,
-    "tables"
-  ),
-  "min" = file.path(
-    pathDataProcessed,
-    "tables_min"
-  ),
-  "test" = file.path(
-    pathDataProcessed,
-    "tables_test"
-  )
+pathDataProcessedTables <- file.path(
+  pathDataProcessed,
+  paste("tables", mode, sep = "_")
 )
 
 #### figures
-pathDataProcessedFigures <- switch(mode,
-  "full" = file.path(
-    pathDataProcessed,
-    "figures"
-  ),
-  "min" = file.path(
-    pathDataProcessed,
-    "figures_min"
-  ),
-  "test" = file.path(
-    pathDataProcessed,
-    "figures_test"
-  )
+pathDataProcessedFigures <- file.path(
+  pathDataProcessed,
+  paste("figures", mode, sep = "_")
 )
 
 ##### html
@@ -1260,24 +1231,28 @@ pathDataInterimTablesAnalyzedSampleKnapsack <-
 ## dirty for the moment
 pathOriginalGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
+  "manual" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_manual.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
 )
 
 pathTranslatedGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh",
+  "manual" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_manual.sh",
   "min" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 )
 
 pathOriginalGnverifierScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_full.sh",
+  "manual" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_manual.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_test.sh"
 )
 
 pathGnverifierScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_full.sh",
+  "manual" = "2_curating/2_editing/organism/shell/gnverifierLauncher_manual.sh",
   "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_test.sh"
 )

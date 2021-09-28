@@ -24,7 +24,7 @@ dataSplit <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataSplit) != 1) {
+if (nrow(dataSplit) != 1 | !is.na(dataSplit[, 1])) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit,
@@ -40,19 +40,14 @@ if (nrow(dataSplit) != 1) {
       mc.substyle = 1
     )
   )
-}
 
-log_debug("This may take several minutes")
-
-if (nrow(dataSplit) != 1) {
+  log_debug("This may take several minutes")
   dataSplit <- getAllReferences(
     data = dataSplit,
     referenceType = "split",
     method = "osa"
   )
-}
-
-if (nrow(dataSplit) == 1) {
+} else {
   dataSplit <- data.frame() %>%
     mutate(
       referenceOriginal_split = NA,

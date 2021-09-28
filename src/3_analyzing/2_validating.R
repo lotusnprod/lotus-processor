@@ -377,6 +377,7 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
     .keep_all = TRUE
   )
 
+if (mode == "full") {
 log_debug("filtering results ...")
 log_debug("... validated set")
 realSampleFiltered <-
@@ -581,6 +582,7 @@ f2Table_reworked <- f2Table %>%
     recall,
     `F0.5 score`,
   )
+}
 
 log_debug("applying the filtering criteria to the whole DB, this may take a while")
 openDb <- inhouseDbFull %>%
@@ -639,8 +641,8 @@ openDb <- inhouseDbFull %>%
     referenceCleanedTitle
   )
 
-log_debug("outputting dnp pairs")
-dnpDb <- inhouseDbFull %>%
+log_debug("outputting closed pairs")
+closedDb <- inhouseDbFull %>%
   filter(database %in% forbidden_export) %>%
   distinct(
     database,
@@ -710,7 +712,7 @@ manuallyRemovedEntries <- realMetaSample %>%
 
 openDbClean <- anti_join(openDb, manuallyRemovedEntries)
 
-if (mode != "test") {
+if (mode != "test" & mode != "manual") {
   set.seed(
     seed = 42,
     kind = "Mersenne-Twister",
@@ -732,7 +734,7 @@ validationSetFilled_1 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
-if (mode != "test") {
+if (mode != "test" & mode != "manual") {
   set.seed(
     seed = 42,
     kind = "Mersenne-Twister",
@@ -755,8 +757,8 @@ validationSetFilled_2 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
-if (mode != "test") {
-  set.seed(
+if (mode == "test") {
+    set.seed(
     seed = 42,
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
@@ -883,8 +885,10 @@ finalStats_reworked <- finalStats %>%
     )
   )
 
+if (mode == "full") {
 finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
   mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
+}
 
 log_debug("outputing correct entries from manually validated set")
 manuallyValidatedSet2 <- realValidationSetFilled %>%
@@ -911,17 +915,21 @@ openDbClean3 <- openDbClean2 %>%
     x = structureCleanedSmiles
   ))
 
-dnpDb3 <- dnpDb %>%
+closedDb3 <- closedDb %>%
   filter(!grepl(
     pattern = "\\.",
     x = structureCleanedSmiles
   ))
 
 log_debug("exporting")
+ifelse(
+  test = !dir.exists(pathDataInterimTablesAnalyzed),
+  yes = dir.create(pathDataInterimTablesAnalyzed),
+  no = paste(pathDataInterimTablesAnalyzed, "exists")
+)
 if (mode == "full") {
   log_debug("../data/validation/manuallyValidated.tsv.gz")
-}
-if (mode == "full") {
+
   write.table(
     x = manuallyValidatedSet3,
     file = gzfile(
@@ -934,12 +942,9 @@ if (mode == "full") {
     sep = "\t",
     fileEncoding = "UTF-8"
   )
-}
 
-if (mode == "full") {
   log_debug("../data/validation/manuallyRemoved.tsv.gz")
-}
-if (mode == "full") {
+
   write.table(
     x = manuallyRemovedEntries3,
     file = gzfile(
@@ -970,11 +975,11 @@ write_delim(
   file = pathDataInterimTablesAnalyzedPlatinum
 )
 
-log_debug(file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz"))
+log_debug(file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"))
 write_delim(
-  x = dnpDb3,
+  x = closedDb3,
   delim = "\t",
-  file = file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz")
+  file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")
 )
 
 log_debug(file.path(

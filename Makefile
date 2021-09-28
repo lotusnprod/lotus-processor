@@ -5,12 +5,12 @@ include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
 include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash tests
-.PHONY: gathering-full gathering-full-quick gathering-full-hard 
-.PHONY: gathering-databases-full gathering-databases-full-hard gathering-databases-full-quick 
+.PHONY: gathering-full gathering-quick gathering-full-hard 
+.PHONY: gathering-databases-full gathering-databases-full-hard gathering-databases-quick 
 .PHONY: gathering-databases gathering-databases-download gathering-databases-download-modified 
 .PHONY: gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
-.PHONY: gathering-custom-dictionaries gathering-pmcid gathering-gbif gathering-chinese-board
-.PHONY: gathering-translation-full gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-full-quick gathering-translation-tcm gathering-translation-tcm-quick
+.PHONY: gathering-custom-dictionaries gathering-pmcid gathering-gbif gathering-chinese-board gathering-validation
+.PHONY: gathering-translation-full gathering-translation-tcmid gathering-translation-common gathering-translation-common-quick gathering-translation-quick gathering-translation-tcm gathering-translation-tcm-quick
 .PHONY: gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire gathering-taxonomy-full
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
@@ -20,6 +20,7 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: processing-organism-interim
 .PHONY: curating-and-analyzing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 .PHONY: get-gnfinder get-gnverifier get-opsin get-bins
+.PHONY: manual-entry lotus lotus-quick
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -71,7 +72,7 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 tests:
 	cd src && Rscript ${TESTS_PATH}/tests.R 
 
-gathering-full-quick: gathering-custom-dictionaries gathering-databases-full-quick gathering-translation-full-quick gathering-taxonomy-full
+gathering-quick: gathering-custom-dictionaries gathering-databases-quick gathering-translation-quick gathering-taxonomy-full
 
 gathering-full: gathering-custom-dictionaries gathering-databases-full gathering-translation-full gathering-taxonomy-full
 
@@ -80,9 +81,12 @@ gathering-full-hard: gathering-custom-dictionaries gathering-databases-full-hard
 gathering-custom-dictionaries: 
 	cd src && bash ${SRC_GATHERING_PATH}/dictionary/gathering_custom_dictionaries.sh
 
-gathering-databases-full-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-accessible
+gathering-validation: 
+	cd src && bash ${SRC_GATHERING_VALIDATION_PATH}/gathering_validation.sh
 
-gathering-databases-full: gathering-databases-scrape gathering-databases-full-quick
+gathering-databases-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-accessible
+
+gathering-databases-full: gathering-databases-scrape gathering-databases-quick
 
 gathering-databases-full-hard: gathering-databases-semi gathering-databases-closed gathering-databases-full
 
@@ -108,7 +112,7 @@ gathering-databases-scrape: ${DATABASES_SCRAPE}
 	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
 
-gathering-translation-full-quick: phenolexplorer-download gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm-quick
+gathering-translation-quick: phenolexplorer-download gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm-quick
 
 gathering-translation-full: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm
 
@@ -137,6 +141,8 @@ gathering-pmcid:
 	make -C ${SRC_GATHERING_TRANSLATION_PATH} gathering-pmcid
 
 gathering-taxonomy-full: gathering-taxonomy-npclassifier gathering-taxonomy-otl gathering-taxonomy-classyfire
+
+gathering-taxonomy-quick: gathering-taxonomy-npclassifier gathering-taxonomy-classyfire
 
 gathering-taxonomy-classyfire:
 	make -C ${SRC_GATHERING_TAXONOMY_PATH} gathering-taxonomy-classyfire
@@ -201,7 +207,7 @@ processing-organism-interim:
 curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)
 	./gradlew castShadows
-${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/deny.tsv ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/manualSubtraction.tsv ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/tcm/names.tsv.gz ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/deny.tsv ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/manualSubtraction.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/2_translating_organism_kotlin/build/libs/shadow.jar #  ${EXTERNAL_DICTIONARY_SOURCE_PATH}/common/names.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/tcm/names.tsv.gz 
 	@java -jar ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${MODE}
 
 curating-editing-organism-processing-translated: curating-editing-organism-translating ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz
@@ -252,7 +258,9 @@ curating-3-integrating: ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
 	cd src && Rscript ${SRC_CURATING_PATH}/3_integrating.R
 
-analyzing: get-bins analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
+analyzing: gathering-validation	analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
+
+analyzing-quick: gathering-validation analyzing-validating
 
 analyzing-sampling: # ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
 	cd src && Rscript ${SRC_ANALYSING_PATH}/1_sampling.R
@@ -283,6 +291,8 @@ visualizing-upset:
 visualizing-distribution:
 	cd src && Rscript ${SRC_VISUALIZING_PATH}/plot_distribution.R
 
-lotus-quick: gathering-custom-dictionaries gathering-translation-full-quick gathering-taxonomy-full curating
+lotus-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating
 
 lotus: gathering-full curating analyzing visualizing
+
+manual-entry: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating analyzing-quick

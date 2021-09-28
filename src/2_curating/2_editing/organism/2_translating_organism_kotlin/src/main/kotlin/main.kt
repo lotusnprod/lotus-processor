@@ -10,10 +10,7 @@ const val cut = 10_000
 
 // Show usage and exit
 fun usageExit() {
-    println("Usage: java -jar <scriptname> Data_path full/min/test")
-    println("If the last argument is test, it will run on tables_test")
-    println("If the last argument is min, it will run on tables_min")
-    println("If the last argument is full, it will run on tables")
+    println("Usage: java -jar <scriptname> Data_path full/manual/min/test")
     exitProcess(1)
 }
 
@@ -21,9 +18,10 @@ fun usageExit() {
 fun main(args: Array<String>) {
     val logger = MyDirtyLogger() //LoggerFactory.getLogger("main")
     if (args.size < 2) usageExit()
-    if (args[1] !in setOf("test", "min", "full")) usageExit()
+    if (args[1] !in setOf("test", "min", "full", "manual")) usageExit()
 
     val pathData = args[0]
+    val mode = args[1]
 
     val pathDataInterim = "$pathData/interim"
     val pathDataExternal = "$pathData/external"
@@ -33,12 +31,7 @@ fun main(args: Array<String>) {
     val pathDataInterimDictionariesCommonNames = "$pathDataInterimDictionaries/common/names.tsv.gz"
     val pathDataInterimDictionariesCommonDenyDic = "$pathDataInterimDictionaries/common/deny.tsv"
 
-    val pathDataInterimTables = when (args[1]) {
-        "full" -> "$pathData/interim/tables"
-        "min" -> "$pathData/interim/tables_min"
-        "test" -> "$pathData/interim/tables_test"
-        else -> throw Exception("This shouldn't have happened, we only know these types of tables")
-    }
+    val pathDataInterimTables = "$pathData/interim/tables_$mode"
 
     val pathDataInterimTablesProcessed = "$pathDataInterimTables/2_processed"
     val pathDataInterimTablesProcessedOrganism = "$pathDataInterimTablesProcessed/organism"

@@ -97,7 +97,7 @@ for (i in num) {
   )
 
   log_debug("submitting to crossRef")
-  if (nrow(dataTitle) != 1) {
+  if (nrow(dataTitle) != 0) {
     reflist <- invisible(
       pbmclapply(
         FUN = getref_noLimit,
@@ -113,23 +113,14 @@ for (i in num) {
         mc.substyle = 1
       )
     )
-  }
-
-  if (nrow(dataTitle) == 1) {
-    reflist <- list(NA)
-  }
-
-  log_debug("treating results, may take a while if full mode")
-  if (nrow(dataTitle) != 0) {
+    log_debug("treating results, may take a while if full mode")
     dataTitle2 <-
       getAllReferences(
         data = dataTitle,
         referenceType = "title",
         method = "osa"
       )
-  }
-
-  if (nrow(dataTitle) == 0) {
+  } else {
     dataTitle2 <- data.frame() %>%
       mutate(
         referenceOriginal_title = NA,

@@ -13,6 +13,7 @@ source("paths.R")
 log_debug("... functions")
 source("r/split_data_table_quote.R")
 source("r/sqlFromFile.R")
+source("r/standardizing_original.R")
 
 log_debug("loading ...")
 log_debug("... libraries")
@@ -25,7 +26,7 @@ library(tidyr)
 log_debug("... files ...")
 log_debug("... DBs")
 
-if (mode == "full") {
+if (mode == "full" | mode == "manual") {
   if (ssot_access == TRUE) {
     library(RPostgreSQL)
 
@@ -81,7 +82,11 @@ if (mode == "full") {
   if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
     log_debug("... structures")
     structureDictionary <-
-      read_delim(file = pathDataInterimDictionariesStructureDictionary)
+      read_delim(
+        file = pathDataInterimDictionariesStructureDictionary,
+        delim = "\t",
+        col_types = cols(.default = "c")
+      )
   }
 
   if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
@@ -89,25 +94,42 @@ if (mode == "full") {
     structureAntiDictionary <-
       read_delim(
         file = pathDataInterimDictionariesStructureAntiDictionary,
-        delim = "\t"
+        delim = "\t",
+        col_types = cols(.default = "c")
       )
   }
 
   if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     log_debug("... organisms")
     organismDictionary <-
-      read_delim(file = pathDataInterimDictionariesOrganismDictionary)
+      read_delim(
+        file = pathDataInterimDictionariesOrganismDictionary,
+        delim = "\t",
+        col_types = cols(.default = "c")
+      )
   }
 
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     log_debug("... references")
     referenceDictionary <-
-      read_delim(file = pathDataInterimDictionariesReferenceDictionary) %>%
+      read_delim(
+        file = pathDataInterimDictionariesReferenceDictionary,
+        delim = "\t",
+        col_types = cols(.default = "c")
+      ) %>%
       data.table()
   }
 
   log_debug("renaming and selecting columns")
   dbTable <- rbindlist(l = dbList, fill = TRUE) %>%
+    data.frame()
+
+  dbTable[setdiff(
+    x = accepted_fields,
+    y = names(dbTable)
+  )] <- NA
+
+  dbTable <- dbTable %>%
     select(
       database,
       organismOriginal_clean = organism_clean,
@@ -128,49 +150,51 @@ if (mode == "full") {
     ) %>%
     mutate(referenceOriginal_pubmed = as.character(referenceOriginal_pubmed))
 
-  log_debug("sampling rows for min mode")
-  "%ni%" <- Negate("%in%")
-  set.seed(
-    seed = 3.14,
-    kind = "Mersenne-Twister",
-    normal.kind = "Inversion"
-  )
-  dbTable_sampled <- dbTable %>%
-    filter(database %ni% forbidden_export) %>%
-    filter(is.na(referenceOriginal_external)) %>%
-    filter(!(
-      !is.na(structureOriginal_inchi) &
-        !is.na(structureOriginal_nominal)
-    ) | !(
-      !is.na(structureOriginal_smiles) &
-        !is.na(structureOriginal_nominal)
-    )) %>% # to avoid too many names (long for CI)
-    sample_n(size = 500)
-  originalTable_sampled <- dbTable_sampled %>%
-    select(database, everything()) %>%
-    pivot_longer(
-      cols = 7:ncol(.),
-      names_to = c("drop", "referenceType"),
-      names_sep = "_",
-      values_to = "referenceValue",
-      values_drop_na = TRUE
-    ) %>%
-    pivot_longer(
-      cols = 4:6,
-      names_to = c("drop2", "structureType"),
-      names_sep = "_",
-      values_to = "structureValue",
-      values_drop_na = TRUE
-    ) %>%
-    pivot_longer(
-      cols = 2:3,
-      names_to = c("drop3", "organismType"),
-      names_sep = "_",
-      values_to = "organismValue",
-      values_drop_na = TRUE
-    ) %>%
-    select(-drop, -drop2, -drop3) %>%
-    distinct()
+  if (mode == "full") {
+    log_debug("sampling rows for min mode")
+    "%ni%" <- Negate("%in%")
+    set.seed(
+      seed = 3.14,
+      kind = "Mersenne-Twister",
+      normal.kind = "Inversion"
+    )
+    dbTable_sampled <- dbTable %>%
+      filter(database %ni% forbidden_export) %>%
+      filter(is.na(referenceOriginal_external)) %>%
+      filter(!(
+        !is.na(structureOriginal_inchi) &
+          !is.na(structureOriginal_nominal)
+      ) | !(
+        !is.na(structureOriginal_smiles) &
+          !is.na(structureOriginal_nominal)
+      )) %>% # to avoid too many names (long for CI)
+      sample_n(size = 500)
+    originalTable_sampled <- dbTable_sampled %>%
+      select(database, everything()) %>%
+      pivot_longer(
+        cols = 7:ncol(.),
+        names_to = c("drop", "referenceType"),
+        names_sep = "_",
+        values_to = "referenceValue",
+        values_drop_na = TRUE
+      ) %>%
+      pivot_longer(
+        cols = 4:6,
+        names_to = c("drop2", "structureType"),
+        names_sep = "_",
+        values_to = "structureValue",
+        values_drop_na = TRUE
+      ) %>%
+      pivot_longer(
+        cols = 2:3,
+        names_to = c("drop3", "organismType"),
+        names_sep = "_",
+        values_to = "organismValue",
+        values_drop_na = TRUE
+      ) %>%
+      select(-drop, -drop2, -drop3) %>%
+      distinct()
+  }
 } else {
   dbTable <- read_delim(file = pathTestsFile) %>%
     pivot_wider(
@@ -242,7 +266,7 @@ originalTable <- dbTable %>%
   select(-drop, -drop2, -drop3) %>%
   distinct()
 
-if (mode == "full") {
+if (mode == "full" | mode == "manual") {
   log_debug("new entries only ...")
   originalTable <- anti_join(
     originalTable,
@@ -260,20 +284,23 @@ if (mode == "full") {
 }
 
 log_debug("ensuring proper encoding ...")
-originalTable$organismValue <- iconv(
-  x = originalTable$organismValue,
-  to = "UTF-8"
-)
+originalTable$organismValue <-
+  iconv(
+    x = originalTable$organismValue,
+    to = "UTF-8"
+  )
 
-originalTable$referenceValue <- iconv(
-  x = originalTable$referenceValue,
-  to = "UTF-8"
-)
+originalTable$referenceValue <-
+  iconv(
+    x = originalTable$referenceValue,
+    to = "UTF-8"
+  )
 
-originalTable$structureValue <- iconv(
-  x = originalTable$structureValue,
-  to = "UTF-8"
-)
+originalTable$structureValue <-
+  iconv(
+    x = originalTable$structureValue,
+    to = "UTF-8"
+  )
 
 log_debug("keeping entries not previously curated only ...")
 log_debug("... inchi table")
@@ -456,7 +483,8 @@ log_debug("... DOI table")
 referenceTable_doi <- dbTable %>%
   filter(!is.na(referenceOriginal_doi)) %>%
   distinct(referenceOriginal_doi) %>%
-  select(referenceOriginal = referenceOriginal_doi)
+  select(referenceOriginal = referenceOriginal_doi) %>%
+  mutate_all(as.character)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -478,7 +506,8 @@ log_debug("... PMID table")
 referenceTable_pubmed <- dbTable %>%
   filter(!is.na(referenceOriginal_pubmed)) %>%
   distinct(referenceOriginal_pubmed) %>%
-  select(referenceOriginal = referenceOriginal_pubmed)
+  select(referenceOriginal = referenceOriginal_pubmed) %>%
+  mutate_all(as.character)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -508,7 +537,7 @@ referenceTable_title <- dbTable %>%
   filter(!is.na(referenceOriginal_title)) %>%
   distinct(referenceOriginal_title) %>%
   select(referenceOriginal = referenceOriginal_title) %>%
-  data.table()
+  mutate_all(as.character)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -526,6 +555,9 @@ if (nrow(referenceTable_title) == 0) {
   referenceTable_title[1, ] <- NA
 }
 
+referenceTable_title <- referenceTable_title %>%
+  data.table()
+
 log_debug(".. reference publishing details table")
 referenceTable_publishingDetails <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
@@ -533,7 +565,8 @@ referenceTable_publishingDetails <- dbTable %>%
   filter(is.na(referenceOriginal_title)) %>%
   filter(!is.na(referenceOriginal_publishingDetails)) %>%
   distinct(referenceOriginal_publishingDetails) %>%
-  select(referenceOriginal = referenceOriginal_publishingDetails)
+  select(referenceOriginal = referenceOriginal_publishingDetails) %>%
+  mutate_all(as.character)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -562,7 +595,8 @@ referenceTable_split <- dbTable %>%
   filter(is.na(referenceOriginal_publishingDetails)) %>%
   filter(!is.na(referenceOriginal_split)) %>%
   distinct(referenceOriginal_split) %>%
-  select(referenceOriginal = referenceOriginal_split)
+  select(referenceOriginal = referenceOriginal_split) %>%
+  mutate_all(as.character)
 
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -592,6 +626,7 @@ referenceTable_original <- dbTable %>%
   filter(!is.na(referenceOriginal_original)) %>%
   distinct(referenceOriginal_original) %>%
   select(referenceOriginal = referenceOriginal_original) %>%
+  mutate_all(as.character) %>%
   data.table()
 
 if (mode != "test") {
@@ -626,7 +661,6 @@ referenceTable_full <- originalTable %>%
 #   conn = db,
 #   statement = "SELECT * FROM data_source"
 # )
-
 
 log_debug("ensuring directories exist ...")
 ifelse(

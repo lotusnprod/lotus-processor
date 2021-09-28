@@ -179,8 +179,11 @@ if (length != 0) {
 if (length == 0) {
   dataCleanedOrganism <-
     bind_rows(
-      dataVerifiedOriginalOrganism %>% select(-organismType),
-      dataCleanedOriginalOrganism
+      dataVerifiedOriginalOrganism %>%
+        select(-organismType) %>%
+        mutate_all(as.character),
+      dataCleanedOriginalOrganism %>%
+        mutate_all(as.character())
     )
 }
 

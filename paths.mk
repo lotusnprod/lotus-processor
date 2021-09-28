@@ -7,22 +7,8 @@ export EXTERNAL_DICTIONARY_SOURCE_PATH = ${EXTERNAL_PATH}/dictionarySource
 export EXTERNAL_TAXONOMY_SOURCE_PATH = ${EXTERNAL_PATH}/taxonomySource
 export EXTERNAL_TRANSLATION_SOURCE_PATH = ${EXTERNAL_PATH}/translationSource
 
-ifeq (${MODE},full)
-    export INTERIM_TABLE_PATH = ${INTERIM_PATH}/tables
-else ifeq (${MODE},min)
-    export INTERIM_TABLE_PATH = ${INTERIM_PATH}/tables_min
-else
-    export INTERIM_TABLE_PATH = ${INTERIM_PATH}/tables_test
-endif
-
-ifeq (${MODE},full)
-    export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries
-else ifeq (${MODE},min)
-    export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries_min
-else
-    export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries_test
-endif
-
+export INTERIM_TABLE_PATH = ${INTERIM_PATH}/tables_${MODE}
+export INTERIM_DICTIONARY_PATH = ${INTERIM_PATH}/dictionaries_${MODE}
 export INTERIM_DICTIONARY_PATH_FIX = ${EXTERNAL_PATH}/dictionarySource
 
 export INTERIM_TABLE_ORIGINAL_PATH = ${INTERIM_TABLE_PATH}/0_original
@@ -44,7 +30,7 @@ export SRC_GATHERING_PATH = ${SRC_PATH}/1_gathering
 export SRC_GATHERING_DB_PATH = ${SRC_GATHERING_PATH}/db
 export SRC_GATHERING_TAXONOMY_PATH = ${SRC_GATHERING_PATH}/taxonomy
 export SRC_GATHERING_TRANSLATION_PATH = ${SRC_GATHERING_PATH}/translation
-
+export SRC_GATHERING_VALIDATION_PATH = ${SRC_GATHERING_PATH}/validation
 
 export SRC_CURATING_PATH = ${SRC_PATH}/2_curating
 export SRC_CURATING_EDITING_PATH = ${SRC_CURATING_PATH}/2_editing
