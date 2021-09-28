@@ -37,7 +37,6 @@ if (nrow(dataPublishingDetails) != 1) {
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
       mc.style = "txt",
-      mc.substyle = 1, mc.style = "txt",
       mc.substyle = 1
     )
   )
