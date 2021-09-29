@@ -39,7 +39,7 @@ extracted_elements <- invisible(
     FUN = getalkamid,
     X = X,
     mc.silent = FALSE,
-    mc.cores = numCores,
+    mc.cores = min(max(1, parallel::detectCores() - 1), 10),
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,

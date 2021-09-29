@@ -182,7 +182,7 @@ X <- seq_along(Y)
 class_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1)
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
 )) |>
   rbindlist()
 
@@ -196,7 +196,7 @@ X <- seq_along(Y)
 class_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -213,7 +213,7 @@ X <- seq_along(Y)
 class_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -241,7 +241,7 @@ X <- seq_along(Y)
 superclass_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1)
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
 )) |>
   rbindlist()
 
@@ -255,7 +255,7 @@ X <- seq_along(Y)
 superclass_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -272,7 +272,7 @@ X <- seq_along(Y)
 superclass_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -300,7 +300,7 @@ X <- seq_along(Y)
 pathway_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1)
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
 )) |>
   rbindlist()
 
@@ -314,7 +314,7 @@ X <- seq_along(Y)
 pathway_2 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -331,7 +331,7 @@ X <- seq_along(Y)
 pathway_3 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = (parallel::detectCores() - 1),
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1

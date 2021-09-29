@@ -255,7 +255,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 2,
+      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,

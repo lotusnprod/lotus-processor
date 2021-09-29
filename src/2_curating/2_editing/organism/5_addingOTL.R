@@ -199,7 +199,7 @@ if (is_empty(new_matched_names) == FALSE) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = (parallel::detectCores() - 1),
+      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
