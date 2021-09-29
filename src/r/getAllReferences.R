@@ -1,5 +1,6 @@
 source("paths.R")
 library(stringdist)
+library(tidyr)
 
 #' Title
 #'
