@@ -249,6 +249,7 @@ originalTable <- dbTable %>%
     values_to = "referenceValue",
     values_drop_na = TRUE
   ) %>%
+  select(-drop) %>%
   pivot_longer(
     cols = 4:6,
     names_to = c("drop2", "structureType"),
@@ -256,6 +257,7 @@ originalTable <- dbTable %>%
     values_to = "structureValue",
     values_drop_na = TRUE
   ) %>%
+  select(-drop2) %>%
   pivot_longer(
     cols = 2:3,
     names_to = c("drop3", "organismType"),
@@ -263,7 +265,7 @@ originalTable <- dbTable %>%
     values_to = "organismValue",
     values_drop_na = TRUE
   ) %>%
-  select(-drop, -drop2, -drop3) %>%
+  select(-drop3) %>%
   distinct()
 
 if (mode == "full" | mode == "manual") {
