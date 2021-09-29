@@ -15,7 +15,7 @@ password <- Sys.getenv("LOTUS_DB_PWD")
 ###############################################################################
 source("r/database.R")
 
-mode <- Sys.getenv("MODE", unset = "manual")
+mode <- Sys.getenv("MODE", unset = "full")
 
 if (exists("mode_test")) {
   mode <- "test"
