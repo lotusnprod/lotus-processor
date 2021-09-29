@@ -23,7 +23,7 @@ dataDoi <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataDoi) != 1 | !is.na(dataDoi[, 1])) {
+if (!is.na(dataDoi[, 1])) {
   reflistDoi <-
     pbmclapply(
       FUN = getrefDoi,

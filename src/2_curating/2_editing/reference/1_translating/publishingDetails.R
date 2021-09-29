@@ -24,8 +24,7 @@ dataPublishingDetails <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataPublishingDetails) != 1 |
-  !is.na(dataPublishingDetails[, 1])) {
+if (!is.na(dataPublishingDetails[, 1])) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit_publishingDetails,
