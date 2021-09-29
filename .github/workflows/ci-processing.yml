@@ -2,9 +2,11 @@ on:
   push:
     branches:
       - main
+      - feature-ci-*
   pull_request:
     branches:
       - main
+      - feature-ci-*
 jobs:
   build-linux:
     runs-on: ubuntu-latest
@@ -22,9 +24,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install conda dependencies
+      - name: Install mamba
         run: |
-          $CONDA/bin/conda env create -q --file environment.yml
+          conda install mamba -n base -c conda-forge
+      - name: Install dependencies
+        run: |
+          $CONDA/bin/mamba env update -f environment.yml -n lotus_env
       - name: Install non-conda dependencies
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
