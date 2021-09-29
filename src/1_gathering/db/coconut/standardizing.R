@@ -254,6 +254,14 @@ data_corrected$reference_authors <-
 data_corrected$reference_external <-
   y_as_na(data_corrected$reference_external, "NA")
 
+data_corrected$biologicalsource <-
+  gsub(
+    pattern = "_",
+    replacement = " ",
+    x =  data_corrected$biologicalsource,
+    fixed = TRUE
+  )
+
 findCapitals_1 <- data_corrected$biologicalsource %>%
   data.frame() %>%
   filter(!is.na(.)) %>%
@@ -295,11 +303,8 @@ data_corrected_capitals <- left_join(data_corrected,
   findCapitals_3,
   by = c("biologicalsource" = "x")
 ) %>%
-  mutate(organism_clean = ifelse(
-    test = !is.na(y),
-    yes = y,
-    no = biologicalsource
-  )) %>%
+  mutate(organism_clean = biologicalsource
+  ) %>%
   select(
     -y,
     -nchar,
@@ -308,15 +313,6 @@ data_corrected_capitals <- left_join(data_corrected,
     -capitals_x,
     -capitals_y
   ) %>%
-  mutate(n = str_count(organism_clean, "\\S+")) %>%
-  mutate(organism_dirty = ifelse(test = n == 1,
-    yes = organism_clean,
-    no = NA
-  )) %>%
-  mutate(organism_clean = ifelse(test = n > 1,
-    yes = organism_clean,
-    no = NA
-  )) %>%
   select(
     structure_inchi = inchi,
     structure_smiles = smiles,
@@ -330,13 +326,12 @@ data_standard <-
     data_selected = data_corrected_capitals,
     db = "coconut",
     structure_field = c("structure_inchi", "structure_smiles", "structure_name"),
-    organism_field = c("organism_clean", "organism_dirty"),
+    organism_field = c("organism_clean"),
     reference_field = c(
       "reference_doi",
       "reference_pubmed",
       "reference_authors",
-      "reference_publishingDetails",
-      "reference_external"
+      "reference_publishingDetails"
     )
   )
 
