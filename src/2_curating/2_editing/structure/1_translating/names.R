@@ -93,13 +93,15 @@ dataOpsin <-
 
 dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
 
-dataInterim <- left_join(dataPreparedNames, dataInterim)
+dataInterim <- left_join(dataPreparedNames, dataInterim) %>%
+  distinct()
 
 log_debug("exporting interim ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal_opsin)
 write_delim(
   x = dataInterim,
-  file = pathDataInterimTablesTranslatedStructureNominal_opsin
+  file = pathDataInterimTablesTranslatedStructureNominal_opsin,
+  delim = "\t"
 )
 
 dataForCTS <- dataInterim %>%
@@ -147,7 +149,8 @@ dataTranslatedNominal_cts <- dataForCTS %>%
 dataInterim_2 <- left_join(
   dataInterim,
   dataTranslatedNominal_cts
-)
+) %>%
+  distinct()
 
 log_debug("exporting interim ...")
 log_debug(
@@ -155,11 +158,13 @@ log_debug(
 )
 write_delim(
   x = dataInterim_2,
-  file = pathDataInterimTablesTranslatedStructureNominal_cts
+  file = pathDataInterimTablesTranslatedStructureNominal_cts,
+  delim = "\t"
 )
 
 # dataInterim_2 <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts,
+#              delim = "\t")
 
 dataInterim_2 <- dataInterim_2 %>%
   mutate(nameCleaned_capitalized = capitalize(nameCleaned))
@@ -208,7 +213,8 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
 dataInterim_3 <- left_join(
   dataInterim_2,
   dataTranslatedNominal_cts_2
-)
+) %>%
+  distinct()
 
 log_debug("exporting interim ...")
 log_debug(
@@ -216,11 +222,13 @@ log_debug(
 )
 write_delim(
   x = dataInterim_3,
-  file = pathDataInterimTablesTranslatedStructureNominal_cts_2
+  file = pathDataInterimTablesTranslatedStructureNominal_cts_2,
+  delim = "\t"
 )
 
 # dataInterim_3 <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts_2)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts_2,
+#              delim = "\t")
 
 ## cactus is the lowest quality but allows retrieving important structures also
 ## some incorrect spotted...
@@ -313,11 +321,13 @@ log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal)
 write_delim(
   x = dataTranslated,
-  file = pathDataInterimTablesTranslatedStructureNominal
+  file = pathDataInterimTablesTranslatedStructureNominal,
+  delim = "\t"
 )
 
 # dataTranslated <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal)
+#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal,
+#              delim = "\t")
 
 end <- Sys.time()
 
