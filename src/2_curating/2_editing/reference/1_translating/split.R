@@ -24,7 +24,7 @@ dataSplit <-
   )
 
 log_debug("submitting to crossRef")
-if (nrow(dataSplit) != 1 | !is.na(dataSplit[, 1])) {
+if (!is.na(dataSplit[, 1])) {
   reflist <- invisible(
     pbmclapply(
       FUN = getref_noLimit,
