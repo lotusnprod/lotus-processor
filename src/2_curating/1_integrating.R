@@ -154,7 +154,7 @@ if (mode == "full" | mode == "manual") {
     log_debug("sampling rows for min mode")
     "%ni%" <- Negate("%in%")
     set.seed(
-      seed = 3.14,
+      seed = 42,
       kind = "Mersenne-Twister",
       normal.kind = "Inversion"
     )
