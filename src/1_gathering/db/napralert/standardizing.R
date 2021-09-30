@@ -14,7 +14,9 @@ database <- databases$get("napralert")
 ## files
 dataOriginal <- read_delim(
   file = gzfile(database$sourceFiles$tsvOriginal),
-  col_types = cols(.default = "c")
+  col_types = cols(.default = "c"),
+  escape_backslash = TRUE,
+  delim = "\t"
 ) %>%
   mutate(
     biologicalsource = paste(
