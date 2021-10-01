@@ -114,7 +114,7 @@ for (i in num) {
       )
     )
     log_debug("treating results, may take a while if full mode")
-    dataPublishingDetails <-
+    dataPublishingDetails2 <-
       getAllReferences(
         data = dataPublishingDetails,
         referenceType = "publishingDetails",
