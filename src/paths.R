@@ -895,12 +895,9 @@ pathDataInterimTablesOriginalReferenceOriginalFolder <-
 pathDataInterimTablesOriginalReferencePubmed <-
   file.path(pathDataInterimTablesOriginalReference, "pubmed.tsv.gz")
 
-### publishingDetails
-pathDataInterimTablesOriginalReferencePublishingDetails <-
-  file.path(
-    pathDataInterimTablesOriginalReference,
-    "publishingDetails.tsv.gz"
-  )
+### title
+pathDataInterimTablesOriginalReferencePublishingDetailsFolder <-
+  file.path(pathDataInterimTablesOriginalReference, "publishingDetails")
 
 ### title
 pathDataInterimTablesOriginalReferenceTitleFolder <-
@@ -946,6 +943,9 @@ pathDataInterimTablesTranslatedReferenceOriginal <-
 
 pathDataInterimTablesTranslatedReferencePubmed <-
   file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
+
+pathDataInterimTablesTranslatedReferencePublishingDetailsFolder <-
+  file.path(pathDataInterimTablesTranslatedReference, "publishingDetails")
 
 pathDataInterimTablesTranslatedReferencePublishingDetails <-
   file.path(

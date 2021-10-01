@@ -589,6 +589,9 @@ if (nrow(referenceTable_publishingDetails) == 0) {
     rbind(referenceTable_publishingDetails, list(NA))
 }
 
+referenceTable_publishingDetails <- referenceTable_publishingDetails %>%
+  data.table()
+
 log_debug("... reference split table")
 referenceTable_split <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
@@ -716,8 +719,23 @@ ifelse(
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalOrganism,
+    dir.create(pathDataInterimTablesOriginalReferenceOriginalFolder,
       showWarnings = FALSE
+    )
+)
+
+###### publishing details
+ifelse(
+  test = !dir.exists(pathDataInterimTablesOriginalReferencePublishingDetailsFolder),
+  yes = dir.create(pathDataInterimTablesOriginalReferencePublishingDetailsFolder),
+  no = file.remove(
+    list.files(
+      path = pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
+      full.names = TRUE
+    )
+  ) &
+    dir.create(pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
+               showWarnings = FALSE
     )
 )
 
@@ -731,7 +749,7 @@ ifelse(
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalOrganism,
+    dir.create(pathDataInterimTablesOriginalReferenceTitleFolder,
       showWarnings = FALSE
     )
 )
@@ -787,14 +805,12 @@ split_data_table_quote(
   path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
-log_debug(
-  pathDataInterimTablesOriginalReferencePublishingDetails,
-  "\n"
-)
-write_delim(
+log_debug(pathDataInterimTablesOriginalReferencePublishingDetailsFolder)
+split_data_table_quote(
   x = referenceTable_publishingDetails,
-  delim = "\t",
-  file = pathDataInterimTablesOriginalReferencePublishingDetails
+  no_rows_per_frame = 1000,
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalReferencePublishingDetailsFolder
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceSplit)
