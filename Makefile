@@ -239,7 +239,7 @@ ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/split.tsv.gz: ${SRC_CURATING_EDITING_
 	cd src && Rscript ${SRC_CURATING_EDITING_REFERENCE_TRANSLATING_PATH}/split.R
 
 curating-editing-reference-translating-publishingDetails: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz
-${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_TRANSLATING_PATH}/publishingDetails.R ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/publishingDetails.tsv.gz
+${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/publishingDetails.tsv.gz: ${SRC_CURATING_EDITING_REFERENCE_TRANSLATING_PATH}/publishingDetails.R $(wildcard ${INTERIM_TABLE_ORIGINAL_REFERENCE_PATH}/publishingDetails/*.tsv.gz)
 	cd src && Rscript ${SRC_CURATING_EDITING_REFERENCE_TRANSLATING_PATH}/publishingDetails.R
 
 curating-editing-reference-translating-original: ${INTERIM_TABLE_TRANSLATED_REFERENCE_PATH}/original.tsv.gz
