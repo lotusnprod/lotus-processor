@@ -900,12 +900,12 @@ pathDataInterimTablesOriginalReferencePublishingDetailsFolder <-
   file.path(pathDataInterimTablesOriginalReference, "publishingDetails")
 
 ### title
+pathDataInterimTablesOriginalReferenceSplitFolder <-
+  file.path(pathDataInterimTablesOriginalReference, "split")
+
+### title
 pathDataInterimTablesOriginalReferenceTitleFolder <-
   file.path(pathDataInterimTablesOriginalReference, "title")
-
-### split
-pathDataInterimTablesOriginalReferenceSplit <-
-  file.path(pathDataInterimTablesOriginalReference, "split.tsv.gz")
 
 ### full
 pathDataInterimTablesOriginalReferenceFull <-
@@ -958,6 +958,9 @@ pathDataInterimTablesTranslatedReferenceTitleFolder <-
 
 pathDataInterimTablesTranslatedReferenceTitle <-
   file.path(pathDataInterimTablesTranslatedReference, "title.tsv.gz")
+
+pathDataInterimTablesTranslatedReferenceSplitFolder <-
+  file.path(pathDataInterimTablesTranslatedReference, "split")
 
 pathDataInterimTablesTranslatedReferenceSplit <-
   file.path(pathDataInterimTablesTranslatedReference, "split.tsv.gz")

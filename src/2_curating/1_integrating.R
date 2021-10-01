@@ -621,6 +621,9 @@ if (nrow(referenceTable_split) == 0) {
     rbind(referenceTable_split, list(NA))
 }
 
+referenceTable_split <- referenceTable_split %>%
+  data.table()
+
 log_debug("... original references table")
 referenceTable_original <- dbTable %>%
   filter(is.na(referenceOriginal_doi)) %>%
@@ -739,6 +742,21 @@ ifelse(
     )
 )
 
+###### split
+ifelse(
+  test = !dir.exists(pathDataInterimTablesOriginalReferenceSplitFolder),
+  yes = dir.create(pathDataInterimTablesOriginalReferenceSplitFolder),
+  no = file.remove(
+    list.files(
+      path = pathDataInterimTablesOriginalReferenceSplitFolder,
+      full.names = TRUE
+    )
+  ) &
+    dir.create(pathDataInterimTablesOriginalReferenceSplitFolder,
+               showWarnings = FALSE
+    )
+)
+
 ###### title
 ifelse(
   test = !dir.exists(pathDataInterimTablesOriginalReferenceTitleFolder),
@@ -790,19 +808,19 @@ write_delim(
   file = pathDataInterimTablesOriginalReferenceDoi
 )
 
+log_debug(pathDataInterimTablesOriginalReferenceOriginalFolder)
+split_data_table_quote(
+  x = referenceTable_original,
+  no_rows_per_frame = 1000,
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalReferenceOriginalFolder
+)
+
 log_debug(pathDataInterimTablesOriginalReferencePubmed)
 write_delim(
   x = referenceTable_pubmed,
   delim = "\t",
   file = pathDataInterimTablesOriginalReferencePubmed
-)
-
-log_debug(pathDataInterimTablesOriginalReferenceTitleFolder)
-split_data_table_quote(
-  x = referenceTable_title,
-  no_rows_per_frame = 1000,
-  text = "",
-  path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
 log_debug(pathDataInterimTablesOriginalReferencePublishingDetailsFolder)
@@ -813,19 +831,20 @@ split_data_table_quote(
   path_to_store = pathDataInterimTablesOriginalReferencePublishingDetailsFolder
 )
 
-log_debug(pathDataInterimTablesOriginalReferenceSplit)
-write_delim(
-  x = referenceTable_split,
-  delim = "\t",
-  file = pathDataInterimTablesOriginalReferenceSplit
-)
-
-log_debug(pathDataInterimTablesOriginalReferenceOriginalFolder)
+log_debug(pathDataInterimTablesOriginalReferenceSplitFolder)
 split_data_table_quote(
-  x = referenceTable_original,
+  x = referenceTable_split,
   no_rows_per_frame = 1000,
   text = "",
-  path_to_store = pathDataInterimTablesOriginalReferenceOriginalFolder
+  path_to_store = pathDataInterimTablesOriginalReferenceSplitFolder
+)
+
+log_debug(pathDataInterimTablesOriginalReferenceTitleFolder)
+split_data_table_quote(
+  x = referenceTable_title,
+  no_rows_per_frame = 1000,
+  text = "",
+  path_to_store = pathDataInterimTablesOriginalReferenceTitleFolder
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceFull)

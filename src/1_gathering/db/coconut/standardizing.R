@@ -210,7 +210,7 @@ data_treated <- rbind(
 
 data_corrected <- data_treated %>%
   mutate(
-    reference_publishingDetails = reference,
+    reference_split = reference,
     reference_authors = reference
   ) %>%
   mutate(n = nchar(reference)) %>%
@@ -225,9 +225,9 @@ data_corrected <- data_treated %>%
       yes = str_extract(string = reference, pattern = "^10.*"),
       no = NA
     ),
-    reference_publishingDetails = ifelse(
+    reference_split = ifelse(
       test = n >= 20,
-      yes = str_extract(string = reference_publishingDetails, pattern = "^[A-Z].*"),
+      yes = str_extract(string = reference_split, pattern = "^[A-Z].*"),
       no = NA
     ),
     reference_authors = ifelse(
@@ -331,7 +331,7 @@ data_standard <-
       "reference_doi",
       "reference_pubmed",
       "reference_authors",
-      "reference_publishingDetails"
+      "reference_split"
     )
   )
 

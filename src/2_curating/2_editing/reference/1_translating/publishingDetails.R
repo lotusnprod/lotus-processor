@@ -102,7 +102,7 @@ for (i in num) {
       pbmclapply(
         FUN = getref_noLimit_publishingDetails,
         X = dataPublishingDetails$referenceOriginal_publishingDetails,
-        mc.preschedule = FALSE,
+        mc.preschedule = TRUE,
         mc.set.seed = TRUE,
         mc.silent = TRUE,
         mc.cores = min(max(1, parallel::detectCores() - 1), 10),
