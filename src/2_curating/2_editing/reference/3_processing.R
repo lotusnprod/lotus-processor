@@ -23,26 +23,20 @@ dataTranslated <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceFile,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    col_select = 
+      c("organismType",
+        "organismValue",
+        "referenceType",
+        "referenceValue",
+        "organismDetected",
+        "referenceCleanedType" = "referenceTranslatedType",
+        "referenceCleanedValue" = "referenceTranslatedValue",
+        "level")
   )
-
-log_debug("cleaning")
-dataCleaned <- dataTranslated %>%
-  filter(!is.na(referenceTranslatedType)) %>%
-  filter(!is.na(referenceTranslatedValue)) %>%
-  mutate(
-    referenceCleanedValue = referenceTranslatedValue,
-    referenceCleanedType = referenceTranslatedType
-  ) %>%
-  select(
-    -referenceTranslatedValue,
-    -referenceTranslatedType
-  )
-
-rm(dataTranslated)
 
 log_debug("checking for organism in title, may take a while if running full mode")
-dataCleanedScore <- dataCleaned %>%
+dataCleanedScore <- dataTranslated %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismValue) &
     !is.na(referenceCleanedValue)) %>%
@@ -76,10 +70,10 @@ dataCleanedScore <- dataCleaned %>%
   select(-drop) %>%
   distinct()
 
-dataCleanedJoined <- bind_rows(dataCleaned, dataCleanedScore) %>%
+dataCleanedJoined <- bind_rows(dataTranslated, dataCleanedScore) %>%
   filter(!is.na(organismValue))
 
-rm(dataCleaned)
+rm(dataTranslated)
 
 # this is because sadly crossref does not always give the same score, therefore
 ## we do not have unique values ...
