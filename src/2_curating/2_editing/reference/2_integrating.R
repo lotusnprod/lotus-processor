@@ -281,6 +281,9 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 
 dataCrossref <- dataCrossref %>%
   filter(!is.na(referenceOriginal)) %>%
+  filter(
+    !is.na(referenceTranslatedValue)
+  ) %>%
   distinct(
     referenceOriginal,
     referenceTranslatedType,
@@ -314,27 +317,12 @@ rm(
 )
 
 log_debug("... with reference dictionary")
-dataTranslated <- left_join(dataJoined,
+dataTranslated <- left_join(
+  dataJoined,
   dataCrossref,
-  by = c("referenceValue" = "referenceOriginal")
-) %>%
-  filter(
-    !is.na(referenceTranslatedValue) |
-      referenceType == "external" |
-      referenceType == "journal" |
-      referenceType == "authors" |
-      referenceType == "isbn"
-  ) %>%
-  distinct(
-    organismType,
-    organismValue,
-    organismDetected,
-    referenceType,
-    referenceValue,
-    referenceTranslatedType,
-    referenceTranslatedValue,
-    level
-  )
+  by = c("referenceValue" = "referenceOriginal",
+         "referenceType" = "origin")
+)
 
 rm(dataJoined)
 
