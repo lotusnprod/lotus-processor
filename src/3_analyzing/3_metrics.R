@@ -54,15 +54,32 @@ log_debug("final table ...")
 inhouseDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
-    col_types = cols(.default = "c")
-  )
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "database",
+      "organismCleaned",
+      "structureCleanedInchikey",
+      "referenceCleanedTitle"
+    )
+  ) %>%
+  distinct()
 
 log_debug("validated for export ...")
 openDb <-
   read_delim(
     file = pathDataInterimTablesAnalyzedPlatinum,
-    col_types = cols(.default = "c")
-  )
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "database",
+      "organismCleaned",
+      "organismCleaned_dbTaxoTaxonRanks",
+      "structureCleanedInchikey",
+      "structureCleaned_inchikey2D",
+      "referenceCleanedTitle",
+      "referenceCleanedDoi"
+    )
+  ) %>%
+  distinct()
 
 log_debug("exported ...")
 wikidata_pairs <-
@@ -72,22 +89,32 @@ wikidata_pairs <-
       pathLastWdExport
     ),
     quote = "",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "structureCleanedInchikey" = "structure_inchikey",
+      "organismCleaned" = "taxon_name",
+      "referenceCleaned" = "reference_doi"
+    )
   ) %>%
-  filter(!is.na(structure_inchikey) &
-    !is.na(taxon_name) &
-    !is.na(reference_doi)) %>%
-  distinct(
-    structureCleanedInchikey = structure_inchikey,
-    organismCleaned = taxon_name,
-    referenceCleanedDoi = reference_doi
-  )
+  filter(!is.na(structureCleanedInchikey) &
+    !is.na(organismCleaned) &
+    !is.na(referenceCleaned)) %>%
+  distinct()
 
-log_debug("... dnp db")
-dnpDb <-
+log_debug("... closed db")
+closedDb <-
   read_delim(
-    file = file.path(pathDataInterimTablesAnalyzed, "dnp.tsv.gz"),
-    col_types = cols(.default = "c")
+    file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "database",
+      "organismCleaned",
+      "organismCleaned_dbTaxoTaxonRanks",
+      "structureCleanedInchikey",
+      "structureCleaned_inchikey2D",
+      "referenceCleanedTitle",
+      "referenceCleanedDoi"
+    )
   ) %>%
   data.frame()
 
@@ -95,7 +122,7 @@ log_debug("performing inner join with uploaded entries")
 openDb <- openDb %>%
   inner_join(., wikidata_pairs)
 
-inhouseDb <- bind_rows(dnpDb, openDb)
+inhouseDb <- bind_rows(closedDb, openDb)
 
 initial_stats <- dbTable %>%
   group_by(database) %>%
@@ -115,6 +142,7 @@ final_stats_3D <- openDb %>%
   distinct(
     organismCleaned,
     structureCleanedInchikey,
+    structureCleaned_inchikey2D,
     referenceCleanedTitle
   ) %>%
   count(name = "pairs validated for wikidata export")
@@ -123,7 +151,7 @@ stats_table <- left_join(initial_stats, cleaned_stats_3D) %>%
   left_join(., final_stats_3D)
 
 dataset <- dataset %>%
-  left_join(., stats_table) %>%
+  full_join(., stats_table) %>%
   select(
     database,
     `type`,
@@ -151,7 +179,7 @@ pairsOpenDb_2D <- openDb %>%
 
 "%ni%" <- Negate("%in%")
 
-pairsOutsideDnp_3D <- inhouseDb %>%
+pairsOutsideClosed_3D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleanedInchikey)) %>%
   distinct(structureCleanedInchikey,
@@ -160,7 +188,7 @@ pairsOutsideDnp_3D <- inhouseDb %>%
   ) %>%
   filter(database %ni% forbidden_export)
 
-pairsOutsideDnp_2D <- inhouseDb %>%
+pairsOutsideClosed_2D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D,
@@ -169,7 +197,7 @@ pairsOutsideDnp_2D <- inhouseDb %>%
   ) %>%
   filter(database %ni% forbidden_export)
 
-pairsFull_3D <- bind_rows(openDb, dnpDb) %>%
+pairsFull_3D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleanedInchikey)) %>%
   distinct(structureCleanedInchikey,
@@ -177,7 +205,7 @@ pairsFull_3D <- bind_rows(openDb, dnpDb) %>%
     .keep_all = TRUE
   )
 
-pairsFull_2D <- bind_rows(openDb, dnpDb) %>%
+pairsFull_2D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
     !is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D,
@@ -185,24 +213,24 @@ pairsFull_2D <- bind_rows(openDb, dnpDb) %>%
     .keep_all = TRUE
   )
 
-pairsDNP_3D <- dnpDb %>%
+pairsClosed_3D <- closedDb %>%
   distinct(structureCleanedInchikey,
     organismCleaned,
     .keep_all = TRUE
   )
 
-pairsDNP_2D <- dnpDb %>%
+pairsClosed_2D <- closedDb %>%
   distinct(structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   )
 
-stats_3D <- pairsOutsideDnp_3D %>%
+stats_3D <- pairsOutsideClosed_3D %>%
   group_by(database) %>%
   count() %>%
   arrange(desc(n))
 
-stats_2D <- pairsOutsideDnp_2D %>%
+stats_2D <- pairsOutsideClosed_2D %>%
   group_by(database) %>%
   count() %>%
   arrange(desc(n))
@@ -227,12 +255,12 @@ log_debug(paste(
   sep = " "
 ))
 
-### DNP
-dnpDbOrganism <- dnpDb %>%
+### Closed
+closedDbOrganism <- closedDb %>%
   filter(!is.na(organismCleaned)) %>%
   distinct(organismCleaned)
 
-log_debug(paste("dnp:", nrow(dnpDbOrganism), "distinct organisms", sep = " "))
+log_debug(paste("closed:", nrow(closedDbOrganism), "distinct organisms", sep = " "))
 
 ## structures
 log_debug("analyzing unique structures (2D) per db")
@@ -271,25 +299,25 @@ log_debug(paste(
   sep = " "
 ))
 
-### DNP
-dnpDbStructure_3D <- dnpDb %>%
+### closed
+closedDbStructure_3D <- closedDb %>%
   filter(!is.na(structureCleanedInchikey)) %>%
   distinct(structureCleanedInchikey, .keep_all = TRUE)
 
 log_debug(paste(
-  "dnp:",
-  nrow(dnpDbStructure_3D),
+  "closed:",
+  nrow(closedDbStructure_3D),
   "distinct structures (3D)",
   sep = " "
 ))
 
-dnpDbStructure_2D <- dnpDb %>%
+closedDbStructure_2D <- closedDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
   distinct(structureCleaned_inchikey2D, .keep_all = TRUE)
 
 log_debug(paste(
-  "dnp:",
-  nrow(dnpDbStructure_2D),
+  "closed:",
+  nrow(closedDbStructure_2D),
   "distinct structures (2D)",
   sep = " "
 ))
@@ -432,7 +460,7 @@ if (mode == "FULL" | mode == "full") {
       "contain more than 100 2D structures. \n",
       sep = " "
     ),
-    file = "../docs/metrics.adoc"
+    file = "../docs/metrics.md"
   )
 }
 

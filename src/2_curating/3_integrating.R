@@ -321,10 +321,8 @@ rm(organismTableFull)
 
 log_debug("joining minimal table ...")
 inhouseDbMinimal <-
-  left_join(originalTable, structureMinimal) %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  left_join(., organismMinimal) %>%
-  filter(!is.na(organismCleaned)) %>%
+  inner_join(originalTable, structureMinimal) %>%
+  inner_join(., organismMinimal) %>%
   left_join(., referenceMinimal %>%
     select(-organismDetected)) %>%
   filter(!is.na(referenceCleanedTitle) |
