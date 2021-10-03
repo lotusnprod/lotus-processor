@@ -52,7 +52,6 @@ dataCleanedScore <- dataTranslated %>%
     yes = 1,
     no = 0
   )) %>%
-  filter(referenceCleaned_scoreTitleOrganism == 1) %>%
   pivot_wider(
     names_from = referenceCleanedType,
     names_prefix = "referenceCleaned_",
@@ -67,6 +66,7 @@ dataCleanedScore <- dataTranslated %>%
     values_drop_na = TRUE
   ) %>%
   filter(referenceCleanedType == "scoreTitleOrganism") %>%
+  filter(referenceCleanedValue == 1) %>%
   select(-drop) %>%
   distinct()
 
