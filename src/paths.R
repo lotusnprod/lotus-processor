@@ -21,6 +21,10 @@ if (exists("mode_test")) {
   mode <- "test"
 }
 
+if (exists("mode_manual")) {
+  mode <- "manual"
+}
+
 works_locally_only <- TRUE
 
 ## for steps where paths need to be adapted locally or related to other repos
