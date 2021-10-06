@@ -25,7 +25,8 @@ dataTranslated <-
     delim = "\t",
     col_types = cols(.default = "c"),
     col_select =
-      c("organismType",
+      c(
+        "organismType",
         "organismValue",
         "referenceType",
         "referenceValue",
@@ -247,23 +248,24 @@ if (mode != "test") {
       col_types = cols(.default = "c")
     ) %>%
       filter(!is.na(DOI) | !is.na(PMID)) %>%
-      select(DOI,
-             PMCID,
-             PMID) %>%
+      select(
+        DOI,
+        PMCID,
+        PMID
+      ) %>%
       mutate(DOI = toupper(DOI)) %>%
       mutate_all(as.character) %>%
       tibble()
-  } else{
-    
-    else {
-      ## TEMPORARY to be fast
-      PMC_ids <-
-        data.frame(DOI = NA,
-                   PMCID = NA,
-                   PMID = NA) %>%
-        mutate_all(as.character) %>%
-        tibble()
-    }
+  } else {
+    ## TEMPORARY to be fast
+    PMC_ids <-
+      data.frame(
+        DOI = NA,
+        PMCID = NA,
+        PMID = NA
+      ) %>%
+      mutate_all(as.character) %>%
+      tibble()
   }
 }
 
