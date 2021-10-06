@@ -63,6 +63,7 @@ dataCleanedScore <- dataTranslated %>%
   mutate_all(as.character) %>%
   distinct() 
   cat("meow")
+  dataCleanedScore
   dataCleanedScore <- dataCleanedScore %>% 
     pivot_longer(
     cols = starts_with("referenceCleaned_"),
