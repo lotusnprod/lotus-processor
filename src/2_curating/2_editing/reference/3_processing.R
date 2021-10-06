@@ -61,7 +61,7 @@ dataCleanedScore <- dataTranslated %>%
   ) %>%
   mutate_all(as.character) %>%
   pivot_longer(
-    cols = (ncol(.) - 1):ncol(.),
+    cols = starts_with("referenceCleaned_"),
     names_to = c("drop", "referenceCleanedType"),
     names_sep = "_",
     values_to = "referenceCleanedValue",
