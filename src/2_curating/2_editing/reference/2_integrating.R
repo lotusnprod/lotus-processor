@@ -320,8 +320,10 @@ log_debug("... with reference dictionary")
 dataTranslated <- left_join(
   dataJoined,
   dataCrossref,
-  by = c("referenceValue" = "referenceOriginal",
-         "referenceType" = "origin")
+  by = c(
+    "referenceValue" = "referenceOriginal",
+    "referenceType" = "origin"
+  )
 )
 
 rm(dataJoined)

@@ -24,7 +24,7 @@ dataTranslated <-
     file = pathDataInterimTablesTranslatedReferenceFile,
     delim = "\t",
     col_types = cols(.default = "c"),
-    col_select = 
+    col_select =
       c("organismType",
         "organismValue",
         "referenceType",
@@ -32,7 +32,8 @@ dataTranslated <-
         "organismDetected",
         "referenceCleanedType" = "referenceTranslatedType",
         "referenceCleanedValue" = "referenceTranslatedValue",
-        "level")
+        "level"
+      )
   )
 
 log_debug("checking for organism in title, may take a while if running full mode")

@@ -74,7 +74,7 @@ for (i in num) {
       ),
       ".tsv"
     )
-  
+
   outpath <-
     paste0(
       pathDataInterimTablesTranslatedReferencePublishingDetailsFolder,
@@ -86,16 +86,16 @@ for (i in num) {
       ),
       ".tsv.gz"
     )
-  
+
   log_debug(paste("step", i / cut, "of", length))
-  
+
   dataPublishingDetails <- read_delim(
     file = inpath,
     delim = "\t",
     escape_double = TRUE,
     trim_ws = TRUE
   )
-  
+
   log_debug("submitting to crossRef")
   if (nrow(dataPublishingDetails) != 0) {
     reflist <- invisible(
@@ -133,14 +133,14 @@ for (i in num) {
         referenceTranslationScoreDistance = NA
       )
   }
-  
+
   log_debug("exporting ...")
   write_delim(
     x = dataPublishingDetails2,
     delim = "\t",
     file = outpath
   )
-  
+
   ## cleaning memory
   gc(
     verbose = TRUE,
