@@ -15,7 +15,7 @@ git clone git@github.com:lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
 conda run -n lotus_env bash environment_non_conda.sh
-conda run -n lotus_env MODE=min make lotus-quick
+conda run -n lotus_env MODE=test make lotus-quick
 ```
 
 ## Data Availability Statements
