@@ -37,7 +37,7 @@ dataTranslated <-
       )
   ) %>%
   data.frame()
-
+dataTranslated
 log_debug("checking for organism in title, may take a while if running full mode")
 dataCleanedScore <- dataTranslated %>%
   filter(referenceCleanedType == "title") %>%
@@ -62,7 +62,6 @@ dataCleanedScore <- dataTranslated %>%
   ) %>%
   mutate_all(as.character) %>%
   distinct() 
-  cat("meow")
   dataCleanedScore
   dataCleanedScore <- dataCleanedScore %>% 
     pivot_longer(
