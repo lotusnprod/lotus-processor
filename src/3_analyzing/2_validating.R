@@ -712,14 +712,14 @@ manuallyRemovedEntries <- realMetaSample %>%
 
 openDbClean <- anti_join(openDb, manuallyRemovedEntries)
 
-if (mode != "test" & mode != "manual") {
-  set.seed(
-    seed = 42,
-    kind = "Mersenne-Twister",
-    normal.kind = "Inversion"
-  )
-  validationSet <- anti_join(openDbClean, realMetaSample) %>%
-    sample_n(100)
+if (mode == "full") {
+    set.seed(
+      seed = 42,
+      kind = "Mersenne-Twister",
+      normal.kind = "Inversion"
+    )
+    validationSet <- anti_join(openDbClean, realMetaSample) %>%
+      sample_n(100)
 }
 
 log_debug("loading validation set")
@@ -734,7 +734,7 @@ validationSetFilled_1 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
-if (mode != "test" & mode != "manual") {
+if (mode == "full") {
   set.seed(
     seed = 42,
     kind = "Mersenne-Twister",
