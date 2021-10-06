@@ -19,16 +19,19 @@ log_debug("... open DB")
 openDbMetaValidated <-
   read_delim(
     file = pathDataInterimTablesAnalyzedPlatinum,
-    col_types = cols(.default = "c")
-  ) %>%
-  filter(
-    !is.na(structureCleanedInchikey) &
-      !is.na(organismCleaned) &
-      !is.na(referenceCleanedDoi)
-  ) %>%
-  filter(database != "wikidata") %>%
-  mutate(validation = "validated")
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "database",
+      "organismType",
+      "organismValue",
+      "structureType",
+      "structureValue",
+      "referenceType",
+      "referenceValue"
+    )
+  )
 
+log_debug("... open DB max")
 openDbMaximal <-
   read_delim(
     file = pathDataInterimTablesCuratedTableMaximal,
@@ -36,52 +39,21 @@ openDbMaximal <-
   ) %>%
   filter(database != "wikidata")
 
-full <- left_join(openDbMaximal, openDbMetaValidated) %>%
+log_debug("filtering (might be long if running full)")
+openDbMetaValidated <- openDbMetaValidated %>%
+  filter(database != "wikidata") %>%
   mutate(
-    validation = ifelse(
-      test = !is.na(validation),
-      yes = validation,
-      no = "not_validated"
-    ),
-    cleaned_reference = ifelse(
-      test = !is.na(referenceCleanedDoi) |
-        !is.na(referenceCleanedPmcid) |
-        !is.na(referenceCleanedPmid),
-      yes = "reference_Yes",
-      no = "reference_No"
-    ),
-    cleaned_organism = ifelse(
-      test = !is.na(organismCleaned),
-      yes = "organism_Yes",
-      no = "organism_No"
-    ),
-    cleaned_structure = ifelse(
-      test = !is.na(structureCleanedSmiles) |
-        !is.na(structureCleanedInchi) |
-        !is.na(structureCleanedInchikey),
-      yes = "structure_Yes",
-      no = "structure_No"
-    ),
-  ) %>%
-  distinct(
-    database,
-    organismType,
-    organismValue,
-    structureType,
-    structureValue,
-    referenceType,
-    referenceValue,
-    organismCleaned,
-    structureCleanedInchikey,
-    referenceCleanedTitle,
-    cleaned_structure,
-    cleaned_organism,
-    cleaned_reference,
-    validation,
-  ) %>%
+    validation = "validated",
+    cleaned_structure = "structure_Yes",
+    cleaned_organism = "organism_Yes",
+    cleaned_reference = "reference_Yes"
+  )
+
+log_debug("joining (might be long if running full)")
+full <- left_join(openDbMaximal, openDbMetaValidated) %>%
+  distinct() %>%
   pivot_longer(
-    cols = 12:14,
-    values_drop_na = TRUE
+    cols = contains("cleaned_")
   ) %>%
   select(
     database,
@@ -97,6 +69,8 @@ full <- left_join(openDbMaximal, openDbMetaValidated) %>%
   ) %>%
   distinct() %>%
   data.frame()
+
+rm(openDbMaximal, openDbMetaValidated)
 
 ready_1 <- full %>%
   pivot_wider(
@@ -258,7 +232,8 @@ sunk <- ready_2 %>%
     ),
   ) %>%
   left_join(., prettyNames) %>%
-  select(-database)
+  select(-database) %>%
+  mutate(validation = replace_na(validation, replace = "not validated"))
 
 legend <- with(sunk, reorder(prettyDataBase, count))
 
