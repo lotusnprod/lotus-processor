@@ -1,6 +1,6 @@
 # title: "manual input cleaneR"
 
-mode <- "manual"
+mode_manual <- TRUE
 
 # loading paths
 source("paths.R")
