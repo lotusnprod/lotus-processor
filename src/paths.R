@@ -91,11 +91,17 @@ pathDataProcessed <-
   )
 
 #### db
-pathDataInterimDb <-
-  file.path(
+pathDataInterimDb <- switch(mode,
+  "full" =
+    file.path(
+      pathDataInterim,
+      "db"
+    ),
+  "manual" = file.path(
     pathDataInterim,
     "db"
   )
+)
 
 databases <-
   Databases$new(
@@ -234,7 +240,7 @@ databases$add(
 databases$add(
   name = "manual",
   sourceFiles = NA,
-  interimFile = "../manual/manual.tsv.gz"
+  interimFile = "manual/manual.tsv.gz"
 )
 
 databases$add(

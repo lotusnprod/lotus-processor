@@ -181,7 +181,7 @@ if (mode == "full" | mode == "manual") {
           !is.na(structureOriginal_nominal)
       )) %>% # to avoid too many names (long for CI)
       sample_n(size = 10)
-    dbTable_sampled <- bind_rows(dbTable_sampled_1,dbTable_sampled_2)
+    dbTable_sampled <- bind_rows(dbTable_sampled_1, dbTable_sampled_2)
     originalTable_sampled <- dbTable_sampled %>%
       select(database, everything()) %>%
       pivot_longer(
