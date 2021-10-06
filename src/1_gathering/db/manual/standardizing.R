@@ -1,5 +1,7 @@
 # title: "manual input cleaneR"
 
+mode <- "manual"
+
 # loading paths
 source("paths.R")
 source("r/standardizing_original.R")
