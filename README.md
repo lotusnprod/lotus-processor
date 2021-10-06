@@ -11,6 +11,8 @@ As the shorter READMEs are the best, we decided to give detailed documentation i
 If you are in a hurry and don't want to go through the whole documentation, what you need is:
 
 ```
+git clone git@github.com:lotusnprod/lotus-processor.git
+cd lotus-processor
 conda env create --file environment.yml
 conda run -n lotus_env bash environment_non_conda.sh
 conda run -n lotus_env MODE=min make lotus-quick
