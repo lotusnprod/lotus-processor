@@ -258,7 +258,7 @@ data_corrected$biologicalsource <-
   gsub(
     pattern = "_",
     replacement = " ",
-    x =  data_corrected$biologicalsource,
+    x = data_corrected$biologicalsource,
     fixed = TRUE
   )
 
@@ -303,8 +303,7 @@ data_corrected_capitals <- left_join(data_corrected,
   findCapitals_3,
   by = c("biologicalsource" = "x")
 ) %>%
-  mutate(organism_clean = biologicalsource
-  ) %>%
+  mutate(organism_clean = biologicalsource) %>%
   select(
     -y,
     -nchar,

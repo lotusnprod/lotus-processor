@@ -378,210 +378,210 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
   )
 
 if (mode == "full") {
-log_debug("filtering results ...")
-log_debug("... validated set")
-realSampleFiltered <-
-  filter_dirty(dataframe = realMetaSample)
+  log_debug("filtering results ...")
+  log_debug("... validated set")
+  realSampleFiltered <-
+    filter_dirty(dataframe = realMetaSample)
 
-log_debug("... rejected set")
-antiFilter <- anti_join(realMetaSample, realSampleFiltered)
+  log_debug("... rejected set")
+  antiFilter <- anti_join(realMetaSample, realSampleFiltered)
 
-log_debug("counting results ...")
-log_debug("... per category on validation set")
-table_count <- myDirtyF(table = realMetaSample)
+  log_debug("counting results ...")
+  log_debug("... per category on validation set")
+  table_count <- myDirtyF(table = realMetaSample)
 
-log_debug("... global on validation set")
-table_count_global <- myDirtyC(table = realMetaSample)
+  log_debug("... global on validation set")
+  table_count_global <- myDirtyC(table = realMetaSample)
 
-log_debug("... per category on validated set")
-tableFiltered_count <-
-  myDirtyF(table = realSampleFiltered)
+  log_debug("... per category on validated set")
+  tableFiltered_count <-
+    myDirtyF(table = realSampleFiltered)
 
-log_debug("... global on validated set")
-tableFiltered_count_global <-
-  myDirtyC(table = realSampleFiltered)
+  log_debug("... global on validated set")
+  tableFiltered_count_global <-
+    myDirtyC(table = realSampleFiltered)
 
-log_debug("... per category on rejected set")
-tableAntiFiltered_count <-
-  myDirtyF(table = antiFilter)
+  log_debug("... per category on rejected set")
+  tableAntiFiltered_count <-
+    myDirtyF(table = antiFilter)
 
-log_debug("... global on rejected set")
-tableAntiFiltered_count_global <-
-  myDirtyC(table = antiFilter)
+  log_debug("... global on rejected set")
+  tableAntiFiltered_count_global <-
+    myDirtyC(table = antiFilter)
 
-log_debug("visualizing ...")
-log_debug("... validation set per category")
-fig_full <-
-  myDirtyP(
-    table = table_count,
-    yaxismax = 140,
-    title = "full version"
-  )
-fig_full
-
-log_debug("... validated set per category")
-fig_filtered <-
-  myDirtyP(
-    table = tableFiltered_count,
-    yaxismax = 140,
-    title = "filtered version"
-  )
-fig_filtered
-
-log_debug("... rejected set per category")
-fig_anti <-
-  myDirtyP(
-    table = tableAntiFiltered_count,
-    yaxismax = 140,
-    title = "anti version"
-  )
-fig_anti
-
-log_debug("... validation set global")
-newfull <- myDirtyQ(
-  table = table_count_global,
-  yaxismax = 550,
-  title = "new full version"
-)
-newfull
-
-log_debug("... validated set global")
-newfiltered <- myDirtyQ(
-  table = tableFiltered_count_global,
-  yaxismax = 550,
-  title = "new filtered version"
-)
-newfiltered
-
-log_debug("... rejected set global")
-antifull <- myDirtyQ(
-  table = tableAntiFiltered_count_global,
-  yaxismax = 550,
-  title = "anti full version"
-)
-antifull
-
-log_debug("calculating statistics ...")
-old <- table_count %>%
-  select(referenceType,
-    tot,
-    y,
-    n,
-    ratio1 = ratio
-  )
-
-log_debug("... true positives and false positives")
-new <- tableFiltered_count %>%
-  select(
-    referenceType,
-    fil = tot,
-    tp = y,
-    fp = n,
-    ratio2 = ratio
-  )
-
-log_debug("... true negatives and false negatives")
-anti <- tableAntiFiltered_count %>%
-  select(
-    referenceType,
-    anti = tot,
-    fn = y,
-    tn = n,
-    ratioAnti = ratio
-  )
-
-f1Table <- full_join(old, new) %>%
-  replace(is.na(.), 0)
-
-beta <- 0.5
-
-log_debug("... precision, recall and Fbeta", beta, "score")
-f1Table <- full_join(f1Table, anti) %>%
-  mutate(
-    tpfn = tp + fn,
-    tpfp = tp + fp
-  ) %>%
-  mutate(
-    recall = tp / tpfn,
-    precision = tp / tpfp
-  ) %>%
-  mutate(
-    rxp = recall * precision,
-    rpp = recall + precision
-  ) %>%
-  mutate(f2 = 2 * rxp / rpp) %>%
-  select(-tpfn, -tpfp, -rxp, -rpp) %>%
-  mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
-    2) + recall)) %>%
-  replace(. == "NaN", 0)
-
-"%ni%" <- Negate("%in%")
-
-log_debug("... correcting with references ratios")
-refRatios <- inhouseDbFull %>%
-  filter(database %ni% forbidden_export) %>%
-  group_by(referenceType) %>%
-  count() %>%
-  mutate(prop = n / sum(.$n)) %>%
-  select(-n)
-
-f2Table <- left_join(f1Table, refRatios) %>%
-  mutate(
-    f2corr_temp = f2 * prop,
-    recall_temp = recall * prop,
-    precision_temp = precision * prop
-  ) %>%
-  mutate(
-    f2corr = sum(.$f2corr_temp),
-    recallcorr = sum(.$recall_temp),
-    precisioncorr = sum(.$precision_temp)
-  ) %>%
-  mutate()
-
-f2Table_reworked <- f2Table %>%
-  arrange(desc(prop)) %>%
-  select(
-    `reference type` = referenceType,
-    `true positives` = tp,
-    `false positives` = fp,
-    `false negatives` = fn,
-    `true negatives` = tn,
-    `relative abundance` = prop,
-    precision,
-    recall,
-    `F0.5 score` = f2,
-    recallcorr,
-    precisioncorr,
-    f2corr
-  ) %>%
-  rbind(
-    .,
-    tibble(
-      `reference type` = "Total",
-      `true positives` = sum(.$`true positives`),
-      `false positives` = sum(.$`false positives`),
-      `false negatives` = sum(.$`false negatives`),
-      `true negatives` = sum(.$`true negatives`),
-      `relative abundance` = sum(.$`relative abundance`),
-    ),
-    tibble(
-      `reference type` = "Corrected total",
-      `precision` = unique(.$precisioncorr),
-      `recall` = unique(.$recallcorr),
-      `F0.5 score` = unique(.$f2corr),
+  log_debug("visualizing ...")
+  log_debug("... validation set per category")
+  fig_full <-
+    myDirtyP(
+      table = table_count,
+      yaxismax = 140,
+      title = "full version"
     )
-  ) %>%
-  select(
-    `reference type`,
-    `true positives`,
-    `false positives`,
-    `false negatives`,
-    `true negatives`,
-    `relative abundance`,
-    precision,
-    recall,
-    `F0.5 score`,
+  fig_full
+
+  log_debug("... validated set per category")
+  fig_filtered <-
+    myDirtyP(
+      table = tableFiltered_count,
+      yaxismax = 140,
+      title = "filtered version"
+    )
+  fig_filtered
+
+  log_debug("... rejected set per category")
+  fig_anti <-
+    myDirtyP(
+      table = tableAntiFiltered_count,
+      yaxismax = 140,
+      title = "anti version"
+    )
+  fig_anti
+
+  log_debug("... validation set global")
+  newfull <- myDirtyQ(
+    table = table_count_global,
+    yaxismax = 550,
+    title = "new full version"
   )
+  newfull
+
+  log_debug("... validated set global")
+  newfiltered <- myDirtyQ(
+    table = tableFiltered_count_global,
+    yaxismax = 550,
+    title = "new filtered version"
+  )
+  newfiltered
+
+  log_debug("... rejected set global")
+  antifull <- myDirtyQ(
+    table = tableAntiFiltered_count_global,
+    yaxismax = 550,
+    title = "anti full version"
+  )
+  antifull
+
+  log_debug("calculating statistics ...")
+  old <- table_count %>%
+    select(referenceType,
+      tot,
+      y,
+      n,
+      ratio1 = ratio
+    )
+
+  log_debug("... true positives and false positives")
+  new <- tableFiltered_count %>%
+    select(
+      referenceType,
+      fil = tot,
+      tp = y,
+      fp = n,
+      ratio2 = ratio
+    )
+
+  log_debug("... true negatives and false negatives")
+  anti <- tableAntiFiltered_count %>%
+    select(
+      referenceType,
+      anti = tot,
+      fn = y,
+      tn = n,
+      ratioAnti = ratio
+    )
+
+  f1Table <- full_join(old, new) %>%
+    replace(is.na(.), 0)
+
+  beta <- 0.5
+
+  log_debug("... precision, recall and Fbeta", beta, "score")
+  f1Table <- full_join(f1Table, anti) %>%
+    mutate(
+      tpfn = tp + fn,
+      tpfp = tp + fp
+    ) %>%
+    mutate(
+      recall = tp / tpfn,
+      precision = tp / tpfp
+    ) %>%
+    mutate(
+      rxp = recall * precision,
+      rpp = recall + precision
+    ) %>%
+    mutate(f2 = 2 * rxp / rpp) %>%
+    select(-tpfn, -tpfp, -rxp, -rpp) %>%
+    mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
+      2) + recall)) %>%
+    replace(. == "NaN", 0)
+
+  "%ni%" <- Negate("%in%")
+
+  log_debug("... correcting with references ratios")
+  refRatios <- inhouseDbFull %>%
+    filter(database %ni% forbidden_export) %>%
+    group_by(referenceType) %>%
+    count() %>%
+    mutate(prop = n / sum(.$n)) %>%
+    select(-n)
+
+  f2Table <- left_join(f1Table, refRatios) %>%
+    mutate(
+      f2corr_temp = f2 * prop,
+      recall_temp = recall * prop,
+      precision_temp = precision * prop
+    ) %>%
+    mutate(
+      f2corr = sum(.$f2corr_temp),
+      recallcorr = sum(.$recall_temp),
+      precisioncorr = sum(.$precision_temp)
+    ) %>%
+    mutate()
+
+  f2Table_reworked <- f2Table %>%
+    arrange(desc(prop)) %>%
+    select(
+      `reference type` = referenceType,
+      `true positives` = tp,
+      `false positives` = fp,
+      `false negatives` = fn,
+      `true negatives` = tn,
+      `relative abundance` = prop,
+      precision,
+      recall,
+      `F0.5 score` = f2,
+      recallcorr,
+      precisioncorr,
+      f2corr
+    ) %>%
+    rbind(
+      .,
+      tibble(
+        `reference type` = "Total",
+        `true positives` = sum(.$`true positives`),
+        `false positives` = sum(.$`false positives`),
+        `false negatives` = sum(.$`false negatives`),
+        `true negatives` = sum(.$`true negatives`),
+        `relative abundance` = sum(.$`relative abundance`),
+      ),
+      tibble(
+        `reference type` = "Corrected total",
+        `precision` = unique(.$precisioncorr),
+        `recall` = unique(.$recallcorr),
+        `F0.5 score` = unique(.$f2corr),
+      )
+    ) %>%
+    select(
+      `reference type`,
+      `true positives`,
+      `false positives`,
+      `false negatives`,
+      `true negatives`,
+      `relative abundance`,
+      precision,
+      recall,
+      `F0.5 score`,
+    )
 }
 
 log_debug("applying the filtering criteria to the whole DB, this may take a while")
@@ -758,7 +758,7 @@ validationSetFilled_2 <-
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 if (mode == "test") {
-    set.seed(
+  set.seed(
     seed = 42,
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
@@ -886,8 +886,8 @@ finalStats_reworked <- finalStats %>%
   )
 
 if (mode == "full") {
-finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
-  mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
+  finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
+    mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
 }
 
 log_debug("outputing correct entries from manually validated set")
