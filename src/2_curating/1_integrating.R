@@ -158,7 +158,7 @@ if (mode == "full" | mode == "manual") {
       kind = "Mersenne-Twister",
       normal.kind = "Inversion"
     )
-    dbTable_sampled <- dbTable %>%
+    dbTable_sampled_1 <- dbTable %>%
       filter(database %ni% forbidden_export) %>%
       filter(is.na(referenceOriginal_external)) %>%
       filter(!(
@@ -168,7 +168,20 @@ if (mode == "full" | mode == "manual") {
         !is.na(structureOriginal_smiles) &
           !is.na(structureOriginal_nominal)
       )) %>% # to avoid too many names (long for CI)
-      sample_n(size = 500)
+      sample_n(size = 490)
+    dbTable_sampled_2 <- dbTable %>%
+      filter(database %ni% forbidden_export) %>%
+      filter(!is.na(organismOriginal_dirty)) %>%
+      filter(is.na(referenceOriginal_external)) %>%
+      filter(!(
+        !is.na(structureOriginal_inchi) &
+          !is.na(structureOriginal_nominal)
+      ) | !(
+        !is.na(structureOriginal_smiles) &
+          !is.na(structureOriginal_nominal)
+      )) %>% # to avoid too many names (long for CI)
+      sample_n(size = 10)
+    dbTable_sampled <- bind_rows(dbTable_sampled_1,dbTable_sampled_2)
     originalTable_sampled <- dbTable_sampled %>%
       select(database, everything()) %>%
       pivot_longer(
