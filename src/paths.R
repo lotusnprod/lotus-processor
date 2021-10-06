@@ -91,16 +91,14 @@ pathDataProcessed <-
   )
 
 #### db
-pathDataInterimDb <- switch(mode,
-  "full" =
-    file.path(
-      pathDataInterim,
-      "db"
-    ),
-  "manual" = file.path(
-    pathDataInterim
+if (mode != "manual") {
+  pathDataInterimDb <- file.path(
+    pathDataInterim,
+    "db"
   )
-)
+} else {
+  pathDataInterimDb <- file.path(pathDataInterim)
+}
 
 databases <-
   Databases$new(
@@ -573,13 +571,13 @@ pathDataExternalTranslationSourceTcmCmba <-
   )
 
 #### dir
-pathDataInterimDbDir <- switch(mode,
-  "full" =
-    Sys.glob(file.path(paste0(
-      pathDataInterimDb, "/*.tsv.gz"
-    ))),
-  "manual" = file.path(pathDataInterim, "manual","manual.tsv.gz")
-)
+if (mode != "manual") {
+  pathDataInterimDbDir <-
+    Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
+} else {
+  pathDataInterimDbDir <-
+    file.path(pathDataInterim, "manual", "manual.tsv.gz")
+}
 
 #### dictionaries
 pathDataInterimDictionaries <- file.path(
