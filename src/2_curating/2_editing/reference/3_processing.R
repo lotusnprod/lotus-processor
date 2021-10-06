@@ -60,11 +60,11 @@ dataCleanedScore <- dataTranslated %>%
     values_from = referenceCleanedValue
   ) %>%
   mutate_all(as.character) %>%
+  distinct() %>%
   pivot_longer(
     cols = starts_with("referenceCleaned_"),
     names_to = c("drop", "referenceCleanedType"),
     names_sep = "_",
-    names_repair = "unique",
     values_to = "referenceCleanedValue",
     values_drop_na = TRUE
   ) %>%
