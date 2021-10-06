@@ -98,8 +98,7 @@ pathDataInterimDb <- switch(mode,
       "db"
     ),
   "manual" = file.path(
-    pathDataInterim,
-    "db"
+    pathDataInterim
   )
 )
 
@@ -579,7 +578,7 @@ pathDataInterimDbDir <- switch(mode,
     Sys.glob(file.path(paste0(
       pathDataInterimDb, "/*.tsv.gz"
     ))),
-  "manual" = file.path(pathDataInterim, "manual", "manual.tsv.gz")
+  "manual" = file.path(pathDataInterim, "manual")
 )
 
 #### dictionaries
