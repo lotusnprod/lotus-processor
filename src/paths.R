@@ -97,7 +97,7 @@ if (mode != "manual") {
     "db"
   )
 } else {
-  pathDataInterimDb <- file.path(pathDataInterim)
+  pathDataInterimDb <- file.path(pathDataInterim, "manual")
 }
 
 databases <-
@@ -237,7 +237,7 @@ databases$add(
 databases$add(
   name = "manual",
   sourceFiles = NA,
-  interimFile = "manual/manual.tsv.gz"
+  interimFile = "manual.tsv.gz"
 )
 
 databases$add(
@@ -576,7 +576,7 @@ if (mode != "manual") {
     Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
 } else {
   pathDataInterimDbDir <-
-    file.path(pathDataInterim, "manual", "manual.tsv.gz")
+    file.path(pathDataInterimDb, "manual.tsv.gz")
 }
 
 #### dictionaries
