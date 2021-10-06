@@ -40,6 +40,7 @@ dataDoi <-
   ) %>%
   mutate(level = 1) %>%
   mutate_all(as.character)
+dataDoi
 
 log_debug("... original references")
 dataOriginal <-
