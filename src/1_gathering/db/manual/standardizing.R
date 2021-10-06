@@ -34,8 +34,13 @@ data_standard <-
 
 # exporting
 ifelse(
-  test = !dir.exists(dirname(database$interimFile)),
-  yes = dir.create(dirname(database$interimFile)),
-  no = paste(dirname(database$interimFile), "exists")
+  test = !dir.exists("../data/interim"),
+  yes = dir.create("../data/interim"),
+  no = paste("../data/interim", "exists")
+)
+ifelse(
+  test = !dir.exists("../data/interim/manual"),
+  yes = dir.create("../data/interim/manual"),
+  no = paste("../data/interim/manual", "exists")
 )
 database$writeInterim(data_standard)
