@@ -35,9 +35,8 @@ dataTranslated <-
         "referenceCleanedValue" = "referenceTranslatedValue",
         "level"
       )
-  ) %>%
-  data.frame()
-dataTranslated
+  )
+
 log_debug("checking for organism in title, may take a while if running full mode")
 dataCleanedScore <- dataTranslated %>%
   filter(referenceCleanedType == "title") %>%
@@ -61,10 +60,7 @@ dataCleanedScore <- dataTranslated %>%
     values_from = referenceCleanedValue
   ) %>%
   mutate_all(as.character) %>%
-  distinct() 
-  dataCleanedScore
-  dataCleanedScore <- dataCleanedScore %>% 
-    pivot_longer(
+  pivot_longer(
     cols = starts_with("referenceCleaned_"),
     names_to = c("drop", "referenceCleanedType"),
     names_sep = "_",
