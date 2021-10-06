@@ -238,35 +238,41 @@ subDataClean_pmid <- dataCleanedJoinedWideScore %>%
   distinct(referenceValue) %>%
   mutate_all(as.character)
 
-if (mode != "test") {
-  if (mode != "manual") {
-    log_debug("loading pmcid file, this may take a while")
-    # here because of memory
-    PMC_ids <- read_delim(
-      file = pathDataExternalTranslationSourcePubmedFile,
-      delim = ",",
-      col_types = cols(.default = "c")
+if (mode == "test") {
+  PMC_ids <-
+    data.frame(
+      DOI = NA,
+      PMCID = NA,
+      PMID = NA
     ) %>%
-      filter(!is.na(DOI) | !is.na(PMID)) %>%
-      select(
-        DOI,
-        PMCID,
-        PMID
-      ) %>%
-      mutate(DOI = toupper(DOI)) %>%
-      mutate_all(as.character) %>%
-      tibble()
-  } else {
-    ## TEMPORARY to be fast
-    PMC_ids <-
-      data.frame(
-        DOI = NA,
-        PMCID = NA,
-        PMID = NA
-      ) %>%
-      mutate_all(as.character) %>%
-      tibble()
-  }
+    mutate_all(as.character) %>%
+    tibble()
+} else if (mode == "manual") {
+  PMC_ids <-
+    data.frame(
+      DOI = NA,
+      PMCID = NA,
+      PMID = NA
+    ) %>%
+    mutate_all(as.character) %>%
+    tibble()
+} else {
+  log_debug("loading pmcid file, this may take a while")
+  # here because of memory
+  PMC_ids <- read_delim(
+    file = pathDataExternalTranslationSourcePubmedFile,
+    delim = ",",
+    col_types = cols(.default = "c")
+  ) %>%
+    filter(!is.na(DOI) | !is.na(PMID)) %>%
+    select(
+      DOI,
+      PMCID,
+      PMID
+    ) %>%
+    mutate(DOI = toupper(DOI)) %>%
+    mutate_all(as.character) %>%
+    tibble()
 }
 
 log_debug("adding PMID and PMCID")
