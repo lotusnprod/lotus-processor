@@ -15,6 +15,8 @@ library(readr)
 log_debug("... functions")
 source("r/getrefDoi.R")
 
+packageVersion("rcrossref")
+
 log_debug("loading DOI list")
 dataDoi <-
   read_delim(
@@ -177,6 +179,8 @@ ifelse(
   yes = dir.create(pathDataInterimTablesTranslatedReference),
   no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
+
+dataDoi
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceDoi)
