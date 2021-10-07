@@ -33,6 +33,7 @@ jobs:
       - name: Install non-conda dependencies
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
+          conda run -n lotus_env Rscript -e "install.packages(c('remotes'))" -e "remotes::install_deps(dependencies = TRUE)"
           conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
       # - name: Run minimal example processing
       #   run: |
