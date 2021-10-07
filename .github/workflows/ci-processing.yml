@@ -51,8 +51,8 @@ jobs:
           conda run -n lotus_env Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv 
           cd ..
           conda run -n lotus_env MODE=manual make manual-entry
-     - name: Run analyzing
-       run: |
+      - name: Run analyzing
+        run: |
          conda run -n lotus_env MODE=test make analyzing
      # - name: Install visualizing conda dependencies
      #   run: |
