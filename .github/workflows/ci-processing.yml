@@ -32,10 +32,16 @@ jobs:
           $CONDA/bin/mamba env update -f environment.yml -n lotus_env
       - name: Install non-conda dependencies
         run: |
-          bash environment_non_conda.sh
+          conda run -n lotus_env bash environment_non_conda.sh
       # - name: Run minimal example processing
       #   run: |
       #     conda run -n lotus_env MODE=test make lotus-quick
+      - name: Create and populate .Renviron file
+        env:
+          CROSSREF_EMAIL: ${{ secrets.CROSSREF_EMAIL }}
+        run: |
+          touch .Renviron
+          echo crossref_email="$CROSSREF_EMAIL" >> .Renviron
       - name: Run manual entry mode
         run: |
           cd src
