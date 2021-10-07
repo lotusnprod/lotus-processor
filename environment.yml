@@ -24,6 +24,7 @@ dependencies:
   - r-philentropy
   - r-plotly
   - r-purrr
+  - r-rcrossref
   - r-readr
   - r-readxl
   - r-rentrez
@@ -38,6 +39,7 @@ dependencies:
   - r-stringr
   - r-testthat
   - r-tibble
+  - r-tidyjson
   - r-tidyr
   - r-webchem
   - r-XML
