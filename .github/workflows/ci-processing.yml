@@ -36,9 +36,9 @@ jobs:
         run: |
           conda run -n lotus_env bash environment_non_conda.sh
           conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
-      # - name: Run minimal example processing
-      #   run: |
-      #     conda run -n lotus_env MODE=test make lotus-quick
+      - name: Run minimal example processing
+        run: |
+          conda run -n lotus_env MODE=test make lotus-quick
       - name: Create and populate .Renviron file
         env:
           CROSSREF_EMAIL: ${{ secrets.CROSSREF_EMAIL }}
@@ -51,9 +51,9 @@ jobs:
           conda run -n lotus_env Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv 
           cd ..
           conda run -n lotus_env MODE=manual make manual-entry
-     # - name: Run analyzing
-     #   run: |
-     #     conda run -n lotus_env MODE=min make analyzing
+     - name: Run analyzing
+       run: |
+         conda run -n lotus_env MODE=test make analyzing
      # - name: Install visualizing conda dependencies
      #   run: |
      #    $CONDA/bin/conda env create -q --file environment_visualizing.yml

@@ -180,8 +180,6 @@ ifelse(
   no = paste(pathDataInterimTablesTranslatedReference, "exists")
 )
 
-dataDoi
-
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceDoi)
 write_delim(
