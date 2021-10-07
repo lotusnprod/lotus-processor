@@ -1238,6 +1238,12 @@ pathDataInterimTablesAnalyzedSampleKnapsack <-
     "sampleKnapsack.tsv"
   )
 
+pathDataInterimTimestamps <-
+  file.path(
+    pathDataInterim,
+    "timestamps.txt"
+  )
+
 ## dirty for the moment
 pathOriginalGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
@@ -1266,6 +1272,8 @@ pathGnverifierScript <- switch(mode,
   "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_test.sh"
 )
+
+pathTimestampsScript <- "3_analyzing/timestamps.sh"
 
 pathTests <- file.path("../tests")
 

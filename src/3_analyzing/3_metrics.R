@@ -21,8 +21,10 @@ dataset <- read_delim(
   select(
     -`initial retrieved unique observations`,
     -`cleaned referenced structure-organism pairs`,
-    -`pairs validated for wikidata export`
-  )
+    -`pairs validated for wikidata export`,
+    -`timestamp`
+  ) %>%
+  data.frame(check.names = FALSE)
 
 log_debug("initial table ...")
 dbTable <- lapply(pathDataInterimDbDir,
@@ -118,6 +120,36 @@ closedDb <-
   ) %>%
   data.frame()
 
+log_debug("... generating timestamps")
+system(command = paste("bash", pathTimestampsScript))
+
+timestamps <- read_delim(
+  file = pathDataInterimTimestamps,
+  delim = "\t",
+  col_names = FALSE
+)
+
+dates <- timestamps$X1 %>%
+  matrix(., ncol = 2, byrow = TRUE) %>%
+  data.frame() %>%
+  mutate(
+    database = gsub(
+      pattern = "../data/external/dbSource/",
+      replacement = "",
+      x = X1,
+      fixed = TRUE
+    ),
+    timestamp = X2
+  ) %>%
+  mutate(database = gsub(
+    pattern = "/.*",
+    replacement = "",
+    x = database
+  )) %>%
+  arrange(desc(timestamp)) %>%
+  distinct(database, .keep_all = TRUE) %>%
+  select(database, timestamp)
+
 log_debug("performing inner join with uploaded entries")
 openDb <- openDb %>%
   inner_join(., wikidata_pairs)
@@ -151,6 +183,7 @@ stats_table <- left_join(initial_stats, cleaned_stats_3D) %>%
   left_join(., final_stats_3D)
 
 dataset <- dataset %>%
+  full_join(., dates) %>%
   full_join(., stats_table) %>%
   select(
     database,
@@ -159,7 +192,8 @@ dataset <- dataset %>%
     `cleaned referenced structure-organism pairs`,
     `pairs validated for wikidata export`,
     everything()
-  )
+  ) %>%
+  relocate(timestamps, .before = remakrs)
 
 pairsOpenDb_3D <- openDb %>%
   filter(!is.na(organismCleaned) &
@@ -348,6 +382,7 @@ tableStructures_3D <-
     "above100_structures" = sum(structuresPerOrganism_3D$n > 100)
   ) %>%
   data.frame()
+
 colnames(tableStructures_3D)[1] <- "organisms"
 
 tableStructures_2D <-
@@ -364,6 +399,7 @@ tableStructures_2D <-
     "above100_structures" = sum(structuresPerOrganism_2D$n > 100)
   ) %>%
   data.frame()
+
 colnames(tableStructures_2D)[1] <- "organisms"
 
 organismsPerStructure_3D <- pairsOpenDb_3D %>%
@@ -392,6 +428,7 @@ tableOrganisms_3D <-
     "above100_organisms" = sum(organismsPerStructure_3D$n > 100)
   ) %>%
   data.frame()
+
 colnames(tableOrganisms_3D)[1] <- "structures"
 
 tableOrganisms_2D <-
@@ -408,6 +445,7 @@ tableOrganisms_2D <-
     "above100_organisms" = sum(organismsPerStructure_2D$n > 100)
   ) %>%
   data.frame()
+
 colnames(tableOrganisms_2D)[1] <- "structures"
 
 if (mode == "FULL" | mode == "full") {
