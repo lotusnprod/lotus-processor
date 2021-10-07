@@ -32,7 +32,7 @@ jobs:
           $CONDA/bin/mamba env update -f environment.yml -n lotus_env
       - name: Install non-conda dependencies
         run: |
-          conda run -n lotus_env bash environment_non_conda.sh
+          bash environment_non_conda.sh
       # - name: Run minimal example processing
       #   run: |
       #     conda run -n lotus_env MODE=test make lotus-quick
