@@ -8,3 +8,4 @@ echo "Installing packages missing from conda"
 
 conda skeleton cran tidyjson
 conda skeleton cran classyfirer --allow-archived
+conda skeleton cran https://github.com/ropensci/rcrossref
