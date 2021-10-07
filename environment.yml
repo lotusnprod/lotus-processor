@@ -27,6 +27,7 @@ dependencies:
   - r-rcrossref
   - r-readr
   - r-readxl
+  - r-remotes
   - r-rentrez
   - r-rotl
   - r-RPostgreSQL
