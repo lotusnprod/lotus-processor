@@ -139,7 +139,7 @@ dates <- timestamps$X1 %>%
       x = X1,
       fixed = TRUE
     ),
-    timestamp = X2
+    timestamp = as.character.POSIXt(X2)
   ) %>%
   mutate(database = gsub(
     pattern = "/.*",
@@ -193,7 +193,7 @@ dataset <- dataset %>%
     `pairs validated for wikidata export`,
     everything()
   ) %>%
-  relocate(timestamps, .before = remakrs)
+  relocate(timestamp, .before = remark)
 
 pairsOpenDb_3D <- openDb %>%
   filter(!is.na(organismCleaned) &
