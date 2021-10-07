@@ -148,7 +148,8 @@ structureNamed <-
   )
 
 structureNamed_defined <- structureNamed %>%
-  filter(count_unspecified_atomic_stereocenters == 0)
+  filter(count_unspecified_atomic_stereocenters == 0) %>%
+  mutate_all(as.character)
 
 structureNamed_undefined <- structureNamed %>%
   filter(count_unspecified_atomic_stereocenters != 0) %>%
@@ -183,7 +184,8 @@ structureNamed_undefined <- structureNamed %>%
       x = structureCleaned_nameTraditional,
       fixed = TRUE
     )
-  )
+  ) %>%
+  mutate_all(as.character)
 
 structureNamed_cleaned <-
   bind_rows(structureNamed_defined, structureNamed_undefined)
