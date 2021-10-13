@@ -169,6 +169,11 @@ if (mode == "full" | mode == "manual") {
           !is.na(structureOriginal_nominal)
       )) %>% # to avoid too many names (long for CI)
       sample_n(size = 490)
+    set.seed(
+      seed = 42,
+      kind = "Mersenne-Twister",
+      normal.kind = "Inversion"
+    )
     dbTable_sampled_2 <- dbTable %>%
       filter(database %ni% forbidden_export) %>%
       filter(!is.na(organismOriginal_dirty)) %>%
