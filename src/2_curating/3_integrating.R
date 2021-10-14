@@ -232,7 +232,8 @@ organismMinimal <- organismTableFull %>%
   distinct(
     organismType,
     organismValue,
-    organismCleaned
+    organismCleaned,
+    organismDetected
   )
 
 organismMetadata <- organismTableFull %>%
