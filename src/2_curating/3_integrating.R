@@ -232,7 +232,6 @@ organismMinimal <- organismTableFull %>%
   distinct(
     organismType,
     organismValue,
-    organismDetected,
     organismCleaned
   )
 
@@ -336,7 +335,6 @@ inhouseDbMinimal <-
     structureValue,
     referenceType,
     referenceValue,
-    organismDetected,
     organismCleaned,
     structureCleanedInchikey,
     structureCleanedInchi,
