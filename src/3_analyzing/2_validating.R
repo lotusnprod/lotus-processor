@@ -320,22 +320,22 @@ globalSample <- bind_rows(table_old, table) %>%
     structureValue,
     referenceType,
     referenceValue,
-    # organismCleaned,
-    # structureCleanedInchi,
-    # structureCleanedSmiles,
-    # structureCleanedInchikey,
-    # referenceCleanedDoi,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    structureCleanedInchikey,
+    referenceCleanedDoi,
     curator,
     validated,
     comments
   ) %>%
   filter(!is.na(validated)) %>%
-  # mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
-  # left_join(., inhouseDbMinimal) %>%
-  # select(
-  #   -referenceCleanedTitle,
-  #   -organismType
-  # ) %>%
+  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
+  left_join(., inhouseDbMinimal) %>%
+  select(
+    -referenceCleanedTitle,
+    -organismType
+  ) %>%
   distinct()
 
 a <- paste0("\\b", oldDbNames$oldDbName, "\\b")

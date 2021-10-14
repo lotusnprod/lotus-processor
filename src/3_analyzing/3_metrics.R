@@ -33,6 +33,7 @@ dbTable <- lapply(pathDataInterimDbDir,
   col_types = cols(.default = "c")
 ) %>%
   rbindlist(l = ., fill = TRUE) %>%
+  filter(database != "manual") %>%
   select(
     database,
     organismOriginal_clean = organism_clean,
@@ -64,6 +65,7 @@ inhouseDbMinimal <-
       "referenceCleanedTitle"
     )
   ) %>%
+  filter(database != "manual") %>%
   distinct()
 
 log_debug("validated for export ...")
@@ -81,6 +83,7 @@ openDb <-
       "referenceCleanedDoi"
     )
   ) %>%
+  filter(database != "manual") %>%
   distinct()
 
 log_debug("exported ...")
@@ -95,12 +98,12 @@ wikidata_pairs <-
     col_select = c(
       "structureCleanedInchikey" = "structure_inchikey",
       "organismCleaned" = "taxon_name",
-      "referenceCleaned" = "reference_doi"
+      "referenceCleanedDoi" = "reference_doi"
     )
   ) %>%
   filter(!is.na(structureCleanedInchikey) &
     !is.na(organismCleaned) &
-    !is.na(referenceCleaned)) %>%
+    !is.na(referenceCleanedDoi)) %>%
   distinct()
 
 log_debug("... closed db")
@@ -448,7 +451,7 @@ tableOrganisms_2D <-
 
 colnames(tableOrganisms_2D)[1] <- "structures"
 
-if (mode == "FULL" | mode == "full") {
+if (mode == "full") {
   write.table(
     x = dataset,
     file = "../docs/dataset.csv",
