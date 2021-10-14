@@ -233,12 +233,7 @@ organismMinimal <- organismTableFull %>%
     organismType,
     organismValue,
     organismDetected,
-    organismCleaned,
-    organismCleaned_dbTaxo,
-    organismCleaned_id,
-    # organismCleaned_dbTaxoTaxonIds,
-    organismCleaned_dbTaxoTaxonRanks,
-    organismCleaned_dbTaxoTaxonomy
+    organismCleaned
   )
 
 organismMetadata <- organismTableFull %>%
@@ -341,12 +336,11 @@ inhouseDbMinimal <-
     structureValue,
     referenceType,
     referenceValue,
+    organismDetected,
     organismCleaned,
     structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac,
     referenceCleanedTitle
   )
 
