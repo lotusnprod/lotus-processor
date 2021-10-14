@@ -201,7 +201,10 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated_old <-
-    read_delim(file = pathDataInterimDictionariesOrganismDictionary) %>%
+    read_delim(file = pathDataInterimDictionariesOrganismDictionary,
+               delim = "\t",
+               col_types = cols(.default = "c")
+               ) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -210,11 +213,12 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       organismType,
       organismValue,
       organismDetected
-    ) %>%
-    mutate_all(as.character)
+    )
 
   dataCleanedOrganismManipulated_new <-
-    read_delim(file = pathDataInterimTablesProcessedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
+               delim = "\t",
+               col_types = cols(.default = "c")) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -223,8 +227,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       organismType,
       organismValue,
       organismDetected
-    ) %>%
-    mutate_all(as.character)
+    )
 
   dataCleanedOrganismManipulated <-
     bind_rows(
@@ -239,7 +242,9 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 }
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
-    read_delim(file = pathDataInterimTablesProcessedOrganismFinal) %>%
+    read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
+               delim = "\t",
+               col_types = cols(.default = "c")) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -248,8 +253,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       organismType,
       organismValue,
       organismDetected
-    ) %>%
-    mutate_all(as.character)
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
