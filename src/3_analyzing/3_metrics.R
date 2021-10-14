@@ -452,13 +452,10 @@ tableOrganisms_2D <-
 colnames(tableOrganisms_2D)[1] <- "structures"
 
 if (mode == "full") {
-  write.table(
+  fwrite(
     x = dataset,
     file = "../docs/dataset.csv",
-    row.names = FALSE,
-    quote = FALSE,
-    sep = ",",
-    fileEncoding = "UTF-8"
+    sep = ","
   )
 
   cat(
