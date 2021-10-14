@@ -239,8 +239,6 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... cleaned organisms")
-}
-if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated <-
     read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
                delim = "\t",
