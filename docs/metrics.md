@@ -1,6 +1,6 @@
-636153 | 392107 (3D|2D) unique referenced structure-organism pairs. 
+636154 | 392107 (3D|2D) unique referenced structure-organism pairs. 
  They consist of 
- 273031 | 135861 (3D|2D) unique curated structures and 
+ 273032 | 135861 (3D|2D) unique curated structures and 
  35261 unique organisms,
  originating from 
  23 initial open databases. 
