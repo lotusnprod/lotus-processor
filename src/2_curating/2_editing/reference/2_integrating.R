@@ -198,8 +198,6 @@ dataFull <-
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
-}
-if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   dataCleanedOrganismManipulated_old <-
     read_delim(file = pathDataInterimDictionariesOrganismDictionary,
                delim = "\t",
@@ -256,8 +254,6 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   log_debug("... reference dictionary, this may take a while")
-}
-if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   referenceDictionary <-
     read_delim(
       file = pathDataInterimDictionariesReferenceDictionary,
