@@ -25,7 +25,10 @@ structureCounted <-
 
 old <-
   read_delim(
-    file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+    file = file.path(
+      pathDataInterimDictionariesStructureDictionaryClassyfire,
+      "direct_parent.tsv.gz"
+    ),
     delim = "\t"
   ) %>%
   distinct(inchikey)
