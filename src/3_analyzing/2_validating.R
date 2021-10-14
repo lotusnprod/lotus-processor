@@ -320,22 +320,22 @@ globalSample <- bind_rows(table_old, table) %>%
     structureValue,
     referenceType,
     referenceValue,
-    organismCleaned,
-    structureCleanedInchi,
-    structureCleanedSmiles,
-    structureCleanedInchikey,
-    referenceCleanedDoi,
+    # organismCleaned,
+    # structureCleanedInchi,
+    # structureCleanedSmiles,
+    # structureCleanedInchikey,
+    # referenceCleanedDoi,
     curator,
     validated,
     comments
   ) %>%
   filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
-  left_join(., inhouseDbMinimal) %>%
-  select(
-    -referenceCleanedTitle,
-    -organismType
-  ) %>%
+  # mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
+  # left_join(., inhouseDbMinimal) %>%
+  # select(
+  #   -referenceCleanedTitle,
+  #   -organismType
+  # ) %>%
   distinct()
 
 a <- paste0("\\b", oldDbNames$oldDbName, "\\b")
@@ -351,8 +351,6 @@ globalSample$database <- stri_replace_all_regex(
 
 log_debug("adding metadata")
 inhouseDbFull <- inhouseDbMinimal %>%
-  left_join(., structureMetadata) %>%
-  left_join(., organismMetadata) %>%
   left_join(., referenceMetadata)
 
 log_debug("joining manual validation results with documented pairs")
@@ -588,6 +586,8 @@ if (mode == "full") {
 log_debug("applying the filtering criteria to the whole DB, this may take a while")
 openDb <- inhouseDbFull %>%
   filter_dirty() %>%
+  left_join(.,structureMetadata) %>%
+  left_join(.,organismMetadata) %>%
   distinct(
     database,
     organismCleaned,
@@ -646,6 +646,8 @@ openDb <- inhouseDbFull %>%
 log_debug("outputting closed pairs")
 closedDb <- inhouseDbFull %>%
   filter(database %in% forbidden_export) %>%
+  left_join(.,structureMetadata) %>%
+  left_join(.,organismMetadata) %>%
   distinct(
     database,
     organismCleaned,
