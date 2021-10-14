@@ -154,7 +154,7 @@ dataPublishingDetails3 <- do.call(
   "rbind",
   lapply(
     list.files(
-      path = file.path(pathDataInterimTablesTranslatedReferenceTitleFolder),
+      path = file.path(pathDataInterimTablesTranslatedReferencePublishingDetailsFolder),
       pattern = "*.tsv.gz",
       full.names = FALSE
     ),
