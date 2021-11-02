@@ -1,6 +1,8 @@
 database	prettyDataBase
 afrotryp	Afrotryp
 alkamid	Alkamid
+antibase	AntiBase
+antimarin	AntiMarin
 biofacquim	BIOFACQUIM
 biophytmol	BioPhytMol
 carotenoiddb	Carotenoid DB
@@ -8,7 +10,7 @@ coconut	COCONUT
 cyanometdb	CyanoMetDB
 datawarrior	DataWarrior
 dianatdb	DiaNat-DB
-dnp	DNP 
+dnp	DNP
 drduke	Dr. Duke's database
 foodb	FooDB
 inflamnat	InflamNat
@@ -36,3 +38,4 @@ tmmc	TM-MC
 tppt	TPPT
 unpd	UNPD
 wakankensaku	Wakankensaku
+wikidata	Wikidata
