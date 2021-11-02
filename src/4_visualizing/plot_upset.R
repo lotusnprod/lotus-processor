@@ -43,7 +43,8 @@ if (mode == "full") {
 
   log_debug("... closed DBs")
   closedDb <-
-    read_delim(file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")) %>%
+    read_delim(file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
+               col_types = cols(.default = "c")) %>%
     distinct(
       database,
       organismCleaned,
