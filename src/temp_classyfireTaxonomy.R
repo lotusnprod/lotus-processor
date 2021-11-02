@@ -13,24 +13,24 @@ library(jsonlite)
 library(readr)
 library(tidyr)
 
-classyfire_old <-
-  read_delim(file = pathDataInterimDictionariesStructureDictionaryClassyfireFile) %>%
-  distinct(structureCleanedInchikey3D, .keep_all = TRUE) %>%
-  select(
-    structureCleanedInchikey = structureCleanedInchikey3D,
-    structureCleaned_classyfire_1kingdom = structureCleaned_1kingdom,
-    structureCleaned_classyfire_2superclass = structureCleaned_2superclass,
-    structureCleaned_classyfire_3class = structureCleaned_3class,
-    structureCleaned_classyfire_4subclass = structureCleaned_4subclass,
-    structureCleaned_classyfire_5directParent = structureCleaned_5directParent
-  )
+# classyfire_old <-
+#   read_delim(file = pathDataInterimDictionariesStructureDictionaryClassyfireFile) %>%
+#   distinct(structureCleanedInchikey3D, .keep_all = TRUE) %>%
+#   select(
+#     structureCleanedInchikey = structureCleanedInchikey3D,
+#     structureCleaned_classyfire_1kingdom = structureCleaned_1kingdom,
+#     structureCleaned_classyfire_2superclass = structureCleaned_2superclass,
+#     structureCleaned_classyfire_3class = structureCleaned_3class,
+#     structureCleaned_classyfire_4subclass = structureCleaned_4subclass,
+#     structureCleaned_classyfire_5directParent = structureCleaned_5directParent
+#   )
 
 classyfire_json <-
   fromJSON(txt = "../data/external/taxonomySource/structure/classyfire/tax_nodes.json")
 
 classyfire_direct_parent <-
   read_delim(
-    file = "../data/interim/dictionaries/structure/classyfire/direct_parent.tsv.gz",
+    file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
     delim = "\t"
   ) %>%
   distinct(inchikey,
