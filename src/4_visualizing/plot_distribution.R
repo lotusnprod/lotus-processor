@@ -3,6 +3,10 @@ log_debug("This script draws the distribution of organisms per structure and vic
 
 start <- Sys.time()
 
+# reticulate::conda_install('r-reticulate', 'python-kaleido')
+# reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
+# reticulate::use_miniconda('r-reticulate')
+
 log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
@@ -123,7 +127,7 @@ e <- list(
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -90,
+  ax = -77,
   ay = -5,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
@@ -223,7 +227,7 @@ fig <- plot_ly() %>%
 fig
 
 if (mode == "full") {
-  orca(
+  save_image(
     p = fig,
     file = file.path("../res", "distribution.pdf"),
     width = 800,

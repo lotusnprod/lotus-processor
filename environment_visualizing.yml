@@ -11,6 +11,7 @@ dependencies:
   - cmcrameri
   - pandas
   - python=3.*
+  - python-kaleido 
   - rdkit
   - tmap
   - scipy
@@ -34,6 +35,7 @@ dependencies:
   - r-ggraph
   - r-plotly
   - r-readr>=2.0.1
+  - r-reticulate
   - r-rotl
   - r-R.utils ## needed for new version of data.table to read .gz
   - r-rvcheck ## needed by ggtree
