@@ -343,13 +343,13 @@ if (mode == "full") {
   getGraphStudiedPlant(plant = "Tripterygium wilfordii")
   dev.off()
 
-  log_debug("... drawing Citrus aurantium metabolites repartition")
+  log_debug("... drawing Citrus reticulata metabolites repartition")
   pdf(
-    file = file.path("../res", "upset_citrusAurantium.pdf"),
+    file = file.path("../res", "upset_citrusReticulata.pdf"),
     width = 16,
     height = 9
   )
-  getGraphStudiedPlant(plant = "Citrus aurantium")
+  getGraphStudiedPlant(plant = "Citrus reticulata")
   dev.off()
 
   log_debug("... drawing Camellia sinensis metabolites repartition")
