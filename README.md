@@ -1,7 +1,7 @@
 # The LOTUS Initiative
 
 *LOTUS*, actually, represents the most exhaustive resource of documented structure-organism pairs.
-Within the frame of current computational approaches in Natural Produts’s research and related fields, 
+Within the frame of current computational approaches in Natural Products’s research and related fields, 
 these documented structure-organism pairs should allow a more complete understanding of organisms and their chemistry.
 
 As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki).
