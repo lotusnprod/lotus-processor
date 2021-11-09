@@ -199,10 +199,11 @@ dataFull <-
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
   dataCleanedOrganismManipulated_old <-
-    read_delim(file = pathDataInterimDictionariesOrganismDictionary,
-               delim = "\t",
-               col_types = cols(.default = "c")
-               ) %>%
+    read_delim(
+      file = pathDataInterimDictionariesOrganismDictionary,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    ) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -214,9 +215,11 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     )
 
   dataCleanedOrganismManipulated_new <-
-    read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
-               delim = "\t",
-               col_types = cols(.default = "c")) %>%
+    read_delim(
+      file = pathDataInterimTablesProcessedOrganismFinal,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    ) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
@@ -238,9 +241,11 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... cleaned organisms")
   dataCleanedOrganismManipulated <-
-    read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
-               delim = "\t",
-               col_types = cols(.default = "c")) %>%
+    read_delim(
+      file = pathDataInterimTablesProcessedOrganismFinal,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    ) %>%
     mutate(
       organismDetected =
         word(organismDetected, 1)
