@@ -29,7 +29,7 @@ works_locally_only <- TRUE
 
 ## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
-wikidataLotusExporterPath <- "../../wikidataLotusExporter"
+wikidataLotusExporterPath <- "../../lotus-wikidata-interact/downloadLotus/"
 wikidataLotusExporterDataPath <-
   file.path(wikidataLotusExporterPath, "data")
 wikidataLotusExporterDataOutputPath <-

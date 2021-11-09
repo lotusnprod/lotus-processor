@@ -31,14 +31,6 @@ data_triples <-
     file = wikidataLotusExporterDataOutputTriplesPath
   )
 
-data_temp <-
-  read_delim(
-    file = file.path(
-      pathDataExternalDbSource,
-      "210505_wikidata_query.tsv"
-    )
-  )
-
 # manipulating
 data_manipulated <- data_triples %>%
   left_join(data_organism, by = c("taxon" = "wikidataId")) %>%
@@ -58,13 +50,6 @@ data_manipulated <- data_triples %>%
   ) %>%
   distinct() %>%
   data.frame()
-
-data_manipulated <- data_temp %>%
-  distinct(
-    structure_inchi = compound_inchi,
-    organism_clean = taxon_name,
-    reference_doi
-  )
 
 # standardizing
 data_standard <-
