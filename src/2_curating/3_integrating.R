@@ -19,10 +19,10 @@ originalTable <-
     col_types = cols(.default = "c")
   )
 
-originalStructureTable <-
-  read_delim(
-    file = pathDataInterimTablesOriginalStructureFull,
-    col_types = cols(.default = "c")
+originalStructureTable <- originalTable %>%
+  distinct(
+    structureType,
+    structureValue
   )
 
 log_debug("loading dictionaries ...")
@@ -416,20 +416,12 @@ ifelse(
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
-if (file.exists(pathDataInterimTablesCuratedTable)) {
-  write_delim(
-    x = inhouseDbMinimal,
-    file = pathDataInterimTablesCuratedTable,
-    delim = "\t",
-    append = TRUE
-  )
-} else {
-  write_delim(
-    x = inhouseDbMinimal,
-    file = pathDataInterimTablesCuratedTable,
-    delim = "\t"
-  )
-}
+write_delim(
+  x = inhouseDbMinimal,
+  file = pathDataInterimTablesCuratedTable,
+  delim = "\t"
+)
+
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
 write_delim(
@@ -439,20 +431,12 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesStructureAntiDictionary)
-if (file.exists(pathDataInterimDictionariesStructureAntiDictionary)) {
-  write_delim(
-    x = structureNA,
-    file = pathDataInterimDictionariesStructureAntiDictionary,
-    delim = "\t",
-    append = TRUE
-  )
-} else {
-  write_delim(
-    x = structureNA,
-    file = pathDataInterimDictionariesStructureAntiDictionary,
-    delim = "\t"
-  )
-}
+write_delim(
+  x = structureNA,
+  file = pathDataInterimDictionariesStructureAntiDictionary,
+  delim = "\t"
+)
+
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
 write_delim(
@@ -492,20 +476,11 @@ write_delim(
 )
 
 log_debug(pathDataInterimTablesCuratedTableMaximal)
-if (file.exists(pathDataInterimTablesCuratedTableMaximal)) {
-  write_delim(
-    x = openDbMaximal,
-    file = pathDataInterimTablesCuratedTableMaximal,
-    delim = "\t",
-    append = TRUE
-  )
-} else {
-  write_delim(
-    x = openDbMaximal,
-    file = pathDataInterimTablesCuratedTableMaximal,
-    delim = "\t"
-  )
-}
+write_delim(
+  x = openDbMaximal,
+  file = pathDataInterimTablesCuratedTableMaximal,
+  delim = "\t"
+)
 
 end <- Sys.time()
 
