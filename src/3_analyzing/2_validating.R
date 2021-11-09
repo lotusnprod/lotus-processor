@@ -586,8 +586,8 @@ if (mode == "full") {
 log_debug("applying the filtering criteria to the whole DB, this may take a while")
 openDb <- inhouseDbFull %>%
   filter_dirty() %>%
-  left_join(.,structureMetadata) %>%
-  left_join(.,organismMetadata) %>%
+  left_join(., structureMetadata) %>%
+  left_join(., organismMetadata) %>%
   distinct(
     database,
     organismCleaned,
@@ -646,8 +646,8 @@ openDb <- inhouseDbFull %>%
 log_debug("outputting closed pairs")
 closedDb <- inhouseDbFull %>%
   filter(database %in% forbidden_export) %>%
-  left_join(.,structureMetadata) %>%
-  left_join(.,organismMetadata) %>%
+  left_join(., structureMetadata) %>%
+  left_join(., organismMetadata) %>%
   distinct(
     database,
     organismCleaned,
