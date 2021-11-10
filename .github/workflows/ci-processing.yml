@@ -144,8 +144,9 @@ jobs:
           conda install mamba -n base -c conda-forge
       - name: Install dependencies
         run: |
-          choco install wget
+          choco install make
           choco install unzip
+          choco install wget
           conda env update -f environment.yml -n lotus_env
       - name: Install non-conda dependencies
         env:
