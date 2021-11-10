@@ -9,7 +9,6 @@ dependencies:
   - pandas
   - python=3.*
   - rdkit
-  - bioconductor-chemminer
   - scipy
   - r-base
   - r-clisymbols ## needed by classyfirer
@@ -45,4 +44,3 @@ dependencies:
   - r-webchem
   - r-XML
   - r-xml2
-  - unzip

@@ -4,7 +4,14 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-library(ChemmineR)
+if(!require(BiocManager)) {
+  install.packages("BiocManager")
+  library(BiocManager)
+}
+if(!require(ChemmineR)) {
+  BiocManager::install("BiocManager")
+  library(ChemmineR)
+}
 
 # get paths
 database <- databases$get("streptomedb")
