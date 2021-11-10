@@ -145,7 +145,7 @@ jobs:
           python-version: 3.8
       - name: Install mamba
         run: |
-          <conda_base_env>\condabin\conda_hook.bat
+          conda init
           conda install mamba -n base -c conda-forge
       - name: Install dependencies
         run: |
