@@ -85,7 +85,7 @@ jobs:
           python-version: 3.8
       - name: Install mamba
         run: |
-          conda install mamba -n base -c conda-forge
+          sudo conda install mamba -n base -c conda-forge
       - name: Install dependencies
         run: |
           $CONDA/bin/mamba env update -f environment.yml -n lotus_env
