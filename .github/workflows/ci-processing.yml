@@ -137,6 +137,8 @@ jobs:
         uses: Vampire/setup-wsl@v1.1.0
       - name: setup-conda
         uses: s-weigand/setup-conda@v1.0.7
+        with:
+          update-conda: true
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
