@@ -1,8 +1,9 @@
 # The LOTUS Initiative
 
-*LOTUS*, actually, represents the most exhaustive resource of documented structure-organism pairs.
-Within the frame of current computational approaches in Natural Products’s research and related fields, 
+*LOTUS* is a comprehensive collection of documented structure-organism pairs.
+Within the frame of current computational approaches in Natural Products research and related fields, 
 these documented structure-organism pairs should allow a more complete understanding of organisms and their chemistry.
+For additional details on this first project of the LOTUS Initiative please have a look at our preprint [https://lotusnprod.github.io/lotus-manuscript/](https://lotusnprod.github.io/lotus-manuscript/)
 
 As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki).
 
@@ -22,15 +23,16 @@ conda run -n lotus_env MODE=min make lotus-quick
 ## Data Availability Statements
 
 The data used to support the findings of this study have been deposited on OSF [https://osf.io/pmgux/](https://osf.io/pmgux/).
-An snapshot of the repository at the time of publication is also available under the same link.
+Outputs of the lotus-processor will be regularly archived at [https://zenodo.org/record/5665295](https://zenodo.org/record/5665295)
+A snapshot of the repository at the time of publication is also available under the same link.
 
 ## Dataset list
 
-All data used for this study is listed under [docs/dataset.csv](docs/dataset.csv)
+All data sources used for this study are listed under [docs/dataset.csv](docs/dataset.csv)
 
 ## Contributing
 
-Please read [contributing](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [contributing](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests.
 
 ## Authors
 
