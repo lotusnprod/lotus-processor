@@ -66,8 +66,7 @@ jobs:
      # - name: Run visualizing
      #   run: |
      #     conda run -n lotus_visualizing_env MODE=min make visualizing
-
-jobs:
+     
   lotus-macOS:
     runs-on: macos-latest
     defaults:
