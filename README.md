@@ -16,7 +16,6 @@ If you are in a hurry and don't want to go through the whole documentation, what
 git clone git@github.com:lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
-conda run -n lotus_env bash environment_non_conda.sh
 conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
 conda run -n lotus_env MODE=min make lotus-quick
 ```
