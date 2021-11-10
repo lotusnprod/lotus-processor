@@ -83,22 +83,19 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Install mamba
-        run: |
-          sudo conda install mamba -n base -c conda-forge
       - name: Install dependencies
         run: |
-          $CONDA/bin/mamba env update -f environment.yml -n lotus_env
+          sudo conda env update -f environment.yml -n lotus_env
       - name: Install non-conda dependencies
         env:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          conda run -n lotus_env bash environment_non_conda.sh
-          conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
+          sudo conda run -n lotus_env bash environment_non_conda.sh
+          sudo conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
       - name: Run minimal example processing
         run: |
-          conda run -n lotus_env MODE=test make lotus-quick
+          sudo conda run -n lotus_env MODE=test make lotus-quick
       - name: Create and populate .Renviron file
         env:
           CROSSREF_EMAIL: ${{ secrets.CROSSREF_EMAIL }}
@@ -108,9 +105,9 @@ jobs:
       - name: Run manual entry mode
         run: |
           cd src
-          conda run -n lotus_env Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv 
+          sudo conda run -n lotus_env Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv 
           cd ..
-          conda run -n lotus_env MODE=manual make manual-entry
+          sudo conda run -n lotus_env MODE=manual make manual-entry
      # - name: Run analyzing
      #   run: |
      #    conda run -n lotus_env MODE=test make analyzing
