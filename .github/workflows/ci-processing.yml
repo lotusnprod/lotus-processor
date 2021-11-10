@@ -121,11 +121,11 @@ jobs:
      #   run: |
      #     conda run -n lotus_visualizing_env MODE=min make visualizing
 
-lotus-windows:
+  lotus-windows:
     runs-on: windows-latest
     defaults:
       run:
-        shell: bash
+        shell: wsl-bash {0}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v2
