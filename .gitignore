@@ -24,3 +24,8 @@ src/local_pma
 /src/2_curating/2_editing/organism/subscripts/2_translating_organism_kotlin/.gradle/
 /src/Rplots.pdf
 /src/2_curating/2_editing/organism/2_translating_organism_kotlin/2_translating_organism_kotlin.iml
+
+#kotlin related settings files check if OK to gitignore them
+.settings
+.project
+.classpath
