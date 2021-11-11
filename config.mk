@@ -21,7 +21,7 @@ export UNAME := $(shell uname)
 
 PLATFORM := unsupported
 ifeq ($(OS),Windows_NT)
-	PLATFORM := unsupported
+	PLATFORM := windows
 else
 	UNAME_S := $(shell uname -s)
     ifeq ($(UNAME_S),Linux)
