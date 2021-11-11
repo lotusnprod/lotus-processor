@@ -54,24 +54,22 @@ get-opsin: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 bin/gnfinder: ${BIN_PATH}/gnfinder
 ${BIN_PATH}/gnfinder: config.mk
 	mkdir -p bin
-	if [[ ${PLATFORM} == "mac" || ${PLATFORM} == "linux" ]]; \
-	then \
-	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnfinder > bin/gnfinder; \
-	chmod +x bin/gnfinder; \
-	else \
-	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-win-64.zip | unzip gnfinder -d bin/gnfinder; \
-	fi
+ifneq (${PLATFORM},$(filter ${PLATFORM},"mac" "linux"))
+	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnfinder > bin/gnfinder
+	chmod +x bin/gnfinder
+else
+	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-win-64.zip | unzip gnfinder -d bin/gnfinder
+endif
 
 bin/gnverifier: ${BIN_PATH}/gnverifier
 ${BIN_PATH}/gnverifier: config.mk
 	mkdir -p bin
-	if [[ ${PLATFORM} == "mac" || ${PLATFORM} == "linux" ]]; \
-	then \
-	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnverifier > bin/gnverifier; \
-	chmod +x bin/gnverifier; \
-	else \
-	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-win-64.zip | unzip gnverifier -d bin/gnverifier; \
-	fi
+ifneq (${PLATFORM},$(filter ${PLATFORM},"mac" "linux"))
+	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnverifier > bin/gnverifier
+	chmod +x bin/gnverifier
+else
+	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-win-64.zip | unzip gnverifier -d bin/gnverifier
+endif
 
 bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
