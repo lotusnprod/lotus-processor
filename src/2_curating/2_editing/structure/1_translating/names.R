@@ -17,6 +17,7 @@ log_debug("... functions")
 source("r/capitalize.R")
 source("r/name2inchi_cactus.R")
 source("r/name2inchi_cts.R")
+source("r/parallel.R")
 source("r/preparing_name.R")
 source("r/y_as_na.R")
 
@@ -123,7 +124,11 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 2,
+      mc.cores = if (.Platform$OS.type == "unix") {
+        2
+      } else {
+        1
+      },
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
@@ -187,7 +192,11 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = 2,
+      mc.cores = if (.Platform$OS.type == "unix") {
+        2
+      } else {
+        1
+      },
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
@@ -255,7 +264,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+      mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,

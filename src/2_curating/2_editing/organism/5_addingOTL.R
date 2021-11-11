@@ -17,6 +17,7 @@ library(readr)
 library(rotl)
 library(RSQLite)
 library(tidyr)
+source("r/parallel.R")
 
 canonical_name_colname <- "organismCleaned"
 
@@ -199,7 +200,7 @@ if (is_empty(new_matched_names) == FALSE) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+      mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
