@@ -33,6 +33,7 @@ jobs:
         with:
           additional-packages:
             curl
+            dos2unix
             gzip
             make
             unzip
@@ -55,9 +56,16 @@ jobs:
           echo crossref_email="$CROSSREF_EMAIL" >> .Renviron
       - name: Run tests (unix)
         if: matrix.os != 'windows-latest'
+        env:
+          R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
            bash tests/integration_test.sh
       - name: Run tests (windows)
         if: matrix.os == 'windows-latest'
+        env:
+          R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          dos2unix tests/integration_test.sh
           wsl bash tests/integration_test.sh
