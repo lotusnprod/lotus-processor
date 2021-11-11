@@ -57,7 +57,11 @@ ifelse(
 )
 
 log_debug("submitting to GNFinder")
-system(command = paste("bash", pathTranslatedGnfinderScript))
+if (.Platform$OS.type == "unix") {
+  system(command = paste("bash", pathTranslatedGnfinderScript))
+} else {
+  shell(paste("bash", pathTranslatedGnfinderScript))
+}
 
 length <-
   length(list.files(

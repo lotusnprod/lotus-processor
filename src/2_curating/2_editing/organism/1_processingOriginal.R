@@ -66,7 +66,11 @@ ifelse(
 )
 
 log_debug("submitting to GNVerifier")
-system(command = paste("bash", pathOriginalGnverifierScript))
+if (.Platform$OS.type == "unix") {
+  system(command = paste("bash", pathOriginalGnverifierScript))
+} else {
+  shell(paste("bash", pathOriginalGnverifierScript))
+}
 
 verified <-
   stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedOriginalTable))
@@ -135,7 +139,11 @@ if (nrow(dataOrganismNoVerified) != 0) {
 }
 
 log_debug("submitting to GNFinder")
-system(command = paste("bash", pathOriginalGnfinderScript))
+if (.Platform$OS.type == "unix") {
+  system(command = paste("bash", pathOriginalGnfinderScript))
+} else {
+  shell(paste("bash", pathOriginalGnfinderScript))
+}
 
 log_debug("treating GNFinder results")
 length <-

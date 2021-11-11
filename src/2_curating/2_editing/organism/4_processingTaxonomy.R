@@ -49,7 +49,11 @@ write_delim(
 ## because gnverifier does not parse quotes
 
 log_debug("submitting to GNVerifier")
-system(command = paste("bash", pathGnverifierScript))
+if (.Platform$OS.type == "unix") {
+  system(command = paste("bash", pathGnverifierScript))
+} else {
+  shell(paste("bash", pathGnverifierScript))
+}
 
 verified <-
   stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
