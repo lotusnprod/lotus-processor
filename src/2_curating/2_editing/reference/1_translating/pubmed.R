@@ -32,7 +32,6 @@ if (!is.na(dataPubmed[, 1])) {
       X = as.character(dataPubmed$referenceOriginal_pubmed),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = 1,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
