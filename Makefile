@@ -59,7 +59,7 @@ ifeq (${PLATFORM},$(filter ${PLATFORM},mac linux))
 	chmod +x bin/gnfinder
 else
 	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-win-64.zip > bin/gnfinder.zip
-	unzip bin/gnfinder.zip -d bin/
+	unzip -o bin/gnfinder.zip -d bin/
 	rm bin/gnfinder.zip
 endif
 
@@ -71,7 +71,7 @@ ifeq (${PLATFORM},$(filter ${PLATFORM},mac linux))
 	chmod +x bin/gnverifier
 else
 	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-win-64.zip > bin/gnverifier.zip
-	unzip bin/gnverifier.zip -d bin/
+	unzip -o bin/gnverifier.zip -d bin/
 	rm bin/gnverifier.zip
 endif
 
