@@ -44,7 +44,7 @@ jobs:
           mamba-version: "*"
           channels: conda-forge, bioconda, defaults
           channel-priority: true
-          activate-environment: lotus_env
+          activate-environment: base
           environment-file: environment.yml
       - uses: s-weigand/setup-conda@v1
       - name: Create and populate .Renviron file
@@ -53,6 +53,11 @@ jobs:
         run: |
           touch .Renviron
           echo crossref_email="$CROSSREF_EMAIL" >> .Renviron
-      - name: Run tests
+      - name: Run tests (unix)
+        if: matrix.os != 'windows-latest'
         run: |
-          bash tests/integration_test.sh
+           bash tests/integration_test.sh
+      - name: Run tests (windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          wsl bash tests/integration_test.sh
