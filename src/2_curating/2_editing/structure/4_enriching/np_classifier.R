@@ -18,6 +18,7 @@ library(tidyr)
 
 log_debug("... functions")
 source("r/getClass.R")
+source("r/parallel.R")
 source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
@@ -72,7 +73,7 @@ if (length(queries) != 0) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+      mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,

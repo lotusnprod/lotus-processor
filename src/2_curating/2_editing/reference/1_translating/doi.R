@@ -14,6 +14,7 @@ library(readr)
 
 log_debug("... functions")
 source("r/getrefDoi.R")
+source("r/parallel.R")
 
 packageVersion("rcrossref")
 
@@ -33,7 +34,7 @@ if (!is.na(dataDoi[, 1])) {
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.silent = TRUE,
-      mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+      mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,

@@ -1,5 +1,6 @@
 # load("../data/interim/temp.Rdata")
 source("r/log_debug.R")
+source("r/parallel.R")
 log_debug("This script adds chemical taxonomy to structures dictionary")
 
 start <- Sys.time()
@@ -114,7 +115,7 @@ alternative_parents <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+    mc.cores = numCores,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
@@ -143,7 +144,7 @@ chebi <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+    mc.cores = numCores,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
@@ -171,7 +172,7 @@ direct_parent <- invisible(
     mc.preschedule = TRUE,
     mc.set.seed = TRUE,
     mc.silent = TRUE,
-    mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+    mc.cores = numCores,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,

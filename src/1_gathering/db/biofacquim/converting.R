@@ -4,11 +4,11 @@
 source("paths.R")
 source("r/standardizing_original.R")
 
-if(!require(BiocManager)) {
+if (!require(BiocManager)) {
   install.packages("BiocManager")
   library(BiocManager)
 }
-if(!require(ChemmineR)) {
+if (!require(ChemmineR)) {
   BiocManager::install("BiocManager")
   library(ChemmineR)
 }

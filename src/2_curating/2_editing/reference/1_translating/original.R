@@ -16,6 +16,7 @@ library(stringr)
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
+source("r/parallel.R")
 
 log_debug("loading original references lists")
 length <-
@@ -105,7 +106,7 @@ for (i in num) {
         mc.preschedule = FALSE,
         mc.set.seed = TRUE,
         mc.silent = TRUE,
-        mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+        mc.cores = numCores,
         mc.cleanup = TRUE,
         mc.allow.recursive = TRUE,
         ignore.interactive = TRUE,
