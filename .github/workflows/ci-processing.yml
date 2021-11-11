@@ -28,46 +28,6 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - uses: r-lib/actions/setup-r@v1
-        with:
-          extra-repositories:
-            bioconductor
-            git
-      - uses: r-lib/actions/setup-r-dependencies@v1
-        with:
-          needs: |
-            codetools 
-            data.table
-            dplyr
-            DBI
-            forcats
-            gdata
-            jsonlite
-            pbmcapply
-            philentropy
-            plotly
-            purrr
-            rcrossref
-            readr
-            readxl
-            remotes
-            rentrez
-            rotl
-            RPostgreSQL
-            RSQLite
-            R.utils
-            rvest
-            splitstackshape
-            stringdist
-            stringi
-            stringr
-            testthat
-            tibble
-            tidyjson
-            tidyr
-            webchem
-            XML
-            xml2
       - if: matrix.os == 'windows-latest'
         uses: Vampire/setup-wsl@v1.1.0
         with:
@@ -107,4 +67,5 @@ jobs:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          wsl conda env update -f environment.yml base
           wsl bash tests/integration_test.sh
