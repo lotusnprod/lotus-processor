@@ -105,7 +105,6 @@ for (i in num) {
         X = dataPublishingDetails$referenceOriginal_publishingDetails,
         mc.preschedule = TRUE,
         mc.set.seed = TRUE,
-        mc.silent = TRUE,
         mc.cores = numCores,
         mc.cleanup = TRUE,
         mc.allow.recursive = TRUE,

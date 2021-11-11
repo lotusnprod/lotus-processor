@@ -105,7 +105,6 @@ for (i in num) {
         X = dataOriginal$referenceOriginal_original,
         mc.preschedule = FALSE,
         mc.set.seed = TRUE,
-        mc.silent = TRUE,
         mc.cores = numCores,
         mc.cleanup = TRUE,
         mc.allow.recursive = TRUE,

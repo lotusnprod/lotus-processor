@@ -38,7 +38,6 @@ extracted_elements <- invisible(
   pbmclapply(
     FUN = getalkamid,
     X = X,
-    mc.silent = FALSE,
     mc.cores = numCores,
     mc.cleanup = TRUE,
     mc.allow.recursive = TRUE,
