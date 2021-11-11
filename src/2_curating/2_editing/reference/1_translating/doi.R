@@ -33,7 +33,6 @@ if (!is.na(dataDoi[, 1])) {
       X = dataDoi$referenceOriginal_doi,
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,

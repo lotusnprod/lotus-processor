@@ -123,7 +123,6 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       X = seq_len(nrow(dataForCTS)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = if (.Platform$OS.type == "unix") {
         2
       } else {
@@ -191,7 +190,6 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
       X = seq_len(nrow(dataForCTS_2)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = if (.Platform$OS.type == "unix") {
         2
       } else {
@@ -263,7 +261,6 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       X = seq_len(nrow(dataForCactus)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,

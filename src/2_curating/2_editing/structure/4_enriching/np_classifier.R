@@ -72,7 +72,6 @@ if (length(queries) != 0) {
       X = X,
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
-      mc.silent = TRUE,
       mc.cores = numCores,
       mc.cleanup = TRUE,
       mc.allow.recursive = TRUE,

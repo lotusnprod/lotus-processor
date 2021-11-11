@@ -104,7 +104,6 @@ for (i in num) {
         X = dataSplit$referenceOriginal_split,
         mc.preschedule = TRUE,
         mc.set.seed = TRUE,
-        mc.silent = TRUE,
         mc.cores = numCores,
         mc.cleanup = TRUE,
         mc.allow.recursive = TRUE,
