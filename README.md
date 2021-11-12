@@ -10,14 +10,15 @@ As the shorter READMEs are the best, we decided to give detailed documentation i
 
 ## tl;dr
 
-If you are in a hurry and don't want to go through the whole documentation, what you need is:
+If you are in a hurry and just want a quick test without reading the whole documentation, what you need is:
 
 ```
 git clone git@github.com:lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
-conda run -n lotus_env Rscript -e 'remotes::install_github("ropensci/rcrossref")'
-conda run -n lotus_env MODE=min make lotus-quick
+conda activate lotus_env
+Rscript -e 'remotes::install_github("ropensci/rcrossref")'
+make MODE=test lotus-quick
 ```
 
 ## Data Availability Statements
