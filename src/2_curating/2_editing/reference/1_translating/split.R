@@ -16,6 +16,7 @@ library(stringr)
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
+source("r/parallel.R")
 
 log_debug("loading split references lists")
 length <-
