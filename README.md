@@ -6,7 +6,7 @@ these documented structure-organism pairs should allow a more complete understan
 
 For additional details on this first project of the LOTUS Initiative please have a look at our preprint [https://lotusnprod.github.io/lotus-manuscript/](https://lotusnprod.github.io/lotus-manuscript/)
 
-As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki).
+As the shorter READMEs are the best, we decided to give detailed documentation in our [Wiki](https://github.com/lotusnprod/lotus-processor/wiki). ❤️
 
 ## tl;dr
 
