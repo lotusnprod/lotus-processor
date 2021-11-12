@@ -27,10 +27,16 @@ fun main(args: Array<String>) {
     val pathDataExternal = "$pathData/external"
 
     val pathDataInterimDictionaries = "$pathDataExternal/dictionarySource"
-    val pathDataInterimDictionariesTcmNames = "$pathDataInterimDictionaries/tcm/names.tsv.gz"
-    if (args[1] in setOf("test", "min", "manual")) val pathDataInterimDictionariesTcmNames = "$pathData/../tests/tests_dic_tcm_min.tsv.gz"
-    val pathDataInterimDictionariesCommonNames = "$pathDataInterimDictionaries/common/names.tsv.gz"
-    if (args[1] in setOf("test", "min", "manual")) val pathDataInterimDictionariesCommonNames = "$pathData/../tests/tests_dic_common_min.tsv.gz"
+    val pathDataInterimDictionariesTcmNames = if (args[1] in setOf("test", "min", "manual")) {
+                        "$pathData/../tests/tests_dic_tcm_min.tsv.gz"
+                    } else {
+                        "$pathDataInterimDictionaries/tcm/names.tsv.gz"
+                    }
+    val pathDataInterimDictionariesCommonNames = if (args[1] in setOf("test", "min", "manual")) {
+                        "$pathData/../tests/tests_dic_common_min.tsv.gz"
+                    } else {
+                        "$pathDataInterimDictionaries/common/names.tsv.gz"
+                    }
     val pathDataInterimDictionariesCommonDenyDic = "$pathDataInterimDictionaries/common/deny.tsv"
 
     val pathDataInterimTables = "$pathData/interim/tables_$mode"
