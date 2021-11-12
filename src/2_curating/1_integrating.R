@@ -151,7 +151,7 @@ if (mode == "full" | mode == "manual") {
     mutate(referenceOriginal_pubmed = as.character(referenceOriginal_pubmed))
 
   if (mode == "full") {
-    log_debug("sampling rows for min mode")
+    log_debug("sampling rows for test mode")
     "%ni%" <- Negate("%in%")
     set.seed(
       seed = 42,

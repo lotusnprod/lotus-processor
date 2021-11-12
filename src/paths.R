@@ -1284,6 +1284,10 @@ pathTestsFile <-
     "test" = "tests.tsv"
   ))
 
+pathTestsDicCommonFile <- file.path(pathTests, "tests_dic_common_min.tsv.gz")
+
+pathTestsDicTcmFile <- file.path(pathTests, "tests_dic_tcm_min.tsv.gz")
+
 pathTestsExpectations <- file.path(pathTests, "expectations")
 
 pathTestsOrganisms <- file.path(

@@ -84,7 +84,7 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 tests:
 	cd src && Rscript ${TESTS_PATH}/tests.R 
 
-gathering-quick: gathering-custom-dictionaries gathering-databases-quick gathering-translation-quick gathering-taxonomy-full
+gathering-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick
 
 gathering-full: gathering-custom-dictionaries gathering-databases-full gathering-translation-full gathering-taxonomy-full
 
@@ -124,7 +124,7 @@ gathering-databases-scrape: ${DATABASES_SCRAPE}
 	mkdir -p ${INTERIM_DB_PATH}
 	make -C ${SRC_GATHERING_DB_PATH} gathering-databases-scrape
 
-gathering-translation-quick: phenolexplorer-download gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common-quick gathering-translation-tcm-quick
+gathering-translation-quick: gathering-translation-common-quick gathering-translation-tcm-quick
 
 gathering-translation-full: gathering-pmcid gathering-gbif gathering-chinese-board gathering-translation-tcmid gathering-translation-common gathering-translation-tcm
 
@@ -303,8 +303,10 @@ visualizing-upset:
 visualizing-distribution:
 	cd src && Rscript ${SRC_VISUALIZING_PATH}/plot_distribution.R
 
-lotus-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating
+lotus-quick: gathering-quick curating
 
 lotus: gathering-full curating analyzing visualizing
+
+lotus-full: gathering-full-hard curating analyzing visualizing
 
 manual-entry: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating analyzing-quick
