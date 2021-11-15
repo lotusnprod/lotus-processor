@@ -22,14 +22,20 @@ source("r/parallel.R")
 canonical_name_colname <- "organismCleaned"
 
 dataCuratedOrganismAuto <-
-  read_delim(file = pathDataInterimTablesProcessedOrganismFinal)
+  read_delim(file = pathDataInterimTablesProcessedOrganismFinal,
+             delim = "\t",
+             col_types = cols(.default = "c"))
 
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-
-    read_delim(file = wikidataLotusExporterDataOutputTriplesPath)
+    read_delim(file = wikidataLotusExporterDataOutputTriplesPath,
+               delim = "\t",
+               col_types = cols(.default = "c"))
 
   organismsPostWikidata <-
-    read_delim(file = wikidataLotusExporterDataOutputTaxaPath)
+    read_delim(file = wikidataLotusExporterDataOutputTaxaPath,
+               delim = "\t",
+               col_types = cols(.default = "c"))
 
   postWikidata <- left_join(
     triplesPostWikidata %>% distinct(taxon),
