@@ -317,28 +317,23 @@ referenceMetadata <- referenceTableFull %>%
   )
 
 log_debug("cleaning memory ...")
+rm(organismTableFull)
 gc(
   verbose = TRUE,
   reset = TRUE,
   full = TRUE
 )
-rm(organismTableFull)
 
 log_debug("joining minimal table ...")
 inhouseDbMinimal <-
   inner_join(originalTable, structureMinimal) %>%
   inner_join(., organismMinimal) %>%
   left_join(., referenceMinimal %>%
-    select(-organismDetected)) %>%
-  filter(!is.na(referenceCleanedTitle) |
-    database %in% forbidden_export) %>%
-  filter(
-    !is.na(referenceCleanedDoi) |
-      !is.na(referenceCleanedPmcid) |
-      !is.na(referenceCleanedPmid) |
-      database %in% forbidden_export
-  ) %>%
-  distinct(
+    select(-organismDetected))
+
+inhouseDbMinimal_1 <- inhouseDbMinimal %>%
+  filter(database %in% forbidden_export) %>%
+  select(
     database,
     organismType,
     organismValue,
@@ -351,7 +346,82 @@ inhouseDbMinimal <-
     structureCleanedInchi,
     structureCleanedSmiles,
     referenceCleanedTitle
-  )
+  ) %>%
+  distinct()
+
+inhouseDbMinimal_2 <- inhouseDbMinimal %>%
+  filter(!is.na(referenceCleanedTitle))
+
+rm(inhouseDbMinimal)
+
+inhouseDbMinimal_2_1 <- inhouseDbMinimal_2 %>%
+  filter(!is.na(referenceCleanedDoi)) %>%
+  select(
+    database,
+    organismType,
+    organismValue,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchikey,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedTitle
+  ) %>%
+  distinct()
+inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 %>%
+  filter(!is.na(referenceCleanedPmcid)) %>%
+  select(
+    database,
+    organismType,
+    organismValue,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchikey,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedTitle
+  ) %>%
+  distinct()
+inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 %>%
+  filter(!is.na(referenceCleanedPmid)) %>%
+  select(
+    database,
+    organismType,
+    organismValue,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchikey,
+    structureCleanedInchi,
+    structureCleanedSmiles,
+    referenceCleanedTitle
+  ) %>%
+  distinct()
+
+inhouseDbMinimal <-
+  bind_rows(
+    inhouseDbMinimal_2_1,
+    inhouseDbMinimal_2_2,
+    inhouseDbMinimal_2_3,
+    inhouseDbMinimal_1
+  ) %>%
+  distinct()
+
+rm(
+  inhouseDbMinimal_2_1,
+  inhouseDbMinimal_2_2,
+  inhouseDbMinimal_2_3,
+  inhouseDbMinimal_1,
+  inhouseDbMinimal_2
+)
 
 log_debug("outputting table with missing empty translations (for later on) ...")
 openDbMaximal <- originalTable %>%

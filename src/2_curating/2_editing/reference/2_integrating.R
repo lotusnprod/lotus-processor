@@ -8,10 +8,13 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
+library(data.table)
 library(dplyr)
 library(readr)
 library(stringr)
 library(tidyr)
+
+source("r/split_data_table.R")
 
 log_debug("... files ...")
 log_debug("... DOI")
@@ -322,7 +325,7 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
 }
 
 log_debug("... with organisms")
-dataJoined <-
+dataTranslated <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
   distinct(
@@ -331,37 +334,10 @@ dataJoined <-
     referenceType,
     referenceValue,
     organismDetected
-  )
-
-rm(
-  dataCleanedOrganismManipulated_new,
-  dataCleanedOrganismManipulated_old,
-  dataDoi,
-  dataOriginal,
-  dataPublishingDetails,
-  dataPubmed,
-  dataSplit,
-  dataTitle,
-  dataFull,
-  referenceDictionary,
-  referenceOrganismDictionary,
-  dataCleanedOrganismManipulated
-)
-
-log_debug("... with reference dictionary")
-dataTranslated <- left_join(
-  dataJoined,
-  dataCrossref,
-  by = c(
-    "referenceValue" = "referenceOriginal",
-    "referenceType" = "origin"
-  )
-)
-
-rm(dataJoined)
+  ) %>%
+  data.table()
 
 log_debug("ensuring directories exist")
-
 ifelse(
   test = !dir.exists(pathDataInterimDictionaries),
   yes = dir.create(pathDataInterimDictionaries),
@@ -375,11 +351,12 @@ ifelse(
 )
 
 log_debug("exporting, this may take a while if running full mode")
-log_debug(pathDataInterimTablesTranslatedReferenceFile)
-write_delim(
+log_debug(pathDataInterimTablesTranslatedReference)
+split_data_table(
   x = dataTranslated,
-  delim = "\t",
-  file = pathDataInterimTablesTranslatedReferenceFile
+  no_rows_per_frame = 100000,
+  text = "",
+  path_to_store = pathDataInterimTablesTranslatedReference
 )
 
 log_debug(pathDataInterimDictionariesReferenceDictionary)
@@ -388,8 +365,6 @@ write_delim(
   delim = "\t",
   file = pathDataInterimDictionariesReferenceDictionary
 )
-
-rm(dataCrossref)
 
 end <- Sys.time()
 
