@@ -24,16 +24,20 @@ log_debug(" Step 4")
 log_debug("... files ... ")
 log_debug("... cleaned organisms ")
 dataCleanedOrganism <-
-  read_delim(file = pathDataInterimTablesProcessedOrganismTranslatedTable,
-             delim = "\t",
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimTablesProcessedOrganismTranslatedTable,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
   distinct()
 
 log_debug(" ... taxa ranks dictionary ")
 taxaRanksDictionary <-
-  read_delim(file = pathDataInterimDictionariesTaxaRanks,
-             delim = "\t",
-             col_types = cols(.default = "c"))
+  read_delim(
+    file = pathDataInterimDictionariesTaxaRanks,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
 dataCleanedOrganismVerify <- dataCleanedOrganism %>%
   filter(!is.na(organismCleaned)) %>%

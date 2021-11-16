@@ -41,7 +41,7 @@ log_debug("filtering entries")
 dataCleanedScore <- dataTranslated %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismValue) &
-    !is.na(referenceCleanedValue)) 
+    !is.na(referenceCleanedValue))
 
 log_debug("checking for organism in title, may take a while if running full mode")
 dataCleanedScore <- dataCleanedScore %>%
@@ -56,7 +56,7 @@ dataCleanedScore <- dataCleanedScore %>%
     ),
     yes = 1,
     no = 0
-  )) 
+  ))
 
 log_debug("pivoting")
 dataCleanedScore <- dataCleanedScore %>%
