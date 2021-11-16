@@ -37,11 +37,14 @@ dataTranslated <-
       )
   )
 
-log_debug("checking for organism in title, may take a while if running full mode")
+log_debug("filtering entries")
 dataCleanedScore <- dataTranslated %>%
   filter(referenceCleanedType == "title") %>%
   filter(!is.na(organismValue) &
-    !is.na(referenceCleanedValue)) %>%
+    !is.na(referenceCleanedValue)) 
+
+log_debug("checking for organism in title, may take a while if running full mode")
+dataCleanedScore <- dataCleanedScore %>%
   mutate(referenceCleaned_scoreTitleOrganism = ifelse(
     test = str_detect(
       string = fixed(tolower(
@@ -53,7 +56,10 @@ dataCleanedScore <- dataTranslated %>%
     ),
     yes = 1,
     no = 0
-  )) %>%
+  )) 
+
+log_debug("pivoting")
+dataCleanedScore <- dataCleanedScore %>%
   pivot_wider(
     names_from = referenceCleanedType,
     names_prefix = "referenceCleaned_",
@@ -66,12 +72,16 @@ dataCleanedScore <- dataTranslated %>%
     names_sep = "_",
     values_to = "referenceCleanedValue",
     values_drop_na = TRUE
-  ) %>%
+  )
+
+log_debug("filtering again")
+dataCleanedScore <- dataCleanedScore %>%
   filter(referenceCleanedType == "scoreTitleOrganism") %>%
   filter(referenceCleanedValue == 1) %>%
   select(-drop) %>%
   distinct()
 
+log_debug("joining results")
 dataCleanedJoined <- bind_rows(dataTranslated, dataCleanedScore) %>%
   filter(!is.na(organismValue))
 
