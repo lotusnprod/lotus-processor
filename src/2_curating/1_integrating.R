@@ -509,9 +509,11 @@ referenceTable_doi <- dbTable %>%
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_doi <- anti_join(
-      x = referenceTable_doi,
+      x = referenceTable_doi %>%
+        mutate(origin = "doi"),
       y = referenceDictionary
-    )
+    ) %>%
+      select(-origin)
   }
 }
 
@@ -532,9 +534,11 @@ referenceTable_pubmed <- dbTable %>%
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_pubmed <- anti_join(
-      x = referenceTable_pubmed,
+      x = referenceTable_pubmed %>%
+        mutate(origin = "pubmed"),
       y = referenceDictionary
-    )
+    ) %>%
+      select(-origin)
   }
 }
 
@@ -562,9 +566,11 @@ referenceTable_title <- dbTable %>%
 if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_title <- anti_join(
-      x = referenceTable_title,
+      x = referenceTable_title %>%
+        mutate(origin = "title"),
       y = referenceDictionary
-    )
+    ) %>%
+      select(-origin)
   }
 }
 
@@ -593,8 +599,10 @@ if (mode != "test") {
     referenceTable_publishingDetails <-
       anti_join(
         x = referenceTable_publishingDetails,
-        y = referenceDictionary
-      )
+        y = referenceDictionary %>%
+          mutate(origin = "publishingDetails")
+      ) %>%
+      select(-origin)
   }
 }
 
@@ -625,9 +633,11 @@ if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_split <-
       anti_join(
-        x = referenceTable_split,
+        x = referenceTable_split %>%
+          mutate(origin = "split"),
         y = referenceDictionary
-      )
+      ) %>%
+      select(-origin)
   }
 }
 
@@ -659,9 +669,11 @@ if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_original <-
       anti_join(
-        x = referenceTable_original,
+        x = referenceTable_original %>%
+          mutate(origin = "original"),
         y = referenceDictionary
-      )
+      ) %>%
+      select(-origin)
   }
 }
 

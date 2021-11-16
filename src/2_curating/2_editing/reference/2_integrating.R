@@ -269,12 +269,12 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... reference organism dictionary")
-referenceOrganismDictionary <-
-  read_delim(
-    file = pathDataInterimDictionariesReferenceOrganismDictionary,
-    delim = "\t",
-    col_types = cols(.default = "c")
-  )
+  referenceOrganismDictionary <-
+    read_delim(
+      file = pathDataInterimDictionariesReferenceOrganismDictionary,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    )
 }
 
 log_debug("joining ...")

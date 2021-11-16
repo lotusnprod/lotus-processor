@@ -40,7 +40,7 @@ wikidataLotusExporterDataOutputStructuresPath <-
   "https://zenodo.org/record/5668855/files/compounds.tsv"
 wikidataLotusExporterDataOutputReferencesPath <-
   "https://zenodo.org/record/5668855/files/references.tsv"
-wikidataLotusExporterDataOutputTriplesPath <- 
+wikidataLotusExporterDataOutputTriplesPath <-
   "https://zenodo.org/record/5668855/files/compound_reference_taxon.tsv"
 
 # databases for which we have no right to disseminate the data
