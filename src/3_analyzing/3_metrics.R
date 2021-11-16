@@ -57,6 +57,7 @@ log_debug("final table ...")
 inhouseDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
+    delim = "\t",
     col_types = cols(.default = "c"),
     col_select = c(
       "database",
