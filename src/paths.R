@@ -35,16 +35,13 @@ wikidataLotusExporterDataPath <-
 wikidataLotusExporterDataOutputPath <-
   file.path(wikidataLotusExporterDataPath, "output")
 wikidataLotusExporterDataOutputTaxaPath <-
-  file.path(wikidataLotusExporterDataOutputPath, "taxa.tsv")
+  "https://zenodo.org/record/5668855/files/taxa.tsv"
 wikidataLotusExporterDataOutputStructuresPath <-
-  file.path(wikidataLotusExporterDataOutputPath, "compounds.tsv")
+  "https://zenodo.org/record/5668855/files/compounds.tsv"
 wikidataLotusExporterDataOutputReferencesPath <-
-  file.path(wikidataLotusExporterDataOutputPath, "references.tsv")
-wikidataLotusExporterDataOutputTriplesPath <-
-  file.path(
-    wikidataLotusExporterDataOutputPath,
-    "compound_reference_taxon.tsv"
-  )
+  "https://zenodo.org/record/5668855/files/references.tsv"
+wikidataLotusExporterDataOutputTriplesPath <- 
+  "https://zenodo.org/record/5668855/files/compound_reference_taxon.tsv"
 
 # databases for which we have no right to disseminate the data
 forbidden_export <- c("antibase", "antimarin", "dnp", "foodb")
