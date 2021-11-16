@@ -13,7 +13,11 @@ library(readr)
 
 log_debug("loading db, if running fullmode, this may take a while")
 inhouseDbMinimal <-
-  read_delim(file = pathDataInterimTablesCuratedTable) %>%
+  read_delim(
+    file = pathDataInterimTablesCuratedTable,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
   filter(database %ni% forbidden_export) %>%
   data.frame()
 
@@ -24,11 +28,19 @@ frozen_metadata <-
   ))
 
 structureMetadata <-
-  read_delim(file = pathDataInterimDictionariesStructureMetadata) %>%
+  read_delim(
+    file = pathDataInterimDictionariesStructureMetadata,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
   filter(structureCleaned_stereocenters_unspecified == 0)
 
 referenceOrganismDictionary <-
-  read_delim(file = pathDataInterimDictionariesReferenceOrganismDictionary) %>%
+  read_delim(
+    file = pathDataInterimDictionariesReferenceOrganismDictionary,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
 ## structures

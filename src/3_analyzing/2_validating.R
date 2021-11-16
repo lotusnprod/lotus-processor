@@ -125,6 +125,7 @@ log_debug("... documented pairs")
 inhouseDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
+    delim = "\t",
     col_types = cols(.default = "c")
   )
 
@@ -132,6 +133,7 @@ log_debug("... reference metadata")
 structureMetadata <-
   read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   distinct(
@@ -152,6 +154,7 @@ log_debug("... organism metadata")
 organismMetadata <-
   read_delim(
     file = pathDataInterimDictionariesOrganismMetadata,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   distinct(
@@ -167,6 +170,7 @@ log_debug("... reference metadata")
 referenceMetadata <-
   read_delim(
     file = pathDataInterimDictionariesReferenceMetadata,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   distinct(
