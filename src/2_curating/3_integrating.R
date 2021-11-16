@@ -16,6 +16,7 @@ log_debug("... original table")
 originalTable <-
   read_delim(
     file = pathDataInterimTablesOriginalTable,
+    delim = "\t",
     col_types = cols(.default = "c")
   )
 
@@ -31,6 +32,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   structureDictionary <-
     read_delim(
       file = pathDataInterimDictionariesStructureDictionary,
+      delim = "\t",
       col_types = cols(.default = "c")
     )
 }
@@ -40,6 +42,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   organismDictionary <-
     read_delim(
       file = pathDataInterimDictionariesOrganismDictionary,
+      delim = "\t",
       col_types = cols(.default = "c")
     )
 }
@@ -49,6 +52,7 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   referenceOrganismDictionary <-
     read_delim(
       file = pathDataInterimDictionariesReferenceOrganismDictionary,
+      delim = "\t",
       col_types = cols(.default = "c")
     )
 }
@@ -58,6 +62,7 @@ if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   structureMetadata <-
     read_delim(
       file = pathDataInterimDictionariesStructureMetadata,
+      delim = "\t",
       col_types = cols(.default = "c")
     )
 }
@@ -67,6 +72,7 @@ if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   organismMetadata <-
     read_delim(
       file = pathDataInterimDictionariesOrganismMetadata,
+      delim = "\t",
       col_types = cols(.default = "c")
     )
 }
@@ -75,6 +81,7 @@ log_debug("... cleaned organisms")
 organismTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismFinal,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   select(
@@ -103,6 +110,7 @@ log_debug("... translated structures")
 translatedStructureTable <-
   read_delim(
     file = pathDataInterimTablesTranslatedStructureFinal,
+    delim = "\t",
     col_types = cols(.default = "c")
   )
 
@@ -110,6 +118,7 @@ log_debug("... cleaned structures")
 cleanedStructureTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedStructureNamed,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   select(
@@ -134,6 +143,7 @@ log_debug("... cleaned references")
 referenceTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedReferenceFile,
+    delim = "\t",
     col_types = cols(.default = "c")
   ) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
@@ -422,7 +432,6 @@ write_delim(
   delim = "\t"
 )
 
-
 log_debug(pathDataInterimDictionariesStructureDictionary)
 write_delim(
   x = structureMinimal,
@@ -436,7 +445,6 @@ write_delim(
   file = pathDataInterimDictionariesStructureAntiDictionary,
   delim = "\t"
 )
-
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
 write_delim(
