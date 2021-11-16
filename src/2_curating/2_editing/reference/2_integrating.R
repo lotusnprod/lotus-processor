@@ -267,6 +267,16 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     )
 }
 
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
+  log_debug("... reference organism dictionary")
+referenceOrganismDictionary <-
+  read_delim(
+    file = pathDataInterimDictionariesReferenceOrganismDictionary,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
+}
+
 log_debug("joining ...")
 log_debug("... all reference types")
 dataCrossref <- bind_rows(
@@ -276,7 +286,18 @@ dataCrossref <- bind_rows(
   dataPubmed,
   dataSplit,
   dataTitle
-)
+) %>%
+  filter(!is.na(referenceOriginal)) %>%
+  filter(
+    !is.na(referenceTranslatedValue)
+  ) %>%
+  distinct(
+    referenceOriginal,
+    referenceTranslatedType,
+    origin,
+    referenceTranslatedValue,
+    level
+  )
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   dataCrossref <- bind_rows(dataCrossref, referenceDictionary)
@@ -295,6 +316,11 @@ dataCrossref <- dataCrossref %>%
     level
   )
 
+if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
+  dataFull <- dataFull %>%
+    anti_join(., referenceOrganismDictionary)
+}
+
 log_debug("... with organisms")
 dataJoined <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
@@ -308,6 +334,8 @@ dataJoined <-
   )
 
 rm(
+  dataCleanedOrganismManipulated_new,
+  dataCleanedOrganismManipulated_old,
   dataDoi,
   dataOriginal,
   dataPublishingDetails,
@@ -316,6 +344,7 @@ rm(
   dataTitle,
   dataFull,
   referenceDictionary,
+  referenceOrganismDictionary,
   dataCleanedOrganismManipulated
 )
 
