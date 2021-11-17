@@ -167,7 +167,7 @@ foodb$organism_dirty <- y_as_na(foodb$organism_dirty, "")
 data_standard <- standardizing_original(
   data_selected = foodb,
   db = "foodb",
-  structure_field = c("structure_name", "structure_smiles", "structure_inchi"),
+  structure_field = "structure_smiles",
   organism_field = c("organism_clean", "organism_dirty"),
   reference_field = c(
     "reference_external",

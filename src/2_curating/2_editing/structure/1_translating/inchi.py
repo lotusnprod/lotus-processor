@@ -16,15 +16,15 @@ from rdkit import Chem
 try:
     input_file_path = sys.argv[1]
     ouput_file_path = sys.argv[2]
-    smiles_column_header = sys.argv[3]
+    inchi_column_header = sys.argv[3]
 
     print('Parsing gziped tab separated file '
           + '\n'
           + input_file_path
           + 'with column: '
           + '\n'
-          + smiles_column_header
-          + ' as SMILES column. \n'
+          + inchi_column_header
+          + ' as InChI column. \n'
           + ' Proceeding to the the ROMol object conversion and returning the InChI in file : '
           + '\n'
           + ouput_file_path)
@@ -40,7 +40,7 @@ df = pd.read_csv(
     sep='\t')
 
 if (len(df) == 1) and (df.empty):
-    df[smiles_column_header] = '[Pu]'
+    df[inchi_column_header] = 'InChI=1S/Pu'
     print('your dataframe is empty, plutonium loaded \n')
 else:
     print('your dataframe is not empty :) \n')
@@ -49,10 +49,10 @@ else:
 # df.info()
 
 # keeping non-null entries
-df = df[df[smiles_column_header].notnull()]
+df = df[df[inchi_column_header].astype(str).str.startswith('InChI')]
 
 # replacing unwanted characters
-df[smiles_column_header].replace(regex=True,
+df[inchi_column_header].replace(regex=True,
                                  inplace=True,
                                  to_replace=r'"',
                                  value=r''
@@ -62,21 +62,19 @@ df[smiles_column_header].replace(regex=True,
 
 
 # generating ROMOL
-df['ROMol'] = df[smiles_column_header].map(Chem.MolFromSmiles)
+df['ROMol'] = df[inchi_column_header].map(Chem.MolFromInchi)
 
 # removing entries for which no ROMol object could be generated
 df = df[~df['ROMol'].isnull()]
 
 # generating the InChI
-df['inchi'] = df['ROMol'].map(Chem.MolToInchi)
+df['smiles'] = df['ROMol'].map(Chem.MolToSmiles)
 
 # renaming
-# naming not OK checkz with Adriano
-
-df['structureTranslated_smiles'] = df['inchi']
+df['structureTranslated_inchi'] = df['smiles']
 
 # dropping old columns
-df = df.drop(['inchi', 'ROMol'], axis=1)
+df = df.drop(['smiles', 'ROMol'], axis=1)
 
 # exporting
 if not os.path.exists(os.path.dirname(ouput_file_path)):

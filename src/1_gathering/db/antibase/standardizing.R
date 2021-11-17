@@ -64,11 +64,9 @@ data_standard <-
   standardizing_original(
     data_selected = data_corrected,
     db = "antibase",
-    structure_field = c("structure_smiles", "structure_name"),
-    organism_field = c("organism_clean", "organism_dirty"),
-    reference_field = c(
-      "reference_publishingDetails"
-    )
+    structure_field = "structure_smiles",
+    organism_field = "organism_dirty",
+    reference_field = "reference_publishingDetails"
   )
 
 # exporting
