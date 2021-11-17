@@ -598,9 +598,9 @@ if (mode != "test") {
   if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
     referenceTable_publishingDetails <-
       anti_join(
-        x = referenceTable_publishingDetails,
-        y = referenceDictionary %>%
-          mutate(origin = "publishingDetails")
+        x = referenceTable_publishingDetails %>%
+          mutate(origin = "publishingDetails"),
+        y = referenceDictionary
       ) %>%
       select(-origin)
   }
