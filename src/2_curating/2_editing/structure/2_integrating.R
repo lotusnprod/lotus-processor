@@ -24,15 +24,15 @@ nominalStructureTable <-
   read_delim(file = pathDataInterimTablesTranslatedStructureNominal)
 
 log_debug("... SMILES list")
-smilesStructureTable <-
-  read_delim(file = pathDataInterimTablesTranslatedStructureSmiles)
+inchiStructureTable <-
+  read_delim(file = pathDataInterimTablesTranslatedStructureInchi)
 
 log_debug("joining")
 translatedStructureTable <-
   left_join(
     originalTable,
-    smilesStructureTable,
-    by = c("structureValue" = "structureOriginal_smiles")
+    inchiStructureTable,
+    by = c("structureValue" = "structureOriginal_inchi")
   )
 
 translatedStructureTable <-
@@ -45,11 +45,11 @@ translatedStructureTable <-
 translatedStructureTable <- translatedStructureTable %>%
   mutate(
     structureTranslated = ifelse(
-      test = structureType == "inchi",
+      test = structureType == "smiles",
       yes = structureValue,
       no = ifelse(
-        test = structureType == "smiles",
-        yes = structureTranslated_smiles,
+        test = structureType == "inchi",
+        yes = structureTranslated_inchi,
         no = structureTranslated_nominal
       )
     )

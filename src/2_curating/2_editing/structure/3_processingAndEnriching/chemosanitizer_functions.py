@@ -38,11 +38,11 @@ def MolFromInchi_fun(inchi):
     return None
 
 
-# def MolFromInchi_fun(inchi):
-#     m = Chem.MolFromInchi(inchi)
-#     if m:
-#         return m
-#     print(inchi)
+def MolFromSmiles_fun(smiles):
+    m = Chem.MolFromSmiles(smiles)
+    if m:
+        return m
+    return None
 
 
 def MolToSmiles_fun(romol):

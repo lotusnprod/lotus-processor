@@ -13,7 +13,7 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: gathering-translation-tcmid gathering-translation-full gathering-translation-common gathering-translation-common-quick gathering-translation-quick gathering-translation-tcm gathering-translation-tcm-quick
 .PHONY: gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire gathering-taxonomy-full
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
-.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-smiles curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
+.PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-inchi curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-processing
 .PHONY: curating-and-analyzing analyzing analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
@@ -179,18 +179,18 @@ curating-editing: curating-editing-structure curating-editing-organism curating-
 
 curating-editing-structure: curating-editing-structure-translating curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-stereocounting curating-editing-structure-naming curating-editing-structure-classifying
 
-curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-smiles
+curating-editing-structure-translating: curating-editing-structure-translating-name curating-editing-structure-translating-inchi
 
 curating-editing-structure-translating-name: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz
 ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/names.R ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/nominal.tsv.gz
 	cd src && Rscript ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/names.R
 
-curating-editing-structure-translating-smiles: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz
-${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz
-	cd src && python ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/smiles.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz structureOriginal_smiles
+curating-editing-structure-translating-inchi: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/inchi.tsv.gz
+${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/inchi.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/inchi.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/inchi.tsv.gz
+	cd src && python ${SRC_CURATING_EDITING_STRUCTURE_TRANSLATING_PATH}/inchi.py ${INTERIM_TABLE_ORIGINAL_STRUCTURE_PATH}/inchi.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/inchi.tsv.gz structureOriginal_inchi
 
 curating-editing-structure-integrating: ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz
-${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
+${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/unique.tsv.gz: ${SRC_CURATING_EDITING_STRUCTURE_PATH}/2_integrating.R ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/inchi.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz
 	cd src && Rscript ${SRC_CURATING_EDITING_STRUCTURE_PATH}/2_integrating.R
 
 curating-editing-structure-sanitizing: ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz
@@ -267,7 +267,7 @@ ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz: ${SRC_CURATING_EDITI
 	cd src && Rscript ${SRC_CURATING_EDITING_REFERENCE_PATH}/3_processing.R
 
 curating-3-integrating: ${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz
-${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/smiles.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
+${INTERIM_TABLE_CURATED_PATH}/table.tsv.gz: ${SRC_CURATING_PATH}/3_integrating.R ${INTERIM_TABLE_ORIGINAL_PATH}/table.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/inchi.tsv.gz ${INTERIM_TABLE_TRANSLATED_STRUCTURE_PATH}/nominal.tsv.gz ${INTERIM_TABLE_PROCESSED_STRUCTURE_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz ${INTERIM_TABLE_PROCESSED_REFERENCE_PATH}/processed.tsv.gz
 	cd src && Rscript ${SRC_CURATING_PATH}/3_integrating.R
 
 analyzing: gathering-validation	analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples

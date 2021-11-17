@@ -15,14 +15,14 @@ from chemosanitizer_functions import *
 try:
     input_file_path = sys.argv[1]
     ouput_file_path = sys.argv[2]
-    inchi_column_header = sys.argv[3]
+    smiles_column_header = sys.argv[3]
     cpus = sys.argv[4]
 
     print('Parsing tab separated file'
           + input_file_path
           + ' with column: '
-          + inchi_column_header
-          + ' as InChI column.'
+          + smiles_column_header
+          + ' as SMILES column.'
           + ' Parralelized on '
           + cpus
           + ' cores.'
@@ -30,11 +30,11 @@ try:
           + ouput_file_path)
 except:
     print(
-        '''Please add input and output file path as first and second argument, InChI column header as third argument and finally the number of cpus you want to use.
+        '''Please add input and output file path as first and second argument, SMILES column header as third argument and finally the number of cpus you want to use.
         Example :
         python chemosanitizer.py ~/translatedStructureRdkit.tsv ./test.tsv structureTranslated 6''')
 
-# Loading the df with inchi columns
+# Loading the df with smiles columns
 myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
@@ -42,7 +42,7 @@ df = pd.read_csv(
     sep='\t')
 
 if (len(df) == 1) and (df.empty):
-    df['structureTranslated'] = 'InChI=1S/Pu'
+    df['structureTranslated'] = '[Pu]'
     print('your dataframe is empty, plutonium loaded')
 else:
     print('your dataframe is not empty :)')
@@ -53,10 +53,7 @@ else:
 df.columns
 df.info()
 
-df = df[df[inchi_column_header].astype(str).str.startswith('InChI')]
-
-df.columns
-df.info()
+df = df[df[smiles_column_header].notnull()]
 
 # the full df is splitted and each subdf are treated sequentially as df > 900000 rows retruned errors
 # (parralel treatment of these subdf should improve performance)
@@ -82,7 +79,7 @@ for i in range(0, len(list_df)):
 
             # # we generate ROMol object from smiles and or inchi
             list_df[i]['ROMol'] = pool.map(
-                MolFromInchi_fun, list_df[i][inchi_column_header])
+                MolFromSmiles_fun, list_df[i][smiles_column_header])
             # # we eventually remove rows were no ROMol pobject was generated
             list_df[i] = list_df[i][~list_df[i]['ROMol'].isnull()]
             # # and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.

@@ -427,7 +427,7 @@ data_standard <-
   standardizing_original(
     data_selected = data_pivoted,
     db = "phytohub",
-    structure_field = c("structure_name", "structure_inchi", "structure_smiles"),
+    structure_field = "structure_smiles",
     organism_field = "organism_dirty",
     reference_field = c(
       "reference_isbn",

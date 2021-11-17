@@ -980,8 +980,8 @@ pathDataInterimTablesTranslatedStructure <-
   file.path(pathDataInterimTablesTranslated, "structure")
 
 ### smiles
-pathDataInterimTablesTranslatedStructureSmiles <-
-  file.path(pathDataInterimTablesTranslatedStructure, "smiles.tsv.gz")
+pathDataInterimTablesTranslatedStructureInchi <-
+  file.path(pathDataInterimTablesTranslatedStructure, "inchi.tsv.gz")
 
 ### nominal
 pathDataInterimTablesTranslatedStructureNominal <-
