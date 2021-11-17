@@ -145,8 +145,32 @@ referenceTableFull <-
     file = pathDataInterimTablesProcessedReferenceFile,
     delim = "\t",
     col_types = cols(.default = "c")
-  ) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+  )
+
+log_debug("ensuring directories exist")
+ifelse(
+  test = !dir.exists(pathDataInterimTablesCurated),
+  yes = dir.create(pathDataInterimTablesCurated),
+  no = paste(pathDataInterimTablesCurated, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesStructure),
+  yes = dir.create(pathDataInterimDictionariesStructure),
+  no = paste(pathDataInterimDictionariesStructure, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesOrganism),
+  yes = dir.create(pathDataInterimDictionariesOrganism),
+  no = paste(pathDataInterimDictionariesOrganism, "exists")
+)
+
+ifelse(
+  test = !dir.exists(pathDataInterimDictionariesReference),
+  yes = dir.create(pathDataInterimDictionariesReference),
+  no = paste(pathDataInterimDictionariesReference, "exists")
+)
 
 log_debug("joining ...")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
@@ -316,8 +340,130 @@ referenceMetadata <- referenceTableFull %>%
     referenceCleaned_score_complementTotal
   )
 
+log_debug(
+  "generating list with chemical names having no translation \n",
+  "to avoid translating them again (since process is long)"
+)
+structureNA <- anti_join(
+  x = originalStructureTable,
+  y = structureMinimal
+) %>%
+  distinct(
+    structureType,
+    structureValue
+  )
+
+structureNA <- left_join(structureNA, structureFull) %>%
+  filter(is.na(structureCleanedInchikey)) %>%
+  distinct(structureType,
+    structureValue,
+    .keep_all = TRUE
+  ) %>%
+  select(
+    structureType,
+    structureValue,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    # structureCleanedName,
+    # structureCleanedNameIupac
+  ) %>%
+  distinct()
+
+log_debug("partial export ...")
+log_debug(
+  pathDataInterimDictionariesReferenceOrganismDictionary
+)
+write_delim(
+  x = referenceTableFull,
+  file = pathDataInterimDictionariesReferenceOrganismDictionary,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesStructureDictionary)
+write_delim(
+  x = structureMinimal,
+  file = pathDataInterimDictionariesStructureDictionary,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesStructureAntiDictionary)
+write_delim(
+  x = structureNA,
+  file = pathDataInterimDictionariesStructureAntiDictionary,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesOrganismDictionary)
+write_delim(
+  x = organismMinimal,
+  file = pathDataInterimDictionariesOrganismDictionary,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesStructureMetadata)
+write_delim(
+  x = structureMetadata,
+  file = pathDataInterimDictionariesStructureMetadata,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesOrganismMetadata)
+write_delim(
+  x = organismMetadata,
+  file = pathDataInterimDictionariesOrganismMetadata,
+  delim = "\t"
+)
+
+log_debug(pathDataInterimDictionariesReferenceMetadata)
+write_delim(
+  x = referenceMetadata,
+  file = pathDataInterimDictionariesReferenceMetadata,
+  delim = "\t"
+)
+
 log_debug("cleaning memory ...")
-rm(organismTableFull)
+rm(
+  organismTableFull,
+  structureFull,
+  referenceTableFull,
+  organismMetadata,
+  structureMetadata,
+  referenceMetadata,
+  structureNA
+)
+gc(
+  verbose = TRUE,
+  reset = TRUE,
+  full = TRUE
+)
+
+log_debug("outputting table with missing empty translations (for later on) ...")
+openDbMaximal <- originalTable %>%
+  distinct(
+    database,
+    organismType,
+    organismValue,
+    referenceType,
+    referenceValue,
+    structureType,
+    structureValue
+  ) %>%
+  filter(referenceType != "authors") %>%
+  filter(referenceType != "journal") %>%
+  filter(referenceType != "external") %>%
+  filter(referenceType != "isbn")
+
+log_debug("partial export ...")
+log_debug(pathDataInterimTablesCuratedTableMaximal)
+write_delim(
+  x = openDbMaximal,
+  file = pathDataInterimTablesCuratedTableMaximal,
+  delim = "\t"
+)
+
+log_debug("cleaning memory ...")
+rm(openDbMaximal)
 gc(
   verbose = TRUE,
   reset = TRUE,
@@ -330,6 +476,8 @@ inhouseDbMinimal <-
   inner_join(., organismMinimal) %>%
   left_join(., referenceMinimal %>%
     select(-organismDetected))
+
+rm(originalTable)
 
 inhouseDbMinimal_1 <- inhouseDbMinimal %>%
   filter(database %in% forbidden_export) %>%
@@ -423,140 +571,11 @@ rm(
   inhouseDbMinimal_2
 )
 
-log_debug("outputting table with missing empty translations (for later on) ...")
-openDbMaximal <- originalTable %>%
-  distinct(
-    database,
-    organismType,
-    organismValue,
-    referenceType,
-    referenceValue,
-    structureType,
-    structureValue
-  ) %>%
-  filter(referenceType != "authors") %>%
-  filter(referenceType != "journal") %>%
-  filter(referenceType != "external") %>%
-  filter(referenceType != "isbn")
-
-log_debug(
-  "generating list with chemical names having no translation \n",
-  "to avoid translating them again (since process is long)"
-)
-structureNA <- anti_join(
-  x = originalStructureTable,
-  y = structureMinimal
-) %>%
-  distinct(
-    structureType,
-    structureValue
-  )
-
-structureNA <- left_join(structureNA, structureFull) %>%
-  filter(is.na(structureCleanedInchikey)) %>%
-  distinct(structureType,
-    structureValue,
-    .keep_all = TRUE
-  ) %>%
-  select(
-    structureType,
-    structureValue,
-    structureCleanedInchi,
-    structureCleanedInchikey,
-    structureCleanedSmiles,
-    # structureCleanedName,
-    # structureCleanedNameIupac
-  ) %>%
-  distinct()
-
-log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesCurated),
-  yes = dir.create(pathDataInterimTablesCurated),
-  no = paste(pathDataInterimTablesCurated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesStructure),
-  yes = dir.create(pathDataInterimDictionariesStructure),
-  no = paste(pathDataInterimDictionariesStructure, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesOrganism),
-  yes = dir.create(pathDataInterimDictionariesOrganism),
-  no = paste(pathDataInterimDictionariesOrganism, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesReference),
-  yes = dir.create(pathDataInterimDictionariesReference),
-  no = paste(pathDataInterimDictionariesReference, "exists")
-)
-
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
 write_delim(
   x = inhouseDbMinimal,
   file = pathDataInterimTablesCuratedTable,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesStructureDictionary)
-write_delim(
-  x = structureMinimal,
-  file = pathDataInterimDictionariesStructureDictionary,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesStructureAntiDictionary)
-write_delim(
-  x = structureNA,
-  file = pathDataInterimDictionariesStructureAntiDictionary,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesOrganismDictionary)
-write_delim(
-  x = organismMinimal,
-  file = pathDataInterimDictionariesOrganismDictionary,
-  delim = "\t"
-)
-
-log_debug(
-  pathDataInterimDictionariesReferenceOrganismDictionary
-)
-write_delim(
-  x = referenceTableFull,
-  file = pathDataInterimDictionariesReferenceOrganismDictionary,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesStructureMetadata)
-write_delim(
-  x = structureMetadata,
-  file = pathDataInterimDictionariesStructureMetadata,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesOrganismMetadata)
-write_delim(
-  x = organismMetadata,
-  file = pathDataInterimDictionariesOrganismMetadata,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimDictionariesReferenceMetadata)
-write_delim(
-  x = referenceMetadata,
-  file = pathDataInterimDictionariesReferenceMetadata,
-  delim = "\t"
-)
-
-log_debug(pathDataInterimTablesCuratedTableMaximal)
-write_delim(
-  x = openDbMaximal,
-  file = pathDataInterimTablesCuratedTableMaximal,
   delim = "\t"
 )
 
