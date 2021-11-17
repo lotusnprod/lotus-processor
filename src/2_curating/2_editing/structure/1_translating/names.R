@@ -15,8 +15,8 @@ library(stringr)
 
 log_debug("... functions")
 source("r/capitalize.R")
-source("r/name2inchi_cactus.R")
-source("r/name2inchi_cts.R")
+source("r/name2structure_cactus.R")
+source("r/name2structure_cts.R")
 source("r/parallel.R")
 source("r/preparing_name.R")
 source("r/y_as_na.R")
@@ -74,7 +74,7 @@ system(
   command = paste(
     "java -jar",
     pathBinOpsin,
-    "-ostdinchi",
+    "-o smi",
     pathDataInterimTablesTranslatedStructurePrepared_1,
     pathDataInterimTablesTranslatedStructureOpsin
   )
@@ -90,7 +90,7 @@ dataOpsin <-
     trim_ws = TRUE
   ) %>%
   mutate_all(as.character) %>%
-  select(inchiNominal_opsin = `...1`)
+  select(smilesNominal_opsin = `...1`)
 
 dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
 
@@ -106,7 +106,7 @@ write_delim(
 )
 
 dataForCTS <- dataInterim %>%
-  filter(is.na(inchiNominal_opsin)) %>%
+  filter(is.na(smilesNominal_opsin)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
   select(structureOriginal_nominal, nameCleaned)
 
@@ -117,9 +117,9 @@ if (nrow(dataForCTS) == 0) {
 
 dataTranslatedNominal_cts <- dataForCTS %>%
   select(-structureOriginal_nominal) %>%
-  mutate(inchiNominal_cts = invisible(
+  mutate(smilesNominal_cts = invisible(
     pbmclapply(
-      FUN = name2inchi_cts,
+      FUN = name2smiles_cts,
       X = seq_len(nrow(dataForCTS)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
@@ -135,18 +135,18 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.substyle = 1
     )
   )) %>%
-  mutate(inchiNominal_cts = gsub(
+  mutate(smilesNominal_cts = gsub(
     pattern = "^http.*",
     replacement = NA,
-    x = inchiNominal_cts
+    x = smilesNominal_cts
   )) %>%
-  mutate(inchiNominal_cts = gsub(
+  mutate(smilesNominal_cts = gsub(
     pattern = "^NCI.*",
     replacement = NA,
-    x = inchiNominal_cts
+    x = smilesNominal_cts
   )) %>%
-  mutate(inchiNominal_cts = y_as_na(
-    x = inchiNominal_cts,
+  mutate(smilesNominal_cts = y_as_na(
+    x = smilesNominal_cts,
     y = "NA"
   ))
 
@@ -174,7 +174,7 @@ dataInterim_2 <- dataInterim_2 %>%
   mutate(nameCleaned_capitalized = capitalize(nameCleaned))
 
 dataForCTS_2 <- dataInterim_2 %>%
-  filter(is.na(inchiNominal_cts)) %>%
+  filter(is.na(smilesNominal_cts)) %>%
   filter(nameCleaned_capitalized != nameCleaned)
 
 log_debug("translating structures with CTS again (capitalized)")
@@ -184,9 +184,9 @@ if (nrow(dataForCTS_2) == 0) {
 
 dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
   select(-structureOriginal_nominal) %>%
-  mutate(inchiNominal_cts_2 = invisible(
+  mutate(smilesNominal_cts_2 = invisible(
     pbmclapply(
-      FUN = name2inchi_cts_capitalized,
+      FUN = name2smiles_cts_capitalized,
       X = seq_len(nrow(dataForCTS_2)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
@@ -202,18 +202,18 @@ dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
       mc.substyle = 1
     )
   )) %>%
-  mutate(inchiNominal_cts_2 = gsub(
+  mutate(smilesNominal_cts_2 = gsub(
     pattern = "^http.*",
     replacement = NA,
-    x = inchiNominal_cts_2
+    x = smilesNominal_cts_2
   )) %>%
-  mutate(inchiNominal_cts_2 = gsub(
+  mutate(smilesNominal_cts_2 = gsub(
     pattern = "^NCI.*",
     replacement = NA,
-    x = inchiNominal_cts_2
+    x = smilesNominal_cts_2
   )) %>%
-  mutate(inchiNominal_cts_2 = y_as_na(
-    x = inchiNominal_cts_2,
+  mutate(smilesNominal_cts_2 = y_as_na(
+    x = smilesNominal_cts_2,
     y = "NA"
   ))
 
@@ -244,9 +244,9 @@ write_delim(
 ### or https://cactus.nci.nih.gov/chemical/structure/Combretastatin%20b-2%20/smiles
 
 dataForCactus <- dataInterim_3 %>%
-  filter(is.na(inchiNominal_opsin)) %>%
-  filter(is.na(inchiNominal_cts)) %>%
-  filter(is.na(inchiNominal_cts_2))
+  filter(is.na(smilesNominal_opsin)) %>%
+  filter(is.na(smilesNominal_cts)) %>%
+  filter(is.na(smilesNominal_cts_2))
 
 if (nrow(dataForCactus) == 0) {
   dataForCactus[1, "nameCleaned"] <- NA
@@ -255,9 +255,9 @@ if (nrow(dataForCactus) == 0) {
 log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus %>%
   select(-structureOriginal_nominal) %>%
-  mutate(inchiNominal_cactus = invisible(
+  mutate(smilesNominal_cactus = invisible(
     pbmclapply(
-      FUN = name2inchi_cactus,
+      FUN = name2smiles_cactus,
       X = seq_len(nrow(dataForCactus)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
@@ -269,56 +269,40 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
       mc.substyle = 1
     )
   )) %>%
-  mutate(inchiNominal_cactus = as.character(inchiNominal_cactus)) %>%
-  mutate(inchiNominal_cactus = y_as_na(
-    x = inchiNominal_cactus,
+  mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) %>%
+  mutate(smilesNominal_cactus = y_as_na(
+    x = smilesNominal_cactus,
     y = "character(0)"
   )) %>%
-  mutate(inchiNominal_cactus = y_as_na(
-    x = inchiNominal_cactus,
+  mutate(smilesNominal_cactus = y_as_na(
+    x = smilesNominal_cactus,
     y = "NA"
   )) %>%
-  mutate(inchiNominal_cactus = gsub(
+  mutate(smilesNominal_cactus = gsub(
     pattern = "^http.*",
     replacement = NA,
-    x = inchiNominal_cactus
+    x = smilesNominal_cactus
   )) %>%
-  mutate(inchiNominal_cactus = gsub(
+  mutate(smilesNominal_cactus = gsub(
     pattern = "^NCI.*",
     replacement = NA,
-    x = inchiNominal_cactus
+    x = smilesNominal_cactus
   ))
 
 dataTranslated <- left_join(
   dataInterim_3,
   dataTranslatedNominal_cactus
 ) %>%
-  mutate(inchiNominal_cts = ifelse(
-    test = grepl(
-      pattern = "^InChI=.*",
-      x = inchiNominal_cts
-    ),
-    yes = inchiNominal_cts,
-    no = NA
-  )) %>%
-  mutate(inchiNominal_cts_2 = ifelse(
-    test = grepl(
-      pattern = "^InChI=.*",
-      x = inchiNominal_cts_2
-    ),
-    yes = inchiNominal_cts_2,
-    no = NA
-  )) %>%
   mutate(structureTranslated_nominal = ifelse(
-    test = !is.na(inchiNominal_opsin),
-    yes = inchiNominal_opsin,
+    test = !is.na(smilesNominal_opsin),
+    yes = smilesNominal_opsin,
     no = ifelse(
-      test = !is.na(inchiNominal_cts),
-      yes = inchiNominal_cts,
+      test = !is.na(smilesNominal_cts),
+      yes = smilesNominal_cts,
       no = ifelse(
-        test = !is.na(inchiNominal_cts_2),
-        yes = inchiNominal_cts_2,
-        no = inchiNominal_cactus
+        test = !is.na(smilesNominal_cts_2),
+        yes = smilesNominal_cts_2,
+        no = smilesNominal_cactus
       )
     )
   ))
