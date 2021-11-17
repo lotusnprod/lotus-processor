@@ -48,14 +48,13 @@ else:
     print('your dataframe is not empty :)')
 
 # eventually filter display some info, comment according to your needs
-# df = df[df['originaldb'] == 'tcm']
 # df = df.head(50000)
 df.columns
 df.info()
 
 df = df[df[smiles_column_header].notnull()]
 
-# the full df is splitted and each subdf are treated sequentially as df > 900000 rows retruned errors
+# the full df is split and each subdf are treated sequentially as df > 900000 rows retruned errors
 # (parralel treatment of these subdf should improve performance)
 n = 20000  # chunk row size
 list_df = [df[i:i + n] for i in range(0, df.shape[0], n)]
@@ -70,13 +69,6 @@ for i in range(0, len(list_df)):
     if __name__ == "__main__":
         # with multiprocessing.Pool(multiprocessing.cpu_count() - 2 ) as pool:
         with multiprocessing.Pool(int(cpus)) as pool:
-            # list_df[i].to_csv(
-            #     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/2_cleaned/structure/outfirst38%i.csv" % i ,
-            #     sep = '\t',
-            #     index = False,
-            #     compression = 'gzip'
-            #     )
-
             # # we generate ROMol object from smiles and or inchi
             list_df[i]['ROMol'] = pool.map(
                 MolFromSmiles_fun, list_df[i][smiles_column_header])
@@ -129,29 +121,12 @@ for i in range(0, len(list_df)):
             pool.close()
             pool.join()
 
-            # list_df[i].to_csv(
-            #     "/home/EPGL.UNIGE.LOCAL/allardp/opennaturalproductsdb/data/interim/tables/2_cleaned/structure/oouthoupla_%i.csv" % i ,
-            #     sep = '\t',
-            #     index = False,
-            #     compression = 'gzip'
-            #     )
-
 # timer is stopped
 print(" Above command executed in --- %s seconds ---" %
       (time.time() - start_time))
 
 # we merge the previously obtained df
 df = pd.concat(list_df)
-
-# # dropping some irrelevant columns prior to export
-# colstodrop = ['ROMol',
-#               'ROMolSanitized',
-#               'ROMolSanitizedLargestFragment',
-#               'ROMolSanitizedLargestFragmentUncharged'
-#               ]
-# colstodrop = ['ROMolSanitizedLargestFragmentUncharged']
-# df.drop(colstodrop, axis=1, inplace=True)
-
 df.info()
 
 # exporting
