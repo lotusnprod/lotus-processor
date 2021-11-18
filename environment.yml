@@ -24,6 +24,7 @@ dependencies:
   - r-plotly
   - r-purrr
   - r-rcrossref
+  - r-RCurl
   - r-readr
   - r-readxl
   - r-remotes
