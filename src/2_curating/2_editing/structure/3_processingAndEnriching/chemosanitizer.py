@@ -3,29 +3,24 @@
 
 '''
 Author: PMA
+Contributor: JB, AR
 '''
-
-# importing packages
 import errno
 import os
-
+import sys
 from chemosanitizer_functions import *
+import numpy as np
 
 # defining the command line arguments
 try:
     input_file_path = sys.argv[1]
     ouput_file_path = sys.argv[2]
     smiles_column_header = sys.argv[3]
-    cpus = sys.argv[4]
+    cpus = int(sys.argv[4])
 
-    print('Parsing tab separated file'
-          + input_file_path
-          + ' with column: '
-          + smiles_column_header
-          + ' as SMILES column.'
-          + ' Parralelized on '
-          + cpus
-          + ' cores.'
+    print(f'Parsing tab separated file {input_file_path}'
+          + f' with column: {smiles_column_header}'
+          + f' as SMILES column. Paralelized on {cpus} cores.'
           + ' Proceeding to the validation, standardization, fragment choosing and uncharging of the ROMol object and returning the sanitized outputs in file :'
           + ouput_file_path)
 except:
@@ -33,113 +28,40 @@ except:
         '''Please add input and output file path as first and second argument, SMILES column header as third argument and finally the number of cpus you want to use.
         Example :
         python chemosanitizer.py ~/translatedStructureRdkit.tsv ./test.tsv structureTranslated 6''')
+    sys.exit(1)
 
-# Loading the df with smiles columns
-myZip = gzip.open(input_file_path)
+if __name__ == "__main__":
+    myZip = gzip.open(input_file_path)
+    df = pd.read_csv(myZip, sep='\t')
 
-df = pd.read_csv(
-    myZip,
-    sep='\t')
+    if (len(df) == 1) and df.empty:
+        df['structureTranslated'] = '[Pu]'
+        print('your dataframe is empty, plutonium loaded')
+    else:
+        print('your dataframe is not empty :)')
 
-if (len(df) == 1) and (df.empty):
-    df['structureTranslated'] = '[Pu]'
-    print('your dataframe is empty, plutonium loaded')
-else:
-    print('your dataframe is not empty :)')
+    df = df[df[smiles_column_header].notnull()]
+    df_chunks = np.array_split(df, cpus)
+    f = CleaningFunc(smiles_column_header).f
+    with multiprocessing.Pool(cpus) as pool:
+        processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
 
-# eventually filter display some info, comment according to your needs
-# df = df.head(50000)
-df.columns
-df.info()
+    df_2 = processed_df.loc[:,
+       ~processed_df.columns.isin(['ROMol', 'ROMolSanitized', 'ROMolSanitizedLargestFragment', 'flatROMol',
+                                   'ROMolSanitizedLargestFragmentUncharged'])]
 
-df = df[df[smiles_column_header].notnull()]
+    output_path = os.path.dirname(ouput_file_path)
 
-# the full df is split and each subdf are treated sequentially as df > 900000 rows retruned errors
-# (parralel treatment of these subdf should improve performance)
-n = 20000  # chunk row size
-list_df = [df[i:i + n] for i in range(0, df.shape[0], n)]
+    if output_path != '' and not os.path.exists(output_path):
+        try:
+            os.makedirs(os.path.dirname(ouput_file_path))
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
 
-# timer is started
-start_time = time.time()
-
-for i in range(0, len(list_df)):
-
-    # here we define the multiprocessing wrapper for the function. Beware to set the number of running tasks according to your cpu number
-
-    if __name__ == "__main__":
-        # with multiprocessing.Pool(multiprocessing.cpu_count() - 2 ) as pool:
-        with multiprocessing.Pool(int(cpus)) as pool:
-            # # we generate ROMol object from smiles and or inchi
-            list_df[i]['ROMol'] = pool.map(
-                MolFromSmiles_fun, list_df[i][smiles_column_header])
-            # # we eventually remove rows were no ROMol pobject was generated
-            list_df[i] = list_df[i][~list_df[i]['ROMol'].isnull()]
-            # # and now apply the validation, standardization, fragment chooser and uncharging scripts as new columns.
-            # # Note that these are sequentially applied
-            list_df[i]['validatorLog'] = pool.map(
-                validator_fun, list_df[i]['ROMol'])
-            list_df[i]['ROMolSanitized'] = pool.map(
-                standardizor_fun, list_df[i]['ROMol'])
-            list_df[i].drop('ROMol', axis=1, inplace=True)
-            list_df[i]['ROMolSanitizedLargestFragment'] = pool.map(
-                fragremover_fun, list_df[i]['ROMolSanitized'])
-            list_df[i].drop('ROMolSanitized', axis=1, inplace=True)
-            list_df[i]['ROMolSanitizedLargestFragmentUncharged'] = pool.map(
-                uncharger_fun, list_df[i]['ROMolSanitizedLargestFragment'])
-            list_df[i].drop('ROMolSanitizedLargestFragment',
-                            axis=1, inplace=True)
-            # # outputting smiles, inchi, molecular formula, exact mass and protonated and deprotonated exactmasses from the latest object of the above scripts
-            list_df[i]['smilesSanitized'] = pool.map(
-                MolToSmiles_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            # for the inchi and IK since some specific structures are raising issues we use the ***_fun_safe functions (see associated chemosanitizer_function.py)
-            # list_df[i]['inchi_sanitized'] = pool.map(MolToInchi_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            list_df[i]['inchiSanitized'] = pool.starmap(MolToInchi_fun_safe, zip(
-                list_df[i]['smilesSanitized'], list_df[i]['ROMolSanitizedLargestFragmentUncharged']))
-
-            # Below we flatten the ROMol object and generate corresponding SMILES and InChI encodings
-            list_df[i]['flatROMol'] = pool.map(MolToFlatMol_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            # print(list_df[i]['flatROMol'])
-            list_df[i]['smilesSanitizedFlat'] = pool.map(MolToSmiles_fun, list_df[i]['flatROMol'])
-            list_df[i]['inchiSanitizedFlat'] = pool.starmap(MolToInchi_fun_safe, zip(list_df[i]['smilesSanitizedFlat'],
-                                                                                     list_df[i]['flatROMol']))
-            list_df[i].drop('flatROMol', axis=1, inplace=True)
-
-            # list_df[i]['inchikeySanitized'] = pool.map(MolToIK_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            list_df[i]['inchikeySanitized'] = pool.starmap(MolToIK_fun_safe, zip(
-                list_df[i]['smilesSanitized'], list_df[i]['ROMolSanitizedLargestFragmentUncharged']))
-            list_df[i]['shortikSanitized'] = list_df[i]['inchikeySanitized'].str.split(
-                "-", n=1, expand=True)[0]
-            list_df[i]['formulaSanitized'] = pool.map(
-                MolToMF_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            list_df[i]['exactmassSanitized'] = pool.map(
-                MolToEmass_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            list_df[i]['xlogpSanitized'] = pool.map(
-                MolToLogP_fun, list_df[i]['ROMolSanitizedLargestFragmentUncharged'])
-            list_df[i].drop(
-                'ROMolSanitizedLargestFragmentUncharged', axis=1, inplace=True)
-
-            pool.close()
-            pool.join()
-
-# timer is stopped
-print(" Above command executed in --- %s seconds ---" %
-      (time.time() - start_time))
-
-# we merge the previously obtained df
-df = pd.concat(list_df)
-df.info()
-
-# exporting
-if not os.path.exists(os.path.dirname(ouput_file_path)):
-    try:
-        os.makedirs(os.path.dirname(ouput_file_path))
-    except OSError as exc:  # Guard against race condition
-        if exc.errno != errno.EEXIST:
-            raise
-
-df.to_csv(
-    ouput_file_path,
-    sep='\t',
-    index=False,
-    compression='gzip'
-)
+    df_2.to_csv(
+        ouput_file_path,
+        sep='\t',
+        index=False,
+        compression='gzip'
+    )
