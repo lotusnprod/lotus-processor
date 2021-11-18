@@ -31,3 +31,11 @@ else
         PLATFORM := mac
     endif
 endif
+
+NPROCS := 1
+ifeq ($(UNAME_S),Linux)
+  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
+endif
+ifeq ($(UNAME_S),Darwin)
+  NPROCS := $(shell sysctl -n hw.ncpu)
+endif
