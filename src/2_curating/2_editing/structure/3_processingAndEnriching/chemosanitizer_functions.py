@@ -5,7 +5,6 @@ import pandas as pd
 import sys
 import gzip
 
-
 # RDkit specific modules
 from rdkit import Chem
 from rdkit.Chem import Descriptors
@@ -59,11 +58,9 @@ def MolToInchi_fun(romol):
     return None
 
 
-def MolToInchi_fun_safe(smiles, romol):
-    # print(smiles) (beware as too much print statement will crash \\
-    # interactve python console such as the one in vscode)
-    if '[O]' not in smiles:
-        m = Chem.MolToInchi(romol)
+def MolToInchi_fun_safe(row):
+    if '[O]' not in row['smilesSanitized']:
+        m = Chem.MolToInchi(row['ROMolSanitizedLargestFragmentUncharged'])
         if m:
             return m
         return None
@@ -72,6 +69,16 @@ def MolToInchi_fun_safe(smiles, romol):
         return None
 
 
+def MolToInchi_fun_safe_flat(row):
+    if '[O]' not in row['smilesSanitizedFlat']:
+        m = Chem.MolToInchi(row['flatROMol'])
+        if m:
+            return m
+        return None
+    else:
+        print('Sayonara Robocop !')
+        return None
+        
 def MolToIK_fun(romol):
     m = Chem.MolToInchiKey(romol)
     if m:
@@ -79,11 +86,9 @@ def MolToIK_fun(romol):
     return None
 
 
-def MolToIK_fun_safe(smiles, romol):
-    # print(smiles) (beware as too much print statement will crash \\
-    # interactve python console such as the one in vscode)
-    if '[O]' not in smiles:
-        m = Chem.MolToInchiKey(romol)
+def MolToIK_fun_safe(row):
+    if '[O]' not in row['smilesSanitized']:
+        m = Chem.MolToInchiKey(row['ROMolSanitizedLargestFragmentUncharged'])
         if m:
             return m
         return None
@@ -128,7 +133,6 @@ fmt = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
 
 
 def validator_fun(romol):
-    print(romol.GetNumAtoms)
     m = Validator(log_format=fmt).validate(romol)
     if m:
         return m
@@ -136,7 +140,6 @@ def validator_fun(romol):
 
 
 def standardizor_fun(romol):
-    print('standardizer ' + str(romol.GetNumAtoms))
     m = Standardizer().standardize(romol)
     if m:
         return m
@@ -144,7 +147,6 @@ def standardizor_fun(romol):
 
 
 def fragremover_fun(romol):
-    print('fragremover ' + str(romol.GetNumAtoms))
     m = FragmentRemover().remove(romol)
     if m:
         return m
@@ -152,8 +154,36 @@ def fragremover_fun(romol):
 
 
 def uncharger_fun(romol):
-    print('uncharger ' + str(romol.GetNumAtoms))
     m = Uncharger().uncharge(romol)
     if m:
         return m
     return None
+
+
+def long_cleaning_function(myslice, smiles_column_header):
+    myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
+    myslice = myslice[~myslice['ROMol'].isnull()]
+    myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
+    myslice['ROMolSanitized'] = myslice['ROMol'].apply(standardizor_fun)
+    myslice['ROMolSanitizedLargestFragment'] = myslice['ROMolSanitized'].apply(fragremover_fun)
+    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMolSanitizedLargestFragment'].apply(uncharger_fun)
+    myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
+    myslice['inchiSanitized'] = myslice.apply(MolToInchi_fun_safe, axis=1)
+
+    myslice['flatROMol'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToFlatMol_fun)
+    myslice['smilesSanitizedFlat'] = myslice['flatROMol'].apply(MolToSmiles_fun)
+    myslice['inchiSanitizedFlat'] = myslice.apply(MolToInchi_fun_safe_flat, axis=1)
+    myslice['inchikeySanitized'] = myslice.apply(MolToIK_fun_safe, axis=1)
+    myslice['shortikSanitized'] = myslice['inchikeySanitized'].str.split("-", n=1, expand=True)[0]
+    myslice['formulaSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToMF_fun)
+    myslice['exactmassSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToEmass_fun)
+    myslice['xlogpSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToLogP_fun)
+    return myslice
+
+
+class CleaningFunc:
+    def __init__(self, smiles_column_header):
+        self.header = smiles_column_header
+
+    def f(self, myslice):
+        return long_cleaning_function(myslice, self.header)
