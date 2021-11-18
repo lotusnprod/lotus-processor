@@ -16,7 +16,7 @@ library(stringr)
 log_debug("... functions")
 source("r/capitalize.R")
 source("r/name2structure_cactus.R")
-source("r/name2structure_cts.R")
+source("r/name2structure_pubchem.R")
 source("r/parallel.R")
 source("r/preparing_name.R")
 source("r/y_as_na.R")
@@ -105,26 +105,26 @@ write_delim(
   delim = "\t"
 )
 
-dataForCTS <- dataInterim %>%
+dataForPubchem <- dataInterim %>%
   filter(is.na(smilesNominal_opsin)) %>%
   distinct(nameCleaned, .keep_all = TRUE) %>%
   select(structureOriginal_nominal, nameCleaned)
 
-log_debug("translating structures with CTS (slow but better results)")
-if (nrow(dataForCTS) == 0) {
-  dataForCTS[1, "nameCleaned"] <- NA
+if (nrow(dataForPubchem) == 0) {
+  dataForPubchem[1, "nameCleaned"] <- NA
 }
 
-dataTranslatedNominal_cts <- dataForCTS %>%
+log_debug("translating structures with pubchem")
+dataTranslatedNominal_pubchem <- dataForPubchem %>%
   select(-structureOriginal_nominal) %>%
-  mutate(smilesNominal_cts = invisible(
+  mutate(smilesNominal_pubchem = invisible(
     pbmclapply(
-      FUN = name2smiles_cts,
-      X = seq_len(nrow(dataForCTS)),
+      FUN = name2smiles_pubchem,
+      X = seq_len(nrow(dataForPubchem)),
       mc.preschedule = TRUE,
       mc.set.seed = TRUE,
       mc.cores = if (.Platform$OS.type == "unix") {
-        2
+        2 ## limit to 5 calls per sec
       } else {
         1
       },
@@ -135,107 +135,26 @@ dataTranslatedNominal_cts <- dataForCTS %>%
       mc.substyle = 1
     )
   )) %>%
-  mutate(smilesNominal_cts = gsub(
-    pattern = "^http.*",
-    replacement = NA,
-    x = smilesNominal_cts
-  )) %>%
-  mutate(smilesNominal_cts = gsub(
-    pattern = "^NCI.*",
-    replacement = NA,
-    x = smilesNominal_cts
-  )) %>%
-  mutate(smilesNominal_cts = y_as_na(
-    x = smilesNominal_cts,
+  mutate(smilesNominal_pubchem = y_as_na(
+    x = trimws(smilesNominal_pubchem),
     y = "NA"
   ))
 
-dataInterim_2 <- left_join(
+dataInterim_1 <- left_join(
   dataInterim,
-  dataTranslatedNominal_cts
+  dataTranslatedNominal_pubchem
 ) %>%
   distinct()
 
 log_debug("exporting interim ...")
 log_debug(
-  pathDataInterimTablesTranslatedStructureNominal_cts
+  pathDataInterimTablesTranslatedStructureNominal_pubchem
 )
 write_delim(
-  x = dataInterim_2,
-  file = pathDataInterimTablesTranslatedStructureNominal_cts,
+  x = dataInterim_1,
+  file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
   delim = "\t"
 )
-
-# dataInterim_2 <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts,
-#              delim = "\t")
-
-dataInterim_2 <- dataInterim_2 %>%
-  mutate(nameCleaned_capitalized = capitalize(nameCleaned))
-
-dataForCTS_2 <- dataInterim_2 %>%
-  filter(is.na(smilesNominal_cts)) %>%
-  filter(nameCleaned_capitalized != nameCleaned)
-
-log_debug("translating structures with CTS again (capitalized)")
-if (nrow(dataForCTS_2) == 0) {
-  dataForCTS_2[1, "nameCleaned_capitalized"] <- NA
-}
-
-dataTranslatedNominal_cts_2 <- dataForCTS_2 %>%
-  select(-structureOriginal_nominal) %>%
-  mutate(smilesNominal_cts_2 = invisible(
-    pbmclapply(
-      FUN = name2smiles_cts_capitalized,
-      X = seq_len(nrow(dataForCTS_2)),
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
-      mc.cores = if (.Platform$OS.type == "unix") {
-        2
-      } else {
-        1
-      },
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
-    )
-  )) %>%
-  mutate(smilesNominal_cts_2 = gsub(
-    pattern = "^http.*",
-    replacement = NA,
-    x = smilesNominal_cts_2
-  )) %>%
-  mutate(smilesNominal_cts_2 = gsub(
-    pattern = "^NCI.*",
-    replacement = NA,
-    x = smilesNominal_cts_2
-  )) %>%
-  mutate(smilesNominal_cts_2 = y_as_na(
-    x = smilesNominal_cts_2,
-    y = "NA"
-  ))
-
-dataInterim_3 <- left_join(
-  dataInterim_2,
-  dataTranslatedNominal_cts_2
-) %>%
-  distinct()
-
-log_debug("exporting interim ...")
-log_debug(
-  pathDataInterimTablesTranslatedStructureNominal_cts_2
-)
-write_delim(
-  x = dataInterim_3,
-  file = pathDataInterimTablesTranslatedStructureNominal_cts_2,
-  delim = "\t"
-)
-
-# dataInterim_3 <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal_cts_2,
-#              delim = "\t")
 
 ## cactus is the lowest quality but allows retrieving important structures also
 ## some incorrect spotted...
@@ -243,10 +162,9 @@ write_delim(
 ### or https://cactus.nci.nih.gov/chemical/structure?identifier=PONGAMOL&representation=smiles
 ### or https://cactus.nci.nih.gov/chemical/structure/Combretastatin%20b-2%20/smiles
 
-dataForCactus <- dataInterim_3 %>%
+dataForCactus <- dataInterim_1 %>%
   filter(is.na(smilesNominal_opsin)) %>%
-  filter(is.na(smilesNominal_cts)) %>%
-  filter(is.na(smilesNominal_cts_2))
+  filter(is.na(smilesNominal_pubchem))
 
 if (nrow(dataForCactus) == 0) {
   dataForCactus[1, "nameCleaned"] <- NA
@@ -289,23 +207,18 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     x = smilesNominal_cactus
   ))
 
-dataTranslated <- left_join(
-  dataInterim_3,
-  dataTranslatedNominal_cactus
-) %>%
+dataTranslated <- left_join(dataInterim_1,
+                            dataTranslatedNominal_cactus) %>%
   mutate(structureTranslated_nominal = ifelse(
     test = !is.na(smilesNominal_opsin),
     yes = smilesNominal_opsin,
     no = ifelse(
-      test = !is.na(smilesNominal_cts),
-      yes = smilesNominal_cts,
-      no = ifelse(
-        test = !is.na(smilesNominal_cts_2),
-        yes = smilesNominal_cts_2,
-        no = smilesNominal_cactus
-      )
+      test = !is.na(smilesNominal_pubchem),
+      yes = smilesNominal_pubchem,
+      no = smilesNominal_cactus
     )
-  ))
+  )) %>%
+  distinct()
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal)

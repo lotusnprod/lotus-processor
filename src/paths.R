@@ -994,18 +994,11 @@ pathDataInterimTablesTranslatedStructureNominal_opsin <-
     "nominal_opsin.tsv.gz"
   )
 
-#### nominal_cts
-pathDataInterimTablesTranslatedStructureNominal_cts <-
+#### nominal_pubchem
+pathDataInterimTablesTranslatedStructureNominal_pubchem <-
   file.path(
     pathDataInterimTablesTranslatedStructure,
-    "nominal_cts.tsv.gz"
-  )
-
-#### nominal_cts_2
-pathDataInterimTablesTranslatedStructureNominal_cts_2 <-
-  file.path(
-    pathDataInterimTablesTranslatedStructure,
-    "nominal_cts_2.tsv.gz"
+    "nominal_pubchem.tsv.gz"
   )
 
 ### prepared_1

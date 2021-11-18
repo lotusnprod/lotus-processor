@@ -14,7 +14,11 @@ name2inchi_cactus <- function(i) {
     {
       cpd <- dataForCactus[i, "nameCleaned"]
       url <-
-        paste0("https://cactus.nci.nih.gov/chemical/structure/", cpd, "/stdinchi")
+        paste0(
+          "https://cactus.nci.nih.gov/chemical/structure/",
+          cpd,
+          "/stdinchi"
+        )
       url <- gsub(
         pattern = "\\s",
         replacement = "%20",
@@ -42,7 +46,11 @@ name2smiles_cactus <- function(i) {
     {
       cpd <- dataForCactus[i, "nameCleaned"]
       url <-
-        paste0("https://cactus.nci.nih.gov/chemical/structure/", cpd, "/smiles")
+        paste0(
+          "https://cactus.nci.nih.gov/chemical/structure/",
+          cpd,
+          "/smiles"
+        )
       url <- gsub(
         pattern = "\\s",
         replacement = "%20",

@@ -41,6 +41,5 @@ dependencies:
   - r-tibble
   - r-tidyjson
   - r-tidyr
-  - r-webchem
   - r-XML
   - r-xml2

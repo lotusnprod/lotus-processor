@@ -67,7 +67,6 @@ if (nrow(translatedStructureTable) == 0) {
 
 log_debug("outputing unique structures")
 translatedStructureTableUnique <- translatedStructureTable %>%
-  filter(!is.na(structureTranslated)) %>%
   distinct(structureTranslated)
 
 if (nrow(translatedStructureTableUnique) == 0) {
