@@ -11,6 +11,7 @@ log_debug("... libraries")
 library(dplyr)
 library(pbmcapply)
 library(readr)
+library(splitstackshape)
 library(stringr)
 
 log_debug("... functions")
@@ -135,6 +136,10 @@ dataTranslatedNominal_pubchem <- dataForPubchem %>%
       mc.substyle = 1
     )
   )) %>%
+  cSplit("smilesNominal_pubchem",
+    sep = "\n",
+    direction = "long"
+  ) %>%
   mutate(smilesNominal_pubchem = y_as_na(
     x = trimws(smilesNominal_pubchem),
     y = "NA"
@@ -147,14 +152,17 @@ dataInterim_1 <- left_join(
   distinct()
 
 log_debug("exporting interim ...")
-log_debug(
-  pathDataInterimTablesTranslatedStructureNominal_pubchem
-)
+log_debug(pathDataInterimTablesTranslatedStructureNominal_pubchem)
 write_delim(
   x = dataInterim_1,
   file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
   delim = "\t"
 )
+
+# dataInterim_1 <- read_delim(
+#   file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
+#   delim = "\t"
+# )
 
 ## cactus is the lowest quality but allows retrieving important structures also
 ## some incorrect spotted...
@@ -207,8 +215,10 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     x = smilesNominal_cactus
   ))
 
-dataTranslated <- left_join(dataInterim_1,
-                            dataTranslatedNominal_cactus) %>%
+dataTranslated <- left_join(
+  dataInterim_1,
+  dataTranslatedNominal_cactus
+) %>%
   mutate(structureTranslated_nominal = ifelse(
     test = !is.na(smilesNominal_opsin),
     yes = smilesNominal_opsin,

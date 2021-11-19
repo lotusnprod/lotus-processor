@@ -22,11 +22,7 @@ name2smiles_pubchem <- function(i) {
         x = url
       )
       read_html(url) %>%
-        html_text() %>%
-        gsub(
-          pattern = "\n$",
-          replacement = ""
-        )
+        html_text2()
     },
     error = function(e) {
       NA
