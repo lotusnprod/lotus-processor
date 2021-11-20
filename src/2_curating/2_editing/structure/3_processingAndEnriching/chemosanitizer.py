@@ -41,7 +41,7 @@ if __name__ == "__main__":
         print('your dataframe is not empty :)')
 
     df = df[df[smiles_column_header].notnull()]
-    df_chunks = np.array_split(df, cpus)
+    df_chunks = np.array_split(df, cpus * len(df)/cpus)
     f = CleaningFunc(smiles_column_header).f
     with multiprocessing.Pool(cpus) as pool:
         processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
