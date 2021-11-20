@@ -143,6 +143,11 @@ dataTranslatedNominal_pubchem <- dataForPubchem %>%
   mutate(smilesNominal_pubchem = y_as_na(
     x = trimws(smilesNominal_pubchem),
     y = "NA"
+  )) %>%
+  mutate(smilesNominal_pubchem = gsub(
+    pattern = "^http.*",
+    replacement = NA,
+    x = smilesNominal_pubchem
   ))
 
 dataInterim_1 <- left_join(

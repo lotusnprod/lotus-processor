@@ -13,7 +13,6 @@ from rdkit.Chem import AllChem
 from rdkit.Chem import rdMolDescriptors
 
 # MolVS specific modules
-
 import molvs
 from molvs import Standardizer
 from molvs import Validator
@@ -65,7 +64,7 @@ def MolToInchi_fun_safe(row):
             return m
         return None
     else:
-        print('Sayonara Robocop !')
+        print('Sayonara Sensei !')
         return None
 
 
@@ -76,7 +75,7 @@ def MolToInchi_fun_safe_flat(row):
             return m
         return None
     else:
-        print('Sayonara Robocop !')
+        print('Sayonara Fuji !')
         return None
         
 def MolToIK_fun(romol):
@@ -93,14 +92,12 @@ def MolToIK_fun_safe(row):
             return m
         return None
     else:
-        print('Sayonara Babeee !')
+        print('Sayonara Neko !')
         return None
 
 
-# It looks like the  Chem.RemoveStereochemistry should be defined this way and not assigned to a variable. See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
-
 def MolToFlatMol_fun(romol):
-    Chem.RemoveStereochemistry(romol)
+    Chem.RemoveStereochemistry(romol) # See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
     return romol
 
 
@@ -169,7 +166,6 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMolSanitizedLargestFragment'].apply(uncharger_fun)
     myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
     myslice['inchiSanitized'] = myslice.apply(MolToInchi_fun_safe, axis=1)
-
     myslice['flatROMol'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToFlatMol_fun)
     myslice['smilesSanitizedFlat'] = myslice['flatROMol'].apply(MolToSmiles_fun)
     myslice['inchiSanitizedFlat'] = myslice.apply(MolToInchi_fun_safe_flat, axis=1)
