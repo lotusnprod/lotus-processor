@@ -56,44 +56,12 @@ def MolToInchi_fun(romol):
         return m
     return None
 
-
-def MolToInchi_fun_safe(row):
-    if '[O]' not in row['smilesSanitized']:
-        m = Chem.MolToInchi(row['ROMolSanitizedLargestFragmentUncharged'])
-        if m:
-            return m
-        return None
-    else:
-        print('Sayonara Sensei !')
-        return None
-
-
-def MolToInchi_fun_safe_flat(row):
-    if '[O]' not in row['smilesSanitizedFlat']:
-        m = Chem.MolToInchi(row['flatROMol'])
-        if m:
-            return m
-        return None
-    else:
-        print('Sayonara Fuji !')
-        return None
         
 def MolToIK_fun(romol):
     m = Chem.MolToInchiKey(romol)
     if m:
         return m
     return None
-
-
-def MolToIK_fun_safe(row):
-    if '[O]' not in row['smilesSanitized']:
-        m = Chem.MolToInchiKey(row['ROMolSanitizedLargestFragmentUncharged'])
-        if m:
-            return m
-        return None
-    else:
-        print('Sayonara Neko !')
-        return None
 
 
 def MolToFlatMol_fun(romol):
@@ -157,6 +125,15 @@ def uncharger_fun(romol):
     return None
 
 
+def sik_fun(ik):
+    if ik:
+        m = str.partition(ik,"-")[0]
+        if m:
+            return m
+        return None    
+    return None
+
+
 def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
     myslice = myslice[~myslice['ROMol'].isnull()]
@@ -165,12 +142,12 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMolSanitizedLargestFragment'] = myslice['ROMolSanitized'].apply(fragremover_fun)
     myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMolSanitizedLargestFragment'].apply(uncharger_fun)
     myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
-    myslice['inchiSanitized'] = myslice.apply(MolToInchi_fun_safe, axis=1)
+    myslice['inchiSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToInchi_fun)
     myslice['flatROMol'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToFlatMol_fun)
     myslice['smilesSanitizedFlat'] = myslice['flatROMol'].apply(MolToSmiles_fun)
-    myslice['inchiSanitizedFlat'] = myslice.apply(MolToInchi_fun_safe_flat, axis=1)
-    myslice['inchikeySanitized'] = myslice.apply(MolToIK_fun_safe, axis=1)
-    myslice['shortikSanitized'] = myslice['inchikeySanitized'].str.split("-", n=1, expand=True)[0]
+    myslice['inchiSanitizedFlat'] = myslice['flatROMol'].apply(MolToInchi_fun)
+    myslice['inchikeySanitized'] = myslice['flatROMol'].apply(MolToIK_fun)
+    myslice['shortikSanitized'] = myslice['inchikeySanitized'].apply(sik_fun)
     myslice['formulaSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToMF_fun)
     myslice['exactmassSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToEmass_fun)
     myslice['xlogpSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToLogP_fun)
