@@ -493,7 +493,8 @@ inhouseDbMinimal_1 <- inhouseDbMinimal %>%
     structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
-    referenceCleanedTitle
+    referenceCleanedTitle,
+    referenceCleanedDoi,
   ) %>%
   distinct()
 
@@ -516,7 +517,8 @@ inhouseDbMinimal_2_1 <- inhouseDbMinimal_2 %>%
     structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
-    referenceCleanedTitle
+    referenceCleanedTitle,
+    referenceCleanedDoi,
   ) %>%
   distinct()
 inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 %>%
@@ -533,7 +535,8 @@ inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 %>%
     structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
-    referenceCleanedTitle
+    referenceCleanedTitle,
+    referenceCleanedDoi,
   ) %>%
   distinct()
 inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 %>%
@@ -550,7 +553,8 @@ inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 %>%
     structureCleanedInchikey,
     structureCleanedInchi,
     structureCleanedSmiles,
-    referenceCleanedTitle
+    referenceCleanedTitle,
+    referenceCleanedDoi,
   ) %>%
   distinct()
 

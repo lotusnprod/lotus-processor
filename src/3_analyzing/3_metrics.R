@@ -63,8 +63,8 @@ inhouseDbMinimal <-
     col_select = c(
       "database",
       "organismCleaned",
-      "structureCleanedInchikey",
-      "referenceCleanedTitle"
+      "structureCleanedInchi",
+      "referenceCleanedDoi"
     )
   ) %>%
   filter(database != "manual") %>%
@@ -74,14 +74,14 @@ log_debug("validated for export ...")
 openDb <-
   read_delim(
     file = pathDataInterimTablesAnalyzedPlatinum,
+    delim = "\t",
     col_types = cols(.default = "c"),
     col_select = c(
       "database",
       "organismCleaned",
       "organismCleaned_dbTaxoTaxonRanks",
-      "structureCleanedInchikey",
+      "structureCleanedInchi",
       "structureCleaned_inchikey2D",
-      "referenceCleanedTitle",
       "referenceCleanedDoi"
     )
   ) %>%
@@ -91,19 +91,16 @@ openDb <-
 log_debug("exported ...")
 wikidata_pairs <-
   read_delim(
-    file = file.path(
-      pathDataExternalDbSource,
-      pathLastWdExport
-    ),
-    quote = "",
+    file = pathLastWdExport,
+    delim = "\t",
     col_types = cols(.default = "c"),
     col_select = c(
-      "structureCleanedInchikey" = "structure_inchikey",
-      "organismCleaned" = "taxon_name",
+      "structureCleanedInchi" = "structure_inchi",
+      "organismCleaned" = "organism_clean",
       "referenceCleanedDoi" = "reference_doi"
     )
   ) %>%
-  filter(!is.na(structureCleanedInchikey) &
+  filter(!is.na(structureCleanedInchi) &
     !is.na(organismCleaned) &
     !is.na(referenceCleanedDoi)) %>%
   distinct()
@@ -117,9 +114,8 @@ closedDb <-
       "database",
       "organismCleaned",
       "organismCleaned_dbTaxoTaxonRanks",
-      "structureCleanedInchikey",
+      "structureCleanedInchi",
       "structureCleaned_inchikey2D",
-      "referenceCleanedTitle",
       "referenceCleanedDoi"
     )
   ) %>%
@@ -169,8 +165,8 @@ cleaned_stats_3D <- inhouseDbMinimal %>%
   group_by(database) %>%
   distinct(
     organismCleaned,
-    structureCleanedInchikey,
-    referenceCleanedTitle
+    structureCleanedInchi,
+    referenceCleanedDoi
   ) %>%
   count(name = "cleaned referenced structure-organism pairs")
 
@@ -178,9 +174,9 @@ final_stats_3D <- openDb %>%
   group_by(database) %>%
   distinct(
     organismCleaned,
-    structureCleanedInchikey,
+    structureCleanedInchi,
     structureCleaned_inchikey2D,
-    referenceCleanedTitle
+    referenceCleanedDoi
   ) %>%
   count(name = "pairs validated for wikidata export")
 
@@ -188,9 +184,9 @@ wiki_stats_3D <- openDb_u_wiki %>%
   group_by(database) %>%
   distinct(
     organismCleaned,
-    structureCleanedInchikey,
+    structureCleanedInchi,
     structureCleaned_inchikey2D,
-    referenceCleanedTitle
+    referenceCleanedDoi
   ) %>%
   count(name = "actual pairs on wikidata")
 
@@ -211,12 +207,12 @@ dataset <- dataset %>%
     everything()
   ) %>%
   relocate(timestamp, .before = remark) %>%
-  mutate_all(~replace(., is.na(.), "-"))
+  mutate_all(~ replace(., is.na(.), "-"))
 
 pairsOpenDb_3D <- openDb %>%
   filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey,
+    !is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi,
     organismCleaned,
     .keep_all = TRUE
   )
@@ -233,8 +229,8 @@ pairsOpenDb_2D <- openDb %>%
 
 pairsOutsideClosed_3D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey,
+    !is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi,
     organismCleaned,
     .keep_all = TRUE
   ) %>%
@@ -251,8 +247,8 @@ pairsOutsideClosed_2D <- inhouseDb %>%
 
 pairsFull_3D <- inhouseDb %>%
   filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey,
+    !is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi,
     organismCleaned,
     .keep_all = TRUE
   )
@@ -266,7 +262,7 @@ pairsFull_2D <- inhouseDb %>%
   )
 
 pairsClosed_3D <- closedDb %>%
-  distinct(structureCleanedInchikey,
+  distinct(structureCleanedInchi,
     organismCleaned,
     .keep_all = TRUE
   )
@@ -318,13 +314,13 @@ log_debug(paste("closed:", nrow(closedDbOrganism), "distinct organisms", sep = "
 log_debug("analyzing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_3D <- openDb %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi, .keep_all = TRUE)
 
 ### inhouseDB
 inhouseDbStructure_3D <- inhouseDb %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi, .keep_all = TRUE)
 
 log_debug(paste(
   "inhouse:",
@@ -353,8 +349,8 @@ log_debug(paste(
 
 ### closed
 closedDbStructure_3D <- closedDb %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  distinct(structureCleanedInchikey, .keep_all = TRUE)
+  filter(!is.na(structureCleanedInchi)) %>%
+  distinct(structureCleanedInchi, .keep_all = TRUE)
 
 log_debug(paste(
   "closed:",
@@ -376,7 +372,7 @@ log_debug(paste(
 
 structuresPerOrganism_3D <- pairsOpenDb_3D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
-  distinct(organismCleaned, structureCleanedInchikey) %>%
+  distinct(organismCleaned, structureCleanedInchi) %>%
   group_by(organismCleaned) %>%
   count()
 
@@ -422,8 +418,8 @@ colnames(tableStructures_2D)[1] <- "organisms"
 
 organismsPerStructure_3D <- pairsOpenDb_3D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
-  distinct(organismCleaned, structureCleanedInchikey) %>%
-  group_by(structureCleanedInchikey) %>%
+  distinct(organismCleaned, structureCleanedInchi) %>%
+  group_by(structureCleanedInchi) %>%
   count()
 
 organismsPerStructure_2D <- pairsOpenDb_2D %>%
