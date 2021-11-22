@@ -29,11 +29,6 @@ works_locally_only <- TRUE
 
 ## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
-wikidataLotusExporterPath <- "../../lotus-wikidata-interact/downloadLotus/"
-wikidataLotusExporterDataPath <-
-  file.path(wikidataLotusExporterPath, "data")
-wikidataLotusExporterDataOutputPath <-
-  file.path(wikidataLotusExporterDataPath, "output")
 wikidataLotusExporterDataOutputTaxaPath <-
   "https://zenodo.org/record/5668855/files/taxa.tsv"
 wikidataLotusExporterDataOutputStructuresPath <-
@@ -1300,7 +1295,7 @@ path_accepted_fields <- file.path(
   "accepted_fields.tsv"
 )
 
-pathLastWdExport <- "210505_wikidata_query.tsv"
+pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
 pathLastFrozen <- "210715_frozen_metadata.csv.gz"
 
