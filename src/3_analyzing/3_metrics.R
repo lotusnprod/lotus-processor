@@ -22,6 +22,7 @@ dataset <- read_delim(
     -`initial retrieved unique observations`,
     -`cleaned referenced structure-organism pairs`,
     -`pairs validated for wikidata export`,
+    -`actual pairs on wikidata`,
     -`timestamp`
   ) %>%
   data.frame(check.names = FALSE)
@@ -155,7 +156,7 @@ dates <- timestamps$X1 %>%
   select(database, timestamp)
 
 log_debug("performing inner join with uploaded entries")
-openDb <- openDb %>%
+openDb_u_wiki <- openDb %>%
   inner_join(., wikidata_pairs)
 
 inhouseDb <- bind_rows(closedDb, openDb)
@@ -183,8 +184,19 @@ final_stats_3D <- openDb %>%
   ) %>%
   count(name = "pairs validated for wikidata export")
 
+wiki_stats_3D <- openDb_u_wiki %>%
+  group_by(database) %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchikey,
+    structureCleaned_inchikey2D,
+    referenceCleanedTitle
+  ) %>%
+  count(name = "actual pairs on wikidata")
+
 stats_table <- left_join(initial_stats, cleaned_stats_3D) %>%
-  left_join(., final_stats_3D)
+  left_join(., final_stats_3D) %>%
+  left_join(., wiki_stats_3D)
 
 dataset <- dataset %>%
   full_join(., dates) %>%
@@ -195,9 +207,11 @@ dataset <- dataset %>%
     `initial retrieved unique observations`,
     `cleaned referenced structure-organism pairs`,
     `pairs validated for wikidata export`,
+    `actual pairs on wikidata`,
     everything()
   ) %>%
-  relocate(timestamp, .before = remark)
+  relocate(timestamp, .before = remark) %>%
+  mutate_all(~replace(., is.na(.), "-"))
 
 pairsOpenDb_3D <- openDb %>%
   filter(!is.na(organismCleaned) &
