@@ -20,7 +20,7 @@ dataset <- read_delim(
   delim = ","
 ) %>%
   select(
-    -`initial retrieved unique observations`,
+    -`initial retrieved unique entries`,
     -`cleaned referenced structure-organism pairs`,
     -`pairs validated for wikidata export`,
     -`actual pairs on wikidata`,
@@ -212,7 +212,7 @@ inhouseDb <- bind_rows(closedDb, openDb)
 
 initial_stats <- dbTable %>%
   group_by(database) %>%
-  count(name = "initial retrieved unique observations")
+  count(name = "initial retrieved unique entries")
 
 cleaned_stats_3D <- inhouseDbMinimal %>%
   group_by(database) %>%
@@ -253,7 +253,7 @@ dataset <- dataset %>%
   select(
     database,
     `type`,
-    `initial retrieved unique observations`,
+    `initial retrieved unique entries`,
     `cleaned referenced structure-organism pairs`,
     `pairs validated for wikidata export`,
     `actual pairs on wikidata`,
