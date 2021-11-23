@@ -3,9 +3,11 @@ log_debug("This script draws the distribution of organisms per structure and vic
 
 start <- Sys.time()
 
-# reticulate::conda_install('r-reticulate', 'python-kaleido')
-# reticulate::conda_install('r-reticulate', 'plotly', channel = 'plotly')
-# reticulate::use_miniconda('r-reticulate')
+# reticulate::install_miniconda()
+# reticulate::conda_install(packages = 'python-kaleido')
+# reticulate::conda_install(packages = 'plotly',
+#                           channel = 'plotly')
+# reticulate::use_miniconda()
 
 log_debug("sourcing ...")
 log_debug("... paths")
@@ -63,8 +65,8 @@ a <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -200,
-  ay = 40,
+  ax = -50,
+  ay = 30,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
 )
@@ -81,8 +83,8 @@ b <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -100,
-  ay = 40,
+  ax = -90,
+  ay = 30,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
 )
@@ -127,8 +129,8 @@ e <- list(
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -77,
-  ay = -5,
+  ax = -100,
+  ay = -0,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
 )
@@ -203,8 +205,8 @@ fig <- plot_ly() %>%
       zeroline = FALSE,
       showline = FALSE,
       showgrid = FALSE,
-      range = c(0, 25),
-      domain = c(0.3, 0.7),
+      range = c(0, 30),
+      domain = c(0.25, 0.8),
       anchor = "x2"
     ),
     xaxis2 = list(
@@ -214,20 +216,20 @@ fig <- plot_ly() %>%
       showline = FALSE,
       showticklabels = FALSE,
       showgrid = FALSE,
-      domain = c(0.4, 0.99),
+      domain = c(0.25, 0.9),
       anchor = "y2"
     ),
     legend = list(
-      x = 0.4,
-      y = 0.25,
-      orientation = "h"
+      x = 0.45,
+      y = 0.075,
+      orientation = "v"
     )
   )
 
 fig
 
 if (mode == "full") {
-  save_image(
+  plotly::save_image(
     p = fig,
     file = file.path("../res", "distribution.pdf"),
     width = 800,
