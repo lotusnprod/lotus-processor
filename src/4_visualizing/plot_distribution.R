@@ -65,7 +65,7 @@ a <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -50,
+  ax = -120,
   ay = 30,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
@@ -83,7 +83,7 @@ b <- list(
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -90,
+  ax = -120,
   ay = 30,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
@@ -129,7 +129,7 @@ e <- list(
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -100,
+  ax = -115,
   ay = -0,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
@@ -143,7 +143,7 @@ f <- list(
   yref = "y2",
   showarrow = TRUE,
   arrowhead = 1,
-  ax = -100,
+  ax = -115,
   ay = 0,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
@@ -206,7 +206,7 @@ fig <- plot_ly() %>%
       showline = FALSE,
       showgrid = FALSE,
       range = c(0, 30),
-      domain = c(0.25, 0.8),
+      domain = c(0.2, 0.8),
       anchor = "x2"
     ),
     xaxis2 = list(
@@ -216,13 +216,13 @@ fig <- plot_ly() %>%
       showline = FALSE,
       showticklabels = FALSE,
       showgrid = FALSE,
-      domain = c(0.25, 0.9),
+      domain = c(0.2, 0.95),
       anchor = "y2"
     ),
     legend = list(
-      x = 0.45,
-      y = 0.075,
-      orientation = "v"
+      x = 0.25,
+      y = 0.175,
+      orientation = "h"
     )
   )
 
