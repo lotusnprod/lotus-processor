@@ -11,6 +11,7 @@ log_debug("... libraries")
 library(data.table)
 library(dplyr)
 library(readr)
+library(splitstackshape)
 
 log_debug("loading ...")
 log_debug("databases list ...")
@@ -28,7 +29,8 @@ dataset <- read_delim(
   data.frame(check.names = FALSE)
 
 log_debug("initial table ...")
-dbTable <- lapply(pathDataInterimDbDir,
+dbTable <- lapply(
+  pathDataInterimDbDir,
   read_delim,
   delim = "\t",
   col_types = cols(.default = "c")
@@ -89,6 +91,52 @@ openDb <-
   distinct()
 
 log_debug("exported ...")
+data_organism <-
+  read_delim(
+    file = wikidataLotusExporterDataOutputTaxaPath,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "organism_wikidata" = "wikidataId",
+      "organismCleaned" = "names_pipe_separated"
+    )
+  ) %>%
+  cSplit("organismCleaned",
+    sep = "|",
+    direction = "long"
+  ) %>%
+  distinct()
+
+data_structures <-
+  read_delim(
+    file = wikidataLotusExporterDataOutputStructuresPath,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "structure_wikidata" = "wikidataId",
+      "structureCleanedInchiKey" = "inchiKey",
+      "structureCleanedInchi" = "inchi"
+    )
+  ) %>%
+  distinct()
+
+data_references <-
+  read_delim(
+    file = wikidataLotusExporterDataOutputReferencesPath,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    col_select = c(
+      "reference_wikidata" = "wikidataId",
+      "referenceCleanedDoi" = "dois_pipe_separated",
+      "referenceCleanedTitle" = "title",
+    )
+  ) %>%
+  cSplit("referenceCleanedDoi",
+    sep = "|",
+    direction = "long"
+  ) %>%
+  distinct()
+
 wikidata_pairs <-
   read_delim(
     file = pathLastWdExport,
@@ -100,9 +148,14 @@ wikidata_pairs <-
       "referenceCleanedDoi" = "reference_doi"
     )
   ) %>%
-  filter(!is.na(structureCleanedInchi) &
-    !is.na(organismCleaned) &
-    !is.na(referenceCleanedDoi)) %>%
+  filter(
+    !is.na(structureCleanedInchi) &
+      !is.na(organismCleaned) &
+      !is.na(referenceCleanedDoi)
+  ) %>%
+  left_join(., data_organism) %>%
+  left_join(., data_structures) %>%
+  left_join(., data_references) %>%
   distinct()
 
 log_debug("... closed db")

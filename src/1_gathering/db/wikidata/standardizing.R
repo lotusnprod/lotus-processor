@@ -6,6 +6,7 @@ source("r/standardizing_original.R")
 
 library(dplyr)
 library(readr)
+library(splitstackshape)
 
 # get paths
 database <- databases$get("wikidata")
@@ -14,7 +15,12 @@ database <- databases$get("wikidata")
 data_organism <-
   read_delim(
     file = wikidataLotusExporterDataOutputTaxaPath
-  )
+  ) %>%
+  cSplit("names_pipe_separated",
+    sep = "|",
+    direction = "long"
+  ) %>%
+  distinct()
 
 data_structures <-
   read_delim(
@@ -24,7 +30,12 @@ data_structures <-
 data_references <-
   read_delim(
     file = wikidataLotusExporterDataOutputReferencesPath
-  )
+  ) %>%
+  cSplit("dois_pipe_separated",
+    sep = "|",
+    direction = "long"
+  ) %>%
+  distinct()
 
 data_triples <-
   read_delim(
