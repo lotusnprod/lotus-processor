@@ -259,7 +259,7 @@ dataset <- dataset %>%
     `actual pairs on wikidata`,
     everything()
   ) %>%
-  relocate(timestamp, .before = remark) %>%
+  relocate(timestamp, .after = status) %>%
   mutate_all(~ replace(., is.na(.), "-"))
 
 pairsOpenDb_3D <- openDb %>%
