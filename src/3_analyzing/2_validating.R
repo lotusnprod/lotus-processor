@@ -319,11 +319,11 @@ globalSample <- bind_rows(table_old, table) %>%
   mutate(organismValue = organismOriginal) %>%
   distinct(
     database,
-    organismValue,
-    structureType,
-    structureValue,
-    referenceType,
-    referenceValue,
+    # organismValue,
+    # structureType,
+    # structureValue,
+    # referenceType,
+    # referenceValue,
     organismCleaned,
     structureCleanedInchi,
     structureCleanedSmiles,
@@ -337,21 +337,19 @@ globalSample <- bind_rows(table_old, table) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
   left_join(., inhouseDbMinimal) %>%
   select(
+    -database,
     -referenceCleanedTitle,
-    -organismType
+    -organismType,
+    -organismValue,
+    -structureType,
+    -structureValue,
+    -referenceType,
+    -referenceValue,
   ) %>%
   distinct()
 
 a <- paste0("\\b", oldDbNames$oldDbName, "\\b")
 b <- oldDbNames$newDbName
-
-globalSample$database <- stri_replace_all_regex(
-  str = globalSample$database,
-  pattern = a,
-  replacement = b,
-  case_insensitive = FALSE,
-  vectorize_all = FALSE
-)
 
 log_debug("adding metadata")
 inhouseDbFull <- inhouseDbMinimal %>%
@@ -360,12 +358,6 @@ inhouseDbFull <- inhouseDbMinimal %>%
 log_debug("joining manual validation results with documented pairs")
 realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
   distinct(
-    database,
-    organismValue,
-    structureType,
-    structureValue,
-    referenceType,
-    referenceValue,
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -378,6 +370,16 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
     validated,
     comments,
     .keep_all = TRUE
+  ) %>%
+  filter(
+    referenceType %in% c(
+      "doi",
+      "pubmed",
+      "title",
+      "publishingDetails",
+      "split",
+      "original"
+    )
   )
 
 if (mode == "full") {
@@ -417,7 +419,7 @@ if (mode == "full") {
   fig_full <-
     myDirtyP(
       table = table_count,
-      yaxismax = 140,
+      yaxismax = 300,
       title = "full version"
     )
   fig_full
@@ -426,7 +428,7 @@ if (mode == "full") {
   fig_filtered <-
     myDirtyP(
       table = tableFiltered_count,
-      yaxismax = 140,
+      yaxismax = 300,
       title = "filtered version"
     )
   fig_filtered
@@ -459,7 +461,7 @@ if (mode == "full") {
   log_debug("... rejected set global")
   antifull <- myDirtyQ(
     table = tableAntiFiltered_count_global,
-    yaxismax = 550,
+    yaxismax = 100,
     title = "anti full version"
   )
   antifull
@@ -525,7 +527,7 @@ if (mode == "full") {
     filter(database %ni% forbidden_export) %>%
     group_by(referenceType) %>%
     count() %>%
-    mutate(prop = n / sum(.$n)) %>%
+    mutate(prop = n / sum(.$n, na.rm = TRUE)) %>%
     select(-n)
 
   f2Table <- left_join(f1Table, refRatios) %>%
@@ -535,9 +537,9 @@ if (mode == "full") {
       precision_temp = precision * prop
     ) %>%
     mutate(
-      f2corr = sum(.$f2corr_temp),
-      recallcorr = sum(.$recall_temp),
-      precisioncorr = sum(.$precision_temp)
+      f2corr = sum(.$f2corr_temp, na.rm = TRUE),
+      recallcorr = sum(.$recall_temp, na.rm = TRUE),
+      precisioncorr = sum(.$precision_temp, na.rm = TRUE)
     ) %>%
     mutate()
 
@@ -561,11 +563,11 @@ if (mode == "full") {
       .,
       tibble(
         `reference type` = "Total",
-        `true positives` = sum(.$`true positives`),
-        `false positives` = sum(.$`false positives`),
-        `false negatives` = sum(.$`false negatives`),
-        `true negatives` = sum(.$`true negatives`),
-        `relative abundance` = sum(.$`relative abundance`),
+        `true positives` = sum(.$`true positives`, na.rm = TRUE),
+        `false positives` = sum(.$`false positives`, na.rm = TRUE),
+        `false negatives` = sum(.$`false negatives`, na.rm = TRUE),
+        `true negatives` = sum(.$`true negatives`, na.rm = TRUE),
+        `relative abundance` = sum(.$`relative abundance`, na.rm = TRUE),
       ),
       tibble(
         `reference type` = "Corrected total",
@@ -713,11 +715,27 @@ closedDb <- inhouseDbFull %>%
 
 log_debug("outputing correct entries from manually validated set")
 manuallyValidatedSet <- realMetaSample %>%
-  filter(validated == "Y")
+  filter(validated == "Y") %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle
+  )
 
 log_debug("outputing incorrect entries from validated set")
 manuallyRemovedEntries <- realMetaSample %>%
-  filter(validated != "Y")
+  filter(validated != "Y") %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle
+  )
 
 openDbClean <- anti_join(openDb, manuallyRemovedEntries)
 
@@ -790,11 +808,24 @@ validationSetFilled_3 <-
   filter(!is.na(validated)) %>%
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
+# log_debug("loading validation set tetra")
+# validationSetFilled_4 <-
+#   read_delim(
+#     file = "../data/validation/validationSetTetra.tsv",
+#     delim = "\t",
+#     col_types = cols(.default = "c"),
+#     escape_double = FALSE,
+#     trim_ws = TRUE
+#   ) %>%
+#   filter(!is.na(validated)) %>%
+#   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+
 validationSetFilled <-
   bind_rows(
     validationSetFilled_1,
     validationSetFilled_2,
-    validationSetFilled_3
+    validationSetFilled_3,
+    # validationSetFilled_4
   ) %>%
   mutate(organismValue = organismOriginal) %>%
   select(
@@ -889,8 +920,8 @@ finalStats_reworked <- finalStats %>%
     .,
     tibble(
       `reference type` = "Total",
-      `true positives Validation` = sum(.$`true positives Validation`),
-      `false positives Validation` = sum(.$`false positives Validation`)
+      `true positives Validation` = sum(.$`true positives Validation`, na.rm = TRUE),
+      `false positives Validation` = sum(.$`false positives Validation`, na.rm = TRUE)
     )
   )
 
@@ -901,7 +932,15 @@ if (mode == "full") {
 
 log_debug("outputing correct entries from manually validated set")
 manuallyValidatedSet2 <- realValidationSetFilled %>%
-  filter(validated == "Y")
+  filter(validated == "Y") %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle
+  )
 
 manuallyValidatedSet3 <-
   bind_rows(manuallyValidatedSet, manuallyValidatedSet2)
@@ -911,7 +950,15 @@ manuallyRemovedEntries2 <- realValidationSetFilled %>%
   filter(validated != "Y")
 
 manuallyRemovedEntries3 <-
-  bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2)
+  bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2) %>%
+  distinct(
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle
+  )
 
 openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
   filter(!database %in% forbidden_export)
@@ -936,6 +983,7 @@ ifelse(
   yes = dir.create(pathDataInterimTablesAnalyzed),
   no = paste(pathDataInterimTablesAnalyzed, "exists")
 )
+
 if (mode == "full") {
   log_debug("../data/validation/manuallyValidated.tsv.gz")
 
@@ -991,11 +1039,11 @@ write_delim(
   file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")
 )
 
-log_debug(file.path(
-  pathDataInterimTablesAnalyzed,
-  "validationSet.tsv"
-))
 if (exists("validationSet")) {
+  log_debug(file.path(
+    pathDataInterimTablesAnalyzed,
+    "validationSet.tsv"
+  ))
   write.table(
     x = validationSet,
     file = file.path(
@@ -1009,12 +1057,12 @@ if (exists("validationSet")) {
   )
 }
 
-log_debug(file.path(
-  pathDataInterimTablesAnalyzed,
-  "validationSetBis.tsv"
-))
-
 if (exists("validationSet2")) {
+  log_debug(file.path(
+    pathDataInterimTablesAnalyzed,
+    "validationSetBis.tsv"
+  ))
+  
   write.table(
     x = validationSet2,
     file = file.path(
@@ -1029,11 +1077,33 @@ if (exists("validationSet2")) {
 }
 
 if (exists("validationSet3")) {
+  log_debug(file.path(
+    pathDataInterimTablesAnalyzed,
+    "validationSetTer.tsv"
+  ))
   write.table(
     x = validationSet3,
     file = file.path(
       pathDataInterimTablesAnalyzed,
       "validationSetTer.tsv"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+}
+
+if (exists("validationSet4")) {
+  log_debug(file.path(
+    pathDataInterimTablesAnalyzed,
+    "validationSetTetra.tsv"
+  ))
+  write.table(
+    x = validationSet3,
+    file = file.path(
+      pathDataInterimTablesAnalyzed,
+      "validationSetTetra.tsv"
     ),
     row.names = FALSE,
     quote = FALSE,

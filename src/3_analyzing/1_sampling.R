@@ -274,7 +274,7 @@ if (exists("realMetaSample")) {
     ) %>%
     select(
       database,
-      organismOriginal,
+      organismOriginal = organismValue,
       structureType,
       structureValue,
       referenceType,
@@ -311,6 +311,7 @@ if (exists("sampleONPDB")) {
   )
 }
 
+## 2nd iteration where some knapsack entries were needed
 log_debug(pathDataInterimTablesAnalyzedSampleKnapsack)
 if (exists("sampleKnapsack")) {
   write.table(
@@ -374,7 +375,7 @@ if (exists("additionalSetBis")) {
   )
 }
 
-# additional again
+## 3rd iteration, 2_validating needs to run first.
 set.seed(
   seed = 42,
   kind = "Mersenne-Twister",
@@ -410,7 +411,76 @@ if (exists("openDbClean2")) {
     ) %>%
     select(
       database,
-      organismOriginal,
+      organismOriginal = organismValue,
+      structureType,
+      structureValue,
+      referenceType,
+      referenceValue,
+      organismCleaned,
+      structureCleanedInchi,
+      structureCleanedInchikey,
+      structureCleanedSmiles,
+      referenceCleanedDoi,
+      referenceCleanedTitle,
+      curator,
+      validated,
+      comments
+    )
+}
+
+## 4th iteration, 2_validating needs to run first.
+set.seed(
+  seed = 42,
+  kind = "Mersenne-Twister",
+  normal.kind = "Inversion"
+)
+if (exists("openDbClean3")) {
+  additionalSetTetra <-
+    bind_rows(
+      A <- openDbClean2 %>%
+        filter(referenceType == "pubmed") %>%
+        sample_n(40) %>%
+        mutate(
+          curator = "AR",
+          validated = NA,
+          comments = NA
+        ),
+      B <- openDbClean2 %>%
+        filter(referenceType == "split") %>%
+        sample_n(220) %>%
+        mutate(
+          curator = "AR",
+          validated = NA,
+          comments = NA
+        ),
+      C <- openDbClean2 %>%
+        filter(referenceType == "original") %>%
+        sample_n(25) %>%
+        mutate(
+          curator = "AR",
+          validated = NA,
+          comments = NA
+        ),
+      D <- openDbClean2 %>%
+        filter(referenceType == "title") %>%
+        sample_n(25) %>%
+        mutate(
+          curator = "AR",
+          validated = NA,
+          comments = NA
+        ),
+      D <- openDbClean2 %>%
+        filter(referenceType == "publishingDetails") %>%
+        sample_n(50) %>%
+        mutate(
+          curator = "AR",
+          validated = NA,
+          comments = NA
+        )
+    ) %>%
+    select(
+      database,
+      organismOriginal = organismValue,
       structureType,
       structureValue,
       referenceType,
@@ -441,6 +511,19 @@ if (exists("additionalSetTer")) {
   )
 }
 
+if (exists("additionalSetTetra")) {
+  write.table(
+    x = additionalSetTetra,
+    file = file.path(
+      pathDataInterimTablesAnalyzed,
+      "additionalSetTetra.tsv"
+    ),
+    row.names = FALSE,
+    quote = FALSE,
+    sep = "\t",
+    fileEncoding = "UTF-8"
+  )
+}
 
 end <- Sys.time()
 
