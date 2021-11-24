@@ -1,4 +1,4 @@
-FROM continuumio/miniconda3
+FROM docker.io/continuumio/miniconda3
 
 ARG USER_ID
 ARG GROUP_ID
