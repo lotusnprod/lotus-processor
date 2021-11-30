@@ -15,6 +15,7 @@ if (mode == "full") {
   library(readr)
   library(tidyr)
   library(UpSetR)
+  source("r/add_metadata.R")
   source("r/getGraphChemicalClass.R")
   source("r/getGraphStudiedPlant.R")
   source("r/prepare_upset.R")
@@ -54,33 +55,6 @@ if (mode == "full") {
       structureCleaned_inchikey2D,
       .keep_all = TRUE
     )
-
-  log_debug("... metadata ...")
-  pairs_metadata <- fread(
-    file = file.path(
-      pathDataProcessed,
-      pathLastFrozen
-    )
-  ) %>%
-    cSplit(
-      splitCols = colnames(.)[.[, grepl(
-        pattern = "structure_taxonomy_npclassifier_",
-        x = colnames(.)
-      )]],
-      sep = "|",
-      direction = "long"
-    ) %>%
-    filter(
-      !is.na(structure_taxonomy_npclassifier_01pathway) &
-        !is.na(structure_taxonomy_npclassifier_02superclass) &
-        !is.na(structure_taxonomy_npclassifier_03class)
-    ) %>%
-    mutate_all(as.character)
-
-  pairs_metadata[] <-
-    lapply(pairs_metadata, function(x) {
-      y_as_na(x, "")
-    })
 
   log_debug("joining closed DBs and open DB")
   inhouseDb <- bind_rows(closedDb, openDb) %>%
@@ -186,15 +160,26 @@ if (mode == "full") {
 
   log_debug("adding metadata for more detailed analyzis ...")
   log_debug("... classyfire")
-  inhouseDbMeta <- left_join(
-    inhouseDb %>% distinct(
+  inhouseDbMeta <- inhouseDb %>%
+    distinct(
       database,
       organism_name = organismCleaned,
       structure_inchikey = structureCleanedInchikey,
       structure_inchikey_2D = structureCleaned_inchikey2D
-    ),
-    pairs_metadata %>% distinct(organism_name, structure_inchikey, .keep_all = TRUE)
-  )
+    ) %>%
+    add_metadata() %>%
+    mutate(structure_inchikey_2D = substring(text = structure_inchikey,
+                                             first = 1,
+                                             last = 14)) %>%
+    left_join(
+      inhouseDb %>%
+        distinct(
+          database,
+          organism_name = organismCleaned,
+          structure_inchikey = structureCleanedInchikey,
+          structure_inchikey_2D = structureCleaned_inchikey2D
+        )
+    )
 
   chemo <- inhouseDbMeta %>%
     filter(!is.na(structure_taxonomy_npclassifier_01pathway)) %>%
@@ -316,7 +301,7 @@ if (mode == "full") {
     mainbar.y.label = "Unique organisms per intersection",
     sets.x.label = "Unique organisms per database",
     set_size.show = TRUE,
-    set_size.scale_max = 2500
+    set_size.scale_max = 3000
   )
   dev.off()
 

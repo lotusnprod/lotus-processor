@@ -324,7 +324,7 @@ classy_temp <-
     chemont_id, everything(), -chemontId
   )
 
-chemical_taxonomy_2 <- classy_temp %>%
+chemical_taxonomy_2 <<- classy_temp %>%
   mutate(direct_parent = apply(.[, 3:13], 1, function(x) {
     tail(na.omit(x), 1)
   })) %>%
