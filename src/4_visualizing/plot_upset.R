@@ -168,9 +168,11 @@ if (mode == "full") {
       structure_inchikey_2D = structureCleaned_inchikey2D
     ) %>%
     add_metadata() %>%
-    mutate(structure_inchikey_2D = substring(text = structure_inchikey,
-                                             first = 1,
-                                             last = 14)) %>%
+    mutate(structure_inchikey_2D = substring(
+      text = structure_inchikey,
+      first = 1,
+      last = 14
+    )) %>%
     left_join(
       inhouseDb %>%
         distinct(
