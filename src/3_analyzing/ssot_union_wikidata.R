@@ -161,7 +161,7 @@ log_debug(
 )
 
 platinum_only <-
-  anti_join(platinum_pairs, wikidata_pairs) %>% 
+  anti_join(platinum_pairs, wikidata_pairs) %>%
   distinct()
 
 platinum_u_wd_complete <- add_metadata(df = platinum_u_wd)

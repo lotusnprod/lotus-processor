@@ -1062,7 +1062,7 @@ if (exists("validationSet2")) {
     pathDataInterimTablesAnalyzed,
     "validationSetBis.tsv"
   ))
-  
+
   write.table(
     x = validationSet2,
     file = file.path(
