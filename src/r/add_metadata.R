@@ -111,16 +111,16 @@ add_metadata <- function(df) {
     select(
       organism_name = canonical_name,
       organism_taxonomy_ottid = ott_id,
-      organism_taxonomy_01domain = name_domain,
-      organism_taxonomy_02kingdom = name_kingdom,
-      organism_taxonomy_03phylum = name_phylum,
-      organism_taxonomy_04class = name_class,
-      organism_taxonomy_05order = name_order,
-      organism_taxonomy_06family = name_family,
-      organism_taxonomy_07tribe = name_tribe,
-      organism_taxonomy_08genus = name_genus,
-      organism_taxonomy_09species = name_species,
-      organism_taxonomy_10varietas = name_varietas
+      organism_taxonomy_01domain = dplyr::matches("name_domain"),
+      organism_taxonomy_02kingdom = dplyr::matches("name_kingdom"),
+      organism_taxonomy_03phylum = dplyr::matches("name_phylum"),
+      organism_taxonomy_04class = dplyr::matches("name_class"),
+      organism_taxonomy_05order = dplyr::matches("name_order"),
+      organism_taxonomy_06family = dplyr::matches("name_family"),
+      organism_taxonomy_07tribe = dplyr::matches("name_tribe"),
+      organism_taxonomy_08genus = dplyr::matches("name_genus"),
+      organism_taxonomy_09species = dplyr::matches("name_species"),
+      organism_taxonomy_10varietas = dplyr::matches("name_varietas")
     ) %>%
     map_df(rev) %>%
     coalesce()
