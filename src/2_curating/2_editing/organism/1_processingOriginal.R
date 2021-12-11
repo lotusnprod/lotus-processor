@@ -81,14 +81,14 @@ verified_df <- verified %>%
     -curation,
     -matchType
   ) %>%
-  unnest(preferredResults, names_repair = "minimal") %>%
+  unnest(results, names_repair = "minimal") %>%
   filter(dataSourceTitleShort != "IRMNG (old)" &
     dataSourceTitleShort != "IPNI") %>%
   filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
   mutate(organismType = "clean") %>%
   select(
     organismType,
-    organismValue = input,
+    organismValue = name,
     organismCleaned = currentCanonicalFull,
     organismDbTaxo = dataSourceTitleShort,
     taxonId = currentRecordId,
