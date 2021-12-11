@@ -137,7 +137,7 @@ test_that(
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
-
+# 
 # write.table(
 #   x = structureFull,
 #   file = pathTestsStructures,
@@ -146,7 +146,7 @@ test_that(
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
-
+# 
 # write.table(
 #   x = referenceTableFull,
 #   file = pathTestsReferences,

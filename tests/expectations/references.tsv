@@ -1,35 +1,34 @@
 organismType	organismValue	organismDetected	referenceType	referenceValue	referenceCleanedDoi	referenceCleanedPmcid	referenceCleanedPmid	referenceCleanedTitle	referenceCleaned_journal	referenceCleaned_date	referenceCleaned_author	referenceCleaned_score_distance	referenceCleaned_score_titleOrganism	referenceCleaned_score_complementDate	referenceCleaned_score_complementAuthor	referenceCleaned_score_complementJournal	referenceCleaned_score_complementTotal
-clean	Ficus variegata	Ficus	pubmed	1234	NA	NA	1234	Change in the kinetics of sulphacetamide tissue distribution in Walker tumor-bearing rats.	Drug metabolism and disposition: the biological fate of chemicals	1975 Nov-Dec	Nadeau D	0	NA	NA	NA	NA	NA
-clean	Ficus	Ficus	pubmed	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	Frontiers in plant science	2019	Rutz A	0	NA	NA	NA	NA	NA
-dirty	kiwi	NA	title	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	Frontiers in plant science	2019	Rutz A	0	NA	NA	NA	NA	NA
-clean	Kiwi	Kiwi	doi	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	Frontiers in plant science	2019	Rutz A	0	NA	NA	NA	NA	NA
-clean	Kiwi canterberus	Kiwi	doi	10.1080/00071618200650061 .	10.1080/00071618200650061	NA	NA	The keto-carotenoids of two marine coccoid members of the Eustigmatophyceae	British Phycological Journal	1982-03	Antia	0	NA	NA	NA	NA	NA
-clean	Rose apple	Syzygium	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ejoc73%3e3.0.co;2-f	10.1002/(SICI)1099-0690(199801)1998:1<73::AID-EJOC73>3.0.CO;2-F	NA	NA	New Triquinane-Type Sesquiterpenoids fromMacrocystidia cucumis (Basidiomycetes)	European Journal of Organic Chemistry	1998-01	Hellwig	0	NA	NA	NA	NA	NA
-clean	Iris pallida	Iris	title	SWERTIAJAPONIN FROM IRIS LACTEA	10.1007/BF00598780	NA	NA	Swertiajaponin fromIris lactea	Chemistry of Natural Compounds	1987	Pryakhina	1	1	NA	NA	NA	NA
-dirty	Rose, apple	Malus	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	Rice Bean	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	Rice, Bean	Phaseolus	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	Rice, Bean	Oryza	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Rice	Oryza	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	Olive	Olea	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	African olive	Olea	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Astragali radix	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Lini Semen	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Lini semen	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Piper	Piper	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Piperis	Piperis	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Lecidea piperis	Lecidea	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Lecidea piperis	Malmidea	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-dirty	Black pepper	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Radix Piperis longi	Piper	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Radix	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Pepper	NA	doi	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	NA	NA	NA	NA
-clean	Iris hybr	Iris	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK	10.1016/0031-9422(90)80076-S	NA	NA	Two isoflavones from Iris kashmiriana	Phytochemistry	1990	Kachroo	14	1	NA	NA	NA	NA
-clean	Iris persiminima	Iris	title	(J Nat Prod) 43: 97-102	10.1039/C4NP90043J	NA	NA	Front cover	Nat. Prod. Rep.	2014-11-05	NA	19	NA	NA	NA	NA	NA
-clean	Nicotiana tabacum	Nicotiana	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51	10.3891/ACTA.CHEM.SCAND.29B-0677	NA	NA	Tobacco Chemistry. 29. (7S)-10-Oxo-4xi-methyl-7-isopropyl-5E-undecen-4-olide, a New Thunbergan-type Nor-isoprenoid Isolated from Greek Nicotiana tabacum L.	Acta Chemica Scandinavica	1975	Aasen	138	1	1	1	0	2
-dirty	Green bell pepper	Capsicum	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51	10.3891/ACTA.CHEM.SCAND.29B-1002	NA	NA	Studies on Orchidaceae Glycosides. 2. The Structures of Loroglossine and Militarine, two Glucosides from Orchis militaris L.	Acta Chemica Scandinavica	1975	Aasen	104	NA	1	1	0	2
-clean	Iris	Iris	split	; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163	10.1016/0305-1978(88)90089-0	NA	NA	A comparative study of anthraquinones in rhizomes of Kniphofia species	Biochemical Systematics and Ecology	1988-01	Yenesew	65	NA	0	0	1	1
-clean	Iris florentina	Iris	publishingDetails	(J Nat Prod) 43: 97-102	10.1021/NP50007A007	NA	NA	New Tertiary Alkaloids of Strychnos decussata	Journal of Natural Products	1980-01	Rolfsen	38	NA	0	0	0	0
-clean	Rose	NA	publishingDetails	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	0	0	0	0
-clean	Apple	Malus	original	HelloWorld!	10.7934/P3209	NA	NA	HelloWorld (project)	MorphoBank datasets	2018	Angielczyk	10	NA	0	0	0	0
-clean	Callichroma iris	Callichroma	split	Bar	10.2307/3615389	NA	NA	68.2 cos (sin x) >= [vertical bar]cos x[vertical bar] >= [vertical bar] sin (cos x)[vertical bar]	The Mathematical Gazette	1984-03	Webster	94	NA	0	0	0	0
+clean	Nicotiana tabacum	Nicotiana	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51	10.3891/ACTA.CHEM.SCAND.29B-0677	NA	NA	Tobacco Chemistry. 29. (7S)-10-Oxo-4xi-methyl-7-isopropyl-5E-undecen-4-olide, a New Thunbergan-type Nor-isoprenoid Isolated from Greek Nicotiana tabacum L.	NA	1975	Aasen	NA	1	1	1	NA	2
+clean	Iris pallida	Iris	title	SWERTIAJAPONIN FROM IRIS LACTEA	10.1007/BF00598780	NA	NA	Swertiajaponin fromIris lactea	NA	NA	NA	1	1	NA	NA	NA	NA
+clean	Iris hybr	Iris	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK	10.1016/0031-9422(90)80076-S	NA	NA	Two isoflavones from Iris kashmiriana	NA	NA	NA	14	1	NA	NA	NA	NA
+dirty	Green bell pepper	Capsicum	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51	10.3891/ACTA.CHEM.SCAND.29B-0051	NA	NA	Tobacco Chemistry. 28. Structure and Synthesis of Drim-8-en-7-one, a New Tobacco Constituent.	NA	1975	Aasen	NA	NA	1	1	NA	2
+clean	Iris	Iris	split	; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163	10.1016/0305-1978(88)90089-0	NA	NA	A comparative study of anthraquinones in rhizomes of Kniphofia species	Biochemical Systematics and Ecology	NA	NA	NA	NA	NA	NA	1	1
+clean	Iris florentina	Iris	publishingDetails	(J Nat Prod) 43: 97-102	NA	NA	NA	New Tertiary Alkaloids of Strychnos decussata	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Iris persiminima	Iris	title	(J Nat Prod) 43: 97-102	10.1021/NP50010A900	NA	NA	ads	NA	NA	NA	21	NA	NA	NA	NA	NA
+clean	Rose	NA	publishingDetails	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Apple	Malus	original	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Ficus variegata	Ficus	pubmed	1234	NA	NA	1234	Change in the kinetics of sulphacetamide tissue distribution in Walker tumor-bearing rats.	NA	NA	NA	0	NA	NA	NA	NA	NA
+clean	Ficus	Ficus	pubmed	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	NA	NA	NA	0	NA	NA	NA	NA	NA
+clean	Kiwi canterberus	Kiwi	doi	10.1080/00071618200650061 .	10.1080/00071618200650061	NA	NA	The keto-carotenoids of two marine coccoid members of the Eustigmatophyceae	NA	NA	NA	0	NA	NA	NA	NA	NA
+clean	Rose apple	Syzygium	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ejoc73%3e3.0.co;2-f	10.1002/(SICI)1099-0690(199801)1998:1<73::AID-EJOC73>3.0.CO;2-F	NA	NA	New Triquinane-Type Sesquiterpenoids fromMacrocystidia cucumis (Basidiomycetes)	NA	NA	NA	0	NA	NA	NA	NA	NA
+clean	Callichroma iris	Callichroma	split	Bar	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	kiwi	NA	title	31708947	NA	NA	31708947	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Kiwi	Kiwi	doi	31708947	NA	NA	31708947	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Rose, apple	Malus	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Rice Bean	Vigna	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Rice, Bean	Oryza	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Rice	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Olive	Olea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	African olive	Olea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Astragali radix	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Lini Semen	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Lini semen	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Piper	Piper	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Piperis	Piperis	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Lecidea piperis	Malmidea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Lecidea piperis	Lecidea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Black pepper	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Radix Piperis longi	Piperis	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Radix	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Pepper	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA

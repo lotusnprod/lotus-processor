@@ -21,6 +21,12 @@ Rscript -e 'remotes::install_github("ropensci/rcrossref")'
 make MODE=test lotus-quick
 ```
 
+if everything worked smoothly you can then:
+
+```
+make MODE=test tests
+```
+
 ## Data Availability Statements
 
 - The data used to support the findings of this study have been deposited on OSF [https://osf.io/pmgux/](https://osf.io/pmgux/).

@@ -1196,24 +1196,11 @@ pathDataInterimTablesAnalyzedSampleAllONPDB <-
     "sampleAllONPDB.tsv"
   )
 
-## sample ONPDB triplets (gold)
-pathDataInterimTablesAnalyzedGold <-
-  file.path(
-    pathDataInterimTablesAnalyzed,
-    "gold.tsv.gz"
-  )
-
+## validated structure-organism pairs
 pathDataInterimTablesAnalyzedPlatinum <-
   file.path(
     pathDataInterimTablesAnalyzed,
-    "platinum.tsv.gz"
-  )
-
-## sample ONPDB triplets (gold)
-pathDataInterimTablesAnalyzedSampleGoldONPDB <-
-  file.path(
-    pathDataInterimTablesAnalyzed,
-    "sampleGoldONPDB.tsv"
+    "validated_referenced_structure_organism_pairs.tsv.gz"
   )
 
 ## sample knapsack triplets
