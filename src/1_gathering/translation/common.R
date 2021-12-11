@@ -49,6 +49,12 @@ if (mode == "full") {
       canonicalName = TAXON
     )
 
+  ## forcing organisms in test file to be in sampled dic
+  test_organisms <- read_delim(
+    file = "../tests/tests.tsv",
+    delim = "\t"
+  )
+
   commonSciDuk <- left_join(sciDuk, commonDuk) %>%
     select(-FNFNUM) %>%
     filter(!is.na(vernacularName))
@@ -410,8 +416,24 @@ if (mode == "full") {
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
   )
-  common2Sci_sampled <- common2Sci %>%
+  common2Sci_sampled_1 <- common2Sci %>%
     sample_n(500)
+
+  common2Sci_sampled_2 <- common2Sci %>%
+    filter(grepl(
+      pattern = paste(test_organisms$organismValue, collapse = "|"),
+      x = vernacularName,
+      ignore.case = TRUE
+    ))
+
+  common2Sci_sampled <-
+    bind_rows(
+      common2Sci_sampled_1,
+      common2Sci_sampled_2
+    ) %>%
+    mutate(n = str_count(string = vernacularName)) %>%
+    arrange(desc(n)) %>%
+    select(-n)
 
   # exporting
   write_delim(
@@ -437,5 +459,5 @@ if (mode == "full") {
     quote = "none",
     escape = "double"
   )
+  ## because of univocity parser settings
 }
-## because of univocity parser settings

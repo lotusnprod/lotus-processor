@@ -63,33 +63,43 @@ if (mode == "full") {
 
   # latin genitive dictionaries
   ## i
-  latinGenitiveIDic <- read_delim(
-    file = pathDataInterimDictionariesLatinGenitiveI,
-    delim = "\t",
-  ) %>%
+  latinGenitiveIDic <-
+    read_delim(
+      file = pathDataInterimDictionariesLatinGenitiveI,
+      delim = "\t",
+    ) %>%
     mutate(n = str_count(string = genitive)) %>%
     arrange(desc(n)) %>%
     select(-n)
 
   ## is
-  latinGenitiveIsDic <- read_delim(
-    file = pathDataInterimDictionariesLatinGenitiveIs,
-    delim = "\t",
-  ) %>%
+  latinGenitiveIsDic <-
+    read_delim(
+      file = pathDataInterimDictionariesLatinGenitiveIs,
+      delim = "\t",
+    ) %>%
     mutate(n = str_count(string = genitive)) %>%
     arrange(desc(n)) %>%
     select(-n)
 
   ## parts
-  latinGenitivePartsDic <- read_delim(
-    file = pathDataInterimDictionariesLatinPlantParts,
-    delim = "\t",
-  )
+  latinGenitivePartsDic <-
+    read_delim(
+      file = pathDataInterimDictionariesLatinPlantParts,
+      delim = "\t",
+    )
 
   ## manually subtracted entries
-  manualSubtraction <- read_delim(
-    file = pathDataInterimDictionariesTcmManualSubtraction,
-    delim = "\t",
+  manualSubtraction <-
+    read_delim(
+      file = pathDataInterimDictionariesTcmManualSubtraction,
+      delim = "\t",
+    )
+
+  ## forcing organisms in test file to be in sampled dic
+  test_organisms <- read_delim(
+    file = "../tests/tests_min.tsv",
+    delim = "\t"
   )
 
   # cleaning
@@ -188,7 +198,8 @@ if (mode == "full") {
     tcmNamesDic_2$latin <- capitalize(string = tcmNamesDic_2$latin)
 
     tcmNamesDic_2$common <- tolower(x = tcmNamesDic_2$common)
-    tcmNamesDic_2$common <- capitalize(string = tcmNamesDic_2$common)
+    tcmNamesDic_2$common <-
+      capitalize(string = tcmNamesDic_2$common)
 
     # reordering tcm names (eg. not Radix gentianae but Gentianae radix)
     tcmNamesDic_2 <-
@@ -362,7 +373,8 @@ if (mode == "full") {
       newCanonicalName = newbiologicalsource
     ) %>%
     distinct() %>%
-    filter(vernacularName != canonicalName | is.na(newCanonicalName))
+    filter(vernacularName != canonicalName |
+      is.na(newCanonicalName))
 
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")
@@ -371,8 +383,24 @@ if (mode == "full") {
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
   )
-  tcmNamesDicCurated_sampled <- tcmNamesDicCurated %>%
+  tcmNamesDicCurated_sampled_1 <- tcmNamesDicCurated %>%
     sample_n(500)
+
+  tcmNamesDicCurated_sampled_2 <- tcmNamesDicCurated %>%
+    filter(grepl(
+      pattern = paste(test_organisms$organismValue, collapse = "|"),
+      x = vernacularName,
+      ignore.case = TRUE
+    ))
+
+  tcmNamesDicCurated_sampled <-
+    bind_rows(
+      tcmNamesDicCurated_sampled_1,
+      tcmNamesDicCurated_sampled_2
+    ) %>%
+    mutate(n = str_count(string = vernacularName)) %>%
+    arrange(desc(n)) %>%
+    select(-n)
 
   # exporting
   write_delim(
