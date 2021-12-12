@@ -49,6 +49,7 @@ cleanedStructureTableFull <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  select(-validatorLog) %>%
   tibble()
 
 ## no classification (classyFire, NP-classifier) test at the moment
@@ -89,6 +90,7 @@ structureFullExpectation <- read_delim(
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%
+  select(-validatorLog) %>%
   tibble()
 
 log_debug("... references")

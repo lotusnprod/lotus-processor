@@ -11,6 +11,7 @@ if (!require(remotes)) {
 remotes::install_github('ropensci/rcrossref')
 "
 make MODE=test lotus-quick
+make MODE=test tests
 cd src
 Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv
 cd ..
