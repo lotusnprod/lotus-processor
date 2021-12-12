@@ -944,7 +944,10 @@ pathDataInterimTablesTranslatedReferencePubmed <-
   file.path(pathDataInterimTablesTranslatedReference, "pubmed.tsv.gz")
 
 pathDataInterimTablesTranslatedReferencePublishingDetailsFolder <-
-  file.path(pathDataInterimTablesTranslatedReference, "publishingDetails")
+  file.path(
+    pathDataInterimTablesTranslatedReference,
+    "publishingDetails"
+  )
 
 pathDataInterimTablesTranslatedReferencePublishingDetails <-
   file.path(
@@ -1256,9 +1259,11 @@ pathTestsFile <-
     "test" = "tests.tsv"
   ))
 
-pathTestsDicCommonFile <- file.path(pathTests, "tests_dic_common_min.tsv.gz")
+pathTestsDicCommonFile <-
+  file.path(pathTests, "tests_dic_common_min.tsv.gz")
 
-pathTestsDicTcmFile <- file.path(pathTests, "tests_dic_tcm_min.tsv.gz")
+pathTestsDicTcmFile <-
+  file.path(pathTests, "tests_dic_tcm_min.tsv.gz")
 
 pathTestsExpectations <- file.path(pathTests, "expectations")
 
@@ -1275,6 +1280,11 @@ pathTestsStructures <- file.path(
 pathTestsReferences <- file.path(
   pathTestsExpectations,
   "references.tsv"
+)
+
+pathTestsPlatinum <- file.path(
+  pathTestsExpectations,
+  "validated.tsv"
 )
 
 path_accepted_fields <- file.path(

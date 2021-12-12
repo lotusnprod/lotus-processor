@@ -65,6 +65,16 @@ referenceTableFull <- read_delim(
   select(-referenceCleaned_score_crossref) %>%
   tibble()
 
+log_debug("validated table ")
+validatedTable <- read_delim(
+  file = gzfile(description = pathDataInterimTablesAnalyzedPlatinum),
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  tibble()
+
 log_debug("joining structures")
 structureFull <-
   left_join(translatedStructureTable, cleanedStructureTableFull) %>%
@@ -107,28 +117,29 @@ log_debug("testing ...")
 log_debug("... organisms")
 test_that(
   desc = "organisms",
-  code = expect_equal(
-    object = organismTableFull,
-    expected = organismTableFullExpectation
-  )
+  code = expect_equal(object = organismTableFull,
+                      expected = organismTableFullExpectation)
 )
 
 log_debug("... structures")
 test_that(
   desc = "structures",
-  code = expect_equal(
-    object = structureFull,
-    expected = structureFullExpectation
-  )
+  code = expect_equal(object = structureFull,
+                      expected = structureFullExpectation)
 )
 
 log_debug("... references")
 test_that(
   desc = "references",
-  code = expect_equal(
-    object = referenceTableFull,
-    expected = referenceTableFullExpectation
-  )
+  code = expect_equal(object = referenceTableFull,
+                      expected = referenceTableFullExpectation)
+)
+
+log_debug("... validated")
+test_that(
+  desc = "validated",
+  code = expect_equal(object = validatedTable,
+                      expected = validatedTableExpectation)
 )
 
 # write.table(
@@ -152,6 +163,15 @@ test_that(
 # write.table(
 #   x = referenceTableFull,
 #   file = pathTestsReferences,
+#   row.names = FALSE,
+#   quote = FALSE,
+#   sep = "\t",
+#   fileEncoding = "UTF-8"
+# )
+# 
+# write.table(
+#   x = validatedTable,
+#   file = pathTestsPlatinum,
 #   row.names = FALSE,
 #   quote = FALSE,
 #   sep = "\t",
