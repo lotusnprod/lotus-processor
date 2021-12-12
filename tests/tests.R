@@ -113,6 +113,16 @@ referenceTableFullExpectation <- read_delim(
 ) %>%
   tibble()
 
+log_debug("... validated table")
+validatedTableExpectation <- read_delim(
+  file = pathTestsPlatinum,
+  delim = "\t",
+  col_types = cols(.default = "c"),
+  escape_double = FALSE,
+  trim_ws = TRUE
+) %>%
+  tibble()
+
 log_debug("testing ...")
 log_debug("... organisms")
 test_that(
