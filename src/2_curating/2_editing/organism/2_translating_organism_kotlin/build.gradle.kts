@@ -34,7 +34,7 @@ dependencies {
  * We need to compile for the outdated conda java version
  */
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "14"
+    kotlinOptions.jvmTarget = "16"
 }
 
 /**
@@ -42,7 +42,6 @@ tasks.withType<KotlinCompile>() {
  */
 application {
     mainClass.set("MainKt")
-    mainClassName = "MainKt"
 }
 
 tasks.withType<Jar> {
