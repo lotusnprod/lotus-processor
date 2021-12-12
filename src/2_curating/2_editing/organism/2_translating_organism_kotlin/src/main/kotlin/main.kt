@@ -23,7 +23,6 @@ fun main(args: Array<String>) {
     val pathData = args[0]
     val mode = args[1]
 
-    val pathDataInterim = "$pathData/interim"
     val pathDataExternal = "$pathData/external"
 
     val pathDataInterimDictionaries = "$pathDataExternal/dictionarySource"
