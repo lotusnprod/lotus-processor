@@ -793,7 +793,7 @@ if (mode == "test") {
   validationSet3 <-
     anti_join(openDbClean, validationSetFilled_1) %>%
     anti_join(., validationSetFilled_2) %>%
-    sample_n(10)
+    sample_n(6)
 }
 
 log_debug("loading validation set ter")
