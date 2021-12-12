@@ -242,11 +242,14 @@ biocleaning <- function(gnfound, names, organismCol) {
   }
 
   names[1, "sum"] <- nchar(colnames(names)[1]) + 1
-  for (i in 2:nrow(names)) {
-    names[i, "sum"] <-
-      names[i - 1, "nchar"] +
-      1 +
-      names[i - 1, "sum"]
+  
+  if (nrow(names) >= 2) {
+    for (i in 2:nrow(names)) {
+      names[i, "sum"] <-
+        names[i - 1, "nchar"] +
+        1 +
+        names[i - 1, "sum"]
+    }
   }
 
   # adding min and max to merge
