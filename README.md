@@ -25,7 +25,7 @@ Note that Java will also have to be installed on WSL.
 
 ## Test the processing workflow
 ```
-git clone git@github.com:lotusnprod/lotus-processor.git
+git clone https://github.com/lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
 conda activate lotus_env
