@@ -11,7 +11,7 @@ As the shorter READMEs are the best, we decided to give detailed documentation i
 If you are in a hurry and just want a quick test without reading the whole documentation, what you need is:
 
 - R
-- Python
+- Python 3
 - Java >= 17
 
 ### UNIX systems requirements
@@ -20,8 +20,7 @@ Please make sure to have [Make](https://www.gnu.org/software/make) installed.
 
 ### Windows systems requirements
 
-Please install [WSL](https://docs.microsoft.com/en-us/windows/wsl/install). 
-Note that Java will also have to be installed on WSL.
+As steps are a bit longer, we made a dedicated [Wiki for Windows users](https://github.com/lotusnprod/lotus-processor/wiki/Windows-users).
 
 ## Test the processing workflow
 ```
