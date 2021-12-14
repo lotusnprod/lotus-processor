@@ -12,12 +12,47 @@ As the shorter READMEs are the best, we decided to give detailed documentation i
 
 If you are in a hurry and just want a quick test without reading the whole documentation, what you need is:
 
+- R
+- Python
+- Java >= 17
+
+### On UNIX systems
+Be sure to have [Make](https://www.gnu.org/software/make) installed
+
 ```
 git clone git@github.com:lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
 conda activate lotus_env
 Rscript -e 'remotes::install_github("ropensci/rcrossref")'
+make MODE=test lotus-quick
+```
+
+if everything worked smoothly you can then:
+
+```
+make MODE=test tests
+```
+
+### On Windows systems
+If you are working on a Windows, you'll first need [Choco](https://chocolatey.org/install).
+Then:
+
+```
+choco install curl
+choco install gzip
+choco install make
+choco install unzip
+choco install wget
+```
+
+and finally:
+```
+git clone git@github.com:lotusnprod/lotus-processor.git
+cd lotus-processor
+conda env create --file environment.yml
+conda activate lotus_env
+Rscript -e "remotes::install_github('ropensci/rcrossref')"
 make MODE=test lotus-quick
 ```
 
