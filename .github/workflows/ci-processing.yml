@@ -16,7 +16,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'macos-latest', 'windows-latest']
+        os: ['ubuntu-latest', 'macos-latest']
     defaults:
       run:
         shell: bash
@@ -31,13 +31,6 @@ jobs:
         with:
           python-version: 3.8
       - uses: r-lib/actions/setup-r@v1
-      - if: matrix.os == 'windows-latest'
-        run: |
-          choco install curl
-          choco install gzip
-          choco install make
-          choco install unzip
-          choco install wget
       - uses: conda-incubator/setup-miniconda@v2
         with:
           auto-update-conda: true
