@@ -25,7 +25,7 @@ dataPubmed <-
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
 # mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
 log_debug("submitting to entrez")
-if (!is.na(dataPubmed[, 1])) {
+if (nrow(dataPubmed) != 0) {
   reflistPubmed <- invisible(
     pbmclapply(
       FUN = getrefPubmed,
