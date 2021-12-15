@@ -1,3 +1,5 @@
+library(rvest)
+
 #' Title
 #'
 #' @param i
@@ -17,7 +19,7 @@ name2smiles_pubchem <- function(i) {
           "/property/IsomericSMILES/TXT"
         )
       url <- gsub(
-        pattern = "\\s",
+        pattern = "[[:space:]]",
         replacement = "%20",
         x = url
       )
