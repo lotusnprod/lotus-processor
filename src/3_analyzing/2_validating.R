@@ -814,12 +814,13 @@ validationSetFilled_3 <-
 #   filter(!is.na(validated)) %>%
 #   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
+## add validationSetFilled_4 below in case
+
 validationSetFilled <-
   bind_rows(
     validationSetFilled_1,
     validationSetFilled_2,
-    validationSetFilled_3,
-    # validationSetFilled_4
+    validationSetFilled_3
   ) %>%
   mutate(organismValue = organismOriginal) %>%
   select(
@@ -954,7 +955,8 @@ manuallyRemovedEntries3 <-
     referenceCleanedTitle
   )
 
-openDbClean2 <- anti_join(openDbClean, manuallyRemovedEntries3) %>%
+openDbClean2 <-
+  anti_join(openDbClean, manuallyRemovedEntries3) %>%
   filter(!database %in% forbidden_export)
 
 log_debug("removing dimers")
@@ -1022,7 +1024,17 @@ if (mode == "full") {
   )
 }
 
-log_debug(pathDataInterimTablesAnalyzedPlatinum)
+log_debug(
+  nrow(
+    openDbClean3 %>% distinct(
+      structureCleanedInchikey,
+      organismCleaned,
+      referenceCleanedDoi
+    )
+  ),
+  "referenced pairs are being exported to",
+  pathDataInterimTablesAnalyzedPlatinum
+)
 write_delim(
   x = openDbClean3,
   delim = "\t",
