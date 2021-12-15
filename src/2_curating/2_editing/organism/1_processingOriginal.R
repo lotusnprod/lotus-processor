@@ -244,7 +244,6 @@ if (length != 0) {
       compression = 9,
       encoding = "UTF-8"
     ),
-    na = "",
     quote = "none",
     escape = "double"
   )

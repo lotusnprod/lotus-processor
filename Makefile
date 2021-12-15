@@ -214,7 +214,7 @@ ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_T
 	cd src && Rscript ${SRC_CURATING_EDITING_ORGANISM_PATH}/1_processingOriginal.R
 
 processing-organism-interim:
-	-rm edit ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
+	@[ -f ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz ] && rm ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz || true
 
 curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)

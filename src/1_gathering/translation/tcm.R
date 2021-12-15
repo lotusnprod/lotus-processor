@@ -411,7 +411,6 @@ if (mode == "full") {
       compression = 9,
       encoding = "UTF-8"
     ),
-    na = "",
     quote = "none",
     escape = "double"
   )
@@ -424,7 +423,6 @@ if (mode == "full") {
       compression = 9,
       encoding = "UTF-8"
     ),
-    na = "",
     quote = "none",
     escape = "double"
   )
