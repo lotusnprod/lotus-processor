@@ -61,6 +61,7 @@ log_debug(pathDataInterimTablesTranslatedStructureNominal)
 write.table(
   x = dataPreparedNamesDistinct,
   file = pathDataInterimTablesTranslatedStructurePrepared_1,
+  na = "",
   row.names = FALSE,
   quote = FALSE,
   qmethod = "double",
@@ -103,7 +104,8 @@ log_debug(pathDataInterimTablesTranslatedStructureNominal_opsin)
 write_delim(
   x = dataInterim,
   file = pathDataInterimTablesTranslatedStructureNominal_opsin,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 dataForPubchem <- dataInterim %>%
@@ -161,7 +163,8 @@ log_debug(pathDataInterimTablesTranslatedStructureNominal_pubchem)
 write_delim(
   x = dataInterim_1,
   file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 # dataInterim_1 <- read_delim(
@@ -240,7 +243,8 @@ log_debug(pathDataInterimTablesTranslatedStructureNominal)
 write_delim(
   x = dataTranslated,
   file = pathDataInterimTablesTranslatedStructureNominal,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 # dataTranslated <-

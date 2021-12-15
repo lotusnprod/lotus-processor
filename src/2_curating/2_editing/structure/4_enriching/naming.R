@@ -25,7 +25,8 @@ log_debug("writing the smiles table")
 write_delim(
   x = smilesDictionary,
   delim = "\t",
-  file = pathDataInterimTablesProcessedStructureSmiles
+  file = pathDataInterimTablesProcessedStructureSmiles,
+  na = ""
 )
 
 if (works_locally_only == FALSE) {
@@ -197,7 +198,8 @@ log_debug(pathDataInterimTablesProcessedStructureNamed)
 write_delim(
   x = structureNamed_cleaned,
   delim = "\t",
-  file = pathDataInterimTablesProcessedStructureNamed
+  file = pathDataInterimTablesProcessedStructureNamed,
+  na = ""
 )
 
 end <- Sys.time()

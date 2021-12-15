@@ -143,7 +143,8 @@ log_debug("Exporting")
 write_delim(
   x = df_semiclean,
   delim = "\t",
-  file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+  file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
+  na = ""
 )
 
 end <- Sys.time()
