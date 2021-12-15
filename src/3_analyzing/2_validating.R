@@ -785,15 +785,9 @@ validationSetFilled_2 <-
   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 if (mode == "test") {
-  set.seed(
-    seed = 42,
-    kind = "Mersenne-Twister",
-    normal.kind = "Inversion"
-  )
   validationSet3 <-
     anti_join(openDbClean, validationSetFilled_1) %>%
-    anti_join(., validationSetFilled_2) %>%
-    sample_n(6)
+    anti_join(., validationSetFilled_2)
 }
 
 log_debug("loading validation set ter")
