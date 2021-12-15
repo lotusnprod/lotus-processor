@@ -24,7 +24,8 @@ Database <-
             description = file,
             compression = 9,
             encoding = "UTF-8"
-          )
+          ),
+          na = ""
         )
       },
       writeInterim = function(data) {

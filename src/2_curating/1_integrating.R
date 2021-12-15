@@ -819,6 +819,7 @@ if (nrow(organismTable_clean) != 0) {
       compression = 9,
       encoding = "UTF-8"
     ),
+    na = "",
     quote = "none"
   )
   ## because gnverify does not parse quotes
@@ -828,14 +829,16 @@ log_debug(pathDataInterimTablesOriginal)
 write_delim(
   x = organismTable_full,
   delim = "\t",
-  file = pathDataInterimTablesOriginalOrganismFull
+  file = pathDataInterimTablesOriginalOrganismFull,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceDoi)
 write_delim(
   x = referenceTable_doi,
   delim = "\t",
-  file = pathDataInterimTablesOriginalReferenceDoi
+  file = pathDataInterimTablesOriginalReferenceDoi,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalReferenceOriginalFolder)
@@ -850,7 +853,8 @@ log_debug(pathDataInterimTablesOriginalReferencePubmed)
 write_delim(
   x = referenceTable_pubmed,
   delim = "\t",
-  file = pathDataInterimTablesOriginalReferencePubmed
+  file = pathDataInterimTablesOriginalReferencePubmed,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalReferencePublishingDetailsFolder)
@@ -881,42 +885,48 @@ log_debug(pathDataInterimTablesOriginalReferenceFull)
 write_delim(
   x = referenceTable_full,
   delim = "\t",
-  file = pathDataInterimTablesOriginalReferenceFull
+  file = pathDataInterimTablesOriginalReferenceFull,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalStructureInchi)
 write_delim(
   x = structureTable_inchi,
   delim = "\t",
-  file = pathDataInterimTablesOriginalStructureInchi
+  file = pathDataInterimTablesOriginalStructureInchi,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalStructureNominal)
 write_delim(
   x = structureTable_nominal,
   delim = "\t",
-  file = pathDataInterimTablesOriginalStructureNominal
+  file = pathDataInterimTablesOriginalStructureNominal,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalStructureSmiles)
 write_delim(
   x = structureTable_smiles,
   delim = "\t",
-  file = pathDataInterimTablesOriginalStructureSmiles
+  file = pathDataInterimTablesOriginalStructureSmiles,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalStructureFull)
 write_delim(
   x = structureTable_full,
   delim = "\t",
-  file = pathDataInterimTablesOriginalStructureFull
+  file = pathDataInterimTablesOriginalStructureFull,
+  na = ""
 )
 
 log_debug(pathDataInterimTablesOriginalTable)
 write_delim(
   x = originalTable,
   delim = "\t",
-  file = pathDataInterimTablesOriginalTable
+  file = pathDataInterimTablesOriginalTable,
+  na = ""
 )
 
 if (mode == "full") {
@@ -924,7 +934,8 @@ if (mode == "full") {
   write_delim(
     x = originalTable_sampled,
     delim = "\t",
-    file = pathTestsFile
+    file = pathTestsFile,
+    na = ""
   )
 }
 

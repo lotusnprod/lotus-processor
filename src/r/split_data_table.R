@@ -28,6 +28,7 @@ split_data_table <-
           width = 6,
           pad = "0"
         ), ".tsv"),
+        na = "",
         row.names = FALSE,
         quote = FALSE,
         sep = "\t",

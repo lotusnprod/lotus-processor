@@ -994,6 +994,7 @@ if (mode == "full") {
       compression = 9,
       encoding = "UTF-8"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -1009,6 +1010,7 @@ if (mode == "full") {
       compression = 9,
       encoding = "UTF-8"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -1018,6 +1020,7 @@ if (mode == "full") {
   write.table(
     x = finalTable,
     file = "../data/validation/tableStats.csv",
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = ",",
@@ -1029,14 +1032,16 @@ log_debug(pathDataInterimTablesAnalyzedPlatinum)
 write_delim(
   x = openDbClean3,
   delim = "\t",
-  file = pathDataInterimTablesAnalyzedPlatinum
+  file = pathDataInterimTablesAnalyzedPlatinum,
+  na = ""
 )
 
 log_debug(file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"))
 write_delim(
   x = closedDb3,
   delim = "\t",
-  file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")
+  file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
+  na = ""
 )
 
 if (exists("validationSet")) {
@@ -1050,6 +1055,7 @@ if (exists("validationSet")) {
       pathDataInterimTablesAnalyzed,
       "validationSet.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -1069,6 +1075,7 @@ if (exists("validationSet2")) {
       pathDataInterimTablesAnalyzed,
       "validationSetBis.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -1087,6 +1094,7 @@ if (exists("validationSet3")) {
       pathDataInterimTablesAnalyzed,
       "validationSetTer.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -1105,6 +1113,7 @@ if (exists("validationSet4")) {
       pathDataInterimTablesAnalyzed,
       "validationSetTetra.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",

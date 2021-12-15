@@ -172,7 +172,11 @@ if (safety == TRUE) {
     "../docs/repartition.csv"
   )
 
-  write_csv(x = domain, file = "../docs/repartition.csv")
+  write_csv(
+    x = domain,
+    file = "../docs/repartition.csv",
+    na = ""
+  )
 }
 
 end <- Sys.time()

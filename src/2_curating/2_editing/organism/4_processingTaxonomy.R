@@ -50,6 +50,7 @@ write_delim(
     compression = 9,
     encoding = "UTF-8"
   ),
+  na = "",
   delim = "\t",
   quote = "none",
   escape = "double"
@@ -273,7 +274,8 @@ log_debug(pathDataInterimTablesProcessedOrganismFinal)
 write_delim(
   x = dataCuratedOrganismAuto,
   delim = "\t",
-  file = pathDataInterimTablesProcessedOrganismFinal
+  file = pathDataInterimTablesProcessedOrganismFinal,
+  na = ""
 )
 
 end <- Sys.time()

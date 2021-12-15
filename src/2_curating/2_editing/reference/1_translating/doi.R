@@ -185,7 +185,8 @@ log_debug(pathDataInterimTablesTranslatedReferenceDoi)
 write_delim(
   x = dataDoi,
   delim = "\t",
-  file = pathDataInterimTablesTranslatedReferenceDoi
+  file = pathDataInterimTablesTranslatedReferenceDoi,
+  na = ""
 )
 
 end <- Sys.time()

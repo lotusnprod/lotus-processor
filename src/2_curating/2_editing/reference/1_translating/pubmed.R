@@ -130,7 +130,8 @@ log_debug(pathDataInterimTablesTranslatedReferencePubmed)
 write_delim(
   x = dataPubmed,
   delim = "\t",
-  file = pathDataInterimTablesTranslatedReferencePubmed
+  file = pathDataInterimTablesTranslatedReferencePubmed,
+  na = ""
 )
 
 end <- Sys.time()

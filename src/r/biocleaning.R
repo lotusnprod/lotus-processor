@@ -242,7 +242,7 @@ biocleaning <- function(gnfound, names, organismCol) {
   }
 
   names[1, "sum"] <- nchar(colnames(names)[1]) + 1
-  
+
   if (nrow(names) >= 2) {
     for (i in 2:nrow(names)) {
       names[i, "sum"] <-

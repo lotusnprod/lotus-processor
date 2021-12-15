@@ -363,7 +363,8 @@ log_debug(pathDataInterimDictionariesReferenceDictionary)
 write_delim(
   x = dataCrossref,
   delim = "\t",
-  file = pathDataInterimDictionariesReferenceDictionary
+  file = pathDataInterimDictionariesReferenceDictionary,
+  na = ""
 )
 
 end <- Sys.time()

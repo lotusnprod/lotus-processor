@@ -531,7 +531,8 @@ for (i in num) {
   write_delim(
     x = referenceTable,
     file = outpath,
-    delim = "\t"
+    delim = "\t",
+    na = ""
   )
 }
 
@@ -563,7 +564,8 @@ log_debug(pathDataInterimTablesProcessedReferenceFile)
 write_delim(
   x = data3,
   delim = "\t",
-  file = pathDataInterimTablesProcessedReferenceFile
+  file = pathDataInterimTablesProcessedReferenceFile,
+  na = ""
 )
 
 end <- Sys.time()
