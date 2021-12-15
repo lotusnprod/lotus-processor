@@ -123,30 +123,30 @@ validatedTableExpectation <- read_delim(
   tibble()
 
 log_debug("testing ...")
-log_debug("... organisms")
-test_that(
-  desc = "organisms",
-  code = expect_equal(object = organismTableFull,
-                      expected = organismTableFullExpectation)
-)
+# log_debug("... organisms")
+# test_that(
+#   desc = "organisms",
+#   code = expect_equal(object = organismTableFull,
+#                       expected = organismTableFullExpectation)
+# )
+# 
+# log_debug("... structures")
+# test_that(
+#   desc = "structures",
+#   code = expect_equal(object = structureFull,
+#                       expected = structureFullExpectation)
+# )
+# 
+# log_debug("... references")
+# test_that(
+#   desc = "references",
+#   code = expect_equal(object = referenceTableFull,
+#                       expected = referenceTableFullExpectation)
+# )
 
-log_debug("... structures")
+log_debug("... validated referenced pairs")
 test_that(
-  desc = "structures",
-  code = expect_equal(object = structureFull,
-                      expected = structureFullExpectation)
-)
-
-log_debug("... references")
-test_that(
-  desc = "references",
-  code = expect_equal(object = referenceTableFull,
-                      expected = referenceTableFullExpectation)
-)
-
-log_debug("... validated")
-test_that(
-  desc = "validated",
+  desc = "validated referenced pairs",
   code = expect_equal(object = validatedTable,
                       expected = validatedTableExpectation)
 )
