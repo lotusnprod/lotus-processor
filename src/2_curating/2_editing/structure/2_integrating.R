@@ -90,14 +90,16 @@ log_debug(pathDataInterimTablesTranslatedStructureFinal)
 write_delim(
   x = translatedStructureTable,
   file = pathDataInterimTablesTranslatedStructureFinal,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimTablesTranslatedStructureUnique)
 write_delim(
   x = translatedStructureTableUnique,
   file = pathDataInterimTablesTranslatedStructureUnique,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 end <- Sys.time()

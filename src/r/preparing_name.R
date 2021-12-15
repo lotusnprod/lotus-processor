@@ -1,4 +1,5 @@
 require(stringr)
+source("r/y_as_na.R")
 
 #' Title
 #'
@@ -167,16 +168,21 @@ preparing_name <- function(x) {
       x = gsub(
         pattern = ",$",
         replacement = "",
-        x = (paste0(gsub(
-          pattern = ".*,([^.]+)\\:.*",
-          replacement = "\\1",
-          x = x$nameCleaned
-        ), "-", str_extract(
-          pattern = ".*,",
-          string = x$nameCleaned
-        )))
+        x = (paste0(
+          gsub(
+            pattern = ".*,([^.]+)\\:.*",
+            replacement = "\\1",
+            x = x$nameCleaned
+          ),
+          "-",
+          str_extract(
+            pattern = ".*,",
+            string = x$nameCleaned
+          )
+        ))
       )
     )
+  x$nameCleaned <- y_as_na(x = x$nameCleaned, y = "NA")
 
   return(x)
 }

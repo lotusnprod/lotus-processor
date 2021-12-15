@@ -198,13 +198,15 @@ if (file.exists("../data/interim/dictionaries_full/structure/classyfire/alternat
     x = alternative_parents,
     delim = "\t",
     file = "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz",
+    na = "",
     append = TRUE
   )
 } else {
   write_delim(
     x = alternative_parents,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz"
+    file = "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz",
+    na = ""
   )
 }
 
@@ -213,13 +215,15 @@ if (file.exists("../data/interim/dictionaries_full/structure/classyfire/direct_p
     x = direct_parent,
     delim = "\t",
     file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
+    na = "",
     append = TRUE
   )
 } else {
   write_delim(
     x = direct_parent,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz"
+    file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
+    na = ""
   )
 }
 
@@ -228,13 +232,15 @@ if (file.exists("../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz"
     x = chebi,
     delim = "\t",
     file = "../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz",
+    na = "",
     append = TRUE
   )
 } else {
   write_delim(
     x = chebi,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz"
+    file = "../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz",
+    na = ""
   )
 }
 
