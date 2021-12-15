@@ -5,7 +5,7 @@ include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
 include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash tests
-.PHONY: gathering-full gathering-quick gathering-full-hard 
+.PHONY: cleaning-manual gathering-full gathering-quick gathering-full-hard 
 .PHONY: gathering-databases-full gathering-databases-full-hard gathering-databases-quick 
 .PHONY: gathering-databases gathering-databases-download gathering-databases-download-modified 
 .PHONY: gathering-databases-scrape gathering-databases-accessible gathering-databases-semi gathering-databases-closed
@@ -216,6 +216,10 @@ ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz: $(wildcard ${INTERIM_T
 processing-organism-interim:
 	@[ -f ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz ] && rm ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz || true
 
+cleaning-manual:
+	@[ -d ${INTERIM_TABLE_PATH} ] && rm -r ${INTERIM_TABLE_PATH} || true
+	@[ -d ${INTERIM_DICTIONARY_PATH} ] && rm -r ${INTERIM_DICTIONARY_PATH} || true
+
 curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)
 	./gradlew castShadows
@@ -309,4 +313,4 @@ lotus: gathering-full curating analyzing visualizing
 
 lotus-full: gathering-full-hard curating analyzing visualizing
 
-manual-entry: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating analyzing-quick
+manual-entry: cleaning-manual gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating analyzing-quick
