@@ -377,49 +377,56 @@ log_debug(
 write_delim(
   x = referenceTableFull,
   file = pathDataInterimDictionariesReferenceOrganismDictionary,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
 write_delim(
   x = structureMinimal,
   file = pathDataInterimDictionariesStructureDictionary,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesStructureAntiDictionary)
 write_delim(
   x = structureNA,
   file = pathDataInterimDictionariesStructureAntiDictionary,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
 write_delim(
   x = organismMinimal,
   file = pathDataInterimDictionariesOrganismDictionary,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesStructureMetadata)
 write_delim(
   x = structureMetadata,
   file = pathDataInterimDictionariesStructureMetadata,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesOrganismMetadata)
 write_delim(
   x = organismMetadata,
   file = pathDataInterimDictionariesOrganismMetadata,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug(pathDataInterimDictionariesReferenceMetadata)
 write_delim(
   x = referenceMetadata,
   file = pathDataInterimDictionariesReferenceMetadata,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug("cleaning memory ...")
@@ -459,7 +466,8 @@ log_debug(pathDataInterimTablesCuratedTableMaximal)
 write_delim(
   x = openDbMaximal,
   file = pathDataInterimTablesCuratedTableMaximal,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 log_debug("cleaning memory ...")
@@ -580,7 +588,8 @@ log_debug(pathDataInterimTablesCuratedTable)
 write_delim(
   x = inhouseDbMinimal,
   file = pathDataInterimTablesCuratedTable,
-  delim = "\t"
+  delim = "\t",
+  na = ""
 )
 
 end <- Sys.time()

@@ -138,7 +138,8 @@ for (i in num) {
   write_delim(
     x = dataOriginal2,
     delim = "\t",
-    file = outpath
+    file = outpath,
+    na = ""
   )
 
   ## cleaning memory
@@ -177,7 +178,8 @@ log_debug(pathDataInterimTablesTranslatedReferenceOriginal)
 write_delim(
   x = dataOriginal3,
   delim = "\t",
-  file = pathDataInterimTablesTranslatedReferenceOriginal
+  file = pathDataInterimTablesTranslatedReferenceOriginal,
+  na = ""
 )
 
 end <- Sys.time()

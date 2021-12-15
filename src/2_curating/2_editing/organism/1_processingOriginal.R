@@ -224,7 +224,8 @@ if (length != 0) {
   write_delim(
     x = dataCleanedOriginalOrganism,
     delim = "\t",
-    file = pathDataInterimTablesProcessedOrganismOriginalTable
+    file = pathDataInterimTablesProcessedOrganismOriginalTable,
+    na = ""
   )
 }
 
@@ -243,6 +244,7 @@ if (length != 0) {
       compression = 9,
       encoding = "UTF-8"
     ),
+    na = "",
     quote = "none",
     escape = "double"
   )
@@ -252,7 +254,8 @@ if (length != 0) {
 write_delim(
   x = dataOrganismVerified,
   delim = "\t",
-  file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable
+  file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable,
+  na = ""
 )
 
 end <- Sys.time()

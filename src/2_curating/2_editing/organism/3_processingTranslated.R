@@ -234,7 +234,8 @@ log_debug(pathDataInterimTablesProcessedOrganismTranslatedTable)
 write_delim(
   x = dataCleanedOrganism,
   delim = "\t",
-  file = pathDataInterimTablesProcessedOrganismTranslatedTable
+  file = pathDataInterimTablesProcessedOrganismTranslatedTable,
+  na = ""
 )
 
 end <- Sys.time()

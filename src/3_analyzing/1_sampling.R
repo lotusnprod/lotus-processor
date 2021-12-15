@@ -304,6 +304,7 @@ if (exists("sampleONPDB")) {
   write.table(
     x = sampleONPDB,
     file = pathDataInterimTablesAnalyzedSampleAllONPDB,
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -317,6 +318,7 @@ if (exists("sampleKnapsack")) {
   write.table(
     x = sampleKnapsack,
     file = pathDataInterimTablesAnalyzedSampleKnapsack,
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -335,6 +337,7 @@ if (exists("sampleONPDB_publishingDetails")) {
       pathDataInterimTablesAnalyzed,
       "samplePublishingDetails.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -354,6 +357,7 @@ if (exists("additionalSet")) {
       pathDataInterimTablesAnalyzed,
       "additionalSet.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -368,6 +372,7 @@ if (exists("additionalSetBis")) {
       pathDataInterimTablesAnalyzed,
       "additionalSetBis.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -504,6 +509,7 @@ if (exists("additionalSetTer")) {
       pathDataInterimTablesAnalyzed,
       "additionalSetTer.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
@@ -518,6 +524,7 @@ if (exists("additionalSetTetra")) {
       pathDataInterimTablesAnalyzed,
       "additionalSetTetra.tsv"
     ),
+    na = "",
     row.names = FALSE,
     quote = FALSE,
     sep = "\t",
