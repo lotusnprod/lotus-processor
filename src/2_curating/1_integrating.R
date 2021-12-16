@@ -309,26 +309,9 @@ if (mode == "full" | mode == "manual") {
 }
 
 log_debug("ensuring proper encoding ...")
-originalTable$organismValue <-
-  iconv(
-    x = originalTable$organismValue,
-    to = "UTF-8",
-    sub = ""
-  )
-
-originalTable$referenceValue <-
-  iconv(
-    x = originalTable$referenceValue,
-    to = "UTF-8",
-    sub = ""
-  )
-
-originalTable$structureValue <-
-  iconv(
-    x = originalTable$structureValue,
-    to = "UTF-8",
-    sub = ""
-  )
+Encoding(originalTable$organismValue) <- "UTF-8"
+Encoding(originalTable$referenceValue) <- "UTF-8"
+Encoding(originalTable$structureValue) <- "UTF-8"
 
 log_debug("keeping entries not previously curated only ...")
 log_debug("... inchi table")
