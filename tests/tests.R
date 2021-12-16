@@ -123,21 +123,21 @@ validatedTableExpectation <- read_delim(
   tibble()
 
 log_debug("testing ...")
-# log_debug("... organisms")
-# test_that(
-#   desc = "organisms",
-#   code = expect_equal(object = organismTableFull,
-#                       expected = organismTableFullExpectation)
-# )
-# 
-# log_debug("... structures")
-# test_that(
-#   desc = "structures",
-#   code = expect_equal(object = structureFull,
-#                       expected = structureFullExpectation)
-# )
-# 
-# log_debug("... references")
+log_debug("... organisms")
+test_that(
+  desc = "organisms",
+  code = expect_equal(object = organismTableFull,
+                      expected = organismTableFullExpectation)
+)
+
+log_debug("... structures")
+test_that(
+  desc = "structures",
+  code = expect_equal(object = structureFull,
+                      expected = structureFullExpectation)
+)
+
+log_debug("... not testing unvalidated references since they vary because of Crossref")
 # test_that(
 #   desc = "references",
 #   code = expect_equal(object = referenceTableFull,
