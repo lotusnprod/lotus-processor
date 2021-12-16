@@ -311,22 +311,22 @@ log_debug("ensuring proper encoding ...")
 originalTable$organismValue <-
   iconv(
     x = originalTable$organismValue,
-    from = "UTF-8",
-    to = "UTF-8"
+    to = "UTF-8",
+    sub = "Unicode"
   )
 
 originalTable$referenceValue <-
   iconv(
     x = originalTable$referenceValue,
-    from = "UTF-8",
-    to = "UTF-8"
+    to = "UTF-8",
+    sub = "Unicode"
   )
 
 originalTable$structureValue <-
   iconv(
     x = originalTable$structureValue,
-    from = "UTF-8",
-    to = "UTF-8"
+    to = "UTF-8",
+    sub = "Unicode"
   )
 
 log_debug("keeping entries not previously curated only ...")
