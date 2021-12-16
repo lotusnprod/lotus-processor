@@ -16,8 +16,7 @@ log_debug("...  counted structures")
 structureCounted <-
   read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
-    delim = "\t",
-    col_types = cols(.default = "c")
+    delim = "\t"
   )
 
 log_debug("keeping smiles only ...")
