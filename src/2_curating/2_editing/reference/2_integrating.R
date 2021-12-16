@@ -21,7 +21,8 @@ log_debug("... DOI")
 dataDoi <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceDoi,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_doi,
@@ -48,7 +49,8 @@ log_debug("... original references")
 dataOriginal <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceOriginal,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_original,
@@ -78,7 +80,8 @@ log_debug("... PMID")
 dataPubmed <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferencePubmed,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_pubmed,
@@ -105,7 +108,8 @@ log_debug("... publishing details")
 dataPublishingDetails <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferencePublishingDetails,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_publishingDetails,
@@ -135,7 +139,8 @@ log_debug("... titles")
 dataTitle <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceTitle,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_title,
@@ -165,7 +170,8 @@ log_debug("... split")
 dataSplit <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceSplit,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   select(
     referenceOriginal = referenceOriginal_split,

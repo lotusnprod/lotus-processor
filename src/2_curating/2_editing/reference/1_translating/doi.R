@@ -22,7 +22,8 @@ log_debug("loading DOI list")
 dataDoi <-
   read_delim(
     file = pathDataInterimTablesOriginalReferenceDoi,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   )
 
 log_debug("submitting to crossRef")

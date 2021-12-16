@@ -21,7 +21,8 @@ log_debug("...  counted structures")
 structureCounted <-
   read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   )
 
 old <-
@@ -30,7 +31,8 @@ old <-
       pathDataInterimDictionariesStructureDictionaryClassyfire,
       "direct_parent.tsv.gz"
     ),
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   distinct(inchikey)
 

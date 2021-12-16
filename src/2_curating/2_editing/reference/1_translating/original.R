@@ -93,6 +93,7 @@ for (i in num) {
   dataOriginal <- read_delim(
     file = inpath,
     delim = "\t",
+    col_types = cols(.default = "c"),
     escape_double = TRUE,
     trim_ws = TRUE
   )
@@ -165,6 +166,7 @@ dataOriginal3 <- do.call(
           file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
         ),
         delim = "\t",
+        col_types = cols(.default = "c"),
         trim_ws = TRUE,
         escape_double = TRUE,
       ) %>%

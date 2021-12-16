@@ -19,7 +19,8 @@ log_debug("loading PMID list")
 dataPubmed <-
   read_delim(
     file = pathDataInterimTablesOriginalReferencePubmed,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   )
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!

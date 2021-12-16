@@ -93,6 +93,7 @@ for (i in num) {
   dataTitle <- read_delim(
     file = inpath,
     delim = "\t",
+    col_types = cols(.default = "c"),
     escape_double = TRUE,
     trim_ws = TRUE
   )
