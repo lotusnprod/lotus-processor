@@ -14,7 +14,11 @@ library(readr)
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  read_delim(file = pathDataInterimTablesProcessedStructureStereoCounted)
+  read_delim(
+    file = pathDataInterimTablesProcessedStructureStereoCounted,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
 log_debug("keeping smiles only ...")
 smilesDictionary <- structureCounted %>%

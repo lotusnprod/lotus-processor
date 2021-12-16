@@ -25,11 +25,14 @@ log_debug("loading smiles ...")
 smiles <-
   read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   distinct(structure_smiles_2D = smilesSanitizedFlat)
 # smiles <-
-#   read_delim(file = pathDataInterimDictionariesStructureMetadata) %>%
+#   read_delim(file = pathDataInterimDictionariesStructureMetadata,
+#     delim = "\t",
+#     col_types = cols(.default = "c")) %>%
 #   distinct(structure_smiles_2D = structureCleaned_smiles2D)
 
 log_debug("loading npClassifier taxonomy ...")
@@ -46,7 +49,8 @@ if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile))
   old <-
     read_delim(
       file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
-      delim = "\t"
+      delim = "\t",
+      col_types = cols(.default = "c")
     ) %>%
     distinct() %>%
     mutate_all(as.character)

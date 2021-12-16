@@ -93,6 +93,7 @@ for (i in num) {
   dataSplit <- read_delim(
     file = inpath,
     delim = "\t",
+    col_types = cols(.default = "c"),
     escape_double = TRUE,
     trim_ws = TRUE
   )
@@ -165,6 +166,7 @@ dataSplit3 <- do.call(
           file.path(pathDataInterimTablesTranslatedReferenceSplitFolder, x)
         ),
         delim = "\t",
+        col_types = cols(.default = "c"),
         escape_double = TRUE,
         trim_ws = TRUE
       ) %>%

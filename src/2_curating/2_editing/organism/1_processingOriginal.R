@@ -22,19 +22,25 @@ library(tidyr)
 log_debug("  Step 1")
 log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
-  read_delim(file = pathDataInterimDictionariesTaxaRanks)
+  read_delim(
+    file = pathDataInterimDictionariesTaxaRanks,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
 wrongVerifiedDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   as.list()
 
 organismTable <-
   read_delim(
     file = pathDataInterimTablesOriginalOrganismFull,
-    delim = "\t"
+    delim = "\t",
+    col_types = cols(.default = "c")
   ) %>%
   distinct()
 
