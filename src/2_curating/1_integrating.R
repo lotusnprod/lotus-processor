@@ -5,7 +5,7 @@ log_debug(
 )
 
 start <- Sys.time()
-Sys.setlocale("LC_ALL", 'en_US.UTF-8')
+Sys.setlocale("LC_ALL", "en_US.UTF-8")
 Sys.setenv(LANG = "en_US.UTF-8")
 
 log_debug("sourcing ...")
@@ -188,7 +188,8 @@ if (mode == "full" | mode == "manual") {
           !is.na(structureOriginal_nominal)
       )) %>% # to avoid too many names (long for CI)
       sample_n(size = 10)
-    dbTable_sampled <- bind_rows(dbTable_sampled_1, dbTable_sampled_2)
+    dbTable_sampled <-
+      bind_rows(dbTable_sampled_1, dbTable_sampled_2)
     originalTable_sampled <- dbTable_sampled %>%
       select(database, everything()) %>%
       pivot_longer(
@@ -314,21 +315,21 @@ originalTable$organismValue <-
   iconv(
     x = originalTable$organismValue,
     to = "UTF-8",
-    sub = "Unicode"
+    sub = ""
   )
 
 originalTable$referenceValue <-
   iconv(
     x = originalTable$referenceValue,
     to = "UTF-8",
-    sub = "Unicode"
+    sub = ""
   )
 
 originalTable$structureValue <-
   iconv(
     x = originalTable$structureValue,
     to = "UTF-8",
-    sub = "Unicode"
+    sub = ""
   )
 
 log_debug("keeping entries not previously curated only ...")
@@ -624,7 +625,8 @@ if (nrow(referenceTable_publishingDetails) == 0) {
     rbind(referenceTable_publishingDetails, list(NA))
 }
 
-referenceTable_publishingDetails <- referenceTable_publishingDetails %>%
+referenceTable_publishingDetails <-
+  referenceTable_publishingDetails %>%
   data.table()
 
 log_debug("... reference split table")
@@ -761,22 +763,28 @@ ifelse(
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalReferenceOriginalFolder,
+    dir.create(
+      pathDataInterimTablesOriginalReferenceOriginalFolder,
       showWarnings = FALSE
     )
 )
 
 ###### publishing details
 ifelse(
-  test = !dir.exists(pathDataInterimTablesOriginalReferencePublishingDetailsFolder),
-  yes = dir.create(pathDataInterimTablesOriginalReferencePublishingDetailsFolder),
+  test = !dir.exists(
+    pathDataInterimTablesOriginalReferencePublishingDetailsFolder
+  ),
+  yes = dir.create(
+    pathDataInterimTablesOriginalReferencePublishingDetailsFolder
+  ),
   no = file.remove(
     list.files(
       path = pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
+    dir.create(
+      pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
       showWarnings = FALSE
     )
 )
@@ -791,7 +799,8 @@ ifelse(
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalReferenceSplitFolder,
+    dir.create(
+      pathDataInterimTablesOriginalReferenceSplitFolder,
       showWarnings = FALSE
     )
 )
@@ -806,7 +815,8 @@ ifelse(
       full.names = TRUE
     )
   ) &
-    dir.create(pathDataInterimTablesOriginalReferenceTitleFolder,
+    dir.create(
+      pathDataInterimTablesOriginalReferenceTitleFolder,
       showWarnings = FALSE
     )
 )
