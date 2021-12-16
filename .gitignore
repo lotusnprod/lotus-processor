@@ -8,10 +8,11 @@ settings.json
 **/0_initial_files/
 .log
 *~
-bin/
+bin
 ci_env
 default.profraw
 callgrind.*
+res
 /.gradle/
 /src/2_curating/2_editing/organism/2_translating_organism_kotlin/.gradle/
 /src/2_curating/2_editing/organism/2_translating_organism_kotlin/build/
