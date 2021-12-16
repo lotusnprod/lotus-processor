@@ -214,7 +214,11 @@ if (mode == "full" | mode == "manual") {
       distinct()
   }
 } else {
-  dbTable <- read_delim(file = pathTestsFile) %>%
+  dbTable <- read_delim(
+    file = pathTestsFile,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
     pivot_wider(
       names_from = "organismType",
       values_from = "organismValue",
