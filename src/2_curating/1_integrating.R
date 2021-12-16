@@ -5,8 +5,6 @@ log_debug(
 )
 
 start <- Sys.time()
-Sys.setlocale("LC_ALL", "en_US.UTF-8")
-Sys.setenv(LANG = "en_US.UTF-8")
 
 log_debug("sourcing ...")
 log_debug("... paths")
