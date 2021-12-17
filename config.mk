@@ -3,6 +3,8 @@
 # make MODE=full <target>
 export MODE ?= min
 
+export LC_ALL ?= en_US.UTF-8
+
 export DATA_PATH ?= ${PWD}/data
 export SRC_PATH ?= ${PWD}/src
 export BIN_PATH ?= ${PWD}/bin
