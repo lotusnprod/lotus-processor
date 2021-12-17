@@ -318,6 +318,7 @@ log_debug("ensuring proper encoding ...")
 originalTable$organismValue <-
   iconv(
     x = originalTable$organismValue,
+    from = "UTF-8",
     to = "UTF-8",
     sub = ""
   )
@@ -325,6 +326,7 @@ originalTable$organismValue <-
 originalTable$referenceValue <-
   iconv(
     x = originalTable$referenceValue,
+    from = "UTF-8",
     to = "UTF-8",
     sub = ""
   )
@@ -332,6 +334,7 @@ originalTable$referenceValue <-
 originalTable$structureValue <-
   iconv(
     x = originalTable$structureValue,
+    from = "UTF-8",
     to = "UTF-8",
     sub = ""
   )
