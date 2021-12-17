@@ -218,7 +218,8 @@ if (mode == "full" | mode == "manual") {
   dbTable <- read_delim(
     file = pathTestsFile,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = "en_US.UTF-8"
   ) %>%
     pivot_wider(
       names_from = "organismType",
