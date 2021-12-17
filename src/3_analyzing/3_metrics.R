@@ -33,7 +33,8 @@ dbTable <- lapply(
   pathDataInterimDbDir,
   read_delim,
   delim = "\t",
-  col_types = cols(.default = "c")
+  col_types = cols(.default = "c"),
+  locale = locales
 ) %>%
   rbindlist(l = ., fill = TRUE) %>%
   filter(database != "manual") %>%
@@ -62,6 +63,7 @@ inhouseDbMinimal <-
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "database",
       "organismCleaned",
@@ -78,6 +80,7 @@ openDb <-
     file = pathDataInterimTablesAnalyzedPlatinum,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "database",
       "organismCleaned",
@@ -96,6 +99,7 @@ data_organism <-
     file = wikidataLotusExporterDataOutputTaxaPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "organism_wikidata" = "wikidataId",
       "organismCleaned" = "names_pipe_separated"
@@ -112,6 +116,7 @@ data_structures <-
     file = wikidataLotusExporterDataOutputStructuresPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "structure_wikidata" = "wikidataId",
       "structureCleanedInchiKey" = "inchiKey",
@@ -125,6 +130,7 @@ data_references <-
     file = wikidataLotusExporterDataOutputReferencesPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "reference_wikidata" = "wikidataId",
       "referenceCleanedDoi" = "dois_pipe_separated",
@@ -142,6 +148,7 @@ wikidata_pairs <-
     file = pathLastWdExport,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "structureCleanedInchi" = "structure_inchi",
       "organismCleaned" = "organism_clean",
@@ -163,6 +170,7 @@ closedDb <-
   read_delim(
     file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "database",
       "organismCleaned",
@@ -180,6 +188,7 @@ system(command = paste("bash", pathTimestampsScript))
 timestamps <- read_delim(
   file = pathDataInterimTimestamps,
   delim = "\t",
+  locale = locales,
   col_names = FALSE
 )
 

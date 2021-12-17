@@ -83,7 +83,8 @@ dataPubmed <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferencePubmed,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     referenceOriginal = referenceOriginal_pubmed,
@@ -111,7 +112,8 @@ dataPublishingDetails <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferencePublishingDetails,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     referenceOriginal = referenceOriginal_publishingDetails,
@@ -142,7 +144,8 @@ dataTitle <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceTitle,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     referenceOriginal = referenceOriginal_title,

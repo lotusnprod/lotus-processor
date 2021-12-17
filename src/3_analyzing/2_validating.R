@@ -28,6 +28,7 @@ oldDbNames <-
     file = "../data/external/dictionarySource/dbNames.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   )
@@ -37,6 +38,7 @@ sampleAllONPDB_AR_old <-
     file = "../data/validation/old/AR.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -47,6 +49,7 @@ sampleAllONPDB_PMA_old <-
     file = "../data/validation/old/PMA.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -57,6 +60,7 @@ sampleAllONPDB_AR <-
     file = "../data/validation/new/AR.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -67,6 +71,7 @@ sampleAllONPDB_JB <-
     file = "../data/validation/new/JB.csv",
     delim = ",",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -78,6 +83,7 @@ sampleAllONPDB_PMA <-
     file = "../data/validation/new/PM.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -88,6 +94,7 @@ sampleAllONPDB_publishingDetails <-
     file = "../data/validation/new/publishingDetails.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   )
@@ -97,6 +104,7 @@ sampleAllONPDB_additionalSet <-
     file = "../data/validation/new/additionalSet.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   )
@@ -106,6 +114,7 @@ sampleAllONPDB_additionalSetBis <-
     file = "../data/validation/new/additionalSetBis.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   )
@@ -115,6 +124,7 @@ sampleCondifent_PMA <-
     file = "../data/validation/confident/100confidentPMAChecked.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -126,7 +136,8 @@ inhouseDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... reference metadata")
@@ -134,7 +145,8 @@ structureMetadata <-
   read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   distinct(
     structureCleanedSmiles,
@@ -155,7 +167,8 @@ organismMetadata <-
   read_delim(
     file = pathDataInterimDictionariesOrganismMetadata,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   distinct(
     organismCleaned,
@@ -171,7 +184,8 @@ referenceMetadata <-
   read_delim(
     file = pathDataInterimDictionariesReferenceMetadata,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   distinct(
     organismType,
@@ -755,6 +769,7 @@ validationSetFilled_1 <-
     file = "../data/validation/validationSet.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -778,6 +793,7 @@ validationSetFilled_2 <-
     file = "../data/validation/validationSetBis.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -796,6 +812,7 @@ validationSetFilled_3 <-
     file = "../data/validation/validationSetTer.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
   ) %>%
@@ -808,6 +825,7 @@ validationSetFilled_3 <-
 #     file = "../data/validation/validationSetTetra.tsv",
 #     delim = "\t",
 #     col_types = cols(.default = "c"),
+#     locale = locales,
 #     escape_double = FALSE,
 #     trim_ws = TRUE
 #   ) %>%

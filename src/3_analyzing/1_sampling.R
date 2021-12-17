@@ -16,7 +16,8 @@ openDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("sampling ...")

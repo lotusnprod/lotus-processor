@@ -94,6 +94,7 @@ for (i in num) {
     file = inpath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     escape_double = TRUE,
     trim_ws = TRUE
   )
@@ -167,6 +168,7 @@ dataSplit3 <- do.call(
         ),
         delim = "\t",
         col_types = cols(.default = "c"),
+        locale = locales,
         escape_double = TRUE,
         trim_ws = TRUE
       ) %>%

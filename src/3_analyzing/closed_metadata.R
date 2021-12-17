@@ -43,6 +43,7 @@ data_organism <-
     file = wikidataLotusExporterDataOutputTaxaPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "organism_wikidata" = "wikidataId",
       "organismCleaned" = "names_pipe_separated"
@@ -59,6 +60,7 @@ data_structures <-
     file = wikidataLotusExporterDataOutputStructuresPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "structure_wikidata" = "wikidataId",
       "structureCleanedInchiKey" = "inchiKey",
@@ -72,6 +74,7 @@ data_references <-
     file = wikidataLotusExporterDataOutputReferencesPath,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "reference_wikidata" = "wikidataId",
       "referenceCleanedDoi" = "dois_pipe_separated",
@@ -89,6 +92,7 @@ wikidata_pairs <-
     file = pathLastWdExport,
     delim = "\t",
     col_types = cols(.default = "c"),
+    locale = locales,
     col_select = c(
       "structureCleanedInchi" = "structure_inchi",
       "organismCleaned" = "organism_clean",
