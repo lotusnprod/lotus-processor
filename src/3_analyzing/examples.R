@@ -16,6 +16,7 @@ log_debug("... validated db, if running fullmode, this may take a while")
 openDb <- read_delim(
   file = gzfile(pathDataInterimTablesAnalyzedPlatinum),
   col_types = cols(.default = "c"),
+  locale = locales,
   delim = "\t",
   escape_double = FALSE,
   trim_ws = TRUE

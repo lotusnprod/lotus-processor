@@ -50,7 +50,8 @@ if (mode == "test") {
   PMC_ids <- read_delim(
     file = pathDataExternalTranslationSourcePubmedFile,
     delim = ",",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
     filter(!is.na(DOI) | !is.na(PMID)) %>%
     select(
@@ -123,7 +124,8 @@ for (i in num) {
     read_delim(
       file = inpath,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 
   dataCrossref_step <- dataCrossref %>%

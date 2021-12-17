@@ -16,7 +16,8 @@ inhouseDbMinimal <-
   read_delim(
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   filter(database %ni% forbidden_export) %>%
   data.frame()
@@ -31,7 +32,8 @@ structureMetadata <-
   read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   filter(structureCleaned_stereocenters_unspecified == 0)
 
@@ -39,7 +41,8 @@ referenceOrganismDictionary <-
   read_delim(
     file = pathDataInterimDictionariesReferenceOrganismDictionary,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   filter(referenceCleaned_score_titleOrganism == 1)
 
