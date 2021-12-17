@@ -227,7 +227,7 @@ ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz: ${INTERIM_TABLE_PROCESS
 	@java -jar ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar ${DATA_PATH} ${MODE}
 
 curating-editing-organism-processing-translated: curating-editing-organism-translating ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz
-${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz: $(wildcard ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated/*.json) ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/3_processingTranslated.R
+${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/translated.tsv.gz: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/original.tsv.gz ${EXTERNAL_DICTIONARY_SOURCE_PATH}/taxa/ranks.tsv ${SRC_CURATING_EDITING_ORGANISM_PATH}/3_processingTranslated.R
 	cd src && Rscript ${SRC_CURATING_EDITING_ORGANISM_PATH}/3_processingTranslated.R
 
 curating-editing-organism-processing-taxonomy: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/processed.tsv.gz
