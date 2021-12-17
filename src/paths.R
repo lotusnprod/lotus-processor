@@ -16,9 +16,6 @@ password <- Sys.getenv("LOTUS_DB_PWD")
 source("r/database.R")
 
 mode <- Sys.getenv("MODE", unset = "full")
-Sys.setlocale("LC_ALL", "en_US.UTF-8")
-Sys.setenv(LANG = "en_US.UTF-8")
-cat(Sys.getlocale())
 
 if (exists("mode_test")) {
   mode <- "test"
