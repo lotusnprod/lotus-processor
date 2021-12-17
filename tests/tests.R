@@ -14,6 +14,7 @@ originalTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalTable),
   delim = "\t",
   col_types = cols(.default = "c"),
+  locale = locale,
   escape_double = FALSE,
   trim_ws = TRUE
 ) %>%

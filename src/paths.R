@@ -17,6 +17,17 @@ source("r/database.R")
 
 mode <- Sys.getenv("MODE", unset = "full")
 
+locales <- locale(
+  date_names = "en",
+  date_format = "%AD",
+  time_format = "%AT",
+  decimal_mark = ".",
+  grouping_mark = ",",
+  tz = "UTC",
+  encoding = "UTF-8",
+  asciify = FALSE
+)
+
 if (exists("mode_test")) {
   mode <- "test"
 }

@@ -219,7 +219,7 @@ if (mode == "full" | mode == "manual") {
     file = pathTestsFile,
     delim = "\t",
     col_types = cols(.default = "c"),
-    locale = "en_US.UTF-8"
+    locale = locales
   ) %>%
     pivot_wider(
       names_from = "organismType",
