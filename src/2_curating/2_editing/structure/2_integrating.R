@@ -17,7 +17,8 @@ originalTable <-
   read_delim(
     file = pathDataInterimTablesOriginalStructureFull,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... chemical names list")
@@ -25,7 +26,8 @@ nominalStructureTable <-
   read_delim(
     file = pathDataInterimTablesTranslatedStructureNominal,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... SMILES list")
@@ -33,7 +35,8 @@ inchiStructureTable <-
   read_delim(
     file = pathDataInterimTablesTranslatedStructureInchi,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("joining")

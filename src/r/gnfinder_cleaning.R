@@ -75,7 +75,8 @@ gnfinder_cleaning <- function(num, organismCol) {
     trim_ws = FALSE,
     escape_backslash = FALSE,
     na = "",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
     mutate_all(as.character)
 

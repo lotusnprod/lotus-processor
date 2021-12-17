@@ -25,7 +25,8 @@ dataCuratedOrganismAuto <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismFinal,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 if (works_locally_only == FALSE) {
@@ -33,14 +34,16 @@ if (works_locally_only == FALSE) {
     read_delim(
       file = wikidataLotusExporterDataOutputTriplesPath,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 
   organismsPostWikidata <-
     read_delim(
       file = wikidataLotusExporterDataOutputTaxaPath,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 
   postWikidata <- left_join(

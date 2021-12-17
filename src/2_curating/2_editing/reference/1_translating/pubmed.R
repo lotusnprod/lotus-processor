@@ -20,7 +20,8 @@ dataPubmed <-
   read_delim(
     file = pathDataInterimTablesOriginalReferencePubmed,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 # getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!

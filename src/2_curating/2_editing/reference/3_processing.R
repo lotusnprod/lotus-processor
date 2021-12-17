@@ -23,7 +23,8 @@ dataCrossref <-
   read_delim(
     file = pathDataInterimDictionariesReferenceDictionary,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 if (mode == "test") {

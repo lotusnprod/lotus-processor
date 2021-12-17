@@ -31,7 +31,8 @@ classyfire_json <-
 classyfire_direct_parent <-
   read_delim(
     file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
-    delim = "\t"
+    delim = "\t",
+    locale = locales
   ) %>%
   distinct(inchikey,
     chemontId = directParent

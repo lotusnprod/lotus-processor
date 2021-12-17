@@ -17,7 +17,8 @@ originalTable <-
   read_delim(
     file = pathDataInterimTablesOriginalTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 originalStructureTable <- originalTable %>%
@@ -33,7 +34,8 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
     read_delim(
       file = pathDataInterimDictionariesStructureDictionary,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 }
 
@@ -43,7 +45,8 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     read_delim(
       file = pathDataInterimDictionariesOrganismDictionary,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 }
 
@@ -53,7 +56,8 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
     read_delim(
       file = pathDataInterimDictionariesReferenceOrganismDictionary,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 }
 
@@ -63,7 +67,8 @@ if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
     read_delim(
       file = pathDataInterimDictionariesStructureMetadata,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 }
 
@@ -73,7 +78,8 @@ if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
     read_delim(
       file = pathDataInterimDictionariesOrganismMetadata,
       delim = "\t",
-      col_types = cols(.default = "c")
+      col_types = cols(.default = "c"),
+      locale = locales
     )
 }
 
@@ -82,7 +88,8 @@ organismTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismFinal,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     organismType,
@@ -111,7 +118,8 @@ translatedStructureTable <-
   read_delim(
     file = pathDataInterimTablesTranslatedStructureFinal,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... cleaned structures")
@@ -119,7 +127,8 @@ cleanedStructureTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedStructureNamed,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     structureTranslated,
@@ -144,7 +153,8 @@ referenceTableFull <-
   read_delim(
     file = pathDataInterimTablesProcessedReferenceFile,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("ensuring directories exist")

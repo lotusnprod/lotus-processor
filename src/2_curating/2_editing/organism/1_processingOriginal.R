@@ -25,14 +25,16 @@ taxaRanksDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 wrongVerifiedDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   as.list()
 
@@ -40,7 +42,8 @@ organismTable <-
   read_delim(
     file = pathDataInterimTablesOriginalOrganismFull,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   distinct()
 
