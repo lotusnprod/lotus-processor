@@ -75,7 +75,8 @@ if (mode == "full" | mode == "manual") {
     pathDataInterimDbDir,
     read_delim,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
   log_debug("... dictionaries ...")
@@ -85,7 +86,8 @@ if (mode == "full" | mode == "manual") {
       read_delim(
         file = pathDataInterimDictionariesStructureDictionary,
         delim = "\t",
-        col_types = cols(.default = "c")
+        col_types = cols(.default = "c"),
+        locale = locales
       )
   }
 
@@ -95,7 +97,8 @@ if (mode == "full" | mode == "manual") {
       read_delim(
         file = pathDataInterimDictionariesStructureAntiDictionary,
         delim = "\t",
-        col_types = cols(.default = "c")
+        col_types = cols(.default = "c"),
+        locale = locales
       )
   }
 
@@ -105,7 +108,8 @@ if (mode == "full" | mode == "manual") {
       read_delim(
         file = pathDataInterimDictionariesOrganismDictionary,
         delim = "\t",
-        col_types = cols(.default = "c")
+        col_types = cols(.default = "c"),
+        locale = locales
       )
   }
 
@@ -115,7 +119,8 @@ if (mode == "full" | mode == "manual") {
       read_delim(
         file = pathDataInterimDictionariesReferenceDictionary,
         delim = "\t",
-        col_types = cols(.default = "c")
+        col_types = cols(.default = "c"),
+        locale = locales
       ) %>%
       data.table()
   }

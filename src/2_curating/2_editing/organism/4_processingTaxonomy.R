@@ -27,7 +27,8 @@ dataCleanedOrganism <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismTranslatedTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   distinct()
 
@@ -36,7 +37,8 @@ taxaRanksDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 dataCleanedOrganismVerify <- dataCleanedOrganism %>%

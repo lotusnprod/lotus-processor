@@ -22,7 +22,8 @@ dataDoi <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceDoi,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     referenceOriginal = referenceOriginal_doi,
@@ -50,7 +51,8 @@ dataOriginal <-
   read_delim(
     file = pathDataInterimTablesTranslatedReferenceOriginal,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   ) %>%
   select(
     referenceOriginal = referenceOriginal_original,

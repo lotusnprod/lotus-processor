@@ -22,7 +22,8 @@ organismTable_full <-
   read_delim(
     file = pathDataInterimTablesOriginalOrganismFull,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... translated organisms")
@@ -30,7 +31,8 @@ dataInterimOrganismToFill <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismTranslatedInterim,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... cleaned original organisms")
@@ -38,7 +40,8 @@ dataCleanedOriginalOrganism <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismOriginalTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("... verified original organisms")
@@ -46,7 +49,8 @@ dataVerifiedOriginalOrganism <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug(" ... taxa ranks dictionary")
@@ -54,7 +58,8 @@ taxaRanksDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
-    col_types = cols(.default = "c")
+    col_types = cols(.default = "c"),
+    locale = locales
   )
 
 log_debug("ensuring directories exist")
