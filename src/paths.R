@@ -1308,3 +1308,9 @@ pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 pathLastFrozen <- "211220_frozen_metadata.csv.gz"
 
 pathLastFrozenClosed <- "211220_closed_metadata.csv.gz"
+
+pathDataInterimTablesAnalyzedGarbage <- 
+  file.path(
+    pathDataInterimTablesAnalyzed,
+    "recycle.tsv.gz"
+  )
