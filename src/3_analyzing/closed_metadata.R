@@ -252,7 +252,7 @@ closed_u_wd <-
 log_debug(
   "We have",
   nrow(closed_u_wd),
-  "unique inchikey-taxon-doi vaidated triplets in dnp"
+  "unique inchikey-taxon-doi vaidated triplets in closed resources"
 )
 
 closed_only <- anti_join(closed_pairs, wikidata_pairs) %>%
