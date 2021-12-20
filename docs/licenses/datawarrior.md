@@ -1,5 +1,3 @@
 # License
 
-no license found, contact thomas.sander@idorsia.com
-
-
+no license found, contacted and received agreement from thomas.sander@idorsia.com

@@ -1,4 +1,4 @@
 # License
 
-Only a preprint yet:
-[Comprehensive database of secondary metabolites from cyanobacteria](https://www.biorxiv.org/content/10.1101/2020.04.16.038703v1)
+Under a Creative Commons license:
+https://doi.org/10.1016/j.watres.2021.117017
