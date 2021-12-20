@@ -41,13 +41,13 @@ works_locally_only <- TRUE
 ## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 wikidataLotusExporterDataOutputTaxaPath <-
-  "https://zenodo.org/record/5668855/files/taxa.tsv"
+  "https://zenodo.org/record/5793224/files/taxa.tsv"
 wikidataLotusExporterDataOutputStructuresPath <-
-  "https://zenodo.org/record/5668855/files/compounds.tsv"
+  "https://zenodo.org/record/5793224/files/compounds.tsv"
 wikidataLotusExporterDataOutputReferencesPath <-
-  "https://zenodo.org/record/5668855/files/references.tsv"
+  "https://zenodo.org/record/5793224/files/references.tsv"
 wikidataLotusExporterDataOutputTriplesPath <-
-  "https://zenodo.org/record/5668855/files/compound_reference_taxon.tsv"
+  "https://zenodo.org/record/5793224/files/compound_reference_taxon.tsv"
 
 # databases for which we have no right to disseminate the data
 forbidden_export <- c("antibase", "antimarin", "dnp", "foodb")
@@ -1305,6 +1305,6 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "210715_frozen_metadata.csv.gz"
+pathLastFrozen <- "211220_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "210715_dnp_metadata.csv.gz"
+pathLastFrozenClosed <- "211220_closed_metadata.csv.gz"
