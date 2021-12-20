@@ -991,6 +991,25 @@ closedDb3 <- closedDb %>%
     x = structureCleanedSmiles
   ))
 
+log_debug("non-validated entries")
+non_validated <- inhouseDbMinimal %>%
+  anti_join(openDbClean3) %>%
+  filter(!database %in% forbidden_export) %>%
+  distinct(
+    organismType,
+    organismValue,
+    structureType,
+    structureValue,
+    referenceType,
+    referenceValue,
+    organismCleaned,
+    structureCleanedInchi,
+    structureCleanedInchikey,
+    structureCleanedSmiles,
+    referenceCleanedDoi,
+    referenceCleanedTitle,
+  )
+
 log_debug("exporting")
 ifelse(
   test = !dir.exists(pathDataInterimTablesAnalyzed),
@@ -1065,6 +1084,13 @@ write_delim(
   x = closedDb3,
   delim = "\t",
   file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
+  na = ""
+)
+
+write_delim(
+  x = non_validated,
+  delim = "\t",
+  file = pathDataInterimTablesAnalyzedGarbage,
   na = ""
 )
 
