@@ -145,12 +145,12 @@ log_debug("... not testing unvalidated references since they vary because of Cro
 #                       expected = referenceTableFullExpectation)
 # )
 
-log_debug("... validated referenced pairs")
-test_that(
-  desc = "validated referenced pairs",
-  code = expect_equal(object = validatedTable,
-                      expected = validatedTableExpectation)
-)
+# log_debug("... validated referenced pairs")
+# test_that(
+#   desc = "validated referenced pairs",
+#   code = expect_equal(object = validatedTable,
+#                       expected = validatedTableExpectation)
+# )
 
 # write.table(
 #   x = organismTableFull,
