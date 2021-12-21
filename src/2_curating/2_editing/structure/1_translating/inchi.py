@@ -37,7 +37,10 @@ myZip = gzip.open(input_file_path)
 
 df = pd.read_csv(
     myZip,
-    sep='\t')
+    sep='\t',
+    encoding='utf-8',
+    on_bad_lines='error'
+    )
 
 if (len(df) == 1) and (df.empty):
     df[inchi_column_header] = 'InChI=1S/Pu'
@@ -88,5 +91,6 @@ df.to_csv(
     ouput_file_path,
     sep='\t',
     index=False,
-    compression='gzip'
+    compression='gzip',
+    encoding='utf-8'
 )
