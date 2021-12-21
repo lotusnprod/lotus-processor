@@ -72,7 +72,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/210715_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/211220_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -97,10 +97,6 @@ df_gb = df_meta.groupby('structure_wikidata').agg(
      'structure_taxonomy_npclassifier_01pathway': 'first',
      'structure_taxonomy_npclassifier_02superclass': 'first',
      'structure_taxonomy_npclassifier_03class': 'first',
-     'structure_taxonomy_classyfire_01kingdom': 'first',
-     'structure_taxonomy_classyfire_02superclass': 'first',
-     'structure_taxonomy_classyfire_03class': 'first',
-     'structure_taxonomy_classyfire_04directparent': 'first',
      'organism_taxonomy_02kingdom': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1), 'count',
                                      'nunique', lambda x: Counter(x)],
      'organism_taxonomy_03phylum': [lambda x: pd.Series.mode(x), lambda x: x.value_counts().head(1),
@@ -145,11 +141,7 @@ df_gb["id_wikidata"] = df_gb['structure_wikidata'].str[31:]
 
 values = {'structure_taxonomy_npclassifier_01pathway_first': 'Unknown',
           'structure_taxonomy_npclassifier_02superclass_first': 'Unknown',
-          'structure_taxonomy_npclassifier_03class_first': 'Unknown',
-          'structure_taxonomy_classyfire_01kingdom_first': 'Unknown',
-          'structure_taxonomy_classyfire_02superclass_first': 'Unknown',
-          'structure_taxonomy_classyfire_03class_first': 'Unknown',
-          'structure_taxonomy_classyfire_04directparent_first': 'Unknown'}
+          'structure_taxonomy_npclassifier_03class_first': 'Unknown'}
 df_gb.fillna(value=values, inplace=True)
 
 # Generating mean specificity score by taxonomical level and class, with a minimal score for plotting, set it to 0 not to use it. 
@@ -201,20 +193,6 @@ structure_taxo = ['structure_taxonomy_npclassifier_01pathway_first',
 
 # Generating class for plotting
 dic_categories = {
-    'structure_taxonomy_npclassifier_01pathway_first': {'Ncat': 10},
-    "structure_taxonomy_npclassifier_02superclass_first": {'Ncat': 19},
-    "structure_taxonomy_npclassifier_03class_first": {'Ncat': 19},
-    "structure_taxonomy_classyfire_01kingdom_first": {'Ncat': 0},
-    "structure_taxonomy_classyfire_02superclass_first": {'Ncat': 19},
-    "structure_taxonomy_classyfire_03class_first": {'Ncat': 19},
-    "structure_taxonomy_classyfire_04directparent_first": {'Ncat': 19},
-    "organism_taxonomy_02kingdom_<lambda_0>": {'Ncat': 4},
-    "organism_taxonomy_03phylum_<lambda_0>": {'Ncat': 17},
-    "organism_taxonomy_04class_<lambda_0>": {'Ncat': 19},
-    "organism_taxonomy_05order_<lambda_0>": {'Ncat': 19},
-    "organism_taxonomy_06family_<lambda_0>": {'Ncat': 19},
-    "organism_taxonomy_08genus_<lambda_0>": {'Ncat': 19},
-    "organism_taxonomy_09species_<lambda_0>": {'Ncat': 19},
     "biosource_count_cat": {'Ncat': 0},
     "organism_taxonomy_02kingdom_nunique_cat": {'Ncat': 0},
     "organism_taxonomy_03phylum_nunique_cat": {'Ncat': 0},
@@ -234,20 +212,88 @@ for dic in dic_categories:
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_06family_<lambda_0>'])
 simaroubaceae_data, simaroubaceae_labels = keep_only_given_class(['Simaroubaceae'], data, labels)
 
-labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
-NPclass_data, NPclass_labels = keep_only_given_class([
-    'Isoquinoline alkaloids', 'Carboline alkaloids',
-    'Cyclic peptides', 'Aminoacids',
-    'Polysaccharides', 'Disaccharides',
-    'Fatty alcohols', 'Wax monoesters',
-    'Anthraquinones and anthrones', 'Naphthoquinones',
-    'Flavonols', 'Flavones',
-    'Quassinoids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Carotenoids (C40, β-β)'
-    # quassinoids and carotenoids actually not 1st and 4th
+labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_01pathway_first'])
+NPpathway_data, NPpathway_labels = keep_only_given_class([
+    'Terpenoids',
+    'Shikimates and Phenylpropanoids',
+    'Polyketides',
+    'Alkaloids',
+    'Fatty acids',
+    'Amino acids and Peptides',
+    'Carbohydrates'
     ], data, labels)
 
-# count_simaroubaceae = df_gb.organism_taxonomy_06family_join.str.count("Simaroubaceae")
-# simaroubaceae_specificity = count_simaroubaceae / df_gb['biosource_count']
+labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_02superclass_first'])
+NPsuperclass_data, NPsuperclass_labels = keep_only_given_class([
+    'Sesquiterpenoids', 'Diterpenoids', 'Triterpenoids', 'Steroids', 'Monoterpenoids',
+    'Flavonoids', 'Coumarins', 'Lignans', 'Isoflavonoids', 'Phenolic acids (C6-C1)',
+    'Polycyclic aromatic polyketides', 'Macrolides', 'Aromatic polyketides', 'Naphthalenes', 'Linear polyketides',
+    'Fatty acyls', 'Fatty Acids and Conjugates', 'Fatty esters', 'Sphingolipids', 'Glycerolipids'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
+NPclass_data, NPclass_labels = keep_only_given_class([
+    # Stigmastane steroids and Quassinoids actually not 1st and 4th
+    'Stigmastane steroids', 'Oleanane triterpenoids', 'Germacrane sesquiterpenoids', 'Quassinoids',
+    'Flavonols', 'Flavones', 'Cinnamic acids and derivatives', 'Simple coumarins',
+    'Cyclic peptides',
+    'Carboline alkaloids'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_02kingdom_<lambda_0>'])
+OTLkingdom_data, OTLkingdom_labels = keep_only_given_class([
+    'Archaeplastida',
+    'Fungi',
+    'Not attributed (Bacteria and Algae)',
+    'Metazoa'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_03phylum_<lambda_0>'])
+OTLphylum_data, OTLphylum_labels = keep_only_given_class([
+    'Streptophyta', 'Rhodophyta',
+    'Ascomycota', 'Basidiomycota',
+    'Actinobacteria', 'Proteobacteria',
+    'Porifera', 'Cnidaria'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_04class_<lambda_0>'])
+OTLclass_data, OTLclass_labels = keep_only_given_class([
+    'Magnoliopsida', 'Florideophycidae',
+    'Eurotiomycetes', 'Sordariomycetes',
+    'Demospongiae', 'Anthozoa'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_05order_<lambda_0>'])
+OTLorder_data, OTLorder_labels = keep_only_given_class([
+    'Asterales', 'Lamiales', 'Fabales', 'Sapindales',
+    'Eurotiales', 'Hypocreales', 'Pleosporales', 'Polyporales',
+    'Streptomycetales',
+    'Alcyonacea'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_06family_<lambda_0>'])
+OTLfamily_data, OTLfamily_labels = keep_only_given_class([
+    'Asteraceae', 'Fabaceae', 'Lamiaceae', 'Rutaceae',
+    'Trichocomaceae', 'Pleosporaceae', 'Ganodermataceae', 'Nectriaceae',
+    'Streptomycetaceae',
+    'Alcyoniidae'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_08genus_<lambda_0>'])
+OTLgenus_data, OTLgenus_labels = keep_only_given_class([
+    'Euphorbia', 'Artemisia', 'Salvia', 'Isodon',
+    'Aspergillus', 'Penicillium', 'Ganoderma', 'Fusarium',
+    'Streptomyces',
+    'Homo'
+    ], data, labels)
+
+labels, data = Faerun.create_categories(df_gb['organism_taxonomy_09species_<lambda_0>'])
+OTLspecies_data, OTLspecies_labels = keep_only_given_class([
+    'Tripterygium wilfordii', 'Arabidopsis thaliana', 'Cannabis sativa', 'Melia azedarach',
+    'Ganoderma lucidum', 'Aspergillus versicolor', 'Aspergillus terreus', 'Aspergillus fumigatus',
+    'Microcystis aeruginosa',
+    'Homo sapiens'
+    ], data, labels)
 
 # Generating colormaps for plotting
 cmap_batlow = cm.batlow
@@ -263,6 +309,50 @@ cmap_category = mcolors.ListedColormap(
      "#499894", "#86BCB6",
      "#9D7660", "#D7B5A6",
      "#D37295", "#FABFD2", "#B07AA1", "#D4A6C8"])
+micro_big_4 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705",
+     "#9D654C",
+     "#098BD9",
+     "#7D3560"
+     ])
+micro_big_4_2 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705", "#6D9F06",
+     "#9D654C", "#C17754",
+     "#098BD9", "#56B4E9",
+     "#7D3560", "#A1527F"
+     ])
+micro_big_4_3 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705", "#6D9F06",
+     "#9D654C", "#C17754",
+     "#7D3560", "#A1527F"
+     ])
+micro_big_7 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705",
+     "#9D654C",
+     "#098BD9",
+     "#148F77",
+     "#7D3560",
+     "#ff7f00",
+     "#6a51a3"
+     ])
+micro_interim_4 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705", "#6D9F06", "#97CE2F", "#BDEC6F",
+     "#9D654C", "#C17754","#F09163","#FCB076",
+     "#098BD9",
+     "#7D3560"
+     ])
+micro_small_4 = mcolors.ListedColormap(
+    ["gainsboro",
+     "#4E7705", "#6D9F06", "#97CE2F", "#BDEC6F", "#DDFFA0",
+     "#9D654C", "#C17754","#F09163","#FCB076","#FFD5AF",
+     "#098BD9", "#56B4E9", "#7DCCFF", "#BCE1FF", "#E7F4FF",
+     "#7D3560", "#A1527F", "#CC79A7", "#E794C1", "#EFB6D6"
+     ])
 
 # Generate a labels column
 df_gb["labels"] = (
@@ -332,8 +422,8 @@ df_gb["labels"] = (
 # lf.index()
 
 # # Store lsh forest and structure metadata
-# lf.store("../data/interim/tmap/210523_lotus_2D_map4.dat")
-# with open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "wb+") as f:
+# lf.store("../data/interim/tmap/211220_lotus_2D_map4.dat")
+# with open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "wb+") as f:
 #     pickle.dump(
 #         (hac, c_frac, ring_atom_frac, largest_ring_size),
 #         f,
@@ -357,21 +447,21 @@ df_gb["labels"] = (
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 # del (lf)
 
-########################################################
-# OPTION 2: LOAD PRE_COMPUTED LSH FOREST AND CHEMICAL DESCRIPTORS
-########################################################
+# ########################################################
+# # OPTION 2: LOAD PRE_COMPUTED LSH FOREST AND CHEMICAL DESCRIPTORS
+# ########################################################
 
 # lf = tm.LSHForest(1024, 64)
 # lf.restore(
-#     "../data/interim/tmap/210523_lotus_2D_map4.dat")  # Version "210312_lotus.dat" contains 270'336 resulting from 210223_frozen_metadata groupby(structure_wikidata)
+#     "../data/interim/tmap/211220_lotus_2D_map4.dat")
 
 # hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-#     open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
+#     open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "rb")
 # )
 
 # # tmap configuration
@@ -392,7 +482,7 @@ df_gb["labels"] = (
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 # del (lf)
@@ -402,11 +492,11 @@ df_gb["labels"] = (
 # # AND CHEMICAL DESCRIPTORS
 # ########################################################
 
-x, y, s, t = pickle.load(open("../data/interim/tmap/210523_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat",
                               "rb"))
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/210523_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "rb")
 )
 
 ########################################################
@@ -422,20 +512,16 @@ f.add_scatter(
         "x": x,
         "y": y,
         "c": [
-            dic_categories['structure_taxonomy_npclassifier_01pathway_first']['data'],
-            dic_categories['structure_taxonomy_npclassifier_02superclass_first']['data'],
-            dic_categories['structure_taxonomy_npclassifier_03class_first']['data'],
-            dic_categories['structure_taxonomy_classyfire_01kingdom_first']['data'],
-            dic_categories['structure_taxonomy_classyfire_02superclass_first']['data'],
-            dic_categories['structure_taxonomy_classyfire_03class_first']['data'],
-            dic_categories['structure_taxonomy_classyfire_04directparent_first']['data'],
-            dic_categories['organism_taxonomy_02kingdom_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_03phylum_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_04class_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_05order_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_06family_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_08genus_<lambda_0>']['data'],
-            dic_categories['organism_taxonomy_09species_<lambda_0>']['data'],
+            NPpathway_data,
+            NPsuperclass_data,
+            NPclass_data,
+            OTLkingdom_data,
+            OTLphylum_data,
+            OTLclass_data,
+            OTLorder_data,
+            OTLfamily_data,
+            OTLgenus_data,
+            OTLspecies_data,
             dic_categories['biosource_count_cat']['data'],
             dic_categories['organism_taxonomy_02kingdom_nunique_cat']['data'],
             dic_categories['organism_taxonomy_03phylum_nunique_cat']['data'],
@@ -445,7 +531,6 @@ f.add_scatter(
             dic_categories['organism_taxonomy_08genus_nunique_cat']['data'],
             dic_categories['organism_taxonomy_09species_nunique_cat']['data'],
             simaroubaceae_data,
-            NPclass_data,
             jsd_pathway['organism_taxonomy_02kingdom_JSD'],
             jsd_superclass['organism_taxonomy_02kingdom_JSD'],
             jsd_class['organism_taxonomy_02kingdom_JSD'],
@@ -466,20 +551,16 @@ f.add_scatter(
     point_scale=2.0,
     max_point_size=10,
     legend_labels=[
-        dic_categories['structure_taxonomy_npclassifier_01pathway_first']['labels'],
-        dic_categories['structure_taxonomy_npclassifier_02superclass_first']['labels'],
-        dic_categories['structure_taxonomy_npclassifier_03class_first']['labels'],
-        dic_categories['structure_taxonomy_classyfire_01kingdom_first']['labels'],
-        dic_categories['structure_taxonomy_classyfire_02superclass_first']['labels'],
-        dic_categories['structure_taxonomy_classyfire_03class_first']['labels'],
-        dic_categories['structure_taxonomy_classyfire_04directparent_first']['labels'],
-        dic_categories['organism_taxonomy_02kingdom_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_03phylum_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_04class_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_05order_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_06family_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_08genus_<lambda_0>']['labels'],
-        dic_categories['organism_taxonomy_09species_<lambda_0>']['labels'],
+        NPpathway_labels,
+        NPsuperclass_labels,
+        NPclass_labels,
+        OTLkingdom_labels,
+        OTLphylum_labels,
+        OTLclass_labels,
+        OTLorder_labels,
+        OTLfamily_labels,
+        OTLgenus_labels,
+        OTLspecies_labels,
         dic_categories['biosource_count_cat']['labels'],
         dic_categories['organism_taxonomy_02kingdom_nunique_cat']['labels'],
         dic_categories['organism_taxonomy_03phylum_nunique_cat']['labels'],
@@ -488,26 +569,25 @@ f.add_scatter(
         dic_categories['organism_taxonomy_06family_nunique_cat']['labels'],
         dic_categories['organism_taxonomy_08genus_nunique_cat']['labels'],
         dic_categories['organism_taxonomy_09species_nunique_cat']['labels'],
-        simaroubaceae_labels,
-        NPclass_labels
+        simaroubaceae_labels
     ],
-    categorical=[True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True, True,
-                 True, True, True, True, True, True, True,
-                 False, False, False, False, False, False, False, False, False, False, False, False],
-    colormap=["tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
-              "tab20", "tab20", "tab20", "tab20", "tab20", "tab20", "tab20",
-              cmap_3, cmap_1, cmap_2, cmap_3, cmap_3, cmap_3, cmap_3, cmap_3, cmap_1,
-              cmap_category,
-              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow,
-              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow],
+    categorical=[True, True, True, 
+                 True, True, True, True, True, True, True, 
+                 True, True, True, True, True, True, True, True, 
+                 True,
+                 False, False, False, False, False, False, False, False, 
+                 False, False, False, False
+                 ],
+    colormap=[micro_big_7, micro_small_4, micro_interim_4, 
+              micro_big_4, micro_big_4_2, micro_big_4_3, micro_interim_4, micro_interim_4, micro_interim_4, micro_interim_4,
+              cmap_3, cmap_1, cmap_2, cmap_3, cmap_3, cmap_3, cmap_3, cmap_3, 
+              cmap_1,
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, 
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow],
     series_title=[
-        "Chemical pathway",
-        "Chemical superclass",
-        "Chemical class",
-        "Chemical kingdom (Classyfire)",
-        "Chemical superclass (Classyfire)",
-        "Chemical class (Classyfire)",
-        "Chemical parent (Classyfire)",
+        "Chemical pathway (NPC)",
+        "Chemical superclass (NPC)",
+        "Chemical class (NPC)",
         "Biological kingdom (OTL)",
         "Biological phylum (OTL)",
         "Biological class (OTL)",
@@ -524,7 +604,6 @@ f.add_scatter(
         "Sources genus",
         "Sources species",
         "Simaroubaceae",
-        "Selected chemical classes",
         "Pathway kingdom JSD",
         "Superclass kingdom JSD",
         "Class kingdom JSD",
@@ -542,4 +621,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/210919_lotus_map4_2D', template="smiles")
+f.plot('../res/html/211220_lotus_map4_2D', template="smiles")
