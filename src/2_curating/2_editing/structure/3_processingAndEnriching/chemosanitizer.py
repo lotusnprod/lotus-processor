@@ -32,7 +32,12 @@ except:
 
 if __name__ == "__main__":
     myZip = gzip.open(input_file_path)
-    df = pd.read_csv(myZip, sep='\t')
+    df = pd.read_csv(
+        myZip, 
+        sep='\t',
+         encoding='utf-8',
+         on_bad_lines='error'
+         )
 
     if (len(df) == 1) and df.empty:
         df['structureTranslated'] = '[Pu]'
@@ -63,5 +68,6 @@ if __name__ == "__main__":
         ouput_file_path,
         sep='\t',
         index=False,
-        compression='gzip'
+        compression='gzip',
+        encoding='utf-8'
     )
