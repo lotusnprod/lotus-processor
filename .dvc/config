@@ -1,5 +1,6 @@
 [core]
     remote = minio
+    autostage = true
 ['remote "minio"']
     url = s3://onpdb
     endpointurl = https://metabomaps-data.nprod.net
