@@ -5,4 +5,4 @@
 
 source 2_curating/2_editing/organism/shell/gnfinder.sh
 
-gnfinder ../data/interim/tables_manual/1_translated/organism ../data/interim/tables_manual/2_processed/organism/translated
+gnfinder ../data/interim/tables_custom/1_translated/organism ../data/interim/tables_custom/2_processed/organism/translated
