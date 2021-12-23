@@ -4,7 +4,7 @@ include ${SRC_GATHERING_DB_PATH}/Makefile
 include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
 include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 
-.PHONY: help docker-build docker-bash tests
+.PHONY: help docker-build docker-bash
 .PHONY: cleaning-manual gathering-full gathering-quick gathering-full-hard 
 .PHONY: gathering-databases-full gathering-databases-full-hard gathering-databases-quick 
 .PHONY: gathering-databases gathering-databases-download gathering-databases-download-modified 
@@ -18,9 +18,9 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: curating-editing-reference curating-editing-reference-translating curating-editing-reference-translating-doi curating-editing-reference-translating-pubmed curating-editing-reference-translating-title curating-editing-reference-translating-split curating-editing-reference-translating-publishingDetails curating-editing-reference-translating-original curating-editing-reference-integrating curating-editing-reference-processing
 .PHONY: curating-and-analyzing analyzing analyzing-sampling analyzing-validating analyzing-metrics analyzing-examples
 .PHONY: processing-organism-interim
-.PHONY: curating-and-analyzing-and-visalizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
+.PHONY: curating-and-analyzing-and-visualizing visualizing visualizing-alluvial visualizing-chord visualizing-tree visualizing-upset visualizing-distribution
 .PHONY: get-gnfinder get-gnverifier get-opsin get-bins
-.PHONY: manual-entry lotus lotus-quick
+.PHONY: lotus-bloom lotus-check lotus-roots lotus-seeds
 .PRECIOUS: %.tsv %.zip %.json %.gz
 
 help:
@@ -80,9 +80,6 @@ ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 	mkdir -p bin
 	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 	chmod +x bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
-
-tests:
-	cd src && Rscript ${TESTS_PATH}/tests.R 
 
 gathering-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick
 
@@ -307,10 +304,11 @@ visualizing-upset:
 visualizing-distribution:
 	cd src && Rscript ${SRC_VISUALIZING_PATH}/plot_distribution.R
 
-lotus-quick: cleaning-manual gathering-quick curating analyzing-quick
+lotus-bloom: cleaning-manual gathering-quick curating analyzing-quick
 
-lotus: gathering-full curating analyzing visualizing
+lotus-seeds: gathering-full curating analyzing visualizing
 
-lotus-full: gathering-full-hard curating analyzing visualizing
+lotus-roots: gathering-full-hard curating analyzing visualizing
 
-manual-entry: cleaning-manual gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick curating analyzing-quick
+lotus-check:
+	cd src && Rscript ${TESTS_PATH}/tests.R 

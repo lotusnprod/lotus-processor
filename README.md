@@ -29,13 +29,13 @@ cd lotus-processor
 conda env create --file environment.yml
 conda activate lotus_env
 Rscript -e 'remotes::install_github("ropensci/rcrossref")'
-make MODE=test lotus-quick
+make MODE=test lotus-bloom
 ```
 
 if everything worked smoothly you can then:
 
 ```
-make MODE=test tests
+make MODE=test lotus-check
 ```
 
 ## Data Availability Statements
