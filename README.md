@@ -40,7 +40,7 @@ make MODE=test lotus-check
 
 ## Data Availability Statements
 
-- The data used to support the findings of this study have been deposited on OSF [https://osf.io/pmgux](https://osf.io/pmgux).
+- The data used to support the findings of this study have been deposited on Zenodo [https://zenodo.org/communities/the-lotus-initiative](https://zenodo.org/communities/the-lotus-initiative).
 A snapshot of the repository at the time of publication is also available under the same link.
 - Outputs of the lotus-processor will be regularly archived at [https://zenodo.org/record/5665295](https://zenodo.org/record/5665295)
 
