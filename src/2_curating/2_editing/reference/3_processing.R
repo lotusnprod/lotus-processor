@@ -36,7 +36,7 @@ if (mode == "test") {
     ) %>%
     mutate_all(as.character) %>%
     tibble()
-} else if (mode == "manual") {
+} else if (mode == "custom") {
   PMC_ids <-
     data.frame(
       DOI = NA,

@@ -37,7 +37,7 @@ dbTable <- lapply(
   locale = locales
 ) %>%
   rbindlist(l = ., fill = TRUE) %>%
-  filter(database != "manual") %>%
+  filter(database != "custom") %>%
   select(
     database,
     organismOriginal_clean = organism_clean,
@@ -71,7 +71,7 @@ inhouseDbMinimal <-
       "referenceCleanedDoi"
     )
   ) %>%
-  filter(database != "manual") %>%
+  filter(database != "custom") %>%
   distinct()
 
 log_debug("validated for export ...")
@@ -90,7 +90,7 @@ openDb <-
       "referenceCleanedDoi"
     )
   ) %>%
-  filter(database != "manual") %>%
+  filter(database != "custom") %>%
   distinct()
 
 log_debug("exported ...")
