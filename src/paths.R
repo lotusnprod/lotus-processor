@@ -1233,28 +1233,28 @@ pathDataInterimTimestamps <-
 ## dirty for the moment
 pathOriginalGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
-  "manual" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_manual.sh",
+  "custom" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
 )
 
 pathTranslatedGnfinderScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh",
-  "manual" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_manual.sh",
+  "custom" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 )
 
 pathOriginalGnverifierScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_full.sh",
-  "manual" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_manual.sh",
+  "custom" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_test.sh"
 )
 
 pathGnverifierScript <- switch(mode,
   "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_full.sh",
-  "manual" = "2_curating/2_editing/organism/shell/gnverifierLauncher_manual.sh",
+  "custom" = "2_curating/2_editing/organism/shell/gnverifierLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/gnverifierLauncher_test.sh"
 )
