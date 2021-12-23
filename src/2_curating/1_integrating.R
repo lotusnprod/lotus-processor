@@ -26,7 +26,7 @@ library(tidyr)
 log_debug("... files ...")
 log_debug("... DBs")
 
-if (mode == "full" | mode == "manual") {
+if (mode == "full" | mode == "custom") {
   if (ssot_access == TRUE) {
     library(RPostgreSQL)
 
@@ -297,7 +297,7 @@ originalTable <- dbTable %>%
   select(-drop3) %>%
   distinct()
 
-if (mode == "full" | mode == "manual") {
+if (mode == "full" | mode == "custom") {
   log_debug("new entries only ...")
   originalTable <- anti_join(
     originalTable,

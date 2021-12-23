@@ -1,6 +1,6 @@
-# title: "manual input cleaneR"
+# title: "custom input cleaneR"
 
-mode_manual <- TRUE
+mode_custom <- TRUE
 
 # loading paths
 source("paths.R")
@@ -10,15 +10,15 @@ library(dplyr)
 library(readr)
 
 # get paths
-database <- databases$get("manual")
+database <- databases$get("custom")
 
 args <- commandArgs(trailingOnly = TRUE)
 
 ## file
-data_manual <- read_delim(file = args[1], delim = "\t")
+data_custom <- read_delim(file = args[1], delim = "\t")
 
 ## selecting
-data_selected <- data_manual %>%
+data_selected <- data_custom %>%
   select(
     structure_smiles = smiles,
     organism_clean = organism,
@@ -28,7 +28,7 @@ data_selected <- data_manual %>%
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "manual",
+    db = "custom",
     structure_field = "structure_smiles",
     organism_field = "organism_clean",
     reference_field = "reference_doi"
@@ -41,8 +41,8 @@ ifelse(
   no = paste("../data/interim", "exists")
 )
 ifelse(
-  test = !dir.exists("../data/interim/manual"),
-  yes = dir.create("../data/interim/manual"),
-  no = paste("../data/interim/manual", "exists")
+  test = !dir.exists("../data/interim/custom"),
+  yes = dir.create("../data/interim/custom"),
+  no = paste("../data/interim/custom", "exists")
 )
 database$writeInterim(data_standard)

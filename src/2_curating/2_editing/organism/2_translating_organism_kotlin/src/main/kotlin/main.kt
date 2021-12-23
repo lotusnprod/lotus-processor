@@ -10,7 +10,7 @@ const val cut = 10_000
 
 // Show usage and exit
 fun usageExit() {
-    println("Usage: java -jar <scriptname> Data_path full/manual/min/test")
+    println("Usage: java -jar <scriptname> Data_path full/custom/min/test")
     exitProcess(1)
 }
 
@@ -18,7 +18,7 @@ fun usageExit() {
 fun main(args: Array<String>) {
     val logger = MyDirtyLogger() //LoggerFactory.getLogger("main")
     if (args.size < 2) usageExit()
-    if (args[1] !in setOf("test", "min", "full", "manual")) usageExit()
+    if (args[1] !in setOf("test", "min", "full", "custom")) usageExit()
 
     val pathData = args[0]
     val mode = args[1]
@@ -26,12 +26,12 @@ fun main(args: Array<String>) {
     val pathDataExternal = "$pathData/external"
 
     val pathDataInterimDictionaries = "$pathDataExternal/dictionarySource"
-    val pathDataInterimDictionariesTcmNames = if (args[1] in setOf("test", "min", "manual")) {
+    val pathDataInterimDictionariesTcmNames = if (args[1] in setOf("test", "min", "custom")) {
                         "tests/tests_dic_tcm_min.tsv.gz"
                     } else {
                         "$pathDataInterimDictionaries/tcm/names.tsv.gz"
                     }
-    val pathDataInterimDictionariesCommonNames = if (args[1] in setOf("test", "min", "manual")) {
+    val pathDataInterimDictionariesCommonNames = if (args[1] in setOf("test", "min", "custom")) {
                         "tests/tests_dic_common_min.tsv.gz"
                     } else {
                         "$pathDataInterimDictionaries/common/names.tsv.gz"

@@ -32,8 +32,8 @@ if (exists("mode_test")) {
   mode <- "test"
 }
 
-if (exists("mode_manual")) {
-  mode <- "manual"
+if (exists("mode_custom")) {
+  mode <- "custom"
 }
 
 works_locally_only <- TRUE
@@ -98,13 +98,13 @@ pathDataProcessed <-
   )
 
 #### db
-if (mode != "manual") {
+if (mode != "custom") {
   pathDataInterimDb <- file.path(
     pathDataInterim,
     "db"
   )
 } else {
-  pathDataInterimDb <- file.path(pathDataInterim, "manual")
+  pathDataInterimDb <- file.path(pathDataInterim, "custom")
 }
 
 databases <-
@@ -242,9 +242,9 @@ databases$add(
 )
 
 databases$add(
-  name = "manual",
+  name = "custom",
   sourceFiles = NA,
-  interimFile = "manual.tsv.gz"
+  interimFile = "custom.tsv.gz"
 )
 
 databases$add(
@@ -578,12 +578,12 @@ pathDataExternalTranslationSourceTcmCmba <-
   )
 
 #### dir
-if (mode != "manual") {
+if (mode != "custom") {
   pathDataInterimDbDir <-
     Sys.glob(file.path(paste0(pathDataInterimDb, "/*.tsv.gz")))
 } else {
   pathDataInterimDbDir <-
-    file.path(pathDataInterimDb, "manual.tsv.gz")
+    file.path(pathDataInterimDb, "custom.tsv.gz")
 }
 
 #### dictionaries
