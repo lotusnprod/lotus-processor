@@ -11,7 +11,7 @@ if (!require(remotes)) {
 remotes::install_github('ropensci/rcrossref')
 "
 cd src
-Rscript 1_gathering/db/manual/standardizing.R ../data/example/manual_example.tsv
+Rscript 1_gathering/db/custom/standardizing.R ../data/example/custom_example.tsv
 cd ..
 make MODE=custom lotus-bloom
 make MODE=test lotus-bloom
