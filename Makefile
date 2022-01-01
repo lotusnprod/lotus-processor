@@ -78,8 +78,8 @@ endif
 bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
 	mkdir -p bin
-	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
-	chmod +x bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
+	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
+	chmod +x bin/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
 
 gathering-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick
 
