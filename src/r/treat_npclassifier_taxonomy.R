@@ -19,20 +19,20 @@ treat_npclassifier_taxonomy <- function() {
       structure_taxonomy_npclassifier_02superclass = superclass,
       structure_taxonomy_npclassifier_03class = class
     ) %>%
-    group_by(structure_smiles_2D) %>%
-    summarize(across(
-      c(
-        "structure_taxonomy_npclassifier_01pathway",
-        "structure_taxonomy_npclassifier_02superclass",
-        "structure_taxonomy_npclassifier_03class"
-      ),
-      ~ gsub(
-        pattern = "\\bNA\\b",
-        replacement = "",
-        x = paste(unique(.x), collapse = "|")
-      )
-    )) %>%
-    ungroup() %>%
+    # group_by(structure_smiles_2D) %>%
+    # summarize(across(
+    #   c(
+    #     "structure_taxonomy_npclassifier_01pathway",
+    #     "structure_taxonomy_npclassifier_02superclass",
+    #     "structure_taxonomy_npclassifier_03class"
+    #   ),
+    #   ~ gsub(
+    #     pattern = "\\bNA\\b",
+    #     replacement = "",
+    #     x = paste(unique(.x), collapse = "|")
+    #   )
+    # )) %>%
+    # ungroup() %>%
     mutate(across(
       everything(),
       ~ y_as_na(x = .x, y = "")
