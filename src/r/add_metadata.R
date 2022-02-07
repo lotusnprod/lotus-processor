@@ -23,6 +23,8 @@ add_metadata <- function(df) {
       structure_molecular_formula = structureCleaned_molecularFormula,
       structure_exact_mass = structureCleaned_exactMass,
       structure_smiles_2D = structureCleaned_smiles2D,
+      structure_nameIupac = structureCleaned_nameIupac,
+      structure_nameTraditional = structureCleaned_nameTraditional,
       structure_stereocenters_total = structureCleaned_stereocenters_total,
       structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
     ) %>%
@@ -166,6 +168,8 @@ add_metadata <- function(df) {
         "structure_molecular_formula",
         "structure_exact_mass",
         "structure_smiles_2D",
+        "structure_nameIupac",
+        "structure_nameTraditional",
         "structure_stereocenters_total",
         "structure_stereocenters_unspecified",
         "structure_taxonomy_npclassifier_01pathway",
