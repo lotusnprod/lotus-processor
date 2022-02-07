@@ -201,7 +201,7 @@ databases$add(
 
 databases$add(
   name = "dnp",
-  sourceFiles = list(tsv = "30_1/full_set.csv"),
+  sourceFiles = list(tsv = "30_2/full_set.csv"),
   interimFile = "dnp.tsv.gz"
 )
 
@@ -1305,9 +1305,9 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "211220_frozen_metadata.csv.gz"
+pathLastFrozen <- "220207_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "211220_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "220207_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <- 
   file.path(
