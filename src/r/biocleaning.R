@@ -18,19 +18,18 @@ biocleaning <- function(gnfound, names, organismCol) {
   log_debug("Biocleaning: finished creating dataframe")
   # extracting preferred results data table
   ## as list of dataframes
-  df2 <- gnfound$names.verification$preferredResults
+  df2 <- gnfound$verification$bestResult
 
   # outputting row numbers
   rows <- df2 %>%
     data.table() %>%
     mutate(nrow = row_number()) %>%
-    filter(. != "NULL") %>%
+    # filter(. != "NULL") %>%
     select(nrow)
 
   ## as dataframe and adding row number
-  df3 <- bind_rows(df2,
-    .id = "id"
-  )
+  df3 <- df2 %>%
+    mutate(id = row_number())
 
   # selecting best result (with best score and best filled taxonomy)
   df4 <- df3 %>%
@@ -192,7 +191,7 @@ biocleaning <- function(gnfound, names, organismCol) {
   }
 
   # adding row number
-  df7 <- gnfound$names.start %>%
+  df7 <- gnfound$start %>%
     data.table() %>%
     mutate(nrow = row_number())
 
