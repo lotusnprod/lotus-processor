@@ -1305,12 +1305,16 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "220207_frozen_metadata.csv.gz"
+pathLastFrozen <- "220208_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "220207_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "220208_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <- 
   file.path(
     pathDataInterimTablesAnalyzed,
     "recycle.tsv.gz"
   )
+
+pathLastTreeBio <- "tree_bio.json"
+
+pathLastTreeChemo <- "tree_chemo.json"
