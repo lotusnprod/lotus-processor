@@ -23,7 +23,7 @@ dataset <- read_delim(
     -`initial retrieved unique entries`,
     -`cleaned referenced structure-organism pairs`,
     -`pairs validated for wikidata export`,
-    -`actual pairs on wikidata`,
+    -`actual validated pairs on wikidata`,
     -`timestamp`
   ) %>%
   data.frame(check.names = FALSE)
