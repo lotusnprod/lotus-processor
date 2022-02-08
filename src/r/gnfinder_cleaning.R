@@ -87,13 +87,13 @@ gnfinder_cleaning <- function(num, organismCol) {
     gnfound <- data.frame(fromJSON(
       txt = inpath_gnfinder_f,
       simplifyDataFrame = TRUE
-    ))
+    )[["names"]])
   } else {
     gnfound <- data.frame(
-      names.start = 0,
-      names.verification = NA
+      start = 0,
+      verification = NA
     )
-    b <- data.frame(preferredResults = NA)
+    b <- data.frame(bestResult = NA)
     c <- data.frame(
       list(
         datasourceId = NA,
@@ -118,11 +118,12 @@ gnfinder_cleaning <- function(num, organismCol) {
         editDistance = NA,
         stemEditDistance = NA,
         matchType = NA,
+        scoreDetails = NA,
         localId = NA
       )
     )
-    b$preferredResults <- c
-    gnfound$names.verification <- b
+    b$bestResult <- c
+    gnfound$verification <- b
   }
 
   if (nrow(gnfound) != 0) {
