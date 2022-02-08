@@ -1075,23 +1075,20 @@ log_debug(
 write_delim(
   x = openDbClean3,
   delim = "\t",
-  file = pathDataInterimTablesAnalyzedPlatinum,
-  na = ""
+  file = pathDataInterimTablesAnalyzedPlatinum
 )
 
 log_debug(file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"))
 write_delim(
   x = closedDb3,
   delim = "\t",
-  file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"),
-  na = ""
+  file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")
 )
 
 write_delim(
   x = non_validated,
   delim = "\t",
-  file = pathDataInterimTablesAnalyzedGarbage,
-  na = ""
+  file = pathDataInterimTablesAnalyzedGarbage
 )
 
 if (exists("validationSet")) {
