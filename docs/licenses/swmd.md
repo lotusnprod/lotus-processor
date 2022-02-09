@@ -1,6 +1,6 @@
 # License
 
-[article](https://dx.doi.org/10.6026%2F97320630005361)
+[article](http://www.bioinformation.net/005/007900052011.htm)
 This is an Open Access article which permits unrestricted use, distribution, and reproduction in any medium, provided the original work is properly credited. This is distributed under the terms of the Creative Commons Attribution License.
 
 
