@@ -5,7 +5,7 @@ No article
 [website](http://132.230.56.4/streptomedb2/help/)
 
 How to cite StreptomeDB?
-Please, cite accession date, time, and the url "http://StreptomeDB.pharmaceutical-bioinformatics.de"
+Please, cite accession date, time, and the url "h<span>t</span>tp://StreptomeDB.pharmaceutical-bioinformatics.de"
 
 [legal info](http://www.pharmbioinf.uni-freiburg.de/contact/impressum/)
 

@@ -1,6 +1,6 @@
 # License
 
-[article](10.1021/acs.jnatprod.7b00283)
+[article](https://doi.org/10.1021/acs.jnatprod.7b00283)
 
 [website](http://african-compounds.org/nanpdb/)
 
