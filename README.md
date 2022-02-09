@@ -59,7 +59,7 @@ Please read [contributing](CONTRIBUTING.md) for details on our code of conduct, 
 - *Pierre-Marie Allard* - _Investigator_ - [oolonek](https://github.com/oolonek)
 - *Jonathan Bisson* - _Hacker in Chief_ - [bjonnh](https://github.com/bjonnh)
 
-See also the list of [contributors](https://github.com/lotusnprod/lotus-processor/-/project_members) who participated in this project.
+See also the list of [contributors](https://github.com/lotusnprod/lotus-processor/graphs/contributors) who participated in this project.
 
 ## License
 
