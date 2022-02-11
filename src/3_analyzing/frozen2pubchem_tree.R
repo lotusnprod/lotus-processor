@@ -45,6 +45,7 @@ organisms_classified <- lotus |>
   ) |>
   dplyr::distinct()
 
+#' on pubchem's team request: collapse not classified nodes
 structures_cleaned <- structures_classified |>
   dplyr::left_join(classified) |>
   dplyr::distinct(
@@ -60,12 +61,21 @@ structures_cleaned <- structures_classified |>
   )) |>
   dplyr::mutate(chemical_superclass = ifelse(
     test = is.na(chemical_superclass),
-    yes = paste(chemical_pathway, "Not classified"),
+    yes = ifelse(
+      test = chemical_pathway == "Not classified",
+      yes = chemical_superclass,
+      no = "Not classified"
+    ),
     no = chemical_superclass
   )) |>
   dplyr::mutate(chemical_class = ifelse(
     test = is.na(chemical_class),
-    yes = paste(chemical_superclass, "Not classified"),
+    yes = ifelse(
+      test = chemical_superclass == "Not classified" | 
+        is.na(chemical_superclass),
+      yes = chemical_class,
+      no = "Not classified"
+    ),
     no = chemical_class
   )) |>
   data.frame()
