@@ -13,21 +13,25 @@ library(networkD3)
 library(readr)
 library(tidyr)
 
-LIMIT = 999999
+LIMIT <- 999999
 options(max.print = LIMIT)
 
-lotus <- readr::read_delim(file = file.path(pathDataProcessed,
-                                            pathLastFrozen))
+lotus <- readr::read_delim(file = file.path(
+  pathDataProcessed,
+  pathLastFrozen
+))
 
 classified <-
   readr::read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
 
 structures_classified <- lotus |>
-  dplyr::select(structure_id = structure_inchikey,
-                # chemical_pathway = structure_taxonomy_npclassifier_01pathway,
-                # chemical_superclass = structure_taxonomy_npclassifier_02superclass,
-                # chemical_class = structure_taxonomy_npclassifier_03class,
-                structure_smiles_2D) |>
+  dplyr::select(
+    structure_id = structure_inchikey,
+    # chemical_pathway = structure_taxonomy_npclassifier_01pathway,
+    # chemical_superclass = structure_taxonomy_npclassifier_02superclass,
+    # chemical_class = structure_taxonomy_npclassifier_03class,
+    structure_smiles_2D
+  ) |>
   dplyr::distinct()
 
 organisms_classified <- lotus |>
@@ -71,7 +75,7 @@ structures_cleaned <- structures_classified |>
   dplyr::mutate(chemical_class = ifelse(
     test = is.na(chemical_class),
     yes = ifelse(
-      test = chemical_superclass == "Not classified" | 
+      test = chemical_superclass == "Not classified" |
         is.na(chemical_superclass),
       yes = chemical_class,
       no = "Not classified"
@@ -86,8 +90,9 @@ organisms_cleaned <- organisms_classified |>
 #' on pubchem's team request: remove not classified nodes
 #' name of columns does not match anymore but not important
 organisms_cleaned[] <-
-  t(apply(organisms_cleaned, 1, function(x)
-    `length<-`(na.omit(x), length(x))))
+  t(apply(organisms_cleaned, 1, function(x) {
+    `length<-`(na.omit(x), length(x))
+  }))
 
 # organisms_cleaned[is.na(organisms_cleaned)] <- "Not classified"
 
@@ -137,12 +142,16 @@ tree_bio_list <- data.tree::ToListExplicit(x = tree_bio_txt)[2]
 
 tree_bio_json <- jsonlite::toJSON(tree_bio_list)
 
-sink(file = file.path(pathDataProcessed,
-                      pathLastTreeChemo))
+sink(file = file.path(
+  pathDataProcessed,
+  pathLastTreeChemo
+))
 tree_chem_json
 sink()
 
-sink(file = file.path(pathDataProcessed,
-                      pathLastTreeBio))
+sink(file = file.path(
+  pathDataProcessed,
+  pathLastTreeBio
+))
 tree_bio_json
 sink()
