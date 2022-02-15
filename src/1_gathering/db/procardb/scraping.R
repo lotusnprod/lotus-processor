@@ -47,11 +47,7 @@ PROCARDB <- invisible(
   pbmclapply(
     FUN = getprocardb,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1
@@ -100,11 +96,7 @@ PROCARDB_3 <- invisible(
   pbmclapply(
     FUN = getprocardb_bio,
     X = X_bio,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1
@@ -137,11 +129,7 @@ PROCARDB_5 <- invisible(
   pbmclapply(
     FUN = getprocardb_names,
     X = X_bio,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1

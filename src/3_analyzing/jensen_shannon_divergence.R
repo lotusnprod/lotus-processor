@@ -246,7 +246,10 @@ X <- seq_along(Y)
 pathway_1 <- invisible(pbmclapply(
   FUN = get_jsd,
   X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
+  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
+  ignore.interactive = TRUE,
+  mc.style = "txt",
+  mc.substyle = 1
 )) %>%
   rbindlist()
 

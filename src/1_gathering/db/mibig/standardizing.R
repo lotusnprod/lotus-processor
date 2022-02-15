@@ -43,11 +43,7 @@ getid <- function(x) {
 id <- pbmclapply(
   FUN = getid,
   X = x,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
   mc.cores = numCores,
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -61,11 +57,7 @@ getsmiles <- function(x) {
 smiles <- pbmclapply(
   FUN = getsmiles,
   X = x,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
   mc.cores = numCores,
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -79,11 +71,7 @@ getorganism <- function(x) {
 organism <- pbmclapply(
   FUN = getorganism,
   X = x,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
   mc.cores = numCores,
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1
@@ -97,11 +85,7 @@ getreference <- function(x) {
 reference <- pbmclapply(
   FUN = getreference,
   X = x,
-  mc.preschedule = TRUE,
-  mc.set.seed = TRUE,
   mc.cores = numCores,
-  mc.cleanup = TRUE,
-  mc.allow.recursive = TRUE,
   ignore.interactive = TRUE,
   mc.style = "txt",
   mc.substyle = 1

@@ -45,14 +45,9 @@ CAROTENOIDDB <- invisible(
   pbmclapply(
     FUN = getcarotenoid,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
-    mc.substyle = 1, mc.style = "txt",
     mc.substyle = 1
   )
 )

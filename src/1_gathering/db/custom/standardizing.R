@@ -20,6 +20,7 @@ data_custom <- read_delim(file = args[1], delim = "\t")
 ## selecting
 data_selected <- data_custom %>%
   select(
+    structure_name = name,
     structure_smiles = smiles,
     organism_clean = organism,
     reference_doi = doi
@@ -29,7 +30,7 @@ data_standard <-
   standardizing_original(
     data_selected = data_selected,
     db = "custom",
-    structure_field = "structure_smiles",
+    structure_field = c("structure_name","structure_smiles"),
     organism_field = "organism_clean",
     reference_field = "reference_doi"
   )

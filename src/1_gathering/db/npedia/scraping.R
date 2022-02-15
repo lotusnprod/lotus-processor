@@ -43,11 +43,7 @@ NPEDIA <- invisible(
   pbmclapply(
     FUN = getnpedia,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1
@@ -94,11 +90,7 @@ NPEDIA_3 <- invisible(
   pbmclapply(
     FUN = getnpedia_2,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1

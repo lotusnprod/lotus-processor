@@ -114,11 +114,7 @@ alternative_parents <- invisible(
   pbmclapply(
     FUN = get_alternative_parents,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1
@@ -142,11 +138,7 @@ chebi <- invisible(
   pbmclapply(
     FUN = get_chebi,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1
@@ -169,11 +161,7 @@ direct_parent <- invisible(
   pbmclapply(
     FUN = get_direct_parent,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1

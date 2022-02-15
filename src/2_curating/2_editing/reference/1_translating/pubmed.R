@@ -32,11 +32,7 @@ if (nrow(dataPubmed) != 0) {
     pbmclapply(
       FUN = getrefPubmed,
       X = as.character(dataPubmed$referenceOriginal_pubmed),
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
       mc.cores = 1,
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
       mc.style = "txt",
       mc.substyle = 1

@@ -3,11 +3,12 @@ channels:
   - conda-forge
   - bioconda
   - defaults
+  - rdkit
 dependencies:
   - conda-build
   - molvs
   - pandas
-  - python=3.*
+  - python
   - rdkit
   - scipy
   - r-base

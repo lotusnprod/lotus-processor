@@ -32,11 +32,7 @@ if (nrow(dataDoi) != 0) {
     pbmclapply(
       FUN = getrefDoi,
       X = dataDoi$referenceOriginal_doi,
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
       mc.cores = numCores,
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
       mc.style = "txt",
       mc.substyle = 1
