@@ -48,8 +48,13 @@ if __name__ == "__main__":
     df = df[df[smiles_column_header].notnull()]
     df_chunks = np.array_split(df, cpus * len(df)/cpus)
     f = CleaningFunc(smiles_column_header).f
-    with multiprocessing.Pool(cpus) as pool:
-        processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
+
+    # old multiprocessing version
+    # with multiprocessing.Pool(cpus) as pool:
+    #     processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=cpus) as executor:
+        processed_df = pd.concat(executor.map(f, df_chunks), ignore_index=True)
 
     df_2 = processed_df.loc[:,
        ~processed_df.columns.isin(['ROMol', 'ROMolSanitized', 'ROMolSanitizedLargestFragment', 'flatROMol',
