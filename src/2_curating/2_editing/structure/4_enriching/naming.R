@@ -194,6 +194,36 @@ structureNamed_undefined <- structureNamed %>%
 structureNamed_cleaned <-
   bind_rows(structureNamed_defined, structureNamed_undefined)
 
+if (mode == "custom") {
+  library(tidyr)
+  structureNamed <-
+    read_delim(
+      file = pathDataInterimTablesOriginalStructureFull,
+      delim = "\t"
+    ) %>%
+    pivot_wider(
+      names_from = structureType,
+      values_from = structureValue
+    ) %>%
+    unnest(cols = c(inchi, smiles, nominal)) %>%
+    pivot_longer(cols = colnames(.)[grepl(pattern = "inchi|smiles", x = colnames(.))]) %>%
+    distinct(
+      structureType = name,
+      structureValue = value,
+      structureCleaned_nameTraditional = nominal
+    ) %>%
+    filter(!is.na(structureValue))
+
+  structureTranslated <-
+    read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
+
+  structureNamed_cleaned <- structureNamed_cleaned %>%
+    select(-structureCleaned_nameTraditional) %>%
+    left_join(structureTranslated) %>%
+    left_join(structureNamed) %>%
+    select(-structureType, -structureValue)
+}
+
 log_debug("ensuring directories exist")
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesProcessedStructureNamed)
