@@ -104,11 +104,7 @@ for (i in num) {
       pbmclapply(
         FUN = getref_noLimit,
         X = dataTitle$referenceOriginal_title,
-        mc.preschedule = FALSE,
-        mc.set.seed = TRUE,
         mc.cores = numCores,
-        mc.cleanup = TRUE,
-        mc.allow.recursive = TRUE,
         ignore.interactive = TRUE,
         mc.style = "txt",
         mc.substyle = 1

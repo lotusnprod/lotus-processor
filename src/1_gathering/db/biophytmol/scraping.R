@@ -36,11 +36,7 @@ BIOPHYTMOL <- invisible(
   pbmclapply(
     FUN = getbiophyt,
     X = X,
-    mc.preschedule = TRUE,
-    mc.set.seed = TRUE,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE
   )
 )
 

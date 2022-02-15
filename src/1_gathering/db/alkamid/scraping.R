@@ -39,8 +39,6 @@ extracted_elements <- invisible(
     FUN = getalkamid,
     X = X,
     mc.cores = numCores,
-    mc.cleanup = TRUE,
-    mc.allow.recursive = TRUE,
     ignore.interactive = TRUE,
     mc.style = "txt",
     mc.substyle = 1, mc.style = "txt",

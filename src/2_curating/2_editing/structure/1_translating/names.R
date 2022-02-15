@@ -124,15 +124,11 @@ dataTranslatedNominal_pubchem <- dataForPubchem %>%
     pbmclapply(
       FUN = name2smiles_pubchem,
       X = seq_len(nrow(dataForPubchem)),
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
       mc.cores = if (.Platform$OS.type == "unix") {
         2 ## limit to 5 calls per sec
       } else {
         1
       },
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
       mc.style = "txt",
       mc.substyle = 1
@@ -193,11 +189,7 @@ dataTranslatedNominal_cactus <- dataForCactus %>%
     pbmclapply(
       FUN = name2smiles_cactus,
       X = seq_len(nrow(dataForCactus)),
-      mc.preschedule = TRUE,
-      mc.set.seed = TRUE,
       mc.cores = numCores,
-      mc.cleanup = TRUE,
-      mc.allow.recursive = TRUE,
       ignore.interactive = TRUE,
       mc.style = "txt",
       mc.substyle = 1
