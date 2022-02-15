@@ -1309,7 +1309,7 @@ pathLastFrozen <- "220208_frozen_metadata.csv.gz"
 
 pathLastFrozenClosed <- "220208_closed_metadata.csv.gz"
 
-pathDataInterimTablesAnalyzedGarbage <- 
+pathDataInterimTablesAnalyzedGarbage <-
   file.path(
     pathDataInterimTablesAnalyzed,
     "recycle.tsv.gz"
