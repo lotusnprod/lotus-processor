@@ -29,57 +29,60 @@ add_metadata <- function(df) {
       structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
     ) %>%
     distinct(structure_inchikey,
-      .keep_all = TRUE
-    )
-
-  log_debug(
-    "We have",
-    nrow(chemical_metadata),
-    "metadata for structures"
-  )
-
+             .keep_all = TRUE)
+  
+  biological_metadata_2 <-
+    fread(file = pathDataInterimDictionariesOrganismMetadata) %>%
+    filter(organismCleaned_dbTaxo == "GBIF Backbone Taxonomy" |
+             organismCleaned_dbTaxo == "NCBI") %>%
+    distinct(organism_name = organismCleaned,
+             organismCleaned_id,
+             organismCleaned_dbTaxo) %>%
+    pivot_wider(names_from = organismCleaned_dbTaxo, values_from = organismCleaned_id) %>%
+    distinct(
+      organism_name,
+      organism_taxonomy_gbifid = `GBIF Backbone Taxonomy`,
+      organism_taxonomy_ncbiid = NCBI
+    ) %>%
+    mutate_all(as.character)
+  biological_metadata_2[biological_metadata_2 == "NULL"] <- NA
+  
+  log_debug("We have",
+            nrow(chemical_metadata),
+            "metadata for structures")
+  
   chemical_taxonomy_1 <<-
     fread(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
-
+  
   chemical_taxonomy_1 <<- treat_npclassifier_taxonomy()
-
+  
   log_debug(
     "We have",
     nrow(chemical_taxonomy_1),
     "npclassifier classifications for structures"
   )
-
-  log_debug(
-    "We have",
-    nrow(chemical_taxonomy_2),
-    "classyfire classifications for structures"
-  )
-
+  
+  log_debug("We have",
+            nrow(chemical_taxonomy_2),
+            "classyfire classifications for structures")
+  
   drv <- SQLite()
-
-  db <- dbConnect(
-    drv = drv,
-    dbname = pathDataInterimDictionariesOrganismDictionaryOTL
-  )
-
-  names <- dbGetQuery(
-    conn = db,
-    statement = "SELECT * FROM taxa_names"
-  ) %>%
+  
+  db <- dbConnect(drv = drv,
+                  dbname = pathDataInterimDictionariesOrganismDictionaryOTL)
+  
+  names <- dbGetQuery(conn = db,
+                      statement = "SELECT * FROM taxa_names") %>%
     mutate_all(as.character)
-
-  otl <- dbGetQuery(
-    conn = db,
-    statement = "SELECT * FROM taxa_otl"
-  ) %>%
+  
+  otl <- dbGetQuery(conn = db,
+                    statement = "SELECT * FROM taxa_otl") %>%
     mutate_all(as.character)
-
-  meta <- dbGetQuery(
-    conn = db,
-    statement = "SELECT * FROM taxa_meta"
-  ) %>%
+  
+  meta <- dbGetQuery(conn = db,
+                     statement = "SELECT * FROM taxa_meta") %>%
     mutate_all(as.character)
-
+  
   biological_metadata <- left_join(names, otl) %>%
     left_join(., meta, by = c("ott_id" = "id")) %>%
     filter(
@@ -126,7 +129,7 @@ add_metadata <- function(df) {
     ) %>%
     map_df(rev) %>%
     coalesce()
-
+  
   if (nrow(biological_metadata) != 0) {
     biological_metadata[dplyr::setdiff(
       x = c(
@@ -146,16 +149,17 @@ add_metadata <- function(df) {
       y = names(biological_metadata)
     )] <- NA
   }
-
+  
   log_debug(
     "We have",
     nrow(biological_metadata),
     "Open Tree of Life classifications for organisms"
   )
-
+  
   log_debug("Adding useful metadata")
   df_complete <- df %>%
     left_join(., biological_metadata) %>%
+    left_join(., biological_metadata_2) %>%
     left_join(., chemical_metadata) %>%
     left_join(., chemical_taxonomy_1) %>%
     left_join(., chemical_taxonomy_2) %>%
@@ -182,6 +186,8 @@ add_metadata <- function(df) {
         "structure_taxonomy_classyfire_04directparent",
         "organism_wikidata",
         "organism_name",
+        "organism_taxonomy_gbifid",
+        "organism_taxonomy_ncbiid",
         "organism_taxonomy_ottid",
         "organism_taxonomy_01domain",
         "organism_taxonomy_02kingdom",
@@ -198,6 +204,6 @@ add_metadata <- function(df) {
         "manual_validation"
       )
     ))
-
+  
   return(df_complete)
 }

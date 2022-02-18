@@ -21,6 +21,11 @@ lotus <- readr::read_delim(file = file.path(
   pathLastFrozen
 ))
 
+#' since PubChem matching is based on NCBI taxonomy
+organisms_ids <- readr::read_delim(file = pathDataInterimDictionariesOrganismMetadata) |>
+  dplyr::filter(organismCleaned_dbTaxo == "NCBI") |>
+  dplyr::distinct(organism_name = organismCleaned, organism_ncbi_id = organismCleaned_id)
+
 classified <-
   readr::read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
 
@@ -36,7 +41,7 @@ structures_classified <- lotus |>
 
 organisms_classified <- lotus |>
   dplyr::select(
-    organism_id = organism_name,
+    organism_name,
     organism_01_domain = organism_taxonomy_01domain,
     organism_02_kingdom = organism_taxonomy_02kingdom,
     organism_03_phylum = organism_taxonomy_03phylum,
@@ -47,7 +52,8 @@ organisms_classified <- lotus |>
     organism_08_genus = organism_taxonomy_08genus,
     organism_09_species = organism_taxonomy_09species
   ) |>
-  dplyr::distinct()
+  dplyr::distinct() |>
+  dplyr::inner_join(organisms_ids)
 
 #' on pubchem's team request: collapse not classified nodes
 structures_cleaned <- structures_classified |>
@@ -123,7 +129,7 @@ organisms_cleaned <- organisms_cleaned |>
     organism_07_tribe,
     organism_08_genus,
     organism_09_species,
-    organism_id,
+    organism_ncbi_id,
     sep = "§",
     na.rm = TRUE
   )
