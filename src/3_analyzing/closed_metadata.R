@@ -9,6 +9,7 @@ safety <- FALSE
 log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
+source("r/add_metadata.R")
 source("r/y_as_na.R")
 source("r/treat_npclassifier_taxonomy.R")
 source("temp_classyfireTaxonomy.R")
@@ -273,42 +274,7 @@ closed_only <- anti_join(closed_pairs, wikidata_pairs) %>%
 
 log_debug("Adding useful metadata")
 closed_complete <- closed_only %>%
-  left_join(., biological_metadata) %>%
-  left_join(., chemical_metadata) %>%
-  left_join(., chemical_taxonomy_1) %>%
-  left_join(., chemical_taxonomy_2) %>%
-  select(
-    structure_inchikey,
-    structure_inchi,
-    structure_smiles,
-    structure_molecular_formula,
-    structure_exact_mass,
-    structure_smiles_2D,
-    structure_nameIupac,
-    structure_nameTraditional,
-    structure_stereocenters_total,
-    structure_stereocenters_unspecified,
-    structure_taxonomy_npclassifier_01pathway,
-    structure_taxonomy_npclassifier_02superclass,
-    structure_taxonomy_npclassifier_03class,
-    structure_taxonomy_classyfire_chemontid,
-    structure_taxonomy_classyfire_01kingdom,
-    structure_taxonomy_classyfire_02superclass,
-    structure_taxonomy_classyfire_03class,
-    structure_taxonomy_classyfire_04directparent,
-    organism_name,
-    organism_taxonomy_ottid,
-    organism_taxonomy_01domain,
-    organism_taxonomy_02kingdom,
-    organism_taxonomy_03phylum,
-    organism_taxonomy_04class,
-    organism_taxonomy_05order,
-    organism_taxonomy_06family,
-    organism_taxonomy_07tribe,
-    organism_taxonomy_08genus,
-    organism_taxonomy_09species,
-    organism_taxonomy_10varietas
-  )
+  add_metadata()
 
 if (safety == TRUE) {
   log_debug(
