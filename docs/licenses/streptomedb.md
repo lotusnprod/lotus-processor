@@ -2,7 +2,7 @@
 
 No article
 
-[website](http://132.230.56.4/streptomedb2/help/)
+website: h<span>t</span>tp://132.230.56.4/streptomedb2/help/ (often down)
 
 How to cite StreptomeDB?
 Please, cite accession date, time, and the url "h<span>t</span>tp://StreptomeDB.pharmaceutical-bioinformatics.de"
