@@ -42,21 +42,21 @@ works_locally_only <- TRUE
 molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 
 ## can be easily replaced locally
-wikidataLotusExporterDataOutputPath <- 
+wikidataLotusExporterDataOutputPath <-
   # "../../lotus-wikidata-interact/downloadLotus/data/output"
   "https://zenodo.org/record/5793224/files"
 
 wikidataLotusExporterDataOutputTaxaPath <-
-  file.path(wikidataLotusExporterDataOutputPath,"taxa.tsv")
+  file.path(wikidataLotusExporterDataOutputPath, "taxa.tsv")
 
 wikidataLotusExporterDataOutputStructuresPath <-
-  file.path(wikidataLotusExporterDataOutputPath,"compounds.tsv")
+  file.path(wikidataLotusExporterDataOutputPath, "compounds.tsv")
 
 wikidataLotusExporterDataOutputReferencesPath <-
-  file.path(wikidataLotusExporterDataOutputPath,"references.tsv")
+  file.path(wikidataLotusExporterDataOutputPath, "references.tsv")
 
 wikidataLotusExporterDataOutputTriplesPath <-
-  file.path(wikidataLotusExporterDataOutputPath,"compound_reference_taxon.tsv")
+  file.path(wikidataLotusExporterDataOutputPath, "compound_reference_taxon.tsv")
 
 # databases for which we have no right to disseminate the data
 forbidden_export <- c("antibase", "antimarin", "dnp", "foodb")
