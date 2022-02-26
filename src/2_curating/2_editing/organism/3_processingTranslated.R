@@ -151,6 +151,68 @@ if (length(dataCleanTranslatedOrganism) == 0) {
     mutate_all(as.character)
 }
 
+#' temporary fix as gnfinder does not allow the verification we want anymore
+library(tidyr)
+source("r/y_as_na.R")
+wrongVerifiedDictionary <-
+  read_delim(
+    file = pathDataInterimDictionariesTaxaWrongVerified,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
+  as.list()
+dataCleanedOrganismVerify <- dataCleanedTranslatedOrganism %>%
+  filter(!is.na(organismCleaned)) %>%
+  distinct(organismCleaned)
+
+write_delim(
+  x = dataCleanedOrganismVerify,
+  file = gzfile(
+    description = pathDataInterimTablesProcessedOrganismVerifyTable,
+    compression = 9,
+    encoding = "UTF-8"
+  ),
+  na = "",
+  delim = "\t",
+  quote = "none",
+  escape = "double"
+)
+## because gnverifier does not parse quotes
+
+log_debug("submitting to GNVerifier")
+if (.Platform$OS.type == "unix") {
+  system(command = paste("bash", pathGnverifierScript))
+} else {
+  shell(paste("bash", pathGnverifierScript))
+}
+
+verified <-
+  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
+
+verified_df <- verified %>%
+  data.frame() %>%
+  select(-curation, -matchType) %>%
+  unnest(results, names_repair = "minimal") %>%
+  filter(dataSourceTitleShort != "IRMNG (old)" &
+    dataSourceTitleShort != "IPNI") %>%
+  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
+  arrange(desc(sortScore)) %>%
+  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
+  select(
+    organismCleaned = name,
+    organismDbTaxo = dataSourceTitleShort,
+    taxonId = currentRecordId,
+    currentName,
+    currentCanonicalFull,
+    taxonomy = classificationPath,
+    rank = classificationRanks
+  )
+
+## example ID 165 empty, maybe fill later on
+verified_df$organismDbTaxo <-
+  y_as_na(verified_df$organismDbTaxo, "")
+
 if (nrow(dataInterimOrganismToFill) != 0) {
   dataCleanedTranslatedOrganism2join <-
     dataInterimOrganismToFill %>%

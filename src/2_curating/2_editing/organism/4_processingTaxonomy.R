@@ -40,6 +40,14 @@ taxaRanksDictionary <-
     col_types = cols(.default = "c"),
     locale = locales
   )
+wrongVerifiedDictionary <-
+  read_delim(
+    file = pathDataInterimDictionariesTaxaWrongVerified,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
+  as.list()
 
 dataCleanedOrganismVerify <- dataCleanedOrganism %>%
   filter(!is.na(organismCleaned)) %>%
@@ -75,6 +83,9 @@ verified_df <- verified %>%
   unnest(results, names_repair = "minimal") %>%
   filter(dataSourceTitleShort != "IRMNG (old)" &
     dataSourceTitleShort != "IPNI") %>%
+  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
+  arrange(desc(sortScore)) %>%
+  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
   select(
     organismCleaned = name,
     organismDbTaxo = dataSourceTitleShort,
