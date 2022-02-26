@@ -183,8 +183,9 @@ biocleaning <- function(gnfound, names, organismCol) {
   )] <- NA
 
   df6a <- bind_cols(df5a, rows)
-  df6b <- left_join(df6a, df5b) %>%
-    filter(!is.na(classificationIds))
+  df6b <- left_join(df6a, df5b)
+  #' temporary fix as gnfinder does not allow the verification we want anymore
+  # filter(!is.na(classificationIds))
 
   if (nrow(df6b) == 0) {
     df6b[1, colnames(df6b)] <- NA

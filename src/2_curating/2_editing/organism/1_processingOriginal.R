@@ -98,6 +98,8 @@ verified_df <- verified %>%
     dataSourceTitleShort != "IPNI") %>%
   filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
   mutate(organismType = "clean") %>%
+  arrange(desc(sortScore)) %>%
+  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
   select(
     organismType,
     organismValue = name,
