@@ -27,7 +27,7 @@ jobs:
           distribution: 'adopt-hotspot'
           java-version: '16'
           cache: 'gradle'      
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v3
         with:
           python-version: 3.8
       - uses: r-lib/actions/setup-r@v2
