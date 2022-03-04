@@ -13,9 +13,13 @@ export GNVERIFIER_VERSION = v0.8.2
 export OPSIN_VERSION = 2.6.0
 
 export OTT_VERSION = 3.3
+export GBIF_BACKBONE = 2021-11-26
 
 export NPCLASSIFIER_VERSION = 1.5
 export INDEX_VERSION = 1
+
+export OSF_VALIDATION = vg2we
+export ZENODO_CUSTOM_DIC = 5807826
 
 export UNAME := $(shell uname)
 

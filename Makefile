@@ -1,8 +1,6 @@
 include config.mk
 include paths.mk
-include ${SRC_GATHERING_DB_PATH}/Makefile
-include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
-include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
+include ${SRC_GATHERING_PATH}/Makefile
 
 .PHONY: help docker-build docker-bash
 .PHONY: cleaning-manual gathering-full gathering-quick gathering-full-hard 
@@ -12,6 +10,7 @@ include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
 .PHONY: gathering-custom-dictionaries gathering-pmcid gathering-gbif gathering-chinese-board gathering-validation
 .PHONY: gathering-translation-tcmid gathering-translation-full gathering-translation-common gathering-translation-common-quick gathering-translation-quick gathering-translation-tcm gathering-translation-tcm-quick
 .PHONY: gathering-taxonomy-otl gathering-taxonomy-npclassifier gathering-taxonomy-classyfire gathering-taxonomy-full
+.PHONY: gathering-custom-dictionaries gathering-validation
 .PHONY: curating curating-1-integrating curating-editing curating-3-integrating
 .PHONY: curating-editing-structure curating-editing-structure-translating curating-editing-structure-translating-name curating-editing-structure-translating-inchi curating-editing-structure-integrating curating-editing-structure-sanitizing curating-editing-structure-naming curating-editing-structure-classifying
 .PHONY: curating-editing-organism curating-editing-organism-processing-original curating-editing-organism-translating curating-editing-organism-processing-translated curating-editing-organism-processing-taxonomy
@@ -88,10 +87,10 @@ gathering-full: gathering-custom-dictionaries gathering-databases-full gathering
 gathering-full-hard: gathering-custom-dictionaries gathering-databases-full-hard gathering-translation-full gathering-taxonomy-full
 
 gathering-custom-dictionaries: 
-	cd src && bash ${SRC_GATHERING_PATH}/dictionary/gathering_custom_dictionaries.sh
+	make -C ${SRC_GATHERING_DICTIONARY_PATH} gathering-custom-dictionaries
 
 gathering-validation: 
-	cd src && bash ${SRC_GATHERING_VALIDATION_PATH}/gathering_validation.sh
+	make -C ${SRC_GATHERING_VALIDATION_PATH} gathering-validation
 
 gathering-databases-quick: gathering-databases-download gathering-databases-download-modified gathering-databases-accessible
 

@@ -18,8 +18,8 @@ ${TESTS_PATH}/tests_dic_tcm_min.tsv: ${SRC_GATHERING_TRANSLATION_PATH}/tcm.R # $
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_TRANSLATION_PATH}/tcm.R
 
 gathering-gbif: ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip
-${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip: ${SRC_GATHERING_TRANSLATION_PATH}/get_gbif_backbone.sh
-	cd ${PWD}/src && bash ${SRC_GATHERING_TRANSLATION_PATH}/get_gbif_backbone.sh
+${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip:
+	@[ ! -f ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip ] && mkdir -p ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/ && echo "Downloading" && wget -nv "https://hosted-datasets.gbif.org/datasets/backbone/${GBIF_BACKBONE}/backbone.zip" -O ${EXTERNAL_TRANSLATION_SOURCE_PATH}/common/backbone-current.zip  && echo "Done" || true
 
 gathering-chinese-board: ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/Chinese-Medicine-Board---List---Nomenclature-compendium-of-commonly-used-Chinese-herbal-medicines.XLSX
 ${EXTERNAL_TRANSLATION_SOURCE_PATH}/tcm/Chinese-Medicine-Board---List---Nomenclature-compendium-of-commonly-used-Chinese-herbal-medicines.XLSX: ${SRC_GATHERING_TRANSLATION_PATH}/get_chinese_medicine_board.sh

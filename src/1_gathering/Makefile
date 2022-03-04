@@ -1,0 +1,5 @@
+include ${SRC_GATHERING_DB_PATH}/Makefile
+include ${SRC_GATHERING_DICTIONARY_PATH}/Makefile
+include ${SRC_GATHERING_TAXONOMY_PATH}/Makefile
+include ${SRC_GATHERING_TRANSLATION_PATH}/Makefile
+include ${SRC_GATHERING_VALIDATION_PATH}/Makefile
