@@ -701,7 +701,7 @@ pathDataInterimDictionariesOrganism <-
 pathDataInterimDictionariesOrganismDictionary <-
   file.path(
     pathDataInterimDictionariesOrganism,
-    "dictionary.tsv.gz"
+    "organism_dictionary.tsv.gz"
   )
 
 pathDataInterimDictionariesOrganismDictionaryOTL <-
@@ -711,7 +711,7 @@ pathDataInterimDictionariesOrganismDictionaryOTL <-
   )
 
 pathDataInterimDictionariesOrganismMetadata <-
-  file.path(pathDataInterimDictionariesOrganism, "metadata.tsv.gz")
+  file.path(pathDataInterimDictionariesOrganism, "organism_metadata.tsv.gz")
 
 ##### structure
 pathDataInterimDictionariesStructure <-
@@ -723,17 +723,17 @@ pathDataInterimDictionariesStructure <-
 pathDataInterimDictionariesStructureDictionary <-
   file.path(
     pathDataInterimDictionariesStructure,
-    "dictionary.tsv.gz"
+    "structure_dictionary.tsv.gz"
   )
 
 pathDataInterimDictionariesStructureAntiDictionary <-
   file.path(
     pathDataInterimDictionariesStructure,
-    "antiDictionary.tsv.gz"
+    "structure_antiDictionary.tsv.gz"
   )
 
 pathDataInterimDictionariesStructureMetadata <-
-  file.path(pathDataInterimDictionariesStructure, "metadata.tsv.gz")
+  file.path(pathDataInterimDictionariesStructure, "structure_metadata.tsv.gz")
 
 pathDataInterimDictionariesStructureDictionaryClassyfire <-
   file.path(
@@ -769,17 +769,17 @@ pathDataInterimDictionariesReference <-
 pathDataInterimDictionariesReferenceDictionary <-
   file.path(
     pathDataInterimDictionariesReference,
-    "dictionary.tsv.gz"
+    "reference_dictionary.tsv.gz"
   )
 
 pathDataInterimDictionariesReferenceOrganismDictionary <-
   file.path(
     pathDataInterimDictionariesReference,
-    "dictionaryOrganism.tsv.gz"
+    "reference_dictionaryOrganism.tsv.gz"
   )
 
 pathDataInterimDictionariesReferenceMetadata <-
-  file.path(pathDataInterimDictionariesReference, "metadata.tsv.gz")
+  file.path(pathDataInterimDictionariesReference, "reference_metadata.tsv.gz")
 
 
 ##### COMMENT: Discrepancy here, don't know if has to be changed #####
