@@ -23,6 +23,11 @@ log_debug("keeping smiles only ...")
 smilesDictionary <- structureCounted %>%
   distinct(smilesSanitized) %>%
   select(smiles = smilesSanitized)
+#' if some names are missing in structures metadata
+# smilesDictionary <- structureMetadata %>%
+#   filter(is.na(structureCleaned_nameTraditional)) %>%
+#   distinct(structureCleanedSmiles) %>%
+#   select(smiles = structureCleanedSmiles)
 
 log_debug("writing the smiles table")
 write_delim(
@@ -144,6 +149,16 @@ smilesFilled <- bind_cols(
   structureNamesTraditional,
   structureNamesIupac
 )
+
+#' if some names are missing in structures metadata
+# part_1 <- structureMetadata %>%
+#   filter(is.na(structureCleaned_nameTraditional)) %>%
+#   select(-structureCleaned_nameTraditional,
+#          -structureCleaned_nameIupac) %>% 
+#   left_join(smilesFilled, by = c("structureCleanedSmiles"="smiles"))
+# part_2 <- structureMetadata %>%
+#   filter(!is.na(structureCleaned_nameTraditional))
+# structureMetadata <- rbind(part_1, part_2)
 
 structureNamed <-
   left_join(structureCounted,
