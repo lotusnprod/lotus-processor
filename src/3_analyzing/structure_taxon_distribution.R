@@ -92,7 +92,7 @@ domain_unique_organisms <- domain_unique %>%
 domain_unique_pairs <- domain_unique %>%
   group_by(Group) %>%
   count(
-    name = "Structure-Organism Pairs",
+    name = "2D Structure-Organism Pairs",
     sort = TRUE
   )
 
@@ -100,7 +100,7 @@ domain_unique_structures_2D <- domain_unique %>%
   distinct(Group, structure_inchikey_2D) %>%
   group_by(Group) %>%
   count(
-    name = "Chemical Structures",
+    name = "2D Chemical Structures",
     sort = TRUE
   )
 
