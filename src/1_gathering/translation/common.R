@@ -62,7 +62,7 @@ if (mode == "full") {
   ### GBIF
   #### taxa
   taxa <-
-    read_delim(file = unz(pathDataExternalTranslationSourceCommonGbif, "Taxon.tsv")) %>%
+    read_delim(file = unz(pathDataExternalTranslationSourceCommonGbif, "backbone/Taxon.tsv")) %>%
     filter(!is.na(canonicalName)) %>%
     distinct(
       taxonID,
@@ -78,7 +78,7 @@ if (mode == "full") {
   #### taxa
   vernacular <- read_delim(file = unz(
     pathDataExternalTranslationSourceCommonGbif,
-    "VernacularName.tsv"
+    "backbone/VernacularName.tsv"
   )) %>%
     filter(language == "en") %>%
     distinct(
