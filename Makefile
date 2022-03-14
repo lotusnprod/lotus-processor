@@ -214,7 +214,7 @@ processing-organism-interim:
 
 cleaning-manual:
 	@[ -d ${INTERIM_TABLE_PATH} ] && rm -r ${INTERIM_TABLE_PATH} || true
-	@[ -d ${INTERIM_DICTIONARY_PATH} ] && rm -r ${INTERIM_DICTIONARY_PATH} || true
+	@[ -d ${INTERIM_DICTIONARY_TEST_PATH} ] && rm -r ${INTERIM_DICTIONARY_TEST_PATH} || true
 
 curating-editing-organism-translating: ${INTERIM_TABLE_PROCESSED_ORGANISM_PATH}/interim.tsv.gz
 ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build/libs/shadow.jar: ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/build.gradle.kts $(wildcard ${SRC_CURATING_EDITING_ORGANISM_PATH_KT}/src/main/kotlin/*.kt)
