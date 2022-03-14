@@ -154,7 +154,7 @@ smilesFilled <- bind_cols(
 # part_1 <- structureMetadata %>%
 #   filter(is.na(structureCleaned_nameTraditional)) %>%
 #   select(-structureCleaned_nameTraditional,
-#          -structureCleaned_nameIupac) %>% 
+#          -structureCleaned_nameIupac) %>%
 #   left_join(smilesFilled, by = c("structureCleanedSmiles"="smiles"))
 # part_2 <- structureMetadata %>%
 #   filter(!is.na(structureCleaned_nameTraditional))
