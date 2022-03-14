@@ -9,7 +9,7 @@ export BIN_PATH ?= ${PWD}/bin
 export TESTS_PATH ?= ${PWD}/tests
 
 export GNFINDER_VERSION = v0.18.0
-export GNVERIFIER_VERSION = v0.8.2
+export GNVERIFIER_VERSION = v0.9.0
 export OPSIN_VERSION = 2.6.0
 
 export OTT_VERSION = 3.3
