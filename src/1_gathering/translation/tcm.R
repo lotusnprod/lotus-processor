@@ -383,7 +383,7 @@ if (mode == "full") {
       to = "UTF-8",
       sub = ""
     )
-  
+
   tcmNamesDicCurated$canonicalName <-
     iconv(
       x = tcmNamesDicCurated$canonicalName,
@@ -391,7 +391,7 @@ if (mode == "full") {
       to = "UTF-8",
       sub = ""
     )
-  
+
   tcmNamesDicCurated$newCanonicalName <-
     iconv(
       x = tcmNamesDicCurated$newCanonicalName,
@@ -399,7 +399,7 @@ if (mode == "full") {
       to = "UTF-8",
       sub = ""
     )
-  
+
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")
   set.seed(
