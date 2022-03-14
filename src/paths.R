@@ -11,13 +11,22 @@ port <- 5432
 password <- Sys.getenv("LOTUS_DB_PWD")
 
 ###############################################################################
-##################################   Paths   ##################################
+##################################   Modes   ##################################
 ###############################################################################
-source("r/database.R")
 
 mode <- Sys.getenv("MODE", unset = "full")
+if (exists("mode_test")) {
+  mode <- "test"
+}
+if (exists("mode_custom")) {
+  mode <- "custom"
+}
 
-locales <- locale(
+works_locally_only <- TRUE
+safety <- TRUE
+
+
+locales <- readr::locale(
   date_names = "en",
   date_format = "%AD",
   time_format = "%AT",
@@ -28,23 +37,18 @@ locales <- locale(
   asciify = FALSE
 )
 
-if (exists("mode_test")) {
-  mode <- "test"
-}
-
-if (exists("mode_custom")) {
-  mode <- "custom"
-}
-
-works_locally_only <- TRUE
+###############################################################################
+##################################   Paths   ##################################
+###############################################################################
+source("r/database.R")
 
 ## for steps where paths need to be adapted locally or related to other repos
-molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
+molconvertPath <- "~/../../Applications/ChemAxon/JChemSuite/bin/molconvert"
 
 ## can be easily replaced locally
 wikidataLotusExporterDataOutputPath <-
-  # "../../lotus-wikidata-interact/downloadLotus/data/output"
-  "https://zenodo.org/record/5793224/files"
+  "../../lotus-wikidata-interact/downloadLotus/data/output"
+# "https://zenodo.org/record/5793224/files"
 
 wikidataLotusExporterDataOutputTaxaPath <-
   file.path(wikidataLotusExporterDataOutputPath, "taxa.tsv")
@@ -1226,6 +1230,12 @@ pathDataInterimTablesAnalyzedPlatinum <-
     "validated_referenced_structure_organism_pairs.tsv.gz"
   )
 
+pathDataInterimTablesAnalyzedPlatinumNew <-
+  file.path(
+    pathDataInterimTablesAnalyzed,
+    "validated_referenced_structure_organism_pairs_new.tsv.gz"
+  )
+
 ## sample knapsack triplets
 pathDataInterimTablesAnalyzedSampleKnapsack <-
   file.path(
@@ -1314,9 +1324,9 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "220226_frozen_metadata.csv.gz"
+pathLastFrozen <- "220315_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "220226_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "220315_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <-
   file.path(
