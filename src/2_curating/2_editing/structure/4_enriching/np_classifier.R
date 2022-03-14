@@ -30,9 +30,11 @@ smiles <-
   ) %>%
   distinct(structure_smiles_2D = smilesSanitizedFlat)
 # smiles <-
-#   read_delim(file = pathDataInterimDictionariesStructureMetadata,
+#   read_delim(
+#     file = pathDataInterimDictionariesStructureMetadata,
 #     delim = "\t",
-#     col_types = cols(.default = "c")) %>%
+#     col_types = cols(.default = "c")
+#   ) %>%
 #   distinct(structure_smiles_2D = structureCleaned_smiles2D)
 
 log_debug("loading npClassifier taxonomy ...")
