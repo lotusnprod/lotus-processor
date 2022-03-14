@@ -23,7 +23,7 @@ if (exists("mode_custom")) {
 }
 
 works_locally_only <- TRUE
-safety <- TRUE
+safety <- FALSE
 
 
 locales <- readr::locale(
