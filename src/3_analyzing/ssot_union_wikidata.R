@@ -1,13 +1,11 @@
 source("r/log_debug.R")
 log_debug(
   "This script verifies what we uploaded on Wikidata",
-  "and compements it with some metadata."
+  "and complements it with some metadata."
 )
 log_debug("It currently needs 'temp_classyfireTaxonomy.R' to be run before.")
 
 start <- Sys.time()
-
-safety <- FALSE
 
 log_debug("sourcing ...")
 log_debug("... paths")
@@ -25,13 +23,15 @@ library(splitstackshape)
 library(tidyr)
 
 log_debug("importing ...")
-platinum_pairs <-
+platinum_pairs_raw <-
   fread(file = pathDataInterimTablesAnalyzedPlatinum) %>%
   filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
-  ) %>%
+  )
+
+platinum_pairs <- platinum_pairs_raw %>%
   distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
@@ -158,6 +158,15 @@ platinum_u_wd <-
     manual_validation
   )
 
+platinum_no_wd <-
+  anti_join(platinum_pairs, wikidata_pairs) %>%
+  distinct(
+    structureCleanedInchikey = structure_inchikey,
+    organismCleaned = organism_name,
+    referenceCleanedDoi = reference_doi
+  ) %>%
+  left_join(platinum_pairs_raw)
+
 log_debug(
   "We have",
   nrow(platinum_u_wd),
@@ -193,6 +202,12 @@ if (safety == TRUE) {
         x = pathLastFrozen
       )
     )
+  )
+
+  fwrite(
+    x = platinum_no_wd,
+    file = pathDataInterimTablesAnalyzedPlatinumNew,
+    sep = "\t"
   )
 
   log_debug(
