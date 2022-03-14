@@ -408,7 +408,7 @@ if (mode == "full") {
       fixed = TRUE,
       direction = "long"
     )
-  
+
   common2Sci$canonicalName <-
     iconv(
       x = common2Sci$canonicalName,
@@ -416,7 +416,7 @@ if (mode == "full") {
       to = "UTF-8",
       sub = ""
     )
-  
+
   common2Sci$vernacularName <-
     iconv(
       x = common2Sci$vernacularName,
@@ -431,7 +431,7 @@ if (mode == "full") {
       replacement = "",
       x = vernacularName
     ))
-  
+
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")
   set.seed(
