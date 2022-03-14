@@ -60,13 +60,13 @@ top_organism <-
 a <- list(
   x = top_organism$per_x,
   y = top_organism$per_y,
-  text = paste("<i>", top_organism$organismCleaned, "</i> \n N =", top_organism$n),
+  text = paste("<i>", top_organism$organismCleaned, "</i> \n Number of 2D structures =", top_organism$n),
   xref = "x",
   yref = "y",
   showarrow = TRUE,
   arrowhead = 1,
   ax = -120,
-  ay = 30,
+  ay = -30,
   font = list(color = "#2994D2"),
   arrowcolor = "#2994D2"
 )
@@ -76,7 +76,7 @@ b <- list(
   y = top_structure$per_y,
   text = paste(
     top_structure$structureCleaned_inchikey2D,
-    "\n N =",
+    "\n Number of species =",
     top_structure$n
   ),
   xref = "x",
@@ -84,13 +84,13 @@ b <- list(
   showarrow = TRUE,
   arrowhead = 1,
   ax = -120,
-  ay = 30,
+  ay = -30,
   font = list(color = "#7CB13F"),
   arrowcolor = "#7CB13F"
 )
 
 c <- list(
-  x = "per organism",
+  x = "per species",
   y = mean(structuresPerOrganism_2D$n),
   text = paste("mean ", round(mean(
     structuresPerOrganism_2D$n
@@ -136,7 +136,7 @@ e <- list(
 )
 
 f <- list(
-  x = "per organism",
+  x = "per species",
   y = median(structuresPerOrganism_2D$n),
   text = paste("median ", median(structuresPerOrganism_2D$n)),
   xref = "x2",
@@ -153,7 +153,7 @@ f <- list(
 fig <- plot_ly() %>%
   add_lines(
     data = organismsPerStructure_2D_cum,
-    name = "organisms per structure",
+    name = "species per 2D structure",
     x = ~per_x,
     y = ~per_y,
     mode = "line",
@@ -162,7 +162,7 @@ fig <- plot_ly() %>%
   ) %>%
   add_lines(
     data = structuresPerOrganism_2D_cum,
-    name = "structures per organism",
+    name = "2D structures per species",
     x = ~per_x,
     y = ~per_y,
     mode = "line",
@@ -171,8 +171,8 @@ fig <- plot_ly() %>%
   ) %>%
   add_trace(
     data = structuresPerOrganism_2D,
-    name = "structures per organism",
-    x = "per organism",
+    name = "2D structures per species",
+    x = "per species",
     y = ~n,
     type = "box",
     quartilemethod = "inclusive",
@@ -183,7 +183,7 @@ fig <- plot_ly() %>%
   ) %>%
   add_trace(
     data = organismsPerStructure_2D,
-    name = "organisms per structure",
+    name = "species per 2D structure",
     x = "per structure",
     y = ~n,
     type = "box",
@@ -196,17 +196,17 @@ fig <- plot_ly() %>%
   layout(
     annotations = list(a, b, c, d, e, f),
     font = list(family = "helvetica neue", size = 18),
-    yaxis = list(title = "Cumulative % of maximal contribution"),
-    xaxis = list(title = "% of individuals"),
+    yaxis = list(title = "Cumulative % of contribution"),
+    xaxis = list(title = "% of entries"),
     yaxis2 = list(
-      title = "Number of individuals",
+      title = "Number of entries",
       mirror = TRUE,
       showline = TRUE,
       zeroline = FALSE,
       showline = FALSE,
       showgrid = FALSE,
       range = c(0, 30),
-      domain = c(0.2, 0.8),
+      domain = c(0.2, 0.7),
       anchor = "x2"
     ),
     xaxis2 = list(
@@ -216,7 +216,7 @@ fig <- plot_ly() %>%
       showline = FALSE,
       showticklabels = FALSE,
       showgrid = FALSE,
-      domain = c(0.2, 0.95),
+      domain = c(0.25, 0.95),
       anchor = "y2"
     ),
     legend = list(
