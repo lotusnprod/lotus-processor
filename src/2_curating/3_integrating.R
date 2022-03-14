@@ -445,7 +445,6 @@ rm(
   structureFull,
   referenceTableFull,
   organismMetadata,
-  structureMetadata,
   referenceMetadata,
   structureNA
 )
@@ -592,6 +591,42 @@ rm(
   inhouseDbMinimal_1,
   inhouseDbMinimal_2
 )
+
+log_debug("removing redundant structures (lower defined stereo)")
+inhouseDbMinimal <- inhouseDbMinimal %>%
+  left_join(
+    structureMetadata %>%
+      distinct(
+        structureCleanedSmiles,
+        structureCleanedInchi,
+        structureCleanedInchikey,
+        structureCleaned_inchikey2D,
+        structureCleaned_stereocenters_unspecified,
+        structureCleaned_stereocenters_total
+      ) %>%
+      rowwise() %>%
+      mutate(
+        specified_stereo = as.numeric(structureCleaned_stereocenters_total) -
+          as.numeric(structureCleaned_stereocenters_unspecified)
+      ) %>%
+      ungroup()
+  ) %>%
+  group_by(
+    organismCleaned,
+    structureCleaned_inchikey2D,
+    referenceCleanedTitle,
+    referenceCleanedDoi
+  ) %>%
+  mutate(best_stereo = max(specified_stereo)) %>%
+  ungroup() %>%
+  filter(specified_stereo == best_stereo) %>%
+  select(
+    -structureCleaned_inchikey2D,
+    -structureCleaned_stereocenters_unspecified,
+    -structureCleaned_stereocenters_total,
+    -specified_stereo,
+    -best_stereo
+  )
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
