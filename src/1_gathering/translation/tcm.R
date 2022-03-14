@@ -376,6 +376,30 @@ if (mode == "full") {
     filter(vernacularName != canonicalName |
       is.na(newCanonicalName))
 
+  tcmNamesDicCurated$vernacularName <-
+    iconv(
+      x = tcmNamesDicCurated$vernacularName,
+      from = "UTF-8",
+      to = "UTF-8",
+      sub = ""
+    )
+  
+  tcmNamesDicCurated$canonicalName <-
+    iconv(
+      x = tcmNamesDicCurated$canonicalName,
+      from = "UTF-8",
+      to = "UTF-8",
+      sub = ""
+    )
+  
+  tcmNamesDicCurated$newCanonicalName <-
+    iconv(
+      x = tcmNamesDicCurated$newCanonicalName,
+      from = "UTF-8",
+      to = "UTF-8",
+      sub = ""
+    )
+  
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")
   set.seed(
