@@ -140,7 +140,7 @@ inhouseDbMinimal <-
     locale = locales
   )
 
-log_debug("... reference metadata")
+log_debug("... structure metadata")
 structureMetadata <-
   read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
@@ -160,6 +160,19 @@ structureMetadata <-
     structureCleaned_stereocenters_unspecified,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional
+  ) %>%
+  rowwise() %>%
+  mutate(
+    structureCleaned_nameIupac = ifelse(
+      test = is.na(structureCleaned_nameIupac),
+      yes = structureCleanedInchikey,
+      no = structureCleaned_nameIupac
+    ),
+    structureCleaned_nameTraditional = ifelse(
+      test = is.na(structureCleaned_nameTraditional),
+      yes = structureCleanedInchikey,
+      no = structureCleaned_nameTraditional
+    )
   )
 
 log_debug("... organism metadata")
