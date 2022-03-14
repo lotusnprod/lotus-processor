@@ -10,8 +10,6 @@ library(dplyr)
 library(splitstackshape)
 library(readr)
 
-safety <- FALSE
-
 log_debug("loading the LOTUS, this may take a while")
 frozen_lotus <- read_csv(file = file.path(
   pathDataProcessed,
@@ -81,7 +79,7 @@ domain <- frozen_lotus %>%
   )
 
 domain_unique <- domain %>%
-  distinct(structure_inchikey, organism_name, .keep_all = TRUE)
+  distinct(structure_inchikey_2D, organism_name, .keep_all = TRUE)
 
 domain_unique_organisms <- domain_unique %>%
   distinct(organism_name, Group) %>%
@@ -98,8 +96,8 @@ domain_unique_pairs <- domain_unique %>%
     sort = TRUE
   )
 
-domain_unique_structures_3D <- domain_unique %>%
-  distinct(Group, structure_inchikey) %>%
+domain_unique_structures_2D <- domain_unique %>%
+  distinct(Group, structure_inchikey_2D) %>%
   group_by(Group) %>%
   count(
     name = "Chemical Structures",
@@ -114,9 +112,9 @@ domain_unique_classes <- domain_unique %>%
     sort = TRUE
   )
 
-domain_unique_structures_3D_specific <- domain_unique %>%
-  distinct(Group, structure_inchikey) %>%
-  group_by(structure_inchikey) %>%
+domain_unique_structures_2D_specific <- domain_unique %>%
+  distinct(Group, structure_inchikey_2D) %>%
+  group_by(structure_inchikey_2D) %>%
   add_count() %>%
   filter(n == 1) %>%
   ungroup() %>%
@@ -140,8 +138,8 @@ domain_unique_classes_specific <- domain_unique %>%
 
 domain <-
   left_join(domain_unique_organisms, domain_unique_pairs) %>%
-  left_join(., domain_unique_structures_3D) %>%
-  left_join(., domain_unique_structures_3D_specific) %>%
+  left_join(., domain_unique_structures_2D) %>%
+  left_join(., domain_unique_structures_2D_specific) %>%
   left_join(., domain_unique_classes) %>%
   left_join(., domain_unique_classes_specific) %>%
   ungroup() %>%
