@@ -434,12 +434,14 @@ log_debug(paste(
 
 structuresPerOrganism_3D <- pairsOpenDb_3D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = " ", x = organismCleaned)) %>%
   distinct(organismCleaned, structureCleanedInchi) %>%
   group_by(organismCleaned) %>%
   count()
 
 structuresPerOrganism_2D <- pairsOpenDb_2D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = " ", x = organismCleaned)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(organismCleaned) %>%
   count()
@@ -480,12 +482,14 @@ colnames(tableStructures_2D)[1] <- "organisms"
 
 organismsPerStructure_3D <- pairsOpenDb_3D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = " ", x = organismCleaned)) %>%
   distinct(organismCleaned, structureCleanedInchi) %>%
   group_by(structureCleanedInchi) %>%
   count()
 
 organismsPerStructure_2D <- pairsOpenDb_2D %>%
   filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) %>%
+  filter(grepl(pattern = " ", x = organismCleaned)) %>%
   distinct(organismCleaned, structureCleaned_inchikey2D) %>%
   group_by(structureCleaned_inchikey2D) %>%
   count()
