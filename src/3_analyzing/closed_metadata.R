@@ -4,8 +4,6 @@ log_debug("It currently needs 'temp_classyfireTaxonomy.R' to be run before.")
 
 start <- Sys.time()
 
-safety <- FALSE
-
 log_debug("sourcing ...")
 log_debug("... paths")
 source("paths.R")
