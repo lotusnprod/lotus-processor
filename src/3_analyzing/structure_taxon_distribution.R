@@ -120,7 +120,7 @@ domain_unique_structures_2D_specific <- domain_unique %>%
   ungroup() %>%
   group_by(Group) %>%
   count(
-    name = "Specific Chemical Structures",
+    name = "Specific 2D Chemical Structures",
     sort = TRUE
   )
 
@@ -144,11 +144,11 @@ domain <-
   left_join(., domain_unique_classes_specific) %>%
   ungroup() %>%
   mutate(
-    `Specific Chemical Structures` = paste0(
-      `Specific Chemical Structures`,
+    `Specific 2D Chemical Structures` = paste0(
+      `Specific 2D Chemical Structures`,
       " (",
       round(
-        x = 100 * `Specific Chemical Structures` / `Chemical Structures`,
+        x = 100 * `Specific 2D Chemical Structures` / `2D Chemical Structures`,
         digits = 0
       ),
       "%)"
