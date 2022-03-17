@@ -203,7 +203,7 @@ if (safety == TRUE) {
 
   write_delim(
     x = platinum_u_wd,
-    delim = "\t",
+    delim = ",",
     file = file.path(
       pathDataProcessed,
       gsub(
@@ -230,7 +230,7 @@ if (safety == TRUE) {
 
   write_delim(
     x = platinum_u_wd_complete,
-    delim = "\t",
+    delim = ",",
     file = file.path(
       pathDataProcessed,
       pathLastFrozen

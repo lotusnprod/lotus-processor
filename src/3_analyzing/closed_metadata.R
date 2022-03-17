@@ -171,7 +171,7 @@ if (safety == TRUE) {
 
   write_delim(
     x = closed_complete,
-    delim = "\t",
+    delim = ",",
     file = file.path(
       pathDataProcessed,
       pathLastFrozenClosed
