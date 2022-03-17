@@ -174,7 +174,9 @@ platinum_no_wd <-
     organismCleaned = organism_name,
     referenceCleanedDoi = reference_doi
   ) %>%
-  left_join(platinum_pairs_raw)
+  left_join(platinum_pairs_raw) %>%
+  #' subspecies not pushed to WD yet
+  filter(!grepl(pattern = "subspecies", x = organismCleaned_dbTaxoTaxonRanks))
 
 log_debug(
   "We have",
