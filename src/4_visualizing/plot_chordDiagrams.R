@@ -14,13 +14,17 @@ source("r/draw_chord.R")
 source("r/palettes.R")
 source("r/y_as_na.R")
 
-pairs_metadata <- fread(
-  input = file.path(
-    pathDataProcessed,
-    pathLastFrozen
-  ),
-  na.strings = ""
-) %>%
+pairs_metadata <-
+  read_delim(
+    file = file.path(
+      pathDataProcessed,
+      pathLastFrozen
+    ),
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
+  data.table() %>%
   cSplit(
     splitCols = colnames(.)[.[, grepl(
       pattern = "structure_taxonomy_npclassifier_",

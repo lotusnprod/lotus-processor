@@ -1,7 +1,7 @@
-library(data.table)
 library(DBI)
 library(dplyr)
 library(purrr)
+library(readr)
 library(RSQLite)
 
 source("r/treat_npclassifier_taxonomy.R")
@@ -15,7 +15,12 @@ source("temp_classyfireTaxonomy.R")
 #' @examples
 add_metadata <- function(df) {
   chemical_metadata <-
-    fread(file = pathDataInterimDictionariesStructureMetadata) %>%
+    read_delim(
+      file = pathDataInterimDictionariesStructureMetadata,
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      locale = locales
+    ) %>%
     distinct(
       structure_inchikey = structureCleanedInchikey,
       structure_inchi = structureCleanedInchi,
@@ -34,7 +39,12 @@ add_metadata <- function(df) {
     )
 
   biological_metadata_2 <-
-    fread(file = pathDataInterimDictionariesOrganismMetadata) %>%
+    read_delim(
+      file = pathDataInterimDictionariesOrganismMetadata,
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      locale = locales
+    ) %>%
     filter(organismCleaned_dbTaxo == "GBIF Backbone Taxonomy" |
       organismCleaned_dbTaxo == "NCBI") %>%
     distinct(
@@ -58,7 +68,12 @@ add_metadata <- function(df) {
   )
 
   chemical_taxonomy_1 <<-
-    fread(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+    read_delim(
+      file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
+      delim = "\t",
+      col_types = cols(.default = "c"),
+      locale = locales
+    )
 
   chemical_taxonomy_1 <<- treat_npclassifier_taxonomy()
 

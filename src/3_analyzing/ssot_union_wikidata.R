@@ -13,7 +13,6 @@ source("paths.R")
 source("r/add_metadata.R")
 source("r/y_as_na.R")
 
-library(data.table)
 library(DBI)
 library(dplyr)
 library(purrr)
@@ -24,7 +23,12 @@ library(tidyr)
 
 log_debug("importing ...")
 platinum_pairs_raw <-
-  fread(file = pathDataInterimTablesAnalyzedPlatinum) %>%
+  read_delim(
+    file = pathDataInterimTablesAnalyzedPlatinum,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
   filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
@@ -45,7 +49,12 @@ log_debug(
 )
 
 manually_validated_pairs <-
-  fread(file = "../data/validation/manuallyValidated.tsv.gz") %>%
+  read_delim(
+    file = "../data/validation/manuallyValidated.tsv.gz",
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
   distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
@@ -192,8 +201,9 @@ if (safety == TRUE) {
     )
   )
 
-  fwrite(
+  write_delim(
     x = platinum_u_wd,
+    delim = "\t",
     file = file.path(
       pathDataProcessed,
       gsub(
@@ -204,10 +214,10 @@ if (safety == TRUE) {
     )
   )
 
-  fwrite(
+  write_delim(
     x = platinum_no_wd,
-    file = pathDataInterimTablesAnalyzedPlatinumNew,
-    sep = "\t"
+    delim = "\t",
+    file = pathDataInterimTablesAnalyzedPlatinumNew
   )
 
   log_debug(
@@ -218,8 +228,9 @@ if (safety == TRUE) {
     )
   )
 
-  fwrite(
+  write_delim(
     x = platinum_u_wd_complete,
+    delim = "\t",
     file = file.path(
       pathDataProcessed,
       pathLastFrozen

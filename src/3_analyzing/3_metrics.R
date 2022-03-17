@@ -8,7 +8,6 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
-library(data.table)
 library(dplyr)
 library(readr)
 library(splitstackshape)
@@ -179,8 +178,7 @@ closedDb <-
       "structureCleaned_inchikey2D",
       "referenceCleanedDoi"
     )
-  ) %>%
-  data.frame()
+  )
 
 log_debug("... generating timestamps")
 system(command = paste("bash", pathTimestampsScript))
@@ -528,67 +526,67 @@ tableOrganisms_2D <-
 
 colnames(tableOrganisms_2D)[1] <- "structures"
 
-if (mode == "full") {
-  fwrite(
-    x = dataset,
-    file = "../docs/dataset.csv",
-    sep = ","
-  )
+write_delim(
+  x = dataset,
+  delim = ",",
+  file = "../docs/dataset.csv"
+)
 
-  cat(
-    paste(
-      nrow(pairsOpenDb_3D),
-      "|",
-      nrow(pairsOpenDb_2D),
-      "(3D|2D)",
-      "unique referenced structure-organism pairs. \n",
-      "They consist of \n",
-      nrow(openDbStructure_3D),
-      "|",
-      nrow(openDbStructure_2D),
-      "(3D|2D)",
-      "unique curated structures and \n",
-      nrow(openDbOrganism),
-      "unique organisms,\n",
-      "originating from \n",
-      nrow(pairsOpenDb_2D %>% distinct(database)),
-      "initial open databases. \n",
-      "\n",
-      "Among 2D structures, \n",
-      tableOrganisms_2D[1, 1],
-      "are present in only 1 organism, \n",
-      tableOrganisms_2D[2, 1],
-      "are present in between 1 and 10 organisms, \n",
-      tableOrganisms_2D[3, 1],
-      "are present in between 10 and 100 organisms, \n",
-      tableOrganisms_2D[4, 1],
-      "are present in more than 100 organisms. \n",
-      "\n",
-      "Among organisms, \n",
-      tableStructures_2D[1, 1],
-      "contain only 1 2D structure, \n",
-      tableStructures_2D[2, 1],
-      "contain between 1 and 10 2D structures, \n",
-      tableStructures_2D[3, 1],
-      "contain between 10 and 100 2D structures, \n",
-      tableStructures_2D[4, 1],
-      "contain more than 100 2D structures. \n",
-      sep = " "
-    ),
-    file = "../docs/metrics.md"
-  )
-}
+cat(
+  paste(
+    nrow(pairsOpenDb_3D),
+    "|",
+    nrow(pairsOpenDb_2D),
+    "(3D|2D)",
+    "unique referenced structure-organism pairs. \n",
+    "They consist of \n",
+    nrow(openDbStructure_3D),
+    "|",
+    nrow(openDbStructure_2D),
+    "(3D|2D)",
+    "unique curated structures and \n",
+    nrow(openDbOrganism),
+    "unique organisms,\n",
+    "originating from \n",
+    nrow(pairsOpenDb_2D %>% distinct(database)),
+    "initial open databases. \n",
+    "\n",
+    "Among 2D structures, \n",
+    tableOrganisms_2D[1, 1],
+    "are present in only 1 organism, \n",
+    tableOrganisms_2D[2, 1],
+    "are present in between 1 and 10 organisms, \n",
+    tableOrganisms_2D[3, 1],
+    "are present in between 10 and 100 organisms, \n",
+    tableOrganisms_2D[4, 1],
+    "are present in more than 100 organisms. \n",
+    "\n",
+    "Among organisms, \n",
+    tableStructures_2D[1, 1],
+    "contain only 1 2D structure, \n",
+    tableStructures_2D[2, 1],
+    "contain between 1 and 10 2D structures, \n",
+    tableStructures_2D[3, 1],
+    "contain between 10 and 100 2D structures, \n",
+    tableStructures_2D[4, 1],
+    "contain more than 100 2D structures. \n",
+    sep = " "
+  ),
+  file = "../docs/metrics.md"
+)
 
-fwrite(
+write_delim(
   x = structuresPerOrganism_2D,
+  delim = "\t",
   file = file.path(
     pathDataProcessed,
     "structures2DPerOrganism.tsv.gz"
   )
 )
 
-fwrite(
+write_delim(
   x = organismsPerStructure_2D,
+  delim = "\t",
   file = file.path(
     pathDataProcessed,
     "organismsPerStructure2D.tsv.gz"
