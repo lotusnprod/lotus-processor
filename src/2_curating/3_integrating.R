@@ -10,6 +10,7 @@ source("paths.R")
 log_debug("... libraries")
 library(dplyr)
 library(readr)
+library(stringr)
 
 log_debug("loading files ...")
 log_debug("... original table")
@@ -381,9 +382,7 @@ structureNA <- left_join(structureNA, structureFull) %>%
   distinct()
 
 log_debug("partial export ...")
-log_debug(
-  pathDataInterimDictionariesReferenceOrganismDictionary
-)
+log_debug(pathDataInterimDictionariesReferenceOrganismDictionary)
 write_delim(
   x = referenceTableFull,
   file = pathDataInterimDictionariesReferenceOrganismDictionary,
@@ -626,6 +625,33 @@ inhouseDbMinimal <- inhouseDbMinimal %>%
     -structureCleaned_stereocenters_total,
     -specified_stereo,
     -best_stereo
+  )
+
+log_debug("removing redundant upper taxa")
+inhouseDbMinimal <- inhouseDbMinimal %>%
+  mutate(
+    temp_org = gsub(
+      pattern = " .*",
+      replacement = "",
+      x = organismCleaned
+    ),
+    spaces = str_count(string = organismCleaned, pattern = " ")
+  ) %>%
+  mutate(spaces = ifelse(test = spaces == 0, yes = spaces, no = 1)) %>%
+  #' remove genera where species are found but not species with var
+  group_by(
+    temp_org,
+    structureCleanedInchikey,
+    referenceCleanedTitle,
+    referenceCleanedDoi
+  ) %>%
+  mutate(best_org = max(spaces)) %>%
+  ungroup() %>%
+  filter(spaces == best_org) %>%
+  select(
+    -temp_org,
+    -spaces,
+    -best_org
   )
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
