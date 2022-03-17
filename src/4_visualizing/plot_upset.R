@@ -28,8 +28,10 @@ prettyNames <-
 
 log_debug("... open DB")
 openDb <-
-  read_delim(file = pathDataInterimTablesAnalyzedPlatinum,
-             col_types = cols(.default = "c")) %>%
+  read_delim(
+    file = pathDataInterimTablesAnalyzedPlatinum,
+    col_types = cols(.default = "c")
+  ) %>%
   distinct(
     database,
     organismCleaned,
@@ -57,19 +59,23 @@ log_debug("joining closed DBs and open DB")
 inhouseDb <- bind_rows(closedDb, openDb) %>%
   left_join(., prettyNames) %>%
   select(-database) %>%
-  select(database = prettyDataBase,
-         everything())
+  select(
+    database = prettyDataBase,
+    everything()
+  )
 
 log_debug("counting sub-DBs")
 dbNum <-
   as.numeric(nrow(inhouseDb %>%
-                    distinct(inhouseDb$database)))
+    distinct(inhouseDb$database)))
 
 log_debug("drawing upset plot of structures repartition in sub-DBs")
 inhouseDb_structures_2plot_wide <-
-  prepare_upset(table = inhouseDb,
-                group = "database",
-                variable = "structureCleaned_inchikey2D")
+  prepare_upset(
+    table = inhouseDb,
+    group = "database",
+    variable = "structureCleaned_inchikey2D"
+  )
 pdf(
   file = file.path("../res", "upset_structures.pdf"),
   width = 16,
@@ -93,9 +99,11 @@ dev.off()
 
 log_debug("drawing upset plot of organisms repartition in sub-DBs")
 inhouseDb_organism_2plot_wide <-
-  prepare_upset(table = inhouseDb,
-                group = "database",
-                variable = "organismCleaned")
+  prepare_upset(
+    table = inhouseDb,
+    group = "database",
+    variable = "organismCleaned"
+  )
 pdf(
   file = file.path("../res", "upset_organisms.pdf"),
   width = 16,
@@ -159,9 +167,11 @@ inhouseDbMeta <- inhouseDb %>%
     structure_inchikey_2D = structureCleaned_inchikey2D
   ) %>%
   add_metadata() %>%
-  mutate(structure_inchikey_2D = substring(text = structure_inchikey,
-                                           first = 1,
-                                           last = 14)) %>%
+  mutate(structure_inchikey_2D = substring(
+    text = structure_inchikey,
+    first = 1,
+    last = 14
+  )) %>%
   left_join(
     inhouseDb %>%
       distinct(
@@ -174,18 +184,24 @@ inhouseDbMeta <- inhouseDb %>%
 
 chemo <- inhouseDbMeta %>%
   filter(!is.na(structure_taxonomy_npclassifier_01pathway)) %>%
-  distinct(structure_inchikey_2D,
-           structure_taxonomy_npclassifier_01pathway)
+  distinct(
+    structure_inchikey_2D,
+    structure_taxonomy_npclassifier_01pathway
+  )
 
 chemo3D <- inhouseDbMeta %>%
   filter(!is.na(structure_taxonomy_npclassifier_01pathway)) %>%
-  distinct(structure_inchikey,
-           structure_taxonomy_npclassifier_01pathway)
+  distinct(
+    structure_inchikey,
+    structure_taxonomy_npclassifier_01pathway
+  )
 
 bio <- inhouseDbMeta %>%
   filter(!is.na(organism_taxonomy_03phylum)) %>%
-  distinct(organism_name,
-           organism_taxonomy_03phylum)
+  distinct(
+    organism_name,
+    organism_taxonomy_03phylum
+  )
 
 log_debug("drawing upset plot of stigmastenol repartition in sub-DBs")
 inhouseDb_most_structures <- inhouseDbMeta %>%
@@ -206,11 +222,14 @@ inhouseDb_most_structures_2plot_wide <-
     ## order is important
     variable = "structure_inchikey_2D"
   ) %>%
-  left_join(.,
-            bio) %>%
+  left_join(
+    .,
+    bio
+  ) %>%
   distinct(structure_inchikey_2D,
-           organism_name,
-           .keep_all = TRUE)
+    organism_name,
+    .keep_all = TRUE
+  )
 
 mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
   filter(!is.na(organism_taxonomy_03phylum)) %>%
@@ -238,9 +257,11 @@ upset(
       query = elements,
       params = list(
         "organism_taxonomy_03phylum",
-        c(mostkingdom[1, 1],
+        c(
+          mostkingdom[1, 1],
           mostkingdom[2, 1],
-          mostkingdom[3, 1])
+          mostkingdom[3, 1]
+        )
       ),
       active = TRUE,
       color = "#b2df8a",
@@ -248,17 +269,23 @@ upset(
     ),
     list(
       query = elements,
-      params = list("organism_taxonomy_03phylum",
-                    c(mostkingdom[1, 1],
-                      mostkingdom[2, 1])),
+      params = list(
+        "organism_taxonomy_03phylum",
+        c(
+          mostkingdom[1, 1],
+          mostkingdom[2, 1]
+        )
+      ),
       active = TRUE,
       color = "#1f78b4",
       query.name = mostkingdom[2, 1]
     ),
     list(
       query = elements,
-      params = list("organism_taxonomy_03phylum",
-                    mostkingdom[1, 1]),
+      params = list(
+        "organism_taxonomy_03phylum",
+        mostkingdom[1, 1]
+      ),
       active = TRUE,
       color = "#a6cee3",
       query.name = mostkingdom[1, 1]
