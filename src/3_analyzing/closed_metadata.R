@@ -12,7 +12,6 @@ source("r/y_as_na.R")
 source("r/treat_npclassifier_taxonomy.R")
 source("temp_classyfireTaxonomy.R")
 
-library(data.table)
 library(DBI)
 library(dplyr)
 library(purrr)
@@ -23,7 +22,12 @@ library(tidyr)
 
 log_debug("importing ...")
 closed_pairs <-
-  fread(file = pathDataInterimTablesAnalyzedClosedDbTriplets) %>%
+  read_delim(
+    file = pathDataInterimTablesAnalyzedClosedDbTriplets,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  ) %>%
   filter(!is.na(structureCleanedInchikey) &
     !is.na(organismCleaned)) %>%
   distinct(
@@ -165,8 +169,9 @@ if (safety == TRUE) {
     )
   )
 
-  fwrite(
+  write_delim(
     x = closed_complete,
+    delim = "\t",
     file = file.path(
       pathDataProcessed,
       pathLastFrozenClosed
