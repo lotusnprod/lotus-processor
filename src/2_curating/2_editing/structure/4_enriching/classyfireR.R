@@ -16,6 +16,10 @@ library(pbmcapply)
 library(purrr)
 library(readr)
 
+log_debug("opening cache...")
+ClassyFireCache <-
+  classyfireR::open_cache(dbname = "../data/interim/dictionaries_full/structure/classyfire/classyfire.sqlite")
+
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
@@ -24,6 +28,17 @@ structureCounted <-
     delim = "\t",
     col_types = cols(.default = "c")
   )
+
+#' if you want to query again what was not classified
+#' in the dictionary
+# structureCounted <-
+#   read_delim(
+#     file = pathDataInterimDictionariesStructureMetadata,
+#     delim = "\t",
+#     col_types = cols(.default = "c"),
+#     locale = locales
+#   ) %>%
+#   mutate(inchikeySanitized = structureCleanedInchikey)
 
 old <-
   read_delim(
@@ -36,18 +51,45 @@ old <-
   ) %>%
   distinct(inchikey)
 
-structuresForClassification <-
-  anti_join(
-    structureCounted,
-    old %>% select(inchikeySanitized = inchikey)
-  ) %>%
+structuresForClassification <- structureCounted %>%
+  anti_join(old %>% select(inchikeySanitized = inchikey)) %>%
   filter(!is.na(inchikeySanitized)) %>%
   distinct(inchikeySanitized)
 
+#' if you want to query again what was was classified
+#' in the dictionary to put it in the local cache
+#' (in case you lost it)
+# structuresForClassification <- old %>% select(inchikeySanitized = inchikey) %>%
+#   filter(!is.na(inchikeySanitized)) %>%
+#   distinct(inchikeySanitized)
+
+# RSQLite::dbListObjects(ClassyFireCache)
+
+#' If you want to put things you have in your cache to your dictionary
+# incache <- RSQLite::dbGetQuery(conn = ClassyFireCache,
+#                                statement = "SELECT *
+#   FROM classyfire;")
+# structuresForClassification <- inner_join(
+#   structuresForClassification,
+#   incache,
+#   by = c("inchikeySanitized" = "InChikey"))
+
+#' if you want to query again what was was classified
+#' in the dictionary to put it in the local cache
+#' (in case you lost it)
+# incache <- RSQLite::dbGetQuery(conn = ClassyFireCache,
+#                                statement = "SELECT *
+#   FROM classyfire;")
+# structuresForClassification <- anti_join(
+#   structuresForClassification,
+#   incache,
+#   by = c("inchikeySanitized" = "InChikey"))
+
 inchikeys <- structuresForClassification$inchikeySanitized
 
+log_debug("classifying...")
 clasification_list_inchikey <-
-  purrr::map(inchikeys, get_classification)
+  purrr::map(inchikeys, get_classification, conn = ClassyFireCache)
 
 log_debug("worked!")
 
@@ -121,8 +163,13 @@ alternative_parents <- invisible(
   )
 )
 
-alternative_parents <-
-  bind_rows(alternative_parents[alternative_parents != "Error"])
+if (!is_empty(alternative_parents)) {
+  alternative_parents <-
+    bind_rows(alternative_parents[alternative_parents != "Error"])
+} else {
+  alternative_parents <- data.frame()
+}
+
 
 if (nrow(alternative_parents != 0)) {
   alternative_parents <- alternative_parents %>%
@@ -145,7 +192,11 @@ chebi <- invisible(
   )
 )
 
-chebi <- bind_rows(chebi[chebi != "Error"])
+if (!is_empty(chebi)) {
+  chebi <- bind_rows(chebi[chebi != "Error"])
+} else {
+  chebi <- data.frame()
+}
 
 if (nrow(chebi != 0)) {
   chebi <- chebi %>%
@@ -168,8 +219,12 @@ direct_parent <- invisible(
   )
 )
 
-direct_parent <-
-  bind_rows(direct_parent[direct_parent != "Error"])
+if (!is_empty(direct_parent)) {
+  direct_parent <-
+    bind_rows(direct_parent[direct_parent != "Error"])
+} else {
+  direct_parent <- data.frame()
+}
 
 if (nrow(direct_parent != 0)) {
   direct_parent <- direct_parent %>%
@@ -183,7 +238,9 @@ if (nrow(direct_parent != 0)) {
 
 log_debug("exporting")
 
-if (file.exists("../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz")) {
+if (file.exists(
+  "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz"
+)) {
   write_delim(
     x = alternative_parents,
     delim = "\t",
