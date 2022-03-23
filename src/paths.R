@@ -25,7 +25,6 @@ if (exists("mode_custom")) {
 works_locally_only <- TRUE
 safety <- FALSE
 
-
 locales <- readr::locale(
   date_names = "en",
   date_format = "%AD",
@@ -1324,9 +1323,9 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "220315_frozen_metadata.csv.gz"
+pathLastFrozen <- "220318_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "220315_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "220318_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <-
   file.path(
