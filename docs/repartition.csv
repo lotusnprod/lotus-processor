@@ -1,5 +1,5 @@
-Group,Organisms,Structure-Organism Pairs,Chemical Structures,Specific Chemical Structures,Chemical Classes,Specific Chemical Classes
-Plantae,28435,567422,200762,194082 (97%),546,59 (11%)
-Fungi,3980,62245,42385,38840 (92%),417,18 (4%)
-Animalia,2712,40298,28226,23543 (83%),456,14 (3%)
-Bacteria,1553,35514,27356,25156 (92%),385,42 (11%)
+Group,Organisms,2D Structure-Organism Pairs,2D Chemical Structures,Specific 2D Chemical Structures,Chemical Classes,Specific Chemical Classes
+Plantae,29315,353153,95450,90818 (95%),544,59 (11%)
+Fungi,4018,37263,22581,20148 (89%),417,20 (5%)
+Animalia,2704,24229,15308,11805 (77%),458,14 (3%)
+Bacteria,1568,22757,15819,14012 (89%),384,40 (10%)
