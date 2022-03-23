@@ -72,7 +72,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/211220_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/220318_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -372,85 +372,85 @@ df_gb["labels"] = (
 # OPTION 1: START FROM SCRATCH AND GENERATE LSH FOREST AND TMAP FROM SMILES, PLUS CHEMICAL DESCRIPTORS
 ########################################################
 
-# MAP4 = MAP4Calculator(dimensions=1024)
-# # ENC = tm.Minhash(1024)
+MAP4 = MAP4Calculator(dimensions=1024)
+# ENC = tm.Minhash(1024)
 
-# # enc = MHFPEncoder(1024)
-# lf = tm.LSHForest(1024, 64)
+# enc = MHFPEncoder(1024)
+lf = tm.LSHForest(1024, 64)
 
-# fps = []
-# hac = []
-# c_frac = []
-# ring_atom_frac = []
-# largest_ring_size = []
+fps = []
+hac = []
+c_frac = []
+ring_atom_frac = []
+largest_ring_size = []
 
-# n_iter = len(df_gb)
-# for i, row in df_gb.iterrows():
-#     j = (i + 1) / n_iter
-#     sys.stdout.write('\r')
-#     sys.stdout.write(f"[{'=' * int(50 * j):{50}s}] {round((100 * j), 2)}%")
-#     sys.stdout.flush()
-#     sleep(0.05)
+n_iter = len(df_gb)
+for i, row in df_gb.iterrows():
+    j = (i + 1) / n_iter
+    sys.stdout.write('\r')
+    sys.stdout.write(f"[{'=' * int(50 * j):{50}s}] {round((100 * j), 2)}%")
+    sys.stdout.flush()
+    sleep(0.05)
 
-#     mol = AllChem.MolFromSmiles(row["structure_smiles_2D_first"])
-#     atoms = mol.GetAtoms()
-#     size = mol.GetNumHeavyAtoms()
-#     n_c = 0
-#     n_ring_atoms = 0
-#     for atom in atoms:
-#         if atom.IsInRing():
-#             n_ring_atoms += 1
-#         if atom.GetSymbol().lower() == "c":
-#             n_c += 1
+    mol = AllChem.MolFromSmiles(row["structure_smiles_2D_first"])
+    atoms = mol.GetAtoms()
+    size = mol.GetNumHeavyAtoms()
+    n_c = 0
+    n_ring_atoms = 0
+    for atom in atoms:
+        if atom.IsInRing():
+            n_ring_atoms += 1
+        if atom.GetSymbol().lower() == "c":
+            n_c += 1
 
-#     c_frac.append(n_c / size if size != 0 else 0)
+    c_frac.append(n_c / size if size != 0 else 0)
 
-#     ring_atom_frac.append(n_ring_atoms / size if size != 0 else 0)
+    ring_atom_frac.append(n_ring_atoms / size if size != 0 else 0)
 
-#     sssr = AllChem.GetSymmSSSR(mol)
-#     if len(sssr) > 0:
-#         largest_ring_size.append(max([len(s) for s in sssr]))
-#     else:
-#         largest_ring_size.append(0)
-#     hac.append(size)
-#     fps.append(mol)
-#     # fps.append(tm.VectorUint(enc.encode_mol(mol)))
-#     # fps.append(tm.VectorUint(MAP4.calculate(mol)))
+    sssr = AllChem.GetSymmSSSR(mol)
+    if len(sssr) > 0:
+        largest_ring_size.append(max([len(s) for s in sssr]))
+    else:
+        largest_ring_size.append(0)
+    hac.append(size)
+    fps.append(mol)
+    # fps.append(tm.VectorUint(enc.encode_mol(mol)))
+    # fps.append(tm.VectorUint(MAP4.calculate(mol)))
 
-# fps = MAP4.calculate_many(fps)
-# lf.batch_add(fps)
-# lf.index()
+fps = MAP4.calculate_many(fps)
+lf.batch_add(fps)
+lf.index()
 
-# # Store lsh forest and structure metadata
-# lf.store("../data/interim/tmap/211220_lotus_2D_map4.dat")
-# with open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "wb+") as f:
-#     pickle.dump(
-#         (hac, c_frac, ring_atom_frac, largest_ring_size),
-#         f,
-#         protocol=pickle.HIGHEST_PROTOCOL,
-#     )
+# Store lsh forest and structure metadata
+lf.store("../data/interim/tmap/220318_coords_lotus_2D_map4.dat")
+with open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "wb+") as f:
+    pickle.dump(
+        (hac, c_frac, ring_atom_frac, largest_ring_size),
+        f,
+        protocol=pickle.HIGHEST_PROTOCOL,
+    )
 
-# # tmap configuration
-# cfg = tm.LayoutConfiguration()
-# cfg.k = 20
-# cfg.sl_extra_scaling_steps = 10
-# cfg.node_size = 1 / 50
-# cfg.mmm_repeats = 2
-# cfg.sl_repeats = 2
+# tmap configuration
+cfg = tm.LayoutConfiguration()
+cfg.k = 20
+cfg.sl_extra_scaling_steps = 10
+cfg.node_size = 1 / 50
+cfg.mmm_repeats = 2
+cfg.sl_repeats = 2
 
-# # tmap generation
-# x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
+# tmap generation
+x, y, s, t, _ = tm.layout_from_lsh_forest(lf, cfg)
 
-# # To store coordinates
-# x = list(x)
-# y = list(y)
-# s = list(s)
-# t = list(t)
-# pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
-# )
+# To store coordinates
+x = list(x)
+y = list(y)
+s = list(s)
+t = list(t)
+pickle.dump(
+    (x, y, s, t), open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+)
 
-# del (lf)
+del (lf)
 
 # ########################################################
 # # OPTION 2: LOAD PRE_COMPUTED LSH FOREST AND CHEMICAL DESCRIPTORS
@@ -458,10 +458,10 @@ df_gb["labels"] = (
 
 # lf = tm.LSHForest(1024, 64)
 # lf.restore(
-#     "../data/interim/tmap/211220_lotus_2D_map4.dat")
+#     "../data/interim/tmap/220318_lotus_2D_map4.dat")
 
 # hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-#     open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "rb")
+#     open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "rb")
 # )
 
 # # tmap configuration
@@ -482,7 +482,7 @@ df_gb["labels"] = (
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 # del (lf)
@@ -492,11 +492,11 @@ df_gb["labels"] = (
 # # AND CHEMICAL DESCRIPTORS
 # ########################################################
 
-x, y, s, t = pickle.load(open("../data/interim/tmap/211220_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat",
                               "rb"))
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/211220_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "rb")
 )
 
 ########################################################
@@ -621,4 +621,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/211220_lotus_map4_2D', template="smiles")
+f.plot('../res/html/220318_lotus_map4_2D', template="smiles")
