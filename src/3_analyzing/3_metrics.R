@@ -8,6 +8,7 @@ log_debug("... paths")
 source("paths.R")
 
 log_debug("... libraries")
+library(data.table)
 library(dplyr)
 library(readr)
 library(splitstackshape)
@@ -389,7 +390,6 @@ log_debug(paste(
   sep = " "
 ))
 
-log_debug("analyzing unique structures (2D) per db")
 ### open NP DB
 openDbStructure_2D <- openDb %>%
   filter(!is.na(structureCleaned_inchikey2D)) %>%
