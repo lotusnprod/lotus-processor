@@ -157,6 +157,7 @@ data_easy_treated <- data_easy %>%
     sep = ", ",
     fixed = TRUE
   ) %>%
+  mutate_all(as.character) %>%
   pivot_longer(
     cols = 7:(ncol(.)),
     names_to = c("type", "number"),
@@ -317,7 +318,10 @@ data_corrected_capitals <- left_join(data_corrected,
     structure_smiles = smiles,
     structure_name = name,
     everything()
-  )
+  ) %>%
+  filter(!grepl(pattern = "$",
+                x = organism_clean,
+                fixed = TRUE))
 
 # standardizing
 data_standard <-
