@@ -10,6 +10,7 @@ import os
 import sys
 from chemosanitizer_functions import *
 import numpy as np
+from tqdm import tqdm
 
 # defining the command line arguments
 try:
@@ -54,11 +55,18 @@ if __name__ == "__main__":
     #     processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=cpus) as executor:
-        processed_df = pd.concat(executor.map(f, df_chunks), ignore_index=True)
+        processed_list = list(tqdm(executor.map(f, df_chunks), total=len(df_chunks)))
+        processed_df = pd.concat(processed_list, ignore_index=True)
 
     df_2 = processed_df.loc[:,
-       ~processed_df.columns.isin(['ROMol', 'ROMolSanitized', 'ROMolSanitizedLargestFragment', 'flatROMol',
-                                   'ROMolSanitizedLargestFragmentUncharged'])]
+       ~processed_df.columns.isin([
+        'ROMol',
+        'ROMolSanitized',
+        'ROMolSanitizedCanonicalized',
+        'ROMolSanitizedLargestFragment',
+        'flatROMol',
+        'ROMolSanitizedLargestFragmentUncharged'
+        ])]
 
     output_path = os.path.dirname(ouput_file_path)
 

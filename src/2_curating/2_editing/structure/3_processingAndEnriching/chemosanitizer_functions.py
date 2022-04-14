@@ -12,6 +12,8 @@ from rdkit.Chem import Descriptors
 from rdkit.Chem import PandasTools
 from rdkit.Chem import AllChem
 from rdkit.Chem import rdMolDescriptors
+from rdkit.Chem.MolStandardize import rdMolStandardize
+
 
 # MolVS specific modules
 import molvs
@@ -112,6 +114,13 @@ def standardizor_fun(romol):
     return None
 
 
+def canonicalizor_fun(romol):
+    m = rdMolStandardize.TautomerEnumerator().Canonicalize(romol)
+    if m:
+        return m
+    return None
+
+
 def fragremover_fun(romol):
     m = FragmentRemover().remove(romol)
     if m:
@@ -140,7 +149,8 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice = myslice[~myslice['ROMol'].isnull()]
     myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
     myslice['ROMolSanitized'] = myslice['ROMol'].apply(standardizor_fun)
-    myslice['ROMolSanitizedLargestFragment'] = myslice['ROMolSanitized'].apply(fragremover_fun)
+    myslice['ROMolSanitizedCanonicalized'] = myslice['ROMolSanitized'].apply(canonicalizor_fun)
+    myslice['ROMolSanitizedLargestFragment'] = myslice['ROMolSanitizedCanonicalized'].apply(fragremover_fun)
     myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMolSanitizedLargestFragment'].apply(uncharger_fun)
     myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
     myslice['inchiSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToInchi_fun)
