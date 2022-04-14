@@ -56,18 +56,9 @@ if __name__ == "__main__":
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=cpus) as executor:
         processed_list = list(tqdm(executor.map(f, df_chunks), total=len(df_chunks)))
-        processed_df = pd.concat(processed_list, ignore_index=True)
 
-    df_2 = processed_df.loc[:,
-       ~processed_df.columns.isin([
-        'ROMol',
-        'ROMolSanitized',
-        'ROMolSanitizedCanonicalized',
-        'ROMolSanitizedLargestFragment',
-        'flatROMol',
-        'ROMolSanitizedLargestFragmentUncharged'
-        ])]
-
+    processed_df = pd.concat(processed_list, ignore_index=True)
+    
     output_path = os.path.dirname(ouput_file_path)
 
     if output_path != '' and not os.path.exists(output_path):
@@ -77,7 +68,7 @@ if __name__ == "__main__":
             if exc.errno != errno.EEXIST:
                 raise
 
-    df_2.to_csv(
+    processed_df.to_csv(
         ouput_file_path,
         sep='\t',
         index=False,

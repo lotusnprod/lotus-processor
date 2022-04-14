@@ -94,7 +94,7 @@ def MolToLogP_fun(romol):
 
 
 # defining the validator log output format
-fmt = '%(asctime)s - %(levelname)s - %(validation)s - %(message)s'
+fmt = '%(levelname)s - %(validation)s - %(message)s'
 
 
 # save the Standardizer and LargestFragmentChooser classes as variables
@@ -148,10 +148,7 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
     myslice = myslice[~myslice['ROMol'].isnull()]
     myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
-    myslice['ROMolSanitized'] = myslice['ROMol'].apply(standardizor_fun)
-    myslice['ROMolSanitizedCanonicalized'] = myslice['ROMolSanitized'].apply(canonicalizor_fun)
-    myslice['ROMolSanitizedLargestFragment'] = myslice['ROMolSanitizedCanonicalized'].apply(fragremover_fun)
-    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMolSanitizedLargestFragment'].apply(uncharger_fun)
+    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMol'].apply(standardizor_fun).apply(canonicalizor_fun).apply(fragremover_fun).apply(uncharger_fun)
     myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
     myslice['inchiSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToInchi_fun)
     myslice['inchikeySanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToIK_fun)
@@ -162,6 +159,7 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice['formulaSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToMF_fun)
     myslice['exactmassSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToEmass_fun)
     myslice['xlogpSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToLogP_fun)
+    myslice = myslice.drop(myslice.loc[:, ['ROMol', 'flatROMol', 'ROMolSanitizedLargestFragmentUncharged']], axis=1)
     return myslice
 
 
