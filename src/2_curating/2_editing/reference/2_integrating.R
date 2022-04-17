@@ -14,7 +14,7 @@ library(readr)
 library(stringr)
 library(tidyr)
 
-source("r/split_data_table.R")
+source("r/split_data_table_quote.R")
 
 log_debug("... files ...")
 log_debug("... DOI")
@@ -363,7 +363,7 @@ ifelse(
 
 log_debug("exporting, this may take a while if running full mode")
 log_debug(pathDataInterimTablesTranslatedReference)
-split_data_table(
+split_data_table_quote(
   x = dataTranslated,
   no_rows_per_frame = 100000,
   text = "",
