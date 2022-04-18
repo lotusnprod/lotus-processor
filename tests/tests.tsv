@@ -24,7 +24,7 @@ tests	clean	Lini Semen	smiles	OC1=NCCC=C1.OC1=NCCC=C1	doi	HelloWorld!
 tests	clean	Lini semen	smiles	InChI=1/C25H38O5S.C8H11N/c1-23(2)12-5-13-25(4)21(23)10-14-24(3)20(8-6-18-11-15-29-16-18)19(7-9-22(24)25)17-30-31(26,27)28;1-7(9)8-5-3-2-4-6-8/h11,15-17,20-22H,5-10,12-14H2,1-4H3,(H,26,27,28);2-7H,9H2,1H3/b19-17-;	doi	HelloWorld!
 tests	clean	Piper	nominal	C[C@@H]1O[C@H](OC2=C(OC3=CC(O)=CC([O-])=C3C2=O)C2=CC=C(O)C=C2)[C@H](O)[C@H](O)[C@H]1O	doi	HelloWorld!
 tests	clean	Piperis	nominal	InChI=1/C25H38O5S.C8H11N/c1-23(2)12-5-13-25(4)21(23)10-14-24(3)20(8-6-18-11-15-29-16-18)19(7-9-22(24)25)17-30-31(26,27)28;1-7(9)8-5-3-2-4-6-8/h11,15-17,20-22H,5-10,12-14H2,1-4H3,(H,26,27,28);2-7H,9H2,1H3/b19-17-;	doi	HelloWorld!
-tests	clean	Lecidea piperis	smiles	Oc1c(cccc3)c3nc2ccncc12	doi	HelloWorld!
+tests	clean	Lecidea piperis	smiles	O=C(O)c1cnc[nH]1.O=C(O)c1cnc[nH]1	doi	HelloWorld!
 tests	clean	Radix Piperis longi	smiles	C=C1C[C@]([C@@H](C(N[C@H]2OCO[C@H]3[C@@H]2O[C@@H](C(C)([C@@H]3OC)C)C[C@H](OC)CO)=O)O)(O[C@@H]([C@@H]1C)C)OC	doi	HelloWorld!
 tests	clean	Radix	smiles	C=C1C[C@]([C@@H](C(O)=N[C@H]2OCO[C@H]3[C@@H]2O[C@@H](C(C)([C@@H]3OC)C)C[C@H](OC)CO)O)(O[C@@H]([C@@H]1C)C)OC	doi	HelloWorld!
 tests	clean	Pepper	smiles	CC(C)CCCC1CC(=O)NC(CO)C(=O)NC(C(O)C(N)=O)C(=O)NC(CO)C(=O)NCCC(=O)N(C)C(Cc2ccccc2)C(=O)NC(CC(C)C)C(=O)NC(CCCN)C(=O)NC(CCC(=O)O)C(=O)NC(CC(N)=O)C(=O)NC(Cc2c[nH]c3ccccc23)C(=O)NC(CCCN)C(=O)N(C)C(C(C)C)C(=O)O1	doi	HelloWorld!

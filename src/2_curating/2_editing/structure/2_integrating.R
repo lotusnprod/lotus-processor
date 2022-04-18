@@ -83,11 +83,27 @@ bad_smiles <- c(
   "[OH-].[OH-].[OH-].[OH-].[OH-].[OH-].[V+6]", ## rdkit fails
   "Not Available",
   "Cc1ccc2c(c1)-n1-c(=O)/c=c\\c(=O)-n-2-c2cc(C)ccc2-1", ## in reality 'Cc1ccc2c(c1)-n1-c(=O)/c=c\c(=O)-n-2-c2cc(C)ccc2-1'
-  "CCCCCc1cccc([O-])c1C1=NC(C2SCC(C([O-])C(C)(C)C3=NC(C)(C(=O)[O-])CS3)N2C)CS1.[Zn+3]"
+  "CCCCCc1cccc([O-])c1C1=NC(C2SCC(C([O-])C(C)(C)C3=NC(C)(C(=O)[O-])CS3)N2C)CS1.[Zn+3]",
+  "CC(C)c1c(O)cc(CCc2ccccc2)cc1OC(=N)O" # primary carbamate fail
 )
 
 translatedStructureTable <- translatedStructureTable %>%
-  filter(!structureTranslated %in% bad_smiles)
+  filter(!structureTranslated %in% bad_smiles) %>%
+  mutate(di = gsub(
+    pattern = "\\..*",
+    replacement = "",
+    x = structureTranslated
+  )) %>% filter(
+    structureTranslated == di | gsub(
+      pattern = ".*\\.",
+      replacement = "",
+      x = structureTranslated
+    ) == di
+  ) %>%
+  select(structureType, 
+         structureValue, 
+         structureTranslated = di) %>%
+  distinct()
 
 log_debug("outputing unique structures")
 translatedStructureTableUnique <- translatedStructureTable %>%
