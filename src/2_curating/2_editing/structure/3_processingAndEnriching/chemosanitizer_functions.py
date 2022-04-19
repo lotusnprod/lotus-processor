@@ -151,7 +151,8 @@ def sik_fun(ik):
         return None    
     return None
 
-#  Courtesy of Richy Leroy (via  Jean-Marc Nuzillard)
+
+#  Courtesy of Richy Leroy (via Jean-Marc Nuzillard)
 
 # iminol
 smarts1 = "[NH0]=C([OH])([!O])" # secondary iminol
@@ -175,12 +176,10 @@ target3 = Chem.MolFromSmarts(smarts3)
 smarts31 = "[N&!n]([!CX3&!SHX2])([!CX3&!SHX2])=[C&!c]([SHX2])"
 target31 = Chem.MolFromSmarts(smarts31)
 
+
 def tautomerizor_fun(m):
-    Chem.AddHs(m)
 
     ps = m
-
-    Chem.SanitizeMol(ps)
 
     # N-formyl
     if ps.HasSubstructMatch(target14):
@@ -195,19 +194,20 @@ def tautomerizor_fun(m):
                 ps = ps[0][0]
         Chem.SanitizeMol(ps)
         Chem.AssignStereochemistry(ps,force=True,cleanIt=True)
+    # Fails
     # Primary carbamate
-    if ps.HasSubstructMatch(target13):
-        nb13 = len(ps.GetSubstructMatches(target13))
-        #print(nb13, "primary carbamate")
-        rxn11 = AllChem.ReactionFromSmarts('[C:1][O:2][CD3:3]([OH1:4])=[NH:5]>>[C:1][O:2][CD3:3](=[OH0D1:4])[NH2:5]')
-        ps = rxn11.RunReactants((ps,))
-        ps = ps[0][0]
-        if nb13 != 1 :
-            for i in range(1,nb13) :
-                ps = rxn11.RunReactants((ps,))
-                ps = ps[0][0]
-        Chem.SanitizeMol(ps)
-        Chem.AssignStereochemistry(ps,force=True,cleanIt=True)
+    # if ps.HasSubstructMatch(target13):
+    #     nb13 = len(ps.GetSubstructMatches(target13))
+    #     #print(nb13, "primary carbamate")
+    #     rxn11 = AllChem.ReactionFromSmarts('[C:1][O:2][CD3:3]([OH1:4])=[NH:5]>>[C:1][O:2][CD3:3](=[OH0D1:4])[NH2:5]')
+    #     ps = rxn11.RunReactants((ps,))
+    #     ps = ps[0][0]
+    #     if nb13 != 1 :
+    #         for i in range(1,nb13) :
+    #             ps = rxn11.RunReactants((ps,))
+    #             ps = ps[0][0]
+    #     Chem.SanitizeMol(ps)
+    #     Chem.AssignStereochemistry(ps,force=True,cleanIt=True)
     # Secondary carbamate
     if ps.HasSubstructMatch(target12):
         nb12 = len(ps.GetSubstructMatches(target12))
@@ -287,11 +287,12 @@ def tautomerizor_fun(m):
 
     return ps
 
+
 def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
     myslice = myslice[~myslice['ROMol'].isnull()]
     myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
-    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMol'].apply(standardizor_fun).apply(fragremover_fun).apply(fragchooser_fun).apply(uncharger_fun).apply(tautomerizor_fun)
+    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMol'].apply(standardizor_fun).apply(fragremover_fun).apply(uncharger_fun).apply(tautomerizor_fun)
     myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
     myslice['inchiSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToInchi_fun)
     myslice['inchikeySanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToIK_fun)

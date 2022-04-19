@@ -238,7 +238,7 @@ class LargestFragmentChooser(object):
         """
         log.debug('Running LargestFragmentChooser')
         # TODO: Alternatively allow a list of fragments to be passed as the mol parameter
-        fragments = Chem.GetMolFrags(mol, asMols=True)
+        fragments = list(set(Chem.GetMolFrags(mol, asMols=True)))
         largest = None
         for f in fragments:
             smiles = Chem.MolToSmiles(f, isomericSmiles=True)
