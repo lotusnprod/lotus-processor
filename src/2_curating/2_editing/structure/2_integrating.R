@@ -84,7 +84,11 @@ bad_smiles <- c(
   "Not Available",
   "Cc1ccc2c(c1)-n1-c(=O)/c=c\\c(=O)-n-2-c2cc(C)ccc2-1", ## in reality 'Cc1ccc2c(c1)-n1-c(=O)/c=c\c(=O)-n-2-c2cc(C)ccc2-1'
   "CCCCCc1cccc([O-])c1C1=NC(C2SCC(C([O-])C(C)(C)C3=NC(C)(C(=O)[O-])CS3)N2C)CS1.[Zn+3]",
-  "CC(C)c1c(O)cc(CCc2ccccc2)cc1OC(=N)O" # primary carbamate fail
+  "CC(C)C([NH+]=CO)C(=O)OC(C)C1C/C=C/CCC(O)C(C)(C)C2CCC(C)C3(O2)O[B-]24OC(C(=O)O1)C1(OC(CCC1C)C(C)(C)C(O)CCCC1CC(OC(=O)C3O2)C(C)O1)O4",
+  "CC(O)=[NH+]C(C(=O)OC(C)C1C/C=C/CCC(O)C(C)(C)C2CCC(C)C3(O2)O[B-]24OC(C(=O)O1)C1(OC(CCC1C)C(C)(C)C(O)CCCC1CC(OC(=O)C3O2)C(C)O1)O4)C(C)C"
+  # "CC(C)c1c(O)cc(CCc2ccccc2)cc1OC(=N)O", # primary carbamate fail
+  # "COc1c(N=C(O)c2ccc(NC(=O)c3ccc(NC(=O)C(NC(=O)c4ccc(NC(=O)/C(C)=C/c5ccc(OC(=N)O)cc5)cc4)C(C#N)OC)cc3)c(OC)c2O)ccc(C(=O)O)c1O", # primary carbamate fail
+  # "COc1c(N=C(O)c2ccc(NC(=O)c3ccc(NC(=O)C(NC(=O)c4ccc(NC(=O)/C(C)=C/c5ccc(OC(=N)O)cc5)cc4)C(OC)C(=N)O)cc3)c(OC)c2O)ccc(C(=O)O)c1O" # primary carbamate fail
 )
 
 translatedStructureTable <- translatedStructureTable %>%
