@@ -21,8 +21,8 @@ library(readr)
 library(tidyr)
 
 log_debug(" Step 4")
-log_debug("... files ... ")
-log_debug("... cleaned organisms ")
+log_debug("... files ...")
+log_debug("... cleaned organisms")
 dataCleanedOrganism <-
   read_delim(
     file = pathDataInterimTablesProcessedOrganismTranslatedTable,
@@ -32,7 +32,7 @@ dataCleanedOrganism <-
   ) %>%
   distinct()
 
-log_debug(" ... taxa ranks dictionary ")
+log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
@@ -40,6 +40,7 @@ taxaRanksDictionary <-
     col_types = cols(.default = "c"),
     locale = locales
   )
+log_debug("... manual fixes dictionaries")
 wrongVerifiedDictionary <-
   read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
@@ -48,6 +49,14 @@ wrongVerifiedDictionary <-
     locale = locales
   ) %>%
   as.list()
+
+wrongHomonymsDictionary <-
+  read_delim(
+    file = pathDataInterimDictionariesTaxaWrongHomonyms,
+    delim = "\t",
+    col_types = cols(.default = "c"),
+    locale = locales
+  )
 
 dataCleanedOrganismVerify <- dataCleanedOrganism %>%
   filter(!is.na(organismCleaned)) %>%
@@ -281,6 +290,11 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     # organism_8_variety_id,
   ) %>%
   filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
+
+dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
+  anti_join(wrongHomonymsDictionary %>%
+              distinct(organismCleaned,
+                       organismCleanedRank = organismCleaned_rank))
 
 log_debug("exporting ... ")
 log_debug(pathDataInterimTablesProcessedOrganismFinal)

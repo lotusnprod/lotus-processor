@@ -19,7 +19,7 @@ export NPCLASSIFIER_VERSION = 1.5
 export INDEX_VERSION = 1
 
 export OSF_VALIDATION = vg2we
-export ZENODO_CUSTOM_DIC = 6471980
+export ZENODO_CUSTOM_DIC = 6487114
 
 export UNAME := $(shell uname)
 
