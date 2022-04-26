@@ -31,3 +31,4 @@ tests	clean	Pepper	smiles	CC(C)CCCC1CC(=O)NC(CO)C(=O)NC(C(O)C(N)=O)C(=O)NC(CO)C(
 tests	dirty	Black pepper	smiles	CC(C)CCCC1CC(O)=NC(CO)C(O)=NC(C(O)C(=N)O)C(O)=NC(CO)C(O)=NCCC(=O)N(C)C(Cc2ccccc2)C(O)=NC(CC(C)C)C(O)=NC(CCCN)C(O)=NC(CCC(=O)O)C(O)=NC(CC(=N)O)C(O)=NC(Cc2c[nH]c3ccccc23)C(O)=NC(CCCN)C(=O)N(C)C(C(C)C)C(=O)O1	doi	HelloWorld!
 tests	dirty	Green bell pepper	smiles	N=C(CCc1ccccc1)O	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51
 tests	clean	Nicotiana tabacum	smiles	[C@@H]1([C@H]([C@H](O[C@H]([C@@H]1O)O)C(=O)O)O)O	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51
+tests	clean	Bacteria	smiles	CCCCC1CC=CCC=C1	doi	HelloWorld!
