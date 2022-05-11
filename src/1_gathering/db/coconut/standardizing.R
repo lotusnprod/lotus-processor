@@ -319,9 +319,11 @@ data_corrected_capitals <- left_join(data_corrected,
     structure_name = name,
     everything()
   ) %>%
-  filter(!grepl(pattern = "$",
-                x = organism_clean,
-                fixed = TRUE))
+  filter(!grepl(
+    pattern = "$",
+    x = organism_clean,
+    fixed = TRUE
+  ))
 
 # standardizing
 data_standard <-

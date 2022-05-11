@@ -293,8 +293,9 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
 
 dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
   anti_join(wrongHomonymsDictionary %>%
-              distinct(organismCleaned,
-                       organismCleanedRank = organismCleaned_rank))
+    distinct(organismCleaned,
+      organismCleanedRank = organismCleaned_rank
+    ))
 
 log_debug("exporting ... ")
 log_debug(pathDataInterimTablesProcessedOrganismFinal)

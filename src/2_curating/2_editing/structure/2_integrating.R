@@ -97,16 +97,18 @@ translatedStructureTable <- translatedStructureTable %>%
     pattern = "\\..*",
     replacement = "",
     x = structureTranslated
-  )) %>% filter(
+  )) %>%
+  filter(
     structureTranslated == di | gsub(
       pattern = ".*\\.",
       replacement = "",
       x = structureTranslated
     ) == di
   ) %>%
-  select(structureType, 
-         structureValue, 
-         structureTranslated = di) %>%
+  select(structureType,
+    structureValue,
+    structureTranslated = di
+  ) %>%
   distinct()
 
 log_debug("outputing unique structures")
