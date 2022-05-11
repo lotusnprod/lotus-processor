@@ -20,6 +20,7 @@ data_organism <-
     sep = "|",
     direction = "long"
   ) %>%
+  filter(grepl(pattern = " ", x = names_pipe_separated, fixed = TRUE)) %>%
   distinct()
 
 data_structures <-
@@ -44,9 +45,9 @@ data_triples <-
 
 # manipulating
 data_manipulated <- data_triples %>%
-  left_join(data_organism, by = c("taxon" = "wikidataId")) %>%
-  left_join(data_structures, by = c("compound" = "wikidataId")) %>%
-  left_join(data_references, by = c("reference" = "wikidataId")) %>%
+  inner_join(data_organism, by = c("taxon" = "wikidataId")) %>%
+  inner_join(data_structures, by = c("compound" = "wikidataId")) %>%
+  inner_join(data_references, by = c("reference" = "wikidataId")) %>%
   mutate(structure_smiles = if_else(
     condition = !is.na(isomericSmiles),
     true = isomericSmiles,
