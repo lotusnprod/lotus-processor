@@ -52,9 +52,7 @@ openDbMetaValidated <- openDbMetaValidated %>%
 log_debug("joining (might be long if running full)")
 full <- left_join(openDbMaximal, openDbMetaValidated) %>%
   distinct() %>%
-  pivot_longer(
-    cols = contains("cleaned_")
-  ) %>%
+  pivot_longer(cols = contains("cleaned_")) %>%
   select(
     database,
     structure_originalValue = structureValue,
@@ -159,11 +157,11 @@ sunk <- ready_2 %>%
     stop = 8
   )) %>%
   ungroup() %>%
-  arrange(desc(
-    count,
+  arrange(
+    desc(count),
     validation,
     database
-  )) %>%
+  ) %>%
   mutate(
     validation = gsub(
       pattern = "not_validated",
@@ -241,64 +239,62 @@ legend_v <- with(sunk, reorder(validation, desc(count)))
 
 log_debug("drawing alluvial")
 
-if (mode == "full") {
-  pdf(
-    file = file.path("../res", "alluvial.pdf"),
-    width = 16,
-    height = 9
-  )
+pdf(
+  file = file.path("../res", "alluvial.pdf"),
+  width = 16,
+  height = 9
+)
 
-  ggplot(
-    as.data.frame(sunk),
-    aes(
-      y = count,
-      axis1 = prettyDataBase,
-      axis2 = originalType,
-      axis3 = cleanedType
-    )
+ggplot(
+  as.data.frame(sunk),
+  aes(
+    y = count,
+    axis1 = prettyDataBase,
+    axis2 = originalType,
+    axis3 = cleanedType
+  )
+) +
+  geom_stratum(
+    width = 1 / 3,
+    decreasing = TRUE
   ) +
-    geom_stratum(
-      width = 1 / 3,
-      decreasing = TRUE
-    ) +
-    geom_alluvium(
-      aes(fill = legend_v),
-      aes.bind = "alluvia",
-      lode.guidance = "forward",
-      decreasing = TRUE
-    ) +
-    geom_flow(
-      aes(
-        fill = legend_v,
-        colour = legend_v
-      ),
-      aes.bind = "alluvia",
-      aes.flow = "forward",
-      stat = after_stat("alluvium"),
-      decreasing = TRUE
-    ) +
-    geom_fit_text(
-      stat = "stratum",
-      min.size = 0,
-      fullheight = TRUE,
-      reflow = TRUE,
-      width = 1 / 4,
-      aes(label = after_stat(stratum)),
-      decreasing = TRUE
-    ) +
-    scale_x_discrete(limits = c("database", "original", "cleaned")) +
-    # scale_y_continuous(trans = 'log10', name = "log10(count)") +
-    scale_fill_manual(values = c("#2994D2", "#7CB13F")) +
-    scale_colour_manual(values = c("#2994D2", "#7CB13F")) +
-    theme(
-      panel.grid.major = element_blank(),
-      panel.grid.minor = element_blank(),
-      panel.background = element_blank(),
-      axis.title.x = element_blank(),
-      legend.position = "none"
-    )
-  dev.off()
-}
+  geom_alluvium(
+    aes(fill = legend_v),
+    aes.bind = "alluvia",
+    lode.guidance = "forward",
+    decreasing = TRUE
+  ) +
+  geom_flow(
+    aes(
+      fill = legend_v,
+      colour = legend_v
+    ),
+    aes.bind = "alluvia",
+    aes.flow = "forward",
+    stat = after_stat("alluvium"),
+    decreasing = TRUE
+  ) +
+  geom_fit_text(
+    stat = "stratum",
+    min.size = 0,
+    fullheight = TRUE,
+    reflow = TRUE,
+    width = 1 / 4,
+    aes(label = after_stat(stratum)),
+    decreasing = TRUE
+  ) +
+  scale_x_discrete(limits = c("database", "original", "cleaned")) +
+  # scale_y_continuous(trans = 'log10', name = "log10(count)") +
+  scale_fill_manual(values = c("#2994D2", "#7CB13F")) +
+  scale_colour_manual(values = c("#2994D2", "#7CB13F")) +
+  theme(
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    axis.title.x = element_blank(),
+    legend.position = "none"
+  )
+dev.off()
 
 ## interactive alternative
 
