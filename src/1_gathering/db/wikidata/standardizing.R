@@ -21,7 +21,7 @@ data_organism <-
     direction = "long"
   ) %>%
   filter(grepl(pattern = " ", x = names_pipe_separated, fixed = TRUE)) %>%
-  #'taking a single genus name is too risky
+  #' taking a single genus name is too risky
   distinct()
 
 data_structures <-
