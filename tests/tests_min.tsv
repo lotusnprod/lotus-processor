@@ -1,584 +1,585 @@
 database	referenceType	referenceValue	structureType	structureValue	organismType	organismValue
-coconut	split	Marques,Phytochem.,55,(2000),815	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Psoralea acaulis
-coconut	doi	10.1016/j.jep.2008.06.005	smiles	O=C(O)C=CC1=CC=C(O)C=C1	clean	Pseudotsuga japonica
-coconut	split	Tadeo,Physiol.Plant,91,(1994),37	smiles	O=C(O)C1C2C3(C(=O)OC2(CCC3)C4CCC5(O)C(=C)CC14C5)C	clean	Leucaena leucocephala
-coconut	split	Agusta,Chem.Pharm.Bull.,53,(2005),1565	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Dicranopteris linearis
-coconut	split	Chen,Chem.Abstr.,84 102341p	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Jacobaea arnautorum
-coconut	split	Giner,Phytochem.,57,(2001),787	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Cleidion spiciflorum (Burm. f.) Merr.
-coconut	pubmed	29046877	smiles	OC1CC(=C(C=CC(=CC=CC(=CC=CC=C(C=CC=C(C=CC2=C(C)CC(O)CC2(C)C)C)C)C)C)C(C)(C)C1)C	clean	Daemonorops draco
-napralert	doi	10.1016/s0040-4039(97)10404-x	inchi	InChI=1S/C35H60O6/c1-7-22(20(2)3)9-8-21(4)26-12-13-27-25-11-10-23-18-24(14-16-34(23,5)28(25)15-17-35(26,27)6)40-33-32(39)31(38)30(37)29(19-36)41-33/h10,20-22,24-33,36-39H,7-9,11-19H2,1-6H3/t21-,22-,24+,25+,26-,27+,28+,29-,30-,31+,32-,33-,34+,35-/m1/s1	clean	Ophiorrhiza pumila
-wikidata	doi	10.1042/BJ1390751	inchi	InChI=1S/C30H42/c1-25(2)15-11-19-29(7)23-13-21-27(5)17-9-10-18-28(6)22-14-24-30(8)20-12-16-26(3)4/h9-11,13-19,21-24H,12,20H2,1-8H3	clean	Enterococcus faecium
-coconut	pubmed	26348780	smiles	OC1(C)CCC2C(=C)CCC3C(C21)C3(C)C	clean	Piper arboreum
-wikidata	doi	10.1021/NP040137T	inchi	InChI=1S/C22H32O3/c1-15(2)8-6-9-16(3)10-7-11-17(4)12-13-22-19(23)14-18(5)20(24)21(22)25-22/h8,10,12,14,20-21,24H,6-7,9,11,13H2,1-5H3/b16-10+,17-12+/t20-,21-,22+/m1/s1	clean	Penicillium chrysogenum
-coconut	split	Kasali,Phytochem.,59,(2002),805	smiles	O=C(OC1CC2CCC1(C)C2(C)C)C	clean	Magnolia sprengeri
-coconut	split	Chang,Phytochem.,66,(2005),2752	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Pterocaulon virgatum
-tppt	authors	Teuscher and Lindequist	smiles	C=C1C=CC(=O)O1	clean	Ranunculus flammula L.
-tppt	original	Teuscher and Lindequist (2010)	smiles	C=C1C=CC(=O)O1	clean	Ranunculus flammula L.
-wikidata	doi	10.1021/NP990239X	inchi	InChI=1S/C20H22O8/c21-10-16-17(24)18(25)19(26)20(28-16)27-15-5-3-11(4-6-15)1-2-12-7-13(22)9-14(23)8-12/h1-9,16-26H,10H2/b2-1+/t16-,17-,18+,19-,20-/m1/s1	clean	Vitis vinifera
-coconut	split	Beaton,J.Chem.Soc.,(1955),2131	smiles	O=C(O)CCCCCCCCCCCCCCC	clean	Cnidium officinale
-napralert	authors	SHI,ZX: ZHANG,JX: GU,WH: YUAN,XZ:	nominal	ELEMOL	clean	Artemisia mongolica Asteraceae
-napralert	journal	CHIH WU HSUEH PAO	nominal	ELEMOL	clean	Artemisia mongolica Asteraceae
-napralert	title	CHEMICAL CONSTITUENTS OF THE ESSENTIAL OIL OF ARTEMISIA MONGOLICA FISCH.	nominal	ELEMOL	clean	Artemisia mongolica Asteraceae
-coconut	split	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter45	smiles	OC=1C=C(O)C2=C(OC3(OC4=CC(O)=C5C(OC(C6=CC=C(O)C(O)=C6)C(O)C5)=C4C2C3O)C7=CC=C(O)C(O)=C7)C1	clean	Garcinia mangostana
-napralert	authors	STROBEL,GA: STIERLE,A: HEES,WM:	nominal	TAXOL	clean	Taxus brevifolia Taxaceae
-napralert	journal	PLANT SCI(LIMERICK IREL)	nominal	TAXOL	clean	Taxus brevifolia Taxaceae
-napralert	title	TAXOL FORMATION IN YEW. TAXUS.	nominal	TAXOL	clean	Taxus brevifolia Taxaceae
-coconut	split	Chen,J.Nat.Prod.,72,(2009),107	smiles	O1C2=CC=C(C=C2OC1)C3OCC4C(OCC34)C5=CC=C6OCOC6=C5	clean	Lotus ucrainicus
-coconut	split	Silva,J.Nat.Prod.,71,(2008),1291	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros siamensis
-coconut	split	Abrahams,Plant J.,35,(2003),624	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Eucalyptus resinifera
-coconut	split	Mansour,J.Nat.Prod.,49,(1981),355	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Glehnia littoralis
-coconut	split	Kawai,Chem.Abstr.,88 34499b	smiles	OC1CCC2(C)C(CCC3(C)C2CCC4C5C(C(=C)C)CCC5(C)CCC43C)C1(C)C	clean	Aegle marmelos
-coconut	pubmed	10617953	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Lilium lancifolium
-napralert	authors	SENATORE,F: DELLA PORTA,G: REVERCHON,E:	nominal	GUAIOL	clean	Vitex agnus-castus Lamiaceae
-napralert	journal	FLAVOUR FRAGRANCE J	nominal	GUAIOL	clean	Vitex agnus-castus Lamiaceae
-napralert	title	CONSTITUENTS OF VITEX AGNUS-CASTUS L.ESSENTIAL OIL.	nominal	GUAIOL	clean	Vitex agnus-castus Lamiaceae
-coconut	split	Ko,J.Nat.Prod.,60,(1997),1008	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Thespesia populnea
-npass	pubmed	23462643	smiles	COC(=O)[C@]1(O)C[C@@H](O)[C@H]([C@@H](C1)OC(=O)/C=C/c1ccc(cc1)O)O	clean	pimpinella brachycarpa
-metabolights	pubmed	30830410	inchi	InChI=1S/C9H17NO4/c1-7(11)14-8(5-9(12)13)6-10(2,3)4/h8H,5-6H2,1-4H3/t8-/m1/s1	clean	Homo sapiens
-wikidata	doi	10.7164/ANTIBIOTICS.46.1300	inchi	InChI=1S/C14H19NO4/c1-2-13(18)19-14-11(15-8-12(14)17)7-9-3-5-10(16)6-4-9/h3-6,11-12,14-17H,2,7-8H2,1H3/t11-,12-,14-/m0/s1	clean	Streptomyces
-coconut	split	Maldonado,Bol.Soc.Chil.Quim.,38,(1993),43	smiles	O=C1C(OC)=C(OC2=CC(OC)=C(OC)C(O)=C12)C=3C=CC(O)=C(OC)C3	clean	Litsea verticillata
-wikidata	doi	10.1021/NP030392Y	inchi	InChI=1S/C15H10N2O/c18-14-10-6-2-4-8-12(10)17-15-13(14)9-5-1-3-7-11(9)16-15/h1-8H,(H2,16,17,18)	clean	Justicia betonica
-coconut	split	Proksa,Collect.Czech.Chem.Commun,55,(1990),1257	smiles	O=C1N2CC3CC(CN4CCCCC43)C2CCC1O	clean	Hasperolaburnum platycarpum
-unpd	original	Fischer; Linser; Archiv der Pharmazie (Weinheim, Germany); vol. 268; (1930); p. 185,189	smiles	CC1=CC(=O)c2ccc(C)cc2C1=O	clean	Chimaphila corymbosa
-coconut	split	Wagner,Phytochem.,11,(1972),1518	smiles	O=C1C=C(OC2=CC(O)=C(C(O)=C12)C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Barbacenia flava
-coconut	split	Mahmoud,Phytochem.,58,(2001),1239	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Hypericum sampsonii
-coconut	split	Basu,Indian J.Chem.,15B,(1977),971	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Perilla frutescens
-respect	authors	Piccinelli AL, Campo Fernandez M, Cuesta-Rubio O, Márquez Hernández I, De Simone F, Rastrelli L.	nominal	Liquiritigenin	clean	Cuban propolis
-respect	journal	Journal of Agricultural and Food Chemistry	nominal	Liquiritigenin	clean	Cuban propolis
-respect	pubmed	16277396	nominal	Liquiritigenin	clean	Cuban propolis
-respect	publishingDetails	Journal of Agricultural and Food Chemistry;2005 Nov 16;53(23)	nominal	Liquiritigenin	clean	Cuban propolis
-wikidata	doi	10.1016/J.DIB.2020.106469	inchi	InChI=1S/C7H6O4/c8-4-1-2-6(9)5(3-4)7(10)11/h1-3,8-9H,(H,10,11)	clean	Vitis vinifera
-coconut	pubmed	22264337	smiles	O=C(O)C(N)CC=1N=CNC1	clean	Arabidopsis thaliana
-coconut	pubmed	16401590	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Ecballium elaterium
-wikidata	doi	10.1007/BF00579160	inchi	InChI=1S/C27H30O15/c1-9-23(41-27-21(36)19(34)17(32)15(8-28)40-27)20(35)22(37)26(38-9)42-25-18(33)16-13(31)6-12(30)7-14(16)39-24(25)10-2-4-11(29)5-3-10/h2-7,9,15,17,19-23,26-32,34-37H,8H2,1H3/t9-,15+,17+,19-,20-,21+,22+,23-,26+,27-/m0/s1	clean	Solidago virgaurea
-napralert	authors	KOMAE,H: HAYASHI,N: SAKAO,T:	nominal	BENZENE,1-ALLYL-2-3-4-5-TETRAMETHOXY:	clean	Asarum costatum Aristolochiaceae
-napralert	journal	DEV FOOD SCI	nominal	BENZENE,1-ALLYL-2-3-4-5-TETRAMETHOXY:	clean	Asarum costatum Aristolochiaceae
-napralert	title	CHEMOSYSTEMATICS OF HETEROTROPA (ARISTOLOCHIACEAE).	nominal	BENZENE,1-ALLYL-2-3-4-5-TETRAMETHOXY:	clean	Asarum costatum Aristolochiaceae
-unpd	original	Meng, Dahai; Wu, Jian; Zhao, Weimin; Phytochemistry; vol. 71; 2-3; (2010); p. 325 - 331.	smiles	OCC1(O)COC(OCC2OC(OCc3ccccc3)C(O)C(O)C2O)C1O	clean	Breynia rostrata
-coconut	split	Ptak,J.Nat.Prod.,72,(2009),142	smiles	OC1C=CC23C4=C(OC2C1)C(OC)=CC=C4CN(C)CC3	clean	Galanthus woronowii Losinsk.
-coconut	split	Harinantenaina,J.Nat.Prod.,71,(2008),123	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Spiraea formosana
-wikidata	doi	10.1016/S0031-9422(03)00333-9	inchi	InChI=1S/C34H24O22/c35-10-1-6-15(23(43)19(10)39)16-7(2-11(36)20(40)24(16)44)31(48)54-27-14(5-52-30(6)47)53-34(51)29-28(27)55-32(49)8-3-12(37)21(41)25(45)17(8)18-9(33(50)56-29)4-13(38)22(42)26(18)46/h1-4,14,27-29,34-46,51H,5H2/t14-,27-,28+,29-,34+/m1/s1	clean	Juglans regia
-coconut	split	Chen,Phytochem.,68,(2007),2101	smiles	O1C2CCC(=C)C3CC(C)(C)C3CCC12C	clean	Aglaia foveolata
-unpd	original	Kanamori H, et al. Chem Pharm Bull, 1986, 34 (4): 1663.	smiles	OCC1OC(OC2OC=C3C(=O)OCCC3(O)C2C=C)C(OC(=O)c4c(O)cc(O)cc4c5cccc(O)c5)C(O)C1O	clean	Gentiana triflora
-unpd	split	Chem Pharm Bull, 1986, 34 (4): 1663.	smiles	OCC1OC(OC2OC=C3C(=O)OCCC3(O)C2C=C)C(OC(=O)c4c(O)cc(O)cc4c5cccc(O)c5)C(O)C1O	clean	Gentiana triflora
-coconut	split	Monkhe,Phytochem.,49,(1998),1819	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Cirsium dipsacolepis
-streptomedb	pubmed	28740758	smiles	O=C1N[C@H](C(C)C)C(=O)N2CCC[C@H]2C(=O)N(C)CC(=O)N([C@H](C(=O)O[C@@H]([C@@H]1NC(=O)c1c2nc3c(ccc(c3oc2c(c(=O)c1N)C)C)C(=O)N[C@H]1[C@@H](C)OC(=O)[C@H](C(C)C)N(C)C(=O)CN(C(=O)[C@H]2N(C(=O)[C@H](NC1=O)C(C)C)CCC2)C)C)C(C)C)C	clean	Streptomyces flavogriseus NJ-4
-streptomedb	pubmed	16799553	smiles	CSC1SCC2N(C)C(=O)C(C)NC(=O)C(COC(=O)C(N(C(=O)C1N(C)C(=O)C(C)NC(=O)C(COC(=O)C(N(C2=O)C)C(C)C)NC(=O)c1cnc2c(n1)cccc2)C)C(C)C)NC(=O)c1cnc2c(n1)cccc2	clean	Streptomyces griseovariabilis subsp. bandungensis
-coconut	split	Czerson,Chem.Ber.,109,(1976),2291	smiles	C=C1C=CC(CCC(=CCC1)C)C(C)C	clean	Incarvillea emodi
-napralert	doi	10.1248/cpb.45.1183	inchi	InChI=1S/C16H14O6/c1-7-4-11(21-3)14(18)15-12(7)9-5-8(20-2)6-10(17)13(9)16(19)22-15/h4-6,17-18H,1-3H3	clean	Graphis scripta
-coconut	split	Li,J.Nat.Prod.,66,(2003),1002	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Kaunia saltensis
-coconut	split	Wu,Chem.Pharm.Bull.,48,(2000),357	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Homalium longifolium
-coconut	split	Ingham,Z. Naturforsch.,C 34,(1979),630	smiles	OC1=CC=C2C(OCC3C4=CC=5OCOC5C=C4OC23)=C1	clean	Baccharis neglecta
-coconut	split	Xu,Chem.Pharm.Bull.,56,(2008),839	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Khaya ivorensis
-coconut	split	Wansi,Chem.Pharm.Bull.,54,(2006),292	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Helichrysum sutherlandii
-coconut	split	Pei,Zhongcaoyao,14,(1983),433	smiles	O=C(O)C=CC1=CC=C(O)C(OC)=C1	clean	Scrophularia buergeriana
-knapsack	original	PLoS ONE., 2011, 6(2), e16957	inchi	InChI=1S/C3H8O3/c4-1-3(6)2-5/h3-6H,1-2H2	clean	Homo sapiens (Serum)
-coconut	pubmed	21428418	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros sylvatica
-coconut	split	Tasdemir,J.Nat.Prod.,60,(1997),874	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Elsholtzia ciliata
-coconut	split	Mendonca,Chem.Pharm.Bull.,52,(2004),1342	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(C)C(C)C)C2(C)CC1	clean	Ageratina saltillensis
-coconut	split	Wu,Phytochem.,49,(1998),2509	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Senecio scandens
+coconut	split	Mondon,Tetrahedron Lett.,(1981),2015	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Allomyces macrogynus
+coconut	doi	10.1590/S0103-50532000000600012	smiles	C1=C(C)C2C3C(CCC2(C)C3C1)C(C)C	clean	Citrus erythrosa
+coconut	split	Jossang,J.Nat.Prod.,54,(1991),466	smiles	O=C1C2=NC=CC3=CC(OC)=C(OC)C(C=4C=C(OC)C(OC)=CC14)=C23	clean	Alstonia angustiloba
+coconut	split	Ingkaninan,J.Nat.Prod.,63,(2000),315	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Artemisia minor
+coconut	split	Gu,Zhongcaoyao,14,(1983),347	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Sideritis argosphacelus
+coconut	split	Hansen,J.Biol.Chem.,276,(2001),11078	smiles	O=S(C)CCCC(=NOS(=O)(=O)O)SC1OC(CO)C(O)C(O)C1O	clean	Lesquerella gordonii
+coconut	split	Wu,J.Nat.Prod.,53,(1990),1327	smiles	OC1C2=CC=CC=C2C=3C=4OCOC4C=C5C3C1NCC5	clean	Piper brachystachyum
+knapsack	original	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter38	inchi	InChI=1S/C22H22O10/c23-6-17-18(24)19(25)20(26)22(32-17)30-9-1-2-10-13(3-9)27-7-12-11-4-15-16(29-8-28-15)5-14(11)31-21(10)12/h1-5,12,17-26H,6-8H2/t12-,17+,18+,19-,20+,21-,22+/m0/s1	clean	Ononis spinosa
+wikidata	doi	10.1007/S11306-016-1051-4	inchi	InChI=1S/C20H38O2/c1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-18-19-20(21)22/h9-10H,2-8,11-19H2,1H3,(H,21,22)/b10-9-	clean	Homo sapiens
+coconut	split	Hussein,Phytochem.,64,(2003),883	smiles	O=C(O)C1=CC(O)=C(O)C(O)=C1	clean	Melia azedarach
+wikidata	doi	10.1021/NP50034A015	inchi	InChI=1S/C15H24/c1-13-7-5-8-14(2)10-12-15(3,4)11-6-9-13/h7,10,12H,2,5-6,8-9,11H2,1,3-4H3	clean	Hymenoxys hoopesii
+coconut	split	Caldwell,J.Nat.Prod.,63,(2000),1611	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Rosa woodsii
+coconut	doi	10.1002/1099-1565(200101/02)12:1<64::AID-PCA562>3.0.CO	smiles	O(C1=CC=C(C=C1OC)C2OCC3C(OCC23)C4=CC=C5OCOC5=C4)C	clean	Aptosimum spinescens
+napralert	authors	RAOELISON,GE: TERREAUX,C: QUEIROZ,EF: ZSILA,F: SIMONYI,M: ANTUS,S: DRANDRIANTSOA,A: HOSTETTMANN,K:	nominal	PYRAN-2-ONE,2(H): 5-6-DIHYDRO: 6(S)-[2(R)-HYDROXY-6-PHENYL-HEXYL]:	clean	Ravensara crassifolia Lauraceae
+napralert	journal	HELV CHIM ACTA	nominal	PYRAN-2-ONE,2(H): 5-6-DIHYDRO: 6(S)-[2(R)-HYDROXY-6-PHENYL-HEXYL]:	clean	Ravensara crassifolia Lauraceae
+napralert	title	ABSOLUTE CONFIGURATION OF TWO NEW 6-ALKYLATED ALPHA-PYRONES (=2H-PYRAN-2-ONES) FROM RAVENSARA CRASSIFOLIA.	nominal	PYRAN-2-ONE,2(H): 5-6-DIHYDRO: 6(S)-[2(R)-HYDROXY-6-PHENYL-HEXYL]:	clean	Ravensara crassifolia Lauraceae
+unpd	original	Mo S, et al. JNP, 2004, 67 (5): 823.	smiles	OC(=O)c1ccc(O)c(O)c1	clean	Amomum aromaticum
+unpd	split	JNP, 2004, 67 (5): 823.	smiles	OC(=O)c1ccc(O)c(O)c1	clean	Amomum aromaticum
+coconut	split	Chaturvedula,J.Nat.Prod.,66,(2003),1463	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Ligularia songarica
+napralert	doi	10.1515/znb-1992-0324	inchi	InChI=1S/C10H18/c1-7-4-5-8-9(6-7)10(8,2)3/h7-9H,4-6H2,1-3H3	clean	Andropogon muricatus
+coconut	split	Ingham,Biochem. Syst. Ecol.,18,(1990),329	smiles	OC=1C=C(O)C2=C(OC(C3=CC(O)=C(O)C(O)=C3)C(O)C2)C1	clean	Pueraria phaseoloides
+napralert	authors	YIP,TT: LAU,CNB: BUT,PPH: KONG,YC:	nominal	GINSENOSIDE RE	clean	Panax ginseng Araliaceae
+napralert	journal	AMER J CHINESE MED	nominal	GINSENOSIDE RE	clean	Panax ginseng Araliaceae
+napralert	title	QUANTITATIVE ANALYSIS OF GINSENOSIDES IN FRESH PANAX GINSENG.	nominal	GINSENOSIDE RE	clean	Panax ginseng Araliaceae
+coconut	split	Velcheva,Acta Pharm.Nord.,4,(1992),57	smiles	O(C=1C=CC2=CC=3C4=CC=5OCOC5C=C4CC[N+]3C=C2C1OC)C	clean	Papaver rhopalothece
+coconut	pubmed	19475987	smiles	O=C(OC1CC2C(C=CC(=O)C2(C)C)(C)C3CCC4(C(=CC(=O)C4C5=COC=C5)C13C)C)C	clean	Azadirachta indica
+coconut	pubmed	18564899	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Maytenus buxifolia
+coconut	split	Stipanovic,Phytochem.,14,(1975),1077	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Aconitum heterophylloides
+coconut	split	Rohloff,Phytochem.,59,(2002),655	smiles	C1=C(C)CC=C(C1)C(C)C	clean	Rhodiola rosea L.
+coconut	split	Taher,Phytochem.,66,(2005),723	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Cedronella canariensis
+napralert	doi	10.1002/(sici)1099-1026(199801/02)13:1<29::aid-ffj682>3.0.co;2-s	inchi	InChI=1S/C10H16O/c1-9(2)5-4-6-10(3)7-8-11/h5,7-8H,4,6H2,1-3H3/b10-7+	clean	Cymbopogon citratus
+coconut	split	Shelyuto,Khim.Prir.Soedin.,(1975),515	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Casuarina rigida
+napralert	authors	BINNS,WW: BLUNDEN,G: WOODS,DL:	nominal	VIMALIN	clean	Salix rubra Salicaceae
+napralert	journal	PHYTOCHEMISTRY	nominal	VIMALIN	clean	Salix rubra Salicaceae
+napralert	title	DISTRIBUTION OF LEUCOANTHOCYANIDINS, PHENOLIC GLYCOSIDES AND IMINO-ACIDS IN LEAVES OF SALIX SPECIES.	nominal	VIMALIN	clean	Salix rubra Salicaceae
+coconut	authors	Molecules 2014	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Artemisia capillaries
+wikidata	doi	10.1016/0031-9422(75)83051-2	inchi	InChI=1S/C22H22O12/c1-31-12-4-8(2-3-10(12)25)20-21(17(28)15-11(26)5-9(24)6-13(15)32-20)34-22-19(30)18(29)16(27)14(7-23)33-22/h2-6,14,16,18-19,22-27,29-30H,7H2,1H3	clean	Anthyllis onobrychioides
+wikidata	doi	10.1016/0031-9422(93)85463-2	inchi	InChI=1S/C19H20O3/c1-10-9-22-18-12-6-7-13-11(5-4-8-19(13,2)3)15(12)17(21)16(20)14(10)18/h6-7,10H,4-5,8-9H2,1-3H3/t10-/m0/s1	clean	Salvia mellifera
+coconut	split	Breytenbach,J. Nat. Prod.,49,(1986),1003	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Psoralea effusa
+wikidata	doi	10.1021/NP000504A	inchi	InChI=1S/C43H49NO19/c1-21(45)55-20-42-34(59-24(4)48)30(57-22(2)46)29-32(50)43(42)41(8,54)33(31(58-23(3)47)35(42)60-25(5)49)61-38(53)39(6,62-36(51)26-13-10-9-11-14-26)17-16-28-27(15-12-18-44-28)37(52)56-19-40(29,7)63-43/h9-15,18,29-35,50,54H,16-17,19-20H2,1-8H3/t29-,30-,31+,32-,33+,34-,35+,39-,40+,41+,42-,43+/m1/s1	clean	Tripterygium wilfordii
+wikidata	doi	10.1016/J.STEROIDS.2006.05.016	inchi	InChI=1S/C27H41NO3/c1-14-9-24-25(28-13-14)16(3)27(31-24)8-6-18-19(15(27)2)11-21-20(18)12-23(30)22-10-17(29)5-7-26(21,22)4/h14,16-18,20-22,24-25,28-29H,5-13H2,1-4H3	clean	Fritillaria monantha
+coconut	doi	10.7164/antibiotics.50.402	smiles	O=C(O)CNC(=O)C1NC(=O)C(NC(=O)C2N(C(=O)C(N)C)CCC2O)COC(=O)C=3C=C(O)C=C(O)C3CSC1	clean	Streptomyces sp. NR 0661
+npass	pubmed	21241058	smiles	C[C@@H]1OC(=O)C[C@@H](N=C(O)[C@@H](Cc2c(Br)[nH]c3c2ccc(c3)Br)N(C)C(=O)[C@@H](N=C([C@H](C/C(=C/[C@@H](C1)C)/C)C)O)C)c1ccc(cc1)O	clean	Jaspis splendens
+coconut	split	Joshi,Herba Hung..,28,(1989),67	smiles	O=C1C=C(OC=2C1=C(O)C=C(O)C2C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Prosopis chilensis
+coconut	split	Nurmukhamedova,Khim.Prir.Soedin.,(1982),261	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Acanthophyllum elatius
+coconut	split	Gonzalez,An.Quim.,78C,(1982),184	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Gomphrena celosioides
+napralert	authors	LEET,JE: SHAMMA,M:	nominal	BERBERINE	clean	Berberis lycium Berberidaceae
+napralert	journal	DISS ABSTR INT B	nominal	BERBERINE	clean	Berberis lycium Berberidaceae
+napralert	title	ALKALOIDS OF THE BERBERIDACEAE.	nominal	BERBERINE	clean	Berberis lycium Berberidaceae
+unpd	original	Dong, Hui; Chen, Shao-Xing; Xu, Hong-Xi; Kadota, Shigetoshi; Namba, Teuneo; Journal of Natural Products; vol. 61; 1; (1998); p. 142 - 144.	smiles	COc1cc(O)cc(O)c1C(=O)C=Cc2ccccc2	clean	Alpinia blepharocalyx
+coconut	split	Wollmann,Pharmazie,28,(1973),56	smiles	OCCC(C)CCC=C(C)C	clean	Quercus aegilops
+coconut	split	Kitagawa,Chem.Pharm.Bull.,24,(1976),121	smiles	OC(C=C)(C)CCC=C(C)C	clean	Erica glauca
+unpd	original	Stallard,M.O. et al.; Tetrahedron; vol. 34; (1978); p. 2077 - 2081.	smiles	CC(C)C1CC(C)(C)C(O)C2=C1CCC2C	clean	Aplysia brasiliana
+unpd	split	Tetrahedron; vol. 34; (1978); p. 2077 - 2081.	smiles	CC(C)C1CC(C)(C)C(O)C2=C1CCC2C	clean	Aplysia brasiliana
+napralert	doi	10.1016/s0021-9673(01)88492-2	inchi	InChI=1S/C21H20O11/c22-7-13-15(26)17(28)18(29)21(31-13)32-20-16(27)14-11(25)5-10(24)6-12(14)30-19(20)8-1-3-9(23)4-2-8/h1-6,13,15,17-18,21-26,28-29H,7H2/t13-,15-,17+,18-,21+/m1/s1	clean	Ginkgo biloba
+napralert	authors	JENETT SIEMS,K: KOHLER,I: KRAFT,C: SIEMS,K: SOLIS,PN: GUPTA,MP: BIENZLE,U:	nominal	CORNUTIN L	clean	Cornutia grandifolia Verbenaceae
+napralert	journal	PHYTOCHEMISTRY	nominal	CORNUTIN L	clean	Cornutia grandifolia Verbenaceae
+napralert	title	CORNUTINS C-L, NEO-CLERODANE-TYPE DITERPENOIDS FROM CORNUTIA GRANDIFOLIA VAR.INTERMEDIA.	nominal	CORNUTIN L	clean	Cornutia grandifolia Verbenaceae
+coconut	split	Tunmann,Naturwissenschaften,47,(1960),471	smiles	O=C(OC)C12C(O)C34C=5C=CC=CC5NC4C6N(CC(=CC)C1C6)C2C3	clean	Rauvolfia Vomitoria
+wikidata	doi	10.1055/S-2007-969123	inchi	InChI=1S/C15H18O4/c1-8-4-5-11(16)9(2)7-13-14(12(17)6-8)10(3)15(18)19-13/h6,12-14,17H,2-5,7H2,1H3/b8-6-/t12-,13+,14+/m1/s1	clean	Microliabum candidum
+coconut	split	Gorter,K.Annalen,372,(1910),237-246	smiles	O=C([O-])C1=CC=C[N+](=C1)C	clean	Canavalia Ensiformis
+wikidata	doi	10.1211/0022357011776009	inchi	InChI=1S/C17H23NO/c1-4-5-6-7-8-9-10-11-12-13-14-17(19)18-15-16(2)3/h1,8-9,13-14,16H,7,10-12,15H2,2-3H3,(H,18,19)	clean	Echinacea pallida
+coconut	pubmed	21319371	smiles	O(C1=CC=C2C(=C1OC)CN3CCC4=CC(OC)=C(OC)C=C4C3C2)C	clean	Coptis deltoidea
+streptomedb	pubmed	1517162	smiles	N[C@H]1C[C@H](N=C(C(=O)O)N)[C@H](O[C@@H]1OC1[C@H](O)[C@@H](O)C([C@@H]([C@@H]1O)O)O)C	clean	Streptomyces kasugaensis M338-M1
+coconut	pubmed	21941920	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Magnolia kobus
+napralert	authors	ZENK,MH: RUEFFER,M: AMANN,M: DEUS-NEUMANN,B: NAGAKURA,N:	nominal	BERBERINE	clean	Berberis stolonifera Berberidaceae
+napralert	journal	J NAT PROD	nominal	BERBERINE	clean	Berberis stolonifera Berberidaceae
+napralert	title	BENZYLISOQUINOLINE BIOSYNTHESIS BY CULTIVATED PLANT CELLS AND ISOLATED ENZYMES-1.	nominal	BERBERINE	clean	Berberis stolonifera Berberidaceae
+napralert	authors	ROMUSSI,G: CIARALLO,G: PARODI,B:	nominal	HYPEROSIDE	clean	Quercus cerris Fagaceae
+napralert	journal	PHARMAZIE	nominal	HYPEROSIDE	clean	Quercus cerris Fagaceae
+napralert	title	A GLYCOSIDE FROM QUERCUS CERRIS L.	nominal	HYPEROSIDE	clean	Quercus cerris Fagaceae
+coconut	split	Sariyar,Planta Med.,55,(1989),89	smiles	O=C1C2=CC=3OCOC3C=C2CCN(C)CC4=C5OCOC5=CC=C4C1	clean	Hypecoum trilobum
+metabolights	pubmed	27331087	inchi	InChI=1S/C20H32O3/c1-2-3-12-15-18-19(23-18)16-13-10-8-6-4-5-7-9-11-14-17-20(21)22/h4,6-7,9-10,13,18-19H,2-3,5,8,11-12,14-17H2,1H3,(H,21,22)/b6-4-,9-7-,13-10-	clean	Rattus norvegicus
+coconut	split	Waterman,Phytochem.,14,(1975),2530	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Klaseopsis chinensis
+coconut	pubmed	21522091	smiles	O=C1OCC(CC2=CC=C(O)C(OC)=C2)C1CC3=CC=C(O)C(OC)=C3	clean	Lampranthus sociorum
+coconut	split	Zarga,J.Nat.Prod.,61,(1998),798	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Piper Nigrum
+coconut	split	Coxon,Tetrahedron Lett.,(1974),2929	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Magnolia ovata
+coconut	split	Adam,Int.Conf.Chem.Biotechnol.Biol.Act.Nat.Prod.,3,(1981),1919	smiles	O=C1OC(CC(C)C1C)C(C)C2CCC3C4CCC5CCCCC5(C)C4CCC23C	clean	Discopodium penninervium
+coconut	split	Chu,J.Biol.Chem,268,(1993),27 026	smiles	OC1=CC=C(C=C1OC)C2OCC3C(OCC23)C4=CC=C(O)C(OC)=C4	clean	Gymnadenia conopsea R.BR.
+coconut	split	Boeker,Rev.Latinoam.Quim.,17,(1986),47	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Pulicaria canariensis
+coconut	split	Zimmermann,Helv.Chim.Acta,27,(1944),332	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Dioscorea althaeoides
+coconut	split	Seitz,J.Agric.Food Chem.,25,(1977),838-841	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Annona cornifolia
+coconut	split	Jumar,Planta Med.,B 30,(1976),291	smiles	O=C1OC=2C(C=C1)=CC=3C=COC3C2OCC=C(C)C	clean	Podocarpus henckelii
+coconut	split	Sando,J.Biol.Chem.,56,(1973),457	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Potentilla multifida
 biophytmol	authors	Limmatvapirat C, Sirisopanaporn S, Kittakoop P	smiles	O1CC(Cc2c1c(OC)c(OC)c(OC)c2)C1=CC(=O)C(=C(OC)C1=O)OC	clean	Abrus precatorius L.     Common Name:Indian wild liquorice, Jequirity, Crab's Eye (English), Gunja, Gunjaka (Sanskrit)
 biophytmol	journal	Planta Med	smiles	O1CC(Cc2c1c(OC)c(OC)c(OC)c2)C1=CC(=O)C(=C(OC)C1=O)OC	clean	Abrus precatorius L.     Common Name:Indian wild liquorice, Jequirity, Crab's Eye (English), Gunja, Gunjaka (Sanskrit)
 biophytmol	pubmed	15114511	smiles	O1CC(Cc2c1c(OC)c(OC)c(OC)c2)C1=CC(=O)C(=C(OC)C1=O)OC	clean	Abrus precatorius L.     Common Name:Indian wild liquorice, Jequirity, Crab's Eye (English), Gunja, Gunjaka (Sanskrit)
 biophytmol	title	Antitubercular and antiplasmodial constituents of Abrus precatorius	smiles	O1CC(Cc2c1c(OC)c(OC)c(OC)c2)C1=CC(=O)C(=C(OC)C1=O)OC	clean	Abrus precatorius L.     Common Name:Indian wild liquorice, Jequirity, Crab's Eye (English), Gunja, Gunjaka (Sanskrit)
-coconut	pubmed	11714325	smiles	O=C1N2CC3CC(CN4CCCCC43)C2CCC1	clean	Ulex minor
-coconut	split	Marichkova,Probl. Farm.,9,(1981),63	smiles	O=C1C(OC)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Calceolaria spp.
-coconut	pubmed	23354392	smiles	O=C1C2=C(O)C=C(OC3OC(CO)C(O)C(O)C3O)C=C2OC(C4=CC=C(O)C=C4)C1	clean	Prunus persica
-coconut	split	Cooke,Aust. J. Chem.,17,(1964),379	smiles	O=C1C(=COC2=CC(O)=CC=C21)C=3C=CC(OC)=CC3	clean	Pterocarpus indicus
-coconut	pubmed	21598174	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros chloroxylon
-napralert	authors	SIGSTAD,EE: CATALAN,CAN: GUTIERREZ,AB: DIAZ,JG: GOEDKEN,VL: HERZ,W:	nominal	GUAIA-10(14)-11(13)-DIEN-6-12-OLIDE,3-4-DIHYDROXY: (1R-3R-4R-5S-6S-7S):	clean	Stevia grisebachiana Asteraceae
-napralert	journal	PHYTOCHEMISTRY	nominal	GUAIA-10(14)-11(13)-DIEN-6-12-OLIDE,3-4-DIHYDROXY: (1R-3R-4R-5S-6S-7S):	clean	Stevia grisebachiana Asteraceae
-napralert	title	GUAIANOLIDES AND GERMACRANOLIDES FROM STEVIA GRISEBACHIANA.	nominal	GUAIA-10(14)-11(13)-DIEN-6-12-OLIDE,3-4-DIHYDROXY: (1R-3R-4R-5S-6S-7S):	clean	Stevia grisebachiana Asteraceae
-coconut	split	El-Emary,Fitoterapia,54,(1983),133	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Eucalyptus melliodora
-coconut	pubmed	24066512	smiles	O=CC=C(C)CCC=C(C)C	clean	Loranthus parasiticus
-coconut	split	Casabuono,Phytochem.,35,(1994),479	smiles	OC1=CC=C(C=C1)C=CC=2C=C(O)C=C(O)C2	clean	Pterolobium hexapetallum
-coconut	split	Adesina,Fitoterapia,54,(1983),141	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Crocus sativus
-coconut	split	Zaidi,Phytochem.,48,(1998),991	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Xylopia columbiana
-coconut	split	Dava,J.Sci.Ind.Res.Indian,19B,(1960),470	smiles	O=C1C2=C(O)C=C(OC)C=C2OC(C3=CC=C(O)C=C3O)C1	clean	Eukaryota$$$$class
-coconut	split	Anjaneyulu,Curr.Sci.,46,(1977),776	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Carthamus tinctorius
-coconut	pubmed	27326537	smiles	O=C(OC1C(OC(OCCC2=CC=C(O)C(O)=C2)C(O)C1OC3OC(C)C(O)C(O)C3O)CO)C=CC4=CC=C(O)C(O)=C4	clean	Achillea serbica
-coconut	pubmed	24079177	smiles	OC1CCC2(C)C(CCC3(C)C2CC=C4C5CC(C)(C)CCC5(C)CCC43C)C1(C)C	clean	Castanopsis sclerophylla
-wikidata	doi	10.1021/NP500834D	inchi	InChI=1S/C18H22O2/c1-5-18(4,13-11-17(20)14(2)3)12-10-15-6-8-16(19)9-7-15/h5-10,12,19H,1-2,11,13H2,3-4H3/b12-10+/t18-/m0/s1	clean	Cullen corylifolia
-coconut	split	Costa,J.Nat.Prod.,64,(2001),792	smiles	OC1=CC=C(C=C1OC)C2C3=CC(O)=C(OC)C=C3CC(CO)C2CO	clean	Justicia flava
-napralert	authors	KITAJIMA,J: SUZUKI,N: ISHIKAWA,T: TANAKA,Y:	nominal	FRUCTOSE,D:	clean	Torilis japonica Apiaceae
-napralert	journal	CHEM PHARM BULL	nominal	FRUCTOSE,D:	clean	Torilis japonica Apiaceae
-napralert	title	NEW HEMITERPENOID PENTOL AND MONOTERPENOID GLYCOSIDE OF TORILLIS JAPONICA FRUIT, AND CONSIDERATION OF THE ORIGIN OF APIOSE.	nominal	FRUCTOSE,D:	clean	Torilis japonica Apiaceae
-coconut	doi	10.3390/molecules200815330	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Vitis vinifera var.'Trebbiano'.
-coconut	authors	Ginekol Pol. 2012	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Amomum villosum
-coconut	split	Schittko,Phytochem.,51,(1999),609	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Baccharis magellanica
-coconut	split	Asres,Phytochem.,25,(1986),1449	smiles	N12CCCCC1C3CN4CCCCC4C(C2)C3	clean	Genista lydia
-metabolights	pubmed	26839171	inchi	InChI=1S/C21H40O4/c1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-21(24)25-19-20(23)18-22/h9-10,20,22-23H,2-8,11-19H2,1H3/b10-9+	clean	Homo sapiens
-coconut	pubmed	17190852	smiles	OCC1OC(N2C=NC=3C(=NC=NC32)N)C(O)C1O	clean	Eupatorium argentinum
-coconut	split	Jatoi et al.,Phytotherapy Res.,21,(2007),507-516	smiles	OC1CC2CCC1(C)C2(C)C	clean	Astragalus gummifer
-coconut	split	Swiatek,Herba Pol.,23,(1977),201	smiles	O=C(O)C1=CC=C(O)C(OC)=C1	clean	Opunitia dillenii HAW.
-coconut	split	Evans,Phytochem.,24,(1985),2593	smiles	O=C(O)C1=CC(O)=C(O)C(O)=C1	clean	Clibadium mexiae
-wikidata	doi	10.1248/CPB.50.115	inchi	InChI=1S/C16H14O5/c1-9(2)12(17)8-20-16-10-3-4-15(18)21-14(10)7-13-11(16)5-6-19-13/h3-7,12,17H,1,8H2,2H3/t12-/m1/s1	clean	Niphogeton ternata
-coconut	split	Jantan et al.,Flavour Fragr.J.,13,(1998),245	smiles	C=CC(=C)CCC=C(C)C	clean	Atalantia racemosa
-coconut	split	Choudhary,Phytochem.,69,(2008),1018	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Teucrium alyssifolium
-coconut	split	Omolo,Phytochem.,65,(2004),2797	smiles	OC1CC2CCC1(C)C2(C)C	clean	Titanotrichum oldhamii
-coconut	split	Dikhtyarev,Khim. Prir. Soedin.,(1982),258	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Coussarea macrophylla
-coconut	split	Lachman,Sci. Agric. Bohemoslov.,14,(1982),265	smiles	O=C1C=C(OC2=CC(O)=C(C(O)=C12)C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Microcos paniculata
-coconut	pubmed	19544437	smiles	O=C(N)C=1C=NC=CC1	clean	Balanophora involucrata
-coconut	split	Dikhovlinova,Khim.Prir.Soedin.,(1976),811	smiles	O=C1OC=2C=C3OC=CC3=C(OC)C2C=C1	clean	Fagara spp.
-wikidata	doi	10.1080/00021369.1985.10866944	inchi	InChI=1S/C24H32O5/c1-12(25)13-9-18(29)24(6)20-14(26)10-16-21(2,3)17(28)7-8-22(16,4)19(20)15(27)11-23(13,24)5/h13-14,16,26H,7-11H2,1-6H3/t13-,14+,16+,22+,23-,24+/m1/s1	clean	Ganoderma lucidum
-coconut	split	Biggs,Aust. J. Chem.,28,(1975),1389	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Acacia leucoclada
-coconut	split	Bourquin,Pharm. Acta Helv.,62,(1987),297	smiles	O=C1N2CC3CC(CN4CCCCC43)C2CCC1	clean	Camaecytisus absinthioides
-coconut	pubmed	11762832	smiles	O=C(O)CC(O)(C(=O)O)CC(=O)O	clean	Papaver somniferum
-napralert	authors	GINER,JL: WUNSCHE,L: ANDERSEN,RA: DJERASSI,C:	nominal	LANOSTEROL	clean	Unidentified zooxanthella Zooxanthellaceae
-napralert	journal	BIOCHEM SYST ECOL	nominal	LANOSTEROL	clean	Unidentified zooxanthella Zooxanthellaceae
-napralert	title	DINOFLAGELLATES CYCLIZE SQUALENE OXIDE TO LANOSTEROL.	nominal	LANOSTEROL	clean	Unidentified zooxanthella Zooxanthellaceae
-npass	pubmed	7877593	smiles	OC[C@H]1O[C@H]([C@@H]([C@@H]1O)O)n1cnc2c1[nH]c(=N)nc2O	clean	Homo sapiens
-napralert	doi	10.1016/0031-9422(94)00863-o	inchi	InChI=1S/C20H28O7/c1-10(2)8-15(22)27-17-16-12(4)19(24)26-13(16)9-11(3)6-7-14(21)20(5,25)18(17)23/h6-7,10-11,13,16-18,23,25H,4,8-9H2,1-3,5H3/b7-6-/t11-,13+,16-,17-,18+,20+/m0/s1	clean	Neurolaena oaxacana
-coconut	split	Wu,Shoyakugaku Zasshi,43,(1989),195	smiles	OC1=C(OC)C=C2C3=C1C4=CC(OC)=C(OC)C=C4CC3N(C)CC2	clean	Ceratocapnos palaestinus
-coconut	split	Yi,Phytochem.,53,(2000),1001	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros virginiana
-coconut	split	Ferreira,Phytochem.,53,(2000),145	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Acacia linarioides
-coconut	split	Greathouse,Am.J.Bot.,28,(1941),702	smiles	OC1C=C2CCN3CC4=CC=5OCOC5C=C4C(C1O)C23	clean	Crinum amabile
-coconut	split	Siwon,Planta Med.,31,(1977),57	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Laggera aurita
-coconut	pubmed	18982377	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Cassine papillosa
-coconut	split	Winterstein,Angew.Chem.,32,(1960),902	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Taraxacum officinale
-coconut	split	Bhardwaj,Phytochem.,19,(1980),2040	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Luzula multiflora
-coconut	doi	10.1021/jf0508044	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Erythrina melanacantha
-coconut	split	Adesanya,J.Nat.Prod.,62,(1999),1694	smiles	OC1=CC=C(C=C1)C=CC=2C=C(O)C=C(O)C2	clean	Ampelopsis brevipedunculata
-coconut	split	Seitz,J.Agric.Food Chem.,25,(1977),838-841	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(=CC)C(C)C)C2(C)CC1	clean	Pythiopsis cymosa
+coconut	pubmed	21973054	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Ophiorrhiza liukiuensis
+coconut	pubmed	19377635	smiles	OC1=CC=C(C=C1OC)C2OCC3C(OCC23)C4=CC=C(O)C(OC)=C4	clean	Heliotropium glutinosum
+coconut	split	Mors,Phytochem.,55,(2000),627	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Dictamnus dasycarpus
+coconut	pubmed	12850578	smiles	N=1C=CC=C(C1)C2N(C)CCC2	clean	Nicotiana glauca
+coconut	split	Pabuccoglu,J.Nat.Prod.,52,(1989),716	smiles	OC=1C(OC)=CC=C2C1C=3C=4OCOC4C=C5C3C(N(C)CC5)C2	clean	Ixeris repens
+napralert	authors	MANSOUR,RMA: AHMED,AA: SALEH,NAM:	nominal	CYNAROSIDE	clean	Launaea nudicaulis Asteraceae
+napralert	journal	PHYTOCHEMISTRY	nominal	CYNAROSIDE	clean	Launaea nudicaulis Asteraceae
+napralert	title	FLAVONE GLYCOSIDES OF SOME LAUNAEA SPECIES.	nominal	CYNAROSIDE	clean	Launaea nudicaulis Asteraceae
+coconut	split	Nascimento,Phytochem.,52,(1999),345	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Ipomoea cairica
+coconut	split	Chang,J.Chin.Chem.Soc.(Taipei),47,(2000),913	smiles	O(C=1C=C2C3=C(C1OC)C4=CC=CC=C4CC3NCC2)C	clean	Ziziphus jujuba
+coconut	split	Ferreira,Phytochem.,53,(2000),145	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Dipsacus asper
+coconut	split	Waycott,Plant Physiol.,95,(1991),1169	smiles	O=CC12CCCC(C(=O)O)(C)C2C(C(=O)O)C34CC(=C)C(O)(CCC13)C4	clean	Vitis vinifera
+coconut	split	Wollenweber,Phytochem.,16,(1977),295	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Bryum weigelii
+coconut	split	Takai,Chem. Pharm. Bull.,20,(1972),2488	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Acacia parramattensis
+coconut	pubmed	19896667	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Ononis spinosa
+coconut	split	Pailer,Monatsh.Chem.,104,(1973),1394	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Anaphalis margaritacea
+coconut	split	Yoshikawa,Chem.Pharm.Bull.,55,(2007),308	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Salvia aethiopis
+wikidata	doi	10.1016/S0031-9422(97)00221-5	inchi	InChI=1S/C2H6S4/c1-3-5-6-4-2/h1-2H3	clean	Amorphophallus albus
+coconut	split	Lee,J. Nat. Prod.,61,(1998),375	smiles	O=C(O)C12CCC(C(=O)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Cosmos pringlei
+napralert	doi	10.1248/cpb.35.1479	inchi	InChI=1S/C21H30O9/c1-8-4-5-10-9(2)19(26)30-18(10)14-11(8)6-13(21(14,3)27)29-20-17(25)16(24)15(23)12(7-22)28-20/h10-18,20,22-25,27H,1-2,4-7H2,3H3	clean	Diaspananthus uniflorus
+coconut	split	Nicholls,J.Nat.Prod.,45,(1982),453	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Eriobotrya Japonica
+coconut	split	Jabalpurwala,Phytochem.,70,(2009),1428	smiles	C1=C(C)C2CC(C1)C2(C)C	clean	Prunus dulcis
+coconut	split	Alaniya,Khim.Prir.Soedin.,(1976),813	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Agrimonia pilosa var.japonica
+coconut	doi	10.1016/j.jep.2007.05.015	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Euphorbia nematocypha
+coconut	split	Kuo,Chem.Pharm.Bull.,56,(2008),97	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Oncoba echinata
+coconut	split	Leu,Chem.Pharm.Bull.,54,(2006),1063	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Ophiopogon Japonicus
+coconut	split	Wu,Chem.Pharm.Bull.,53,(2005),56	smiles	OC1=C(OC)C=C(C=C1OC)C2OCC3C(OCC23)C4=CC(OC)=C(O)C(OC)=C4	clean	Juniperus scopulorum
+coconut	split	Khamidov,Chem.Hat.Compd.,39,(2003),407	smiles	O(C=1C=CC2=CC=3C4=CC=5OCOC5C=C4CC[N+]3C=C2C1OC)C	clean	Zamia spiralis
+coconut	split	Atta-ur-Rahman,J.Nat.Prod.,71,(2008),910	smiles	O=C(O)C1=CC=C(O)C(OC)=C1	clean	Paeonia hybrida
+unpd	original	Irlinger, Bernhard; Kramer, Hans-Joachim; Mayser, Peter; Steglich, Wolfgang; Angewandte Chemie, International Edition; vol. 43; 9; (2004); p. 1098 - 1100; Angewandte Chemie; vol. 116; 9; (2004); p. 1119 - 1121.	smiles	OC(=O)C1Cc2c([nH]c3ccccc23)C4(N1)C(=O)C(=C(C4=O)c5c[nH]c6ccccc56)c7c[nH]c8ccccc78	clean	Malassezia furfur
+coconut	split	Yoshikawa,Chem.Pharm.Bull.,55,(2007),308	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Astragalus curvicarpus
+coconut	split	Tempeam,Chem.Pharm.Bull.,55,(2005),1321	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Galium album
+coconut	split	Chen,Phytochem.,67,(2006),1041	smiles	OC1=C(OC)C=C(C=C1OC)C2OCC3C(OCC23)C4=CC(OC)=C(O)C(OC)=C4	clean	Plectranthus nummularius
+coconut	split	Ali,Phytochem.,57,(2001),1277	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCCC(C)C)C2(C)CC1	clean	Homo sapiens (Serum)
+coconut	pubmed	21405989	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2C=4C(O)=CC(O)=C5C4OC(C6=CC=C(O)C(O)=C6)C(O)C5)C1	clean	Scorzonera pseudodivaricata
+coconut	split	Latvala,Tetrahedron Asymmetry,6,(1995),361	smiles	OC1C=C2CCN3CC4=CC=5OCOC5C=C4C(C1O)C23	clean	Crinum asiaticum var. sinicum
+coconut	split	Baser,Chem.Pharm.Bull.,54,(2006),222	smiles	C1=C(C)C2CC(C1)C2(C)C	clean	Valeriana jatamansi
+wikidata	doi	10.1055/S-2006-957726	inchi	InChI=1S/C37H40N2O6/c1-38-14-12-24-19-32(41-3)33-21-27(24)28(38)16-22-6-9-26(10-7-22)44-31-18-23(8-11-30(31)40)17-29-35-25(13-15-39(29)2)20-34(42-4)36(43-5)37(35)45-33/h6-11,18-21,28-29,40H,12-17H2,1-5H3/t28-,29+/m1/s1	clean	Stephania cephalantha
+coconut	split	Hatano,Chem.Pharm.Bull.,48,(2000),1286	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Calopogonium caeruleum
+coconut	split	Jung,Chem.Pharm.Bull.,56,(2008),203	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Pteryxia terebinthina
+coconut	split	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter40	smiles	OC=1C=CC=CC1O	clean	Solanum laxum
+napralert	authors	HARMALA,P: VOURELA,H: LEHTONEN,P: HILTUNEN,R:	nominal	IMPERATORIN,ISO:	clean	Angelica archangelica Apiaceae
+napralert	journal	J CHROMATOGR	nominal	IMPERATORIN,ISO:	clean	Angelica archangelica Apiaceae
+napralert	title	OPTIMIZATION OF THE HIGH-PERFORMANCE LIQUID CHROMATOGRAPHY OF COUMARINS IN ANGELICA ARCHANGELICA WITH REFERENCE TO MOLECULAR STRUCTURE.	nominal	IMPERATORIN,ISO:	clean	Angelica archangelica Apiaceae
+napralert	authors	PADMAJA,V: THANKAMANY,V: HISHAM,A:	nominal	TARAXEROL	clean	Uvaria narum Annonaceae
+napralert	journal	J ETHNOPHARMACOL	nominal	TARAXEROL	clean	Uvaria narum Annonaceae
+napralert	title	ANTIBACTERIAL, ANTIFUNGAL AND ANTHELMINTIC ACTIVITIES OF ROOT BARKS OF UVARIA HOOKERI AND UVARIA NARUM.	nominal	TARAXEROL	clean	Uvaria narum Annonaceae
+knapsack	original	Teresa,An.Quim.,74,(1978),1023	inchi	InChI=1S/C17H26O2/c1-11(2)14-8-10-17(5)9-6-7-12(3)15(17)16(14)19-13(4)18/h7,14-16H,1,6,8-10H2,2-5H3/t14-,15+,16-,17+/m0/s1	clean	Chenopodium botrys
+coconut	split	King,J.Chem.Soc.,(1956),4477	smiles	OC=1C=C(O)C=C(C=CC2=CC=C(O)C(O)=C2)C1	clean	Bombax ceiba
+coconut	split	Lindstedt,Acta Chem.Scand.,5,(1951),129	smiles	OC=1C=C(OC)C=C(C=CC=2C=CC=CC2)C1	clean	Crinum giganteum
+coconut	split	Blake,Phytochem.,35,(1994),1383	smiles	O=CC12CCCC(C(=O)O)(C)C2C(C(=O)O)C34CC(=C)C(O)(CCC13)C4	clean	Phyllostachys bambusoides
+coconut	split	Okasaka,Phytochem.,69,(2008),1767	smiles	O=C(O)C=1C=CC=CC1	clean	Pteridium Aquilinum
+coconut	split	Cuca,Phytochem.,47,(1998),1437	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Schizanthus tricolor
+coconut	split	Nishimura,Tetrahedron Lett.,(1969),3097	smiles	OC(C=C)(C)CCC=C(C)C	clean	Pinus halepensis
+coconut	doi	10.1590/S0103-50532009000400008	smiles	O=C1C=2C=CC=C(O)C2N(C3=C(OC)C(O)=C(C(O)=C13)CC=C(C)C)C	clean	Clematis flammula
+coconut	split	Hashida,Chem.Pharm.Bull.,56,(2008),1164	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Podolepis longipedata
+coconut	split	Sotnikova,Khim.Prir.Soedin.,4,(1968),50	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=C(O)C(O)=C(O)C4	clean	Zanthoxylum fraxineum
+coconut	split	Kawai,Chem.Abstr.,88 34499b	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Mulguraea tridens
+coconut	split	Suga,Phytochem.,64,(2003),991	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Gypsophila patrini
 carotenoiddb	title	Additional carotenoid prototype representatices and general chemosystematic evaluation of carotenoids in prasinophyceae (chlorophyta)	nominal	Uriolide	clean	Micromonas pusilla
-coconut	split	Adesina,Phytochem.,24,(1985),3003	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Polygonum cuspidatum
-coconut	doi	10.1038/nchembio.189	smiles	O=C(O)CC(OC1OC(CO)C(O)C(O)C1NC(=O)C(N)CS)C(=O)O	clean	Bacteria$$$$phylum
-coconut	split	Mulchandani,Planta Med.,50,(1984),104	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Hypericum patulum
-coconut	split	Helv.Chim.Acta.,46,(1963),2551	smiles	OC(C=C)(C)CCC=C(C)C	clean	Periploca sepium
-tppt	authors	Roeder	smiles	C[C@H]([C@@](C(C)C)(C(=O)OCC1=CCN2[C@H]1[C@@H](CC2)OC(=O)C)O)O	clean	Borago officinalis L.
-tppt	original	Roeder (1995)	smiles	C[C@H]([C@@](C(C)C)(C(=O)OCC1=CCN2[C@H]1[C@@H](CC2)OC(=O)C)O)O	clean	Borago officinalis L.
-coconut	split	Guner,J. Nat. Prod.,50,(1987),329	smiles	O=C1C=C(OC2=CC(O)=C(C(O)=C12)C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=C(O)C4	clean	Rhynchosia rufescens
-coconut	split	Culvenor,Aust. J. Chem.,19,(1966),2127	smiles	O=C1OC2CCN3CC=C(COC(=O)C(O)(CO)C(C)CC1=CC)C32	clean	Crotalaria trichotoma
-coconut	split	Lin,J.Nat.Prod.,72,(2009),1816	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Plantago asiatica
-coconut	split	Lisso,Phytochem.,67,(2006),2232	smiles	OCC1OC(OC2(OC(CO)C(O)C2O)CO)C(O)C(O)C1O	clean	Eleutherococcus senticosus
-coconut	split	Weniger,Planta Med.,32,(1978),170	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Angelica officinalis
-coconut	split	Sethi,Phytochem.,20,(1981),341	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Chelidonium majus
-unpd	original	Hattori, Masao; Hada, Sumitra; Shu, Yue-Zhong; Kakiuchi, Nobuko; Namba, Tsuneo; Chemical & Pharmaceutical Bulletin; vol. 35; 2; (1987); p. 668 - 674.	smiles	COc1cc(cc(OC)c1O)C(O)C(C)Oc2c(OC)cc(CC=C)cc2OC	clean	Myristica fragrans
-coconut	split	Miletic,J. Serb. Chem. Soc.,56,(1991),307	smiles	OC=1C=C(O)C2=C(OC(C3=CC(O)=C(O)C(O)=C3)C(O)C2)C1	clean	Phoebe pittieri
-coconut	split	Behari,Collect.Czech.Chem.Commun.,41,(1975),295	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Buxus hildebrandtii
-coconut	doi	10.1016/j.jep.2012.11.025	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Esenbeckia leiocarpa
-coconut	pubmed	21569764	smiles	O=C(O)C1=CC=C(O)C(O)=C1	clean	Phyllanthus emblica
-coconut	split	Kumer,Curr.Sci.,44,(1975),889	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Prunus pseudocerasus
-napralert	doi	10.1021/np50028a034	inchi	InChI=1S/C15H10O5/c16-9-3-1-8(2-4-9)13-7-12(19)15-11(18)5-10(17)6-14(15)20-13/h1-7,16-18H	clean	Anisomeles indica
-napralert	authors	NAKAMURA,T: TAKEDA,T: OGIHARA,Y:	nominal	CALLIANDRA SAPONIN D	clean	Calliandra anomala Fabaceae
-napralert	journal	CHEM PHARM BULL	nominal	CALLIANDRA SAPONIN D	clean	Calliandra anomala Fabaceae
-napralert	title	STUDIES ON THE CONSTITUENTS OF CALLIANDRA ANOMALA (KUNTH) MACBR. II. STRUCTURE ELUCIDATION OF FOUR ACYLATED TRITERPENOIDAL SAPONINS.	nominal	CALLIANDRA SAPONIN D	clean	Calliandra anomala Fabaceae
-unpd	original	Chen, Ye-Gao; Song, Xiao-Ping; Hai, Li-Na; Lv, Yu-Ping; Fang, A.; Halaweish, F.; Liao, Xin-Rong; Pharmazie; vol. 61; 10; (2006); p. 891 - 892.	smiles	CCC(CCC(C)C1CCC2C3CC=C4CC(O)CCC4(C)C3CCC12C)C(C)C	clean	Kadsura ananosma
-unpd	original	Onocha, Patricia A.; Okorie, Dominic A.; Connolly, Joseph D.; Roycroft, David S.; Phytochemistry; vol. 40; 4; (1995); p. 1183 - 1190.	smiles	CC1CCC2(CCC3(C)C(=CCC4C5(C)CCC(O)C(C)(C)C5CCC34C)C2C1C)C(=O)O	clean	Anthocleista djalonensis
-coconut	pubmed	24819471	smiles	O=C(O)CCCCCCCC=CCCCCCCCC	clean	Neolitsea villosa
-coconut	split	Iribarren,J.Nat.Prod.,46,(1983),750	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Physarum flavicomum
-coconut	split	Ngounou,Phytochem.,54,(2000),107	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Diospyros rheophytica
-coconut	split	Bohlmann,Chem.Ber.,102,(1969),2211	smiles	O=CC1=CC(O)C(=CC1(C)C)C	clean	Selinum carvifolium
-coconut	split	Sakakibara,Phytochem.,22,(1983),2553	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Coreopsis fasciculata
-coconut	split	Woodward,Plant Pathol.,33,(1988),127	smiles	OC1=CC=C(C=C1)C=CC=2C=C(O)C=C(OC3OC(CO)C(O)C(O)C3O)C2	clean	Eucalyptus decorticans
-coconut	pubmed	15574415	smiles	OC1=CC=C(C=C1OC)CC=C	clean	Asarum forbesii
-coconut	pubmed	19425150	smiles	O=C(O)C=CC1=CC=C(O)C=C1	clean	Hoffmannia strigillosa
-wikidata	doi	10.1016/S0031-9422(00)90727-1	inchi	InChI=1S/C41H66O12/c1-21-28(44)30(46)31(47)33(51-21)53-32-29(45)24(43)19-50-34(32)52-27-11-12-37(4)25(38(27,5)20-42)10-13-40(7)26(37)9-8-22-23-18-36(2,3)14-16-41(23,35(48)49)17-15-39(22,40)6/h8,21,23-34,42-47H,9-20H2,1-7H3,(H,48,49)	clean	Eleutherococcus pentaphyllus
-coconut	pubmed	20127879	smiles	O=C1C=C(OC2=CC(OC3OC(CO)C(O)C(O)C3O)=CC(O)=C12)C=4C=CC(O)=C(O)C4	clean	Pterocarpus officinalis
-coconut	split	Burasheva,Khim. Prir. Soedin.,(1977),280	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Styrax perkinsiae
-napralert	authors	LUENGO,DH: MISKI,M: GAGE,DA: MABRY,TJ:	nominal	SANTAMARIN,7-ALPHA-HYDROXY:	clean	Decachaeta ovatifolia Asteraceae
-napralert	journal	PHYTOCHEMISTRY	nominal	SANTAMARIN,7-ALPHA-HYDROXY:	clean	Decachaeta ovatifolia Asteraceae
-napralert	title	7-ALPHA-HYDROXY-SESQUITERPENE LACTONES FROM DECACHAETA OVATIFOLIA.	nominal	SANTAMARIN,7-ALPHA-HYDROXY:	clean	Decachaeta ovatifolia Asteraceae
-coconut	split	Nunez,J.Nat.Prod.,68,(2005),1018	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Quercus mongolica
-coconut	split	Suarez,An. Assoc. Quim. Argent.,72,(1984),261	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Eriodictyon sessilifolium
-coconut	split	Fu,J.Nat.Prod.,72,(2009),1335	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Polygonum flaccidum
-wikidata	doi	10.1021/NP800064W	inchi	InChI=1S/C15H8N2O2/c18-13-10-6-2-4-8-12(10)17-14(13)16-11-7-3-1-5-9(11)15(17)19/h1-8H	clean	Phaius mishmensis
-napralert	authors	ACHENBACH,H: HEMRICH,H:	nominal	ECDYSONE,BETA:	clean	Penianthus zenkeri Menispermaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	ECDYSONE,BETA:	clean	Penianthus zenkeri Menispermaceae
-napralert	title	CLERODANE-TYPE DITERPENES AND OTHER CONSTITUENTS OF PENIANTHUS ZENKERI.	nominal	ECDYSONE,BETA:	clean	Penianthus zenkeri Menispermaceae
-knapsack	original	Fukui,Phytochem.,63,(2003),15	inchi	InChI=1S/C31H32O20/c32-10-3-15-11-5-17(28(47-15)9-1-12(33)21(37)13(34)2-9)49-31-27(43)24(40)22(38)18(50-31)7-45-20(36)6-14(35)29(44)46-8-19-23(39)25(41)26(42)30(51-19)48-16(11)4-10/h1-5,14,18-19,22-27,30-31,35,38-43H,6-8H2,(H3-,32,33,34,37)/p+1/t14-,18-,19-,22-,23-,24+,25+,26-,27-,30-,31-/m0/s1	clean	Dianthus caryophyllus
-wikidata	doi	10.1016/J.JIPH.2019.09.004	inchi	InChI=1S/C17H26O/c1-16(2)10-13(18)11-17(3)14-7-5-4-6-12(14)8-9-15(16)17/h4,6,12,14-15H,5,7-11H2,1-3H3/t12-,14-,15-,17+/m0/s1	clean	Streptomyces
-coconut	pubmed	21619045	smiles	O=C(O)C12CCC(C)C(C)C2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Vallaris solanacea
-napralert	authors	VAN WYK,BE: VERDOOM,GH: GREINWALD,R:	nominal	SPARTEINE	clean	Melolobium involucratum Fabaceae
-napralert	journal	S AFR J BOT	nominal	SPARTEINE	clean	Melolobium involucratum Fabaceae
-napralert	title	THE MAJOR ALKALOIDS OF THE GENUS POLHILLIA.	nominal	SPARTEINE	clean	Melolobium involucratum Fabaceae
-wikidata	doi	10.1080/10412905.1990.9697838	inchi	InChI=1S/C9H8O2/c10-9(11)7-6-8-4-2-1-3-5-8/h1-7H,(H,10,11)/b7-6-	clean	Eucalyptus andrewsii
-napralert	doi	10.1248/cpb.47.141	inchi	InChI=1S/C21H24O10/c22-9-16-18(27)19(28)20(29)21(31-16)30-15-8-12(24)7-14(26)17(15)13(25)6-3-10-1-4-11(23)5-2-10/h1-2,4-5,7-8,16,18-24,26-29H,3,6,9H2/t16-,18-,19+,20-,21-/m1/s1	clean	Cynomorium songaricum
-unpd	original	Yoshinaga, Miwa; Morita, Hiroshi; Dota, Tomoka; Kobayashi, Jun'ichi; Tetrahedron; vol. 60; 36; (2004); p. 7861 - 7868.	smiles	COC(=O)CC(O)(CCCC(C)(C)O)C(=O)OC1C2c3cc4OCOc4cc3CCN5C(=O)C(CC25C=C1OC)C6CCC78C=C(OC)C(OC(=O)C(O)(CCC(C)C)CC(=O)OC)C7c9cc%10OCOc%10cc9CCN68	clean	Cephalotaxus harringtonia var. nana
-coconut	split	Olschlager,Phytochem.,69,(2008),1389	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Polygonum multiflorum
-knapsack	original	Mitchell,Phytochem.,56,(2001),453	inchi	InChI=1S/C21H20O10/c22-8-16-18(26)19(27)20(28)21(31-16)29-11-5-12(24)17-13(25)7-14(30-15(17)6-11)9-1-3-10(23)4-2-9/h1-7,16,18-24,26-28H,8H2/t16-,18-,19+,20-,21-/m1/s1	clean	Hebe parviflora
-coconut	split	He,J.Nat.Prod.,72,(2009),1198	smiles	OCC=CC1=CC(OC)=C(OC2OC(CO)C(O)C(O)C2O)C(OC)=C1	clean	Alpinia flabellata
-napralert	doi	10.1016/s0003-2670(00)00937-5	inchi	InChI=1S/C11H12O5/c1-15-8-5-7(3-4-10(12)13)6-9(16-2)11(8)14/h3-6,14H,1-2H3,(H,12,13)/b4-3+	clean	Citrus sinensis
-coconut	split	Atta-ur-Rahman,J.Nat.Prod.,71,(2008),910	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Cladrastis kentukea
-coconut	pubmed	17691046	smiles	OC1CCC23CC43CCC5(C)C(CCC5(C)C4CCC2C1(C)C)C(C)CCC(=C)C(C)C	clean	Bacteria
-knapsack	original	Nes,Analysis of Sterols and Other Biologically Significant SteroidsAcademic Press Inc.,New York,Ny,341 pp.(1989)Turner,Fungal Metabolites II,Academic Press,New York,NY, pp.631(1983)	inchi	InChI=1S/C30H50O/c1-20(2)10-9-11-21(3)22-14-18-30(8)24-12-13-25-27(4,5)26(31)16-17-28(25,6)23(24)15-19-29(22,30)7/h10,21-22,25-26,31H,9,11-19H2,1-8H3/t21-,22-,25+,26+,28-,29-,30+/m1/s1	clean	Neurospora crassa
-coconut	split	Tang,Planta Med.,66,(2000),391	smiles	O=C1C=C(OC=2C=C(OC)C(OC)=C(O)C12)C=3C=CC(OC)=C(OC)C3	clean	Beyeria brevifolia
-coconut	split	Okuda,Chem.Pharm.Bull.,22,(1974),971	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Lonchocarpus urucu
-coconut	split	Marner,J.Org.Chem.,47,(1982),2531	smiles	OC1CCC2(C)C3C=CC4C5CC(C)(C)CCC5(C)CCC4(C)C3(C)CCC2C1(C)C	clean	Marsdenia cundurango
-wikidata	doi	10.1021/NP0004956	inchi	InChI=1S/C22H30O5/c1-11(2)15-18(24)16-13(27-12(3)23)10-14-21(4,5)8-7-9-22(14,6)17(16)20(26)19(15)25/h11,13-14,25H,7-10H2,1-6H3	clean	Salvia bracteata
-coconut	split	Baeva,Khim.Prir.Soedin.,(1983),648	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Crepidiastrum sonchifolium
-coconut	split	Kimura,Pharm.Acta Helv.,50,(1975),353	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(OC)C4	clean	Tetragonia tetragonioides
-coconut	split	Van Etten,Phytochem.,22,(1983),2291	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Pseudotsuga sinensis var. wilsoniana
-coconut	pubmed	16872152	smiles	OC1CCC2(C)C(C(=C)CCC2C1(C)C)CCC3C(=C)CCC4C(C)(C)C(O)CCC34C	clean	Diphasiastrum complanatum
-coconut	split	Morita,J.Pharm.Soc.,Japan,97,(1977),649	smiles	O=C(O)CCCCCCCC=CCC=CCCCCC	clean	Daphnia galeata
-coconut	split	Prokopenko,Farm.Zh.(Kiev),(1982),75	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Aconitum sachalinense
-coconut	split	Goel,J.Nat.Med.,61,(2007),458	smiles	C=CC1(C)CCC(C(=C)C)CC1C(=C)C	clean	Euphorbia officinarum subsp. echinus
-coconut	split	Ingham,Z. Naturforsch.,C 34,(1979),293	smiles	OC1=CC=C2C(OCC3C4=CC=5OCOC5C=C4OC23)=C1	clean	Lathyrus roseus
-coconut	split	Al-Rehaily,Phytochem.,69,(2008),1910	smiles	O=C1C(OC)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Berkheya zeyheri
-wikidata	doi	10.1271/BBB.65.1252	inchi	InChI=1S/C15H17ClO5/c1-7-4-14-10(8(7)2)3-9(12(17)18)11(14)5-21-13(19)15(14,20)6-16/h3-4,8,10-11,20H,5-6H2,1-2H3,(H,17,18)/t8-,10-,11+,14+,15-/m0/s1	clean	Streptomyces filipinensis
-coconut	split	Rahman,J.Org.Chem.,27,(1962),153	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Phyllanthus emblica
-napralert	authors	COMPADRE,CM: HUSSAIN,RA: LEON,I: ENRIQUEZ,RG:	nominal	EUGENOL	clean	Montanoa tomentosa Asteraceae
-napralert	journal	PLANTA MED	nominal	EUGENOL	clean	Montanoa tomentosa Asteraceae
-napralert	title	VOLATILE CONSTITUENTS OF MONTANOA TOMENTOSA AND LIPPIA GRAVEOLENS.	nominal	EUGENOL	clean	Montanoa tomentosa Asteraceae
-napralert	authors	WILLIAMS,CA: FRONCZYK,JH: HARBORNE,JB:	nominal	LUTEOLIN-7-O-BETA-D-GLUCURONIDE	clean	Fuchsia triphylla Onagraceae
-napralert	journal	PHYTOCHEMISTRY	nominal	LUTEOLIN-7-O-BETA-D-GLUCURONIDE	clean	Fuchsia triphylla Onagraceae
-napralert	title	LEAF FLAVONOID AND OTHER PHENOLIC GLYCOSIDES AS INDICATORS OF PARENTAGE IN SIX ORNAMENTAL FUCHISA SPECIES AND THEIR HYBRIDS.	nominal	LUTEOLIN-7-O-BETA-D-GLUCURONIDE	clean	Fuchsia triphylla Onagraceae
-coconut	split	Rosenblum,J.Pharm.Pharmacol.,6,(1954),410	smiles	O=C(OC1CC2N(C)C(CC2)C1)C(C=3C=CC=CC3)CO	clean	Hyosciamus niger
-unpd	original	Kato, Massuo J.; Yoshida, Massayoshi; Gottlieb, Otto R.; Phytochemistry; vol. 29; 6; (1990); p. 1799 - 1810.	smiles	COc1ccc(cc1OC)C(C(C)C(C)COC(=O)C)c2ccc3OCOc3c2	clean	Virola elongata
-coconut	split	Arihara,Chem.Pharm.Bull.,52,(2004),354	smiles	O=CC1=CC=C(O)C=C1	clean	Zingiber officinale
-wikidata	doi	10.1034/J.1399-3054.1990.790104.X	inchi	InChI=1S/C4H7NO4/c5-2(4(8)9)1-3(6)7/h2H,1,5H2,(H,6,7)(H,8,9)/t2-/m0/s1	clean	Citrus maxima
-coconut	pubmed	23811778	smiles	O=C(O)C1C2C(C(=O)O)(C)CCCC2(C)C3CCC4(O)C(=C)CC13C4	clean	Citrus reticulata
-coconut	split	Tasdemir,J.Nat.Prod.,60,(1997),874	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Lilium brownii var.viridulum
-coconut	split	Wagner Chem.Ber.,101,(1986),1186	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2OC3OC(CO)C(O)C(O)C3O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Forsteronia refracta
-coconut	pubmed	27829890	smiles	C1=C(C)C2CCC(=CC2C(C1)C(C)C)C	clean	Pteris semipinnata
-coconut	doi	10.1021/np500207p	smiles	O=C(O)CCC1=CC(NC(=O)C=CC=CCC(C)C)=C(O)C=C1O	clean	Bacteria$$$$class
-coconut	split	Agnese,J. Nat. Prod.,49,(1986),528	smiles	O=C1C2=CC=C(O)C=C2OC(C3=CC=C(O)C(O)=C3)C1O	clean	Acacia pycnantha
-wikidata	doi	10.1016/0031-9422(82)85198-4	inchi	InChI=1S/C21H32O4/c1-18-8-4-9-19(2,17(23)25-3)15(18)7-10-20-11-14(5-6-16(18)20)21(24,12-20)13-22/h6,14-15,22,24H,4-5,7-13H2,1-3H3/t14-,15+,18-,19-,20+,21+/m1/s1	clean	Ichthyothere terminalis
-coconut	split	Murkovic et al.,Food Chem.,84,(2004),359-365	smiles	O=C(O)CCCCCCCCCCCCCCC	clean	Drosera peltata
-coconut	split	Singab,Phytochem.,49,(1998),2177	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Knautia montana
-coconut	split	Ulubelen,Phytochem.,21,(1982),1145	smiles	O=C1C=C(OC2=CC(O)=C(C(O)=C12)C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Gentiana depressa
-wikidata	doi	10.1248/CPB.48.879	inchi	InChI=1S/C54H88O23/c1-21(2)23-9-14-54(49(69)77-48-41(67)37(63)34(60)28(74-48)20-70-45-42(68)38(64)43(27(19-56)73-45)76-46-39(65)35(61)32(58)22(3)71-46)16-15-52(7)24(31(23)54)17-25(57)44-51(6)12-11-30(50(4,5)29(51)10-13-53(44,52)8)75-47-40(66)36(62)33(59)26(18-55)72-47/h22-48,55-68H,1,9-20H2,2-8H3/t22-,23-,24+,25+,26+,27+,28+,29-,30+,31-,32-,33+,34+,35+,36-,37-,38-,39+,40+,41+,42+,43+,44+,45+,46-,47-,48-,51-,52+,53+,54-/m0/s1	clean	Eleutherococcus trifoliatus
-coconut	split	Sultana,J.Indian Chem.Soc.,62,(1985),337	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Skimmia japonica
-wikidata	doi	10.1016/0305-1978(87)90002-0	inchi	InChI=1S/C40H56O3/c1-29(17-13-19-31(3)21-22-36-33(5)25-34(41)26-37(36,6)7)15-11-12-16-30(2)18-14-20-32(4)23-24-40-38(8,9)27-35(42)28-39(40,10)43-40/h11-25,34-36,41-42H,26-28H2,1-10H3/b12-11+,17-13+,18-14+,22-21+,24-23+,29-15+,30-16+,31-19+,32-20+/t34-,35-,36-,39+,40-/m0/s1	clean	Nephromopsis nigricascens
-coconut	split	Sakakibara,Phytochem.,22,(1983),2553	smiles	OC1CCC2(C)C3C=CC4C5C(C)C(C)CCC5(C)CCC4(C)C3(C)CCC2C1(C)C	clean	Sideritis argosphacelus var. spicata
-coconut	split	Zhang,J.Nat.Prod.,63,(2000),1507	smiles	O=C(O)C1=CC=C(O)C(O)=C1	clean	Picrorhiza kurrooa
-coconut	pubmed	16226777	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Pluchea lanceolata
-coconut	split	Chen,J.Nat.Prod.,70,(2007),103	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Isodon lihsienensis
-napralert	authors	GARBARINO,JA: CHAMY,MC: PIOVANO,M: GAMBARO,V:	nominal	LABDA-8(17)-13-CIS-DIEN-15-OIC ACID,2-BETA-ACETOXY:	clean	Nolana filifolia Nolanaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	LABDA-8(17)-13-CIS-DIEN-15-OIC ACID,2-BETA-ACETOXY:	clean	Nolana filifolia Nolanaceae
-napralert	title	LABDANE DITERPENOIDS FROM NOLANA FILIFOLIA.	nominal	LABDA-8(17)-13-CIS-DIEN-15-OIC ACID,2-BETA-ACETOXY:	clean	Nolana filifolia Nolanaceae
-coconut	split	Mors,Phytochem.,55,(2000),627	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Luzula multiflora
-coconut	pubmed	25515814	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Curcuma longa
-coconut	split	Jang,Phytochem.,61,(2002),867	smiles	O=C1C2=C(O)C=C(O)C(=C2OC(C3=CC=C(O)C=C3)C1)CC=C(C)C	clean	Pancratium sickenbergeri
-coconut	split	Tutin,J.Chem.Soc.,99,(1911),946	smiles	O=C1C=2C=CC=C(O)C2C(=O)C3=C(O)C=C(C=C13)CO	clean	Senecio praecox
-coconut	pubmed	22489215	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Walsura piscidia
-coconut	split	Kawai,Chem.Abstr.,88 34499b	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Acacia lemmoni
-coconut	split	Barz,Phytochem.,12,(1973),1184	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(OC)=CC3	clean	Corydalis densiflora
-coconut	split	Rodman,Biochem.Syst.Ecol.,8,(1980),43	smiles	O=S(=O)(O)ON=C(SC1OC(CO)C(O)C(O)C1O)CCCCCCSC	clean	Dimorphocarpa wislizenii
-coconut	split	Nakov,Farmatsiya (Sofia),31,(1981),41	smiles	O=C1C=CC=C2N1CC3CN(C)CC2C3	clean	Plathymenia reticulata
-napralert	doi	10.1016/s0305-1978(98)00128-8	inchi	InChI=1S/C9H8O4/c10-7-3-1-6(5-8(7)11)2-4-9(12)13/h1-5,10-11H,(H,12,13)/b4-2+	clean	Hieracium gymnocephalum
-unpd	original	Harinantenaina, Liva; Matsunami, Katsuyoshi; Otsuka, Hideaki; Kawahata, Masatoshi; Yamaguchi, Kentaro; Asakawa, Yoshinori; Journal of Natural Products; vol. 71; 1; (2008); p. 123 - 126.	smiles	CC1(C)CCCC2(C)C1CC=C(C=O)C2C=O	clean	Cinnamosma madagascariensis
-wikidata	doi	10.1021/NP200196J	inchi	InChI=1S/C32H48O9/c1-9-20(5)30(41-32-29(37)28(36)27(35)25(17-33)40-32)21(6)16-19(4)13-11-12-18(3)14-15-24-22(7)26(34)23(10-2)31(38-8)39-24/h9,11,13-16,18,21,25,27-30,32-33,35-37H,10,12,17H2,1-8H3/b13-11+,15-14+,19-16+,20-9+/t18?,21?,25-,27-,28+,29-,30?,32+/m1/s1	clean	Streptomyces albus
-knapsack	original	Alvi,J. Antibiotics,52,(1999),215	inchi	InChI=1S/C34H32N2O5/c1-18(2)14-16-25-27(21-10-6-8-12-23(21)35-25)29-31(38)32(39)30(34(33(29)40)41-20(5)37)28-22-11-7-9-13-24(22)36-26(28)17-15-19(3)4/h6-15,35-36,38H,16-17H2,1-5H3	clean	Aspergillus candidus
-wikidata	doi	10.1248/CPB.39.2233	inchi	InChI=1S/C41H28O27/c42-12-1-7-20(29(53)24(12)48)21-10(5-16(26(50)30(21)54)64-32-11(36(56)57)4-15(45)25(49)31(32)55)37(58)63-6-17-33(66-38(7)59)34-35(41(62)65-17)68-40(61)9-3-14(44)23(47)28(52)19(9)18-8(39(60)67-34)2-13(43)22(46)27(18)51/h1-5,17,33-35,41-55,62H,6H2,(H,56,57)/t17-,33-,34+,35-,41?/m1/s1	clean	Tibouchina urvilleana
-coconut	split	Asakawa,Bull.Soc.Chim.Fr.,(1976),1465	smiles	O=C1OC2C3=C(C)CCCC3(C)CCC2C1=C	clean	Frullania dilatata
-napralert	doi	10.1016/0305-1978(92)90036-d	inchi	InChI=1S/C27H30O16/c1-8-18(32)21(35)23(37)26(40-8)39-7-17-20(34)22(36)24(38)27(43-17)42-16-6-11-12(29)4-10(28)5-15(11)41-25(16)9-2-13(30)19(33)14(31)3-9/h2-6,8,17-18,20-24,26-27,32,34-38H,7H2,1H3,(H4-,28,29,30,31,33)/p+1/t8-,17+,18-,20+,21+,22-,23+,24+,26+,27+/m0/s1	clean	Acer crataegifolium
-unpd	original	Anaya AL, et al. Phytochemistry, 2005, 66, 487.	smiles	CC(C)(O)C1Cc2cc3C=C(C(=O)Oc3cc2O1)C(C)(C)C=C	clean	Ruta graveolens
-unpd	split	Phytochemistry, 2005, 66, 487.	smiles	CC(C)(O)C1Cc2cc3C=C(C(=O)Oc3cc2O1)C(C)(C)C=C	clean	Ruta graveolens
-wikidata	doi	10.1038/JA.2015.41	inchi	InChI=1S/C36H50N2O10S2/c1-5-7-9-11-25(39)17-29(41)47-27-13-15-45-21-23-19-35(49-3)34(44)38-32-24(20-36(38,50-4)33(43)37(35)31(23)27)22-46-16-14-28(32)48-30(42)18-26(40)12-10-8-6-2/h13-16,21-22,25-28,31-32,39-40H,5-12,17-20H2,1-4H3/t25-,26-,27-,28-,31-,32-,35+,36+/m0/s1	clean	Graphium
-coconut	split	Herrmann,J. Sci. Food Agric.,28,(1977),365	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=C(O)C(O)=C(O)C3	clean	Geranium wilfordii maxim
-coconut	pubmed	22766709	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Inula britannica
-coconut	pubmed	25429652	smiles	O=C(O)C=1C=NC=CC1	clean	Bursera kerberi
-coconut	split	Laguna,CENIC.Cienc.Quim.,30,(1999),92	smiles	OC=1C=C2C(=CC1OC)CCN3CC4=C(O)C(OC)=CC=C4CC23	clean	Papaver albiflora
-coconut	split	Sedova,Khim. Prir. Soedin.,(1988),756	smiles	O=C(O)C1OC(OC=2C(=O)C=3C(O)=CC(O)=CC3OC2C=4C=CC(O)=CC4)C(O)C(O)C1O	clean	Achillea clypeolata
-unpd	original	Demirezer L?, et al. Phytochemistry, 2001, 58, 1213.	smiles	Cc1cc(O)c2C(=O)c3c(OC4OC(CO)C(O)C(O)C4O)cccc3C(=O)c2c1	clean	Rheum emodi
-unpd	split	Phytochemistry, 2001, 58, 1213.	smiles	Cc1cc(O)c2C(=O)c3c(OC4OC(CO)C(O)C(O)C4O)cccc3C(=O)c2c1	clean	Rheum emodi
-coconut	split	Ahluwalia,Indian J. Chem.,3,(1965),474	smiles	OC1C(O)C(O)C(O)C(O)C1O	clean	Capparis masaikai
-coconut	split	Neelankantan,Fitoterapia,57,(1986),120	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Euphorbia chamaesyce
-coconut	pubmed	21973054	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Uvaria kirkii
-coconut	split	Arihara,Chem.Pharm.Bull.,52,(2004),354	smiles	O=C1CC(C(=C)CCC=C(C)C)C(O)CC1C	clean	Rhodiola semenovii
-coconut	split	I.Coban et al.,Pharma.Biol.,55,(2017),1894-1898	smiles	OC1=CC(=CC=C1OC)CC2C3=CC(O)=C(OC)C=C3CCN2C	clean	Tinospora cordifolia
-coconut	split	Juliawaty,Chem.Pharm.Bull.,48,(2000),1726	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Glycyrrhiza inflata
-coconut	split	Mukerjee,Phytochem.,14,(1975),1915	smiles	O=C(O)C(=O)C	clean	Bauhinia purpurea
-coconut	pubmed	19127547	smiles	O=C(OC1CC(O)(C(=O)O)CC(O)C1OC(=O)C=CC2=CC=C(O)C(O)=C2)C=CC3=CC=C(O)C(O)=C3	clean	Erigeron breviscapus
-coconut	split	Khozhambergenova,CA,93,(1980),164394c	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Aruncus diocus
-streptomedb	pubmed	18600054	smiles	CO[C@@H]1C[C@H](C)CC2=C(OC)C(=O)C=C(C2=O)NC(=O)/C(=C/C=C\[C@H]([C@@H](/C(=C/[C@H]([C@@H]1O)C)/C)OC(=O)N)OC)/C	clean	Streptomyces autolyticus
-coconut	split	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter56	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Aquilegia ecalcarata
-coconut	split	Chen,J.Nat.Med.,62,(2008),358	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Senecio cathcartensis
-coconut	split	Pei,Zhongcaoyao,14,(1983),433	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Ephedra aphylla
-coconut	split	Oshima,Bull.Agric.Chem.Soc.Japan,15,81939),109	smiles	OC=1C=C(O)C2=C(OC(C3=CC(O)=C(O)C(O)=C3)C(O)C2)C1	clean	Caragana aurantiaca
-coconut	pubmed	12873481	smiles	O=C1OCC2CC3=CC=4OCOC4C=C3C(C5=CC(OC)=C(O)C(OC)=C5)C12	clean	Dysosma versipellis
-coconut	split	Parmar,Phytochem.,50,(1999),1267	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(C3)C4=C(OC)C=C(O)C=5C(=O)C=C(OC54)C=6C=CC(O)=CC6	clean	Lepidothamnus spp.
-coconut	split	Takashima,Chem.Pharm.Bull.,55,(2007),343	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Salvia coulteri
-coconut	split	Murkovic et al.,Food Chem.,84,(2004),359-365	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Eukaryota$$$$phylum
-streptomedb	pubmed	29482589	smiles	O=C(N[C@H](C(=O)O)C(C)C)N[C@H](C(=O)N[C@H]1CCCCNC(=O)/C=C/[C@@H](NC1=O)C(C)C)C(C)C	clean	Streptomyces coelicolor M145
-coconut	pubmed	16508191	smiles	OC1=CC=C(C=C1)C2OC3=CC(O)=CC4=C3C2C=5C=C(O)C=C(O)C5C(C6=CC=C(O)C=C6)C4C7C=8C=C(O)C=C9OC(C%10=CC=C(O)C=C%10)C(C=%11C=C(O)C=C(O)C%11C7C%12=CC=C(O)C=C%12)C98	clean	Caragana aurantiaca
-coconut	split	Khalid,Phytochem.,20,(1981),2761	smiles	OC1CCC2(C)C(CCC3(C)C2CCC4C5C(C(=C)C)CCC5(C)CCC43C)C1(C)C	clean	Dirca occidentalis
-coconut	split	Gupta,Chem.Pharm.Bull.,55,(2007),771	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Pyrola spp.
-knapsack	original	Siamopoulou,Phytochem.,65,(2004),2025	inchi	InChI=1S/C22H34O3/c1-16(2)8-6-10-18(4)21-13-12-17(3)9-7-11-20(14-23)22(21)15-25-19(5)24/h8-9,11,14,18,21-22H,6-7,10,12-13,15H2,1-5H3/b17-9+,20-11-/t18-,21+,22+/m1/s1	clean	Dictyota linearis
-napralert	doi	10.1055/s-2006-959477	inchi	InChI=1S/C16H12O5/c1-20-15-12(19)7-10(17)14-11(18)8-13(21-16(14)15)9-5-3-2-4-6-9/h2-8,17,19H,1H3	clean	Scutellaria indica
-coconut	split	Raina V. et al.,Flavour Fragr. J.,17,(2002),358-360	smiles	OC(C)(C)C1CC=C(C)CC1	clean	Titanotrichum oldhamii
-knapsack	original	Miyase,J.Nat.Prod.,62,(1999),993	inchi	InChI=1S/C23H32O15/c1-33-11-5-10(6-12(34-2)16(11)28)3-4-15(27)36-21-18(30)14(8-25)37-23(21,9-26)38-22-20(32)19(31)17(29)13(7-24)35-22/h3-6,13-14,17-22,24-26,28-32H,7-9H2,1-2H3/b4-3+/t13-,14-,17-,18-,19+,20-,21+,22-,23+/m1/s1	clean	Polygala sibirica
-coconut	split	Gellerman,Phytochem.,15,(1976),1959	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Cinnamomum philippinense
-napralert	authors	STUPPNER,H: MULLER,EP: WAGNER,H:	nominal	LANOST-5-EN-22-ONE,19-NOR: 2-(6-O-CINNAMOYL-BETA-D-GLUCOPYRANOSYL-OXY)-3-16-20-25-TETRAHYDROXY-9-METHYL:	clean	Picrorhiza kurroa Scrophulariaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	LANOST-5-EN-22-ONE,19-NOR: 2-(6-O-CINNAMOYL-BETA-D-GLUCOPYRANOSYL-OXY)-3-16-20-25-TETRAHYDROXY-9-METHYL:	clean	Picrorhiza kurroa Scrophulariaceae
-napralert	title	CUCURBITACINS FROM PICRORHIZA KURROA.	nominal	LANOST-5-EN-22-ONE,19-NOR: 2-(6-O-CINNAMOYL-BETA-D-GLUCOPYRANOSYL-OXY)-3-16-20-25-TETRAHYDROXY-9-METHYL:	clean	Picrorhiza kurroa Scrophulariaceae
-wikidata	doi	10.1135/CCCC19760295	inchi	InChI=1S/C29H50O/c1-7-21(19(2)3)9-8-20(4)25-12-13-26-24-11-10-22-18-23(30)14-16-28(22,5)27(24)15-17-29(25,26)6/h10,19-21,23-27,30H,7-9,11-18H2,1-6H3/t20-,21-,23+,24-,25-,26-,27-,28+,29-/m1/s1	clean	Mirabilis jalapa
-coconut	split	Kerimov,Khim.Prir.Soedin.,(1976),253	smiles	O=C1OC=2C(OC)=C3OC=CC3=C(OC)C2C=C1	clean	Changium smyrnioides
-wikidata	doi	10.1007/BF00630673	inchi	InChI=1S/C56H92O29/c1-19-7-10-56(75-17-19)20(2)31-45(85-56)37(67)32-22-6-5-21-11-26(24(61)12-55(21,4)23(22)8-9-54(31,32)3)76-50-42(72)39(69)44(30(16-60)80-50)81-53-48(47(36(66)29(15-59)79-53)83-49-40(70)33(63)25(62)18-74-49)84-52-43(73)46(35(65)28(14-58)78-52)82-51-41(71)38(68)34(64)27(13-57)77-51/h19-53,57-73H,5-18H2,1-4H3/t19-,20-,21-,22+,23+,24+,25-,26+,27-,28+,29+,30-,31-,32+,33-,34+,35+,36-,37+,38-,39-,40-,41+,42-,43+,44+,45+,46-,47+,48-,49+,50-,51+,52-,53-,54+,55+,56+/m1/s1	clean	Digitalis purpurea
-coconut	split	Kobinata,J.Antibiotics 46,(1993),1616	smiles	O=C1OC(C(C=CC(O)CC(O)CC(O)CC(O)CC(O)CC(O)CC(O)CC(O)CC=CC=CC=CC=CC=C1)C)C(C)C	clean	Bacteria
-coconut	split	Wansi,Phytochem.,68,(2007),2096	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Eukaryota$$$$phylum
-coconut	split	Kusev,Khim.Prir.Soedin.,(1977),704	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Viburnum erubescens
-unpd	original	Ayer, William A.; Browne, Lois M.; Feng, Meow-Chen; Orszanska, Helena; Saeedi-Ghomi, Hossein; Canadian Journal of Chemistry; vol. 64; (1986); p. 904 - 909.	smiles	Oc1ccc(C=O)cc1	clean	Ceratocystis ips
-coconut	split	Bohlmann,Phytochem.,16,(1977),492	smiles	O=C1C=2C(O)=CC(O)=CC2OC(C3=CC=C(O)C=C3)C1	clean	Lespedeza cyrtobotrya
-coconut	pubmed	21988831	smiles	O=C(O)CCCCCCCC=CCCCCCCCC	clean	Lygodium japonicum
-coconut	split	Joshi,J.Indian Chem.Soc.,54,(1977),649	smiles	OC1CCC2(C)C3C=CC4C5CC(C)(C)CCC5(C)CCC4(C)C3(C)CCC2C1(C)C	clean	Chiococca alba
-wikidata	doi	10.1016/0304-3835(96)04184-5	inchi	InChI=1S/C18H22O11S/c1-30-18(24)26-4-6-2-8-11-7(15(23)27-8)5-25-16(10(6)11)29-17-14(22)13(21)12(20)9(3-19)28-17/h2,5,8-14,16-17,19-22H,3-4H2,1H3/t8-,9+,10+,11-,12+,13-,14+,16-,17-/m0/s1	clean	Paederia foetida
-coconut	split	Lan,Chem.Pharm.Bull.,55,(2007),1597	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Artabotrys uncinatus
-coconut	split	Narvaez-Mastache,Phytochem.,69,(2008),451	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Uncaria elliptica
-coconut	split	Mata,J.Nat.Prod.,67,(2004),1961	smiles	O=C(C=CC1=CC=C(O)C(OC)=C1)NCCC2=CC=C(O)C=C2	clean	Boschniakia rossica
-coconut	split	Gupta,Indian J.Chem.,15B,(1977),394	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Desmodium styracifolium
-coconut	split	Abou-Zaid,Phytochem.,52,(1999),1629	smiles	O=C(O)C1=CC(O)=C(O)C(O)=C1	clean	Felicia wrightii
-coconut	split	Maskey,J.Nat.Prod.,67,(2004),1131	smiles	O=C(O)C1=CC=C(O)C(OC)=C1	clean	Catharanthus roseus
-wikidata	doi	10.1021/JF60201A022	inchi	InChI=1S/C8H16O/c1-3-4-5-6-7-8(2)9/h3-7H2,1-2H3	clean	Evernia prunastri
-wikidata	doi	10.1016/J.TET.2019.130530	inchi	InChI=1S/C16H24O5/c1-9(2)5-6-16(20)13(19)11(17)7-10-12(18)8-15(3,4)21-14(10)16/h5,11,13,17,19-20H,6-8H2,1-4H3/t11-,13+,16+/m1/s1	clean	Pseudopestalotiopsis
-coconut	split	Mendonca,Chem.Pharm.Bull.,52,(2004),1342	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Botrychium ternatum
-coconut	split	Hatano,Phytochem.,59,(2002),749	smiles	O=C1C(OC2OCC(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Cynara humilis
-coconut	pubmed	20634506	smiles	O=C(O)CCCCCCCCCCCCC	clean	Podocarpus amarus
-knapsack	original	Wunderlich,Chem.Ind.(London),(1962),2089Briggs,J.Chem.Soc.,(1965),2492	inchi	InChI=1S/C18H25NO5/c1-4-12-9-11(2)18(3,22)17(21)23-10-13-5-7-19-8-6-14(15(13)19)24-16(12)20/h4-5,11,14-15,22H,6-10H2,1-3H3/b12-4-/t11-,14-,15-,18-/m1/s1	clean	Nardosmia laevigata
-coconut	split	Miyaichi,Chem.Pharm.Bull.,54,(2006),136	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Miliusa velutina
-coconut	split	Martin,Phytochem.,65,(2004),2815	smiles	O1C(C)(C)C2CCC1(C)CC2	clean	Canarium album
-coconut	pubmed	23649198	smiles	OC1CCC23CC43CCC5(C)C(CCC5(C)C4CCC2C1(C)C)C(C)CCC=C(C)C	clean	Ochrocarpos odoratus
-coconut	split	Cheb,J.Chin.Chem.Soc.,23,(1976),111	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Helichrysum dendroideum
-napralert	authors	MC CASKILL,DG: MARTIN,DL: SCOTT,AI:	nominal	TABERSONINE	clean	Catharanthus roseus Apocynaceae
-napralert	journal	PLANT PHYSIOL	nominal	TABERSONINE	clean	Catharanthus roseus Apocynaceae
-napralert	title	CHARACTERIZATION OF ALKALOID UPTAKE BY CATHARANTHUS ROSEUS (L.) G.DON PROTOPLASTS.	nominal	TABERSONINE	clean	Catharanthus roseus Apocynaceae
-coconut	split	Kurviakov,Khim.Prir.Soedin.,(1979),164	smiles	C1=C(C)CC2C(C1)C2(C)C	clean	Lathyrus nissolia
-coconut	split	Czeczuga,Biochem. Syst. Ecol.,14,(1986),203	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Morus bombycis
-coconut	split	Russell,Phytochem.,59,(2002),709	smiles	OC1(CC=C(C)CC1)C(C)C	clean	Hypericum perforatum
-napralert	authors	IWASHIMA,M: NARA,K: IGUCHI,K:	nominal	YONARASTEROL C	clean	Clavularia viridis Clavulariidae
-napralert	journal	STEROIDS	nominal	YONARASTEROL C	clean	Clavularia viridis Clavulariidae
-napralert	title	NEW MARINE STEROIDS, YONARASTEROLS, ISOLATED FROM THE OKINAWAN SOFT CORAL, CLAVULARIA VIRIDIIS*, **.	nominal	YONARASTEROL C	clean	Clavularia viridis Clavulariidae
-coconut	split	Sengupta,Phytochem.,15,(1976),995	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Sideritis candicans var.eriocephala
-coconut	split	Gonzalez,An.Quim.,78C,(1982),184	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Papaver glaucum
-napralert	authors	HUAN,VD: YAMAMURA,S: OHTANI,K: KASAI,R: YAMASAKI,K: NHAM,NT: CHAU,HM:	nominal	POLYSCIOSIDE E	clean	Polyscias fruticosa Araliaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	POLYSCIOSIDE E	clean	Polyscias fruticosa Araliaceae
-napralert	title	OLEANANE SAPONINS FROM POLYSCIAS FRUTICOSA.	nominal	POLYSCIOSIDE E	clean	Polyscias fruticosa Araliaceae
-coconut	pubmed	15260221	smiles	C=CC(=C)CCC=C(C)CCC=C(C)C	clean	Ligusticum sinense
-coconut	split	Lange,Plant Mol.Biol.,51,(2003),925	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Mussaenda macrophylla
-coconut	split	Kondo,J.Jap.Forest Soc.,37,(1955),157	smiles	OC=1C=C(OC)C=C(C=CC=2C=CC=CC2)C1	clean	Wrightia tinctoria
-coconut	split	Lan,Chem.Pharm.Bull.,55,(2007),1597	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Centaurea collina
-coconut	split	Kapoor,Fitoterapia,32,(1982),235	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Gaertnera morindoides
-knapsack	original	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter28	inchi	InChI=1S/C15H20N2O/c1-3-5-13-12-8-11(9-16(13)2)14-6-4-7-15(18)17(14)10-12/h3-4,6-7,11-13H,1,5,8-10H2,2H3/t11-,12+,13-/m1/s1	clean	Thermopsis alterniflora
-coconut	split	Chacha,Phytochem.,66,(2005),99	smiles	O=C(C=CC1=CC=C(O)C=C1)C2=CC=C(O)C=C2O	clean	Pancratium maritimum L.
-coconut	split	Karrer,Helv. Chim. Acta,30,(1947),1158	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Chloranthus tianmushanensis
-coconut	split	Herrmann,J. Sci. Food Agric.,28,(1977),365	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=C(O)C(O)=C(O)C3	clean	Glycyrrhiza lepidota
-coconut	pubmed	22079732	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Curcuma heyneana
-coconut	split	Michael,Nat.Prod.Rep.,22,(2004),627	smiles	O=C1C=2C=CC(OC2C=3C=CC=C(OC)C3N1C)(C)C	clean	Kielmeyera coriacea
-coconut	split	P.,J.Nat.Prod.,62,(2008),249-250	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Rosa pomifera
-coconut	split	Ziegenbein,Phytochem.,67,(2006),202	smiles	OC(C=C)(C)CCC=C(C)C	clean	Knightia excelsa
-coconut	split	Blasko,Lloydia,44,(1981),475	smiles	O=C1C=2C=3OCOC3C=CC2C=C4C5=CC=6OCOC6C=C5CCN14	clean	Chelidonium majus
-unpd	original	Cao, Shu-Geng; Wu, Xiao-Hua; Sim, Keng-Yeow; Tan, B. K. H.; Pereira, J. T.; et al.; Tetrahedron Letters; vol. 39; 20; (1998); p. 3353 - 3356.	smiles	CC(=CCc1c(O)c(CC(O)C(=C)C)c2OC34C5CC(C=C3C(=O)c2c1O)C(=O)C4(CC=C(/C)C=O)OC5(C)C)C	clean	Garcinia gaudichaudii
-unpd	split	Tetrahedron Letters; vol. 39; 20; (1998); p. 3353 - 3356.	smiles	CC(=CCc1c(O)c(CC(O)C(=C)C)c2OC34C5CC(C=C3C(=O)c2c1O)C(=O)C4(CC=C(/C)C=O)OC5(C)C)C	clean	Garcinia gaudichaudii
-coconut	split	Kakuda,Chem.Pharm.Bull.,51,(2003),885	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(C)C(C)C)C2(C)CC1	clean	Sambucus nigra
-napralert	authors	HEITZ,S: APIN,H: SANNNIE,C: BARCHEWITZ,P:	nominal	HECOGENIN,9(11)-DEHYDRO:	clean	Agave atrovirens Agavaceae
-napralert	journal	BULL STE CHIM BIOL	nominal	HECOGENIN,9(11)-DEHYDRO:	clean	Agave atrovirens Agavaceae
-napralert	title	RESEARCH ON SAPOGENINS WITH A STEROL NUCLEUS. IV. THE NATURE OF AGAVES AND YUCCAS CULTIVATED IN FRANCE. CHROMATOGRAPHIC ANALYSIS AND INFRARED SPECTRA.	nominal	HECOGENIN,9(11)-DEHYDRO:	clean	Agave atrovirens Agavaceae
-metabolights	pubmed	33574617	inchi	InChI=1S/C6H7N5/c1-7-5-4-6(10-2-8-4)11-3-9-5/h2-3H,1H3,(H2,7,8,9,10,11)	clean	Homo sapiens
-unpd	original	Buckingham J(Executive Editor)\ : et al. Dictionary of Natural Products, Vol 1-7, Chapman & Hall, London, 1994; 1995, Vol 8; 1996, Vol 9; 1997, Vol 10; 1998, Vol 11..	smiles	NC(Cc1c[nH]c2ccccc12)C(=O)O	clean	Isatis indigotica
-unpd	split	Dictionary of Natural Products, Vol 1-7, Chapman & Hall, London, 1994; 1995, Vol 8; 1996, Vol 9; 1997, Vol 10; 1998, Vol 11..	smiles	NC(Cc1c[nH]c2ccccc12)C(=O)O	clean	Isatis indigotica
-napralert	authors	CONNOLLY,JD: FAKUNLE,CO: RYCROFT,DS:	nominal	EUPHORIANIN	clean	Euphorbia poissonii Euphorbiaceae
-napralert	journal	J CHEM RES(S)	nominal	EUPHORIANIN	clean	Euphorbia poissonii Euphorbiaceae
-napralert	title	A NOVEL 19-HYDROXYINGOL ESTER FROM THE LATAX OF EUPHORBIA POISONII, SPECIFICATION OF ESTER LINKAGES USING N.M.R. METHODS, INCLUDING TWO-DIMENSIONAL LONG-RANGE C/H CHEMICAL SHIFT CORRELATION.	nominal	EUPHORIANIN	clean	Euphorbia poissonii Euphorbiaceae
-coconut	split	Lansky et al.,J.Ethnopharmacol.,19,(2007),177-206	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Morus alba
-coconut	pubmed	11747116	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Phelline lucida
-coconut	split	Mahmood,Phytochem.,61,(2002),913	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Plantago cornuti
-wikidata	doi	10.1002/JCCS.200700071	inchi	InChI=1S/C15H24O3/c1-3-4-5-6-7-8-9-10-11-13-14(16)12(2)18-15(13)17/h11,14,16H,2-10H2,1H3/b13-11-/t14-/m1/s1	clean	Litsea acutivena
-coconut	split	Saleem,Nat.Prod.Rep.,27,(2010),238	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Panax ginseng C.A.Meyer.
-napralert	authors	MENUT,C: LAMATY,G: BESSIERE,JM: KOUDOU,J: MAIDOU,J:	nominal	OCIMENE,BETA: TRANS:	clean	Lippia multiflora Verbenaceae
-napralert	journal	FLAVOUR FRAGRANCE J	nominal	OCIMENE,BETA: TRANS:	clean	Lippia multiflora Verbenaceae
-napralert	title	AROMATIC PLANTS OF TROPICAL CENTRAL AFRICA. PART XVII. 6,7-EPOXYMYRCENE, THE MAJOR UNUSUAL CONSTITUENTS OF LIPPIA MULTIFLORA S.I. MOLDENKE ESSENTIAL OIL FROM THE CENTRAL AFRICAN REPUBLIC.	nominal	OCIMENE,BETA: TRANS:	clean	Lippia multiflora Verbenaceae
-coconut	pubmed	11382814	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Prunus laurocerasus
-coconut	split	Ferreira,Phytochem.,53,(2000),145	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Ardisia japonica
-coconut	split	Kumer,Planta Med.,(1985),466	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Curcuma phaeocaulis
-napralert	authors	WEI,J: WANG,J: LI,Z:	nominal	GINSENOSIDE F-11,PSEUDO:	clean	Panax quinquefolius Araliaceae
-napralert	journal	CHUNG TS'AO YAO	nominal	GINSENOSIDE F-11,PSEUDO:	clean	Panax quinquefolius Araliaceae
-napralert	title	STUDIES ON THE CHEMICAL CONSTITUENTS OF XI YANG SHEN (PANAX QUINQUEFOLIUS). (I).	nominal	GINSENOSIDE F-11,PSEUDO:	clean	Panax quinquefolius Araliaceae
-unpd	original	Wu PL, et al. Chem Pharm Bull, 2005, 53 (1): 56.	smiles	COc1cc(C=CC(=O)O)ccc1O	clean	Pinus laricio
-unpd	split	Chem Pharm Bull, 2005, 53 (1): 56.	smiles	COc1cc(C=CC(=O)O)ccc1O	clean	Pinus laricio
-coconut	split	Morikawa,Chem.Pharm.Bull.,54,(2006),1530	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Bassia scoparia
-unpd	original	Matsuda, Hisashi; Murakami, Toshiyuki; Nishida, Norihisa; Kageura, Tadashi; Yoshikawa, Masayuki; Chemical & Pharmaceutical Bulletin; vol. 48; 10; (2000); p. 1429 - 1435.	smiles	CC1(C)Oc2ccc3C=CC(=O)Oc3c2CC1OC4OC(CO)C(O)C(O)C4O	clean	Angelica furcijuga
-unpd	original	Fabre, N.; Bon, M.; Moulis, C.; Fouraste, I.; Stanislas, E.; Phytochemistry; vol. 45; 1; (1997); p. 525 - 528.	smiles	CS(=O)(=O)CCCCCCCCC(=NOS(=O)(=O)O)SC1OC(CO)C(O)C(O)C1O	clean	Brassica juncea
-coconut	split	Batirov,Khim. Prir. Soedin.,(1986),111	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Psoralea oligophylla
-coconut	split	Gonzalez,An.Quim.,73,(1977),858	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Hedyotis diffusae herba
-coconut	split	Liu,J.Nat.Prod.,71,(2008),789	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Garcinia lateriflora
-wikidata	doi	10.1021/JA057404H	inchi	InChI=1S/C30H34N2O4/c1-28-8-6-20-13-21-26(34)27(35)22(32(2)3)15-29(21)9-10-30(20,36-29)24(28)14-23(33)25(28)18-5-4-17-7-11-31-16-19(17)12-18/h4-7,11-13,16,22,24-27,34-35H,8-10,14-15H2,1-3H3/t22-,24+,25-,26+,27+,28-,29+,30+/m0/s1	clean	Corticium simplex
-coconut	split	Jatoi et al.,Phytotherapy Res.,21,(2007),507-516	smiles	O=C(O)CCCCCCCCCCCCC	clean	Imperata cylindrica
-coconut	split	Mulchandani,Planta Med.,50,(1984),104	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Heterotheca inuloides
-wikidata	doi	10.1055/S-2000-8632	inchi	InChI=1S/C11H12O4/c1-14-9-5-3-8(4-6-11(12)13)10(7-9)15-2/h3-7H,1-2H3,(H,12,13)	clean	Artemisia igniaria
-coconut	split	Lin,Phytochem.,68,(2007),1189	smiles	O=C(O)C1=CC=C(O)C(O)=C1	clean	Glycyrrhiza
-coconut	pubmed	23912804	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=CC5	clean	Aster alpinus
-coconut	split	Ali,Phytochem.,59,(2002),889	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Pinus thunbergii
-coconut	split	Abreu,J.Nat.Med.,62,(2008),67	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Solanum lasiocarpum
-coconut	split	Ragasa,J.Nat.Med.,62,(2008),461	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Marcetella moquiniana
-coconut	split	Syrchina,Khim.Prir.Soedin.,(1975),416	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Hypericum laricifolium
-coconut	split	Tsunakawa,J.Antibiotics 45,(1992),180	smiles	O=CC1=CC2(C=CC(=O)C=3C(=O)OC4(C3O)CC(C(=CC4(C=CC=C(C(=O)C=5C(=O)OC6(C5O)CC(C(=CC6(C=CC(=O)C=7C(=O)OC8(C7O)CC(C(=CC8(C=CC=C(C(=O)C=9C(=O)OC2(C9O)CC1C)C)C)CO)C)C)CO)C)C)C)CO)C)C	clean	Bacteria
-coconut	split	Basnet,Chem. Pharm. Bull.,41,(1993),1238	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Scutellaria orientalis
-coconut	split	Cubukcu,Fitoterapia,57,(1986),124	smiles	O=C1C=C(OC2=CC(OC3OC(CO)C(O)C(O)C3O)=CC(O)=C12)C=4C=CC(O)=C(O)C4	clean	Buxus hyrcana
-coconut	split	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter44	smiles	OC1=CC=C(C=C1)C=CC=2C=C(O)C=C(O)C2	clean	Panax ginseng
-napralert	authors	SUZUKI,M: SEGAWA,M: SUZUKI,T: KUROSAWA,E:	nominal	CHAMIGRA-7(14)-9-DIEN-8(R)-OL,2(S)-10-DIBROMO-3(S)-CHLORO:	clean	Laurencia nipponica Rhodomelaceae
-napralert	journal	BULL CHEM SOC JAPAN	nominal	CHAMIGRA-7(14)-9-DIEN-8(R)-OL,2(S)-10-DIBROMO-3(S)-CHLORO:	clean	Laurencia nipponica Rhodomelaceae
-napralert	title	STRUCTURES OF TWO NEW HALOCHAMIGRENE DERIVATIVES FROM THE RED ALGA LAURENCIA NIPPONICA YAMADA.	nominal	CHAMIGRA-7(14)-9-DIEN-8(R)-OL,2(S)-10-DIBROMO-3(S)-CHLORO:	clean	Laurencia nipponica Rhodomelaceae
-coconut	split	Warmers,Phytochem.,52,(1999),1519	smiles	OC1(C)CCC2C(C3C(C)CCC31)C2(C)C	clean	Pellia epiphylla
-streptomedb	pubmed	16941176	smiles	COC[C@H]1O[C@@H](OC2OCC3C([C@H]2OC(=O)C(C)C)O[C@@]2(O3)O[C@H](C)[C@@](C3C2OCO3)(O)C(=O)C)[C@H]([C@H]([C@@H]1O[C@@H]1O[C@H](C)[C@@H]([C@@H]([C@H]1O)O[C@@H]1O[C@H](C)C2[C@](C1)(C)OC1(O2)C[C@@H](O)[C@@H]([C@H](O1)C)O[C@H]1C[C@@H](O)[C@@H]([C@H](O1)C)OC(=O)c1c(C)c(Cl)c(c(c1OC)Cl)O)OC)O)OC	clean	Streptomyces viridochromogenes AS4.126
-napralert	doi	10.1016/j.phytochem.2003.08.002	inchi	InChI=1S/C21H16O7/c1-24-14-4-3-10(5-15(14)25-2)18-11-6-16-17(28-9-27-16)7-12(11)20(22)13-8-26-21(23)19(13)18/h3-7,22H,8-9H2,1-2H3	clean	Bupleurum scorzonerifolium
-coconut	split	Kaneko,Phytochem.,16,(1977),791	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Centrosema pascuorum
-coconut	split	Yamaki,J.Pharm.Soc.,Japan,96,(1976),284	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Lomandra hastilis
-coconut	split	Lindstedt,Acta Chem.Scand.,5,(1951),129	smiles	O=C1C=2C(O)=CC(OC)=CC2OC(C=3C=CC=CC3)C1	clean	Stephania dielsiana
-coconut	split	Marino,Phytochem.,68,(2007),1805	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Plumbago pulchella
-coconut	split	Flamini,Phytochem.,57,(2001),559	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Equsetum arvense
-napralert	authors	KANG,IH: CHA,JH: WAN,S: LEE,W: KIM,HJ: KWON,SH: HAM,IH: HWANG,BS: WHANG,WK:	nominal	HYPEROSIDE	clean	Crataegus pinnatifida Rosaceae
-napralert	journal	KOREAN J PHARMACOG	nominal	HYPEROSIDE	clean	Crataegus pinnatifida Rosaceae
-napralert	title	ISOLATION OF ANTI-OXIDANT FROM DOMESTIC CRATAEGUS PINNATIFIDA BUNGE LEAVES.	nominal	HYPEROSIDE	clean	Crataegus pinnatifida Rosaceae
-coconut	split	Koehler,Naturforsch,58c,(2002),277	smiles	O=C1C=C(OC=2C=C(OC)C=C(O)C12)C=3C=CC(OC)=CC3	clean	Salix rosmarinifolia
-napralert	doi	10.1055/s-2006-960930	inchi	InChI=1S/C10H16/c1-7-4-5-8-6-9(7)10(8,2)3/h8-9H,1,4-6H2,2-3H3	clean	Solidago canadensis
-coconut	split	Parmar,Phytochem.,50,(1999),1267	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Boehmeria pannosa
-coconut	split	Suga,Phytochem.,64,(2003),991	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Aesculus punduana
-napralert	authors	IWAMOTO,M: TAKAGI,Y: KOGAMI,K: HAYASHI,K:	nominal	FURAN,TETRAHYDRO: 2-HYDROXY-5-PENTYL:	clean	Citrullus vulgaris Cucurbitaceae
-napralert	journal	AGR BIOL CHEM	nominal	FURAN,TETRAHYDRO: 2-HYDROXY-5-PENTYL:	clean	Citrullus vulgaris Cucurbitaceae
-napralert	title	SYNTHESIS OF CHARACTERISTIC FLAVOR CONSTITUENTS OF WATERMELON (CITRULLUS VULGARIS) ESSENTIAL OIL.	nominal	FURAN,TETRAHYDRO: 2-HYDROXY-5-PENTYL:	clean	Citrullus vulgaris Cucurbitaceae
-coconut	split	Yousuf,Phytochem.,61,(2002),361	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Diospyros montana
-coconut	split	Pawlus,J.Nat.Prod.,68,(2005),1720	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Viscum album
-coconut	split	Karrer,Helv. Chim. Acta,27,(1944),1684	smiles	OC1CC(=C(C=CC(=CC=CC(=CC=CC=C(C=CC=C(C)C2OC3(C(=C2)C(C)(C)CC(O)C3)C)C)C)C)C(C)(C)C1)C	clean	Viola tricolor
-coconut	split	Khafagy,Planta Med.,29,(1976),301	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros quaesita
-coconut	split	Lwande,J.Nat.Prod.,48,(1985),1004	smiles	O=C1C2=C(OC)C=C(OC)C(=C2OC(C=3C=CC=CC3)C1)CC=C(C)C	clean	Millettia pinnata
-coconut	split	Noreen,J. Nat. Prod.,61,(1998),8	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Amsinckia tessellata
-coconut	split	Hui,Phytochem.,17,(1978),156	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Crinum yemense
-coconut	split	Kokoska,Phytochem.,70,(2009),842	smiles	O=C(O)C=CC1=CC=C(O)C=C1	clean	Leptolaena diospyroidea
-wikidata	doi	10.7164/ANTIBIOTICS.51.676	inchi	InChI=1S/C31H36N2O11/c1-14(2)7-8-16-13-17(9-11-19(16)34)27(37)33-21-22(35)18-10-12-20(15(3)24(18)42-28(21)38)41-29-23(36)25(43-30(32)39)26(40-6)31(4,5)44-29/h7,9-13,23,25-26,29,34,36,38H,8H2,1-6H3,(H2,32,39)(H,33,37)/t23-,25+,26-,29-/m1/s1	clean	Streptomyces albidoflavus
-coconut	split	Ohmiya,Heterocycles,30,(1990),537	smiles	OCC1CCCN2CCCCC21	clean	Lamprolobium fruticosum
-coconut	split	Luo,Phytochem.,61,(2002),449	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Eugenia exsucca
-coconut	split	Kirsten. (2017). Sticking together: inter-species aggregation of bacteria isolated from iron snow is controlled by chemical signaling. 10.1038/ismej.2016.186. https://doi.org/10.1038/ismej.2016.186	smiles	O=C(O)C1=CC=C(O)C=C1	clean	Scopolia atropoides
-coconut	split	Gao,Chem.Pharm.Bull.,51,(2003),1318	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Epimedium grandiflorum
-coconut	split	Tanayama,Phytochem.,22,(1983),1053	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Amomum neoaurantiacum
-wikidata	doi	10.1071/CH9772527	inchi	InChI=1S/C29H44O2/c1-21(2)12-9-13-22(3)14-10-15-23(4)16-11-18-29(7)19-17-26-25(6)27(30-8)20-24(5)28(26)31-29/h12,14,16,20H,9-11,13,15,17-19H2,1-8H3/b22-14+,23-16+/t29-/m1/s1	clean	Cystophora torulosa
-coconut	split	Salem,J.Nat.Prod.,69,(2006),43	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Dipsacus asper
-coconut	pubmed	23203108	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros gabunensis
-coconut	pubmed	23439294	smiles	O=C1C(=COC2=CC(O)=CC=C12)C=3C=CC(O)=CC3	clean	Geranium sibiricum
-coconut	split	Dixit,Indian J.Pharm.,39,(1977),85	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Lemna trisulca
-coconut	split	Bohlmann,Phytochem.,18,(1979),1246	smiles	O=C1C2=C(O)C=C(O)C(=C2OC(C3=CC=C(O)C=C3)C1)CC=C(C)C	clean	Esenbeckia leiocarpa
-coconut	split	Ohtsu,Phytochem.,49,(1998),1761	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Teucrium cossonii
-coconut	split	Miller,Biochem.Syst.Ecol.,8,(1980),279	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2OC3OCC(O)C(O)C3O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Derris uliginosa
-coconut	split	Jabalpurwala,Phytochem.,70,(2009),1428	smiles	C=CC(=C)CCC=C(C)C	clean	Coptis chinensis
-coconut	split	Min,Chem.Pharm.Bull.,48,(2000),194	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=C(O)C(O)=C(O)C4	clean	Myrica rubra
-wikidata	doi	10.1021/JF970031M	inchi	InChI=1S/C10H16/c1-7-4-5-8-6-9(7)10(8,2)3/h4,8-9H,5-6H2,1-3H3	clean	Salvia fruticosa
-wikidata	doi	10.1016/0031-9422(88)83053-X	inchi	InChI=1S/C22H28N2O3/c1-5-13-12-24-9-8-22-16-7-6-14(26-3)10-17(16)23(2)20(22)18(24)11-15(13)19(22)21(25)27-4/h5-7,10,15,18-20H,8-9,11-12H2,1-4H3/b13-5+	clean	Alstonia angustifolia
-napralert	authors	DE TOMMASI,N: PIACENTE,S: PIZZA,C:	nominal	QUERCETIN-3-METHYL ETHER-7-O-BETA-D-GLUCOPYRANOSYL-[(1-6)-ALPHA-L-RHAMNOPYRANOSYL]-(1-2)-BETA-D-XYLOPYRANOSIDE	clean	Bidens andicola Asteraceae
-napralert	journal	J NAT PROD	nominal	QUERCETIN-3-METHYL ETHER-7-O-BETA-D-GLUCOPYRANOSYL-[(1-6)-ALPHA-L-RHAMNOPYRANOSYL]-(1-2)-BETA-D-XYLOPYRANOSIDE	clean	Bidens andicola Asteraceae
-napralert	title	FLAVONOL AND CHALCONE ESTER GLYCOSIDES FROM BIDENS ANDICOLA.	nominal	QUERCETIN-3-METHYL ETHER-7-O-BETA-D-GLUCOPYRANOSYL-[(1-6)-ALPHA-L-RHAMNOPYRANOSYL]-(1-2)-BETA-D-XYLOPYRANOSIDE	clean	Bidens andicola Asteraceae
-coconut	split	Miyaichi,Chem.Pharm.Bull.,54,(2006),136	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Salvia pinnata
-coconut	split	Bycroft,J.Chem.Soc.,C,(1970),1686	smiles	OC1CCC2(C)C(CCC3(C)C2CCC4C5C(C(=C)C)CCC5(C)CCC43C)C1(C)C	clean	Eriolaena hookeriana
-wikidata	doi	10.1071/CH9821873	inchi	InChI=1S/C22H36O2/c1-17-9-7-11-18(2)13-15-21(22(5,6)24-20(4)23)16-14-19(3)12-8-10-17/h9,12-13,21H,7-8,10-11,14-16H2,1-6H3/b17-9+,18-13+,19-12+/t21-/m1/s1	clean	Litophyton brassicum
-napralert	authors	ONAYADE,OA: LOOMAN,A: SCHEFFER,JJC: BAERHEIM-SVENDSEN,A:	nominal	MENTHONE	clean	Platostoma africanum Lamiaceae
-napralert	journal	PLANTA MED	nominal	MENTHONE	clean	Platostoma africanum Lamiaceae
-napralert	title	PRECOCENE I AND OTHER CONSTITUENTS OF ESSENTIAL OIL OF PLATOSTOMA AFRICANUM.	nominal	MENTHONE	clean	Platostoma africanum Lamiaceae
-coconut	split	Basu,J.Pharm.Pharmacol.,20,(1947),136	smiles	C1=C(C)C2CC(C1)C2(C)C	clean	Heracleum yungningense
-coconut	split	Gupta,Chem.Pharm.Bull.,55,(2007),771	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Solanum habrochaites
-napralert	authors	BETTO,P: GABRIELE,R: GALEFFI,C:	nominal	NYASICOSIDE	clean	Hypoxis obtusa Hypoxidaceae
-napralert	journal	J CHROMATOGR	nominal	NYASICOSIDE	clean	Hypoxis obtusa Hypoxidaceae
-napralert	title	DETERMINATION OF THE NORLIGNAN GLUCOSIDES OF HYPOXIDACEAE BY HIGH-PERFORMANCE LIQUID CHROMATOGRAPHY.	nominal	NYASICOSIDE	clean	Hypoxis obtusa Hypoxidaceae
-coconut	split	Dominuez,Rev.Latinoam.Quim.,1,(1970),68	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Phellodendron chinese
-unpd	original	Perez-Castorena, Ana-L.; Arciniegas, Amira; Guzman, S. Laura; Villasenor, Jose Luis; Vivar, Alfonso Romo de; Journal of Natural Products; vol. 69; 10; (2006); p. 1471 - 1475.	smiles	COc1cc(ccc1O)C2=C(OC3C(O)C(CO)OC(OC(=O)C)C3O)C(=O)c4c(O)cc(O)cc4O2	clean	Senecio mairetianus
-coconut	split	Basu,Indian J.Chem.,15B,(1977),971	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Stevia polycephala
-napralert	authors	JIANG,QP: WEI,LS:	nominal	DELBINE	clean	Delphinium bonvalotii Ranunculaceae
-napralert	journal	HETEROCYCLES	nominal	DELBINE	clean	Delphinium bonvalotii Ranunculaceae
-napralert	title	THE STRUCTURES OF FOUR NEW DITERPENOID ALKALOIDS FROM DELPHINIUM BONVALOTII FRANCH.	nominal	DELBINE	clean	Delphinium bonvalotii Ranunculaceae
-streptomedb	pubmed	21261886	smiles	OC[C@@H]1O[C@@H](O[C@H]2[C@H](O[C@H]3[C@H](O)[C@@H](O)[C@@H]([C@H]([C@@H]3N=C(N)N)O)N=C(N)N)O[C@H]([C@]2(O)C=O)C)[C@H]([C@@H]([C@H]1O)O)NC	clean	Streptomyces griseus ATCC 10137
-coconut	split	Robinson,Phytochem.,9,(1970),907	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Corymbia citriodora
-coconut	split	Biltz,Justus Liebigs Ann.Chem.,(1921),423	smiles	O=C1C=C(OC2=CC(O)=C(C(O)=C12)C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Citrus rugulosa
-wikidata	doi	10.1080/10412905.1992.9698068	inchi	InChI=1S/C15H22O/c1-9-5-6-11-7-12-10(2)13(16)8-15(9,12)14(11,3)4/h9,11H,5-8H2,1-4H3/t9-,11-,15+/m1/s1	clean	Artabotrys lastoursvillensis
-napralert	authors	HARBORNE,JB: WILLIAMS,CA: WILSON,KL:	nominal	QUERCETIN	clean	Schoenoplectus validus Cyperaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	QUERCETIN	clean	Schoenoplectus validus Cyperaceae
-napralert	title	FLAVONOIDS IN LEAVES AND INFLORESCENCES OF AUSTRALIAN CYPERACEAE.	nominal	QUERCETIN	clean	Schoenoplectus validus Cyperaceae
-coconut	split	Chem.Abstr.,84 56510t	smiles	O=C(O)C=CC1=CC=C(O)C=C1	clean	Distephanus angulifolius
-coconut	split	Sen,Phytochem.,20,(1981),183	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Scrophularia ningpoensis
-napralert	authors	KINOSHITA,T: TATARA,S: HO,FC: SANKAWA,U:	nominal	OSTHOL	clean	Murraya paniculata Rutaceae
-napralert	journal	PHYTOCHEMISTRY	nominal	OSTHOL	clean	Murraya paniculata Rutaceae
-napralert	title	3-PRENYLINDOLES FROM MURRAYA PANICULATA AND THEIR BIOGENETIC SIGNIFICANCE.	nominal	OSTHOL	clean	Murraya paniculata Rutaceae
-wikidata	doi	10.1016/0305-1978(85)90081-X	inchi	InChI=1S/C15H24/c1-12(2)15-10-8-13(3)6-5-7-14(4)9-11-15/h7-8,10,12,15H,3,5-6,9,11H2,1-2,4H3/b10-8+,14-7+/t15-/m0/s1	clean	Juniperus taxifolia
-coconut	doi	10.1016/0031-9422(95)00504-Z	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Saussurea cordifolia
-coconut	split	Buckingham(Executive Editor)Dictionary of Natural ProductsChapman & Hall 1998	smiles	C1=C(C)C2CCC(=CC2C(C1)C(C)C)C	clean	Amomum neoaurantiacum
-coconut	split	Acheson,G.G.et al.,JCS,(1949),812	smiles	C=C1C=CC(CC1)C(C)C	clean	Plagiochila standleyi
-npass	pubmed	17665952	smiles	CC(=O)O[C@H]1C[C@H]2C(=C)C(=O)[C@@]3([C@@H]1[C@@]14CCCC([C@H]4[C@@H]([C@@]3(OC1)O)O)(C)C)[C@@H]2O	clean	Isodon xerophilus
-npatlas	authors	Veluri, Ravikanth; Oka, Imelda; Wagner-Doebler, Irene; Laatsch, Hartmut	smiles	CC(CC(C1=CNC2=CC=CC=C21)C3=CNC4=CC=CC=C43)C5=CNC6=CC=CC=C65	clean	Vibrio parahaemolyticus Bio249
-npatlas	doi	10.1021/np030288g	smiles	CC(CC(C1=CNC2=CC=CC=C21)C3=CNC4=CC=CC=C43)C5=CNC6=CC=CC=C65	clean	Vibrio parahaemolyticus Bio249
-npatlas	journal	Journal of Natural Products	smiles	CC(CC(C1=CNC2=CC=CC=C21)C3=CNC4=CC=CC=C43)C5=CNC6=CC=CC=C65	clean	Vibrio parahaemolyticus Bio249
-npatlas	pubmed	14640534	smiles	CC(CC(C1=CNC2=CC=CC=C21)C3=CNC4=CC=CC=C43)C5=CNC6=CC=CC=C65	clean	Vibrio parahaemolyticus Bio249
-npatlas	title	New Indole Alkaloids from the North Sea Bacterium Vibrio parahaemolyticus Bio249	smiles	CC(CC(C1=CNC2=CC=CC=C21)C3=CNC4=CC=CC=C43)C5=CNC6=CC=CC=C65	clean	Vibrio parahaemolyticus Bio249
-coconut	split	Krajniak,Aust.J.Chem.,22,(1969),1331	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Hakea amplexicaulis
-coconut	split	Chen,J.Nat.Prod.,70,(2007),1444	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Coffea stenophylla
-coconut	pubmed	15134373	smiles	OC=1C=C(O)C=C(C=CC2=CC=C(O)C(O)=C2)C1	clean	Picea glehnii
-coconut	pubmed	25377186	smiles	O=C(O)C=1C=CC=CC1	clean	Centaurea cheiranthifolia
-coconut	split	Qin,Zhongcaoyao,17,(1986),197	smiles	O=C(O)CCCCCCCCCCCCCCC	clean	Trichosanthes rosthornii
-unpd	original	Tanaka, Ayako; Kinoshita, Kaoru; Koyama, Kiyotaka; Takahashi, Kunio; Ichinose, Koji; Togawa, Tadayasu; Narui, Takao; Wang, Li-Song; Heterocycles; vol. 83; 6; (2011); p. 1377 - 1383.	smiles	CC1=CC(=O)c2c(O)c3C(=C(CN4CCC[C@@H]4C(=O)O)C(=O)C(=O)c3cc2O1)O	clean	Lethariella sinensis
-coconut	split	Pawlowska,Acta Soc.Bot.Pol.,45,(1976),383	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Hippophae rhamnoides
-coconut	split	Tchinda,Chem.Pharm.Bull.,55,(2007),1402	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Schefflera divaricata
-coconut	split	Lago,Phytochem.,55,(2000),727	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Phlomis umbrosa
-phenolexplorer	authors	Lugasi A., Hovari J.	smiles	OC1=CC(O)=C2C(=O)C=C(OC2=C1)C1=CC(O)=C(O)C=C1	clean	Brassica oleracea var. italica
-phenolexplorer	journal	Acta Alimentaria	smiles	OC1=CC(O)=C2C(=O)C=C(OC2=C1)C1=CC(O)=C(O)C=C1	clean	Brassica oleracea var. italica
-phenolexplorer	pubmed	11312761	smiles	OC1=CC(O)=C2C(=O)C=C(OC2=C1)C1=CC(O)=C(O)C=C1	clean	Brassica oleracea var. italica
-phenolexplorer	title	Flavonoid aglycons in foods of plant origin I. Vegetables	smiles	OC1=CC(O)=C2C(=O)C=C(OC2=C1)C1=CC(O)=C(O)C=C1	clean	Brassica oleracea var. italica
-coconut	split	Miyazawa,J.Nat.Med.,60,(2006),89	smiles	O=CCC=1C=CC=CC1	clean	Arctium lappa
-coconut	split	Han,J.Nat.Prod.,66,(2003),1391	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Habropetalum dawei
-coconut	pubmed	17245795	smiles	N=1C=CC=C(C1)C2N(C)CCC2	clean	Areca catechu
-wikidata	doi	10.1016/S0031-9422(00)83061-7	inchi	InChI=1S/C10H16/c1-7(2)10-5-4-8(3)9(10)6-10/h7,9H,3-6H2,1-2H3	clean	Baccharis rufescens
-coconut	split	Chiale,An. Assoc. Quim. Argent.,72,(1984),501	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Angelica acutiloba
-coconut	split	Nicholls,J.Nat.Prod.,45,(1982),453	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Attalea excelsa
-coconut	split	Lin,Phytochem.,51,(1999),793	smiles	O=C(O)C1(C)CCCC2(C)C3C(=CC(C=C)(C)CC3)CCC12	clean	Ophioglossum vulgatum
-coconut	split	Salei,Khim.Prir.Soedin.,(1967),301	smiles	C=C(C)C1CC=C(C)CC1	clean	Hypericum perforatum
-coconut	split	Lansky et al.,J.Ethnopharmacol.,19,(2007),177-206	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Alnus cordata
-coconut	split	Saito,Tetrahedron Lett.,(1975),4661	smiles	O=C(C=CC1=CC=C(O)C=C1)C2=CC=C(O)C=C2O	clean	Eucalyptus australiana
-coconut	split	Suga,Phytochem.,64,(2003),991	smiles	O=C(O)C=CC1=CC=C(O)C(OC)=C1	clean	Lemaireocereus longispinus
-wikidata	doi	10.1016/0305-1978(96)00023-3	inchi	InChI=1S/C10H14/c1-7-4-5-8-6-9(7)10(8,2)3/h4-5,8-9H,1,6H2,2-3H3	clean	Lavandula stoechas
-coconut	split	Basu,Indian J. Exp. Biol.,15,(1977),1072	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Rubus chingii
-wikidata	doi	10.1021/NP990302I	inchi	InChI=1S/C27H38O10/c1-8-21(30)35-17-12-19(34-16(5)29)25(6)18(33-15(4)28)10-9-13(2)11-20-27(23(31)22(25)14(17)3)26(7,37-27)24(32)36-20/h11,14,17-20,22-23,31H,8-10,12H2,1-7H3	clean	Briareum excavata
-coconut	split	Kintsurashvili,Izv.Akad.Nauk.Gruz.Ser.Khim.,23,(1997),171	smiles	O=C1C2=CC=3OCOC3C=C2CCN(C)CC4=C5OCOC5=CC=C4C1	clean	Fumaria indica
-wikidata	doi	10.1055/S-2004-815538	inchi	InChI=1S/C45H72O17/c1-19-8-13-45(55-18-19)20(2)30-27(62-45)15-26-24-7-6-22-14-23(9-11-43(22,4)25(24)10-12-44(26,30)5)57-42-39(61-40-36(53)34(51)31(48)21(3)56-40)38(33(50)29(17-47)59-42)60-41-37(54)35(52)32(49)28(16-46)58-41/h6,19-21,23-42,46-54H,7-18H2,1-5H3/t19-,20+,21+,23+,24-,25+,26+,27+,28-,29-,30+,31+,32-,33-,34-,35+,36-,37-,38+,39-,40+,41+,42-,43+,44+,45-/m1/s1	clean	Dioscorea spongiosa
-coconut	split	Huang,J.Nat.Prod.,71,(2008),1146	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Veronica anagallis-aquatica
-coconut	doi	10.1016/j.jep.2008.06.005	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Eukaryota$$$$class
-streptomedb	pubmed	1367661	smiles	OC(=O)C[C@H]1O[C@H](C)c2c(C1)c(O)c1c(c2O)C(=O)C(=CC1=O)C1=CC(=O)c2c(C1=O)c(O)c1c(c2O)C[C@H](O[C@@H]1C)CC(=O)O	clean	Streptomyces coelicolor A3(2)
-napralert	authors	SUGIYAMA,S: UMEHARA,K: KUROYANAGI,M: UENO,A: TAKI,T:	nominal	FLAVONE,3'-5-DIHYDROXY-6-7-8-TRIMETHOXY:	clean	Citrus reticulata Rutaceae
-napralert	journal	CHEM PHARM BULL	nominal	FLAVONE,3'-5-DIHYDROXY-6-7-8-TRIMETHOXY:	clean	Citrus reticulata Rutaceae
-napralert	title	STUDIES ON THE DIFFERENTIATION INDUCERS OF MYELOID LEUKEMIC CELLS FROM CITRUS SPECIES.	nominal	FLAVONE,3'-5-DIHYDROXY-6-7-8-TRIMETHOXY:	clean	Citrus reticulata Rutaceae
-coconut	split	Li,Phytochem.,58,(2001),543	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Trapa bicornis
-coconut	split	Kamano,J.Pharm.Soc.,Japan,96,(1976),1202	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Eucalyptus froggattii
-coconut	pubmed	22559719	smiles	O=CCC(C)CCC=C(C)C	clean	Elettaria cardamomum
-coconut	split	Li,Chem.Pharm.Bull.,56,(2008),592	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Scutellaria strigillosa
-npass	pubmed	22360639	smiles	C[C@@H]1CC[C@H](OC(=O)[C@]23[C@]([C@@H]1[C@H](O)C2)(C)CC[C@@]12[C@H]3CC[C@@H]3[C@]2(C1)CCC(=O)C3(C)C)C(O)(C)C	clean	Caloncoba glauca
-coconut	split	Academic Press Inc.,New York,Ny,341 pp.(1989)	smiles	OC1CC2=CC=C3C(CCC4(C)C3CCC4C(C=CC(C)C(C)C)C)C2(C)CC1	clean	Eukaryota$$$$genus
-coconut	split	Farag,Phytochem.,61,(2002),545	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Cneorum pulverulentum
-coconut	split	Miyaichi,Chem.Pharm.Bull.,37,(1989),794	smiles	O=C(C=CC1=CC(OC)=C(OC)C(OC)=C1OC)C2=C(OC)C=C3OCOC3=C2OC	clean	Scutellaria indica
-wikidata	doi	10.1016/0031-9422(88)80236-X	inchi	InChI=1S/C30H50O/c1-25(2)15-16-27(5)17-18-29(7)20(21(27)19-25)9-10-23-28(6)13-12-24(31)26(3,4)22(28)11-14-30(23,29)8/h9,21-24,31H,10-19H2,1-8H3/t21-,22-,23+,24-,27+,28-,29+,30+/m0/s1	clean	Salvia cardiophylla
-coconut	pubmed	26035417	smiles	OC(C)(C)C1CCC(C=C)(C)C(C(=C)C)C1	clean	Citrus reticulata
-coconut	split	Bentley,Nat.Prod.Rep.,9,(1992),365	smiles	O=C1C=C2C3N(C)CCC2(C=C1OC)C4=C(O)C(OC)=CC=C4C3	clean	Isatis tinctoria
-napralert	doi	10.1002/ptr.2403	inchi	InChI=1S/C16H12O5/c1-20-11-6-13(18)15-14(7-11)21-8-12(16(15)19)9-2-4-10(17)5-3-9/h2-8,17-18H,1H3	clean	Pterospartum tridentatum
-napralert	doi	10.1016/s0031-9422(00)80829-8	inchi	InChI=1S/C4H12N2/c5-3-1-2-4-6/h1-6H2	clean	Utricularia intermedia
-coconut	split	Hata,J.Jap.Tech.Assoc.Pulp.Paper Ind.,6,(1952),277	smiles	OC=1C=C(OC)C=C(C=CC=2C=CC=CC2)C1	clean	Artemisia argyi
-napralert	authors	LIN,LJ: SHIAO,MS: YEH,SF:	nominal	LANOSTA-7-9(11)-24-TRIEN-26-OIC ACID,3-ALPHA-15-ALPHA-DIACETOXY-22-ALPHA-HYDROXY:	clean	Ganoderma lucidum Ganodermataceae
-napralert	journal	J NAT PROD	nominal	LANOSTA-7-9(11)-24-TRIEN-26-OIC ACID,3-ALPHA-15-ALPHA-DIACETOXY-22-ALPHA-HYDROXY:	clean	Ganoderma lucidum Ganodermataceae
-napralert	title	SEVEN NEW TRITERPENES FROM GANODERMA LUCIDUM.	nominal	LANOSTA-7-9(11)-24-TRIEN-26-OIC ACID,3-ALPHA-15-ALPHA-DIACETOXY-22-ALPHA-HYDROXY:	clean	Ganoderma lucidum Ganodermataceae
-coconut	pubmed	22170035	smiles	OC1=C(OC)C=C(C=C1OC)C2OCC3C(OCC23)C4=CC(OC)=C(O)C(OC)=C4	clean	Gmelina vitiensis
-napralert	doi	10.1016/s0031-9422(00)81568-x	inchi	InChI=1S/C52H76O12/c1-33(21-15-23-35(3)25-17-27-37(5)29-31-41(51(9,10)59)63-49-47(57)45(55)43(53)39(7)61-49)19-13-14-20-34(2)22-16-24-36(4)26-18-28-38(6)30-32-42(52(11,12)60)64-50-48(58)46(56)44(54)40(8)62-50/h13-32,39-50,53-60H,1-12H3/b14-13+,21-15+,22-16+,25-17+,26-18+,31-29+,32-30+,33-19+,34-20+,35-23+,36-24+,37-27+,38-28+/t39-,40-,41+,42+,43-,44-,45+,46+,47-,48-,49?,50?/m1/s1	clean	Oscillatoria agardhii
-napralert	doi	10.1080/10412905.1989.9697787	inchi	InChI=1S/C17H36/c1-3-5-7-9-11-13-15-17-16-14-12-10-8-6-4-2/h3-17H2,1-2H3	clean	Ruta graveolens
-unpd	original	Hwang, Ji Sang; Lee, Seon A; Hong, Seong Su; Han, Xiang Hua; Lee, Chul; Kim, Youngsoo; Hong, Jin Tae; Lee, Mi Kyeong; Hwang, Bang Yeon; Kang, Shin Jung; Lee, Dongho; Bioorganic and Medicinal Chemistry Letters; vol. 20; 12; (2010); p. 3785 - 3787.	smiles	COc1cc2CCc3cc(O)ccc3c2c(O)c1OC	clean	Dendrobium nobile
-knapsack	original	Rezende,Phytochem.,10,(1971),3167	inchi	InChI=1S/C17H16O4/c1-11-14(19)10-15(20)16(17(11)21-2)13(18)9-8-12-6-4-3-5-7-12/h3-10,19-20H,1-2H3/b9-8+	clean	Didymocarpus aurantiaca
-coconut	split	Begum,J.Nat.Prod.,65,(2002),1939	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Aristolochia elegans
-wikidata	doi	10.7164/ANTIBIOTICS.49.223	inchi	InChI=1S/C21H27ClO5/c1-6-12(2)9-13(3)7-8-15-10-16-17(11-26-15)20(27-14(4)23)21(5,25)19(24)18(16)22/h7-10,12,17,20,25H,6,11H2,1-5H3/b8-7+,13-9+/t12?,17-,20-,21+/m1/s1	clean	Penicillium
-unpd	original	Politi M, et al. Planta Med, 2003, 69, 468. (\ 9) Costa-Lotufo LV, et al. Planta Med, 2004, 70 (2): 18\ 0.	smiles	CC(C)c1cc2C(=O)CC3C(C)(C)CCCC3(C)c2cc1O	clean	Cephalotaxus harringtonia var. drupacea
-unpd	split	Planta Med, 2004, 70 (2): 18\ 0.	smiles	CC(C)c1cc2C(=O)CC3C(C)(C)CCCC3(C)c2cc1O	clean	Cephalotaxus harringtonia var. drupacea
-coconut	split	Jiang,Phytochem.,67,(2006),1673	smiles	O=CC=C(C)CCC=C(C)C	clean	Bidens andicola
-coconut	split	Pentegova,Khim.Prir.Soedin.,(1987),459	smiles	C1=C(C)C2CC(C1)C2(C)C	clean	Hypericum perforatum
-coconut	split	Leu,Chem.Pharm.Bull.,54,(2006),1308	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Garrya elliptica
-coconut	split	Morishita,Phytochem.,22,(1983),1051	smiles	O=C1OCC2C3CCC(C(C)C(O)C(O)C(C)C(C)C)C3(C)CCC2C4(C)CC(O)C(O)CC14	clean	Eukaryota$$$$class
-coconut	split	Catalan,Phytochem.,64,(2003),625	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Salvia lavandulifolia
-wikidata	doi	10.1016/J.BMCL.2007.09.003	inchi	InChI=1S/C21H20O11/c22-7-13-15(26)17(28)18(29)21(31-13)32-20-16(27)14-11(25)5-10(24)6-12(14)30-19(20)8-1-3-9(23)4-2-8/h1-6,13,15,17-18,21-26,28-29H,7H2/t13-,15-,17+,18-,21+/m1/s1	clean	Lespedeza virgata
-coconut	split	Chaudhuri,J. Nat. Prod.,58,(1995),1966	smiles	OC1=CC=C2C(OCC3C4=CC=5OCOC5C=C4OC23)=C1	clean	Caragana sinica
-coconut	split	H.Ashihara et al.,Phytochemistry,69,(2008),841-856	smiles	N1=CN=C(N)C=2NC=NC12	clean	Panax ginseng
-unpd	original	Chen, Li-Wen; Chen, Ih-Sheng; Cheng, Ming-Jen; Peng, Chien-Fang; Chemistry and Biodiversity; vol. 7; 7; (2010); p. 1814 - 1821.	smiles	CC1(C)Oc2cc3OC=C(C(=O)c3c(O)c2C=C1)c4ccc(O)cc4O	clean	Ficus nervosa
-coconut	split	Paris,Sceances Acad Sci.,257,(1963),1728	smiles	O=C1C(=COC2=CC(OC3OC(CO)C(O)C(O)C3O)=CC(O)=C12)C=4C=CC(O)=CC4	clean	Astragalus wiedemannianus
-coconut	split	Tasdemir,J.Nat.Prod.,60,(1997),874	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Curcuma wenyujin
-coconut	split	Block,Phytochem.,65,(2004),1165	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Prunus cerasoides
-metabolights	pubmed	31273253	inchi	InChI=1S/C25H52NO7P/c1-5-6-7-8-9-10-11-12-13-14-15-16-17-18-19-25(28)31-22-24(27)23-33-34(29,30)32-21-20-26(2,3)4/h24,27H,5-23H2,1-4H3/t24-/m1/s1	clean	Homo sapiens
-coconut	pubmed	20803379	smiles	OC1(C)CCC(C(C)C)C2C=C(C)CCC21	clean	Tripterygium wilfordii
-coconut	split	Poumale,Chem.Pharm.Bull.,56,(2008),1428	smiles	CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC	clean	Buxus microphylla
-napralert	authors	HE,K: MONTENEGRO,G: HOFFMANN,JJ: TIMMERMANN,BN:	nominal	BACLINEPOXIDE,13-EPI:	clean	Baccharis linearis Asteraceae
-napralert	journal	PHYTOCHEMISTRY	nominal	BACLINEPOXIDE,13-EPI:	clean	Baccharis linearis Asteraceae
-napralert	title	DITERPENOIDS FROM BACCHARIS LINEARIS.	nominal	BACLINEPOXIDE,13-EPI:	clean	Baccharis linearis Asteraceae
-knapsack	original	Grayer-Barkmeijer,Fortschr. Chem. Org. Naturst. ,43,(1983),1	inchi	InChI=1S/C15H14O7/c16-7-3-9(17)8-5-12(20)15(22-13(8)4-7)6-1-10(18)14(21)11(19)2-6/h1-4,12,15-21H,5H2/t12-,15+/m0/s1	clean	Ulex micranthus
-coconut	split	Chen,HortScience,25,(1990),314	smiles	O=C(O)C1C2C3(OC(=O)C2(C)C(O)CC3)C4CCC5(O)C(=C)CC14C5	clean	Citrus$$$$superkingdom
-coconut	split	Battersby,J.Chem.Soc.,Chem.Commun.,(1968),1277	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Onobrychis arenaria
-coconut	split	Cutillo,Phytochem.,67,(2006),481	smiles	O=C(O)C=1C=CC=CC1O	clean	Artemisia annua
-wikidata	doi	10.1021/NP401040D	inchi	InChI=1S/C16H20O4/c1-10(2)5-6-11-13(18-3)9-14-12(16(11)19-4)7-8-15(17)20-14/h7-10H,5-6H2,1-4H3	clean	Toddalia asiatica
+coconut	split	Flamini,Phytochem.,61,(2002),433	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Echinochloa esculenta
+coconut	doi	10.3987/com-12-12633	smiles	O=C1NC(O)(C(=O)NC1)CC2=CC=C(OCC=C(C)C)C=C2	clean	Hypocrea sp.
+coconut	split	Wang,Phytochem.,68,(2007),2455	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Piper taboganum
+coconut	split	Simonet,Phytochem.,51,(1999),1065	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Citrus hystrix
+napralert	authors	TIAN,J: ZHANG,HJ: SUN,HD: PAN,LT: YAO,P: CHEN,DY:	nominal	LIGUROBUSTOSIDE A	clean	Ligustrum robustum Oleaceae
+napralert	journal	PHYTOCHEMISTRY	nominal	LIGUROBUSTOSIDE A	clean	Ligustrum robustum Oleaceae
+napralert	title	MONOTERPENOID GLYCOSIDES FROM LIGUSTRUM ROBUSTUM.	nominal	LIGUROBUSTOSIDE A	clean	Ligustrum robustum Oleaceae
+coconut	split	Chopin,Phytochem.,16,(1977),1999	smiles	O=C1C=C(OC2=C1C(O)=C(C(O)=C2C3OCC(O)C(O)C3O)C4OC(CO)C(O)C(O)C4O)C=5C=CC(O)=CC5	clean	Flourensia cernua
+coconut	split	Chein,J.Nat.Prod.,67,(2004),994	smiles	O=C(OC1CCC2(C)C3CC=C4C5C(C)C(C)CCC5(C(=O)O)CCC4(C)C3(C)CCC2C1(C)C)C	clean	Lasianthus gardneri
+coconut	split	Leu,Chem.Pharm.Bull.,51,(2003),599	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Pteris setuloso-costulata
+coconut	split	Robeson,Phytochem.,19,(1980),2359	smiles	O=C(OC)C=CC=1OC(=CC1)C(=O)C#CC=CCC	clean	Vicia grandiflora
+coconut	split	Wu,J.Nat.Prod.,63,(2000),692	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Viguiera oblongifolia
+wikidata	doi	10.1021/ACS.JOC.0C02049	inchi	InChI=1S/C28H38O6/c1-12(2)13(3)24-25-15(5)19-11-21(30)32-26-23(31)22-14(4)18-8-7-17(29)9-16(18)10-20(22)28(33-24,34-25)27(19,26)6/h10,12-13,15,17,19,23-26,29,31H,7-9,11H2,1-6H3/t13-,15+,17+,19-,23-,24-,25-,26+,27+,28+/m1/s1	clean	Aspergillus flocculosus
+coconut	split	Lin,J.Chin.Chem.Soc.,23,(1981),107	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Samadera indica
+tmmc	pubmed	25210318	nominal	6-undecanol	clean	Angelica gigas Nakai
+coconut	authors	P171330j.	smiles	OC=1C=C(O)C2=C(OC(C3=CC(O)=C(O)C(O)=C3)C(O)C2)C1	clean	Picea mariana
+coconut	split	Sidhu,Indian J.Chem.,13,(1975),749	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Lepisorus contortus
+coconut	split	M. et al.,J.Appl.Phycol.,6,(1994),25-29	smiles	O=C(O)CCCCCCCC=CCCCCCCCC	clean	Allium azureum ledeb
+coconut	split	Li,Phytochem.,58,(2001),591	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Mikania luetzelburgii
+coconut	split	Pawlus,J.Nat.Prod.,68,(2005),1720	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Swertia decora
+knapsack	original	D. P. Singh et al., Chem. Abs., (1995), 123, 193660.	inchi	InChI=1S/C7H6O4/c8-5-2-1-4(7(10)11)3-6(5)9/h1-3,8-9H,(H,10,11)	clean	Toona ciliata
+knapsack	split	Chem. Abs., (1995), 123, 193660.	inchi	InChI=1S/C7H6O4/c8-5-2-1-4(7(10)11)3-6(5)9/h1-3,8-9H,(H,10,11)	clean	Toona ciliata
+wikidata	doi	10.1021/JM00394A013	inchi	InChI=1S/C13H10O4/c14-11-5-9-10(6-17-11)13(16)8-4-2-1-3-7(8)12(9)15/h1-4,11,14H,5-6H2/t11-/m1/s1	clean	Psychotria rubra
+napralert	authors	HOEFLE,G: KUNZE,B:	nominal	AURACHIN G	clean	Stigmatella aurantiaca Cystobacteraceae
+napralert	journal	J NAT PROD	nominal	AURACHIN G	clean	Stigmatella aurantiaca Cystobacteraceae
+napralert	title	BIOSYNTHESIS OF AURACHINS A-L IN STIGMATELLA AURANTIACA: A FEEDING STUDY	nominal	AURACHIN G	clean	Stigmatella aurantiaca Cystobacteraceae
+napralert	authors	VUGALTER,MM: DEKANOSIDZE,GE: DZHIKIVA,OD: SHASHKOV,AS: KEMERTELIDZE,EP:	nominal	CALTHA GLYCOSIDE G	clean	Caltha polypetala Ranunculaceae
+napralert	journal	CHEM NAT COMP	nominal	CALTHA GLYCOSIDE G	clean	Caltha polypetala Ranunculaceae
+napralert	title	TRITERPENE SAPONINS OF CALTHA POLYPETALA. GLYCOSIDES G AND I.	nominal	CALTHA GLYCOSIDE G	clean	Caltha polypetala Ranunculaceae
+tppt	authors	Berg et al.	smiles	C1=CO[C@H]([C@H]2[C@@]1([C@@H](C=C2CO)O)O)O[C@H]3[C@@H]([C@H]([C@@H]([C@H](O3)CO)O)O)O	clean	Pedicularis recutita L.
+tppt	original	Berg et al. (1984)	smiles	C1=CO[C@H]([C@H]2[C@@]1([C@@H](C=C2CO)O)O)O[C@H]3[C@@H]([C@H]([C@@H]([C@H](O3)CO)O)O)O	clean	Pedicularis recutita L.
+coconut	split	Natural Products Vol.1 ISBN978-3-642-22143-9	smiles	O=C1C2=COC(OC3OC(CO)C(O)C(O)C3O)C(C=C)C2CC4C5=NC=6C=CC=CC6C=C5CN14	clean	Mostuea brunnonis
+coconut	split	Dominguez,Rev.Latinoam.Quim.,13,(1982),39	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Crataegus pinnatifida
+coconut	split	Konig,Phytochem.,49,(1998),1257	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Lagotis brevituba
+coconut	split	Giang,Chem.Pharm.Bull.,54,(2006),546	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Calea megacephala
+coconut	pubmed	16534801	smiles	O=C(O)C1NCCC1	clean	Saccharomyces cerevisiae
+coconut	split	Sharma,Collect.Czech.Chem.Commun.,42,(1977),3487	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Lactuca indica
+coconut	split	Sariyar,Planta Med.,55,(1989),89	smiles	O=C1C2=CC=3OCOC3C=C2CCN(C)CC4=C(OC)C(OC)=CC=C4C1	clean	Arctomecon humilis
+coconut	split	Jatoi et al.,Phytotherapy Res.,21,(2007),507-516	smiles	C1=C(C)C2C3C(CCC2(C)C3C1)C(C)C	clean	Citrus maxima
+wikidata	doi	10.1139/V60-033	inchi	InChI=1S/C3H7NO3/c4-2(1-5)3(6)7/h2,5H,1,4H2,(H,6,7)/t2-/m0/s1	clean	Puccinia graminis
+coconut	split	Wollenweber,Phytochem.Bull.,21,(1989),19	smiles	O=C1C(OC)=C(OC2=CC(OC)=CC(O)=C12)C=3C=CC(OC)=C(O)C3	clean	Eucryphia milliganii
+coconut	pubmed	24680612	smiles	O=C1C=2C(O)=CC(OC)=CC2OC(C=3C=CC=CC3)C1	clean	Aralia hispida
+napralert	authors	WANG,MF: KIKUZAKI,H: ZHU,NQ: SANG,SM: NAKATANI,N: HO,CT:	nominal	CAFFEIC ACID	clean	Salvia officinalis Lamiaceae
+napralert	journal	J AGR FOOD CHEM	nominal	CAFFEIC ACID	clean	Salvia officinalis Lamiaceae
+napralert	title	ISOLATION AND STRUCTURAL ELUCIDATION OF TWO NEW GLYCOSIDES FROM SAGE (SALVIA OFFICINALIS L.).	nominal	CAFFEIC ACID	clean	Salvia officinalis Lamiaceae
+coconut	split	De Wet,Biochem.Syst.Ecol.,32,(2004),1145	smiles	OC=1C(OC)=CC=C2C1C=3C=4OCOC4C=C5C3C(N(C)CC5)C2	clean	Helichrysum fulvum
+coconut	split	Baxter,PNAS,102,(2005),2649	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Rhus vulgaris
+coconut	split	Lin,J.Nat.Prod.,69,(2006),1629	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Pinus pumila
+wikidata	doi	10.1016/J.JEP.2012.10.010	inchi	InChI=1S/C10H18O/c1-8(2)10(11)6-4-9(3)5-7-10/h4,8,11H,5-7H2,1-3H3/t10-/m0/s1	clean	Conioselinum anthriscoides
+napralert	doi	10.1076/phbi.35.4.274.13311	inchi	InChI=1S/C15H10O4/c1-7-5-8(16)6-10-12(7)15(19)13-9(14(10)18)3-2-4-11(13)17/h2-6,16-17H,1H3	clean	Asphodelus fistulosus
+coconut	split	Hammouda,Fitoterapia,49,(1978),51	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Eleutherococcus gracilistylus
+wikidata	doi	10.1039/P19860000369	inchi	InChI=1S/C47H34O32/c48-13-1-9(2-14(49)24(13)55)36(61)77-40-33-32-30(19(72-40)8-70-37(62)10-3-15(50)25(56)28(59)21(10)22-11(38(63)73-32)4-16(51)26(57)29(22)60)75-41(65)43-6-20(54)45(67,79-44(43)42(66)76-35-18(53)7-71-47(35,44)69)46(68)34(43)23-12(39(64)74-33)5-17(52)27(58)31(23)78-46/h1-5,18-19,30,32-35,40,48-53,55-60,67-69H,6-8H2/t18-,19+,30+,32-,33+,34+,35+,40-,43-,44+,45+,46+,47-/m0/s1	clean	Elaeocarpus sylvestris
+coconut	split	Saleem,Nat.Prod.Rep.,27,(2010),238	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Bersama abyssinica
+napralert	doi	10.1007/bf00252518	inchi	InChI=1S/C18H32O2/c1-2-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-18(19)20/h6-7,9-10H,2-5,8,11-17H2,1H3,(H,19,20)/b7-6-,10-9-	clean	Mortierella alpina
+unpd	original	Dorn et al.; Chimia; vol. 29; (1975); p. 24.	smiles	CC(=C)C1CCC2(C)C(CO)C1C(CO)C2=C	clean	Helminthosporium victoriae
+unpd	split	Chimia; vol. 29; (1975); p. 24.	smiles	CC(=C)C1CCC2(C)C(CO)C1C(CO)C2=C	clean	Helminthosporium victoriae
+knapsack	original	Suksamrarn,Chem.Pharm.Bull.,54,(2006),535	inchi	InChI=1S/C30H48O4/c1-17(2)18-10-13-30(25(33)34)15-14-28(6)19(23(18)30)8-9-22-27(5)16-20(31)24(32)26(3,4)21(27)11-12-29(22,28)7/h18-24,31-32H,1,8-16H2,2-7H3,(H,33,34)/t18-,19+,20+,21-,22+,23-,24-,27-,28+,29+,30-/m0/s1	clean	Zizphus cambodiana
+unpd	original	Little et al.; Antibiotics Chemotherapy; vol. 3; (1953); p. 183,184.	smiles	CCOC(=O)c1cc(O)c(O)c(O)c1	clean	Acacia seyal
+unpd	split	Antibiotics Chemotherapy; vol. 3; (1953); p. 183,184.	smiles	CCOC(=O)c1cc(O)c(O)c(O)c1	clean	Acacia seyal
+coconut	split	Yu,CA,111,(1989),212002n	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Serpocaulon triseriale
+coconut	split	Reisch,Tetrahedron Lett.,(1969),67	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Punica Granatum
+coconut	split	Lu,Chem.Pharm.Bull.,54,(2004),276	smiles	OCC1OC(N2C=NC=3C(=NC=NC32)N)C(O)C1O	clean	Aconitum variegatum
+knapsack	original	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter20	inchi	InChI=1S/C29H37N3O3/c1-4-17-16-32-10-8-18-13-27(34-2)28(35-3)15-22(18)26(32)12-19(17)11-25-29-21(7-9-30-25)23-14-20(33)5-6-24(23)31-29/h5-6,13-15,17,19,25-26,30-31,33H,4,7-12,16H2,1-3H3/t17-,19-,25+,26-/m0/s1	clean	Psychotria granadensis
+coconut	split	Nair,Curr.Sci.,45,(1976),391	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Tetracentron sinense
+coconut	pubmed	22715728	smiles	O=C1OC=2C=C3OC(CC3=CC2C=C1)C(O)(C)C	clean	Saposhnikovia divaricata
+coconut	split	Silva,J.Nat.Prod.,71,(2008),1291	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Metalasia bolusii
+coconut	split	Stevens,Phytochem.,39,(1995),805	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Plant
+coconut	pubmed	22671862	smiles	O=C1OC(C2=CC=C(OC)C(OC)=C12)C3C4=C(OC)C=5OCOC5C=C4CCN3C	clean	Lycopodium chinense
+coconut	pubmed	23544153	smiles	N=1C=CC=2C=3C=CC=CC3NC2C1C	clean	Zygophyllum fabago
+wikidata	doi	10.1016/0031-9422(92)83480-M	inchi	InChI=1S/C15H14O4/c1-19-13-7-9(16)5-8-6-12(18)10-3-2-4-11(17)15(10)14(8)13/h2-5,7,12,16-18H,6H2,1H3/t12-/m0/s1	clean	Dendrobium rotundatum
+coconut	pubmed	22324400	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Cleome pungens
+coconut	split	Rao,J.Nat.Prod.,62,(1999),305	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=CC5	clean	Glinus lotoides
+coconut	split	Chen,Zhongcaoyao,28,(1987),250	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Adesmia boronioides
+coconut	split	Vega,J.Nat.Prod.,62,(2008),122	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C=CC(CC)C(C)C)C)C3(C)CC2)C(O)C(O)C1O	clean	Physalis solanaceus
+coconut	split	Abdel-Hafiz,Egypt J. Pharm. Sci.,24,(1983),125	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Satureja montana
+coconut	pubmed	25794012	smiles	O=C(O)CCCCCCCC=CCCCCCCCC	clean	Allium tuberosum
+coconut	split	Brown,Phytochem.,12,(1973),2935	smiles	O=C(O)C1C2C3(OC(=O)C2(C)C(O)CC3)C4CCC5(O)C(=C)CC14C5	clean	Ipomoea batatas
+coconut	pubmed	21428375	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Aconitum zuccarini
+coconut	pubmed	22920589	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Mangifera indica
+wikidata	doi	10.1002/HLCA.201000237	inchi	InChI=1S/C20H26O5/c1-6-11(2)17(21)24-15-7-12(3)19(5)10-16-13(4)18(22)25-20(16,23)9-14(19)8-15/h6,9,12,15,23H,7-8,10H2,1-5H3/t12-,15+,19+,20+/m0/s1	clean	Synotis erythropappa
+coconut	split	Chakravarthy,Planta Med.,1,(1985),56	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Ailanthus giraldii
+napralert	doi	10.1016/0305-1978(85)90081-x	inchi	InChI=1S/C15H26O/c1-11-6-5-8-15(4)9-7-12(10-13(11)15)14(2,3)16/h12-13,16H,1,5-10H2,2-4H3/t12-,13+,15-/m1/s1	clean	Juniperus taxifolia
+napralert	doi	10.3724/sp.j.1009.2010.00192	inchi	InChI=1S/C8H8O4/c1-12-7-3-2-5(8(10)11)4-6(7)9/h2-4,9H,1H3,(H,10,11)	clean	Biondia hemsleyana
+coconut	split	Kurosawa,Phytochem.,17,(1978),1413	smiles	O=C1C(=COC2=CC(O)=CC=C21)C=3C=CC(OC)=CC3	clean	Centrolobium robustum
+npass	pubmed	8786366	smiles	OC(=N)CC1(O)C=C(Br)C(=O)C(=C1)Br	clean	Aplysina aerophoba
+coconut	split	Sun,Chem.Pharm.Bull.,55,(2007),474	smiles	OCC=CC1=CC(OC)=C(OC2OC(CO)C(O)C(O)C2O)C(OC)=C1	clean	Passiflora foetida
+unpd	original	Park, Daae; Jung, Seo Yun; Yook, Chang-Soo; Lee, Yong Sup; Kim, Hyoung Ja; Jin, Changbae; Chemical and Pharmaceutical Bulletin; vol. 58; 2; (2010); p. 238 - 241.	smiles	OC1COC(OC(CCCCc2ccc(O)c(O)c2)CCc3ccc(O)c(O)c3)C(O)C1O	clean	Alnus hirsuta
+coconut	split	Kariyone,Yakugaku Zasshi,78,(1958),935	smiles	OC=1C=C(O)C=C(C=CC2=CC=C(O)C(OC)=C2)C1	clean	Gnetum gnemon
+coconut	split	Noriaki,Heterocycles,41,(1995),2043	smiles	OC=1C(OC)=CC=C2C1C=3C(O)=C(OC)C=C4C3C(C2)[N+](C)(C)CC4	clean	Berberis numularis
+coconut	pubmed	22577954	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Parkinsonia Aculeata
+coconut	split	Mukhtar,Chem.Pharm.Bull.,50,(2002),1558	smiles	O=C(O)C1=CC(OC)=C(O)C(OC)=C1	clean	Lithospermum canescens
+coconut	doi	10.7164/antibiotics.39.1407	smiles	O=C1OC(C(=O)C)CC=C(C=C(C)C(OC2OC(C)(C)C(OC(=O)C(C)C)C(O)C2O)C(C=C(C)C(O)CC=CC=C1COC3OC(C)C(C(O)C(=O)C=4C(O)=C(Cl)C(O)=C(Cl)C4CC)C(O)C3OC)CC)C	clean	bacteria
+coconut	split	Nakagawa,J.Nat.Prod.,69,(2006),1177	smiles	O=C1C=C(OC2=C(OC)C(OC)=C(OC)C(O)=C12)C=3C=CC(O)=C(OC)C3	clean	Sesbania punicea
+wikidata	doi	10.1135/CCCC19822912	inchi	InChI=1S/C20H24N2O2/c1-3-10-11-8-14-17-20(12-6-4-5-7-13(12)21(17)2)9-15(16(11)18(20)23)22(14)19(10)24/h4-7,10-11,14-17,19,24H,3,8-9H2,1-2H3/t10-,11-,14-,15-,16-,17-,19+,20+/m0/s1	clean	Rauvolfia salicifolia
+coconut	split	Kakuda,Chem.Pharm.Bull.,51,(2003),885	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Phlogacanthus thyrsiflorus
+coconut	split	Rao,J.Nat.Prod.,60,(1997),632	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Prunus lusitanica
+coconut	split	Nair,CA,110,(1988),72499g	smiles	O=C1C=C(OC=2C1=C(O)C=C(O)C2C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Lychnis flos-cuculi L.
+wikidata	doi	10.1016/0040-4020(73)80174-7	inchi	InChI=1S/C21H22O4/c1-13(4-6-16-11-17(23)7-9-20(16)24)5-8-18-14(2)10-21(25)19(12-22)15(18)3/h4,7,9-12,25H,5-6,8H2,1-3H3/b13-4+	clean	Halichondria panicea
+coconut	pubmed	22090039	smiles	O=C1C=CC=C2N1CC3CNCC2C3	clean	Sophora griffithii Stocks.
+unpd	original	Aalbersberg, William; Singh, Yogendra; Phytochemistry; vol. 30; 3; (1991); p. 921 - 926.	smiles	CC(=C)C1CCC(C)(O1)C2CCC3(C)C2CCC4C5(C)CCC(O)C(C)(C)C5CCC34C	clean	Dysoxylum richii
+coconut	doi	10.1021/jo0156767	smiles	O=C(O)C=1C=CC=CC1NC(=O)CN(C(=O)C(N(C(=O)C(NC(=O)C(N(C(=O)C(N(C(=O)C(N(C(=O)C(NC(=O)C(N(C(=O)C(N(C(=O)C(NC(=O)C(N)C)C(O)C)C)C(O)C)C)C(C)C)C(C)C)C)C(C)C)C)C(C)C)C)C(C)C)C(C)CC)C)C(C)C)C	clean	Unknown-fungus sp. (K063)
+coconut	split	Su,J.Nat.Prod.,68,(2005),592	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Arnebia decumbens
+wikidata	doi	10.1016/0031-9422(92)80210-6	inchi	InChI=1S/C9H16ClN/c1-9-4-2-6-11(8-10)7-3-5-9/h1-8H2	clean	Lotononis perplexa
+coconut	pubmed	21328132	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=C(O)C(O)=C(O)C4	clean	Ajuga genevensis
+coconut	split	Elfita,Phytochem.,70,(2009),907	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Virola multinervia
+napralert	authors	YASUMOTO,M: MADA,K: OOI,T: KUSUMI,T:	nominal	AROMADENDRENE,ALLO: (+):	clean	Sarcophyton acutangulum Alcyoniidae
+napralert	journal	J NAT PROD	nominal	AROMADENDRENE,ALLO: (+):	clean	Sarcophyton acutangulum Alcyoniidae
+napralert	title	NEW TERPENOID COMPONENTS FROM THE VOLATILE OILS OF THE SOFT CORALS CLAVULARIA VIRIDIS AND SARCOPHYTON ACUTANGULUM.	nominal	AROMADENDRENE,ALLO: (+):	clean	Sarcophyton acutangulum Alcyoniidae
+coconut	split	Ohashi,Chem.Pharm.Bull.,51,(2003),343	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Podolepis longipedata
+coconut	split	Harper,J. Chem. Soc.,C,(1969),1109	smiles	OC1=CC=C2C(OCC3C4=CC=5OCOC5C=C4OC23)=C1	clean	Sophora Japonica
+coconut	split	Lin,J.Nat.Prod.,62,(1999),405	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Euphorbia ferganensis
+coconut	split	Elenga,Pharmazie,41,(1986),300	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(C)C(C)C)C2(C)CC1	clean	Kalanchoe spathulata
+coconut	pubmed	21875046	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros maingayi
+coconut	split	El-Emary,Fitoterapia,54,(1983),133	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Glinus lotoides
+coconut	pubmed	17913058	smiles	O=C1OCC2=CCN(C)CCC(OC(=O)C3(OC3C)CC(C)C1(O)C)C2=O	clean	Petasites hybridus
+coconut	split	Mukherjee,J. Indian Chem. Soc.,63,(1986),619	smiles	O=C1C=2C=CC=C(O)C2C(=O)C3=C(O)C=C(C=C13)C	clean	Alvaradoa haitiensis
+coconut	split	Chapple,Plant Cell.,4,(1992),1413	smiles	O=C(O)C=CC1=CC=C(O)C=C1	clean	Gynerium sagittatum
+knapsack	original	Wu,Chem.Pharm.Bull.,53,(2005),56	inchi	InChI=1S/C11H12O4/c1-14-10-7-8(3-5-9(10)12)4-6-11(13)15-2/h3-7,12H,1-2H3/b6-4+	clean	Hibiscus taiwanensis
+npatlas	authors	Sanz M; Andreote AP; Fiore MF; Dörr FA; Pinto E	smiles	CC(C)CC1NC(=O)C(NC(=O)C(CCC(N)=O)NC(=O)C2C=CCN2C)C(C)OC(=O)C(CC(C)C)NC(=O)C(CC2=CC=C(OCl)C=C2)N(C)C(=O)C(CC(C)C)N2C(=O)C(CCC2O)NC1=O	clean	Unknown sp.
+npatlas	doi	10.3390/md13063892	smiles	CC(C)CC1NC(=O)C(NC(=O)C(CCC(N)=O)NC(=O)C2C=CCN2C)C(C)OC(=O)C(CC(C)C)NC(=O)C(CC2=CC=C(OCl)C=C2)N(C)C(=O)C(CC(C)C)N2C(=O)C(CCC2O)NC1=O	clean	Unknown sp.
+npatlas	journal	Marine Drugs	smiles	CC(C)CC1NC(=O)C(NC(=O)C(CCC(N)=O)NC(=O)C2C=CCN2C)C(C)OC(=O)C(CC(C)C)NC(=O)C(CC2=CC=C(OCl)C=C2)N(C)C(=O)C(CC(C)C)N2C(=O)C(CCC2O)NC1=O	clean	Unknown sp.
+npatlas	pubmed	26096276	smiles	CC(C)CC1NC(=O)C(NC(=O)C(CCC(N)=O)NC(=O)C2C=CCN2C)C(C)OC(=O)C(CC(C)C)NC(=O)C(CC2=CC=C(OCl)C=C2)N(C)C(=O)C(CC(C)C)N2C(=O)C(CCC2O)NC1=O	clean	Unknown sp.
+npatlas	title	Structural Characterization of New Peptide Variants Produced by Cyanobacteria from the Brazilian Atlantic Coastal Forest Using Liquid Chromatography Coupled to Quadrupole Time-of-Flight Tandem Mass Spectrometry.	smiles	CC(C)CC1NC(=O)C(NC(=O)C(CCC(N)=O)NC(=O)C2C=CCN2C)C(C)OC(=O)C(CC(C)C)NC(=O)C(CC2=CC=C(OCl)C=C2)N(C)C(=O)C(CC(C)C)N2C(=O)C(CCC2O)NC1=O	clean	Unknown sp.
+wikidata	doi	10.1055/S-2006-957420	inchi	InChI=1S/C23H46O2/c1-3-4-5-6-7-8-9-10-11-12-13-14-15-16-17-18-19-20-21-22-23(24)25-2/h3-22H2,1-2H3	clean	Hamamelis virginiana
+coconut	split	Nguemeving,Phytochem.,69,(2006),1341	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Xylopia aethiopica
+unpd	original	Takaishi, Yoshihisa; Tamai, Shouji; Nakano, Kimiko; Murakami, Koutarou; Tomimatsu, Toshiaki; Phytochemistry; vol. 30; 9; (1991); p. 3027 - 3032.	smiles	CC1CC(O)C(OC(=O)C)C2(C)C(CC3C(OC(=O)c4cccnc4)C12OC3(C)C)OC(=O)c5ccccc5	clean	Tripterygium wilfordii
+coconut	split	Jatoi et al.,Phytotherapy Res.,21,(2007),507-516	smiles	O=C(O)CCCCCCCCCCCCC	clean	Iris flomentina
+knapsack	original	Lavault,Phytochem.,29,(1990),3845	inchi	InChI=1S/C17H9NO3/c19-16-11-4-2-1-3-10(11)14-13-9(5-6-18-15(13)16)7-12-17(14)21-8-20-12/h1-7H,8H2	clean	Polyalthia stenopetala
+unpd	original	Mello, Cesar; Crotti, Antonio E. M.; Vessecchi, Ricardo; Cunha, Wilson R.; Journal of Molecular Structure; vol. 799; 1-3; (2006); p. 141 - 145.	smiles	CC1(C)CCC2(CCC3(C)C(=CCC4C5(C)CCC(O)C(C)(C)C5CCC34C)C2C1)C(=O)O	clean	Miconia fallax
+wikidata	doi	10.1016/S0021-9673(98)00540-8	inchi	InChI=1S/C15H22O2/c1-9(2)13-8-14-11(4)5-6-12(14)10(3)7-15(13,16)17-14/h7,11-12,16H,5-6,8H2,1-4H3	clean	Curcuma aeruginosa
+coconut	pubmed	23265454	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=C(O)C(O)=C(O)C3	clean	Senna siamea
+coconut	split	Bentley,J.Chem.Soc.,C,(1969),830	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Foeniculum vulgare
+coconut	split	Mallavadhani,Phytochem.,49,(1998),901	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(C)C(C)C)C2(C)CC1	clean	Senecio viravira
+coconut	split	Paolini,Phytochem.,70,(2009),1146	smiles	C1=C(C)C2CCC(=CC2C(C1)C(C)C)C	clean	Kundmannia sicula
+coconut	split	Kanchanapoom,Phytochem.,68,(2007),692	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Humulus scandens
+unpd	original	Ma, Cheng; Li, Yan; Niu, Shubin; Liu, Xingzhong; Che, Yongsheng; Zhang, Hua; Journal of Natural Products; vol. 74; 1; (2011); p. 32 - 37.	smiles	CCC(C)CC(C)C=C(/C)C=CC=CC(=O)C1=C(O)C(=CN(O)C1=O)C2=CCC(O)CC2	clean	Cordyceps sinensis
+coconut	split	Lin,Acta Pharm.Sin.,21,(1986),114	smiles	OC1N2C3CC(C1CC)C4C(O)C5(C=6C=CC=CC6N(C)C35)CC24	clean	Rauvolfia balansae ssp.balansae
+coconut	split	Okuyama,Chem.Parm.Bull.,26,(1978),3071	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Peltogyne pubescens
+coconut	pubmed	19594750	smiles	O=C(O)C=CC1=CC=C(O)C(OC)=C1	clean	Chamaecyparis formosensis
+coconut	doi	10.1038/s41564-018-0110-1	smiles	O=C(C=CC=CCCC(C)C)NC(C(=O)NC1C(=O)NC(C(=O)NC(C(=O)NC(C(=O)NC(C(=O)NCC(=O)NC(C(=O)NC(C(=O)N2CC(C)CC2C(=O)NC1C)C(C)C)C(C(=O)O)C)CC(=O)O)C(O)C(=O)O)CCCCN)C(C)C)C(C(=O)O)C	clean	eDNA sp.
+coconut	split	Awale,J.Nat.Prod.,72,(2009),1631	smiles	O=C(O)C1=CC=C(O)C=C1	clean	Euonymus fortunei
+coconut	split	Ragasa,J.Nat.Med.,62,(2008),461	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Chlorella pyrenoidosa
+coconut	authors	Molecules 2014	smiles	OC1CC2CCC1(C)C2(C)C	clean	Dorstenia lindeniana
+coconut	split	Amiguest,J.Nat.Prod.,69,(2006),1005	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Persea obovatifolia
+coconut	pubmed	20686865	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Ophryosporus charua
+napralert	authors	CHERRY,JP:	nominal	GOSSYPOL	clean	Gossypium hirsutum Malvaceae
+napralert	journal	J AMER OIL CHEM SOC	nominal	GOSSYPOL	clean	Gossypium hirsutum Malvaceae
+napralert	title	COTTONSEED OIL.	nominal	GOSSYPOL	clean	Gossypium hirsutum Malvaceae
+coconut	split	Inoue,Phytochem.,14,(1975),1871	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Stenostomum lucidum
+coconut	split	Cai,Yaoxue Tongbao,17,(1982),500	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Boehmeria holosericea
+coconut	split	Xie,Chem.Pharm.Bull.,56,(2008),1628	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CC(O)C(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Symplocos lancifolia
+coconut	split	Tindale,Phytochem.,8,(1969),1713	smiles	OC=1C=C(O)C2=C(OC(C3=CC(O)=C(O)C(O)=C3)C(O)C2)C1	clean	Pterocarpus angolensis
+coconut	pubmed	21973054	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Taxus brevifolia
+coconut	split	Bhakuni,Chem.Ind.(London),(1986),464	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=CC4	clean	Anodendron affine
+coconut	split	Lu,Chem.Pharm.Bull.,54,(2006),936	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Rabdosia flexicaulis
+coconut	split	Harborne,Phytochemical Dictionary Second Edition,Taylor and Francis,(1999),Chapter48	smiles	OC(C=C)(C)CCC=C(C)C	clean	Euodia ruticarpa
+napralert	authors	RUAN,HL: ZHOU,XF: ZHANG,YH:PI,HF: WU,JZ: SUN,HD:	nominal	FERULIC ACID,CIS: OCTACOSYL ESTER	clean	Euphorbia hylonoma Euphorbiaceae
+napralert	journal	FITOTERAPIA	nominal	FERULIC ACID,CIS: OCTACOSYL ESTER	clean	Euphorbia hylonoma Euphorbiaceae
+napralert	title	FERULIC ACID ESTERS FROM EUPHORBIA HYLONOMA.	nominal	FERULIC ACID,CIS: OCTACOSYL ESTER	clean	Euphorbia hylonoma Euphorbiaceae
+coconut	split	Fefer,Farm.Zh.(Kiev),(1977),92	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Adenia globosa
+coconut	split	Meng,Chem.Pharm.Bull.,53,(2005),1484	smiles	C=C1C2CCC(C2)C1(C)C	clean	Picea glehnii L.
+coconut	split	El-Ansari,Z.Naturforsch.,32C,(1977),444	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Euonymus sacrosancta
+coconut	split	Aldrich Library of 13C and 1H FT NMR Spectra,3,(1992),569B	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Sideritis candicans var.eriocephala
+knapsack	original	Min,Acta Pharm.Sin.,16,(1981),557	inchi	InChI=1S/C18H15NO2/c1-19-7-6-12-9-15-18(21-10-20-15)17-13-5-3-2-4-11(13)8-14(19)16(12)17/h2-5,8-9H,6-7,10H2,1H3	clean	Stephania micrantha H.S.Lo.et.M.Yang
+coconut	pubmed	24232845	smiles	O=C(O)C1C2C3(C=CCC2(OC3=O)C4CCC5(O)C(=C)CC14C5)C	clean	Quamoclit pennata
+wikidata	doi	10.1080/14786419.2017.1324959	inchi	InChI=1S/C28H35NO4/c1-15-9-20-25-19(22-11-18(14-30)13-27(25,3)33-22)12-23(31)28(20)24(16(15)2)21(29-26(28)32)10-17-7-5-4-6-8-17/h4-9,16,18-22,24-25,30H,10-14H2,1-3H3,(H,29,32)/t16-,18-,19-,20-,21+,22-,24+,25+,27+,28-/m0/s1	clean	Xylaria striata
+coconut	split	Nkengfack,Phytochem.,60,(2002),381	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Saussurea Lappa
+coconut	split	Peres,Phytochem.,49,(1998),171	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Aloe spicata
+napralert	authors	GRISHKOVETS,VI: TOLKACHEYA,NV: SHASHKOV,AS: CHIRVA,VY:	nominal	HEDERAGENIN,3-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-2)-ALPHA-L-ARABINOPYRANOSYL]-28-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-4)-O-BETA-D-GLUCOPYRANOSYL(1-6)-BETA-D-GLUCOPYRANOSYL]:	clean	Hedera taurica Araliaceae
+napralert	journal	KHIM PRIR SOEDIN	nominal	HEDERAGENIN,3-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-2)-ALPHA-L-ARABINOPYRANOSYL]-28-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-4)-O-BETA-D-GLUCOPYRANOSYL(1-6)-BETA-D-GLUCOPYRANOSYL]:	clean	Hedera taurica Araliaceae
+napralert	title	TRITERPENE GLYCOSIDES OF HEDERA TAURICA. IX. STRUCTURES OF TAUROSIDES G-1, G-2, G-3, H-1, AND H-2 FROM THE LEAVES OF CRIMEAN IVY.	nominal	HEDERAGENIN,3-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-2)-ALPHA-L-ARABINOPYRANOSYL]-28-O-[O-ALPHA-L-RHAMNOPYRANOSYL(1-4)-O-BETA-D-GLUCOPYRANOSYL(1-6)-BETA-D-GLUCOPYRANOSYL]:	clean	Hedera taurica Araliaceae
+wikidata	doi	10.1515/ZNC-1984-7-802	inchi	InChI=1S/C10H16/c1-9(2)6-4-7-8(5-6)10(7,9)3/h6-8H,4-5H2,1-3H3	clean	Cistus monspeliensis
+coconut	split	Kaneko,Phytochem.,16,(1977),791	smiles	O=C(O)C1(O)CC(O)C(O)C(OC(=O)C=CC2=CC=C(O)C(O)=C2)C1	clean	Piptostigma fugax
+wikidata	doi	10.1007/S10600-005-0179-7	inchi	InChI=1S/C9H8O2/c10-9(11)7-6-8-4-2-1-3-5-8/h1-7H,(H,10,11)	clean	Lychnophora pinaster
+coconut	split	Wu,Chem.Pharm.Bull.,52,(2004),1227	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Rhododendron dauricum
+coconut	split	Gupta,Planta Med.,55,(1989),197	smiles	OC1=CC2=C(C=C1OC)C3=C(OC)C(O)=CC4=C3C(N(C)CC4)C2	clean	Xylopia parviflora
+coconut	split	Ahmad,J.Chem.Soc.,Pak,6,(1984),217	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Cordia elaeagnoides
+npass	pubmed	19376614	smiles	C/C=C(/C(=O)O[C@H]1C(=C[C@]23[C@]1(O)[C@H](OC(=O)c1ccccc1N=C(c1ccccc1N)O)C(=C[C@H](C3=O)[C@H]1[C@@H](C[C@H]2C)C1(C)C)COC(=O)C)C)C	clean	Euphorbia cornigera
+coconut	split	Khara,Indian J.Chem.,16B,(1978),78	smiles	OC1=CC=C2C(OCC3C4=CC=C(OC)C=C4OC23)=C1	clean	Galactia jussiaeana
+coconut	split	Banerji,Phytochem.,59,(2002),897	smiles	OC(=NCCCCC=CCCCC(C)C)C=CC=CC1=CC=C2OCOC2=C1	clean	Piper retrofractum Vahl.
+coconut	split	C.A.Young et al.,Toxins,7,(2015),1273-1302	smiles	C=1C=C2NC=C3C2=C(C1)C4CC(C)CN(C)C4C3	clean	Agropyrum semicostatum
+unpd	original	Patent; Agoro; US4124724; (1978); Chem.Abstr.; vol. 90; 103649.	smiles	OC(=O)C=Cc1ccc(O)c(OC(=O)C=Cc2ccc(O)c(O)c2)c1	clean	Echinops amplexicaulis
+coconut	split	Hong,Planta Med.,(1986),193	smiles	O1C=2C=CC=3C4=CC=C5C=C6OCOC6=CC5=C4N(C)CC3C2OC1	clean	Chelidonium majus
+coconut	split	Nielsen,Phytochem.,66,(2005),2829	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Cardiospermum hirsutum
+coconut	split	Hsieh,J.Nat.Prod.,64,(2001),1157	smiles	OC1=CC(=CC=C1OC)CC2C3=CC(O)=C(OC)C=C3CCN2C	clean	Clematis parviloba
+coconut	pubmed	24570447	smiles	OC(C=C)(C)CCC=C(C)C	clean	Mentha canadensis
+coconut	split	Bohlmann,Chem.Ber.,94,(1961),958	smiles	O=C(O)C1=CC=C(O)C(OC)=C1	clean	Fagara spp.
+coconut	split	Iwasa,J.Nat.Prod.,71,(2008),1376	smiles	O(C=1C=CC2=CC=3C4=CC=5OCOC5C=C4CC[N+]3C=C2C1OC)C	clean	Berberis integerrima
+unpd	original	Wattanapiromsakul, Chatchai; Waterman, Peter G.; Phytochemistry; vol. 55; 3; (2000); p. 269 - 274.	smiles	CC(=CCCC(C=O)C1CCC2(C)C3=CCC4C(C)(C)C(=O)CCC4(C)C3CCC12C)C	clean	Paramignya griffithii
+wikidata	doi	10.1248/CPB.56.711	inchi	InChI=1S/C27H30O13/c1-10-17(29)20(32)22(34)26(36-10)38-13-8-14(28)16-15(9-13)39-24(12-6-4-3-5-7-12)25(19(16)31)40-27-23(35)21(33)18(30)11(2)37-27/h3-11,17-18,20-23,26-30,32-35H,1-2H3/t10-,11-,17-,18-,20+,21+,22+,23+,26-,27-/m0/s1	clean	Dryopteris crassirhizoma
+coconut	split	Luo,Phytochem.,61,(2002),449	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Parastrephia lepidophylla
+coconut	pubmed	20815398	smiles	O=C(C=CC1=CC=C(O)C=C1)C=2C(O)=CC(O)=CC2O	clean	Lycopersicon esculentum
+coconut	split	Chen,J.Nat.Prod.,70,(2007),202	smiles	O=C(O)C1=CC=C(O)C=C1	clean	Vitex negundo
+coconut	split	Tasdemir,J.Nat.Prod.,60,(1997),874	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Rubia yunnanensis
+coconut	split	Fang,J.Nat.Prod.,49,(1986),738	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Geranium thunbergii
+coconut	pubmed	15686853	smiles	O=CC1(O)C(OC(OC2C(O)C(O)C(NC(=N)N)C(O)C2NC(=N)N)C1OC3OC(CO)C(O)C(O)C3NC)C	clean	Piptolepis leptospermoides
+coconut	split	Kadota,Phytother.Res.,10,(1996),18	smiles	O=C1C2=CC=3OCOC3C=C2CCN(C)CC4=C5OCOC5=CC=C4C1	clean	Sarcocapnos saetabensis
+coconut	split	Yamaguchi,Tetrahedron Lett.,(1976),1115	smiles	O=C1C=C2C=CC3C4CC=C(C(=O)C)C4(C)C(O)CC3C2(C)CC1	clean	Scutellaria seleriana
+napralert	doi	10.1248/cpb.56.97	inchi	InChI=1S/C35H58O6/c1-7-22(20(2)3)9-8-21(4)26-12-13-27-25-11-10-23-18-24(14-16-34(23,5)28(25)15-17-35(26,27)6)40-33-32(39)31(38)30(37)29(19-36)41-33/h8-10,20-22,24-33,36-39H,7,11-19H2,1-6H3/b9-8+/t21-,22-,24+,25+,26-,27+,28+,29-,30-,31+,32-,33-,34+,35-/m1/s1	clean	Cinnamomum subavenium
+coconut	split	Rycroft,Phytochem.,57,(2001),479	smiles	C1=C(C)CCC(=C(C)C)C1	clean	Acorus calanus L.
+coconut	split	David,Phytochem.,50,(1999),443	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Sideritis romana
+coconut	split	Jin,J.Nat.Med.,61,(2007),351	smiles	O=C(OC1CC(O)(C(=O)O)CC(O)C1O)C=CC2=CC=C(O)C=C2	clean	Kunzea ambigua
+napralert	authors	IORIZZI,M: BIFULCO,G: DE RICCARDIS,F: MINALE,L: RICCIO,R: ZOLLO,F:	nominal	ASTEROSAPONIN P-1	clean	Oreaster reticulatus Oreasteridae
+napralert	journal	J NAT PROD	nominal	ASTEROSAPONIN P-1	clean	Oreaster reticulatus Oreasteridae
+napralert	title	STARFISH SAPONINS. PART 53. A REINVESTIGATION OF THE POLAR STEROIDS FROM THE STARFISH OREASTER RETICULATUS: ISOLATION OF SIXTEEN STEROIDAL OLIGOGLYCOSIDES AND SIX POLYHYDROXYSTEOIDS.	nominal	ASTEROSAPONIN P-1	clean	Oreaster reticulatus Oreasteridae
+coconut	split	Sekhar,Fitoterapia,56,(1985),174	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Triticum aestivum
+coconut	split	Maximov,Fitoterapia,75,(2004),96	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Oriciopsis glaberrima ENGL.
+napralert	authors	POSNER,B: FEIGE,GB: HUNECK,S:	nominal	GYROPHORIC ACID	clean	Umbilicaria nepalensis Umbilicariaceae
+napralert	journal	Z NATURFORSCH SER C	nominal	GYROPHORIC ACID	clean	Umbilicaria nepalensis Umbilicariaceae
+napralert	title	STUDIES ON THE CHEMISTRY OF THE LICHEN GENUS UMBILICARIA HOFFM.	nominal	GYROPHORIC ACID	clean	Umbilicaria nepalensis Umbilicariaceae
+coconut	split	Ahmed,Fitoterapia,57,(1986),457	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Kadsura heteroclita
+coconut	split	Khafagy,Planta Med.,29,(1976),301	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Embelia ribes
+coconut	split	Quijano,Phytochem.,49,(1998),2067	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Sida cordifolia
+coconut	split	Yi,Phytochem.,53,(2000),1001	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Sambucus nigra.
+coconut	split	Hatano,Phytochem.,59,(2002),749	smiles	O=C(O)C1=CC=C(O)C(O)=C1	clean	Nematolepis phebalioides
+coconut	split	Tapondjou,J.Nat.Prod.,66,(2003),1266	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Stevia mercedensis
+coconut	split	Suarez,An.Assoc.Quim.Argent.,70,(1982),647	smiles	O=C1C=C(OC2=CC(OC3OC(CO)C(O)C(O)C3O)=CC(O)=C12)C=4C=CC(O)=C(O)C4	clean	Fragaria vesca
+coconut	split	Jayasuriya,J.Nat.Prod.,68,(2005),1247	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Bituminaria bituminosa
+coconut	split	Perkin,J.Chem.Soc.,(1896),1287	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=C(O)C(O)=C(O)C3	clean	Veronica arvensis
+coconut	split	Sando,J.Biol.Chem.,56,(1973),457	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Pinus halepensis
+coconut	split	Bertea,Phytochem.,66,(2005),507	smiles	C=1C=C(C=CC1C)C(C)C	clean	Citrus aurantium
+coconut	split	Rao,J.Nat.Prod.,62,(1999),305	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Euphorbia pannonica
+coconut	split	Li,Phytochem.,69,(2006),1336	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Marchantia polymorpha
+coconut	split	Katai,Chem.Lett.,(1985),443	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Diospyros gabunensis
+wikidata	doi	10.1016/0031-9422(95)00922-1	inchi	InChI=1S/C15H15NO3/c1-15(2)7-6-10-13(19-15)11-8-9(18-3)4-5-12(11)16-14(10)17/h4-8H,1-3H3,(H,16,17)	clean	Vepris bilocularis
+npass	pubmed	23454028	smiles	CC1=CCC2C(C1)C2(C)C	clean	Homo sapiens
+coconut	split	Kutney,Tetrahedron,28,(1972),5091	smiles	O=C1OC=2C(C=C1)=CC=3C=COC3C2OCC=C(C)C	clean	Angelica Sinensis
+napralert	authors	GALANES,IT: WEBB,DT: ROSARIO,O:	nominal	CAMPESTEROL	clean	Solanum aviculare Solanaceae
+napralert	journal	J NAT PROD	nominal	CAMPESTEROL	clean	Solanum aviculare Solanaceae
+napralert	title	STEROID PRODUCTION BY CALLUS AND CELL SUSPENSION CULTURES OF SOLANUM AVICULARE.	nominal	CAMPESTEROL	clean	Solanum aviculare Solanaceae
+coconut	split	Chen,J.Nat.Prod.,72,(2009),223	smiles	O=C(O)CCCCCCCCCCCCCCCCC	clean	Perilla frutescens
+unpd	original	Harborne, Jeffrey B.; Girija, A. R.; Devi, H. Maheswari; Lakshmi, N. K. M.; Phytochemistry; vol. 22; 12; (1983); p. 2741 - 2742.	smiles	COc1ccc(C=C2/Oc3cc(O)cc(O)c3C2=O)cc1OC	clean	Zinnia linearis
+metabolights	pubmed	25010571	inchi	InChI=1S/C10H16N2O3S/c13-8(14)4-2-1-3-7-9-6(5-16-7)11-10(15)12-9/h6-7,9H,1-5H2,(H,13,14)(H2,11,12,15)/t6-,7-,9-/m0/s1	clean	Homo sapiens
+coconut	split	Dall'Acqua,J.Nat.Prod.,67,(2004),1588	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Lemaireocereus longispinus
+coconut	pubmed	21661732	smiles	O=C1C=2C(O)=CC(O)=CC2OC(C3=CC=C(O)C(O)=C3)C1O	clean	Anthoxanthum nitens
+coconut	split	Harinantenaina,Chem.Pharm.Bull.,54,(2006),1017	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Pittosporum undulatum
+unpd	original	Warning, U.; Jakupovic, J.; Friedrich, D.; Castro, V.; Bohlmann, F.; Phytochemistry; vol. 26; 8; (1987); p. 2331 - 2336.	smiles	CC(=O)OC1C(=O)C=C(C)C(CCC2=CCC(OC2=O)c3cocc3)C1(C)C	clean	Hebeclinium macrophyllum
+coconut	split	Roux,Phytochem.,49,(1998),1745	smiles	O1C2CCC(=C)C3CC(C)(C)C3CCC12C	clean	Ephedra altissima
+napralert	doi	10.1002/j.1537-2197.1986.tb10902.x	inchi	InChI=1S/C21H20O12/c22-6-13-15(27)17(29)18(30)21(32-13)33-20-16(28)14-11(26)4-8(23)5-12(14)31-19(20)7-1-2-9(24)10(25)3-7/h1-5,13,15,17-18,21-27,29-30H,6H2/t13-,15-,17+,18+,21-/m0/s1	clean	Fuchsia juntasensis
+coconut	split	Siddiqui,Phytochem.,52,(1999),1111	smiles	O=C(O)C12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Picramnia pentandra
+coconut	split	Becerra,Rev.Latinoam.Quim.,14,(1983),92	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Hippophae rhamnoides
+coconut	split	Vareed,Phytomedicine,15,(2008),706	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Iris germanica L.
+napralert	authors	WIJAYA,CH: MUCHTADI,D: LALEL,HJ: ZAKARIA,F: KOSWARA,S:	nominal	THOPHENE,2-5-DIMETHYL:	clean	Allium cepa Liliaceae
+napralert	journal	NAT PROD SCI	nominal	THOPHENE,2-5-DIMETHYL:	clean	Allium cepa Liliaceae
+napralert	title	ANTIPLATELET AGGREGATION POTENCIES OF SOME ALLIUM SPP. GROWN IN INDONESIA.	nominal	THOPHENE,2-5-DIMETHYL:	clean	Allium cepa Liliaceae
+unpd	original	Valisolalao, J.; Luu, B.; Ourisson, G.; Tetrahedron; vol. 39; 17; (1983); p. 2779 - 2786.	smiles	CC(C)C(C)C=CC(C)C1CCC2C3=CC(O)C4(O)CC(O)CCC4(C)C3CCC12C	clean	Polyporus versicolor
+coconut	split	Pramono,Plant Med.Phytother.,19,(1985),159	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Artemisia annua
+phenolexplorer	authors	Schuster B., Herrmann K.	smiles	O[C@@H]1C[C@](O)(C[C@@H](OC(=O)C2=CC(O)=C(O)C(O)=C2)[C@@H]1O)C(O)=O	clean	Ribes nigrum L.
+phenolexplorer	journal	Phytochemistry	smiles	O[C@@H]1C[C@](O)(C[C@@H](OC(=O)C2=CC(O)=C(O)C(O)=C2)[C@@H]1O)C(O)=O	clean	Ribes nigrum L.
+phenolexplorer	title	Hydroxybenzoic and hydroxycinnamic acid derivatives in soft fruits	smiles	O[C@@H]1C[C@](O)(C[C@@H](OC(=O)C2=CC(O)=C(O)C(O)=C2)[C@@H]1O)C(O)=O	clean	Ribes nigrum L.
+streptomedb	pubmed	31212620	smiles	CC[C@H]([C@H]1O[C@]2(C=C[C@H]([C@@]3(O2)CC[C@@](O3)(C)[C@H]2CC[C@]([C@@H](O2)C)(O)CC)O)[C@@H](C[C@@H]1C)C)C(=O)[C@H]([C@H]([C@@H]([C@@H]1O[C@H](CC[C@@H]1C)[C@H](C(=O)O)CC)C)O)C	clean	Streptomyces albus XM211
+coconut	split	Iinuma,Phytochem.,39,(1995),907	smiles	O=C1C(=COC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Erycibe expansa
+coconut	split	Qin,Zhongcaoyao,17,(1986),197	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Achillea magnifica
+coconut	split	LePage-Degivry,Proc. Natl. Acad. Sci. USA,83,(1986),1155	smiles	O=C(O)C=C(C=CC1(O)C(=CC(=O)CC1(C)C)C)C	clean	Bupleurum aureum
+wikidata	doi	10.1016/S0031-9422(00)94771-X	inchi	InChI=1S/C17H16O6/c1-7-13-9(5-11(19)14(7)17(22)23-2)3-8-4-10(18)6-12(20)15(8)16(13)21/h3,5,10,18-19,21H,4,6H2,1-2H3	clean	Aloe lateritia
+coconut	split	Inada,Phytochem.,66,(2005),2729	smiles	O=C(O)C1=CC=C(O)C=C1	clean	Ilex brevicuspis
+coconut	split	Bergeron,Phytochem.,49,(1998),233	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Eysenhardtia subcoriacea Pennell
+wikidata	doi	10.1021/NP980112S	inchi	InChI=1S/C15H10O5/c16-9-3-1-8(2-4-9)11-7-20-13-6-10(17)5-12(18)14(13)15(11)19/h1-7,16-18H	clean	Genista sagittalis
+coconut	split	Kutney,Tetrahedron,28,(1972),5091	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Alkanna cappadocica
+coconut	split	El-Sayed,Phytochem.,51,(1999),591	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC3=CC(OC4OC(C)C(O)C(O)C4O)=CC(O)=C13)C=5C=CC(O)=CC5	clean	Forsythia suspensa
+coconut	split	Szendrei,Herba Hung.,16,(1977),15	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Lupinus luteus
+coconut	split	Gomez,E. et al.,J.Agric.Food Chem.,41,(1993),1669-1676	smiles	O=CCC=1C=CC=CC1	clean	Saccharomyces cerevisiae
+coconut	split	Ulubelen,Planta Med.,29,(1976),318	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Castanopsis sclerophylla
+coconut	pubmed	21751840	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Spiraea prunifolia
+coconut	doi	10.1021/np200324x	smiles	O=C1OC2C=CCCSSCC(NC(=O)C(NC(=O)C2)CCSC)C(=O)NC(C(O)C1)C(C)CC	clean	bacteria
+coconut	split	Chosson,Phytochem.,49,(1998),1431	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Sida veronicaefolia
+coconut	split	Azuma,Phytochem.,69,(2008),2743	smiles	O=C1C(OC)=C(OC2=CC(OC)=CC(O)=C12)C=3C=CC(OC)=C(O)C3	clean	Petunia surfinia
+coconut	split	Torres,Phytochem.,53,(2000),1047	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Dipsacus asper
+napralert	authors	ITO,H: ONOUE,S: MIYAKE,Y: YOSHIDA,T:	nominal	IRIDOGERMANAL,ISO:	clean	Belamcanda chinensis Iridaceae
+napralert	journal	J NAT PROD	nominal	IRIDOGERMANAL,ISO:	clean	Belamcanda chinensis Iridaceae
+napralert	title	IRIDAL-TYPE TRITERPENOIDS WITH ICHTHYOTOXIC ACTIVITY FROM BELAMCANDA CHINENSIS.	nominal	IRIDOGERMANAL,ISO:	clean	Belamcanda chinensis Iridaceae
+coconut	split	Zou,Chem.Pharm.Bull.,54,(2006),920	smiles	OC1CCC2(C)C3CCC4(C(=CCC5(C)CCC(C)(C)CC45)C3(C)CCC2C1(C)C)C	clean	Senecio polyodon
+napralert	authors	XIANG,L: XING,DM: WANG,W: WANG,RF: DING,Y: DU,LJ:	nominal	OLERACEINE E	clean	Portulaca oleracea Portulacaceae
+napralert	journal	PHYTOCHEMISTRY	nominal	OLERACEINE E	clean	Portulaca oleracea Portulacaceae
+napralert	title	ALKALOIDS FROM PORTULACA OLERACEA L.	nominal	OLERACEINE E	clean	Portulaca oleracea Portulacaceae
+knapsack	original	Herz,J. Org. Chem.,35,(1970),2611	inchi	InChI=1S/C15H22O4/c1-8-4-12-10(9(2)14(17)19-12)6-15(3)7-18-13(16)5-11(8)15/h8-12H,4-7H2,1-3H3/t8-,9+,10-,11+,12-,15-/m1/s1	clean	Hymenoxys anthemoides
+coconut	pubmed	25794012	smiles	O=C(O)CCCCCCCC=CCCCCCCCC	clean	Lithospermum erythrorhizon
+coconut	split	Babu,Phytochem.,17,(1978),2042	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Dysoxylum macranthum
+coconut	split	Nakov,Farmatsiya (Sofia),33,(1983),18	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Astragalus kabadianus
+coconut	split	Buckingham(Executive Editor)Dictionary of Natural ProductsChapman & Hall 1995	smiles	OC=1C(OC)=CC=C2C1C=3C(OC)=C(OC)C=C4C3C(N(C)CC4)C2	clean	Glaucium corniculatum
+coconut	split	Okuyama,Chem.Pharm.Bull.,49,(2001),154	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Mimosa diplotricha
+napralert	doi	10.3892/or.7.6.1213	inchi	InChI=1S/C34H46O18/c1-43-17-5-13(6-18(44-2)31(17)51-33-27(41)25(39)23(37)21(9-35)49-33)29-15-11-48-30(16(15)12-47-29)14-7-19(45-3)32(20(8-14)46-4)52-34-28(42)26(40)24(38)22(10-36)50-34/h5-8,15-16,21-30,33-42H,9-12H2,1-4H3/t15-,16+,21?,22?,23?,24?,25?,26?,27?,28?,29?,30?,33?,34?	clean	Eleutherococcus senticosus
+coconut	split	Kumer,Chem.Abstr.,100 64974m	smiles	O=C1C(OC)=C(OC2=CC(OC)=C(OC)C(O)=C12)C=3C=CC(O)=CC3	clean	Dodonaea viscosa
+knapsack	original	Dhakad, A. K. et al., J. Sci. Food Agric., 98, (2018), 833-848.	inchi	InChI=1S/C10H18O/c1-9(2)8-4-6-10(3,11-9)7-5-8/h8H,4-7H2,1-3H3/t8-,10+	clean	Eucalyptus radiata
+knapsack	split	J. Sci. Food Agric., 98, (2018), 833-848.	inchi	InChI=1S/C10H18O/c1-9(2)8-4-6-10(3,11-9)7-5-8/h8H,4-7H2,1-3H3/t8-,10+	clean	Eucalyptus radiata
+coconut	split	Rayudu,Leather Sci. (Madras),12,(1965),162	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Livistona chinensis
+coconut	split	Lago,Phytochem.,55,(2000),727	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Amomum sulcatum
+napralert	authors	KANG,SS: KIM,JS:	nominal	IKARISOSIDE A,2''-O-RHAMNOSYL:	clean	Epimedium koreanum Berberidaceae
+napralert	journal	KOREAN J PHARMACOG	nominal	IKARISOSIDE A,2''-O-RHAMNOSYL:	clean	Epimedium koreanum Berberidaceae
+napralert	title	SEASONAL VARIATION OF FLAVONOID GLYCOSIDES IN EPIMEDIUM KOREANUM.	nominal	IKARISOSIDE A,2''-O-RHAMNOSYL:	clean	Epimedium koreanum Berberidaceae
+coconut	split	Wang,Chin.Pharm.J.,31,(1996),74	smiles	OC1CCC2(COC)CN(CC)C3C4C(OC)C2C13C5CC6C(O)C5C4(O)CC6OC	clean	Aconitum napellus ssp.neomontanum Wulfen Gayer
+coconut	split	Galina,Phytochem.,13,(1974),2593	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Psilotum nudum
+coconut	split	Awanchiri,Phytochem.,70,(2009),419	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Diospyros moonii
+coconut	split	Yang,J.Nat.Prod.,61,(1998),456	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Smilax myosotiflora
+coconut	split	Corticchiato,Phytochem.,40,(1995),115	smiles	O=C1C=C(OC=2C=C(OC)C(OC)=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Gardenia fosbergii
+coconut	split	Wollenweber,Naturforsch,57c,(2002),445	smiles	O=C1C=C(OC=2C=C(OC)C=C(O)C12)C=3C=CC=CC3	clean	Scutellaria baicalensis
+coconut	split	Atta-ur-Rahman,J.Nat.Prod.,71,(2008),910	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Hedysarum gmelini
+coconut	pubmed	23108028	smiles	OCC=C(C)CCC=C(C)C	clean	Stenostomum lucidum
+wikidata	doi	10.1002/HLCA.201100117	inchi	InChI=1S/C12H20N2O5/c1-3-13-8-4-12(18,7-15)5-9(11(8)19-2)14-6-10(16)17/h14-15,18H,3-7H2,1-2H3,(H,16,17)/t12-/m1/s1	clean	Aplysia californica
+coconut	pubmed	21848266	smiles	O=C(O)C1=CC(OC)=C(O)C(OC)=C1	clean	Posidonia oceanica
+coconut	split	Chen,J.Nat.Prod.,71,(2008),1016	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Cinnamosma madagascariensis
+coconut	pubmed	25280163	smiles	C=CC(=C)CCC=C(C)C	clean	Diphasia angolensis
+coconut	split	He,J.Nat.Prod.,72,(2009),1198	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Rubus laciniatus
+coconut	split	Morita,Chem.Pharm.Bull.,15,(1967),998	smiles	OCCCCCCCC	clean	Aria pallescens
+wikidata	doi	10.1080/10412905.1993.9698163	inchi	InChI=1S/C10H18O/c1-8(2)10-5-3-9(7-11)4-6-10/h3,5,8-11H,4,6-7H2,1-2H3	clean	Taxus canadensis
+coconut	pubmed	10909279	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Artemisia apiacea
+coconut	split	Tsushima,Comp. Biochem. Physiol.,133B,(2002),331	smiles	OC1CC(=C(C#CC(=CC=CC(=CC=CC=C(C=CC=C(C=CC2=C(C)CC(O)CC2(C)C)C)C)C)C)C(C)(C)C1)C	clean	Silurus asotus
+coconut	split	Takido,Lloydia,40,(1977),191	smiles	O=C1C=2C=CC=C(O)C2C(=O)C3=C(O)C=C(C=C13)C	clean	Hemerocallis Fulva
+coconut	split	Reynertson,J.Nat.Prod.,69,(2006),1228	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Polygonum spp.
+coconut	split	Takamura,J.Nat.Med.,61,(2007),220	smiles	O=C1C(OC2OC(COC3OC(C)C(O)C(O)C3O)C(O)C(O)C2O)=C(OC=4C=C(O)C=C(O)C14)C=5C=CC(O)=C(O)C5	clean	Dryopteris aitoniana
+wikidata	doi	10.1631/JZUS.B1800046	inchi	InChI=1S/C32H26O14/c1-9-21-15(3-11(45-9)5-19(35)36)29(41)23-17(33)7-13(27(39)25(23)31(21)43)14-8-18(34)24-26(28(14)40)32(44)22-10(2)46-12(6-20(37)38)4-16(22)30(24)42/h7-12,41-44H,3-6H2,1-2H3,(H,35,36)(H,37,38)/t9-,10-,11+,12+/m1/s1	clean	Streptomyces bingchenggensis
+coconut	split	Ko,Bioorg. Med. Chem. Lett.,14,(2004),1011	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Thermopsis mollis
+coconut	split	Qiu,J.Nat.Prod.,71,(2008),642	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Gleditsia sinensis Lam.
+coconut	split	Vidal-Tessier,Ann.Pharm.Fr.,44,(1986),117	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Erythrina burttii
+coconut	split	Yasinov,Khim. Prir. Soedin.,(1984),523	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Calendula officinalis
+unpd	original	Alesiani, Daniela; Canini, Antonella; D'Abrosca, Brigida; Fiorentino, Antonio; Mastellone, Claudio; Monaco, Pietro; Pacifico, Severina; DellaGreca, Marina; Food Chemistry; vol. 118; 2; (2010); p. 199 - 207.	smiles	CC[C@H]1O[C@@H](OC(=O)C(=CC)C)[C@H](O)[C@@H](O)[C@@H]1O	clean	Cydonia vulgaris
+unpd	original	Kim, Jin Hyo; Ryu, Young Bae; Kang, Nam Suk; Lee, Byong Won; Heo, Jong Soo; Jeong, Ill-Yun; Park, Ki Hun; Biological & Pharmaceutical Bulletin; vol. 29; 2; (2006); p. 302 - 305.	smiles	CC(=CCc1c(O)cc(O)c2C(=O)C(=C(Oc12)c3ccc(O)cc3)O)C	clean	Sophora flavescens
+napralert	authors	WU,ZJ: DING,LS: ZHAO,SX:	nominal	DAUCOSTEROL	clean	Pulsatilla chinensis Ranunculaceae
+napralert	journal	ZHONGGUO YAOKE DAXUE XUEBAO	nominal	DAUCOSTEROL	clean	Pulsatilla chinensis Ranunculaceae
+napralert	title	GLYCOSIDES FROM PULSATILLA CHINENSIS (BUNGE) REGEL.	nominal	DAUCOSTEROL	clean	Pulsatilla chinensis Ranunculaceae
+coconut	split	Marzouk,Phytochem.,52,(1999),943	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Glaucidium palmatum
+coconut	split	Sayavedra,J. Plant Growth Regul.,7,(1988),169	smiles	N1=CN=C(NCC=C(C)C)C=2NC=NC12	clean	Daucus Carota
+wikidata	doi	10.1016/J.BMC.2011.05.008	inchi	InChI=1S/C22H27ClO5/c1-6-12(2)19(25)10-18-17-11-28-15(8-7-13(3)14(4)24)9-16(17)20(23)21(26)22(18,5)27/h6-9,11,13-14,18,24,27H,10H2,1-5H3/t13-,14+,18-,22-/m0/s1	clean	Chaetomium globosum
+napralert	doi	10.1021/np50006a014	inchi	InChI=1S/C13H26O/c1-3-4-5-6-7-8-9-10-11-12-13(2)14/h3-12H2,1-2H3	clean	Pilocarpus
+coconut	split	Jo,J.Nat.Med.,60,(2006),217	smiles	O=C(O)CCCCCCCC=CCC=CCCCCC	clean	Homo sapiens (Serum)
+coconut	pubmed	21598418	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Macaranga Triloba
+napralert	doi	10.1016/0031-9422(92)83466-c	inchi	InChI=1S/C18H16O6/c1-21-11-6-4-10(5-7-11)13-8-12(19)16-14(24-13)9-15(22-2)18(23-3)17(16)20/h4-9,20H,1-3H3	clean	Lepechinia caulescens
+coconut	split	Nguyen,Phytochem.,67,(2006),2159	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Amomum reticulatum
+streptomedb	pubmed	28884676	smiles	OC(=O)C[C@H]1O[C@H](C)c2c(C1)c(O)c1c(c2O)C(=O)C(=CC1=O)C1=CC(=O)c2c(C1=O)c(O)c1c(c2O)C[C@H](O[C@@H]1C)CC(=O)O	clean	Streptomyces coelicolor A3(2) P91S
+coconut	split	Gonzalez,An.Quim.,78C,(1982),184	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Valeriana hardwickii
+napralert	authors	ONO,M: YAMOTO,M: MASUOKA,C: ITO,Y: YAMASHITA,M: NOHARA,T:	nominal	FERRUGINOL	clean	Vitex rotundifolia Lamiaceae
+napralert	journal	J NAT PROD	nominal	FERRUGINOL	clean	Vitex rotundifolia Lamiaceae
+napralert	title	DITERPENES FROM THE FRUITS OF VITEX ROTUNDIFOLIA.	nominal	FERRUGINOL	clean	Vitex rotundifolia Lamiaceae
+napralert	authors	ZHANG,Z: XIE,SJ: HUANG,SP: ZHANG,Q:	nominal	SAPONIN	clean	Gynostemma pentaphyllum Cucurbitaceae
+napralert	journal	SHANXI DAXUE XUEBAO ZIRAN KEXUEBAN	nominal	SAPONIN	clean	Gynostemma pentaphyllum Cucurbitaceae
+napralert	title	ANALYSIS OF MEDICINAL AND NUTRITIONAL COMPONENTS IN GYNOSTEMMA PENTAPHYLLUM.	nominal	SAPONIN	clean	Gynostemma pentaphyllum Cucurbitaceae
+coconut	split	Yoshikawa,Chem.Pharm.Bull.,56,(2008),89	smiles	O=C(O)C1(C)CCCC2(C)C(C(=C)CCC12)CCC(C)CCO	clean	Sonneratia caseolaris
+coconut	split	McNally,J.Nat.Prod.,66,(2003),1280	smiles	O=C1C=C(OC=2C1=C(O)C=C(O)C2C3OC(CO)C(O)C(O)C3O)C=4C=CC(O)=CC4	clean	Anthurium versicolor
+wikidata	doi	10.1080/10412905.1992.9698083	inchi	InChI=1S/C10H18O2/c1-8(2)5-4-6-9(3)7-10(11)12/h5,9H,4,6-7H2,1-3H3,(H,11,12)	clean	Pelargonium vitifolium
+napralert	authors	KWON,SW: HAN,SB: PARK,IH: KIM,JM: PARK,MK: PARK,JH:	nominal	GINSENOSIDE RS-4	clean	Panax ginseng Araliaceae
+napralert	journal	J CHROMATOGR A	nominal	GINSENOSIDE RS-4	clean	Panax ginseng Araliaceae
+napralert	title	LIQUID CHROMATOGRAPHIC DETERMINATION OF LESS POLAR GINSENOSIDES IN PROCESSED GINSENG.	nominal	GINSENOSIDE RS-4	clean	Panax ginseng Araliaceae
+coconut	split	Saritas,Phytochem.,48,(1998),1019	smiles	C1=C(C)C2C3C(CCC2(C)C3C1)C(C)C	clean	Acorus calanus L.
+coconut	split	Minghe,Planta Med.,49,(1983),38	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Hypericum reptans
+napralert	authors	JELLA,P: ROUSEFF,R: GOODNER,K: WIDMER,W:	nominal	HUMULENE,ALPHA:	clean	Citrus paradisi Rutaceae
+napralert	journal	J AGR FOOD CHEM	nominal	HUMULENE,ALPHA:	clean	Citrus paradisi Rutaceae
+napralert	title	DETERMINATION OF KEY FLAVOR COMPONENTS IN METHYLENE CHLORIDE EXTRACTS FROM PROCESSED GRAPEFRUIT JUICE.	nominal	HUMULENE,ALPHA:	clean	Citrus paradisi Rutaceae
+unpd	original	Chou, Tsung-Hsien; Chen, Ih-Sheng; Hwang, Tsong-Long; Lee, Tzong-Huei; Cho, Jui-Ying; Wang, Tai-Chi; Cheng, Lin-Yang; Chang, Ya-Chih; Chen, Jih-Jung; Journal of Natural Products; vol. 71; 10; (2008); p. 1692 - 1695.	smiles	COc1ccc2C(=CC)OC(=O)c2c1OC	clean	Pittosporum illicioides var. illicioides
+coconut	split	Loizzo,Phytomedicine,15,(2008),79	smiles	C=1C=C(CCC1C)C(C)C	clean	Rosmarinus officinalis
+coconut	split	Mo,J.Nat.Prod.,67,(2004),823	smiles	O=C(O)C1=CC(OC)=C(O)C(OC)=C1	clean	Ophryosporus charua
+coconut	split	D'Auria,Curr.Op.Plant Biol.,8,(2005),308	smiles	O=S(C)CCCCC(=NOS(=O)(=O)O)SC1OC(CO)C(O)C(O)C1O	clean	Cakile maritima
+napralert	authors	SUDARSHANAKRISHNA,KR: VISWANATHAN,KR: SREENATH,HK: SANTHANAM,K:	nominal	EXTENSIN	clean	Phaseolus vulgaris Fabaceae
+napralert	journal	J FOOD SCI TECHNOL	nominal	EXTENSIN	clean	Phaseolus vulgaris Fabaceae
+napralert	title	EXTRACTION AND ASSAY OF EXTENSIN IN SOME VEGETABLES.	nominal	EXTENSIN	clean	Phaseolus vulgaris Fabaceae
+napralert	authors	ROMUSSI,G: BARBIERI,G: DE TOMMASI,N:	nominal	KAEMPFEROL-2-6-DI-O-(TRANS-PARA-COUMAROYL)-BETA-D-GLUCOPYRANOSIDE	clean	Quercus rubra Fagaceae
+napralert	journal	PHARMAZIE	nominal	KAEMPFEROL-2-6-DI-O-(TRANS-PARA-COUMAROYL)-BETA-D-GLUCOPYRANOSIDE	clean	Quercus rubra Fagaceae
+napralert	title	MINOR POLYPHENOLS FROM QUERCUS RUBRA L. PART 21: CONSTITUENTS OF FAGACEAE (CUPULIFERAE).	nominal	KAEMPFEROL-2-6-DI-O-(TRANS-PARA-COUMAROYL)-BETA-D-GLUCOPYRANOSIDE	clean	Quercus rubra Fagaceae
+coconut	split	Aldrich Library of 13C and 1H FT NMR Spectra,3,(1992),3,567C	smiles	OCC12CCC(C(=C)C)C2C3CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Satureja cuneifolia
+coconut	split	Liu,J.Nat.Prod.,71,(2008),789	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Glycosmis puberula
+coconut	split	Mundina,Phytochem.,47,(1998),1277	smiles	OC(C)(CCC=C(C)C)C1CC=C(C)CC1	clean	Roldana barba-johannis
+coconut	pubmed	23662135	smiles	O=C(OC1C2=C(CCCC2(C)C)C(C)(CCC(O)(C=C)C)C(C)C1OC(=O)C)C	clean	Delphinium campylocentrum
+coconut	split	Wu,Chem.Pharm.Bull.,52,(2004),1227	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Clausena dunniana
+streptomedb	pubmed	11305367	smiles	CO[C@@H]1C[C@H](C)CC2=C(OC)C(=O)C=C(C2=O)NC(=O)/C(=C/C=C\[C@H]([C@@H](/C(=C/[C@H]([C@@H]1O)C)/C)OC(=O)N)OC)/C	clean	Streptomyces hygroscopicus NRRL 3602
+coconut	pubmed	22428255	smiles	C=1C=C2C(=CC1C)C(CCC2C)C(C)C	clean	Solanum diflorum
+coconut	pubmed	18767554	smiles	C(=CC=C(C=CC=C(C=CC1=C(C)CCCC1(C)C)C)C)C=C(C=CC=C(C=CC2=C(C)CCCC2(C)C)C)C	clean	Erwinia herbicola strain Eho10
+coconut	split	Amiguest,J.Nat.Prod.,69,(2006),1005	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Dorstenia zenkeri
+napralert	authors	FORGACS,P: PROVOST,J: TOUCHE,A: JEHANNO,A:	nominal	COPTISINE	clean	Fumaria capreolata Papaveraceae
+napralert	journal	J NAT PROD	nominal	COPTISINE	clean	Fumaria capreolata Papaveraceae
+napralert	title	ALKALOIDS FROM FUMARIA CAPREOLATA AND FUMARIA BELLA.	nominal	COPTISINE	clean	Fumaria capreolata Papaveraceae
+coconut	split	Nickavar et al.,Z.Naturforsch.,58c,(2003),629-631	smiles	C1=CC(CC=C1C)C(C)C	clean	Ligularia hodgsonii
+coconut	split	Shimizu,Chem.Pharm.Bull.,16,(1968),2310	smiles	O=C1C(OC)=C(OC=2C=C(OC)C(OC)=C(O)C12)C=3C=CC(O)=C(O)C3	clean	Scapania nemorea
+coconut	pubmed	21954959	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Polemonium caeruleum
+unpd	original	Pan, Li-Li; Fang, Ping-Lei; Ni, Wei; Li, Lei; Chen, Chang-Xiang; Hao, Xiao-Jiang; Liu, Hai-Yang; Zhang, Xing-Jie; Yang, Liu-Meng; Zheng, Yong-Tang; Li, Chang-Tian; Journal of Natural Products; vol. 74; 6; (2011); p. 1508 - 1512.	smiles	C[C@@H]1C[C@]2(OC(=O)C)[C@H]([C@@H]3C=C(COC(=O)C)C[C@@]4(O)[C@@H](C=C(C)C4=O)[C@@]13O)C2(C)C	clean	Euphorbia fischeri
+coconut	split	Chan,E.W.C.et al.,Pharmacognosy J.,3,(2011)	smiles	OC=1C=C(O)C2=C(OC(C3=CC=C(O)C(O)=C3)C(O)C2)C1	clean	Acacia adunca
+coconut	split	Markham,N.Z.J.Bot.,23,(1985),1	smiles	O=C1C2=C(O)C=C(OC3OC(CO)C(O)C(O)C3O)C=C2OC(C4=CC=C(O)C=C4)C1O	clean	Cudrania javanensis
+coconut	doi	10.1515/znc-2009-11-1212	smiles	O=C1OC(C)CC=2C(O)=CC=C(O)C12	clean	Serpocaulon triseriale
+coconut	split	Sagen,Phytochem.,61,(2002),975	smiles	O=C1C=CC=C2N1CC3CN(C)CC2C3	clean	Argyrolobium lunare
+coconut	split	Vareed,Phytomedicine,15,(2008),706	smiles	O=C1C(OC2OC(C)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=C(O)C(O)=C(O)C4	clean	Caesalpinia pulcherrima
+coconut	split	Stepien,Diss.Pharm.Pharmacol.,19,(1967),557	smiles	O=C1C=C(OC2=CC(OC3OC(CO)C(O)C(O)C3O)=CC(O)=C12)C=4C=CC(O)=C(O)C4	clean	Chlorophytum borivilianum
+coconut	pubmed	23006989	smiles	OC1=CC=C(C=C1OC)C2OCC3C(OCC23)C4=CC=C(O)C(OC)=C4	clean	Picea glehnii
+unpd	original	Lin, Yun-Lian; Kuo, Yueh-Hsiung; Heterocycles; vol. 41; 9; (1995); p. 1959 - 1966.	smiles	CC1(C)CCC2(C)CCC3(C)C(=CCC4C5(C)CCC(O)C(C)(C)C5CCC34C)C2C1	clean	Derris oblonga
+coconut	split	Shmatova,Khim.Prir.Soedin.,(1985),561	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Mitragyna africanus WILLD.
+wikidata	doi	10.1021/NP200035M	inchi	InChI=1S/C20H24O4/c1-13(2)6-8-22-16-10-15(5)20-17(23-9-7-14(3)4)12-19(21)24-18(20)11-16/h6-7,10-12H,8-9H2,1-5H3	clean	Mariannaea camptospora
+coconut	split	Giang,J.Nat.Med.,60,(2006),248	smiles	C=C1CCC=C(C)CCC2C1CC2(C)C	clean	Citrus Grandis
+wikidata	doi	10.1016/J.CHEMOSPHERE.2020.125961	inchi	InChI=1S/C27H42N4O7/c1-3-4-5-6-7-9-20(28)23(33)25(35)29-17(2)26(36)31-15-8-10-22(31)24(34)30-21(27(37)38)16-18-11-13-19(32)14-12-18/h11-14,17,20-23,32-33H,3-10,15-16,28H2,1-2H3,(H,29,35)(H,30,34)(H,37,38)	clean	Gymnothorax unicolor
+coconut	split	Dou,J.Nat.Prod.,65,(2002),1777	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Phellodendron Amurense
+coconut	split	Sadavongvivad,Phytochem.,16,(1977),1451	smiles	O=C1OC=2C=C(O)C(OC)=CC2C=C1	clean	Vicia sativa
+napralert	authors	RODRIGUEZ,J: RIGUERA,R: DEBITUS,C:	nominal	ONCHITRIOL II-C	clean	Onchidium species Onchidiidae
+napralert	journal	J ORG CHEM	nominal	ONCHITRIOL II-C	clean	Onchidium species Onchidiidae
+napralert	title	THE NATURAL POLYPROPIONATE-DERIVED ESTERS OF THE MOLLUSC ONCHIDIUM SP.	nominal	ONCHITRIOL II-C	clean	Onchidium species Onchidiidae
+napralert	doi	10.1016/s0031-9422(00)83598-0	inchi	InChI=1S/C26H26O10/c27-15(4-1-13-2-5-18(29)21(32)7-13)11-25(34)35-24-12-17-20(31)9-16(28)10-23(17)36-26(24)14-3-6-19(30)22(33)8-14/h2-3,5-10,15,24,26-33H,1,4,11-12H2/t15-,24-,26+/m0/s1	clean	Phyllocladus trichomanoides
+coconut	split	Umek,Fitoterapia,52,(1982),277	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Anthocleista procera
+coconut	split	Ray,Indian J.Chem.,14,(1975),1876	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Isatis costata
+coconut	split	Agarwal,Phytochem.,15,(1976),430	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Hedysarum gmelini
+coconut	split	Maloney,J.Nat.Prod.,71,(2008),1927	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Diospyros assimilis
+napralert	authors	BOUCHENY,A: BRUM-BOUSQUET,M:	nominal	RUTIN	clean	Vitis vinifera Vitaceae
+napralert	journal	PLANT MED PHYTOTHER	nominal	RUTIN	clean	Vitis vinifera Vitaceae
+napralert	title	CONTRIBUTION TO A STUDY OF THE LEAVES OF RED GRAPES(VITIS VINIFERA L.).	nominal	RUTIN	clean	Vitis vinifera Vitaceae
+coconut	split	Paul,Phytochem.,57,(2001),307	smiles	OC1(C)CCC(C(C)C)C2C=C(C)CCC21	clean	Eugenia brasiliensis
+coconut	split	Nagashima,Chem.Pharm.,50,(2002),808	smiles	C1=C(C)C2CC(C1)C2(C)C	clean	Magnolia salicifolia
+coconut	split	Ishida,Chem. Pharm. Bull.,37,(1989),1616	smiles	O=C1C(O)=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=C(OC)C3	clean	Sedum Sarmentosum
+wikidata	doi	10.1016/S0031-9422(00)80490-2	inchi	InChI=1S/C30H50O2/c1-19(2)20-10-15-30(18-31)17-16-28(6)21(25(20)30)8-9-23-27(5)13-12-24(32)26(3,4)22(27)11-14-29(23,28)7/h20-25,31-32H,1,8-18H2,2-7H3/t20-,21+,22-,23+,24-,25+,27-,28+,29+,30+/m0/s1	clean	Diospyros sumatrana
+coconut	split	Maga,J. Sci. Food Agric.,25,(1974),797	smiles	O=C(O)C=CC1=CC=C(O)C(O)=C1	clean	Solanum lycopersicum
+coconut	split	Chu,J.Biol.Chem,268,(1993),27 026	smiles	OC1=CC=C(C=C1OC)C2OCC3C(OCC23)C4=CC=C(O)C(OC)=C4	clean	Linum usitatissimum
+knapsack	original	Iinuma, M. et al., Heterocycles, 1993, 35, 407-413 (Vancouveria hexandra constit)	inchi	InChI=1S/C20H16O6/c1-20(2)9-15(24)12-5-10(3-4-16(12)26-20)17-8-14(23)19-13(22)6-11(21)7-18(19)25-17/h3-9,21-22,24H,1-2H3	clean	Morus nigra
+knapsack	split	Heterocycles, 1993, 35, 407-413 (Vancouveria hexandra constit)	inchi	InChI=1S/C20H16O6/c1-20(2)9-15(24)12-5-10(3-4-16(12)26-20)17-8-14(23)19-13(22)6-11(21)7-18(19)25-17/h3-9,21-22,24H,1-2H3	clean	Morus nigra
+knapsack	original	Dosoky, N. S. et al., Molecules, 24, (2019), 4244.	inchi	InChI=1S/C15H24/c1-10(2)13-8-6-12(4)14-7-5-11(3)9-15(13)14/h9-10,12-14H,3,5-8H2,1-2,4H3/t12-,13+,14+/m0/s1	clean	Piper nigrum
+knapsack	split	Molecules, 24, (2019), 4244.	inchi	InChI=1S/C15H24/c1-10(2)13-8-6-12(4)14-7-5-11(3)9-15(13)14/h9-10,12-14H,3,5-8H2,1-2,4H3/t12-,13+,14+/m0/s1	clean	Piper nigrum
+coconut	pubmed	21309591	smiles	O=C(O)C12CCC(C)(C)CC2C3=CCC4C5(C)CCC(O)C(C)(C)C5CCC4(C)C3(C)CC1	clean	Beta Vulgaris
+napralert	authors	AKIHISA,T: YASUKAWA,K: KIMURA,Y: TAKASE,S: YAMANOUCHI,S: TAMURA,T:	nominal	AMYRIN,BETA:	clean	Camellia sasanqua Theaceae
+napralert	journal	CHEM PHARM BULL	nominal	AMYRIN,BETA:	clean	Camellia sasanqua Theaceae
+napralert	title	TRITERPENE ALCOHOLS FROM CAMELLIA AND SASANQUA OILS AND THEIR ANTI-INFLAMMATORY EFFECTS.	nominal	AMYRIN,BETA:	clean	Camellia sasanqua Theaceae
+coconut	pubmed	24422408	smiles	O=C(OCC12C(=O)OC3(C)CC(O)C2CC31OC4OC(CO)C(O)C(O)C4O)C=5C=CC=CC5	clean	Paeonia hybrida
+knapsack	original	Chen,J.Nat.Prod.,71,(2008),93	inchi	InChI=1S/C34H44O10/c1-10-18(2)30(38)42-29-28(41-20(4)35)27(32(7)13-11-25(36)44-31(5,6)23(32)16-26(37)39-9)19(3)34-24(43-34)15-22(33(29,34)8)21-12-14-40-17-21/h11-14,17-18,22-24,27-29H,3,10,15-16H2,1-2,4-9H3/t18-,22-,23-,24+,27+,28+,29-,32+,33+,34+/m0/s1	clean	Amoora tsangii
+coconut	pubmed	16884313	smiles	O=C(O)CCCCCCCCCCCCCCC	clean	Trollius chinensis
+npass	pubmed	26839171	smiles	O/N=C(C(=O)O)/Cc1ccc(cc1)O	clean	Homo sapiens
+coconut	split	Bardon,Phytochem.,59,(2002),205	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C=CC(CC)C(C)C)C)C2(C)CC1	clean	Ginkgo semen
+coconut	split	Cheng,Phytochem.,66,(2005),1180	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Symphonia globulifera
+wikidata	doi	10.1248/YAKUSHI1947.90.12_1514	inchi	InChI=1S/C10H18O/c1-7(2)9-5-4-8(3)6-10(9)11/h7-9H,4-6H2,1-3H3/t8-,9-/m0/s1	clean	Agastache rugosa
+unpd	original	Parrilli et al.; Gazzetta Chimica Italiana; vol. 109; (1979); p. 391.	smiles	CCC(=O)C1CC(C)C2(CC(=O)C3(C)C4=C(CCC23C)C5(C)CCC(O)C(C)(CO)C5CC4)O1	clean	Muscari comosum
+unpd	split	Gazzetta Chimica Italiana; vol. 109; (1979); p. 391.	smiles	CCC(=O)C1CC(C)C2(CC(=O)C3(C)C4=C(CCC23C)C5(C)CCC(O)C(C)(CO)C5CC4)O1	clean	Muscari comosum
+coconut	pubmed	17604256	smiles	O=C1NC(C(=O)NC(C(=O)N2CCCC2C(=O)NC(C(=O)NC1)CC=3C=CC=CC3)CC4=CC=C(O)C=C4)CC=5C=CC=CC5	clean	Dianthus superbus var.longicalycinus (MAXIM.) WILL
+coconut	split	Suzuki,Chem.Pharm.Bull.,55,(2007),153	smiles	O=C1C=C2CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Senecio zoellneri
+coconut	split	Coxon,Tetrahedron Lett.,(1974),2929	smiles	O=C1C(OC2OC(CO)C(O)C(O)C2O)=C(OC=3C=C(O)C=C(O)C13)C=4C=CC(O)=C(O)C4	clean	Berberis julianae
+coconut	split	Xie,Chem.Pharm.Bull.,55,(2007),1258	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Khaya grandifoliola
+coconut	split	Somanathan,J.Chem.Soc.,Perkin 1,(1972),1935	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Cuphea hyssopifolia
+wikidata	doi	10.1016/S0031-9422(00)97305-9	inchi	InChI=1S/C15H10O7/c16-7-4-10(19)12-11(5-7)22-15(14(21)13(12)20)6-1-2-8(17)9(18)3-6/h1-5,16-19,21H	clean	Pavetta indica
+coconut	split	Wang,J.Nat.Prod.,67,(2004),2096	smiles	OCC1OC(OC2CC3=CCC4C(CCC5(C)C(CCC45)C(C)CCC(CC)C(C)C)C3(C)CC2)C(O)C(O)C1O	clean	Guettarda noumeana
+coconut	doi	10.1021/np800667e	smiles	O=C1C=CC(O)CC1C	clean	Ampelomyces sp.
+npass	pubmed	21910504	smiles	CCCCCCCCCC[C@H]([C@H]1CC[C@@H](O1)[C@@H](CCCCCCCCCCCCCCC1=C[C@@H](OC1=O)C)O)O	clean	Annona squamosa
+coconut	split	Yoon,J.Nat.Prod.,70,(2007),2029	smiles	O=C1C=C(OC=2C=C(O)C=C(O)C12)C=3C=CC(O)=CC3	clean	Campsis flos
+coconut	split	Seitz,J.Agric.Food Chem.,25,(1977),838-841	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Helichrysum anomalum
+coconut	split	Prasad,Phytochem.,16,(1977),1120	smiles	OC1CC2=CCC3C(CCC4(C)C(CCC34)C(C)CCC(CC)C(C)C)C2(C)CC1	clean	Teucrium alyssifolium
 phytohub	authors	Milder IE, Arts IC, van de Putte B, Venema DP, Hollman PC	smiles	[H][C@@]12CO[C@@H](C3=CC=C(O)C(OC)=C3)[C@]1([H])CO[C@H]2C1=CC(OC)=C(O)C=C1	dirty	Strawberry
 phytohub	original	Lignan contents of Dutch plant foods: a database including lariciresinol, pinoresinol, secoisolariciresinol and matairesinol. Br J Nutr. 2005 Mar;93(3):393-402.	smiles	[H][C@@]12CO[C@@H](C3=CC=C(O)C(OC)=C3)[C@]1([H])CO[C@H]2C1=CC(OC)=C(O)C=C1	dirty	Strawberry
 phytohub	pubmed	15877880	smiles	[H][C@@]12CO[C@@H](C3=CC=C(O)C(OC)=C3)[C@]1([H])CO[C@H]2C1=CC(OC)=C(O)C=C1	dirty	Strawberry
