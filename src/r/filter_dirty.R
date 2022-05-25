@@ -73,27 +73,36 @@ filter_dirty <- function(dataframe) {
       ) &
         as.numeric(referenceCleaned_score_titleOrganism) == 1
     )
-  
+
   #' additional coconut cleaning
-  dfSplit_1 <- dfSplit %>%
-    filter(database == "coconut")
-  
-  dfSplit_1_1 <- dfSplit %>%
-    filter(database == "coconut") %>%
-    rowwise() %>%
-    filter(grepl(pattern = organismValue, x = referenceCleanedTitle))
-  
-  dfSplit_1_2 <- dfSplit %>%
-    filter(database == "coconut") %>%
-    anti_join(dfSplit_1_1, by = c(
-      "structureValue" = "structureValue",
-      "referenceValue" = "referenceValue"))
-  
-  dfSplit_2 <- bind_rows(dfSplit_1_1, dfSplit_1_2)
-  
-  dfSplit_3 <- dfSplit %>%
-    filter(database != "coconut")
-  
+  if (nrow(dfSplit) != 0) {
+    dfSplit_1 <- dfSplit %>%
+      filter(database == "coconut")
+
+    dfSplit_1_1 <- dfSplit %>%
+      filter(database == "coconut") %>%
+      rowwise() %>%
+      filter(grepl(pattern = organismValue, x = referenceCleanedTitle))
+
+    dfSplit_1_2 <- dfSplit %>%
+      filter(database == "coconut") %>%
+      anti_join(
+        dfSplit_1_1,
+        by = c(
+          "structureValue" = "structureValue",
+          "referenceValue" = "referenceValue"
+        )
+      )
+
+    dfSplit_2 <- bind_rows(dfSplit_1_1, dfSplit_1_2)
+
+    dfSplit_3 <- dfSplit %>%
+      filter(database != "coconut")
+  } else {
+    dfSplit_2 <- dfSplit
+    dfSplit_3 <- dfSplit
+  }
+
   dfTitle <- dfRest %>%
     filter(referenceType == "title") %>%
     filter(as.numeric(referenceCleaned_score_distance) <= 10)
