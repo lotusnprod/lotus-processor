@@ -20,7 +20,6 @@ pairs_metadata <-
       pathDataProcessed,
       pathLastFrozen
     ),
-    delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   ) %>%
