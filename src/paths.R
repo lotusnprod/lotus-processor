@@ -243,7 +243,8 @@ databases$add(
 
 databases$add(
   name = "inflamnat",
-  sourceFiles = list(tsv = "ci8b00560_si_001.xlsx"),
+  # sourceFiles = list(tsv = "ci8b00560_si_001.xlsx"),
+  sourceFiles = list(tsv = "13321_2022_608_MOESM2_ESM.xlsx"),
   interimFile = "inflamnat.tsv.gz"
 )
 
