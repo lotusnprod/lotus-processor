@@ -23,12 +23,12 @@ data_original <-
 # selecting
 data_selected <- data_original %>%
   select(
-    uniqueid = Index,
+    uniqueid = Inflam_id,
     structure_name = Name,
     structure_smiles = SMILES,
     organism_clean = Origin,
-    pubchem = CID,
-    reference = Reference
+    pubchem = PubChem_CID,
+    reference = Ref
   )
 
 data_manipulated <- data_selected %>%
@@ -107,11 +107,11 @@ data_manipulated <- data_selected %>%
     )
   ) %>%
   mutate(n = str_count(organism_clean, "\\S+")) %>%
-  mutate(organism_dirty = ifelse(test = n > 1,
+  mutate(organism_dirty = ifelse(test = n > 2,
     yes = organism_clean,
     no = NA
   )) %>%
-  mutate(organism_clean = ifelse(test = n == 1,
+  mutate(organism_clean = ifelse(test = n == 2,
     yes = organism_clean,
     no = NA
   )) %>%
