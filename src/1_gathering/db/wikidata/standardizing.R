@@ -7,6 +7,7 @@ source("r/standardizing_original.R")
 library(dplyr)
 library(readr)
 library(splitstackshape)
+library(WikidataQueryServiceR)
 
 # get paths
 database <- databases$get("wikidata")
@@ -20,8 +21,6 @@ data_organism <-
     sep = "|",
     direction = "long"
   ) %>%
-  filter(grepl(pattern = " ", x = names_pipe_separated, fixed = TRUE)) %>%
-  #' taking a single genus name is too risky
   distinct()
 
 data_structures <-
@@ -43,6 +42,22 @@ data_triples <-
   read_delim(
     file = wikidataLotusExporterDataOutputTriplesPath
   )
+
+# step to discard ambiguous uninomials from wikidata
+names <- WikidataQueryServiceR::query_wikidata(
+  sparql_query = "
+SELECT DISTINCT ?name (COUNT(DISTINCT ?id) AS ?count) WHERE {
+  ?id wdt:P31 wd:Q16521;
+    wdt:P105 wd:Q34740;
+    wdt:P225 ?name.
+}
+GROUP BY ?name
+HAVING ((COUNT(?id)) > 1 )
+ORDER BY DESC (?count)
+")
+
+data_organism <- data_organism %>%
+  filter(!names_pipe_separated %in% names$name)
 
 # manipulating
 data_manipulated <- data_triples %>%
