@@ -43,5 +43,6 @@ dependencies:
   - r-tibble
   - r-tidyjson
   - r-tidyr
+  - r-WikidataQueryServiceR
   - r-XML
   - r-xml2
