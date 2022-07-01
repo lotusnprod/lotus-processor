@@ -1,4 +1,4 @@
-580763 | 468769 (3D|2D) unique referenced structure-organism pairs. 
+580765 | 468771 (3D|2D) unique referenced structure-organism pairs. 
  They consist of 
  224550 | 146052 (3D|2D) unique curated structures and 
  41351 unique organisms,

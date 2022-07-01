@@ -72,7 +72,7 @@ def keep_only_given_class(to_keep=[], input_data=[], input_labels=[]):
 ########################################################
 
 # Load lotus
-df_meta = pd.read_csv('../data/processed/220318_frozen_metadata.csv.gz', sep=",")
+df_meta = pd.read_csv('../data/processed/220701_frozen_metadata.csv.gz', sep=",")
 
 # Fill NaN with 'Unknown'
 values = {'organism_taxonomy_02kingdom': 'Not attributed (Bacteria and Algae)', 'organism_taxonomy_03phylum': 'Unknown',
@@ -422,8 +422,8 @@ lf.batch_add(fps)
 lf.index()
 
 # Store lsh forest and structure metadata
-lf.store("../data/interim/tmap/220318_coords_lotus_2D_map4.dat")
-with open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "wb+") as f:
+lf.store("../data/interim/tmap/220701_coords_lotus_2D_map4.dat")
+with open("../data/interim/tmap/220701_lotus_2D_map4.pickle", "wb+") as f:
     pickle.dump(
         (hac, c_frac, ring_atom_frac, largest_ring_size),
         f,
@@ -447,7 +447,7 @@ y = list(y)
 s = list(s)
 t = list(t)
 pickle.dump(
-    (x, y, s, t), open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+    (x, y, s, t), open("../data/interim/tmap/220701_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 )
 
 del (lf)
@@ -458,10 +458,10 @@ del (lf)
 
 # lf = tm.LSHForest(1024, 64)
 # lf.restore(
-#     "../data/interim/tmap/220318_lotus_2D_map4.dat")
+#     "../data/interim/tmap/220701_lotus_2D_map4.dat")
 
 # hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-#     open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "rb")
+#     open("../data/interim/tmap/220701_lotus_2D_map4.pickle", "rb")
 # )
 
 # # tmap configuration
@@ -482,7 +482,7 @@ del (lf)
 # s = list(s)
 # t = list(t)
 # pickle.dump(
-#     (x, y, s, t), open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
+#     (x, y, s, t), open("../data/interim/tmap/220701_coords_lotus_2D_map4.dat", "wb+"), protocol=pickle.HIGHEST_PROTOCOL
 # )
 
 # del (lf)
@@ -492,11 +492,11 @@ del (lf)
 # # AND CHEMICAL DESCRIPTORS
 # ########################################################
 
-x, y, s, t = pickle.load(open("../data/interim/tmap/220318_coords_lotus_2D_map4.dat",
+x, y, s, t = pickle.load(open("../data/interim/tmap/220701_coords_lotus_2D_map4.dat",
                               "rb"))
 
 hac, c_frac, ring_atom_frac, largest_ring_size = pickle.load(
-    open("../data/interim/tmap/220318_lotus_2D_map4.pickle", "rb")
+    open("../data/interim/tmap/220701_lotus_2D_map4.pickle", "rb")
 )
 
 ########################################################
@@ -621,4 +621,4 @@ f.add_scatter(
     has_legend=True,
 )
 f.add_tree("lotus_tree", {"from": s, "to": t}, point_helper="lotus", color='#e6e6e6')
-f.plot('../res/html/220318_lotus_map4_2D', template="smiles")
+f.plot('../res/html/220701_lotus_map4_2D', template="smiles")
