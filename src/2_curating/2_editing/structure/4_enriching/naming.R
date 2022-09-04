@@ -216,6 +216,9 @@ if (mode == "custom") {
       file = pathDataInterimTablesOriginalStructureFull,
       delim = "\t"
     ) %>%
+    # using https://stackoverflow.com/a/58837832 to allow multiple smiles/inchi/nominal
+    group_by(structureType) %>%
+    mutate(row = row_number()) %>%
     pivot_wider(
       names_from = structureType,
       values_from = structureValue
@@ -228,6 +231,7 @@ if (mode == "custom") {
       structureCleaned_nameTraditional = nominal
     ) %>%
     filter(!is.na(structureValue))
+
 
   structureTranslated <-
     read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
