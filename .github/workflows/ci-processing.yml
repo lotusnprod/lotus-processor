@@ -16,8 +16,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest']
-        # os: ['ubuntu-latest', 'macos-latest'] # problems with XCode
+        # os: ['ubuntu-latest']
+        os: ['ubuntu-latest', 'macos-latest']
     defaults:
       run:
         shell: bash
