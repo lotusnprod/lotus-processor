@@ -163,10 +163,10 @@ fun main(args: Array<String>) {
         }
 
     // Testing a dummy file export
-    val fileName = "$pathDataInterimTablesTranslatedOrganism/dummy.tsv"
+    val fileName = "$pathDataInterimTablesTranslatedOrganism/010000.tsv"
     val writer = TsvWriter(File(fileName), TsvWriterSettings())
     writer.writeHeaders("organismInterim")
-    writer.writeRow("Rose apple")
+    writer.writeRow("Syzygium jambos")
     writer.close()
 
     logger.info("Completely done. Go Kotlin \\o/")
