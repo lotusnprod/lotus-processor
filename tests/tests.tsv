@@ -12,6 +12,7 @@ tests	clean	Kiwi	nominal	Pseudoionone;ψ-ionone;psi-ionone;Citrylideneacetone	do
 tests	clean	Kiwi canterberus	nominal	3-Hexen-1-ol; (Z)-form, O-[β-D-Xylopyranosyl-(1->6)-β-D-glucopyranoside]	doi	10.1080/00071618200650061 .
 tests	clean	Rose apple	nominal	α-Terpinene	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ejoc73%3e3.0.co;2-f
 tests	clean	Rose	nominal	β-Terpinene	publishingDetails	HelloWorld!
+tests	clean	Rose	nominal	β-Terpinene	publishingDetails	ByeWolrd!
 tests	clean	Apple	nominal	γ-Terpinene	original	HelloWorld!
 tests	dirty	Rose, apple	nominal	δ-Terpinene	doi	HelloWorld!
 tests	dirty	Rice Bean	nominal	δ-cadinene	doi	HelloWorld!
