@@ -78,11 +78,13 @@ ifelse(
     )
 )
 
-log_debug("submitting to GNFinder")
-if (.Platform$OS.type == "unix") {
-  system(command = paste("bash", pathTranslatedGnfinderScript))
-} else {
-  shell(paste("bash", pathTranslatedGnfinderScript))
+if (length(list.files(path = pathDataInterimTablesTranslatedOrganism, pattern = "tsv")) != 0) {
+  log_debug("submitting to GNFinder")
+  if (.Platform$OS.type == "unix") {
+    system(command = paste("bash", pathTranslatedGnfinderScript))
+  } else {
+    shell(paste("bash", pathTranslatedGnfinderScript))
+  }
 }
 
 length <-
@@ -190,28 +192,30 @@ if (.Platform$OS.type == "unix") {
 verified <-
   stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
 
-verified_df <- verified %>%
-  data.frame() %>%
-  select(-curation, -matchType) %>%
-  unnest(results, names_repair = "minimal") %>%
-  filter(dataSourceTitleShort != "IRMNG (old)" &
-    dataSourceTitleShort != "IPNI") %>%
-  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
-  arrange(desc(sortScore)) %>%
-  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
-  select(
-    organismCleaned = name,
-    organismDbTaxo = dataSourceTitleShort,
-    taxonId = currentRecordId,
-    currentName,
-    currentCanonicalFull,
-    taxonomy = classificationPath,
-    rank = classificationRanks
-  )
+if (nrow(dataCleanedOrganismVerify != 0)) {
+  verified_df <- verified %>%
+    data.frame() %>%
+    select(-curation, -matchType) %>%
+    unnest(results, names_repair = "minimal") %>%
+    filter(dataSourceTitleShort != "IRMNG (old)" &
+      dataSourceTitleShort != "IPNI") %>%
+    filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
+    arrange(desc(sortScore)) %>%
+    distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
+    select(
+      organismCleaned = name,
+      organismDbTaxo = dataSourceTitleShort,
+      taxonId = currentRecordId,
+      currentName,
+      currentCanonicalFull,
+      taxonomy = classificationPath,
+      rank = classificationRanks
+    )
 
-## example ID 165 empty, maybe fill later on
-verified_df$organismDbTaxo <-
-  y_as_na(verified_df$organismDbTaxo, "")
+  ## example ID 165 empty, maybe fill later on
+  verified_df$organismDbTaxo <-
+    y_as_na(verified_df$organismDbTaxo, "")
+}
 
 if (nrow(dataInterimOrganismToFill) != 0) {
   dataCleanedTranslatedOrganism2join <-

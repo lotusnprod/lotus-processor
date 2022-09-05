@@ -162,12 +162,5 @@ fun main(args: Array<String>) {
             writer.close()
         }
 
-    // Testing a dummy file export
-    val fileName = "$pathDataInterimTablesTranslatedOrganism/010000.tsv"
-    val writer = TsvWriter(File(fileName), TsvWriterSettings())
-    writer.writeHeaders("organismInterim")
-    writer.writeRow("Syzygium jambos")
-    writer.close()
-
     logger.info("Completely done. Go Kotlin \\o/")
 }
