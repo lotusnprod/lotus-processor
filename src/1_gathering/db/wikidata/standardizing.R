@@ -54,7 +54,8 @@ SELECT DISTINCT ?name (COUNT(DISTINCT ?id) AS ?count) WHERE {
 GROUP BY ?name
 HAVING ((COUNT(?id)) > 1 )
 ORDER BY DESC (?count)
-")
+"
+)
 
 data_organism <- data_organism %>%
   filter(!names_pipe_separated %in% names$name)
