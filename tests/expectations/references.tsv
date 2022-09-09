@@ -5,9 +5,9 @@ clean	Iris hybr	Iris	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK	10.1016/0
 dirty	Green bell pepper	Capsicum	original	Aasen,Acta Chem. Scand. Ser. B,29,(1975),51	10.3891/ACTA.CHEM.SCAND.29B-0051	NA	NA	Tobacco Chemistry. 28. Structure and Synthesis of Drim-8-en-7-one, a New Tobacco Constituent.	NA	1975	Aasen	NA	NA	1	1	NA	2
 clean	Iris	Iris	split	; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163	10.1016/0305-1978(88)90089-0	NA	NA	A comparative study of anthraquinones in rhizomes of Kniphofia species	Biochemical Systematics and Ecology	NA	NA	NA	NA	NA	NA	1	1
 clean	Iris florentina	Iris	publishingDetails	(J Nat Prod) 43: 97-102	NA	NA	NA	New Tertiary Alkaloids of Strychnos decussata	NA	NA	NA	NA	NA	NA	NA	NA	NA
-clean	Iris persiminima	Iris	title	(J Nat Prod) 43: 97-102	10.1021/NP50011A900	NA	NA	ads	NA	NA	NA	21	NA	NA	NA	NA	NA
 clean	Rose	NA	publishingDetails	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
-clean	Apple	Malus	original	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Iris persiminima	Iris	title	(J Nat Prod) 43: 97-102	10.1021/NP50010A900	NA	NA	ads	NA	NA	NA	21	NA	NA	NA	NA	NA
+clean	Apple	NA	original	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Ficus variegata	Ficus	pubmed	1234	NA	NA	1234	Change in the kinetics of sulphacetamide tissue distribution in Walker tumor-bearing rats.	NA	NA	NA	0	NA	NA	NA	NA	NA
 clean	Ficus	Ficus	pubmed	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	NA	NA	NA	0	NA	NA	NA	NA	NA
 clean	Kiwi canterberus	Kiwi	doi	10.1080/00071618200650061 .	10.1080/00071618200650061	NA	NA	The keto-carotenoids of two marine coccoid members of the Eustigmatophyceae	NA	NA	NA	0	NA	NA	NA	NA	NA
@@ -15,7 +15,8 @@ clean	Rose apple	Syzygium	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ej
 clean	Callichroma iris	Callichroma	split	Bar	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 dirty	kiwi	NA	title	31708947	NA	NA	31708947	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Kiwi	Kiwi	doi	31708947	NA	NA	31708947	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
-dirty	Rose, apple	Malus	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Rose	NA	publishingDetails	ByeWolrd!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Rose, apple	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 dirty	Rice Bean	Vigna	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 dirty	Rice, Bean	Oryza	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Rice	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
@@ -28,7 +29,8 @@ clean	Piper	Piper	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Piperis	Piperis	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Lecidea piperis	Malmidea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Lecidea piperis	Lecidea	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
-dirty	Black pepper	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
-clean	Radix Piperis longi	Piperis	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Radix Piperis longi	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Radix	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Pepper	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+dirty	Black pepper	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Bacteria	NA	doi	HelloWorld!	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
