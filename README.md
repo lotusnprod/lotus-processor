@@ -18,17 +18,6 @@ If you are in a hurry and just want a quick test without reading the whole docum
 
 Please make sure to have [Make](https://www.gnu.org/software/make) installed.
 
-
-#### OSX
-If you observe this type of errors 
-`objc[67570]: +[__NSPlaceholderDate initialize] may have been in progress in another thread when fork() was called.`, you might also need to append the following lines to your bash profile.
-
-- export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
-- export DISABLE_SPRING=TRUE
-
-See https://stackoverflow.com/a/52230415 for details.
-
-
 ### Windows systems requirements
 
 As steps are a bit longer, we made a dedicated [Wiki for Windows users](https://github.com/lotusnprod/lotus-processor/wiki/Windows-users).
