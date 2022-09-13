@@ -454,6 +454,10 @@ structureTable_full <-
   ) %>%
   distinct()
 
+if (mode == "custom") {
+  structureTable_nominal <- data.frame(structureOriginal_nominal = NA)
+}
+
 if (nrow(structureTable_full) == 0) {
   structureTable_full[1, ] <- NA
 }
