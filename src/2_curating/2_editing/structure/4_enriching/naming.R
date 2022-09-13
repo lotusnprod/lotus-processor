@@ -232,7 +232,6 @@ if (mode == "custom") {
     ) %>%
     filter(!is.na(structureValue))
 
-
   structureTranslated <-
     read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
 
