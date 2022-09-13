@@ -173,11 +173,9 @@ dataTitle <-
 
 log_debug("... split")
 dataSplit <-
-  read_delim(
-    file = pathDataInterimTablesTranslatedReferenceSplit,
-    delim = "\t",
-    col_types = cols(.default = "c")
-  ) %>%
+  read_delim(file = pathDataInterimTablesTranslatedReferenceSplit,
+             delim = "\t",
+             col_types = cols(.default = "c")) %>%
   select(
     referenceOriginal = referenceOriginal_split,
     doi_split = referenceTranslatedDoi,
@@ -204,11 +202,9 @@ dataSplit <-
 
 log_debug("... full references")
 dataFull <-
-  read_delim(
-    file = pathDataInterimTablesOriginalReferenceFull,
-    delim = "\t",
-    col_types = cols(.default = "c")
-  )
+  read_delim(file = pathDataInterimTablesOriginalReferenceFull,
+             delim = "\t",
+             col_types = cols(.default = "c"))
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
@@ -218,37 +214,27 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       delim = "\t",
       col_types = cols(.default = "c")
     ) %>%
-    mutate(
-      organismDetected =
-        word(organismDetected, 1)
-    ) %>%
-    distinct(
-      organismType,
-      organismValue,
-      organismDetected
-    )
-
+    mutate(organismDetected =
+             word(organismDetected, 1, 2)) %>%
+    distinct(organismType,
+             organismValue,
+             organismDetected)
+  
   dataCleanedOrganismManipulated_new <-
     read_delim(
       file = pathDataInterimTablesProcessedOrganismFinal,
       delim = "\t",
       col_types = cols(.default = "c")
     ) %>%
-    mutate(
-      organismDetected =
-        word(organismDetected, 1)
-    ) %>%
-    distinct(
-      organismType,
-      organismValue,
-      organismDetected
-    )
-
+    mutate(organismDetected =
+             word(organismDetected, 1, 2)) %>%
+    distinct(organismType,
+             organismValue,
+             organismDetected)
+  
   dataCleanedOrganismManipulated <-
-    bind_rows(
-      dataCleanedOrganismManipulated_old,
-      dataCleanedOrganismManipulated_new
-    ) %>%
+    bind_rows(dataCleanedOrganismManipulated_old,
+              dataCleanedOrganismManipulated_new) %>%
     distinct()
 }
 
@@ -260,15 +246,11 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       delim = "\t",
       col_types = cols(.default = "c")
     ) %>%
-    mutate(
-      organismDetected =
-        word(organismDetected, 1)
-    ) %>%
-    distinct(
-      organismType,
-      organismValue,
-      organismDetected
-    )
+    mutate(organismDetected =
+             word(organismDetected, 1, 2)) %>%
+    distinct(organismType,
+             organismValue,
+             organismDetected)
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
@@ -293,18 +275,14 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
 
 log_debug("joining ...")
 log_debug("... all reference types")
-dataCrossref <- bind_rows(
-  dataDoi,
-  dataOriginal,
-  dataPublishingDetails,
-  dataPubmed,
-  dataSplit,
-  dataTitle
-) %>%
+dataCrossref <- bind_rows(dataDoi,
+                          dataOriginal,
+                          dataPublishingDetails,
+                          dataPubmed,
+                          dataSplit,
+                          dataTitle) %>%
   filter(!is.na(referenceOriginal)) %>%
-  filter(
-    !is.na(referenceTranslatedValue)
-  ) %>%
+  filter(!is.na(referenceTranslatedValue)) %>%
   distinct(
     referenceOriginal,
     referenceTranslatedType,
@@ -319,9 +297,7 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 
 dataCrossref <- dataCrossref %>%
   filter(!is.na(referenceOriginal)) %>%
-  filter(
-    !is.na(referenceTranslatedValue)
-  ) %>%
+  filter(!is.na(referenceTranslatedValue)) %>%
   distinct(
     referenceOriginal,
     referenceTranslatedType,
@@ -339,13 +315,11 @@ log_debug("... with organisms")
 dataTranslated <-
   left_join(dataFull, dataCleanedOrganismManipulated) %>%
   filter(!is.na(referenceValue)) %>%
-  distinct(
-    organismType,
-    organismValue,
-    referenceType,
-    referenceValue,
-    organismDetected
-  ) %>%
+  distinct(organismType,
+           organismValue,
+           referenceType,
+           referenceValue,
+           organismDetected) %>%
   data.table()
 
 log_debug("ensuring directories exist")
