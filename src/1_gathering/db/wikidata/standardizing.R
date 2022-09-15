@@ -24,9 +24,25 @@ data_organism <-
   distinct()
 
 data_structures <-
-  read_delim(
-    file = wikidataLotusExporterDataOutputStructuresPath
-  )
+  read_delim(file = wikidataLotusExporterDataOutputStructuresPath) 
+
+data_structures_1 <- data_structures %>%
+  filter(!grepl(pattern = "\\|", x = inchiKey)) 
+
+data_structures_2 <- data_structures %>%
+  filter(grepl(pattern = "\\|", x = inchiKey)) %>%
+  cSplit(c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
+         sep = "|") %>%
+  pivot_longer(cols = contains("_")) %>%
+  filter(!is.na(value)) %>%
+  cSplit("name",
+         sep = "_") %>%
+  pivot_wider(names_from = "name_1") %>%
+  select(-name_2) %>%
+  distinct()
+
+data_structures <- data_structures_1 %>%
+  bind_rows(data_structures_2)
 
 data_references <-
   read_delim(
