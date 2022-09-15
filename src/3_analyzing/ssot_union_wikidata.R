@@ -100,6 +100,10 @@ data_structures <-
       "structureCleanedInchi" = "inchi"
     )
   ) %>%
+  cSplit("structureCleanedInchiKey",
+         sep = "|",
+         direction = "long"
+  ) %>%
   distinct()
 
 data_references <-
