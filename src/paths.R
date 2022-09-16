@@ -1331,9 +1331,9 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "220701_frozen_metadata.csv.gz"
+pathLastFrozen <- "220916_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "220701_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "220916_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <-
   file.path(
