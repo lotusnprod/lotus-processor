@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val univocityParserVersion = "2.9.1"
-val junitApiVersion = "5.9.0"
+val junitApiVersion = "5.9.1"
 
 group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
