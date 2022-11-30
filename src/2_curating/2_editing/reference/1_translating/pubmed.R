@@ -9,7 +9,6 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(pbmcapply)
 library(readr)
 
 log_debug("... functions")
@@ -29,13 +28,9 @@ dataPubmed <-
 log_debug("submitting to entrez")
 if (nrow(dataPubmed) != 0) {
   reflistPubmed <- invisible(
-    pbmclapply(
+    lapply(
       FUN = getrefPubmed,
-      X = as.character(dataPubmed$referenceOriginal_pubmed),
-      mc.cores = 1,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = as.character(dataPubmed$referenceOriginal_pubmed)
     )
   )
 

@@ -9,14 +9,12 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(pbmcapply)
 library(readr)
 library(stringr)
 
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
-source("r/parallel.R")
 
 log_debug("loading split references lists")
 length <-
@@ -102,13 +100,9 @@ for (i in num) {
   log_debug("submitting to crossRef")
   if (nrow(dataSplit) != 0) {
     reflist <- invisible(
-      pbmclapply(
+      lapply(
         FUN = getref_noLimit,
-        X = dataSplit$referenceOriginal_split,
-        mc.cores = numCores,
-        ignore.interactive = TRUE,
-        mc.style = "txt",
-        mc.substyle = 1
+        X = dataSplit$referenceOriginal_split
       )
     )
     log_debug("treating results, may take a while if full mode")

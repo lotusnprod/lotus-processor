@@ -9,12 +9,10 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(pbmcapply)
 library(readr)
 
 log_debug("... functions")
 source("r/getrefDoi.R")
-source("r/parallel.R")
 
 packageVersion("rcrossref")
 
@@ -29,13 +27,9 @@ dataDoi <-
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 0) {
   reflistDoi <-
-    pbmclapply(
+    lapply(
       FUN = getrefDoi,
-      X = dataDoi$referenceOriginal_doi,
-      mc.cores = numCores,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = dataDoi$referenceOriginal_doi
     )
 
   log_debug("joining results with original list")

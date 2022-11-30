@@ -2,13 +2,10 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 source("r/y_as_na.R")
 
 library(data.table)
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(rvest) # provides read_html
 library(tidyr) # provides pivot_wider
 library(xml2)
@@ -42,13 +39,9 @@ getcarotenoid <- function(X) {
 }
 
 CAROTENOIDDB <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getcarotenoid,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

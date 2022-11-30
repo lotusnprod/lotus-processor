@@ -1,6 +1,5 @@
 # load("../data/interim/temp.Rdata")
 source("r/log_debug.R")
-source("r/parallel.R")
 log_debug("This script adds chemical taxonomy to structures dictionary")
 
 start <- Sys.time()
@@ -12,7 +11,6 @@ source("paths.R")
 log_debug("... libraries")
 library(classyfireR)
 library(dplyr)
-library(pbmcapply)
 library(purrr)
 library(readr)
 
@@ -153,13 +151,9 @@ get_direct_parent <- function(X) {
 }
 
 alternative_parents <- invisible(
-  pbmclapply(
+  lapply(
     FUN = get_alternative_parents,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -182,13 +176,9 @@ if (nrow(alternative_parents != 0)) {
 }
 
 chebi <- invisible(
-  pbmclapply(
+  lapply(
     FUN = get_chebi,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -209,13 +199,9 @@ if (nrow(chebi != 0)) {
 }
 
 direct_parent <- invisible(
-  pbmclapply(
+  lapply(
     FUN = get_direct_parent,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

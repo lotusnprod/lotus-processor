@@ -2,11 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
@@ -33,13 +30,9 @@ getsanc <- function(X) {
 }
 
 SANCDB <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getsanc,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 ) %>%
   as.data.table() %>%

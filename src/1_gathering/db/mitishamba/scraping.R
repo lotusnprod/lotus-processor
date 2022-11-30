@@ -2,11 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
@@ -68,13 +65,9 @@ GetMitishamba <- function(X) {
 }
 
 MITISHAMBA <- invisible(
-  pbmclapply(
+  lapply(
     FUN = GetMitishamba,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
