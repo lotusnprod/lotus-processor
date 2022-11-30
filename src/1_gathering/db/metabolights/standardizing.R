@@ -3,12 +3,9 @@
 # loading paths
 source("paths.R")
 source("r/capitalize.R")
-source("r/parallel.R")
 source("r/standardizing_original.R")
 
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(splitstackshape)
 library(XML)
 library(xml2)
@@ -84,13 +81,9 @@ get_length_additional_fields <- function(X) {
 
 get_length <- function(.function) {
   df1 <- invisible(
-    pbmclapply(
+    lapply(
       FUN = .function,
-      X = X,
-      mc.cores = numCores,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = X
     )
   )
 

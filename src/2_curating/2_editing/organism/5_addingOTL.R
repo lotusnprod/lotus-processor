@@ -11,13 +11,11 @@ log_debug("loading ...")
 log_debug("... libraries")
 library(DBI)
 library(dplyr)
-library(pbmcapply)
 library(purrr)
 library(readr)
 library(rotl)
 library(RSQLite)
 library(tidyr)
-source("r/parallel.R")
 
 canonical_name_colname <- "organismCleaned"
 
@@ -209,13 +207,9 @@ if (is_empty(new_matched_names) == FALSE) {
   }
 
   new_matched_meta_list <-
-    pbmclapply(
+    lapply(
       FUN = get_otl_lineage,
-      X = X,
-      mc.cores = numCores,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = X
     )
 
   new_matched_meta <- bind_rows(new_matched_meta_list)

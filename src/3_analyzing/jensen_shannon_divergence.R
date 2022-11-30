@@ -13,8 +13,6 @@ source("r/get_jsd.R")
 log_debug("... libraries")
 library(data.table)
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(philentropy)
 library(readr)
 library(tidyr)
@@ -125,10 +123,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_1 <- invisible(pbmclapply(
+class_1 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
+  X = X
 )) %>%
   rbindlist()
 
@@ -139,13 +136,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_2 <- invisible(pbmclapply(
+class_2 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -156,13 +149,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_3 <- invisible(pbmclapply(
+class_3 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -184,10 +173,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_1 <- invisible(pbmclapply(
+superclass_1 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10)
+  X = X
 )) %>%
   rbindlist()
 
@@ -198,13 +186,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_2 <- invisible(pbmclapply(
+superclass_2 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -215,13 +199,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_3 <- invisible(pbmclapply(
+superclass_3 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -243,13 +223,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_1 <- invisible(pbmclapply(
+pathway_1 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -260,13 +236,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_2 <- invisible(pbmclapply(
+pathway_2 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 
@@ -277,13 +249,9 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_3 <- invisible(pbmclapply(
+pathway_3 <- invisible(lapply(
   FUN = get_jsd,
-  X = X,
-  mc.cores = min(max(1, parallel::detectCores() - 1), 10),
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = X
 )) %>%
   rbindlist()
 

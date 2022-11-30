@@ -3,12 +3,9 @@
 # loading paths
 source("paths.R")
 source("r/standardizing_original.R")
-source("r/parallel.R")
 
 library(dplyr)
 library(jsonlite)
-library(parallel)
-library(pbmcapply)
 library(splitstackshape)
 library(stringr)
 library(tidyr)
@@ -40,13 +37,9 @@ getid <- function(x) {
   j
 }
 
-id <- pbmclapply(
+id <- lapply(
   FUN = getid,
-  X = x,
-  mc.cores = numCores,
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = x
 )
 
 getsmiles <- function(x) {
@@ -54,13 +47,9 @@ getsmiles <- function(x) {
   j
 }
 
-smiles <- pbmclapply(
+smiles <- lapply(
   FUN = getsmiles,
-  X = x,
-  mc.cores = numCores,
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = x
 )
 
 getorganism <- function(x) {
@@ -68,13 +57,9 @@ getorganism <- function(x) {
   j
 }
 
-organism <- pbmclapply(
+organism <- lapply(
   FUN = getorganism,
-  X = x,
-  mc.cores = numCores,
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = x
 )
 
 getreference <- function(x) {
@@ -82,13 +67,9 @@ getreference <- function(x) {
   j
 }
 
-reference <- pbmclapply(
+reference <- lapply(
   FUN = getreference,
-  X = x,
-  mc.cores = numCores,
-  ignore.interactive = TRUE,
-  mc.style = "txt",
-  mc.substyle = 1
+  X = x
 )
 
 data <- tibble(id, smiles, organism, reference) %>%

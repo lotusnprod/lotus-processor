@@ -2,11 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
@@ -40,13 +37,9 @@ getnpedia <- function(X) {
 }
 
 NPEDIA <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getnpedia,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -87,13 +80,9 @@ getnpedia_2 <- function(X) {
 }
 
 NPEDIA_3 <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getnpedia_2,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

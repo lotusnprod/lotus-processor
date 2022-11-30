@@ -2,11 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(readr)
 library(splitstackshape) # provides cSplit
@@ -100,13 +97,9 @@ GetKnapSackRef <- function(X) {
 }
 
 df1 <- invisible(
-  pbmclapply(
+  lapply(
     FUN = GetKnapSackTable,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -115,13 +108,9 @@ KnapSackTable <- bind_rows(df1[!is.na(df1)])
 X <- KnapSackTable$link
 
 df3 <- invisible(
-  pbmclapply(
+  lapply(
     FUN = GetKnapSackRef,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

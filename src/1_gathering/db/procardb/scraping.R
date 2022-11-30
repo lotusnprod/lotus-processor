@@ -2,11 +2,8 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
@@ -44,13 +41,9 @@ getprocardb <- function(X) {
 }
 
 PROCARDB <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getprocardb,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -93,13 +86,9 @@ getprocardb_bio <- function(X_bio) {
 }
 
 PROCARDB_3 <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getprocardb_bio,
-    X = X_bio,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X_bio
   )
 )
 
@@ -126,13 +115,9 @@ getprocardb_names <- function(X_bio) {
 }
 
 PROCARDB_5 <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getprocardb_names,
-    X = X_bio,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X_bio
   )
 )
 

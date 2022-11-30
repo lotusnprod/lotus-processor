@@ -9,14 +9,12 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(pbmcapply)
 library(readr)
 library(stringr)
 
 log_debug("... functions")
 source("r/getref_noLimit_publishingDetails.R")
 source("r/getAllReferences.R")
-source("r/parallel.R")
 
 log_debug("loading title lists")
 length <-
@@ -101,13 +99,9 @@ for (i in num) {
   log_debug("submitting to crossRef")
   if (nrow(dataPublishingDetails) != 0) {
     reflist <- invisible(
-      pbmclapply(
+      lapply(
         FUN = getref_noLimit_publishingDetails,
-        X = dataPublishingDetails$referenceOriginal_publishingDetails,
-        mc.cores = numCores,
-        ignore.interactive = TRUE,
-        mc.style = "txt",
-        mc.substyle = 1
+        X = dataPublishingDetails$referenceOriginal_publishingDetails
       )
     )
     log_debug("treating results, may take a while if full mode")

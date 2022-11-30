@@ -3,11 +3,8 @@
 # loading paths
 source("paths.R")
 source("r/y_as_na.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
@@ -54,13 +51,9 @@ getswmd <- function(X) {
 }
 
 SWMD <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getswmd,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

@@ -9,7 +9,6 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
-library(pbmcapply)
 library(readr)
 library(splitstackshape)
 library(stringr)
@@ -18,7 +17,6 @@ log_debug("... functions")
 source("r/capitalize.R")
 source("r/name2structure_cactus.R")
 source("r/name2structure_pubchem.R")
-source("r/parallel.R")
 source("r/preparing_name.R")
 source("r/y_as_na.R")
 
@@ -121,17 +119,9 @@ log_debug("translating structures with pubchem")
 dataTranslatedNominal_pubchem <- dataForPubchem %>%
   select(-structureOriginal_nominal) %>%
   mutate(smilesNominal_pubchem = invisible(
-    pbmclapply(
+    lapply(
       FUN = name2smiles_pubchem,
-      X = seq_len(nrow(dataForPubchem)),
-      mc.cores = if (.Platform$OS.type == "unix") {
-        2 ## limit to 5 calls per sec
-      } else {
-        1
-      },
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = seq_len(nrow(dataForPubchem))
     )
   )) %>%
   cSplit("smilesNominal_pubchem",
@@ -186,13 +176,9 @@ log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus %>%
   select(-structureOriginal_nominal) %>%
   mutate(smilesNominal_cactus = invisible(
-    pbmclapply(
+    lapply(
       FUN = name2smiles_cactus,
-      X = seq_len(nrow(dataForCactus)),
-      mc.cores = numCores,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = seq_len(nrow(dataForCactus))
     )
   )) %>%
   mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) %>%

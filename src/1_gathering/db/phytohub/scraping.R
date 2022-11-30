@@ -3,11 +3,8 @@
 # loading paths
 source("paths.R")
 source("r/y_as_na.R")
-source("r/parallel.R")
 
 library(dplyr)
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(stringr) # provides str_pad
@@ -52,13 +49,9 @@ getphytohub <- function(X) {
 }
 
 PHYTOHUB <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getphytohub,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 
@@ -114,13 +107,9 @@ getphytohubref <- function(X) {
 }
 
 PHYTOHUB_REF <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getphytohubref,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

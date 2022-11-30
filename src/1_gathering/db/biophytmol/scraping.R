@@ -2,12 +2,9 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(data.table)
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(rvest) # provides read_html
 library(tidyr) # provides pivot_wider
 library(xml2)
@@ -33,10 +30,9 @@ getbiophyt <- function(X) {
 }
 
 BIOPHYTMOL <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getbiophyt,
-    X = X,
-    mc.cores = numCores,
+    X = X
   )
 )
 

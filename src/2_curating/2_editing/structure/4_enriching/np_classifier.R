@@ -11,14 +11,12 @@ log_debug("... libraries")
 library(data.table)
 library(dplyr)
 library(jsonlite)
-library(pbmcapply)
 library(RCurl)
 library(readr)
 library(tidyr)
 
 log_debug("... functions")
 source("r/getClass.R")
-source("r/parallel.R")
 source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
@@ -73,13 +71,9 @@ if (length(queries) != 0) {
   X <- seq_len(length(queries))
 
   list_df <- invisible(
-    pbmclapply(
+    lapply(
       FUN = getClass,
-      X = X,
-      mc.cores = numCores,
-      ignore.interactive = TRUE,
-      mc.style = "txt",
-      mc.substyle = 1
+      X = X
     )
   )
 

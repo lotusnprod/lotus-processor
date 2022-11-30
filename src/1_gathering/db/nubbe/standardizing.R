@@ -2,7 +2,6 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 source("r/standardizing_original.R")
 
 library(dplyr)

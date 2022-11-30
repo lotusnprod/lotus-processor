@@ -2,12 +2,9 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
 library(data.table)
 library(dplyr)
-library(parallel)
-library(pbmcapply)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
 
@@ -35,14 +32,9 @@ getalkamid <- function(X) {
 }
 
 extracted_elements <- invisible(
-  pbmclapply(
+  lapply(
     FUN = getalkamid,
-    X = X,
-    mc.cores = numCores,
-    ignore.interactive = TRUE,
-    mc.style = "txt",
-    mc.substyle = 1, mc.style = "txt",
-    mc.substyle = 1
+    X = X
   )
 )
 

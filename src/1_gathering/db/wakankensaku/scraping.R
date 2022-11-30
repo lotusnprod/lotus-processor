@@ -4,10 +4,7 @@
 
 # loading paths
 source("paths.R")
-source("r/parallel.R")
 
-library(pbmcapply)
-library(parallel)
 library(data.table)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
