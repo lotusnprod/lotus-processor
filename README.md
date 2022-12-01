@@ -23,15 +23,12 @@ Please make sure to have [Make](https://www.gnu.org/software/make) installed.
 
 As steps are a bit longer, we made a dedicated [Wiki for Windows users](https://github.com/lotusnprod/lotus-processor/wiki/Windows-users).
 
-
-
 ## Test the processing workflow
 ```
 git clone https://github.com/lotusnprod/lotus-processor.git
 cd lotus-processor
 conda env create --file environment.yml
 conda activate lotus_env
-Rscript -e 'remotes::install_github("ropensci/rcrossref")'
 make MODE=test lotus-bloom
 ```
 
