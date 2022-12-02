@@ -22,14 +22,10 @@ X <- 1:63574
 GetKnapSackTable <- function(X) {
   tryCatch(
     {
-      df0 <- rvest::read_html(paste(url, stringr::str_pad(
-        string = X,
-        width = 6,
-        pad = "0"
-      )) |> gsub(
-        pattern = "\\s",
-        replacement = ""
-      )) |>
+      cd_id <- stringr::str_pad(string = X, width = 6, pad = "0")
+      url_id <- paste(url, cd_id) |>
+        gsub(pattern = "\\s", replacement = "")
+      df0 <- rvest::read_html(x = url_id) |>
         rvest::html_element(xpath = "/html/body/div/div[2]/div[2]/table") |>
         xml2::xml_child(2) |>
         xml2::xml_child(1) |>
@@ -99,6 +95,10 @@ GetKnapSackRef <- function(X) {
   )
 }
 
+invisible(lapply(
+  FUN = GetKnapSackTable,
+  X = head(X)
+))
 df1 <- invisible(pbmcapply::pbmclapply(
   FUN = GetKnapSackTable,
   X = X,
@@ -109,9 +109,14 @@ KnapSackTable <- dplyr::bind_rows(df1[!is.na(df1)])
 
 X <- KnapSackTable$link
 
-df3 <- invisible(lapply(
+invisible(lapply(
   FUN = GetKnapSackRef,
-  X = X
+  X = head(X)
+))
+df3 <- invisible(pbmcapply::pbmclapply(
+  FUN = GetKnapSackRef,
+  X = X,
+  mc.cores = parallel::detectCores(logical = TRUE)
 ))
 
 df4 <- bind_rows(df3[!is.na(df3)])
