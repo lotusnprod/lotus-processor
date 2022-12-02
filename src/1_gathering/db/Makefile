@@ -4,11 +4,11 @@ DATABASES_SEMI = foodb-download foodb-download-modified foodb inflamnat-download
 
 DATABASES_CLOSED = creating-directory-db antibase-convert antibase antimarin-convert antimarin dnp
 
-DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert tmmc-download tppt-download
+DATABASES_DOWNLOAD = creating-directory-db afrotryp-download biofacquim-download coconut-download coconut-convert cyanometdb-download dianatdb-download drduke-download metabolights-download mibig-download napralert-download npass-download npatlas-download npcare-download pamdb-download phenolexplorer-download respect-download streptomedb-download streptomedb-convert swmd-download tmmc-download tppt-download
 
 DATABASES_DOWNLOAD_MODIFIED = afrotryp-download-modified datawarrior-download-modified
 
-DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape biofacquim-convert biophytmol carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba nanpdb-scrape nanpdb npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku# nubbe-scrape not done
+DATABASES_SCRAPE = creating-directory-db alkamid-scrape alkamid biophytmol-scrape anpdb-scrape anpdb biofacquim-convert biophytmol carotenoiddb-download carotenoiddb-scrape carotenoiddb knapsack-scrape knapsack mitishamba-scrape mitishamba npedia-scrape npedia phytohub-scrape phytohub procardb-scrape procardb sancdb-scrape sancdb swmd-scrape swmd tmdb-scrape tmdb wakankensaku-scrape wakankensaku # nubbe-scrape not done
 
 .PHONY: ${DATABASES} ${DATABASES_DOWNLOAD} ${DATABASES_DOWNLOAD_MODIFIED} ${DATABASES_SCRAPE}
 .PHONY: gathering-databases-accessible gathering-databases-scrape gathering-databases-convert creating-directory-db
@@ -56,6 +56,14 @@ alkamid-scrape: # ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.gz ${EXT
 # ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidScraped.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/alkamid/alkamidRefScraped.tsv.gz: ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/alkamid/scraping.R
 
+anpdb: ${INTERIM_DB_PATH}/anpdb.tsv.gz
+${INTERIM_DB_PATH}/anpdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/anpdb/anpdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/anpdb/standardizing.R
+	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/anpdb/standardizing.R
+
+anpdb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/anpdb/anpdbScraped.tsv.gz
+${EXTERNAL_DB_SOURCE_PATH}/anpdb/anpdbScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/anpdb/scraping.R
+	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/anpdb/scraping.R
+
 antibase: ${INTERIM_DB_PATH}/antibase.tsv.gz
 ${INTERIM_DB_PATH}/antibase.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/antibase/antibaseConverted.smi ${SRC_GATHERING_DB_PATH}/antibase/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/antibase/standardizing.R
@@ -95,6 +103,10 @@ ${EXTERNAL_DB_SOURCE_PATH}/biophytmol/biophytmolScraped.tsv.gz: # ${SRC_GATHERIN
 carotenoiddb: ${INTERIM_DB_PATH}/carotenoiddb.tsv.gz
 ${INTERIM_DB_PATH}/carotenoiddb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/carotenoiddb/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/carotenoiddb/standardizing.R
+
+carotenoiddb-download: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv
+${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv: ${SRC_GATHERING_DB_PATH}/carotenoiddb/downloading.sh
+	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/carotenoiddb/downloading.sh
 
 carotenoiddb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/carotenoiddbScraped.tsv.gz: # ${EXTERNAL_DB_SOURCE_PATH}/carotenoiddb/Carotenoids_InChI_InChIKey.tsv ${SRC_GATHERING_DB_PATH}/carotenoiddb/scraping.R
@@ -198,14 +210,6 @@ ${INTERIM_DB_PATH}/mitishamba.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/miti
 mitishamba-scrape: ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/mitishamba/mitishambaScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/mitishamba/scraping.R
-
-nanpdb: ${INTERIM_DB_PATH}/nanpdb.tsv.gz
-${INTERIM_DB_PATH}/nanpdb.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
-	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/nanpdb/standardizing.R
-
-nanpdb-scrape: ${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz
-${EXTERNAL_DB_SOURCE_PATH}/nanpdb/nanpdbScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
-	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/nanpdb/scraping.R
 
 napralert: ${INTERIM_DB_PATH}/napralert.tsv.gz
 ${INTERIM_DB_PATH}/napralert.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert_matched_final_unified.tsv.gz ${EXTERNAL_DB_SOURCE_PATH}/napralert/napralert.tsv.gz ${SRC_GATHERING_DB_PATH}/napralert/standardizing.R
@@ -313,6 +317,9 @@ swmd: ${INTERIM_DB_PATH}/swmd.tsv.gz
 ${INTERIM_DB_PATH}/swmd.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz ${SRC_GATHERING_DB_PATH}/swmd/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/swmd/standardizing.R
 
+swmd-download: ## TODO target directory
+	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/swmd/downloading.sh
+	
 swmd-scrape: ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz
 ${EXTERNAL_DB_SOURCE_PATH}/swmd/swmdScraped.tsv.gz: # ${SRC_GATHERING_DB_PATH}/swmd/scraping.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/swmd/scraping.R

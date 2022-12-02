@@ -141,6 +141,12 @@ databases$add(
 )
 
 databases$add(
+  name = "anpdb",
+  sourceFiles = list(tsv = "anpdbScraped.tsv.gz"),
+  interimFile = "anpdb.tsv.gz"
+)
+
+databases$add(
   name = "antibase",
   sourceFiles = list(
     sdf = "ANTIBASE_2012_FORM2.sdf",
@@ -268,7 +274,7 @@ databases$add(
 
 databases$add(
   name = "mibig",
-  sourceFiles = list(data = "mibig_json_2.0.zip"),
+  sourceFiles = list(data = "mibig_json_3.1.zip"),
   interimFile = "mibig.tsv.gz"
 )
 
@@ -276,12 +282,6 @@ databases$add(
   name = "mitishamba",
   sourceFiles = list(tsv = "mitishambaScraped.tsv.gz"),
   interimFile = "mitishamba.tsv.gz"
-)
-
-databases$add(
-  name = "nanpdb",
-  sourceFiles = list(tsv = "nanpdbScraped.tsv.gz"),
-  interimFile = "nanpdb.tsv.gz"
 )
 
 databases$add(

@@ -5,4 +5,6 @@ Reference File > NaturalProducts.dwar. Open the file and export it as .txt.
 
 The obtained .txt is available at:
 
-//TODO
+https://osf.io/3g75a/download
+
+With permission of Thomas Sander

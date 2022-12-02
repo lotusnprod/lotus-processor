@@ -15,7 +15,7 @@ replaced "\n#" with "#"
 replaced ". \n" with ". "
 replaced "\n\n" with " "
 
-### Food:
+### Compound:
 
 replaced ". \n" with ". "
 replaced "\n\n" with " "

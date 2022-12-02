@@ -1,4 +1,4 @@
-# title: "NANPDB cleaneR"
+# title: "ANPDB cleaneR"
 
 # loading paths
 source("paths.R")
@@ -9,19 +9,18 @@ library(splitstackshape)
 library(readr)
 
 # get paths
-database <- databases$get("nanpdb")
+database <- databases$get("anpdb")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-) %>%
-  mutate_all(as.character) %>%
-  mutate(id = row.names(.))
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv)) %>%
+  dplyr::mutate_all(as.character) %>%
+  dplyr::mutate(id = row.names(.))
 
 # selecting
-data_selected <- data_original %>%
-  mutate(name = NA) %>%
-  select(
+data_selected <- data_original |>
+  dplyr::mutate(name = NA) |>
+  dplyr::select(
     uniqueid = id,
     name,
     smiles = SMILES.,
@@ -29,13 +28,13 @@ data_selected <- data_original %>%
     pubchem = PubChem.,
     reference = Reference.information,
     reference_authors = Authors.information
-  ) %>%
-  cSplit("biologicalsource",
+  ) |>
+  splitstackshape::cSplit("biologicalsource",
     " Known use:",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     uniqueid,
     structure_name = name,
     structure_smiles = smiles,
@@ -43,43 +42,43 @@ data_selected <- data_original %>%
     pubchem,
     reference,
     reference_authors
-  ) %>%
-  mutate(organism_clean = gsub(
+  ) |>
+  dplyr::mutate(organism_clean = gsub(
     "Source: ",
     "",
     biologicalsource
-  )) %>%
-  mutate_all(as.character) %>%
-  cSplit("reference",
+  )) |>
+  dplyr::mutate_all(as.character) |>
+  splitstackshape::cSplit("reference",
     "Title: ",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  cSplit("reference_2",
+  ) |>
+  splitstackshape::cSplit("reference_2",
     " PubMed: ",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  cSplit("reference_1",
+  ) |>
+  splitstackshape::cSplit("reference_1",
     " Reference: ",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  cSplit("reference_authors",
+  ) |>
+  splitstackshape::cSplit("reference_authors",
     "Author(s): ",
     stripWhite = FALSE,
     fixed = TRUE
-  ) %>%
-  cSplit("reference_authors_2",
+  ) |>
+  splitstackshape::cSplit("reference_authors_2",
     "Curator(s): ",
     stripWhite = FALSE,
     fixed = TRUE
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_title = reference_2_1,
     reference_authors = reference_authors_2_1,
     reference_publishingDetails = reference_1_2
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

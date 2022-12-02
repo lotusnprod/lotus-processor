@@ -1,4 +1,4 @@
-# title: "NANPDB scrapeR"
+# title: "ANPDB scrapeR"
 
 # loading paths
 source("paths.R")
@@ -10,24 +10,30 @@ library(rvest) # provides read_html
 library(xml2)
 
 # get paths
-database <- databases$get("nanpdb")
+database <- databases$get("anpdb")
 
-url <- "http://african-compounds.org/nanpdb/get_compound_card/"
+url <- "http://african-compounds.org/anpdb/get_compound_card/"
 
-X <- (1:8410)
+X <- 1:8410
 
 getnanp <- function(X) {
   tryCatch(
     {
       cd_id <- X
       url_id <- paste(url, cd_id, "/")
-      url_id <- gsub("\\s", "", url_id)
-      df1 <- read_html(url_id) %>%
-        html_element("body") %>%
-        html_element(xpath = "/html/body/div[3]/div/div[2]") %>%
-        xml_child(2) %>%
-        xml_child(1) %>%
-        html_table()
+      url_id <- gsub(
+        pattern = "\\s",
+        replacement = "",
+        x = url_id
+      )
+      df1 <- rvest::read_html(url_id) |>
+        rvest::html_element("body") |>
+        xml2::xml_child(3) |>
+        xml2::xml_child(1) |>
+        xml2::xml_child(2) |>
+        xml2::xml_child(3) |>
+        xml2::xml_child(1) |>
+        rvest::html_table()
 
       df2 <- t(df1)
 
@@ -58,59 +64,117 @@ getnanp <- function(X) {
   )
 }
 
-NANPDB <- invisible(
-  lapply(
-    FUN = getnanp,
-    X = X
-  )
-)
+NANPDB <- invisible(lapply(
+  FUN = getnanp,
+  X = X
+))
 
 NANPDB_2 <- bind_rows(NANPDB[!is.na(NANPDB)])
 
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("\r\n", " ", x)
+  gsub(
+    pattern = "\r\n",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("\r", " ", x)
+  gsub(
+    pattern = "\r",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("\n", " ", x)
+  gsub(
+    pattern = "\n",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("\t", " ", x)
+  gsub(
+    pattern = "\t",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 NANPDB_2[] <- lapply(NANPDB_2, function(x) {
-  gsub("  ", " ", x)
+  gsub(
+    pattern = "  ",
+    replacement = " ",
+    x = x
+  )
 })
 
 # exporting
