@@ -14,9 +14,9 @@ database <- databases$get("swmd")
 
 ids <-
   gsub(
-    ".mol",
-    "",
-    list.files(path = pathDataExternalDbSourceSwmdDirectory)
+    pattern = ".mol",
+    replacement = "",
+    x = list.files(path = pathDataExternalDbSourceSwmdDirectory)
   )
 
 url <- "http://www.swmd.co.in/search.php?No="
@@ -24,40 +24,45 @@ url <- "http://www.swmd.co.in/search.php?No="
 X <- ids
 
 getswmd <- function(X) {
-  tryCatch({
-    cd_id <- X
-    url_id <- paste0(url, cd_id)
+  tryCatch(
+    {
+      cd_id <- X
+      url_id <- paste0(url, cd_id)
 
-    df0 <- read_html(url_id) %>%
-      html_element(xpath = "body")
+      df0 <- rvest::read_html(url_id, ) |>
+        rvest::html_element(xpath = "body")
 
-    df1 <- df0 %>%
-      html_element(xpath = "div[1]/table[3]") %>%
-      html_table(fill = TRUE) %>%
-      select(1, 2)
+      df1 <- df0 |>
+        rvest::html_element(xpath = "div[1]/table[3]") |>
+        rvest::html_table(fill = TRUE) |>
+        dplyr::select(1, 2)
 
-    df2 <- df0 %>%
-      html_element(xpath = "div[2]/table") %>%
-      html_table(fill = TRUE)
+      df2 <- df0 |>
+        rvest::html_element(xpath = "div[2]/table") |>
+        rvest::html_table(fill = TRUE)
 
-    df3 <- df0 %>%
-      html_element(xpath = "div[4]/div/table") %>%
-      html_table(fill = TRUE)
+      df3 <- df0 |>
+        rvest::html_element(xpath = "div[4]/div/table") |>
+        rvest::html_table(fill = TRUE)
 
-    df4 <- rbind(df1, df2, df3)
+      df4 <- rbind(df1, df2, df3)
 
-    return(df4)
-  })
+      return(df4)
+    },
+    error = function(e) {
+      "Timed out!"
+    }
+  )
 }
 
-SWMD <- invisible(
-  lapply(
-    FUN = getswmd,
-    X = X
-  )
-)
+SWMD <- invisible(lapply(
+  FUN = getswmd,
+  X = X
+))
 
-SWMD_2 <- bind_rows(SWMD)
+SWMD <- SWMD[SWMD != "Timed out!"]
+
+SWMD_2 <- dplyr::bind_rows(SWMD)
 
 SWMD_2$level <- as.numeric(gl(nrow(SWMD_2) / 21, 21))
 
@@ -66,25 +71,40 @@ colnames(SWMD_2) <- c("name", "value", "level")
 SWMD_2$name <- y_as_na(SWMD_2$name, "")
 SWMD_2$value <- y_as_na(SWMD_2$value, "")
 
-SWMD_3 <- SWMD_2 %>%
-  filter(!str_detect(name, "Accession Number\r\n")) %>%
-  filter(!is.na(name)) %>%
-  group_by(level) %>%
-  pivot_wider(
+SWMD_3 <- SWMD_2 |>
+  dplyr::filter(!stringr::str_detect(
+    string = name,
+    pattern = "Accession Number\r\n"
+  )) |>
+  dplyr::filter(!is.na(name)) |>
+  dplyr::group_by(level) |>
+  tidyr::pivot_wider(
     names_from = name,
     values_from = value
-  ) %>%
-  ungroup() %>%
-  select(-level)
+  ) |>
+  dplyr::ungroup() |>
+  dplyr::select(-level)
 
 SWMD_3[] <- lapply(SWMD_3, function(x) {
-  gsub("\r\n", " ", x)
+  gsub(
+    pattern = "\r\n",
+    replacement = " ",
+    x = x
+  )
 })
 SWMD_3[] <- lapply(SWMD_3, function(x) {
-  gsub("\r", " ", x)
+  gsub(
+    pattern = "\r",
+    replacement = " ",
+    x = x
+  )
 })
 SWMD_3[] <- lapply(SWMD_3, function(x) {
-  gsub("\n", " ", x)
+  gsub(
+    pattern = "\n",
+    replacement = " ",
+    x = x
+  )
 })
 
 # exporting

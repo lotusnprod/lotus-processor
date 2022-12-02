@@ -12,20 +12,20 @@ database <- databases$get("dianatdb")
 
 ## files
 data_original <-
-  read_excel(
+  readxl::read_excel(
     path = database$sourceFiles$tsv,
     sheet = 1
-  ) %>%
-  mutate_all(as.character)
+  ) |>
+  dplyr::mutate_all(as.character)
 
 # manipulating
-data_manipulated <- data_original %>%
-  select(
+data_manipulated <- data_original |>
+  dplyr::select(
     structure_name = Name,
     structure_smiles = SMILE,
     organism_clean = Plant,
     reference_original = Citation
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

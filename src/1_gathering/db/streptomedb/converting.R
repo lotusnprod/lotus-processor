@@ -16,7 +16,7 @@ if (!require(ChemmineR)) {
 # get paths
 database <- databases$get("streptomedb")
 
-data <- read.SDFset(database$sourceFiles$sdf)
+data <- ChemmineR::read.SDFset(sdfstr = database$sourceFiles$sdf)
 
 df <- data.frame()
 df[1, 1] <- ""

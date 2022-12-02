@@ -11,14 +11,15 @@ library(readr)
 database <- databases$get("swmd")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t"
-)
+data_original <-
+  readr::read_delim(
+    file = gzfile(description = database$sourceFiles$tsv),
+    delim = "\t"
+  )
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = 1,
     structure_name = 2,
     pubchem = 3,

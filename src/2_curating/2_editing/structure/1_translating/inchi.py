@@ -7,9 +7,8 @@
 import errno
 import gzip
 import os
-import sys
-
 import pandas as pd
+import sys
 from rdkit import Chem
 
 # here we deine input, outputs and other variables as sys arguments
@@ -40,7 +39,7 @@ df = pd.read_csv(
     sep='\t',
     encoding='utf-8',
     on_bad_lines='error'
-    )
+)
 
 if (len(df) == 1) and (df.empty):
     df[inchi_column_header] = 'InChI=1S/Pu'
@@ -56,10 +55,10 @@ df = df[df[inchi_column_header].astype(str).str.startswith('InChI')]
 
 # replacing unwanted characters
 df[inchi_column_header].replace(regex=True,
-                                 inplace=True,
-                                 to_replace=r'"',
-                                 value=r''
-                                 )
+                                inplace=True,
+                                to_replace=r'"',
+                                value=r''
+                                )
 
 ##
 

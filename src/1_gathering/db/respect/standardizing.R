@@ -29,16 +29,16 @@ data_standard <- do.call(
 )
 
 data_transposed <- t(data_standard) %>%
-  cSplit(seq_len(ncol(.)), sep = ":")
+  splitstackshape::cSplit(seq_len(ncol(.)), sep = ":")
 
 # cleaning
 ## function
 RESPECT_clean <- function(dfsel) {
   df_2 <- dfsel %>%
-    select_if(~ sum(!is.na(.)) > 0) %>%
-    mutate_all(as.character) %>%
-    filter_at(vars(-V1_1), any_vars(. == "SP$SAMPLE")) %>%
-    tibble()
+    dplyr::select_if(~ sum(!is.na(.)) > 0) %>%
+    dplyr::mutate_all(as.character) %>%
+    dplyr::filter_at(dplyr::vars(-V1_1), dplyr::any_vars(. == "SP$SAMPLE")) %>%
+    dplyr::tibble()
 
   for (i in seq_len(nrow(df_2))) {
     df_2[i, "biologicalsource_col"] <-
@@ -89,9 +89,9 @@ RESPECT_clean <- function(dfsel) {
   df_3$inchi <- y_as_na(df_3$inchi, "N/A")
   df_3$smiles <- y_as_na(df_3$smiles, "N/A")
 
-  df_4 <- df_3 %>%
-    mutate(reference = paste(V3_2, V4_2, sep = "§")) %>%
-    select(
+  df_4 <- df_3 |>
+    dplyr::mutate(reference = paste(V3_2, V4_2, sep = "§")) |>
+    dplyr::select(
       name = 2,
       biologicalsource,
       inchi,
@@ -99,7 +99,12 @@ RESPECT_clean <- function(dfsel) {
       reference
     )
 
-  df_4$name <- gsub(";.*", "\\1", df_4$name)
+  df_4$name <-
+    gsub(
+      pattern = ";.*",
+      replacement = "\\1",
+      x = df_4$name
+    )
 
   df_4
 }
@@ -107,11 +112,11 @@ RESPECT_clean <- function(dfsel) {
 ## applying
 data_selected <- RESPECT_clean(dfsel = data_transposed)
 
-data_manipulated <- data_selected %>%
-  cSplit("reference", sep = "§") %>%
-  cSplit("reference_1", sep = ";") %>%
-  mutate_all(as.character) %>%
-  mutate(
+data_manipulated <- data_selected |>
+  splitstackshape::cSplit("reference", sep = "§") |>
+  splitstackshape::cSplit("reference_1", sep = ";") |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     reference_publishingDetails = paste(reference_1_2,
       reference_1_3,
       reference_1_4,
@@ -121,16 +126,16 @@ data_manipulated <- data_selected %>%
       string = reference_2,
       pattern = "[0-9]{6,9}"
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_publishingDetails = gsub(
       pattern = ";NA",
       replacement = "",
       x = reference_publishingDetails,
       fixed = TRUE
     )
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structure_name = name,
     organism_clean = biologicalsource,
     structure_inchi = inchi,
@@ -139,7 +144,7 @@ data_manipulated <- data_selected %>%
     reference_publishingDetails,
     reference_authors = reference_1_1,
     reference_journal = reference_1_2
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

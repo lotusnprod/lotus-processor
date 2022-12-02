@@ -13,30 +13,46 @@ library(rvest) # provides read_html
 # get paths
 database <- databases$get("phytohub")
 
-url <- "http://phytohub.eu/entries/PHUB"
+url <- "https://phytohub.eu/entries/PHUB"
 
-X <- (1:1975)
+X <- 1:2527
 
 getphytohub <- function(X) {
   tryCatch(
     {
-      cd_id <- str_pad(X, 6, pad = "0")
+      cd_id <- stringr::str_pad(
+        string = X,
+        width = 6,
+        pad = "0"
+      )
       url_id <- paste(url, cd_id)
-      url_id <- gsub("\\s", "", url_id)
-      sample <- read_html(url_id)
+      url_id <- gsub(
+        pattern = "\\s",
+        replacement = "",
+        x = url_id
+      )
+      sample <- rvest::read_html(url_id)
       scrape1 <-
-        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]") %>%
-        html_text()
+        rvest::html_element(sample,
+          xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]"
+        ) |>
+        rvest::html_text()
       scrape2 <-
-        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[10]/pre/small") %>%
-        html_text()
+        rvest::html_element(sample,
+          xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre"
+        ) |>
+        rvest::html_text()
       scrape3 <-
-        html_element(sample, xpath = "//*[@id=\"fs\"]/div/div/div/table") %>%
-        html_table()
-      scrape4 <- scrape3[[1]]
+        rvest::html_element(sample,
+          xpath = "//*[@id=\"fs\"]/div/div/div/table"
+        ) |>
+        rvest::html_table()
+      scrape4 <- scrape3[, 2]
       scrape5 <-
-        html_element(sample, xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre") %>%
-        html_text()
+        rvest::html_element(sample,
+          xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[12]/pre"
+        ) |>
+        rvest::html_text()
 
       df <- cbind(scrape1, scrape2, scrape5, scrape4)
       final_df <- data.frame(df)
@@ -48,28 +64,26 @@ getphytohub <- function(X) {
   )
 }
 
-PHYTOHUB <- invisible(
-  lapply(
-    FUN = getphytohub,
-    X = X
-  )
-)
+PHYTOHUB <- invisible(lapply(
+  FUN = getphytohub,
+  X = X
+))
 
 PHYTOHUB_2 <- PHYTOHUB[PHYTOHUB != "Timed out!"]
 
-PHYTOHUB_3 <- bind_rows(PHYTOHUB_2)
+PHYTOHUB_3 <- dplyr::bind_rows(PHYTOHUB_2)
 
-PHYTOHUB_4 <- PHYTOHUB_3 %>%
-  select(
+PHYTOHUB_4 <- PHYTOHUB_3 |>
+  dplyr::select(
     name = scrape1,
     inchi = scrape2,
     smiles = scrape5,
-    biologicalsource = Name,
-    name_precursor = Precursor,
-    biologicalsource_precursor = Food.Source
-  ) %>%
-  filter(is.na(name_precursor)) %>%
-  select(
+    biologicalsource = Name
+    # name_precursor = Precursor,
+    # biologicalsource_precursor = Food.Source
+  ) |>
+  # dplyr::filter(is.na(name_precursor)) |>
+  dplyr::select(
     name,
     inchi,
     smiles,
@@ -78,21 +92,25 @@ PHYTOHUB_4 <- PHYTOHUB_3 %>%
 
 url <- "http://phytohub.eu/entry_food_sources/"
 
-X <- (1:2975)
+X <- 1:3257
 
 getphytohubref <- function(X) {
   tryCatch(
     {
       cd_id <- X
       url_id <- paste(url, cd_id)
-      url_id <- gsub("\\s", "", url_id)
-      sample <- read_html(url_id)
+      url_id <- gsub(
+        pattern = "\\s",
+        replacement = "",
+        x = url_id
+      )
+      sample <- rvest::read_html(url_id)
       scrape1 <-
-        html_elements(sample, xpath = "/html/body/main/div/h1") %>%
-        html_text()
+        rvest::html_elements(sample, xpath = "/html/body/main/div/h1") %>%
+        rvest::html_text()
       scrape2 <-
-        html_elements(sample, xpath = "/html/body/main/blockquote") %>%
-        html_text()
+        rvest::html_elements(sample, xpath = "/html/body/main/blockquote") %>%
+        rvest::html_text()
 
       df <- cbind(scrape1, scrape2)
 
@@ -106,29 +124,35 @@ getphytohubref <- function(X) {
   )
 }
 
-PHYTOHUB_REF <- invisible(
-  lapply(
-    FUN = getphytohubref,
-    X = X
-  )
-)
+PHYTOHUB_REF <- invisible(lapply(
+  FUN = getphytohubref,
+  X = X
+))
 
 PHYTOHUB_5 <- PHYTOHUB_REF[PHYTOHUB_REF != "Timed out!"]
 
-PHYTOHUB_6 <- bind_rows(PHYTOHUB_5)
+PHYTOHUB_6 <- dplyr::bind_rows(PHYTOHUB_5)
 
 colnames(PHYTOHUB_6) <- c("pair", "reference")
 
-PHYTOHUB_7 <- PHYTOHUB_6 %>%
-  mutate(joining_col = gsub("Publications for ", "", pair)) %>%
-  mutate(joining_col = gsub("being present in ", "", joining_col))
+PHYTOHUB_7 <- PHYTOHUB_6 |>
+  dplyr::mutate(joining_col = gsub(
+    pattern = "Publications for ",
+    replacement = "",
+    x = pair
+  )) |>
+  dplyr::mutate(joining_col = gsub(
+    pattern = "being present in ",
+    replacement = "",
+    x = joining_col
+  ))
 
-PHYTOHUB_8 <- PHYTOHUB_4 %>%
-  mutate(joining_col = paste(name, biologicalsource, sep = " "))
+PHYTOHUB_8 <- PHYTOHUB_4 |>
+  dplyr::mutate(joining_col = paste(name, biologicalsource, sep = " "))
 
-PHYTOHUB_9 <- full_join(PHYTOHUB_7, PHYTOHUB_8) %>%
-  select(name, inchi, smiles, biologicalsource, reference) %>%
-  filter(!is.na(name) | !is.na(inchi) | !is.na(smiles))
+PHYTOHUB_9 <- dplyr::full_join(PHYTOHUB_7, PHYTOHUB_8) |>
+  dplyr::select(name, inchi, smiles, biologicalsource, reference) |>
+  dplyr::filter(!is.na(name) | !is.na(inchi) | !is.na(smiles))
 
 PHYTOHUB_9$reference <- y_as_na(PHYTOHUB_9$reference, "")
 

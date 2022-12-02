@@ -15,11 +15,11 @@ database <- databases$get("custom")
 args <- commandArgs(trailingOnly = TRUE)
 
 ## file
-data_custom <- read_delim(file = args[1], delim = "\t")
+data_custom <- readr::read_delim(file = args[1], delim = "\t")
 
 ## selecting
-data_selected <- data_custom %>%
-  select(
+data_selected <- data_custom |>
+  dplyr::select(
     structure_name = name,
     structure_smiles = smiles,
     organism_clean = organism,
@@ -37,13 +37,13 @@ data_standard <-
 
 # exporting
 ifelse(
-  test = !dir.exists("../data/interim"),
-  yes = dir.create("../data/interim"),
-  no = paste("../data/interim", "exists")
+  test = !dir.exists(pathDataInterim),
+  yes = dir.create(pathDataInterim),
+  no = paste(pathDataInterim, "exists")
 )
 ifelse(
-  test = !dir.exists("../data/interim/custom"),
-  yes = dir.create("../data/interim/custom"),
-  no = paste("../data/interim/custom", "exists")
+  test = !dir.exists(file.path(pathDataInterim, "custom")),
+  yes = dir.create(file.path(pathDataInterim, "custom")),
+  no = paste(file.path(pathDataInterim, "custom"), "exists")
 )
 database$writeInterim(data_standard)

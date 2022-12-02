@@ -13,15 +13,15 @@ library(stringr)
 database <- databases$get("npcare")
 
 ## files
-data_original <- read_delim(
+data_original <- readr::read_delim(
   file = database$sourceFiles$tsv,
   col_types = cols(.default = "c")
 )
 
 # selecting
-data_selected <- data_original %>%
-  mutate(reference_pubmed = str_extract(string = ref_link, pattern = "[0-9]{6,9}")) %>%
-  select(
+data_selected <- data_original |>
+  dplyr::mutate(reference_pubmed = stringr::str_extract(string = ref_link, pattern = "[0-9]{6,9}")) |>
+  dplyr::select(
     originalid = id,
     structure_name = compounds,
     structure_smiles = canonical_smiles,
@@ -34,7 +34,11 @@ data_selected <- data_original %>%
 
 data_selected[] <-
   lapply(data_selected, function(x) {
-    gsub("\"", " ", x)
+    gsub(
+      pattern = "\"",
+      replacement = " ",
+      x = x
+    )
   })
 
 data_selected <- data_selected %>%

@@ -11,17 +11,16 @@ library(readr)
 database <- databases$get("wakankensaku")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv))
 
 # manipulating
-data_manipulated <- data_original %>%
-  select(
+data_manipulated <- data_original |>
+  dplyr::select(
     structure_name = Compound,
     organism_dirty = `Plant resources`,
     reference_original = Literature
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

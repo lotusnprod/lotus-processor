@@ -12,59 +12,59 @@ library(readr)
 database <- databases$get("drduke")
 
 ## files
-data_common <- read_delim(
+data_common <- readr::read_delim(
   file = database$sourceFiles$tsvCommon,
   delim = ",",
   col_types = cols(.default = "c")
-) %>%
-  select(FNFNUM, CNNAM)
+) |>
+  dplyr::select(FNFNUM, CNNAM)
 
-data_farmacy <- read_delim(
+data_farmacy <- readr::read_delim(
   file = database$sourceFiles$tsvFarmacy,
   delim = ",",
   col_types = cols(.default = "c")
 )
 
-data_fntax <- read_delim(
+data_fntax <- readr::read_delim(
   file = database$sourceFiles$tsvTaxa,
   delim = ",",
   col_types = cols(.default = "c")
-) %>%
-  select(FNFNUM, TAXON)
+) |>
+  dplyr::select(FNFNUM, TAXON)
 
-data_reference <- read_delim(
+data_reference <- readr::read_delim(
   file = database$sourceFiles$tsvReference,
   delim = ",",
   col_types = cols(.default = "c")
-) %>%
-  select(REFERENCE, LONGREF)
+) |>
+  dplyr::select(REFERENCE, LONGREF)
 
 # joining
-data_joined <- left_join(data_farmacy, data_fntax)
+data_joined <- dplyr::left_join(data_farmacy, data_fntax)
 
-data_joined <- left_join(data_joined, data_reference)
+data_joined <- dplyr::left_join(data_joined, data_reference)
 
 # selecting
-data_selected <- data_joined %>%
-  select(
+data_selected <- data_joined |>
+  dplyr::select(
     name = CHEM,
     biologicalsource = TAXON,
     reference_original = LONGREF,
     REFERENCE
   )
 
-data_filtered_1 <- data_selected %>%
-  filter(grepl(pattern = "[0-9]", x = REFERENCE)) %>%
-  mutate(
+data_filtered_1 <- data_selected |>
+  dplyr::filter(grepl(pattern = "[0-9]", x = REFERENCE)) |>
+  dplyr::mutate(
     reference_unsplittable = sub(
       pattern = "[0-9]{4}.",
       replacement = "§",
       x = reference_original
     )
-  ) %>%
-  cSplit("reference_unsplittable", sep = "§") %>%
-  mutate_all(as.character) %>%
-  mutate(
+  ) |>
+  splitstackshape::cSplit("reference_unsplittable", sep = "§") |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     reference_authors = ifelse(
       test = !is.na(reference_unsplittable_2),
       yes = reference_unsplittable_1,
@@ -72,8 +72,8 @@ data_filtered_1 <- data_selected %>%
     ),
     reference_split = reference_unsplittable_2,
     reference_external = NA
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     name,
     biologicalsource,
     reference_authors,
@@ -81,26 +81,26 @@ data_filtered_1 <- data_selected %>%
     reference_external
   )
 
-data_filtered_2 <- data_selected %>%
-  filter(!grepl(pattern = "[0-9]", x = REFERENCE)) %>%
-  mutate(
+data_filtered_2 <- data_selected |>
+  dplyr::filter(!grepl(pattern = "[0-9]", x = REFERENCE)) |>
+  dplyr::mutate(
     reference_external = reference_original,
     reference_authors = NA,
     reference_original = NA
-  ) %>%
-  select(-REFERENCE)
+  ) |>
+  dplyr::select(-REFERENCE)
 
-data_filtered <- rbind(data_filtered_1, data_filtered_2) %>%
-  mutate(reference_external = ifelse(
+data_filtered <- rbind(data_filtered_1, data_filtered_2) |>
+  dplyr::mutate(reference_external = ifelse(
     test = is.na(reference_external),
     yes = "DRDUKE",
     no = reference_external
-  )) %>%
-  select(
+  )) |>
+  dplyr::select(
     organism_clean = biologicalsource,
     structure_name = name,
-    everything()
-  ) %>%
+    dplyr::everything()
+  ) |>
   data.frame()
 
 # standardizing

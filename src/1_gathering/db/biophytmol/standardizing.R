@@ -12,24 +12,29 @@ library(splitstackshape)
 database <- databases$get("biophytmol")
 
 ## files
-data_original <- read_delim(file = gzfile(database$sourceFiles$tsv)) %>%
-  mutate_all(as.character)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv)) |>
+  dplyr::mutate_all(as.character)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid,
     name,
     smiles,
     biologicalsource,
     reference
-  ) %>%
-  cSplit("biologicalsource", "     ") %>%
-  cSplit("reference", "§") %>%
-  cSplit("reference_1", ",", direction = "long") %>%
-  cSplit("reference_2", ".", fixed = TRUE) %>%
-  mutate(reference_authors = gsub("[0-9]\\) ", "", reference_2_01)) %>%
-  select(
+  ) |>
+  splitstackshape::cSplit("biologicalsource", sep = "     ") |>
+  splitstackshape::cSplit("reference", sep = "§") |>
+  splitstackshape::cSplit("reference_1", sep = ",", direction = "long") |>
+  splitstackshape::cSplit("reference_2", sep = ".", fixed = TRUE) |>
+  dplyr::mutate(reference_authors = gsub(
+    pattern = "[0-9]\\) ",
+    replacement = "",
+    x = reference_2_01
+  )) |>
+  dplyr::select(
     uniqueid,
     structure_name = name,
     structure_smiles = smiles,
@@ -38,9 +43,9 @@ data_selected <- data_original %>%
     reference_pubmed = reference_1,
     reference_title = reference_2_02,
     reference_journal = reference_2_03
-  ) %>%
-  mutate_all(as.character) %>%
-  tibble()
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::tibble()
 
 # standardizing
 data_standard <-

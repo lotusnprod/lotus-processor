@@ -14,43 +14,43 @@ library(stringr)
 database <- databases$get("antibase")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv))
 
-data_smiles <- read_delim(
-  file = gzfile(database$sourceFiles$smi)
-)
+data_smiles <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$smi))
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     MOL_ID,
     name = NAME,
     biologicalsource = SOURCE,
     reference_publishingDetails = REFERENCES
-  ) %>%
-  mutate(biologicalsource = gsub(
-    pattern = "\\[+[[:alpha:]]+\\]",
-    replacement = "",
-    x = biologicalsource
-  )) %>%
-  cSplit(
+  ) |>
+  dplyr::mutate(
+    biologicalsource = gsub(
+      pattern = "\\[+[[:alpha:]]+\\]",
+      replacement = "",
+      x = biologicalsource
+    )
+  ) |>
+  splitstackshape::cSplit(
     "biologicalsource",
     sep = ";",
     direction = "long",
     fixed = TRUE
-  ) %>%
-  cSplit(
+  ) |>
+  splitstackshape::cSplit(
     "biologicalsource",
     sep = ",",
     direction = "long",
     fixed = TRUE
   )
 
-data_corrected <- data_selected %>%
-  left_join(data_smiles) %>%
-  select(
+data_corrected <- data_selected |>
+  dplyr::left_join(data_smiles) |>
+  dplyr::select(
     structure_name = name,
     organism_clean = biologicalsource,
     organism_dirty = biologicalsource,

@@ -15,12 +15,12 @@ database <- databases$get("carotenoiddb")
 
 ## files
 data_original <-
-  read_delim(file = gzfile(database$sourceFiles$tsv)) %>%
-  mutate_all(as.character)
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv)) |>
+  dplyr::mutate_all(as.character)
 
 # manipulating
-data_manipulated <- data_original %>%
-  select(
+data_manipulated <- data_original |>
+  dplyr::select(
     uniqueid = Entry,
     name = `Carotenoid Name`,
     inchi = InChI,
@@ -33,76 +33,80 @@ data_manipulated <- data_original %>%
 
 data_manipulated$biologicalsource <-
   gsub(
-    "(\\))([A-Z])",
-    ")SPLIT\\2",
-    data_manipulated$biologicalsource
+    pattern = "(\\))([A-Z])",
+    replacement = ")SPLIT\\2",
+    x = data_manipulated$biologicalsource
   )
 
-data_manipulated <- data_manipulated %>%
-  cSplit(
+data_manipulated <- data_manipulated |>
+  splitstackshape::cSplit(
     "biologicalsource",
     sep = "SPLIT",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  mutate(across(.cols = everything(), as.character))
+  ) |>
+  dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.character))
 
-data_manipulated_long <- data_manipulated %>%
-  gather(8:ncol(.),
+data_manipulated_long <- data_manipulated |>
+  tidyr::gather(8:ncol(data_manipulated),
     key = "n",
     value = "biologicalsource"
-  ) %>%
-  group_by(uniqueid) %>%
-  select(-n) %>%
-  distinct(biologicalsource, .keep_all = TRUE) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(!is.na(biologicalsource) | !n > 1) %>%
-  select(-n) %>%
-  arrange(uniqueid)
+  ) |>
+  dplyr::group_by(uniqueid) |>
+  dplyr::select(-n) |>
+  dplyr::distinct(biologicalsource, .keep_all = TRUE) |>
+  dplyr::add_count() |>
+  dplyr::ungroup() |>
+  dplyr::filter(!is.na(biologicalsource) | !n > 1) |>
+  dplyr::select(-n) |>
+  dplyr::arrange(uniqueid)
 
 data_manipulated_long$reference <-
-  gsub("(Ref.\\d* : )", "SPLIT\\1", data_manipulated_long$reference)
+  gsub(
+    pattern = "(Ref.\\d*: )",
+    replacement = "SPLIT\\1",
+    x = data_manipulated_long$reference
+  )
 
 data_manipulated_long_ref <- data_manipulated_long %>%
-  cSplit("reference",
+  splitstackshape::cSplit("reference",
     sep = "SPLIT",
     stripWhite = FALSE,
     fixed = FALSE
   ) %>%
-  mutate_all(as.character) %>%
-  gather(8:ncol(.),
+  dplyr::mutate_all(as.character) %>%
+  tidyr::gather(8:ncol(.),
     key = "n",
     value = "reference"
   ) %>%
-  select(-n) %>%
+  dplyr::select(-n) %>%
   group_by(uniqueid) %>%
-  distinct(biologicalsource, reference, .keep_all = TRUE) %>%
-  ungroup() %>%
-  group_by(uniqueid, biologicalsource) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(!is.na(reference) | !n > 1) %>%
-  select(-n) %>%
-  arrange(uniqueid)
+  dplyr::distinct(biologicalsource, reference, .keep_all = TRUE) %>%
+  dplyr::ungroup() %>%
+  dplyr::group_by(uniqueid, biologicalsource) %>%
+  dplyr::add_count() %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(!is.na(reference) | !n > 1) %>%
+  dplyr::select(-n) %>%
+  dplyr::arrange(uniqueid)
 
-data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
-  mutate(
-    refnum = str_extract(data_manipulated_long_ref$reference, "(Ref.\\d*)"),
-    biorefnum = str_extract(data_manipulated_long_ref$biologicalsource, "(Ref.\\d*)")
-  ) %>%
-  filter(refnum == biorefnum |
-    is.na(refnum)) %>%
-  mutate(reference_unsplittable = gsub(
+data_manipulated_long_ref_unique <- data_manipulated_long_ref |>
+  dplyr::mutate(
+    refnum = stringr::str_extract(string = data_manipulated_long_ref$reference, pattern = "(Ref.\\d*)"),
+    biorefnum = stringr::str_extract(string = data_manipulated_long_ref$biologicalsource, pattern = "(Ref.\\d*)")
+  ) |>
+  dplyr::filter(refnum == biorefnum |
+    is.na(refnum)) |>
+  dplyr::mutate(reference_unsplittable = gsub(
     pattern = "(Ref.\\d* : )",
     replacement = "",
     x = reference
-  )) %>%
-  mutate(
+  )) |>
+  dplyr::mutate(
     reference_title = gsub(
       pattern = "\"",
       replacement = "",
-      x = str_extract(
+      x = stringr::str_extract(
         string = reference_unsplittable,
         pattern = "\".*\""
       )
@@ -111,7 +115,7 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
       gsub(
         pattern = "\"",
         replacement = "",
-        x = str_extract(
+        x = stringr::str_extract(
           string = reference_unsplittable,
           pattern = "doi:.*"
         )
@@ -120,67 +124,67 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref %>%
       gsub(
         pattern = "\"",
         replacement = "",
-        x = str_extract(
+        x = stringr::str_extract(
           string = reference_unsplittable,
           pattern = "DOI:.*"
         )
       )
-  ) %>%
-  mutate(reference_doi = ifelse(
+  ) |>
+  dplyr::mutate(reference_doi = ifelse(
     test = !is.na(reference_doi_1),
     yes = reference_doi_1,
     no = reference_doi_2
-  )) %>%
-  cSplit("reference_doi", sep = ",") %>%
-  cSplit(
+  )) |>
+  splitstackshape::cSplit("reference_doi", sep = ",") |>
+  splitstackshape::cSplit(
     "biologicalsource",
     sep = " (Ref.",
     fixed = TRUE,
     stripWhite = FALSE
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organism_clean = biologicalsource_1,
-    everything()
-  ) %>%
-  mutate(
+    dplyr::everything()
+  ) |>
+  dplyr::mutate(
     reference_doi = gsub(
       pattern = "doi:",
       replacement = "",
       x = reference_doi_01,
       ignore.case = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_doi = gsub(
       pattern = ". Epub .*",
       replacement = "",
       x = reference_doi,
       ignore.case = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_doi = gsub(
       pattern = " https://doi.org/",
       replacement = "",
       x = reference_doi,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_doi = gsub(
       pattern = "http:/​/​dx.​doi.​org/",
       replacement = "",
       x = reference_doi,
       fixed = TRUE
     )
-  ) %>%
-  mutate(reference_doi = trimws(reference_doi)) %>%
-  data.frame() %>%
-  select(
+  ) |>
+  dplyr::mutate(reference_doi = trimws(reference_doi)) |>
+  data.frame() |>
+  dplyr::select(
     structure_inchi = inchi,
     structure_smiles = smiles,
     structure_name = name,
-    everything()
+    dplyr::everything()
   )
 
 # standardizing

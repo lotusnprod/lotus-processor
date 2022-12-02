@@ -13,35 +13,39 @@ library(splitstackshape)
 database <- databases$get("unpd")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(pathDataExternalDbSourceUnpdIntegrated),
+data_original <- readr::read_delim(
+  file = gzfile(description = pathDataExternalDbSourceUnpdIntegrated),
   col_types = cols(.default = "c")
 )
 
 # selecting
 ## atomizing references
-data_selected <- data_original %>%
-  mutate(reference = gsub("(\\(\\d+).\\s", "|", ref)) %>%
-  cSplit("reference", sep = "|", direction = "long") %>%
-  mutate_all(as.character) %>%
-  cSplit(
+data_selected <- data_original |>
+  dplyr::mutate(reference = gsub(
+    pattern = "(\\(\\d+).\\s",
+    replacement = "|",
+    x = ref
+  )) |>
+  splitstackshape::cSplit("reference", sep = "|", direction = "long") |>
+  dplyr::mutate_all(as.character) |>
+  splitstackshape::cSplit(
     "reference",
     sep = "; ; ; ",
     stripWhite = FALSE,
     fixed = TRUE,
     direction = "long"
-  ) %>%
-  mutate_all(as.character) %>%
-  select(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::select(
     organism_clean = ln_reduced,
     reference_original = reference,
     structure_inchi = InChI,
     structure_smiles = SMILES
-  ) %>%
+  ) |>
   data.frame()
 
-data_manipulated <- data_selected %>%
-  mutate(
+data_manipulated <- data_selected |>
+  dplyr::mutate(
     reference_external = ifelse(
       test = reference_original == "Retrieved from CNPD",
       yes = reference_original,
@@ -53,14 +57,14 @@ data_manipulated <- data_selected %>%
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(reference_original = y_as_na(reference_original, y = "")) %>%
-  mutate(reference_original = ifelse(
+  ) |>
+  dplyr::mutate(reference_original = y_as_na(reference_original, y = "")) %>%
+  dplyr::mutate(reference_original = ifelse(
     test = !grepl(pattern = "[^ -~]", x = reference_original),
     yes = reference_original,
     no = NA
-  )) %>%
-  mutate(
+  )) |>
+  dplyr::mutate(
     reference_split =
       ifelse(
         test = grepl(
@@ -94,7 +98,7 @@ data_manipulated <- data_selected %>%
         )),
         no = NA
       )
-  ) %>%
+  ) |>
   data.frame()
 
 # reverse_words <- function(string) {

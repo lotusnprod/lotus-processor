@@ -14,15 +14,15 @@ database <- databases$get("inflamnat")
 
 ## files
 data_original <-
-  read_excel(
+  readxl::read_excel(
     path = database$sourceFiles$tsv,
     sheet = 1
-  ) %>%
+  ) |>
   mutate_all(as.character)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = Inflam_id,
     structure_name = Name,
     structure_smiles = SMILES,
@@ -31,13 +31,13 @@ data_selected <- data_original %>%
     reference = Ref
   )
 
-data_manipulated <- data_selected %>%
-  mutate(reference_title = gsub(
+data_manipulated <- data_selected |>
+  dplyr::mutate(reference_title = gsub(
     pattern = "\"",
     replacement = "",
-    x = str_extract(string = reference, pattern = "\".*\"")
-  )) %>%
-  mutate(
+    x = stringr::str_extract(string = reference, pattern = "\".*\"")
+  )) |>
+  dplyr::mutate(
     reference_authors_1 = ifelse(
       test = !is.na(reference_title),
       yes = str_extract(string = reference, pattern = "^[^\\(]+"),
@@ -57,14 +57,14 @@ data_manipulated <- data_selected %>%
       yes = NA,
       no = reference
     )
-  ) %>%
-  cSplit("reference_2",
+  ) |>
+  splitstackshape::cSplit("reference_2",
     sep = "\\.,",
     stripWhite = FALSE,
     fixed = FALSE
-  ) %>%
-  mutate_all(as.character) %>%
-  mutate(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     reference_title_2 = ifelse(
       test = !is.na(reference_2_3),
       yes = reference_2_3,
@@ -75,21 +75,27 @@ data_manipulated <- data_selected %>%
       yes = paste(reference_2_1, reference_2_2, sep = ".,"),
       no = reference_2_1
     )
-  ) %>%
-  cSplit("reference_authors_2",
+  ) |>
+  splitstackshape::cSplit("reference_authors_2",
     sep = "et.al.", stripWhite = FALSE
-  ) %>%
-  mutate_all(as.character) %>%
-  mutate(reference_title_2_2 = gsub("\\([0-9]{4}\\)", "", reference_authors_2_2)) %>%
-  mutate(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
+    reference_title_2_2 = gsub(
+      pattern = "\\([0-9]{4}\\)",
+      replacement = "",
+      reference_authors_2_2
+    )
+  ) |>
+  dplyr::mutate(
     reference_authors_3 = reference_authors_2_1,
     reference_original = ifelse(
       test = !is.na(reference_title_2_2),
       yes = reference_title_2_2,
       no = reference_title_2
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_authors = ifelse(
       test = !is.na(reference_authors_2_1),
       yes = reference_authors_2_1,
@@ -105,16 +111,19 @@ data_manipulated <- data_selected %>%
       replacement = "",
       x = reference_original
     )
-  ) %>%
-  mutate(n = str_count(organism_clean, "\\S+")) %>%
-  mutate(organism_dirty = ifelse(test = n > 2,
+  ) |>
+  dplyr::mutate(n = stringr::str_count(
+    string = organism_clean,
+    pattern = "\\S+"
+  )) |>
+  dplyr::mutate(organism_dirty = ifelse(test = n > 2,
     yes = organism_clean,
     no = NA
-  )) %>%
+  )) |>
   mutate(organism_clean = ifelse(test = n == 2,
     yes = organism_clean,
     no = NA
-  )) %>%
+  )) |>
   data.frame()
 
 # standardizing

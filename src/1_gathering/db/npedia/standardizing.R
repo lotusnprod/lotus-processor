@@ -11,14 +11,14 @@ library(readr)
 database <- databases$get("npedia")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
+data_original <- readr::read_delim(
+  file = gzfile(description = database$sourceFiles$tsv),
   col_types = cols(.default = "c")
 )
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = ID,
     structure_name = Name,
     organism_clean = Source,

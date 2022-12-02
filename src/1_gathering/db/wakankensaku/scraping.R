@@ -16,27 +16,39 @@ database <- databases$get("wakankensaku")
 url <-
   "https://wakankensaku.inm.u-toyama.ac.jp/wiki/Persist:CompoundList"
 
-WAKANKENSAKU <- read_html(url) %>%
-  xml_child(2) %>%
-  xml_child(1) %>%
-  xml_child(1) %>%
-  xml_child(1) %>%
-  xml_child(3) %>%
-  xml_child(4) %>%
-  xml_child(1) %>%
-  html_table(fill = TRUE)
+WAKANKENSAKU <- rvest::read_html(url) |>
+  xml2::xml_child(2) |>
+  xml2::xml_child(1) |>
+  xml2::xml_child(1) |>
+  xml2::xml_child(1) |>
+  xml2::xml_child(3) |>
+  xml2::xml_child(4) |>
+  xml2::xml_child(1) |>
+  rvest::html_table(fill = TRUE)
 
 WAKANKENSAKU[] <-
   lapply(WAKANKENSAKU, function(x) {
-    gsub("\r\n", " ", x)
+    gsub(
+      pattern = "\r\n",
+      replacement = " ",
+      x = x
+    )
   })
 WAKANKENSAKU[] <-
   lapply(WAKANKENSAKU, function(x) {
-    gsub("\r", " ", x)
+    gsub(
+      pattern = "\r",
+      replacement = " ",
+      x = x
+    )
   })
 WAKANKENSAKU[] <-
   lapply(WAKANKENSAKU, function(x) {
-    gsub("\n", " ", x)
+    gsub(
+      pattern = "\n",
+      replacement = " ",
+      x = x
+    )
   })
 
 # exporting

@@ -11,19 +11,20 @@ library(readr)
 database <- databases$get("dnp")
 
 ## files
-data_original <- read_delim(file = database$sourceFiles$tsv) %>%
-  mutate_all(as.character)
+data_original <-
+  readr::read_delim(file = database$sourceFiles$tsv) |>
+  dplyr::mutate_all(as.character)
 
 ## selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = CRC_Number,
     structure_name = Molecule_Name,
     structure_inchi = MolfileName,
     organism_dirty = Biological_Source
-  ) %>%
-  distinct(uniqueid, .keep_all = TRUE) %>%
-  mutate(reference_external = "DNP") %>%
+  ) |>
+  dplyr::distinct(uniqueid, .keep_all = TRUE) |>
+  dplyr::mutate(reference_external = "DNP") |>
   data.frame()
 
 ## standardizing

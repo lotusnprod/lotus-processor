@@ -3,10 +3,9 @@
 
 
 import glob
+import pandas as pd
 import re
 import zipfile
-
-import pandas as pd
 from lxml import etree
 
 problem_files = []
