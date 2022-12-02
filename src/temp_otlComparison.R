@@ -18,16 +18,16 @@ library(RSQLite)
 canonical_name_colname <- "organismCleaned"
 
 fullOrganisms <-
-  read_delim(file = pathDataInterimDictionariesOrganismDictionary)
+  readr::read_delim(file = pathDataInterimDictionariesOrganismDictionary)
 
-drv <- SQLite()
+drv <- RSQLite::SQLite()
 
-db <- dbConnect(
+db <- DBI::dbConnect(
   drv = drv,
   dbname = pathDataInterimDictionariesOrganismDictionaryOTL
 )
 
-otlVersion <- dbGetQuery(
+otlVersion <- DBI::dbGetQuery(
   conn = db,
   statement = "SELECT
   taxa_names.canonical_name AS organismCleaned,
@@ -35,22 +35,22 @@ otlVersion <- dbGetQuery(
   FROM taxa_names
   LEFT JOIN taxa_otl
   ON taxa_names.search_string = taxa_otl.search_string"
-) %>%
-  filter(organismCleaned %in% fullOrganisms$organismCleaned) %>%
-  filter(!is.na(organismCleanedId)) %>%
-  distinct()
+) |>
+  dplyr::filter(organismCleaned %in% fullOrganisms$organismCleaned) |>
+  dplyr::filter(!is.na(organismCleanedId)) |>
+  dplyr::distinct()
 
 log_debug(nrow(otlVersion), "for rotl API version")
 
-gnverifyVersion <- fullOrganisms %>%
-  filter(organismCleaned_dbTaxo == "Open Tree of Life") %>%
-  filter(!is.na(organismCleaned_id)) %>%
-  distinct(organismCleaned, organismCleaned_id) %>%
-  mutate(organismCleanedId = as.integer(organismCleaned_id))
+gnverifyVersion <- fullOrganisms |>
+  dplyr::filter(organismCleaned_dbTaxo == "Open Tree of Life") |>
+  dplyr::filter(!is.na(organismCleaned_id)) |>
+  dplyr::distinct(organismCleaned, organismCleaned_id) |>
+  dplyr::mutate(organismCleanedId = as.integer(organismCleaned_id))
 
 log_debug(nrow(gnverifyVersion), "for gnverify version")
 
-diff <- anti_join(otlVersion, gnverifyVersion)
+diff <- dplyr::anti_join(otlVersion, gnverifyVersion)
 
 log_debug("so it seems that rotl version has \n", nrow(diff), "more results")
 
@@ -58,29 +58,30 @@ log_debug("but then if we have a closer look and only go for distinct IDs...")
 log_debug("just an example to show what is meant:")
 log_debug("applying filter(organismCleanedId == \"65272\") to both tables")
 
-otlStrepto <- otlVersion %>%
+otlStrepto <- otlVersion |>
   filter(organismCleanedId == "65272")
 
 log_debug("rotl table")
 otlStrepto
 
-gnverifyStrepto <- gnverifyVersion %>%
-  filter(organismCleanedId == "65272")
+gnverifyStrepto <- gnverifyVersion |>
+  dplyr::filter(organismCleanedId == "65272")
 
 log_debug("gnverify table")
 gnverifyStrepto
 
 log_debug("so when keeping only one name per ID...")
 
-otlVersionDistinct <- otlVersion %>%
-  left_join(., gnverifyVersion %>% mutate(isInBoth = "Y")) %>%
+otlVersionDistinct <- otlVersion |>
+  dplyr::left_join(gnverifyVersion |>
+    dplyr::mutate(isInBoth = "Y")) |>
   ## to keep the same synonym for both
-  arrange(isInBoth) %>%
-  distinct(organismCleanedId, .keep_all = TRUE)
+  dplyr::arrange(isInBoth) |>
+  dplyr::distinct(organismCleanedId, .keep_all = TRUE)
 log_debug(nrow(otlVersionDistinct), "distinct IDs for rotl API version")
 
-gnverifyVersionDistinct <- gnverifyVersion %>%
-  distinct(organismCleanedId, .keep_all = TRUE)
+gnverifyVersionDistinct <- gnverifyVersion |>
+  dplyr::distinct(organismCleanedId, .keep_all = TRUE)
 
 log_debug(
   nrow(gnverifyVersionDistinct),
@@ -88,10 +89,10 @@ log_debug(
 )
 
 diffDistinct_1 <-
-  anti_join(otlVersionDistinct, gnverifyVersionDistinct)
+  dplyr::anti_join(otlVersionDistinct, gnverifyVersionDistinct)
 
 diffDistinct_2 <-
-  anti_join(gnverifyVersionDistinct, otlVersionDistinct)
+  dplyr::anti_join(gnverifyVersionDistinct, otlVersionDistinct)
 
 log_debug(
   "so it seems that rotl version has \n",

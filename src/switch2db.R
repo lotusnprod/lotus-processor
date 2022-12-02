@@ -30,7 +30,7 @@ log_debug("... connecting to the database")
 #   host = "localhost",
 # )
 
-db <- dbConnect(
+db <- DBI::dbConnect(
   drv = drv,
   dbname = dbname,
   user = user,
@@ -40,28 +40,28 @@ db <- dbConnect(
 )
 
 log_debug("... listing objects")
-dbListObjects(db)
+DBI::dbListObjects(db)
 
 log_debug("... loading files ...")
 
-dbTypes <- read_delim(
+dbTypes <- readr::read_delim(
   file = "../docs/dataset.csv",
   delim = ","
-) %>%
-  select(
+) |>
+  dplyr::select(
     database,
     type
   )
 
 structureDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesStructureDictionary,
     # n_max = 1000,
     col_types = "c"
   )
 
 organismDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesOrganismDictionary,
     # n_max = 1000,
     col_types = "c"
@@ -69,64 +69,64 @@ organismDictionary <-
 
 ## temp path
 ott_taxonomy <-
-  read_delim(
+  readr::read_delim(
     file = "../data/external/taxonomySource/organism/taxonomy.tsv",
     # n_max = 1000,
     col_types = "c"
   )
 
 referenceOrganismDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesReferenceOrganismDictionary,
     # n_max = 1000,
     col_types = cols(referenceCleanedPmid = "c")
   )
 
 structureMetadata <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
     # n_max = 1000,
     col_types = "c"
   )
 
 organismMetadata <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesOrganismMetadata,
     # n_max = 1000,
     col_types = "c"
   )
 
 inhouseDbMinimal <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesCuratedTable,
     # n_max = 1000,
     col_types = "c"
   )
 
 manuallyValidated <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/manuallyValidated.tsv.gz",
     col_select = any_of(colnames(inhouseDbMinimal))
-  ) %>%
-  mutate(curationTypeId_1 = 1)
+  ) |>
+  dplyr::mutate(curationTypeId_1 = 1)
 
 automaticallyValidated <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesAnalyzedPlatinum,
     # n_max = 1000,
     col_select = colnames(inhouseDbMinimal)
-  ) %>%
-  mutate(curationTypeId_2 = 2)
+  ) |>
+  dplyr::mutate(curationTypeId_2 = 2)
 
 manuallyRemoved <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/manuallyRemoved.tsv.gz",
     col_select = any_of(colnames(inhouseDbMinimal))
-  ) %>%
-  mutate(curationTypeId_3 = 3)
+  ) |>
+  dplyr::mutate(curationTypeId_3 = 3)
 
 originalTable <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalTable,
     # n_max = 1000,
     col_types = "c"
@@ -145,32 +145,32 @@ curation_type <-
   )
 
 structureOld <-
-  left_join(
+  dplyr::left_join(
     structureDictionary,
     structureMetadata
   )
 
 organismOld <-
-  left_join(
+  dplyr::left_join(
     organismDictionary,
     organismMetadata
   )
 
-database_type <- dbTypes %>%
-  distinct(type)
+database_type <- dbTypes |>
+  dplyr::distinct(type)
 
-database_type_old <- dbGetQuery(
+database_type_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_database_type.sql")
 )
 
-database_type <- database_type_old %>%
-  full_join(., database_type) %>%
-  distinct() %>%
-  anti_join(., database_type_old)
+database_type <- database_type_old |>
+  dplyr::full_join(database_type) |>
+  dplyr::distinct() |>
+  dplyr::anti_join(database_type_old)
 
-database_type <- database_type %>%
-  select(name = type)
+database_type <- database_type |>
+  dplyr::select(name = type)
 
 log_debug(
   "writing",
@@ -178,7 +178,7 @@ log_debug(
   "new rows to 'database_type' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "database_type",
   value = database_type,
@@ -187,29 +187,30 @@ dbWriteTable(
   row.names = FALSE
 )
 
-database_source <- originalTable %>%
-  distinct(database) %>%
-  left_join(., dbTypes)
+database_source <- originalTable |>
+  dplyr::distinct(database) |>
+  dplyr::left_join(dbTypes)
 
-database_type <- dbGetQuery(
+database_type <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_database_type.sql")
 )
 
-database_source <- database_source %>%
-  left_join(., database_type) %>%
-  select(
+database_source <- database_source |>
+  dplyr::left_join(database_type) |>
+  dplyr::select(
     name = database,
     database_type_id
   )
 
-database_source_old <- dbGetQuery(
+database_source_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_database_source.sql")
 )
-database_source <- database_source %>%
-  anti_join(., database_source_old %>% select(name)) %>%
-  distinct()
+database_source <- database_source |>
+  dplyr::anti_join(database_source_old |>
+    dplyr::select(name)) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -217,7 +218,7 @@ log_debug(
   "new rows to 'database_source' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "database_source",
   value = database_source,
@@ -226,22 +227,22 @@ dbWriteTable(
   row.names = FALSE
 )
 
-organism_type <- originalTable %>%
-  distinct(organismType) %>%
-  select(organism_type = organismType)
+organism_type <- originalTable |>
+  dplyr::distinct(organismType) |>
+  dplyr::select(organism_type = organismType)
 
-organism_type_old <- dbGetQuery(
+organism_type_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_type.sql")
 )
-organism_type <- organism_type_old %>%
-  full_join(., organism_type) %>%
-  distinct() %>%
-  anti_join(., organism_type_old)
+organism_type <- organism_type_old |>
+  dplyr::full_join(organism_type) |>
+  dplyr::distinct() |>
+  dplyr::anti_join(organism_type_old)
 
-organism_type <- organism_type %>%
-  select(name = organism_type) %>%
-  distinct()
+organism_type <- organism_type |>
+  dplyr::select(name = organism_type) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -249,7 +250,7 @@ log_debug(
   "new rows to 'organism_type' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_type",
   value = organism_type,
@@ -258,30 +259,30 @@ dbWriteTable(
   row.names = FALSE
 )
 
-organism_type <- dbGetQuery(
+organism_type <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_type.sql")
 )
 
-organism_source <- originalTable %>%
-  distinct(organismType, organismValue) %>%
-  select(
+organism_source <- originalTable |>
+  dplyr::distinct(organismType, organismValue) |>
+  dplyr::select(
     organism_type = organismType,
     organism_value = organismValue
-  ) %>%
-  left_join(., organism_type) %>%
-  select(
+  ) |>
+  dplyr::left_join(organism_type) |>
+  dplyr::select(
     value = organism_value,
     organism_type_id
   )
 
-organism_source_old <- dbGetQuery(
+organism_source_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_source.sql")
 )
-organism_source <- organism_source %>%
-  anti_join(., organism_source_old) %>%
-  distinct()
+organism_source <- organism_source |>
+  dplyr::anti_join(organism_source_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -289,7 +290,7 @@ log_debug(
   "new rows to 'organism_source' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_source",
   value = organism_source,
@@ -298,22 +299,22 @@ dbWriteTable(
   row.names = FALSE
 )
 
-structure_type <- originalTable %>%
-  distinct(structureType) %>%
-  select(structure_type = structureType)
+structure_type <- originalTable |>
+  dplyr::distinct(structureType) |>
+  dplyr::select(structure_type = structureType)
 
-structure_type_old <- dbGetQuery(
+structure_type_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_type.sql")
 )
-structure_type <- structure_type_old %>%
-  full_join(., structure_type) %>%
-  distinct() %>%
-  anti_join(., structure_type_old)
+structure_type <- structure_type_old |>
+  dplyr::full_join(structure_type) |>
+  dplyr::distinct() |>
+  dplyr::anti_join(structure_type_old)
 
-structure_type <- structure_type %>%
-  select(name = structure_type) %>%
-  distinct()
+structure_type <- structure_type |>
+  dplyr::select(name = structure_type) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -321,7 +322,7 @@ log_debug(
   "new rows to 'structure_type' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "structure_type",
   value = structure_type,
@@ -330,30 +331,30 @@ dbWriteTable(
   row.names = FALSE
 )
 
-structure_type <- dbGetQuery(
+structure_type <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_type.sql")
 )
 
-structure_source <- originalTable %>%
-  distinct(structureType, structureValue) %>%
-  select(
+structure_source <- originalTable |>
+  dplyr::distinct(structureType, structureValue) |>
+  dplyr::select(
     structure_type = structureType,
     structure_value = structureValue
-  ) %>%
-  left_join(., structure_type) %>%
-  select(
+  ) |>
+  dplyr::left_join(structure_type) |>
+  dplyr::select(
     value = structure_value,
     structure_type_id
   )
 
-structure_source_old <- dbGetQuery(
+structure_source_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_source.sql")
 )
-structure_source <- structure_source %>%
-  anti_join(., structure_source_old) %>%
-  distinct()
+structure_source <- structure_source |>
+  dplyr::anti_join(structure_source_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -361,7 +362,7 @@ log_debug(
   "new rows to 'structure_source' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "structure_source",
   value = structure_source,
@@ -370,22 +371,22 @@ dbWriteTable(
   row.names = FALSE
 )
 
-reference_type <- originalTable %>%
-  distinct(referenceType) %>%
-  select(reference_type = referenceType)
+reference_type <- originalTable |>
+  dplyr::distinct(referenceType) |>
+  dplyr::select(reference_type = referenceType)
 
-reference_type_old <- dbGetQuery(
+reference_type_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_type.sql")
 )
-reference_type <- reference_type_old %>%
-  full_join(., reference_type) %>%
-  distinct() %>%
-  anti_join(., reference_type_old)
+reference_type <- reference_type_old |>
+  dplyr::full_join(reference_type) |>
+  dplyr::distinct() |>
+  dplyr::anti_join(reference_type_old)
 
-reference_type <- reference_type %>%
-  select(name = reference_type) %>%
-  distinct()
+reference_type <- reference_type |>
+  dplyr::select(name = reference_type) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -393,7 +394,7 @@ log_debug(
   "new rows to 'reference_type' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "reference_type",
   value = reference_type,
@@ -402,30 +403,30 @@ dbWriteTable(
   row.names = FALSE
 )
 
-reference_type <- dbGetQuery(
+reference_type <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_type.sql")
 )
 
-reference_source <- originalTable %>%
-  distinct(referenceType, referenceValue) %>%
-  select(
+reference_source <- originalTable |>
+  dplyr::distinct(referenceType, referenceValue) |>
+  dplyr::select(
     reference_type = referenceType,
     reference_value = referenceValue
-  ) %>%
-  left_join(., reference_type) %>%
-  select(
+  ) |>
+  dplyr::left_join(reference_type) |>
+  dplyr::select(
     value = reference_value,
     reference_type_id
   )
 
-reference_source_old <- dbGetQuery(
+reference_source_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_source.sql")
 )
-reference_source <- reference_source %>%
-  anti_join(., reference_source_old) %>%
-  distinct()
+reference_source <- reference_source |>
+  dplyr::anti_join(reference_source_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -433,7 +434,7 @@ log_debug(
   "new rows to 'reference_source' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "reference_source",
   value = reference_source,
@@ -442,79 +443,79 @@ dbWriteTable(
   row.names = FALSE
 )
 
-database_source <- dbGetQuery(
+database_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_database_source.sql")
 )
 
-organism_source <- dbGetQuery(
+organism_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_source.sql")
 )
 
-structure_source <- dbGetQuery(
+structure_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_source.sql")
 )
 
-reference_source <- dbGetQuery(
+reference_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_source.sql")
 )
 
-data_source <- originalTable %>%
+data_source <- originalTable |>
+  dplyr::left_join(
+    database_source |>
+      dplyr::select(
+        database = name,
+        databaseSourceId = id,
+        dplyr::everything()
+      )
+  ) |>
   left_join(
-    .,
-    database_source %>% select(
-      database = name,
-      databaseSourceId = id,
-      everything()
-    )
-  ) %>%
+    organism_source |>
+      dplyr::select(
+        organismValue = value,
+        organismSourceId = id,
+        dplyr::everything()
+      )
+  ) |>
   left_join(
-    .,
-    organism_source %>% select(
-      organismValue = value,
-      organismSourceId = id,
-      everything()
-    )
-  ) %>%
+    structure_source |>
+      dplyr::select(
+        structureValue = value,
+        structureSourceId = id,
+        dplyr::everything()
+      )
+  ) |>
   left_join(
-    .,
-    structure_source %>% select(
-      structureValue = value,
-      structureSourceId = id,
-      everything()
-    )
-  ) %>%
-  left_join(
-    .,
-    reference_source %>% select(
-      referenceValue = value,
-      referenceSourceId = id,
-      everything()
-    )
-  ) %>%
-  distinct(
+    reference_source |>
+      dplyr::select(
+        referenceValue = value,
+        referenceSourceId = id,
+        dplyr::everything()
+      )
+  ) |>
+  dplyr::distinct(
     databaseSourceId,
     organismSourceId,
     structureSourceId,
     referenceSourceId
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     database_source_id = databaseSourceId,
     organism_source_id = organismSourceId,
     structure_source_id = structureSourceId,
     reference_source_id = referenceSourceId
   )
 
-data_source_old <- dbGetQuery(
+data_source_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_source_full.sql")
 )
-data_source <- data_source %>%
-  anti_join(., data_source_old) %>%
-  distinct()
+data_source <- data_source |>
+  dplyr::anti_join(data_source_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -522,7 +523,7 @@ log_debug(
   "new rows to 'data_source' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "data_source",
   value = data_source,
@@ -531,32 +532,32 @@ dbWriteTable(
   row.names = FALSE
 )
 
-data_source <- dbGetQuery(
+data_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_source.sql")
 )
 
-organism_detected <- organismOld %>%
-  distinct(
+organism_detected <- organismOld |>
+  dplyr::distinct(
     organismDetected,
     organismCleaned
-  ) %>%
-  mutate(id = row_number()) %>%
-  select(id,
+  ) |>
+  dplyr::mutate(id = row_number()) |>
+  dplyr::select(id,
     organism_detected = organismDetected,
     organism_cleaned = organismCleaned
   )
 
-organism_cleaned <- organismOld %>%
-  select(name = organismCleaned)
+organism_cleaned <- organismOld |>
+  dplyr::select(name = organismCleaned)
 
-organism_cleaned_old <- dbGetQuery(
+organism_cleaned_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_cleaned.sql")
 )
-organism_cleaned <- organism_cleaned %>%
-  anti_join(., organism_cleaned_old) %>%
-  distinct()
+organism_cleaned <- organism_cleaned |>
+  dplyr::anti_join(organism_cleaned_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -564,7 +565,7 @@ log_debug(
   "new rows to 'organism_cleaned' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_cleaned",
   value = organism_cleaned,
@@ -573,35 +574,34 @@ dbWriteTable(
   row.names = FALSE
 )
 
-organism_cleaned <- dbGetQuery(
+organism_cleaned <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_cleaned.sql")
 )
 
-organism_synonym <- organism_detected %>%
-  left_join(.,
-    organism_cleaned,
+organism_synonym <- organism_detected |>
+  dplyr::left_join(organism_cleaned,
     by = c("organism_cleaned" = "name")
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     id = id.x,
     name = organism_detected,
     organism_cleaned_id = id.y
   )
 
-organism_synonym <- organism_synonym %>%
-  select(
+organism_synonym <- organism_synonym |>
+  dplyr::select(
     name,
     organism_cleaned_id
   )
 
-organism_synonym_old <- dbGetQuery(
+organism_synonym_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_synonym.sql")
 )
-organism_synonym <- organism_synonym %>%
-  anti_join(., organism_synonym_old) %>%
-  distinct()
+organism_synonym <- organism_synonym |>
+  dplyr::anti_join(organism_synonym_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -609,7 +609,7 @@ log_debug(
   "new rows to 'organism_synonym' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_synonym",
   value = organism_synonym,
@@ -618,17 +618,17 @@ dbWriteTable(
   row.names = FALSE
 )
 
-organism_database <- organismOld %>%
-  distinct(organismCleaned_dbTaxo) %>%
-  select(name = organismCleaned_dbTaxo)
+organism_database <- organismOld |>
+  dplyr::distinct(organismCleaned_dbTaxo) |>
+  dplyr::select(name = organismCleaned_dbTaxo)
 
-organism_database_old <- dbGetQuery(
+organism_database_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_database.sql")
 )
-organism_database <- organism_database %>%
-  anti_join(., organism_database_old) %>%
-  distinct()
+organism_database <- organism_database |>
+  dplyr::anti_join(organism_database_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -636,7 +636,7 @@ log_debug(
   "new rows to 'organism_database' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_database",
   value = organism_database,
@@ -645,50 +645,48 @@ dbWriteTable(
   row.names = FALSE
 )
 
-organism_database <- dbGetQuery(
+organism_database <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_database.sql")
 )
 
-organism_information <- organismOld %>%
-  left_join(.,
-    organism_cleaned,
+organism_information <- organismOld |>
+  dplyr::left_join(organism_cleaned,
     by = c("organismCleaned" = "name")
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organism_cleaned_id = id,
-    everything()
-  ) %>%
-  left_join(.,
-    organism_database,
+    dplyr::everything()
+  ) |>
+  dplyr::left_join(organism_database,
     by = c("organismCleaned_dbTaxo" = "name")
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organism_database_id = id,
-    everything()
-  ) %>%
-  distinct(organism_cleaned_id,
+    dplyr::everything()
+  ) |>
+  dplyr::distinct(organism_cleaned_id,
     organism_database_id,
     .keep_all = TRUE
   )
 
-organism_information_old <- dbGetQuery(
+organism_information_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_organism_information.sql")
 )
-organism_information <- organism_information %>%
-  anti_join(organism_information_old)
+organism_information <- organism_information |>
+  dplyr::anti_join(organism_information_old)
 
-organism_information <- organism_information %>%
-  select(
+organism_information <- organism_information |>
+  dplyr::select(
     organism_cleaned_id,
     organism_database_id,
     taxon_id = organismCleaned_id,
     ranks = organismCleaned_dbTaxoTaxonRanks,
     taxonomy = organismCleaned_dbTaxoTaxonomy,
     rank = organismCleaned_rank
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -696,7 +694,7 @@ log_debug(
   "new rows to 'organism_information' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "organism_information",
   value = organism_information,
@@ -705,29 +703,29 @@ dbWriteTable(
   row.names = FALSE
 )
 
-reference_cleaned <- referenceOrganismDictionary %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
-  distinct(
+reference_cleaned <- referenceOrganismDictionary |>
+  dplyr::filter(!is.na(referenceCleanedTitle)) |>
+  dplyr::distinct(
     referenceCleanedDoi,
     referenceCleanedPmcid,
     referenceCleanedPmid,
     referenceCleanedTitle
-  ) %>%
-  left_join(., referenceOrganismDictionary) %>%
-  select(
+  ) |>
+  dplyr::left_join(referenceOrganismDictionary) |>
+  dplyr::select(
     doi = referenceCleanedDoi,
     pmcid = referenceCleanedPmcid,
     pmid = referenceCleanedPmid,
     title = referenceCleanedTitle
   )
 
-reference_cleaned_old <- dbGetQuery(
+reference_cleaned_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_cleaned.sql")
 )
-reference_cleaned <- reference_cleaned %>%
-  anti_join(., reference_cleaned_old) %>%
-  distinct()
+reference_cleaned <- reference_cleaned |>
+  dplyr::anti_join(reference_cleaned_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -735,7 +733,7 @@ log_debug(
   "new rows to 'reference_cleaned' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "reference_cleaned",
   value = reference_cleaned,
@@ -744,34 +742,34 @@ dbWriteTable(
   row.names = FALSE
 )
 
-reference_cleaned <- dbGetQuery(
+reference_cleaned <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_reference_cleaned.sql")
 )
 
-structure_cleaned <- structureOld %>%
-  distinct(
+structure_cleaned <- structureOld |>
+  dplyr::distinct(
     structureCleanedSmiles,
     structureCleanedInchi,
     structureCleanedInchikey
-  ) %>%
-  left_join(
-    .,
-    structureOld %>% distinct(
-      structureCleanedSmiles,
-      structureCleanedInchi,
-      structureCleanedInchikey,
-      .keep_all = TRUE
-    )
-  ) %>%
-  distinct() %>%
-  mutate(
+  ) |>
+  dplyr::left_join(
+    structureOld |>
+      dplyr::distinct(
+        structureCleanedSmiles,
+        structureCleanedInchi,
+        structureCleanedInchikey,
+        .keep_all = TRUE
+      )
+  ) |>
+  dplyr::distinct() |>
+  dplyr::mutate(
     stereocentersTotal = as.integer(structureCleaned_stereocenters_total),
     stereocentersUnspecified = as.integer(structureCleaned_stereocenters_unspecified),
     exactMass = as.numeric(structureCleaned_exactMass),
     xlogp = as.numeric(structureCleaned_xlogp)
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     traditional_name = structureCleaned_nameTraditional,
     iupac_name = structureCleaned_nameIupac,
     inchikey = structureCleanedInchikey,
@@ -787,13 +785,13 @@ structure_cleaned <- structureOld %>%
     xlogp
   )
 
-structure_cleaned_old <- dbGetQuery(
+structure_cleaned_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_cleaned.sql")
 )
-structure_cleaned <- structure_cleaned %>%
-  anti_join(., structure_cleaned_old) %>%
-  distinct()
+structure_cleaned <- structure_cleaned |>
+  dplyr::anti_join(structure_cleaned_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -801,7 +799,7 @@ log_debug(
   "new rows to 'structure_cleaned' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "structure_cleaned",
   value = structure_cleaned,
@@ -810,7 +808,7 @@ dbWriteTable(
   row.names = FALSE
 )
 
-structure_cleaned <- dbGetQuery(
+structure_cleaned <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_structure_cleaned.sql")
 )
@@ -832,19 +830,18 @@ rm(
 gc()
 
 inhouseDbMinimal_complemented <-
-  semi_join(inhouseDbMinimal, originalTable) %>%
-  mutate(curationTypeId_4 = 4) %>%
-  left_join(., manuallyValidated) %>%
-  left_join(., manuallyRemoved) %>%
-  left_join(., automaticallyValidated) %>%
-  pivot_longer(cols = (ncol(.) - 3):ncol(.)) %>%
-  filter(!is.na(value)) %>%
-  select(everything(),
-    -name,
+  dplyr::semi_join(inhouseDbMinimal, originalTable) %>%
+  dplyr::mutate(curationTypeId_4 = 4) %>%
+  dplyr::left_join(., manuallyValidated) %>%
+  dplyr::left_join(., manuallyRemoved) %>%
+  dplyr::left_join(., automaticallyValidated) %>%
+  tidyr::pivot_longer(cols = (ncol(.) - 3):ncol(.)) %>%
+  dplyr::filter(!is.na(value)) %>%
+  dplyr::select(dplyr::everything(), -name,
     curationTypeId = value
   ) %>%
-  arrange(curationTypeId) %>%
-  distinct(
+  dplyr::arrange(curationTypeId) %>%
+  dplyr::distinct(
     database,
     organismType,
     organismValue,
@@ -860,19 +857,17 @@ inhouseDbMinimal_complemented <-
     .keep_all = TRUE
   )
 
-data_cleaned_temp <- inhouseDbMinimal_complemented %>%
-  left_join(.,
-    organism_cleaned,
+data_cleaned_temp <- inhouseDbMinimal_complemented |>
+  dplyr::left_join(organism_cleaned,
     by = c("organismCleaned" = "name")
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organismCleanedId = id,
-    everything()
-  ) %>%
-  left_join(
-    .,
-    structure_cleaned %>%
-      distinct(
+    dplyr::everything()
+  ) |>
+  dplyr::left_join(
+    structure_cleaned |>
+      dplyr::distinct(
         id,
         inchikey,
         inchi,
@@ -883,20 +878,19 @@ data_cleaned_temp <- inhouseDbMinimal_complemented %>%
       "structureCleanedInchi" = "inchi",
       "structureCleanedInchikey" = "inchikey"
     )
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structureCleanedId = id,
-    everything()
+    dplyr::everything()
   ) %>%
-  left_join(.,
-    reference_cleaned %>% distinct(id, title),
+  dplyr::left_join(reference_cleaned %>% distinct(id, title),
     by = c("referenceCleanedTitle" = "title")
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     referenceCleanedId = id,
-    everything()
-  ) %>%
-  distinct(
+    dplyr::everything()
+  ) |>
+  dplyr::distinct(
     database,
     organism_type = organismType,
     organism_value = organismValue,
@@ -910,21 +904,21 @@ data_cleaned_temp <- inhouseDbMinimal_complemented %>%
     curation_type_id = curationTypeId
   )
 
-data_cleaned <- data_cleaned_temp %>%
-  distinct(
+data_cleaned <- data_cleaned_temp |>
+  dplyr::distinct(
     organism_cleaned_id,
     structure_cleaned_id,
     reference_cleaned_id,
     curation_type_id
   )
 
-data_cleaned_old <- dbGetQuery(
+data_cleaned_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_cleaned.sql")
 )
-data_cleaned <- data_cleaned %>%
-  anti_join(., data_cleaned_old) %>%
-  distinct()
+data_cleaned <- data_cleaned |>
+  dplyr::anti_join(data_cleaned_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -932,7 +926,7 @@ log_debug(
   "new rows to 'data_cleaned' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "data_cleaned",
   value = data_cleaned,
@@ -941,12 +935,12 @@ dbWriteTable(
   row.names = FALSE
 )
 
-data_cleaned <- dbGetQuery(
+data_cleaned <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_cleaned.sql")
 )
 
-data_source <- dbGetQuery(
+data_source <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_source.sql")
 )
@@ -959,30 +953,27 @@ rm(
 )
 gc()
 
-data_source__data_cleaned <- data_cleaned_temp %>%
-  left_join(
-    .,
-    data_source %>%
-      select(
-        data_source_id = id,
-        everything()
-      )
-  ) %>%
-  left_join(., data_cleaned %>%
-    select(
+data_source__data_cleaned <- data_cleaned_temp |>
+  dplyr::left_join(data_source |>
+    dplyr::select(
+      data_source_id = id,
+      dplyr::everything()
+    )) |>
+  dplyr::left_join(data_cleaned |>
+    dplyr::select(
       data_cleaned_id = id,
-      everything()
-    )) %>%
-  filter(!is.na(data_cleaned_id)) %>%
-  distinct(data_source_id, data_cleaned_id)
+      dplyr::everything()
+    )) |>
+  dplyr::filter(!is.na(data_cleaned_id)) |>
+  dplyr::distinct(data_source_id, data_cleaned_id)
 
-data_source__data_cleaned_old <- dbGetQuery(
+data_source__data_cleaned_old <- DBI::dbGetQuery(
   conn = db,
   statement = sqlFromFile(file = "queries_db/extract_data_source__data_cleaned.sql")
 )
-data_source__data_cleaned <- data_source__data_cleaned %>%
-  anti_join(., data_source__data_cleaned_old) %>%
-  distinct()
+data_source__data_cleaned <- data_source__data_cleaned |>
+  dplyr::anti_join(data_source__data_cleaned_old) |>
+  dplyr::distinct()
 
 log_debug(
   "writing",
@@ -990,7 +981,7 @@ log_debug(
   "new rows to 'data_source__data_cleaned' table"
 )
 
-dbWriteTable(
+DBI::dbWriteTable(
   conn = db,
   name = "data_source__data_cleaned",
   value = data_source__data_cleaned,
@@ -999,7 +990,7 @@ dbWriteTable(
   row.names = FALSE
 )
 
-dbDisconnect(db)
+DBI::dbDisconnect(db)
 
 end <- Sys.time()
 
