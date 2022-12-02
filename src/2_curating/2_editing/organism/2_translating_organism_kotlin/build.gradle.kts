@@ -34,7 +34,7 @@ dependencies {
  * We need to compile for the outdated conda java version
  */
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = "16"
 }
 
 /**
