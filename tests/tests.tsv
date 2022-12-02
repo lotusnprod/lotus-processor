@@ -1,5 +1,5 @@
 database	organismType	organismValue	structureType	structureValue	referenceType	referenceValue
-tests	clean	Callichroma iris	nominal	Foo	split	Bar 
+tests	clean	Callichroma iris	nominal	F00	split	Bar 
 tests	clean	Iris	nominal	BERBERINE	split	; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163
 tests	clean	Iris pallida	nominal	AMYRIN,BETA:ACETATE	title	SWERTIAJAPONIN FROM IRIS LACTEA
 tests	clean	Iris hybr	nominal	water	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK
