@@ -28,7 +28,7 @@ data_structures_1 <- data_structures |>
   dplyr::filter(!grepl(pattern = "\\|", x = inchiKey))
 
 data_structures_2 <- data_structures |>
-  dplyr::filter(grepl(pattern = "\\|", x = inchiKey)) %>%
+  dplyr::filter(grepl(pattern = "\\|", x = inchiKey)) |>
   splitstackshape::cSplit(c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
     sep = "|"
   ) |>

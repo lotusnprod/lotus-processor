@@ -16,83 +16,90 @@ if (mode == "full") {
   ##  files
   ### common names from PhenolExplorer
   commonSciPhe <-
-    read_delim(file = pathDataExternalTranslationSourceCommonPhenolexplorer) %>%
-    select(
+    readr::read_delim(file = pathDataExternalTranslationSourceCommonPhenolexplorer) |>
+    dplyr::select(
       vernacularName = name,
       canonicalName = food_source_scientific_name
-    ) %>%
-    filter(!is.na(vernacularName))
+    ) |>
+    dplyr::filter(!is.na(vernacularName))
 
   ### common names from FooDB
   if (file.exists(pathDataExternalTranslationSourceCommonFoodb)) {
     commonSciFoo <-
-      read_delim(file = pathDataExternalTranslationSourceCommonFoodb) %>%
-      select(
+      readr::read_delim(file = pathDataExternalTranslationSourceCommonFoodb) |>
+      dplyr::select(
         vernacularName = name,
         canonicalName = name_scientific
-      ) %>%
-      filter(!is.na(vernacularName))
+      ) |>
+      dplyr::filter(!is.na(vernacularName))
   }
 
   ### common names from DrDuke
   commonDuk <-
-    read_delim(file = pathDataExternalTranslationSourceCommonDrdukeCommon) %>%
-    select(
+    readr::read_delim(file = pathDataExternalTranslationSourceCommonDrdukeCommon) |>
+    dplyr::select(
       vernacularName = CNNAM,
       FNFNUM
     )
 
   ### scientific names from DrDuke
   sciDuk <-
-    read_delim(file = pathDataExternalTranslationSourceCommonDrdukeScientific) %>%
-    select(FNFNUM,
+    readr::read_delim(file = pathDataExternalTranslationSourceCommonDrdukeScientific) |>
+    dplyr::select(FNFNUM,
       canonicalName = TAXON
     )
 
   ## forcing organisms in test file to be in sampled dic
-  test_organisms <- read_delim(
+  test_organisms <- readr::read_delim(
     file = "../tests/tests.tsv",
     delim = "\t"
   )
 
-  commonSciDuk <- left_join(sciDuk, commonDuk) %>%
-    select(-FNFNUM) %>%
-    filter(!is.na(vernacularName))
+  commonSciDuk <- dplyr::left_join(sciDuk, commonDuk) |>
+    dplyr::select(-FNFNUM) |>
+    dplyr::filter(!is.na(vernacularName))
 
   ### GBIF
   #### taxa
   taxa <-
-    read_delim(file = unz(pathDataExternalTranslationSourceCommonGbif, "backbone/Taxon.tsv")) %>%
-    filter(!is.na(canonicalName)) %>%
-    distinct(
+    readr::read_delim(
+      file = unz(
+        description = pathDataExternalTranslationSourceCommonGbif,
+        filename = "backbone/Taxon.tsv"
+      )
+    ) |>
+    dplyr::filter(!is.na(canonicalName)) |>
+    dplyr::distinct(
       taxonID,
       canonicalName,
       genericName,
       specificEpithet
-    ) %>%
-    filter(!grepl(
+    ) |>
+    dplyr::filter(!grepl(
       pattern = "\\?",
       x = canonicalName
     ))
 
   #### taxa
-  vernacular <- read_delim(file = unz(
-    pathDataExternalTranslationSourceCommonGbif,
-    "backbone/VernacularName.tsv"
-  )) %>%
-    filter(language == "en") %>%
-    distinct(
+  vernacular <- readr::read_delim(
+    file = unz(
+      description = pathDataExternalTranslationSourceCommonGbif,
+      filename = "backbone/VernacularName.tsv"
+    )
+  ) |>
+    dplyr::filter(language == "en") |>
+    dplyr::distinct(
       taxonID,
       vernacularName
-    ) %>%
-    filter(!grepl(
+    ) |>
+    dplyr::filter(!grepl(
       pattern = "\\?",
       x = vernacularName
     ))
 
   ### manually subtracted entries
   manualSubtraction <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesCommonManualSubtraction,
       delim = "\t"
     )
@@ -112,33 +119,34 @@ if (mode == "full") {
     )
 
   # joining taxa and vernacular names from GBIF
-  taxaVernacular <- left_join(taxa, vernacular) %>%
-    filter(!is.na(vernacularName)) %>%
-    distinct(canonicalName, vernacularName) %>%
-    group_by(vernacularName) %>%
-    arrange(desc(str_count(canonicalName))) %>%
-    ungroup() %>%
-    distinct(vernacularName, .keep_all = TRUE) %>%
-    arrange(desc(str_count(vernacularName))) %>%
-    filter(canonicalName != "Boa constrictor")
+  taxaVernacular <- dplyr::left_join(taxa, vernacular) |>
+    dplyr::filter(!is.na(vernacularName)) |>
+    dplyr::distinct(canonicalName, vernacularName) |>
+    dplyr::group_by(vernacularName) |>
+    dplyr::arrange(dplyr::desc(stringr::str_count(canonicalName))) |>
+    dplyr::ungroup() |>
+    dplyr::distinct(vernacularName, .keep_all = TRUE) |>
+    dplyr::arrange(dplyr::desc(stringr::str_count(vernacularName))) |>
+    dplyr::filter(canonicalName != "Boa constrictor")
 
   # deleting vernacular names corresponding to generic epithets for safety reasons
   ## they are almost safe (see Cacao) but just to be on the safe side...
-  # list <- commonSciSub %>%
-  #   filter(vernacularName %in% taxa$genericName)
-  taxaVernacular <- taxaVernacular %>%
-    filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
+  # list <- commonSciSub |>
+  #   dplyr::filter(vernacularName %in% taxa$genericName)
+  taxaVernacular <- taxaVernacular |>
+    dplyr::filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
 
   # joining common names from PhenolExplorer and FooDB
   if (file.exists(pathDataExternalTranslationSourceCommonFoodb)) {
-    commonSciPheFoo <- full_join(commonSciPhe, commonSciFoo)
+    commonSciPheFoo <- dplyr::full_join(commonSciPhe, commonSciFoo)
   } else {
     commonSciPheFoo <- commonSciPhe
   }
 
   # joining common names from DrDukes
-  commonSciPheFooDuk <- full_join(commonSciPheFoo, commonSciDuk) %>%
-    filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
+  commonSciPheFooDuk <-
+    dplyr::full_join(commonSciPheFoo, commonSciDuk) |>
+    dplyr::filter(!tolower(vernacularName) %in% tolower(taxa$genericName))
 
   # adding
   ## plurals
@@ -154,8 +162,8 @@ if (mode == "full") {
   commonSciPheFooDuk <- commonSciPheFooDuk
 
   ### normal
-  commonSciPlural_1 <- commonSciPheFooDuk %>%
-    filter(
+  commonSciPlural_1 <- commonSciPheFooDuk |>
+    dplyr::filter(
       !grepl(
         pattern = "(.+[^aeiou])y$",
         x = vernacularName
@@ -178,8 +186,8 @@ if (mode == "full") {
     paste0(commonSciPlural_1$vernacularName, "s")
 
   ### "o" and "y" plurals (mango -> mangoes, berry -> berries)
-  commonSciPlural_2 <- commonSciPheFooDuk %>%
-    filter(
+  commonSciPlural_2 <- commonSciPheFooDuk |>
+    dplyr::filter(
       grepl(
         pattern = "(.+[^aeiou])y$",
         x = vernacularName
@@ -203,8 +211,8 @@ if (mode == "full") {
   )
 
   ### s, sh, ch, x, z
-  commonSciPlural_3 <- commonSciPheFooDuk %>%
-    filter(grepl(
+  commonSciPlural_3 <- commonSciPheFooDuk |>
+    dplyr::filter(grepl(
       pattern = ".+s$|.+sh$|.+ch$.+x$|.+z$",
       x = vernacularName
     ))
@@ -213,8 +221,8 @@ if (mode == "full") {
     paste0(commonSciPlural_3$vernacularName, "es")
 
   ### f, fe
-  commonSciPlural_4 <- commonSciPheFooDuk %>%
-    filter(grepl(
+  commonSciPlural_4 <- commonSciPheFooDuk |>
+    dplyr::filter(grepl(
       pattern = "(.+)f$|(.+)fe$",
       x = vernacularName
     ))
@@ -233,11 +241,11 @@ if (mode == "full") {
       commonSciPlural_2,
       commonSciPlural_3,
       commonSciPlural_4
-    ) %>%
-    distinct(vernacularName, canonicalName)
+    ) |>
+    dplyr::distinct(vernacularName, canonicalName)
 
   # joining common names from GBIF
-  commonSci <- full_join(commonSciPluralized, taxaVernacular)
+  commonSci <- dplyr::full_join(commonSciPluralized, taxaVernacular)
 
   # capitalizing
   commonSci$vernacularName <-
@@ -247,7 +255,7 @@ if (mode == "full") {
   commonSci$vernacularName <- trimws(x = commonSci$vernacularName)
 
   commonSci <- commonSci %>%
-    mutate_all(~ iconv(x = ., from = "utf-8", to = "utf-8//ignore"))
+    dplyr::mutate_all(~ iconv(x = ., from = "utf-8", to = "utf-8//ignore"))
 
   commonSci$vernacularName <- gsub(
     pattern = "/",
@@ -268,15 +276,15 @@ if (mode == "full") {
   )
 
   # removing approximative additions of specific names
-  commonSci <- commonSci %>%
-    filter(vernacularName != word(
+  commonSci <- commonSci |>
+    dplyr::filter(vernacularName != stringr::word(
       string = canonicalName,
       start = 1
     ))
 
   ## explanation
-  explanation <- commonSci %>%
-    filter(vernacularName == word(
+  explanation <- commonSci |>
+    dplyr::filter(vernacularName == stringr::word(
       string = canonicalName,
       start = 1
     ))
@@ -296,113 +304,113 @@ if (mode == "full") {
 
   commonSci$vernacularName <- trimws(commonSci$vernacularName)
 
-  commonSci <- commonSci %>%
-    filter(!is.na(canonicalName)) %>%
-    distinct(vernacularName, canonicalName)
+  commonSci <- commonSci |>
+    dplyr::filter(!is.na(canonicalName)) |>
+    dplyr::distinct(vernacularName, canonicalName)
 
   # filtering common names with only one translation
-  commonSci_1 <- commonSci %>%
-    arrange(canonicalName) %>%
-    group_by(vernacularName) %>%
-    add_count() %>%
-    filter(n == 1) %>%
-    select(-n) %>%
-    ungroup() %>%
-    arrange(vernacularName)
+  commonSci_1 <- commonSci |>
+    dplyr::arrange(canonicalName) |>
+    dplyr::group_by(vernacularName) |>
+    dplyr::add_count() |>
+    dplyr::filter(n == 1) |>
+    dplyr::select(-n) |>
+    dplyr::ungroup() |>
+    dplyr::arrange(vernacularName)
 
   # filtering common names with more than one translation
-  commonSci_2 <- commonSci %>%
-    arrange(canonicalName) %>%
-    group_by(vernacularName) %>%
-    add_count(name = "vernacularCount") %>%
-    filter(vernacularCount != 1) %>%
-    arrange(vernacularName) %>%
-    cSplit(
+  commonSci_2 <- commonSci |>
+    dplyr::arrange(canonicalName) |>
+    dplyr::group_by(vernacularName) |>
+    dplyr::add_count(name = "vernacularCount") |>
+    dplyr::filter(vernacularCount != 1) |>
+    dplyr::arrange(vernacularName) |>
+    splitstackshape::cSplit(
       splitCols = "canonicalName",
       sep = " ",
       drop = FALSE
-    ) %>%
-    group_by(vernacularName, canonicalName_1, canonicalName_2) %>%
-    add_count(name = "specificCount") %>%
-    group_by(vernacularName, canonicalName_1) %>%
-    add_count(name = "genericCount") %>%
-    ungroup() %>%
-    mutate(
+    ) |>
+    dplyr::group_by(vernacularName, canonicalName_1, canonicalName_2) |>
+    dplyr::add_count(name = "specificCount") |>
+    dplyr::group_by(vernacularName, canonicalName_1) |>
+    dplyr::add_count(name = "genericCount") |>
+    dplyr::ungroup() |>
+    dplyr::mutate(
       specificRatio = specificCount / vernacularCount,
       genericRatio = genericCount / vernacularCount
     )
 
   # filtering ambiguous entries and outliers
-  commonSci_3 <- commonSci_2 %>%
-    filter(specificRatio > 0.5 | genericRatio > 0.5) %>%
-    group_by(vernacularName) %>%
-    add_count(name = "vernacularCount") %>%
-    group_by(vernacularName, canonicalName_1, canonicalName_2) %>%
-    add_count(name = "specificCount") %>%
-    group_by(vernacularName, canonicalName_1) %>%
-    add_count(name = "genericCount") %>%
-    ungroup()
+  commonSci_3 <- commonSci_2 |>
+    dplyr::filter(specificRatio > 0.5 | genericRatio > 0.5) |>
+    dplyr::group_by(vernacularName) |>
+    dplyr::add_count(name = "vernacularCount") |>
+    dplyr::group_by(vernacularName, canonicalName_1, canonicalName_2) |>
+    dplyr::add_count(name = "specificCount") |>
+    dplyr::group_by(vernacularName, canonicalName_1) |>
+    dplyr::add_count(name = "genericCount") |>
+    dplyr::ungroup()
 
-  commonSciAmbiguous <- commonSci_2 %>%
-    filter(specificRatio == 0.5 & genericRatio == 0.5) %>%
-    group_by(vernacularName) %>%
-    add_count(name = "vernacularCount") %>%
-    group_by(vernacularName, canonicalName_1, canonicalName_2) %>%
-    add_count(name = "canonicalCount") %>%
-    ungroup()
+  commonSciAmbiguous <- commonSci_2 |>
+    dplyr::filter(specificRatio == 0.5 & genericRatio == 0.5) |>
+    dplyr::group_by(vernacularName) |>
+    dplyr::add_count(name = "vernacularCount") |>
+    dplyr::group_by(vernacularName, canonicalName_1, canonicalName_2) |>
+    dplyr::add_count(name = "canonicalCount") |>
+    dplyr::ungroup()
 
   ## specific names matching
-  commonSci_4 <- commonSci_3 %>%
-    filter(specificRatio > 0.5) %>%
-    arrange(desc(specificRatio)) %>%
-    distinct(vernacularName, .keep_all = TRUE) %>%
-    mutate(newCanonicalName = paste(canonicalName_1,
+  commonSci_4 <- commonSci_3 |>
+    dplyr::filter(specificRatio > 0.5) |>
+    dplyr::arrange(dplyr::desc(specificRatio)) |>
+    dplyr::distinct(vernacularName, .keep_all = TRUE) |>
+    dplyr::mutate(newCanonicalName = paste(canonicalName_1,
       canonicalName_2,
       sep = " "
-    )) %>%
-    select(vernacularName,
+    )) |>
+    dplyr::select(vernacularName,
       canonicalName = newCanonicalName
-    ) %>%
-    arrange(vernacularName)
+    ) |>
+    dplyr::arrange(vernacularName)
 
   ## generic name matching
-  commonSci_5 <- anti_join(commonSci_3,
+  commonSci_5 <- dplyr::anti_join(commonSci_3,
     commonSci_4,
     by = "vernacularName"
-  ) %>%
-    filter(specificRatio <= 0.5 &
-      genericRatio > 0.5) %>%
-    arrange(desc(genericRatio)) %>%
-    distinct(vernacularName, .keep_all = TRUE) %>%
-    select(vernacularName,
+  ) |>
+    dplyr::filter(specificRatio <= 0.5 &
+      genericRatio > 0.5) |>
+    dplyr::arrange(dplyr::desc(genericRatio)) |>
+    dplyr::distinct(vernacularName, .keep_all = TRUE) |>
+    dplyr::select(vernacularName,
       canonicalName = canonicalName_1
-    ) %>%
-    arrange(vernacularName)
+    ) |>
+    dplyr::arrange(vernacularName)
 
   # joining again cleaned results
   commonSciJoined <- rbind(commonSci_1, commonSci_4, commonSci_5)
 
   # deleting ambiguous entries
-  commonSciSub <- commonSciJoined %>%
-    filter(!tolower(vernacularName) %in% tolower(manualSubtraction$name))
+  commonSciSub <- commonSciJoined |>
+    dplyr::filter(!tolower(vernacularName) %in% tolower(manualSubtraction$name))
 
   commonSciSub$canonicalName <-
     y_as_na(commonSciSub$canonicalName, "\"\"")
 
   ## sorting in appropriate order
-  common2Sci <- commonSciSub %>%
-    mutate(n = str_count(string = vernacularName)) %>%
-    arrange(desc(n)) %>%
+  common2Sci <- commonSciSub |>
+    dplyr::mutate(n = stringr::str_count(string = vernacularName)) |>
+    dplyr::arrange(dplyr::desc(n)) %>%
     # sorting for replacements like "sea cucumber" and so on...
-    filter(n >= 4) %>%
+    dplyr::filter(n >= 4) %>%
     # names with 3 char are not enough
-    select(
+    dplyr::select(
       vernacularName,
       canonicalName
-    ) %>%
-    filter(!grepl("\\?", canonicalName)) %>%
-    filter(!grepl("\\)", vernacularName)) %>%
-    cSplit(
+    ) |>
+    dplyr::filter(!grepl(pattern = "\\?", x = canonicalName)) |>
+    dplyr::filter(!grepl(pattern = "\\)", x = vernacularName)) |>
+    splitstackshape::cSplit(
       "vernacularName",
       sep = "   ",
       fixed = TRUE,
@@ -425,8 +433,8 @@ if (mode == "full") {
       sub = ""
     )
 
-  common2Sci <- common2Sci %>%
-    mutate(vernacularName = gsub(
+  common2Sci <- common2Sci |>
+    dplyr::mutate(vernacularName = gsub(
       pattern = "\\[.*\\]",
       replacement = "",
       x = vernacularName
@@ -439,27 +447,27 @@ if (mode == "full") {
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
   )
-  common2Sci_sampled_1 <- common2Sci %>%
-    sample_n(500)
+  common2Sci_sampled_1 <- common2Sci |>
+    dplyr::sample_n(500)
 
-  common2Sci_sampled_2 <- common2Sci %>%
-    filter(grepl(
+  common2Sci_sampled_2 <- common2Sci |>
+    dplyr::filter(grepl(
       pattern = paste(test_organisms$organismValue, collapse = "|"),
       x = vernacularName,
       ignore.case = TRUE
     ))
 
   common2Sci_sampled <-
-    bind_rows(
+    dplyr::bind_rows(
       common2Sci_sampled_1,
       common2Sci_sampled_2
-    ) %>%
-    mutate(n = str_count(string = vernacularName)) %>%
-    arrange(desc(n)) %>%
-    select(-n)
+    ) |>
+    dplyr::mutate(n = stringr::str_count(string = vernacularName)) |>
+    dplyr::arrange(dplyr::desc(n)) |>
+    dplyr::select(-n)
 
   # exporting
-  write_delim(
+  readr::write_delim(
     x = common2Sci,
     delim = "\t",
     file = gzfile(
@@ -471,7 +479,7 @@ if (mode == "full") {
     escape = "double"
   )
 
-  write_delim(
+  readr::write_delim(
     x = common2Sci_sampled,
     delim = "\t",
     file = gzfile(
