@@ -7,6 +7,7 @@ channels:
 dependencies:
   - conda-build
   - molvs
+  - openjdk
   - pandas
   - python
   - rdkit
