@@ -15,54 +15,48 @@ database <- databases$get("phenolexplorer")
 
 # loading all files
 compounds_structures <-
-  read_delim(
-    file = database$sourceFiles$tsvCompoundsStructures
-  )
+  readr::read_delim(file = database$sourceFiles$tsvCompoundsStructures)
 
-compounds <- read_delim(
-  file = database$sourceFiles$tsvCompounds
-)
+compounds <-
+  readr::read_delim(file = database$sourceFiles$tsvCompounds)
 
-foods <- read_delim(
-  file = database$sourceFiles$tsvFoods
-)
+foods <- readr::read_delim(file = database$sourceFiles$tsvFoods)
 
-publications <- read_delim(
-  file = database$sourceFiles$tsvPublications
-)
+publications <-
+  readr::read_delim(file = database$sourceFiles$tsvPublications)
 
 composition <-
-  read_excel(
+  readxl::read_excel(
     path = database$sourceFiles$tsvComposition,
     sheet = 1
   )
 
 ### joining
-a <- full_join(compounds, compounds_structures)
-b <- full_join(a, composition, by = c("name" = "compound"))
-c <- full_join(b, foods, by = c("food" = "name"))
+a <- dplyr::full_join(compounds, compounds_structures)
+b <- dplyr::full_join(a, composition, by = c("name" = "compound"))
+c <- dplyr::full_join(b, foods, by = c("food" = "name"))
 
 # pivoting to join right references
 colnames(c)[29] <- "publicationids"
 colnames(c)[30] <- "pubmedids"
 
 data_pivoted <- c %>%
-  cSplit("publicationids", ";") %>%
-  cSplit("pubmedids", ";") %>%
-  group_by(id.x) %>%
-  pivot_longer(
+  splitstackshape::cSplit("publicationids", ";") %>%
+  splitstackshape::cSplit("pubmedids", ";") %>%
+  dplyr::group_by(id.x) %>%
+  tidyr::pivot_longer(
     37:ncol(.),
     names_to = c(".value", "level"),
     names_sep = "_",
     values_to = "taxonomy",
     values_drop_na = TRUE
   ) %>%
-  ungroup()
+  dplyr::ungroup()
 
 # adding references
 data_referenced <-
-  left_join(data_pivoted, publications, by = c("publicationids" = "id")) %>%
-  select(
+  dplyr::left_join(data_pivoted, publications, by = c("publicationids" = "id")) |>
+  dplyr::select(
     uniqueid = id.x,
     name,
     cas = cas_number,
@@ -74,26 +68,30 @@ data_referenced <-
     reference_pubmed = pubmedids,
     reference_journal = journal_name,
     reference_authors = authors
-  ) %>%
-  cSplit(
+  ) |>
+  splitstackshape::cSplit(
     "biologicalsource",
     sep = " and ",
     fixed = TRUE,
     stripWhite = FALSE,
     direction = "long"
-  ) %>%
-  mutate_all(as.character) %>%
-  select(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::select(
     structure_name = name,
     structure_smiles = smiles,
     organism_clean = biologicalsource,
-    everything()
-  ) %>%
+    dplyr::everything()
+  ) |>
   data.frame()
 
 data_referenced[] <-
   lapply(data_referenced, function(x) {
-    gsub("NULL", NA, x)
+    gsub(
+      pattern = "NULL",
+      replacement = NA,
+      x = x
+    )
   })
 
 # standardizing

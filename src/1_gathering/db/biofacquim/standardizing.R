@@ -11,15 +11,16 @@ library(readr)
 database <- databases$get("biofacquim")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv),
-  delim = "\t"
-) %>%
-  mutate_all(as.character)
+data_original <-
+  readr::read_delim(
+    file = gzfile(description = database$sourceFiles$tsv),
+    delim = "\t"
+  ) |>
+  dplyr::mutate_all(as.character)
 
 ## selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = ID,
     structure_name = Name,
     structure_smiles = SMILES,
@@ -27,8 +28,8 @@ data_selected <- data_original %>%
     reference_journal = Journal,
     reference_doi = DOI,
     reference_publishingDetails = Reference
-  ) %>%
-  mutate(organism_clean = gsub(
+  ) |>
+  dplyr::mutate(organism_clean = gsub(
     pattern = "_",
     replacement = " ",
     x = organism_clean,

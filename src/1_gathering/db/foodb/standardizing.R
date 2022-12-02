@@ -15,45 +15,37 @@ database <- databases$get("foodb")
 
 # files
 compounds_flavors <-
-  read_delim(
-    file = database$sourceFiles$tsvCompoundsFlavors
-  ) %>%
-  mutate_all(as.character)
+  readr::read_delim(file = database$sourceFiles$tsvCompoundsFlavors) |>
+  dplyr::mutate_all(as.character)
 
-compounds <- read_delim(
-  file = database$sourceFiles$tsvCompounds
-) %>%
-  mutate_all(as.character)
+compounds <-
+  readr::read_delim(file = database$sourceFiles$tsvCompounds) |>
+  dplyr::mutate_all(as.character)
 
-contents <- read_delim(
-  file = database$sourceFiles$tsvContent
-) %>%
-  mutate_all(as.character)
+contents <-
+  readr::read_delim(file = database$sourceFiles$tsvContent) |>
+  dplyr::mutate_all(as.character)
 
-flavors <- read_delim(
-  file = database$sourceFiles$tsvFlavor
-) %>%
-  mutate_all(as.character)
+flavors <-
+  readr::read_delim(file = database$sourceFiles$tsvFlavor) |>
+  dplyr::mutate_all(as.character)
 
-foods <- read_delim(
-  file = database$sourceFiles$tsvFood
-) %>%
-  mutate_all(as.character)
+foods <- readr::read_delim(file = database$sourceFiles$tsvFood) |>
+  dplyr::mutate_all(as.character)
 
-references <- read_delim(
-  file = database$sourceFiles$tsvReference,
-) %>%
-  mutate_all(as.character)
+references <-
+  readr::read_delim(file = database$sourceFiles$tsvReference) |>
+  dplyr::mutate_all(as.character)
 
 ## Compiling flavors
-compiled_flavors <- full_join(compounds_flavors,
+compiled_flavors <- dplyr::full_join(compounds_flavors,
   flavors,
   by = c("flavor_id" = "id"),
   match = "all"
 )
 
-clean_flavors <- compiled_flavors %>%
-  select(
+clean_flavors <- compiled_flavors |>
+  dplyr::select(
     compound_id,
     flavor_id,
     flavor_citations = citations,
@@ -63,47 +55,47 @@ clean_flavors <- compiled_flavors %>%
 
 # Casting
 ## contents
-compounds_contents <- left_join(compounds,
+compounds_contents <- dplyr::left_join(compounds,
   contents,
   by = c("id" = "source_id"),
   match = "all"
-) %>%
-  group_by(id) %>%
-  distinct(orig_food_scientific_name,
+) |>
+  dplyr::group_by(id) |>
+  dplyr::distinct(orig_food_scientific_name,
     orig_food_part,
     .keep_all = TRUE
-  ) %>%
-  ungroup()
+  ) |>
+  dplyr::ungroup()
 
 ## flavors
-compounds_flavors <- left_join(compounds,
+compounds_flavors <- dplyr::left_join(compounds,
   clean_flavors,
   by = c("id" = "compound_id"),
   match = "all"
 )
 
-compounds_flavors_casted <- compounds_flavors %>%
-  group_by(id) %>%
-  summarise(
+compounds_flavors_casted <- compounds_flavors |>
+  dplyr::group_by(id) |>
+  dplyr::summarise(
     flavor_id = paste(flavor_id, collapse = "|"),
     flavor_citations = paste(flavor_citations, collapse = "|"),
     flavor_name = paste(flavor_name, collapse = "|"),
     flavor_group = paste(flavor_group, collapse = "|")
-  ) %>%
-  ungroup()
+  ) |>
+  dplyr::ungroup()
 
-compounds_contents_flavors <- left_join(
+compounds_contents_flavors <- dplyr::left_join(
   compounds_contents,
   compounds_flavors_casted
 )
 
 # Minimal output
-foodb <- compounds_contents_flavors %>%
-  replace_na(list(
+foodb <- compounds_contents_flavors |>
+  tidyr::replace_na(list(
     orig_food_scientific_name = "",
     orig_food_common_name = ""
-  )) %>%
-  mutate(
+  )) |>
+  dplyr::mutate(
     organism_clean = orig_food_scientific_name,
     organism_dirty = orig_food_common_name,
     reference_external = ifelse(
@@ -118,7 +110,7 @@ foodb <- compounds_contents_flavors %>%
     reference_pubmed = ifelse(
       test = citation != "MANUAL" &
         citation_type == "ARTICLE" | citation_type == "TEXTBOOK",
-      yes = str_extract(string = citation, pattern = "[0-9]{6,9}"),
+      yes = stringr::str_extract(string = citation, pattern = "[0-9]{6,9}"),
       no = NA
     ),
     reference_original = ifelse(
@@ -131,8 +123,8 @@ foodb <- compounds_contents_flavors %>%
       yes = citation,
       no = NA
     )
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     uniqueid = public_id,
     structure_name = name,
     organism_clean,
@@ -147,14 +139,14 @@ foodb <- compounds_contents_flavors %>%
     structure_inchikey = moldb_inchikey,
     flavor_name,
     flavor_group
-  ) %>%
-  mutate(reference_doi = str_extract(
+  ) |>
+  dplyr::mutate(reference_doi = stringr::str_extract(
     pattern = "10.*",
     string = str_extract(
       pattern = "doi.*",
       string = reference_original
     )
-  )) %>%
+  )) |>
   data.frame()
 
 foodb$organism_clean <- trimws(foodb$organism_clean)

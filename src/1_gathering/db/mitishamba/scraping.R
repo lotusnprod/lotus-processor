@@ -13,21 +13,25 @@ library(xml2)
 # get paths
 database <- databases$get("mitishamba")
 
-X <- (1:1102)
+X <- 1:1102
 
 url <- "http://mitishamba.uonbi.ac.ke/details.php?mol=00"
 
 GetMitishamba <- function(X) {
   tryCatch(
     {
-      cd_id <- str_pad(X, 6, pad = "0")
+      cd_id <- str_pad(
+        string = X,
+        width = 6,
+        pad = "0"
+      )
       url_id <- paste(url, cd_id)
-      url_id <- gsub("\\s", "", url_id)
-      df1 <- read_html(url_id) %>%
-        html_element("body") %>%
-        html_element(xpath = '//*[@id="wrapper-search"]') %>%
-        xml_child(5) %>%
-        html_table()
+      url_id <- gsub(pattern = "\\s", replacement = "", url_id)
+      df1 <- rvest::read_html(url_id) |>
+        rvest::html_element("body") |>
+        rvest::html_element(xpath = '//*[@id="wrapper-search"]') |>
+        xml2::xml_child(5) |>
+        rvest::html_table()
 
       df2 <- t(df1)
       colnames(df2) <- df2[1, ]
@@ -64,32 +68,30 @@ GetMitishamba <- function(X) {
   )
 }
 
-MITISHAMBA <- invisible(
-  lapply(
-    FUN = GetMitishamba,
-    X = X
-  )
-)
+MITISHAMBA <- invisible(lapply(
+  FUN = GetMitishamba,
+  X = X
+))
 
 MITISHAMBA_2 <- MITISHAMBA[MITISHAMBA != "Timed out!"]
 
-MITISHAMBA_3 <- bind_rows(MITISHAMBA_2)
+MITISHAMBA_3 <- dplyr::bind_rows(MITISHAMBA_2)
 
 MITISHAMBA_3[] <-
   lapply(MITISHAMBA_3, function(x) {
-    gsub("\r\n", " ", x)
+    gsub(pattern = "\r\n", replacement = " ", x = x)
   })
 MITISHAMBA_3[] <-
   lapply(MITISHAMBA_3, function(x) {
-    gsub("\r", " ", x)
+    gsub(pattern = "\r", replacement = " ", x = x)
   })
 MITISHAMBA_3[] <-
   lapply(MITISHAMBA_3, function(x) {
-    gsub("\n", " ", x)
+    gsub(pattern = "\n", replacement = " ", x = x)
   })
 MITISHAMBA_3[] <-
   lapply(MITISHAMBA_3, function(x) {
-    gsub("\t", " ", x)
+    gsub(pattern = "\t", replacement = " ", x = x)
   })
 
 # exporting

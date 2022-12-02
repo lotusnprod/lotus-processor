@@ -14,50 +14,46 @@ database <- databases$get("wikidata")
 
 ## files
 data_organism <-
-  read_delim(
-    file = wikidataLotusExporterDataOutputTaxaPath
-  ) %>%
-  cSplit("names_pipe_separated",
+  readr::read_delim(file = wikidataLotusExporterDataOutputTaxaPath) |>
+  splitstackshape::cSplit("names_pipe_separated",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 data_structures <-
-  read_delim(file = wikidataLotusExporterDataOutputStructuresPath) 
+  readr::read_delim(file = wikidataLotusExporterDataOutputStructuresPath)
 
-data_structures_1 <- data_structures %>%
-  filter(!grepl(pattern = "\\|", x = inchiKey)) 
+data_structures_1 <- data_structures |>
+  dplyr::filter(!grepl(pattern = "\\|", x = inchiKey))
 
-data_structures_2 <- data_structures %>%
-  filter(grepl(pattern = "\\|", x = inchiKey)) %>%
-  cSplit(c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
-         sep = "|") %>%
-  pivot_longer(cols = contains("_")) %>%
-  filter(!is.na(value)) %>%
-  cSplit("name",
-         sep = "_") %>%
-  pivot_wider(names_from = "name_1") %>%
-  select(-name_2) %>%
-  distinct()
+data_structures_2 <- data_structures |>
+  dplyr::filter(grepl(pattern = "\\|", x = inchiKey)) %>%
+  splitstackshape::cSplit(c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
+    sep = "|"
+  ) |>
+  tidyr::pivot_longer(cols = contains("_")) |>
+  dplyr::filter(!is.na(value)) |>
+  splitstackshape::cSplit("name",
+    sep = "_"
+  ) |>
+  tidyr::pivot_wider(names_from = "name_1") |>
+  dplyr::select(-name_2) |>
+  dplyr::distinct()
 
-data_structures <- data_structures_1 %>%
-  bind_rows(data_structures_2)
+data_structures <- data_structures_1 |>
+  dplyr::bind_rows(data_structures_2)
 
 data_references <-
-  read_delim(
-    file = wikidataLotusExporterDataOutputReferencesPath
-  ) %>%
-  cSplit("dois_pipe_separated",
+  readr::read_delim(file = wikidataLotusExporterDataOutputReferencesPath) |>
+  splitstackshape::cSplit("dois_pipe_separated",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 data_triples <-
-  read_delim(
-    file = wikidataLotusExporterDataOutputTriplesPath
-  )
+  readr::read_delim(file = wikidataLotusExporterDataOutputTriplesPath)
 
 # step to discard ambiguous uninomials from wikidata
 names <- WikidataQueryServiceR::query_wikidata(
@@ -73,27 +69,27 @@ ORDER BY DESC (?count)
 "
 )
 
-data_organism <- data_organism %>%
-  filter(!names_pipe_separated %in% names$name)
+data_organism <- data_organism |>
+  dplyr::filter(!names_pipe_separated %in% names$name)
 
 # manipulating
-data_manipulated <- data_triples %>%
-  inner_join(data_organism, by = c("taxon" = "wikidataId")) %>%
-  inner_join(data_structures, by = c("compound" = "wikidataId")) %>%
-  inner_join(data_references, by = c("reference" = "wikidataId")) %>%
-  mutate(structure_smiles = if_else(
+data_manipulated <- data_triples |>
+  dplyr::inner_join(data_organism, by = c("taxon" = "wikidataId")) |>
+  dplyr::inner_join(data_structures, by = c("compound" = "wikidataId")) |>
+  dplyr::inner_join(data_references, by = c("reference" = "wikidataId")) |>
+  dplyr::mutate(structure_smiles = if_else(
     condition = !is.na(isomericSmiles),
     true = isomericSmiles,
     false = canonicalSmiles
-  )) %>%
-  select(
+  )) |>
+  dplyr::select(
     structure_smiles,
     structure_inchi = inchi,
     organism_clean = names_pipe_separated,
     reference_doi = dois_pipe_separated,
     reference_title = title
-  ) %>%
-  distinct() %>%
+  ) |>
+  distinct() |>
   data.frame()
 
 # standardizing

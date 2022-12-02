@@ -16,12 +16,13 @@ database <- databases$get("mibig")
 fileInZip <-
   function(inZip) {
     outFile <- list()
-    fileList <- unzip(inZip, list = TRUE)
+    fileList <- unzip(zipfile = inZip, list = TRUE)
     fileList <- fileList |>
       filter(Length != 0)
     for (i in seq_along(fileList$Name)) {
-      if (grepl(".json", fileList[i, 1])) {
-        oFa <- fromJSON(unz(inZip, fileList[i, 1]))
+      if (grepl(pattern = ".json", x = fileList[i, 1])) {
+        oFa <-
+          jsonlite::fromJSON(txt = unz(description = inZip, filename = fileList[i, 1]))
         outFile[[i]] <- oFa
       }
     }
@@ -72,29 +73,29 @@ reference <- lapply(
   X = x
 )
 
-data <- tibble(id, smiles, organism, reference) %>%
-  filter(smiles != "NULL") %>%
-  unnest(id) %>%
-  unnest(smiles) %>%
-  unnest(organism) %>%
-  unnest(reference) %>%
-  distinct(id, .keep_all = TRUE) %>%
-  filter(!is.na(smiles)) %>%
-  select(id,
+data <- dplyr::tibble(id, smiles, organism, reference) |>
+  dplyr::filter(smiles != "NULL") |>
+  tidyr::unnest(id) |>
+  tidyr::unnest(smiles) |>
+  tidyr::unnest(organism) |>
+  tidyr::unnest(reference) |>
+  dplyr::distinct(id, .keep_all = TRUE) |>
+  dplyr::filter(!is.na(smiles)) |>
+  dplyr::select(id,
     structure_smiles = smiles,
     organism_clean = organism,
     reference
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_doi = gsub(
       pattern = "doi:",
       replacement = "",
-      x = str_extract(string = reference, pattern = "^doi.*")
+      x = stringr::str_extract(string = reference, pattern = "^doi.*")
     ),
     reference_pubmed = gsub(
       pattern = "pubmed:",
       replacement = "",
-      x = str_extract(string = reference, pattern = "^pubmed.*")
+      x = stringr::str_extract(string = reference, pattern = "^pubmed.*")
     ),
     reference_external = ifelse(
       test = is.na(reference_doi) & is.na(reference_pubmed),

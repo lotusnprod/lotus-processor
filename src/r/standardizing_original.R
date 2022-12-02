@@ -45,12 +45,13 @@ standardizing_original <- function(data_selected,
     filter_at(vars(all_of(organism_field)), any_vars(grepl(pattern = "[[:alpha:]]", x = .))) %>%
     filter_at(vars(all_of(reference_field)), any_vars(!is.na(.))) %>%
     filter_at(vars(all_of(reference_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
-    distinct_at(vars(
-      all_of(structure_field),
-      all_of(organism_field),
-      all_of(reference_field)
-    ),
-    .keep_all = TRUE
+    distinct_at(
+      vars(
+        all_of(structure_field),
+        all_of(organism_field),
+        all_of(reference_field)
+      ),
+      .keep_all = TRUE
     )
 
   data_standard[] <-

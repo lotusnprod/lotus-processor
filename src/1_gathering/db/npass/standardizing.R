@@ -12,40 +12,40 @@ library(readr)
 database <- databases$get("npass")
 
 ## files
-data_original_1 <- read_delim(
-  file = database$sourceFiles$tsvGeneral
-) %>%
-  mutate_all(as.character) %>%
+data_original_1 <-
+  readr::read_delim(file = database$sourceFiles$tsvGeneral) |>
+  dplyr::mutate_all(as.character) |>
   data.frame()
 
-data_original_2 <- read_delim(
-  file = database$sourceFiles$tsvProperties
-) %>%
-  mutate_all(as.character) %>%
+data_original_2 <-
+  readr::read_delim(file = database$sourceFiles$tsvProperties) |>
+  dplyr::mutate_all(as.character) |>
   data.frame()
 
-data_original_3 <- read_delim(
-  file = database$sourceFiles$tsvSpeciesInfo,
-  col_types = cols(.default = "c")
-) %>%
+data_original_3 <-
+  readr::read_delim(
+    file = database$sourceFiles$tsvSpeciesInfo,
+    col_types = cols(.default = "c")
+  ) |>
   data.frame()
 
-data_original_4 <- read_delim(
-  file = database$sourceFiles$tsvSpeciesPair,
-  col_types = cols(.default = "c")
-) %>%
+data_original_4 <-
+  readr::read_delim(
+    file = database$sourceFiles$tsvSpeciesPair,
+    col_types = cols(.default = "c")
+  ) |>
   data.frame()
 
 # joining
-data_original <- left_join(data_original_1, data_original_2)
+data_original <- dplyr::left_join(data_original_1, data_original_2)
 
-data_original <- left_join(data_original, data_original_4)
+data_original <- dplyr::left_join(data_original, data_original_4)
 
-data_original <- left_join(data_original, data_original_3)
+data_original <- dplyr::left_join(data_original, data_original_3)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     pubchem = pubchem_cid,
     np_id,
     structure_name = pref_name,
@@ -57,8 +57,8 @@ data_selected <- data_original %>%
     referenceType = ref_id_type
   )
 
-data_manipulated <- data_selected %>%
-  mutate(
+data_manipulated <- data_selected |>
+  dplyr::mutate(
     reference_doi = ifelse(
       test = referenceType == "DOI",
       yes = reference,
@@ -81,10 +81,11 @@ data_manipulated <- data_selected %>%
       yes = reference,
       no = NA
     ),
-  ) %>%
+  ) |>
   data.frame()
 
-data_manipulated$structure_name <- y_as_na(data_manipulated$structure_name, "n.a.")
+data_manipulated$structure_name <-
+  y_as_na(data_manipulated$structure_name, "n.a.")
 
 # standardizing
 data_standard <-

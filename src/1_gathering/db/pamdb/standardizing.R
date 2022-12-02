@@ -14,43 +14,43 @@ database <- databases$get("pamdb")
 
 ## files
 data_original <-
-  read_excel(database$sourceFiles$tsv) %>%
-  mutate_all(as.character)
+  readxl::read_excel(path = database$sourceFiles$tsv) |>
+  dplyr::mutate_all(as.character)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = MetID,
     structure_name = Name,
     structure_inchi = InChI,
     structure_smiles = SMILES,
     cas = `CAS number`,
     reference = References
-  ) %>%
-  mutate(organism_clean = "Pseudomonas aeruginosa")
+  ) |>
+  dplyr::mutate(organism_clean = "Pseudomonas aeruginosa")
 
-data_manipulated <- data_selected %>%
-  cSplit("reference",
+data_manipulated <- data_selected |>
+  splitstackshape::cSplit("reference",
     sep = "Pubmed:",
     fixed = TRUE,
     stripWhite = FALSE
-  ) %>%
-  mutate_all(as.character) %>%
-  mutate(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     reference_title = str_extract(string = reference_1, pattern = "\".*\""),
     reference_original = ifelse(
       test = !is.na(reference_title),
       yes = NA,
       no = reference_1
     )
-  ) %>%
-  cSplit("reference_2",
+  ) |>
+  splitstackshape::cSplit("reference_2",
     sep = " ",
     fixed = TRUE,
     stripWhite = FALSE
-  ) %>%
-  mutate_all(as.character) %>%
-  select(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::select(
     uniqueid,
     organism_clean,
     structure_name,
@@ -60,7 +60,7 @@ data_manipulated <- data_selected %>%
     reference_original,
     reference_title,
     reference_pubmed = reference_2_02
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

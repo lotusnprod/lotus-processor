@@ -15,33 +15,34 @@ library(tidyr)
 database <- databases$get("cyanometdb")
 
 ## files
-data_original <- fread(
+data_original <- data.table::fread(
   file = database$sourceFiles$tsv,
   strip.white = FALSE,
   encoding = "Latin-1"
 ) %>%
-  mutate_all(as.character)
+  dplyr::mutate_all(as.character)
 
-data_manipulated <- data_original %>%
-  mutate(
+data_manipulated <- data_original |>
+  dplyr::mutate(
     name = IUPAC_name,
-    biologicalsource = paste(ifelse(is.na(Genus),
-      "",
-      Genus
-    ),
-    ifelse(is.na(Species),
-      "",
-      Species
-    ),
-    sep = " "
+    biologicalsource = paste(
+      ifelse(is.na(Genus),
+        "",
+        Genus
+      ),
+      ifelse(is.na(Species),
+        "",
+        Species
+      ),
+      sep = " "
     )
   )
 
 data_manipulated$biologicalsource <-
   y_as_na(data_manipulated$biologicalsource, " ")
 
-data_selected <- data_manipulated %>%
-  select(
+data_selected <- data_manipulated |>
+  dplyr::select(
     structure_name = name,
     organism_clean = biologicalsource,
     structure_inchi = InChI,
@@ -49,21 +50,21 @@ data_selected <- data_manipulated %>%
     reference_doi_1 = `DOI_No1`,
     reference_doi_2 = `DOI_No2`,
     reference_doi_3 = `DOI_No3`,
-  ) %>%
-  pivot_longer(5:7) %>%
-  filter(!is.na(value)) %>%
-  select(structure_name,
+  ) |>
+  tidyr::pivot_longer(5:7) |>
+  dplyr::filter(!is.na(value)) |>
+  dplyr::select(structure_name,
     organism_clean,
     structure_inchi,
     structure_smiles,
     reference_doi = value
-  ) %>%
-  mutate(organism_clean = gsub(
+  ) |>
+  dplyr::mutate(organism_clean = gsub(
     pattern = "n.a.",
     replacement = "",
     x = organism_clean,
     fixed = TRUE
-  )) %>%
+  )) |>
   data.frame()
 
 # standardizing

@@ -12,23 +12,22 @@ library(splitstackshape)
 database <- databases$get("streptomedb")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv))
 
 ## selecting
-data_selected <- data_original %>%
-  select(uniqueid,
+data_selected <- data_original |>
+  dplyr::select(uniqueid,
     name,
     smiles,
     pubchem,
     reference_pubmed = pubmedid,
     biologicalsource
-  ) %>%
-  cSplit("reference_pubmed", sep = ";", direction = "long") %>%
-  cSplit("biologicalsource", sep = ";", direction = "long") %>%
-  data.frame() %>%
-  select(
+  ) |>
+  splitstackshape::cSplit("reference_pubmed", sep = ";", direction = "long") |>
+  splitstackshape::cSplit("biologicalsource", sep = ";", direction = "long") |>
+  data.frame() |>
+  dplyr::select(
     structure_name = name,
     structure_smiles = smiles,
     organism_clean = biologicalsource,

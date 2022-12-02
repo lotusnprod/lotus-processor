@@ -14,28 +14,43 @@ library(tidyr)
 database <- databases$get("tmmc")
 
 ## files
-data_original <- read_excel(database$sourceFiles$tsv,
+data_original <- readxl::read_excel(
+  path = database$sourceFiles$tsv,
   sheet = 1
-) %>%
-  mutate_all(as.character)
+) |>
+  dplyr::mutate_all(as.character)
 
 data_original_long <- data_original %>%
-  cSplit("CSID", "|") %>%
-  pivot_longer(17:ncol(.)) %>%
-  filter(!is.na(value)) %>%
-  distinct(SCIENCE, COMPOUND, .keep_all = TRUE) %>%
-  mutate(
+  splitstackshape::cSplit("CSID", "|") %>%
+  tidyr::pivot_longer(17:ncol(.)) %>%
+  dplyr::filter(!is.na(value)) %>%
+  dplyr::distinct(SCIENCE, COMPOUND, .keep_all = TRUE) %>%
+  dplyr::mutate(
     name = COMPOUND,
-    biologicalsource = str_extract(SCIENCE, "(?<=\\[).+?(?=\\])"),
-    reference_pubmed = str_extract(string = LINK, pattern = "[0-9]{6,9}")
+    biologicalsource = stringr::str_extract(
+      string = SCIENCE,
+      pattern = "(?<=\\[).+?(?=\\])"
+    ),
+    reference_pubmed = stringr::str_extract(
+      string = LINK,
+      pattern = "[0-9]{6,9}"
+    )
   ) %>%
-  distinct(name, .keep_all = TRUE) %>%
-  mutate(
-    biologicalsource = gsub("<i>", "", biologicalsource),
-    biologicalsource = gsub("</i>", "", biologicalsource)
+  dplyr::distinct(name, .keep_all = TRUE) %>%
+  dplyr::mutate(
+    biologicalsource = gsub(
+      pattern = "<i>",
+      replacement = "",
+      x = biologicalsource
+    ),
+    biologicalsource = gsub(
+      pattern = "</i>",
+      replacement = "",
+      x = biologicalsource
+    )
   ) %>%
   data.frame() %>%
-  select(
+  dplyr::select(
     structure_name = name,
     organism_clean = biologicalsource,
     everything()

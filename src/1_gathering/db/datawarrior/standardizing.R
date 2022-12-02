@@ -12,56 +12,57 @@ library(splitstackshape)
 database <- databases$get("datawarrior")
 
 ## files
-data_original <- read_delim(file = database$sourceFiles$tsv) %>%
-  mutate_all(as.character)
+data_original <-
+  readr::read_delim(file = database$sourceFiles$tsv) |>
+  dplyr::mutate_all(as.character)
 
 # manipulating
-data_manipulated <- data_original %>%
-  cSplit("reference", sep = "; ") %>%
-  cSplit("remarks",
+data_manipulated <- data_original |>
+  splitstackshape::cSplit("reference", sep = "; ") |>
+  splitstackshape::cSplit("remarks",
     sep = "; ",
     direction = "long",
     fixed = TRUE
-  ) %>%
-  cSplit(
+  ) |>
+  splitstackshape::cSplit(
     "remarks",
     sep = "<NL>",
     stripWhite = FALSE,
     direction = "wide",
     fixed = TRUE
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structure_name = name,
     structure_smiles = Smiles,
     structure_inchi = InChI,
     biologicalsource = remarks_1,
     reference_authors = reference_1,
     reference_title = reference_2
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     organism_clean = gsub(
       pattern = "Origin:",
       replacement = "",
       x = biologicalsource,
       fixed = TRUE
     )
-  ) %>%
-  mutate_all(as.character) %>%
-  mutate_all(trimws) %>%
-  mutate(
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate_all(trimws) |>
+  dplyr::mutate(
     reference_title = ifelse(
       test = reference_title == "Giftpflanzen Pflanzengifte4. ?berarbeitete Aufl.",
       yes = "Giftpflanzen Pflanzengifte, 4. ?berarbeitete Aufl.",
       no = reference_title
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_isbn = ifelse(
       test = reference_title == "Giftpflanzen Pflanzengifte, 4. ?berarbeitete Aufl.",
       yes = "978-3-933203-31-1",
       no = "3-8047-1053-0"
     )
-  ) %>%
+  ) |>
   data.frame()
 
 # standardizing

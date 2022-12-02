@@ -12,13 +12,13 @@ library(readr)
 database <- databases$get("napralert")
 
 ## files
-dataOriginal <- read_delim(
-  file = gzfile(database$sourceFiles$tsvOriginal),
+dataOriginal <- readr::read_delim(
+  file = gzfile(description = database$sourceFiles$tsvOriginal),
   col_types = cols(.default = "c"),
   escape_backslash = TRUE,
   delim = "\t"
-) %>%
-  mutate(
+) |>
+  dplyr::mutate(
     biologicalsource = paste(
       capitalize(string = tolower(`?genus`)),
       tolower(`?species`),
@@ -26,8 +26,8 @@ dataOriginal <- read_delim(
     ),
     inchi = NA,
     reference_doi = NA
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structure_name = `?compound_name`,
     structure_inchi = inchi,
     organism_clean = biologicalsource,
@@ -37,17 +37,17 @@ dataOriginal <- read_delim(
     reference_journal = `?journal`
   )
 
-dataMatched <- read_delim(
-  file = gzfile(database$sourceFiles$tsvMatched),
+dataMatched <- readr::read_delim(
+  file = gzfile(description = database$sourceFiles$tsvMatched),
   col_types = cols(.default = "c")
-) %>%
-  mutate(
+) |>
+  dplyr::mutate(
     name = NA,
     reference_title = NA,
     reference_authors = NA,
     reference_journal = NA,
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structure_name = name,
     structure_inchi = InChI,
     organism_clean = TaxonName,
@@ -58,7 +58,7 @@ dataMatched <- read_delim(
   )
 
 # manipulating
-dataJoined <- bind_rows(dataMatched, dataOriginal)
+dataJoined <- dplyr::bind_rows(dataMatched, dataOriginal)
 
 # standardizing
 data_standard <-

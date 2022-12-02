@@ -11,12 +11,12 @@ library(readr)
 database <- databases$get("npatlas")
 
 ## files
-data_original <- read_delim(file = database$sourceFiles$tsv)
+data_original <- readr::read_delim(file = database$sourceFiles$tsv)
 
 # selecting
-data_selected <- data_original %>%
-  mutate(biologicalsource = paste(genus, origin_species, sep = " ")) %>%
-  select(
+data_selected <- data_original |>
+  dplyr::mutate(biologicalsource = paste(genus, origin_species, sep = " ")) |>
+  dplyr::select(
     npaid,
     structure_name = compound_names,
     structure_inchi = compound_inchi,

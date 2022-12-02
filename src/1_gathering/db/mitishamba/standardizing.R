@@ -13,50 +13,49 @@ library(readr)
 database <- databases$get("mitishamba")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-) %>%
-  mutate_all(as.character)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv)) |>
+  dplyr::mutate_all(as.character)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     smiles,
     biologicalsource = plant_species,
     name = common_name,
     reference_original = authors
-  ) %>%
-  mutate(reference_test = sub(
+  ) |>
+  dplyr::mutate(reference_test = sub(
     pattern = "\\([0-9]{4}\\)",
     replacement = "§",
     x = reference_original
-  )) %>%
-  cSplit("reference_test", sep = "§") %>%
-  mutate(reference_test_2 = sub(
+  )) |>
+  splitstackshape::cSplit("reference_test", sep = "§") |>
+  dplyr::mutate(reference_test_2 = sub(
     pattern = "^\\.",
     replacement = "",
     x = reference_test_2
-  )) %>%
-  mutate(reference_test_2 = sub(
+  )) |>
+  dplyr::mutate(reference_test_2 = sub(
     pattern = "^\\,",
     replacement = "",
     x = reference_test_2
-  )) %>%
-  mutate(reference_test_2 = trimws(x = reference_test_2)) %>%
-  select(
+  )) |>
+  dplyr::mutate(reference_test_2 = trimws(x = reference_test_2)) |>
+  dplyr::select(
     structure_name = name,
     biologicalsource,
     structure_smiles = smiles,
     reference_authors = reference_test_1,
     reference_original,
     reference_split = reference_test_2
-  ) %>%
+  ) |>
   data.frame()
 
-data_corrected <- data_selected %>%
-  cSplit("biologicalsource", sep = ",", direction = "long") %>%
-  filter(grepl(pattern = "[A-Z]", x = biologicalsource)) %>%
-  mutate(organism_clean = capitalize(tolower(biologicalsource))) %>%
+data_corrected <- data_selected |>
+  splitstackshape::cSplit("biologicalsource", sep = ",", direction = "long") |>
+  dplyr::filter(grepl(pattern = "[A-Z]", x = biologicalsource)) |>
+  dplyr::mutate(organism_clean = capitalize(tolower(biologicalsource))) |>
   data.frame()
 
 # standardizing

@@ -13,46 +13,49 @@ library(tidyr)
 database <- databases$get("tmdb")
 
 ## files
-data_original <- read_delim(
-  file = gzfile(database$sourceFiles$tsv)
-)
+data_original <-
+  readr::read_delim(file = gzfile(description = database$sourceFiles$tsv))
 
 # pivoting
 data_pivoted <- data_original %>%
-  mutate(level = as.numeric(gl(nrow(.) / 28, 28))) %>%
-  group_by(level) %>%
-  pivot_wider(names_from = 1, values_from = 2) %>%
-  unnest() %>%
-  ungroup()
+  dplyr::mutate(level = as.numeric(gl(nrow(.) / 28, 28))) %>%
+  dplyr::group_by(level) %>%
+  tidyr::pivot_wider(names_from = 1, values_from = 2) %>%
+  tidyr::unnest() %>%
+  dplyr::ungroup()
 
 # selecting
-data_selected <- data_pivoted %>%
-  select(
+data_selected <- data_pivoted |>
+  dplyr::select(
     name = `Entry name`,
     biologicalsource = `Latin name`,
     reference_publishingDetails = References
-  ) %>%
-  cSplit("reference_publishingDetails",
+  ) |>
+  splitstackshape::cSplit("reference_publishingDetails",
     sep = ";",
     direction = "long"
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_publishingDetails = gsub(
       pattern = "\\(.*\\D.*\\)",
       replacement = "",
       x = reference_publishingDetails
     )
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structure_name = name,
     organism_clean = biologicalsource,
     everything()
-  ) %>%
+  ) |>
   data.frame()
 
 data_selected[] <-
   lapply(data_selected, function(x) {
-    gsub("Not Available", NA, x)
+    gsub(
+      pattern = "Not Available",
+      replacement = NA,
+      x = x
+    )
   })
 
 # standardizing

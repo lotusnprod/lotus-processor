@@ -13,12 +13,15 @@ database <- databases$get("afrotryp")
 
 # files
 data_original <-
-  read_delim(file = unz(database$sourceFiles$tsv, "AFROTRYP.tsv")) %>%
-  mutate_all(as.character)
+  readr::read_delim(file = unz(
+    description = database$sourceFiles$tsv,
+    filename = "AFROTRYP.tsv"
+  )) |>
+  dplyr::mutate_all(as.character)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     uniqueid = `Compound code`,
     structure_name = `Compound name`,
     organism_clean = `Species name`,

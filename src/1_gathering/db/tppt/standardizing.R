@@ -13,18 +13,20 @@ library(splitstackshape)
 database <- databases$get("tppt")
 
 ## files
-data_original_1 <- read_excel(database$sourceFiles$tsv,
-  sheet = 1
-) %>%
-  mutate_all(as.character)
+data_original_1 <-
+  readxl::read_excel(
+    path = database$sourceFiles$tsv,
+    sheet = 1
+  ) |>
+  dplyr::mutate_all(as.character)
 
-data_original_2 <- read_excel(database$sourceFiles$tsv,
+data_original_2 <- readxl::read_excel(database$sourceFiles$tsv,
   sheet = 3
-) %>%
-  mutate_all(as.character)
+) |>
+  dplyr::mutate_all(as.character)
 
-data_filled <- data_original_1 %>%
-  mutate(smiles = ifelse(
+data_filled <- data_original_1 |>
+  dplyr::mutate(smiles = ifelse(
     Stereo_SMILES == "NI",
     Canonical_SMILES,
     ifelse(
@@ -38,11 +40,11 @@ data_filled <- data_original_1 %>%
   ))
 
 # joining
-data_original <- left_join(data_filled, data_original_2)
+data_original <- dplyr::left_join(data_filled, data_original_2)
 
 # selecting
-data_selected <- data_original %>%
-  select(
+data_selected <- data_original |>
+  dplyr::select(
     Phytotoxin_number,
     name = Phytotoxin_name,
     CASRN,
@@ -50,10 +52,10 @@ data_selected <- data_original %>%
     PubChem_CID,
     biologicalsource = Latin_plant_name,
     reference = References
-  ) %>%
-  cSplit("reference", sep = ",", direction = "long") %>%
-  mutate_all(as.character) %>%
-  mutate(
+  ) |>
+  splitstackshape::cSplit("reference", sep = ",", direction = "long") |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     reference_external = ifelse(
       test = reference == "clinitox.ch" |
         reference == "KNApSAcK Database" |
@@ -71,61 +73,61 @@ data_selected <- data_original %>%
       x = reference,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "KNApSAcK Database",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "KNApSAcKDatabase",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "EFSA Reoport (2012)",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "EFSA Report",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "EFSA Report (2010)",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     reference_original = gsub(
       pattern = "EFSA Report (2012)",
       replacement = "",
       x = reference_original,
       fixed = TRUE
     )
-  ) %>%
-  data.frame() %>%
-  select(
+  ) |>
+  data.frame() |>
+  dplyr::select(
     structure_name = name,
     structure_smiles = smiles,
     organism_clean = biologicalsource,
-    everything()
+    dplyr::everything()
   )
 
 data_selected$reference_original <-
