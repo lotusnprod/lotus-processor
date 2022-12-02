@@ -45,5 +45,6 @@ jobs:
         env:
           R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash -l {0}
         run: |
            bash tests/integration_test.sh
