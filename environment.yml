@@ -19,10 +19,13 @@ dependencies:
   - r-dplyr
   - r-DBI
   - r-forcats
+  - r-future
+  - r-future.apply
   - r-gdata
   - r-jsonlite
   - r-philentropy
   - r-plotly
+  - r-progressr
   - r-purrr
   - r-rcrossref
   - r-RCurl
