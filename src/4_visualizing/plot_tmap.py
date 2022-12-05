@@ -1,18 +1,16 @@
+import matplotlib.colors as mcolors
+import numpy as np
+import pandas as pd
 import pickle
+import scipy.stats as ss
 import sys
-
-from collections import Counter
+import tmap as tm
 from cmcrameri import cm
+from collections import Counter
 from faerun import Faerun
 from map4 import MAP4Calculator
 from rdkit.Chem import AllChem
 from time import sleep
-
-import matplotlib.colors as mcolors
-import numpy as np
-import pandas as pd
-import scipy.stats as ss
-import tmap as tm
 
 
 # Define useful functions:
@@ -152,19 +150,19 @@ dic_jsd_superclass = pd.read_csv('../data/processed/jsd_superclass.tsv', sep="\t
 dic_jsd_pathway = pd.read_csv('../data/processed/jsd_pathway.tsv', sep="\t")
 
 jsd_class = df_gb.merge(dic_jsd_class,
-                    how="left",
-                    left_on=["structure_taxonomy_npclassifier_03class_first"],
-                    right_on=["structure_taxonomy_npclassifier_03class"])
+                        how="left",
+                        left_on=["structure_taxonomy_npclassifier_03class_first"],
+                        right_on=["structure_taxonomy_npclassifier_03class"])
 
 jsd_superclass = df_gb.merge(dic_jsd_superclass,
-                        how="left",
-                        left_on=["structure_taxonomy_npclassifier_02superclass_first"],
-                        right_on=["structure_taxonomy_npclassifier_02superclass"])
+                             how="left",
+                             left_on=["structure_taxonomy_npclassifier_02superclass_first"],
+                             right_on=["structure_taxonomy_npclassifier_02superclass"])
 
 jsd_pathway = df_gb.merge(dic_jsd_pathway,
-                        how="left",
-                        left_on=["structure_taxonomy_npclassifier_01pathway_first"],
-                        right_on=["structure_taxonomy_npclassifier_01pathway"])
+                          how="left",
+                          left_on=["structure_taxonomy_npclassifier_01pathway_first"],
+                          right_on=["structure_taxonomy_npclassifier_01pathway"])
 
 dic_mean_specificity = {
     'organism_taxonomy_02kingdom': {'min': 0},
@@ -221,7 +219,7 @@ NPpathway_data, NPpathway_labels = keep_only_given_class([
     'Fatty acids',
     'Amino acids and Peptides',
     'Carbohydrates'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_02superclass_first'])
 NPsuperclass_data, NPsuperclass_labels = keep_only_given_class([
@@ -229,7 +227,7 @@ NPsuperclass_data, NPsuperclass_labels = keep_only_given_class([
     'Flavonoids', 'Coumarins', 'Lignans', 'Isoflavonoids', 'Phenolic acids (C6-C1)',
     'Polycyclic aromatic polyketides', 'Macrolides', 'Aromatic polyketides', 'Naphthalenes', 'Linear polyketides',
     'Fatty acyls', 'Fatty Acids and Conjugates', 'Fatty esters', 'Sphingolipids', 'Glycerolipids'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['structure_taxonomy_npclassifier_03class_first'])
 NPclass_data, NPclass_labels = keep_only_given_class([
@@ -238,7 +236,7 @@ NPclass_data, NPclass_labels = keep_only_given_class([
     'Flavonols', 'Flavones', 'Cinnamic acids and derivatives', 'Simple coumarins',
     'Cyclic peptides',
     'Carboline alkaloids'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_02kingdom_<lambda_0>'])
 OTLkingdom_data, OTLkingdom_labels = keep_only_given_class([
@@ -246,7 +244,7 @@ OTLkingdom_data, OTLkingdom_labels = keep_only_given_class([
     'Fungi',
     'Not attributed (Bacteria and Algae)',
     'Metazoa'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_03phylum_<lambda_0>'])
 OTLphylum_data, OTLphylum_labels = keep_only_given_class([
@@ -254,14 +252,14 @@ OTLphylum_data, OTLphylum_labels = keep_only_given_class([
     'Ascomycota', 'Basidiomycota',
     'Actinobacteria', 'Proteobacteria',
     'Porifera', 'Cnidaria'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_04class_<lambda_0>'])
 OTLclass_data, OTLclass_labels = keep_only_given_class([
     'Magnoliopsida', 'Florideophycidae',
     'Eurotiomycetes', 'Sordariomycetes',
     'Demospongiae', 'Anthozoa'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_05order_<lambda_0>'])
 OTLorder_data, OTLorder_labels = keep_only_given_class([
@@ -269,7 +267,7 @@ OTLorder_data, OTLorder_labels = keep_only_given_class([
     'Eurotiales', 'Hypocreales', 'Pleosporales', 'Polyporales',
     'Streptomycetales',
     'Alcyonacea'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_06family_<lambda_0>'])
 OTLfamily_data, OTLfamily_labels = keep_only_given_class([
@@ -277,7 +275,7 @@ OTLfamily_data, OTLfamily_labels = keep_only_given_class([
     'Trichocomaceae', 'Pleosporaceae', 'Ganodermataceae', 'Nectriaceae',
     'Streptomycetaceae',
     'Alcyoniidae'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_08genus_<lambda_0>'])
 OTLgenus_data, OTLgenus_labels = keep_only_given_class([
@@ -285,7 +283,7 @@ OTLgenus_data, OTLgenus_labels = keep_only_given_class([
     'Aspergillus', 'Penicillium', 'Ganoderma', 'Fusarium',
     'Streptomyces',
     'Homo'
-    ], data, labels)
+], data, labels)
 
 labels, data = Faerun.create_categories(df_gb['organism_taxonomy_09species_<lambda_0>'])
 OTLspecies_data, OTLspecies_labels = keep_only_given_class([
@@ -293,7 +291,7 @@ OTLspecies_data, OTLspecies_labels = keep_only_given_class([
     'Ganoderma lucidum', 'Aspergillus versicolor', 'Aspergillus terreus', 'Aspergillus fumigatus',
     'Microcystis aeruginosa',
     'Homo sapiens'
-    ], data, labels)
+], data, labels)
 
 # Generating colormaps for plotting
 cmap_batlow = cm.batlow
@@ -342,14 +340,14 @@ micro_big_7 = mcolors.ListedColormap(
 micro_interim_4 = mcolors.ListedColormap(
     ["gainsboro",
      "#4E7705", "#6D9F06", "#97CE2F", "#BDEC6F",
-     "#9D654C", "#C17754","#F09163","#FCB076",
+     "#9D654C", "#C17754", "#F09163", "#FCB076",
      "#098BD9",
      "#7D3560"
      ])
 micro_small_4 = mcolors.ListedColormap(
     ["gainsboro",
      "#4E7705", "#6D9F06", "#97CE2F", "#BDEC6F", "#DDFFA0",
-     "#9D654C", "#C17754","#F09163","#FCB076","#FFD5AF",
+     "#9D654C", "#C17754", "#F09163", "#FCB076", "#FFD5AF",
      "#098BD9", "#56B4E9", "#7DCCFF", "#BCE1FF", "#E7F4FF",
      "#7D3560", "#A1527F", "#CC79A7", "#E794C1", "#EFB6D6"
      ])
@@ -571,18 +569,20 @@ f.add_scatter(
         dic_categories['organism_taxonomy_09species_nunique_cat']['labels'],
         simaroubaceae_labels
     ],
-    categorical=[True, True, True, 
-                 True, True, True, True, True, True, True, 
-                 True, True, True, True, True, True, True, True, 
+    categorical=[True, True, True,
+                 True, True, True, True, True, True, True,
+                 True, True, True, True, True, True, True, True,
                  True,
-                 False, False, False, False, False, False, False, False, 
+                 False, False, False, False, False, False, False, False,
                  False, False, False, False
                  ],
-    colormap=[micro_big_7, micro_small_4, micro_interim_4, 
-              micro_big_4, micro_big_4_2, micro_big_4_3, micro_interim_4, micro_interim_4, micro_interim_4, micro_interim_4,
-              cmap_3, cmap_1, cmap_2, cmap_3, cmap_3, cmap_3, cmap_3, cmap_3, 
+    colormap=[micro_big_7, micro_small_4, micro_interim_4,
+              micro_big_4, micro_big_4_2, micro_big_4_3, micro_interim_4, micro_interim_4, micro_interim_4,
+              micro_interim_4,
+              cmap_3, cmap_1, cmap_2, cmap_3, cmap_3, cmap_3, cmap_3, cmap_3,
               cmap_1,
-              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, 
+              cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow,
+              cmap_batlow,
               cmap_batlow, cmap_batlow, cmap_batlow, cmap_batlow],
     series_title=[
         "Chemical pathway (NPC)",

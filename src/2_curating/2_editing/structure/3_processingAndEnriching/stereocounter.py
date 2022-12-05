@@ -49,7 +49,7 @@ df = pd.read_csv(
     sep='\t',
     encoding='utf-8',
     on_bad_lines='error'
-    )
+)
 
 if (len(df) == 1) and (df.empty):
     df['structureTranslated'] = 'InChI=1S/Pu'
