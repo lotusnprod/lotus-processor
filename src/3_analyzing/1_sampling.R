@@ -13,7 +13,7 @@ library(readr)
 
 log_debug("loading db, if running fullmode, this may take a while")
 openDbMinimal <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -27,12 +27,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "doi")) >= 30) {
-  sampleONPDB_doi <- openDbMinimal %>%
-    filter(referenceType == "doi") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "doi")) >= 30) {
+  sampleONPDB_doi <- openDbMinimal |>
+    dplyr::filter(referenceType == "doi") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = NA,
       validated = NA,
       comments = NA
@@ -45,12 +45,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "original")) >= 30) {
-  sampleONPDB_original <- openDbMinimal %>%
-    filter(referenceType == "original") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "original")) >= 30) {
+  sampleONPDB_original <- openDbMinimal |>
+    dplyr::filter(referenceType == "original") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = NA,
       validated = NA,
       comments = NA
@@ -63,12 +63,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "pubmed")) >= 30) {
-  sampleONPDB_pubmed <- openDbMinimal %>%
-    filter(referenceType == "pubmed") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "pubmed")) >= 30) {
+  sampleONPDB_pubmed <- openDbMinimal |>
+    dplyr::filter(referenceType == "pubmed") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = NA,
       validated = NA,
       comments = NA
@@ -81,12 +81,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "split")) >= 30) {
-  sampleONPDB_split <- openDbMinimal %>%
-    filter(referenceType == "split") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "split")) >= 30) {
+  sampleONPDB_split <- openDbMinimal |>
+    dplyr::filter(referenceType == "split") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = NA,
       validated = NA,
       comments = NA
@@ -99,12 +99,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "title")) >= 30) {
-  sampleONPDB_title <- openDbMinimal %>%
-    filter(referenceType == "title") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "title")) >= 30) {
+  sampleONPDB_title <- openDbMinimal |>
+    dplyr::filter(referenceType == "title") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = NA,
       validated = NA,
       comments = NA
@@ -117,12 +117,12 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "publishingDetails")) >= 30) {
-  sampleONPDB_publishingDetails <- openDbMinimal %>%
-    filter(referenceType == "publishingDetails") %>%
-    sample_n(30) %>%
-    mutate(
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "publishingDetails")) >= 30) {
+  sampleONPDB_publishingDetails <- openDbMinimal |>
+    dplyr::filter(referenceType == "publishingDetails") |>
+    dplyr::sample_n(30) |>
+    dplyr::mutate(
       curator = "AR",
       validated = NA,
       comments = NA
@@ -130,15 +130,15 @@ if (nrow(openDbMinimal %>%
 }
 
 # get0 if to avoid error in minimal mode if df not present
-sampleONPDB <- bind_rows(
+sampleONPDB <- dplyr::bind_rows(
   get0(x = "sampleONPDB_doi"),
   get0(x = "sampleONPDB_original"),
   get0(x = "sampleONPDB_publishingDetails"),
   get0(x = "sampleONPDB_pubmed"),
   get0(x = "sampleONPDB_split"),
   get0(x = "sampleONPDB_title")
-) %>%
-  mutate_all(as.character)
+) |>
+  dplyr::mutate_all(as.character)
 
 log_debug("... attributing curator")
 set.seed(
@@ -159,9 +159,9 @@ log_debug("... knapsack entries")
 #          kind = "Mersenne-Twister",
 #          normal.kind = "Inversion")
 # sampleKnapsack <- openDbMinimal %>%
-#   filter(database == "kna_1") %>%
-#   sample_n(150) %>%
-#   mutate(
+#   dplyr::filter(database == "kna_1") %>%
+#   dplyr::sample_n(150) %>%
+#   dplyr::mutate(
 #     curator = sample(c("AR", "JB", "PMA"),
 #                      size = nrow(.),
 #                      replace = TRUE),
@@ -175,44 +175,44 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal %>%
-  filter(referenceType == "title")) >= 85 &
-  nrow(openDbMinimal %>%
-    filter(referenceType == "publishingDetails")) >= 25 &
-  nrow(openDbMinimal %>%
-    filter(referenceType == "split")) >= 41 &
-  nrow(openDbMinimal %>%
-    filter(referenceType == "publishingDetails")) >= 58) {
+if (nrow(openDbMinimal |>
+  dplyr::filter(referenceType == "title")) >= 85 &
+  nrow(openDbMinimal |>
+    dplyr::filter(referenceType == "publishingDetails")) >= 25 &
+  nrow(openDbMinimal |>
+    dplyr::filter(referenceType == "split")) >= 41 &
+  nrow(openDbMinimal |>
+    dplyr::filter(referenceType == "publishingDetails")) >= 58) {
   additionalSet <-
-    bind_rows(
-      A <- openDbMinimal %>%
-        filter(referenceType == "title") %>%
-        sample_n(85) %>%
-        mutate(
+    dplyr::bind_rows(
+      A <- openDbMinimal |>
+        dplyr::filter(referenceType == "title") |>
+        dplyr::sample_n(85) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      B <- openDbMinimal %>%
-        filter(referenceType == "publishingDetails") %>%
-        sample_n(25) %>%
-        mutate(
+      B <- openDbMinimal |>
+        dplyr::filter(referenceType == "publishingDetails") |>
+        dplyr::sample_n(25) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      C <- openDbMinimal %>%
-        filter(referenceType == "split") %>%
-        sample_n(41) %>%
-        mutate(
+      C <- openDbMinimal |>
+        dplyr::filter(referenceType == "split") |>
+        dplyr::sample_n(41) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      D <- openDbMinimal %>%
-        filter(referenceType == "original") %>%
-        sample_n(58) %>%
-        mutate(
+      D <- openDbMinimal |>
+        dplyr::filter(referenceType == "original") |>
+        dplyr::sample_n(58) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
@@ -222,7 +222,7 @@ if (nrow(openDbMinimal %>%
 
 # additional again (new process) (needs 2_validating)
 if (exists("realMetaSample")) {
-  openDbMinimal <- anti_join(inhouseDbFull, realMetaSample)
+  openDbMinimal <- dplyr::anti_join(inhouseDbFull, realMetaSample)
 }
 set.seed(
   seed = 42,
@@ -231,49 +231,49 @@ set.seed(
 )
 if (exists("realMetaSample")) {
   additionalSetBis <-
-    bind_rows(
-      A <- openDbMinimal %>%
-        filter(referenceType == "title") %>%
-        sample_n(2) %>%
-        mutate(
+    dplyr::bind_rows(
+      A <- openDbMinimal |>
+        dplyr::filter(referenceType == "title") |>
+        dplyr::sample_n(2) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      B <- openDbMinimal %>%
-        filter(referenceType == "publishingDetails") %>%
-        sample_n(15) %>%
-        mutate(
+      B <- openDbMinimal |>
+        dplyr::filter(referenceType == "publishingDetails") |>
+        dplyr::sample_n(15) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      C <- openDbMinimal %>%
-        filter(referenceType == "split") %>%
-        sample_n(3) %>%
-        mutate(
+      C <- openDbMinimal |>
+        dplyr::filter(referenceType == "split") |>
+        dplyr::sample_n(3) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      D <- openDbMinimal %>%
-        filter(referenceType == "pubmed") %>%
-        sample_n(10) %>%
-        mutate(
+      D <- openDbMinimal |>
+        dplyr::filter(referenceType == "pubmed") |>
+        dplyr::sample_n(10) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      E <- openDbMinimal %>%
-        filter(referenceType == "doi") %>%
-        sample_n(2) %>%
-        mutate(
+      E <- openDbMinimal |>
+        dplyr::filter(referenceType == "doi") |>
+        dplyr::sample_n(2) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         )
-    ) %>%
-    select(
+    ) |>
+    dplyr::select(
       database,
       organismOriginal = organismValue,
       structureType,
@@ -293,11 +293,7 @@ if (exists("realMetaSample")) {
 }
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesAnalyzed),
-  yes = dir.create(pathDataInterimTablesAnalyzed),
-  no = paste(pathDataInterimTablesAnalyzed, "exists")
-)
+create_dir(export = pathDataInterimTablesAnalyzed)
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesAnalyzedSampleAllONPDB)
@@ -389,33 +385,33 @@ set.seed(
 )
 if (exists("openDbClean2")) {
   additionalSetTer <-
-    bind_rows(
-      A <- openDbClean2 %>%
-        filter(referenceType == "title") %>%
-        sample_n(49) %>%
-        mutate(
+    dplyr::bind_rows(
+      A <- openDbClean2 |>
+        dplyr::filter(referenceType == "title") |>
+        dplyr::sample_n(49) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      B <- openDbClean2 %>%
-        filter(referenceType == "publishingDetails") %>%
-        sample_n(12) %>%
-        mutate(
+      B <- openDbClean2 |>
+        dplyr::filter(referenceType == "publishingDetails") |>
+        dplyr::sample_n(12) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      C <- openDbClean2 %>%
-        filter(referenceType == "pubmed") %>%
-        sample_n(59) %>%
-        mutate(
+      C <- openDbClean2 |>
+        dplyr::filter(referenceType == "pubmed") |>
+        dplyr::sample_n(59) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         )
-    ) %>%
-    select(
+    ) |>
+    dplyr::select(
       database,
       organismOriginal = organismValue,
       structureType,
@@ -442,49 +438,49 @@ set.seed(
 )
 if (exists("openDbClean3")) {
   additionalSetTetra <-
-    bind_rows(
-      A <- openDbClean2 %>%
-        filter(referenceType == "pubmed") %>%
-        sample_n(40) %>%
-        mutate(
+    dplyr::bind_rows(
+      A <- openDbClean2 |>
+        dplyr::filter(referenceType == "pubmed") |>
+        dplyr::sample_n(40) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      B <- openDbClean2 %>%
-        filter(referenceType == "split") %>%
-        sample_n(220) %>%
-        mutate(
+      B <- openDbClean2 |>
+        dplyr::filter(referenceType == "split") |>
+        dplyr::sample_n(220) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      C <- openDbClean2 %>%
-        filter(referenceType == "original") %>%
-        sample_n(25) %>%
-        mutate(
+      C <- openDbClean2 |>
+        dplyr::filter(referenceType == "original") |>
+        dplyr::sample_n(25) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      D <- openDbClean2 %>%
-        filter(referenceType == "title") %>%
-        sample_n(25) %>%
-        mutate(
+      D <- openDbClean2 |>
+        dplyr::filter(referenceType == "title") |>
+        dplyr::sample_n(25) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         ),
-      D <- openDbClean2 %>%
-        filter(referenceType == "publishingDetails") %>%
-        sample_n(50) %>%
-        mutate(
+      D <- openDbClean2 |>
+        dplyr::filter(referenceType == "publishingDetails") |>
+        dplyr::sample_n(50) |>
+        dplyr::mutate(
           curator = "AR",
           validated = NA,
           comments = NA
         )
-    ) %>%
-    select(
+    ) |>
+    dplyr::select(
       database,
       organismOriginal = organismValue,
       structureType,

@@ -36,7 +36,7 @@ dbTable <- lapply(
   col_types = cols(.default = "c"),
   locale = locales
 ) |>
-  rbindlist(fill = TRUE) |>
+  data.table::rbindlist(fill = TRUE) |>
   dplyr::filter(database != "custom") |>
   dplyr::select(
     database,

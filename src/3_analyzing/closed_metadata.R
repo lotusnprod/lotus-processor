@@ -22,15 +22,15 @@ library(tidyr)
 
 log_debug("importing ...")
 closed_pairs <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesAnalyzedClosedDbTriplets,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  filter(!is.na(structureCleanedInchikey) &
-    !is.na(organismCleaned)) %>%
-  distinct(
+  ) |>
+  dplyr::filter(!is.na(structureCleanedInchikey) &
+    !is.na(organismCleaned)) |>
+  dplyr::distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned
   )
@@ -42,7 +42,7 @@ log_debug(
 )
 
 data_organism <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputTaxaPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -51,15 +51,15 @@ data_organism <-
       "organism_wikidata" = "wikidataId",
       "organismCleaned" = "names_pipe_separated"
     )
-  ) %>%
-  cSplit("organismCleaned",
+  ) |>
+  splitstackshape::cSplit("organismCleaned",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 data_structures <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputStructuresPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -69,11 +69,11 @@ data_structures <-
       "structureCleanedInchiKey" = "inchiKey",
       "structureCleanedInchi" = "inchi"
     )
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 data_references <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputReferencesPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -83,15 +83,15 @@ data_references <-
       "referenceCleanedDoi" = "dois_pipe_separated",
       "referenceCleanedTitle" = "title",
     )
-  ) %>%
-  cSplit("referenceCleanedDoi",
+  ) |>
+  splitstackshape::cSplit("referenceCleanedDoi",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 wikidata_pairs <-
-  read_delim(
+  readr::read_delim(
     file = pathLastWdExport,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -101,16 +101,16 @@ wikidata_pairs <-
       "organismCleaned" = "organism_clean",
       "referenceCleanedDoi" = "reference_doi"
     )
-  ) %>%
+  ) |>
   filter(
     !is.na(structureCleanedInchi) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
-  ) %>%
-  left_join(., data_organism) %>%
-  left_join(., data_structures) %>%
-  left_join(., data_references) %>%
-  distinct(
+  ) |>
+  dplyr::left_join(data_organism) |>
+  dplyr::left_join(data_structures) |>
+  dplyr::left_join(data_references) |>
+  dplyr::distinct(
     structure_wikidata,
     structure_inchikey = structureCleanedInchiKey,
     organism_wikidata,
@@ -126,8 +126,8 @@ log_debug(
 )
 
 closed_u_wd <-
-  left_join(closed_pairs, wikidata_pairs) %>%
-  distinct(
+  dplyr::left_join(closed_pairs, wikidata_pairs) |>
+  dplyr::distinct(
     structure_wikidata,
     structure_inchikey,
     organism_wikidata,
@@ -142,22 +142,23 @@ log_debug(
   "unique inchikey-taxon-doi vaidated triplets in closed resources"
 )
 
-closed_only <- anti_join(closed_pairs, wikidata_pairs) %>%
-  distinct()
+closed_only <- dplyr::anti_join(closed_pairs, wikidata_pairs) |>
+  dplyr::distinct()
 
 # log_debug("We have",
 #     nrow(platinum_only),
 #     "unique inchikey-taxon-doi vaidated triplets present only in platinum")
 
 # wd_only <-
-#   anti_join(wikidata_pairs, platinum_pairs) %>% distinct()
+#   dplyr::anti_join(wikidata_pairs, platinum_pairs) |>
+#   dplyr::distinct()
 
 # log_debug("We have",
 #     nrow(wd_only),
 #     "unique inchikey-taxon-doi vaidated triplets present only in wikidata")
 
 log_debug("Adding useful metadata")
-closed_complete <- closed_only %>%
+closed_complete <- closed_only |>
   add_metadata()
 
 if (safety == TRUE) {
@@ -169,7 +170,7 @@ if (safety == TRUE) {
     )
   )
 
-  write_delim(
+  readr::write_delim(
     x = closed_complete,
     delim = ",",
     file = file.path(

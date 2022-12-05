@@ -13,7 +13,7 @@ library(readr)
 
 log_debug("loading ...")
 log_debug("... validated db, if running fullmode, this may take a while")
-openDb <- read_delim(
+openDb <- readr::read_delim(
   file = gzfile(pathDataInterimTablesAnalyzedPlatinum),
   col_types = cols(.default = "c"),
   locale = locales,
@@ -22,101 +22,101 @@ openDb <- read_delim(
   trim_ws = TRUE
 )
 
-structureSearch_1 <- openDb %>%
-  filter(structureType == "nominal") %>%
-  distinct(structureValue,
+structureSearch_1 <- openDb |>
+  dplyr::filter(structureType == "nominal") |>
+  dplyr::distinct(structureValue,
     structureCleanedInchikey,
     .keep_all = TRUE
   )
 
-structureSearch_2 <- openDb %>%
-  filter(structureType == "smiles") %>%
-  distinct(structureValue,
+structureSearch_2 <- openDb |>
+  dplyr::filter(structureType == "smiles") |>
+  dplyr::distinct(structureValue,
     structureCleanedInchikey,
     .keep_all = TRUE
   )
 
-structureSearch_3 <- openDb %>%
-  filter(structureType == "inchi") %>%
-  distinct(structureValue,
+structureSearch_3 <- openDb |>
+  dplyr::filter(structureType == "inchi") |>
+  dplyr::distinct(structureValue,
     structureCleanedInchikey,
     .keep_all = TRUE
   )
 
 structureSearch <-
-  rbind(structureSearch_1, structureSearch_2, structureSearch_3) %>%
-  group_by(structureCleanedInchikey) %>%
-  add_count() %>%
-  arrange(desc(n))
+  rbind(structureSearch_1, structureSearch_2, structureSearch_3) |>
+  dplyr::group_by(structureCleanedInchikey) |>
+  dplyr::add_count() |>
+  dplyr::arrange(dplyr::desc(n))
 
-saltSearch <- structureSearch_3 %>%
-  distinct(structureValue,
+saltSearch <- structureSearch_3 |>
+  dplyr::distinct(structureValue,
     .keep_all = TRUE
-  ) %>%
-  group_by(structureCleanedInchikey) %>%
-  add_count() %>%
-  filter(grepl(pattern = "\\.", x = structureValue)) %>%
-  arrange(desc(n))
+  ) |>
+  dplyr::group_by(structureCleanedInchikey) |>
+  dplyr::add_count() |>
+  dplyr::filter(grepl(pattern = "\\.", x = structureValue)) |>
+  dplyr::arrange(dplyr::desc(n))
 
-maybeHit_salt <- openDb %>%
-  filter(!is.na(referenceCleanedDoi)) %>%
-  filter(!is.na(organismCleaned)) %>%
-  filter(structureCleanedInchikey == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") %>%
-  distinct(structureValue)
+maybeHit_salt <- openDb |>
+  dplyr::filter(!is.na(referenceCleanedDoi)) |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::filter(structureCleanedInchikey == "KRKNYBCHXYNGOX-UHFFFAOYSA-N") |>
+  dplyr::distinct(structureValue)
 
-maybeHit_str <- openDb %>%
-  filter(!is.na(referenceCleanedDoi)) %>%
-  filter(!is.na(organismCleaned)) %>%
-  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N")
+maybeHit_str <- openDb |>
+  dplyr::filter(!is.na(referenceCleanedDoi)) |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N")
 
-hitNames_str <- maybeHit_str %>%
-  filter(structureType == "nominal") %>%
-  distinct(structureValue)
+hitNames_str <- maybeHit_str |>
+  dplyr::filter(structureType == "nominal") |>
+  dplyr::distinct(structureValue)
 
-hitSmiles_str <- maybeHit_str %>%
-  filter(structureType == "smiles") %>%
-  distinct(structureValue)
+hitSmiles_str <- maybeHit_str |>
+  dplyr::filter(structureType == "smiles") |>
+  dplyr::distinct(structureValue)
 
-hitInchi_str <- maybeHit_str %>%
-  filter(structureType == "inchi") %>%
-  distinct(structureValue)
+hitInchi_str <- maybeHit_str |>
+  dplyr::filter(structureType == "inchi") |>
+  dplyr::distinct(structureValue)
 
-organismSearch <- openDb %>%
-  distinct(organismType,
+organismSearch <- openDb |>
+  dplyr::distinct(organismType,
     organismValue,
     organismCleaned,
     .keep_all = TRUE
-  ) %>%
-  group_by(organismCleaned) %>%
-  add_count() %>%
-  arrange(desc(n)) %>%
-  filter(
+  ) |>
+  dplyr::group_by(organismCleaned) |>
+  dplyr::add_count() |>
+  dplyr::arrange(dplyr::desc(n)) |>
+  dplyr::filter(
     !grepl(pattern = "Streptomyces", x = organismCleaned) &
       !grepl(pattern = "Aspergillus", x = organismCleaned) &
       !grepl(pattern = "Fusarium", x = organismCleaned) &
       !grepl(pattern = ".*ae", x = organismCleaned)
   )
 
-maybeHit_org <- openDb %>%
-  filter(organismCleaned == "Oryza sativa")
+maybeHit_org <- openDb |>
+  dplyr::filter(organismCleaned == "Oryza sativa")
 
-hitNames_org <- maybeHit_org %>%
-  distinct(
+hitNames_org <- maybeHit_org |>
+  dplyr::distinct(
     organismType,
     organismValue
   )
 
-reference <- openDb %>%
-  filter(!is.na(referenceCleanedDoi))
+reference <- openDb |>
+  dplyr::filter(!is.na(referenceCleanedDoi))
 
-referenceSearch <- reference %>%
-  distinct(referenceValue,
+referenceSearch <- reference |>
+  dplyr::distinct(referenceValue,
     .keep_all = TRUE
-  ) %>%
-  group_by(referenceCleanedDoi) %>%
-  add_count() %>%
-  arrange(desc(n)) %>%
-  filter(
+  ) |>
+  dplyr::group_by(referenceCleanedDoi) |>
+  dplyr::add_count() |>
+  dplyr::arrange(dplyr::desc(n)) |>
+  dplyr::filter(
     !grepl(pattern = "Khimiya", x = referenceCleanedTitle) &
       !grepl(pattern = "Flavone and flavonol glycosides", x = referenceCleanedTitle) &
       !grepl(pattern = "The Handbook of Natural Flavonoids", x = referenceCleanedTitle) &
@@ -124,29 +124,29 @@ referenceSearch <- reference %>%
       n >= 3
   )
 
-maybeHit_ref <- openDb %>%
-  filter(referenceCleanedDoi == "10.1021/np0600595")
+maybeHit_ref <- openDb |>
+  dplyr::filter(referenceCleanedDoi == "10.1021/np0600595")
 
-hitNames_org <- maybeHit_org %>%
-  distinct(
+hitNames_org <- maybeHit_org |>
+  dplyr::distinct(
     organismType,
     organismValue
   )
 
-doubleTest <- openDb %>%
-  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
-  distinct(
+doubleTest <- openDb |>
+  dplyr::filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") |>
+  dplyr::distinct(
     organismType,
     organismValue, organismCleaned
-  ) %>%
-  group_by(organismCleaned) %>%
-  count() %>%
-  arrange(desc(n))
+  ) |>
+  dplyr::group_by(organismCleaned) |>
+  dplyr::count() |>
+  dplyr::arrange(dplyr::desc(n))
 
-pairTest <- openDb %>%
-  filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") %>%
-  filter(organismCleaned == "Crataegus monogyna") %>%
-  distinct(
+pairTest <- openDb |>
+  dplyr::filter(structureCleanedInchikey == "OVSQVDMCBVZWGM-DTGCRPNFSA-N") |>
+  dplyr::filter(organismCleaned == "Crataegus monogyna") |>
+  dplyr::distinct(
     organismType,
     organismValue, structureValue, organismCleaned
   )

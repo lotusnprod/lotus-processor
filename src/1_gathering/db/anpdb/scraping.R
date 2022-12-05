@@ -21,7 +21,7 @@ url <- "http://african-compounds.org/anpdb/get_compound_card/"
 
 xs <- 1:8410
 
-getnanp <- function(xs) {
+getanp <- function(xs) {
   p <- progressr::progressor(along = xs)
   future.apply::future_lapply(
     future.seed = TRUE,
@@ -77,110 +77,110 @@ getnanp <- function(xs) {
   )
 }
 
-NANPDB <- getnanp(xs = xs) |>
+ANPDB <- getanp(xs = xs) |>
   progressr::with_progress()
 
-NANPDB_2 <- bind_rows(NANPDB[!is.na(NANPDB)])
+ANPDB_2 <- bind_rows(ANPDB[!is.na(ANPDB)])
 
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "\r\n",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "\r",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "\n",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "\t",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
     x = x
   )
 })
-NANPDB_2[] <- lapply(NANPDB_2, function(x) {
+ANPDB_2[] <- lapply(ANPDB_2, function(x) {
   gsub(
     pattern = "  ",
     replacement = " ",
@@ -190,4 +190,4 @@ NANPDB_2[] <- lapply(NANPDB_2, function(x) {
 
 # exporting
 create_dir(export = database$sourceFiles$tsv)
-database$writeFile(database$sourceFiles$tsv, NANPDB_2)
+database$writeFile(database$sourceFiles$tsv, ANPDB_2)
