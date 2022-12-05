@@ -25,7 +25,7 @@ cut <-
 log_debug("  Step 1")
 log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -33,49 +33,26 @@ taxaRanksDictionary <-
   )
 
 wrongVerifiedDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
+  ) |>
   as.list()
 
 organismTable <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalOrganismFull,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesProcessed),
-  yes = dir.create(pathDataInterimTablesProcessed),
-  no = paste(pathDataInterimTablesProcessed, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesProcessedOrganism),
-  yes = dir.create(pathDataInterimTablesProcessedOrganism),
-  no = paste(pathDataInterimTablesProcessedOrganism, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesProcessedOrganismOriginal),
-  yes = dir.create(pathDataInterimTablesProcessedOrganismOriginal),
-  no = file.remove(
-    list.files(
-      path = pathDataInterimTablesProcessedOrganismOriginal,
-      full.names = TRUE
-    )
-  ) &
-    dir.create(pathDataInterimTablesProcessedOrganismOriginal,
-      showWarnings = FALSE
-    )
-)
+create_dir(export = pathDataInterimTablesProcessedOrganism)
+create_dir_with_rm(export = pathDataInterimTablesProcessedOrganismOriginal)
 
 log_debug("submitting to GNVerifier")
 if (.Platform$OS.type == "unix") {
@@ -85,22 +62,21 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedOriginalTable))
+  jsonlite::stream_in(con = file(
+    pathDataInterimTablesProcessedOrganismVerifiedOriginalTable
+  ))
 
-verified_df <- verified %>%
-  data.frame() %>%
-  select(
-    -curation,
-    -matchType
-  ) %>%
-  unnest(results, names_repair = "minimal") %>%
-  filter(dataSourceTitleShort != "IRMNG (old)" &
-    dataSourceTitleShort != "IPNI") %>%
-  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
-  mutate(organismType = "clean") %>%
-  arrange(desc(sortScore)) %>%
-  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
-  select(
+verified_df <- verified |>
+  data.frame() |>
+  dplyr::select(-curation, -matchType) |>
+  tidyr::unnest(results, names_repair = "minimal") |>
+  dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
+    dataSourceTitleShort != "IPNI") |>
+  dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+  dplyr::mutate(organismType = "clean") |>
+  dplyr::arrange(dplyr::desc(sortScore)) |>
+  dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
+  dplyr::select(
     organismType,
     organismValue = name,
     organismCleaned = currentCanonicalFull,
@@ -115,11 +91,11 @@ verified_df <- verified %>%
 verified_df$organismDbTaxo <-
   y_as_na(verified_df$organismDbTaxo, "")
 
-dataOrganismVerified <- left_join(
+dataOrganismVerified <- dplyr::left_join(
   organismTable,
   verified_df
-) %>%
-  select(
+) |>
+  dplyr::select(
     organismType,
     organismValue,
     organismCleaned,
@@ -130,15 +106,15 @@ dataOrganismVerified <- left_join(
     rank
   )
 
-dataOrganismNoVerified <- dataOrganismVerified %>%
-  arrange(organismDbTaxo) %>%
-  distinct(organismValue, .keep_all = TRUE) %>%
-  filter(is.na(organismDbTaxo)) %>%
-  distinct(organismValue) %>%
+dataOrganismNoVerified <- dataOrganismVerified |>
+  dplyr::arrange(organismDbTaxo) |>
+  dplyr::distinct(organismValue, .keep_all = TRUE) |>
+  dplyr::filter(is.na(organismDbTaxo)) |>
+  dplyr::distinct(organismValue) |>
   data.table()
 
-dataOrganismVerified <- dataOrganismVerified %>%
-  filter(!is.na(organismDbTaxo))
+dataOrganismVerified <- dataOrganismVerified |>
+  dplyr::filter(!is.na(organismDbTaxo))
 
 log_debug(pathDataInterimTablesOriginalOrganism)
 
@@ -199,20 +175,20 @@ if (length != 0) {
 log_debug("selecting and reordering")
 if (length(dataCleanOriginalOrganism) != 0) {
   dataCleanedOriginalOrganism <-
-    bind_rows(dataCleanOriginalOrganism) %>%
-    select(
+    dplyr::bind_rows(dataCleanOriginalOrganism) |>
+    dplyr::select(
       organismValue,
       organismCleaned = canonicalname,
       organismCleanedCurrent = canonicalnameCurrent,
       organismDbTaxo = dbTaxo,
-      everything()
-    ) %>%
-    select(-ids, -dbQuality)
+      dplyr::everything()
+    ) |>
+    dplyr::select(-ids, -dbQuality)
 }
 
 if (length(dataCleanOriginalOrganism) == 0) {
-  dataCleanedOriginalOrganism <- data.frame() %>%
-    mutate(
+  dataCleanedOriginalOrganism <- data.frame() |>
+    dplyr::mutate(
       organismValue = NA,
       organismCleaned = NA,
       organismCleanedCurrent = NA,
@@ -223,8 +199,8 @@ if (length(dataCleanOriginalOrganism) == 0) {
     )
 }
 
-dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism %>%
-  distinct(organismValue, organismCleaned, .keep_all = TRUE)
+dataCleanedOriginalOrganismUnique <- dataCleanedOriginalOrganism |>
+  dplyr::distinct(organismValue, organismCleaned, .keep_all = TRUE)
 
 log_debug("exporting ...")
 if (length != 0) {
@@ -232,7 +208,7 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  write_delim(
+  readr::write_delim(
     x = dataCleanedOriginalOrganism,
     delim = "\t",
     file = pathDataInterimTablesProcessedOrganismOriginalTable,
@@ -241,13 +217,11 @@ if (length != 0) {
 }
 
 if (length != 0) {
-  log_debug(
-    pathDataInterimTablesProcessedOrganismOriginalUniqueTable
-  )
+  log_debug(pathDataInterimTablesProcessedOrganismOriginalUniqueTable)
 }
 
 if (length != 0) {
-  write_delim(
+  readr::write_delim(
     x = dataCleanedOriginalOrganismUnique,
     delim = "\t",
     file = gzfile(
@@ -261,7 +235,7 @@ if (length != 0) {
   ## because of univocity parser settings
 }
 
-write_delim(
+readr::write_delim(
   x = dataOrganismVerified,
   delim = "\t",
   file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable,

@@ -15,15 +15,15 @@ library(stringr)
 log_debug("loading files ...")
 log_debug("... original table")
 originalTable <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalTable,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   )
 
-originalStructureTable <- originalTable %>%
-  distinct(
+originalStructureTable <- originalTable |>
+  dplyr::distinct(
     structureType,
     structureValue
   )
@@ -32,7 +32,7 @@ log_debug("loading dictionaries ...")
 if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
   log_debug("... structures")
   structureDictionary <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesStructureDictionary,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -43,7 +43,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary)) {
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... organisms")
   organismDictionary <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesOrganismDictionary,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -54,7 +54,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... references")
   referenceOrganismDictionary <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesReferenceOrganismDictionary,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -65,7 +65,7 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
 if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... structures metadata")
   structureMetadata <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesStructureMetadata,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -76,7 +76,7 @@ if (file.exists(pathDataInterimDictionariesStructureMetadata)) {
 if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   log_debug("... organisms metadata")
   organismMetadata <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesOrganismMetadata,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -86,13 +86,13 @@ if (file.exists(pathDataInterimDictionariesOrganismMetadata)) {
 
 log_debug("... cleaned organisms")
 organismTableFull <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismFinal,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organismType,
     organismValue,
     organismDetected,
@@ -111,12 +111,12 @@ organismTableFull <-
     organismCleaned_dbTaxo_6genus = organism_6_genus,
     organismCleaned_dbTaxo_7species = organism_7_species,
     organismCleaned_dbTaxo_8variety = organism_8_variety
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 log_debug("... translated structures")
 translatedStructureTable <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedStructureFinal,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -125,13 +125,13 @@ translatedStructureTable <-
 
 log_debug("... cleaned structures")
 cleanedStructureTableFull <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedStructureNamed,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structureTranslated,
     structureCleanedSmiles = smilesSanitized,
     structureCleanedInchi = inchiSanitized,
@@ -151,7 +151,7 @@ cleanedStructureTableFull <-
 
 log_debug("... cleaned references")
 referenceTableFull <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedReferenceFile,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -159,58 +159,40 @@ referenceTableFull <-
   )
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesCurated),
-  yes = dir.create(pathDataInterimTablesCurated),
-  no = paste(pathDataInterimTablesCurated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesStructure),
-  yes = dir.create(pathDataInterimDictionariesStructure),
-  no = paste(pathDataInterimDictionariesStructure, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesOrganism),
-  yes = dir.create(pathDataInterimDictionariesOrganism),
-  no = paste(pathDataInterimDictionariesOrganism, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesReference),
-  yes = dir.create(pathDataInterimDictionariesReference),
-  no = paste(pathDataInterimDictionariesReference, "exists")
-)
+create_dir(export = pathDataInterimTablesCurated)
+create_dir(export = pathDataInterimDictionariesOrganism)
+create_dir(export = pathDataInterimDictionariesReference)
+create_dir(export = pathDataInterimDictionariesStructure)
 
 log_debug("joining ...")
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   log_debug("... previously cleaned organisms with metadata")
   organismOld <-
-    left_join(organismDictionary, organismMetadata)
+    dplyr::left_join(organismDictionary, organismMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... previously cleaned structures with metadata")
   structureOld <-
-    left_join(structureDictionary, structureMetadata)
+    dplyr::left_join(structureDictionary, structureMetadata)
 }
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
   file.exists(pathDataInterimDictionariesOrganismMetadata)) {
   log_debug("... previously cleaned organism with new ones")
-  organismTableFull <- bind_rows(organismTableFull, organismOld) %>%
-    distinct()
+  organismTableFull <-
+    dplyr::bind_rows(organismTableFull, organismOld) |>
+    dplyr::distinct()
 }
 
 log_debug("... translated structures with cleaned ones ...")
 structureFull <-
-  left_join(translatedStructureTable, cleanedStructureTableFull) %>%
-  select(-structureTranslated) %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  distinct(
+  dplyr::left_join(translatedStructureTable, cleanedStructureTableFull) |>
+  dplyr::select(-structureTranslated) |>
+  dplyr::filter(!is.na(structureCleanedInchikey)) |>
+  dplyr::distinct(
     structureType,
     structureValue,
     structureCleanedSmiles,
@@ -222,8 +204,9 @@ structureFull <-
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... previously cleaned structures")
-  structureFull <- bind_rows(structureFull, structureOld) %>%
-    distinct(
+  dplyr::structureFull <-
+    dplyr::bind_rows(structureFull, structureOld) |>
+    dplyr::distinct(
       structureType,
       structureValue,
       structureCleanedSmiles,
@@ -235,9 +218,9 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... previously cleaned references")
-  referenceTableFull <-
-    bind_rows(referenceTableFull, referenceOrganismDictionary) %>%
-    distinct()
+  dplyr::referenceTableFull <-
+    dplyr::bind_rows(referenceTableFull, referenceOrganismDictionary) |>
+    dplyr::distinct()
 }
 
 rm(
@@ -250,9 +233,9 @@ rm(
 
 log_debug("splitting metadata from minimal columns ...")
 log_debug("... structures")
-structureMinimal <- structureFull %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  distinct(
+structureMinimal <- structureFull |>
+  dplyr::filter(!is.na(structureCleanedInchikey)) |>
+  dplyr::distinct(
     structureType,
     structureValue,
     structureCleanedInchi,
@@ -260,10 +243,10 @@ structureMinimal <- structureFull %>%
     structureCleanedSmiles
   )
 
-structureMetadata <- structureFull %>%
-  filter(!is.na(structureCleanedInchikey)) %>%
-  select(-structureType, -structureValue) %>%
-  distinct(
+structureMetadata <- structureFull |>
+  dplyr::filter(!is.na(structureCleanedInchikey)) |>
+  dplyr::select(-structureType, -structureValue) |>
+  dplyr::distinct(
     structureCleanedInchi,
     structureCleanedInchikey,
     structureCleanedSmiles,
@@ -271,20 +254,20 @@ structureMetadata <- structureFull %>%
   )
 
 log_debug("... organisms")
-organismMinimal <- organismTableFull %>%
-  filter(!is.na(organismCleaned)) %>%
-  filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
-  distinct(
+organismMinimal <- organismTableFull |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::distinct(
     organismType,
     organismValue,
     organismCleaned,
     organismDetected
   )
 
-organismMetadata <- organismTableFull %>%
-  filter(!is.na(organismCleaned)) %>%
-  filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) %>%
-  distinct(
+organismMetadata <- organismTableFull |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::distinct(
     organismCleaned,
     organismCleaned_id,
     organismCleaned_rank,
@@ -303,13 +286,13 @@ organismMetadata <- organismTableFull %>%
   )
 
 log_debug("... references")
-referenceMinimal <- referenceTableFull %>%
-  filter(
+referenceMinimal <- referenceTableFull |>
+  dplyr::filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
-  ) %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
+  ) |>
+  filter(!is.na(referenceCleanedTitle)) |>
   distinct(
     organismType,
     organismValue,
@@ -322,14 +305,14 @@ referenceMinimal <- referenceTableFull %>%
     referenceCleanedTitle
   )
 
-referenceMetadata <- referenceTableFull %>%
-  filter(
+referenceMetadata <- referenceTableFull |>
+  dplyr::filter(
     !is.na(referenceCleanedDoi) |
       !is.na(referenceCleanedPmcid) |
       !is.na(referenceCleanedPmid)
-  ) %>%
-  filter(!is.na(referenceCleanedTitle)) %>%
-  distinct(
+  ) |>
+  dplyr::filter(!is.na(referenceCleanedTitle)) |>
+  dplyr::distinct(
     organismType,
     organismValue,
     organismDetected,
@@ -355,22 +338,22 @@ log_debug(
   "generating list with chemical names having no translation \n",
   "to avoid translating them again (since process is long)"
 )
-structureNA <- anti_join(
+structureNA <- dplyr::anti_join(
   x = originalStructureTable,
   y = structureMinimal
-) %>%
-  distinct(
+) |>
+  dplyr::distinct(
     structureType,
     structureValue
   )
 
-structureNA <- left_join(structureNA, structureFull) %>%
-  filter(is.na(structureCleanedInchikey)) %>%
-  distinct(structureType,
+structureNA <- dplyr::left_join(structureNA, structureFull) |>
+  dplyr::filter(is.na(structureCleanedInchikey)) |>
+  dplyr::distinct(structureType,
     structureValue,
     .keep_all = TRUE
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     structureType,
     structureValue,
     structureCleanedInchi,
@@ -378,12 +361,12 @@ structureNA <- left_join(structureNA, structureFull) %>%
     structureCleanedSmiles,
     # structureCleanedName,
     # structureCleanedNameIupac
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 log_debug("partial export ...")
 log_debug(pathDataInterimDictionariesReferenceOrganismDictionary)
-write_delim(
+readr::write_delim(
   x = referenceTableFull,
   file = pathDataInterimDictionariesReferenceOrganismDictionary,
   delim = "\t",
@@ -391,7 +374,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesStructureDictionary)
-write_delim(
+readr::write_delim(
   x = structureMinimal,
   file = pathDataInterimDictionariesStructureDictionary,
   delim = "\t",
@@ -399,7 +382,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesStructureAntiDictionary)
-write_delim(
+readr::write_delim(
   x = structureNA,
   file = pathDataInterimDictionariesStructureAntiDictionary,
   delim = "\t",
@@ -407,7 +390,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesOrganismDictionary)
-write_delim(
+readr::write_delim(
   x = organismMinimal,
   file = pathDataInterimDictionariesOrganismDictionary,
   delim = "\t",
@@ -415,7 +398,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesStructureMetadata)
-write_delim(
+readr::write_delim(
   x = structureMetadata,
   file = pathDataInterimDictionariesStructureMetadata,
   delim = "\t",
@@ -423,7 +406,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesOrganismMetadata)
-write_delim(
+readr::write_delim(
   x = organismMetadata,
   file = pathDataInterimDictionariesOrganismMetadata,
   delim = "\t",
@@ -431,7 +414,7 @@ write_delim(
 )
 
 log_debug(pathDataInterimDictionariesReferenceMetadata)
-write_delim(
+readr::write_delim(
   x = referenceMetadata,
   file = pathDataInterimDictionariesReferenceMetadata,
   delim = "\t",
@@ -454,8 +437,8 @@ gc(
 )
 
 log_debug("outputting table with missing empty translations (for later on) ...")
-openDbMaximal <- originalTable %>%
-  distinct(
+openDbMaximal <- originalTable |>
+  dplyr::distinct(
     database,
     organismType,
     organismValue,
@@ -463,15 +446,15 @@ openDbMaximal <- originalTable %>%
     referenceValue,
     structureType,
     structureValue
-  ) %>%
-  filter(referenceType != "authors") %>%
-  filter(referenceType != "journal") %>%
-  filter(referenceType != "external") %>%
-  filter(referenceType != "isbn")
+  ) |>
+  dplyr::filter(referenceType != "authors") |>
+  dplyr::filter(referenceType != "journal") |>
+  dplyr::filter(referenceType != "external") |>
+  dplyr::filter(referenceType != "isbn")
 
 log_debug("partial export ...")
 log_debug(pathDataInterimTablesCuratedTableMaximal)
-write_delim(
+readr::write_delim(
   x = openDbMaximal,
   file = pathDataInterimTablesCuratedTableMaximal,
   delim = "\t",
@@ -488,16 +471,16 @@ gc(
 
 log_debug("joining minimal table ...")
 inhouseDbMinimal <-
-  inner_join(originalTable, structureMinimal) %>%
-  inner_join(., organismMinimal) %>%
-  left_join(., referenceMinimal %>%
-    select(-organismDetected))
+  dplyr::inner_join(originalTable, structureMinimal) |>
+  dplyr::inner_join(organismMinimal) |>
+  dplyr::left_join(referenceMinimal |>
+    dplyr::select(-organismDetected))
 
 rm(originalTable)
 
-inhouseDbMinimal_1 <- inhouseDbMinimal %>%
-  filter(database %in% forbidden_export) %>%
-  select(
+inhouseDbMinimal_1 <- inhouseDbMinimal |>
+  dplyr::filter(database %in% forbidden_export) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -511,17 +494,17 @@ inhouseDbMinimal_1 <- inhouseDbMinimal %>%
     structureCleanedSmiles,
     referenceCleanedTitle,
     referenceCleanedDoi,
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
-inhouseDbMinimal_2 <- inhouseDbMinimal %>%
-  filter(!is.na(referenceCleanedTitle))
+inhouseDbMinimal_2 <- inhouseDbMinimal |>
+  dplyr::filter(!is.na(referenceCleanedTitle))
 
 rm(inhouseDbMinimal)
 
-inhouseDbMinimal_2_1 <- inhouseDbMinimal_2 %>%
-  filter(!is.na(referenceCleanedDoi)) %>%
-  select(
+inhouseDbMinimal_2_1 <- inhouseDbMinimal_2 |>
+  dplyr::filter(!is.na(referenceCleanedDoi)) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -535,11 +518,11 @@ inhouseDbMinimal_2_1 <- inhouseDbMinimal_2 %>%
     structureCleanedSmiles,
     referenceCleanedTitle,
     referenceCleanedDoi,
-  ) %>%
-  distinct()
-inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 %>%
-  filter(!is.na(referenceCleanedPmcid)) %>%
-  select(
+  ) |>
+  dplyr::distinct()
+inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 |>
+  dplyr::filter(!is.na(referenceCleanedPmcid)) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -553,11 +536,11 @@ inhouseDbMinimal_2_2 <- inhouseDbMinimal_2 %>%
     structureCleanedSmiles,
     referenceCleanedTitle,
     referenceCleanedDoi,
-  ) %>%
-  distinct()
-inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 %>%
-  filter(!is.na(referenceCleanedPmid)) %>%
-  select(
+  ) |>
+  dplyr::distinct()
+inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 |>
+  dplyr::filter(!is.na(referenceCleanedPmid)) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -571,17 +554,17 @@ inhouseDbMinimal_2_3 <- inhouseDbMinimal_2 %>%
     structureCleanedSmiles,
     referenceCleanedTitle,
     referenceCleanedDoi,
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 inhouseDbMinimal <-
-  bind_rows(
+  dplyr::bind_rows(
     inhouseDbMinimal_2_1,
     inhouseDbMinimal_2_2,
     inhouseDbMinimal_2_3,
     inhouseDbMinimal_1
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 rm(
   inhouseDbMinimal_2_1,
@@ -592,71 +575,63 @@ rm(
 )
 
 log_debug("removing redundant structures (lower defined stereo)")
-inhouseDbMinimal <- inhouseDbMinimal %>%
-  left_join(
-    structureMetadata %>%
-      distinct(
+inhouseDbMinimal <- inhouseDbMinimal |>
+  dplyr::left_join(
+    structureMetadata |>
+      dplyr::distinct(
         structureCleanedSmiles,
         structureCleanedInchi,
         structureCleanedInchikey,
         structureCleaned_inchikey2D,
         structureCleaned_stereocenters_unspecified,
         structureCleaned_stereocenters_total
-      ) %>%
-      rowwise() %>%
-      mutate(
+      ) |>
+      dplyr::rowwise() |>
+      dplyr::mutate(
         specified_stereo = as.numeric(structureCleaned_stereocenters_total) -
           as.numeric(structureCleaned_stereocenters_unspecified)
-      ) %>%
-      ungroup()
-  ) %>%
-  group_by(
+      ) |>
+      dplyr::ungroup()
+  ) |>
+  dplyr::group_by(
     organismCleaned,
     structureCleaned_inchikey2D,
     referenceCleanedTitle,
     referenceCleanedDoi
-  ) %>%
-  mutate(best_stereo = max(specified_stereo)) %>%
-  ungroup() %>%
-  filter(specified_stereo == best_stereo) %>%
-  select(
-    -structureCleaned_inchikey2D,
-    -structureCleaned_stereocenters_unspecified,
-    -structureCleaned_stereocenters_total,
-    -specified_stereo,
-    -best_stereo
+  ) |>
+  dplyr::mutate(best_stereo = max(specified_stereo)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(specified_stereo == best_stereo) |>
+  dplyr::select(
+    -structureCleaned_inchikey2D, -structureCleaned_stereocenters_unspecified, -structureCleaned_stereocenters_total, -specified_stereo, -best_stereo
   )
 
 log_debug("removing redundant upper taxa")
-inhouseDbMinimal <- inhouseDbMinimal %>%
-  mutate(
+inhouseDbMinimal <- inhouseDbMinimal |>
+  dplyr::mutate(
     temp_org = gsub(
       pattern = " .*",
       replacement = "",
       x = organismCleaned
     ),
-    spaces = str_count(string = organismCleaned, pattern = " ")
-  ) %>%
-  mutate(spaces = ifelse(test = spaces == 0, yes = spaces, no = 1)) %>%
-  #' remove genera where species are found but not species with var
-  group_by(
+    spaces = stringr::str_count(string = organismCleaned, pattern = " ")
+  ) |>
+  dplyr::mutate(spaces = ifelse(test = spaces == 0, yes = spaces, no = 1)) |>
+  ## remove genera where species are found but not species with var
+  dplyr::group_by(
     temp_org,
     structureCleanedInchikey,
     referenceCleanedTitle,
     referenceCleanedDoi
-  ) %>%
-  mutate(best_org = max(spaces)) %>%
-  ungroup() %>%
-  filter(spaces == best_org) %>%
-  select(
-    -temp_org,
-    -spaces,
-    -best_org
-  )
+  ) |>
+  dplyr::mutate(best_org = max(spaces)) |>
+  dplyr::ungroup() |>
+  dplyr::filter(spaces == best_org) |>
+  dplyr::select(-temp_org, -spaces, -best_org)
 
 log_debug("writing the monster table, if running fullmode, this may take a while")
 log_debug(pathDataInterimTablesCuratedTable)
-write_delim(
+readr::write_delim(
   x = inhouseDbMinimal,
   file = pathDataInterimTablesCuratedTable,
   delim = "\t",

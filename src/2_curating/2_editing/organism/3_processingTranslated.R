@@ -19,7 +19,7 @@ log_debug("  Step 3")
 log_debug("... files ...")
 log_debug("full")
 organismTable_full <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalOrganismFull,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -28,7 +28,7 @@ organismTable_full <-
 
 log_debug("... translated organisms")
 dataInterimOrganismToFill <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismTranslatedInterim,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -37,7 +37,7 @@ dataInterimOrganismToFill <-
 
 log_debug("... cleaned original organisms")
 dataCleanedOriginalOrganism <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismOriginalTable,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -46,7 +46,7 @@ dataCleanedOriginalOrganism <-
 
 log_debug("... verified original organisms")
 dataVerifiedOriginalOrganism <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismOriginalVerifiedTable,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -55,7 +55,7 @@ dataVerifiedOriginalOrganism <-
 
 log_debug(" ... taxa ranks dictionary")
 taxaRanksDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -63,20 +63,7 @@ taxaRanksDictionary <-
   )
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesProcessedOrganismTranslated),
-  yes = dir.create(pathDataInterimTablesProcessedOrganismTranslated),
-  no = file.remove(
-    list.files(
-      path = pathDataInterimTablesProcessedOrganismTranslated,
-      full.names = TRUE
-    )
-  ) &
-    dir.create(
-      pathDataInterimTablesProcessedOrganismTranslated,
-      showWarnings = FALSE
-    )
-)
+create_dir_with_rm(export = pathDataInterimTablesProcessedOrganismTranslated)
 
 if (length(list.files(path = pathDataInterimTablesTranslatedOrganism, pattern = "tsv")) != 0) {
   log_debug("submitting to GNFinder")
@@ -128,20 +115,20 @@ if (length != 0) {
 log_debug("selecting and reordering")
 if (length(dataCleanTranslatedOrganism) != 0) {
   dataCleanedTranslatedOrganism <-
-    bind_rows(dataCleanTranslatedOrganism) %>%
-    select(
+    dplyr::bind_rows(dataCleanTranslatedOrganism) |>
+    dplyr::select(
       organismInterim,
       organismCleaned = canonicalname,
       organismCleanedCurrent = canonicalnameCurrent,
       organismDbTaxo = dbTaxo,
-      everything()
-    ) %>%
-    select(-ids, -dbQuality)
+      dplyr::everything()
+    ) |>
+    dplyr::select(-ids, -dbQuality)
 }
 
 if (length(dataCleanTranslatedOrganism) == 0) {
-  dataCleanedTranslatedOrganism <- data.frame() %>%
-    mutate(
+  dataCleanedTranslatedOrganism <- data.frame() |>
+    dplyr::mutate(
       organismInterim = NA,
       organismCleaned = NA,
       organismCleanedCurrent = NA,
@@ -149,26 +136,26 @@ if (length(dataCleanTranslatedOrganism) == 0) {
       taxonId = NA,
       taxonomy = NA,
       rank = NA,
-    ) %>%
-    mutate_all(as.character)
+    ) |>
+    dplyr::mutate_all(as.character)
 }
 
 #' temporary fix as gnfinder does not allow the verification we want anymore
 library(tidyr)
 source("r/y_as_na.R")
 wrongVerifiedDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
+  ) |>
   as.list()
-dataCleanedOrganismVerify <- dataCleanedTranslatedOrganism %>%
-  filter(!is.na(organismCleaned)) %>%
-  distinct(organismCleaned)
+dataCleanedOrganismVerify <- dataCleanedTranslatedOrganism |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::distinct(organismCleaned)
 
-write_delim(
+readr::write_delim(
   x = dataCleanedOrganismVerify,
   file = gzfile(
     description = pathDataInterimTablesProcessedOrganismVerifyTable,
@@ -190,19 +177,19 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
+  jsonlite::stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
 
 if (nrow(dataCleanedOrganismVerify != 0)) {
-  verified_df <- verified %>%
-    data.frame() %>%
-    select(-curation, -matchType) %>%
-    unnest(results, names_repair = "minimal") %>%
-    filter(dataSourceTitleShort != "IRMNG (old)" &
-      dataSourceTitleShort != "IPNI") %>%
-    filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
-    arrange(desc(sortScore)) %>%
-    distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
-    select(
+  verified_df <- verified |>
+    data.frame() |>
+    dplyr::select(-curation, -matchType) |>
+    tidyr::unnest(results, names_repair = "minimal") |>
+    dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
+      dataSourceTitleShort != "IPNI") |>
+    dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+    dplyr::arrange(dplyr::desc(sortScore)) |>
+    dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
+    dplyr::select(
       organismCleaned = name,
       organismDbTaxo = dataSourceTitleShort,
       taxonId = currentRecordId,
@@ -219,40 +206,41 @@ if (nrow(dataCleanedOrganismVerify != 0)) {
 
 if (nrow(dataInterimOrganismToFill) != 0) {
   dataCleanedTranslatedOrganism2join <-
-    dataInterimOrganismToFill %>%
-    filter(!is.na(organismInterim)) %>%
-    distinct(organismValue, organismInterim) %>%
-    mutate_all(as.character)
+    dataInterimOrganismToFill |>
+    dplyr::filter(!is.na(organismInterim)) |>
+    dplyr::distinct(organismValue, organismInterim) |>
+    dplyr::mutate_all(as.character)
 }
 
 if (nrow(dataInterimOrganismToFill) == 0) {
-  dataCleanedTranslatedOrganism2join <- data.frame() %>%
-    mutate(
+  dataCleanedTranslatedOrganism2join <- data.frame() |>
+    dplyr::mutate(
       organismValue = NA,
       organismInterim = NA
-    ) %>%
+    ) |>
     mutate_all(as.character)
 }
 
 if (length != 0) {
   dataCleanedTranslatedOrganismFull <-
-    left_join(
+    dplyr::left_join(
       dataCleanedTranslatedOrganism2join,
-      dataCleanedTranslatedOrganism %>% distinct(organismInterim, organismCleaned)
-    ) %>%
-    left_join(
-      .,
-      dataCleanedTranslatedOrganism %>% distinct(
-        organismCleaned,
-        organismCleanedCurrent,
-        organismDbTaxo,
-        taxonId,
-        taxonomy,
-        rank,
-      )
-    ) %>%
-    select(-organismInterim) %>%
-    distinct(organismValue,
+      dataCleanedTranslatedOrganism |>
+        dplyr::distinct(organismInterim, organismCleaned)
+    ) |>
+    dplyr::left_join(
+      dataCleanedTranslatedOrganism |>
+        dplyr::distinct(
+          organismCleaned,
+          organismCleanedCurrent,
+          organismDbTaxo,
+          taxonId,
+          taxonomy,
+          rank,
+        )
+    ) |>
+    dplyr::select(-organismInterim) |>
+    dplyr::distinct(organismValue,
       organismCleaned,
       taxonId,
       .keep_all = TRUE
@@ -270,39 +258,39 @@ if (length != 0) {
 
 if (length == 0) {
   dataCleanedOrganism <-
-    bind_rows(
-      dataVerifiedOriginalOrganism %>%
-        select(-organismType) %>%
-        mutate_all(as.character),
-      dataCleanedOriginalOrganism %>%
-        mutate_all(as.character())
+    dplyr::bind_rows(
+      dataVerifiedOriginalOrganism |>
+        dplyr::select(-organismType) |>
+        dplyr::mutate_all(as.character),
+      dataCleanedOriginalOrganism |>
+        dplyr::mutate_all(as.character)
     )
 }
 
-dataCleanedOrganism <- dataCleanedOrganism %>%
-  distinct(organismValue,
+dataCleanedOrganism <- dataCleanedOrganism |>
+  dplyr::distinct(organismValue,
     organismCleaned,
     taxonId,
     .keep_all = TRUE
-  ) %>%
-  group_by(organismValue) %>%
-  add_count() %>%
-  ungroup() %>%
-  filter(!is.na(organismCleaned) |
-    !n > 1) %>%
-  select(-n) %>%
-  distinct(
+  ) |>
+  dplyr::group_by(organismValue) |>
+  dplyr::add_count() |>
+  dplyr::ungroup() |>
+  dplyr::filter(!is.na(organismCleaned) |
+    !n > 1) |>
+  dplyr::select(-n) |>
+  dplyr::distinct(
     organismValue,
     organismCleaned
   )
 
-dataCleanedOrganism <- dataCleanedOrganism %>%
-  left_join(organismTable_full, .) %>%
-  distinct()
+dataCleanedOrganism <- organismTable_full |>
+  dplyr::left_join(dataCleanedOrganism) |>
+  dplyr::distinct()
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesProcessedOrganismTranslatedTable)
-write_delim(
+readr::write_delim(
   x = dataCleanedOrganism,
   delim = "\t",
   file = pathDataInterimTablesProcessedOrganismTranslatedTable,

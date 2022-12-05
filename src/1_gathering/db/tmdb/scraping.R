@@ -52,10 +52,5 @@ TMDB_4 <- TMDB_3 |>
   dplyr::filter(!is.na(X1))
 
 # exporting
-ifelse(
-  test = !dir.exists(dirname(database$sourceFiles$tsv)),
-  yes = dir.create(dirname(database$sourceFiles$tsv)),
-  no = paste(dirname(database$sourceFiles$tsv), "exists")
-)
-
+create_dir(export = database$sourceFiles$tsv)
 database$writeFile(database$sourceFiles$tsv, TMDB_4)

@@ -19,13 +19,13 @@ source("r/split_data_table_quote.R")
 log_debug("... files ...")
 log_debug("... DOI")
 dataDoi <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedReferenceDoi,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     referenceOriginal = referenceOriginal_doi,
     doi_doi = referenceTranslatedDoi,
     journal_doi = referenceTranslatedJournal,
@@ -34,27 +34,27 @@ dataDoi <-
     author_doi = referenceTranslatedAuthor,
     scoreCrossref_doi = referenceTranslationScoreCrossref,
     scoreDistance_doi = referenceTranslationScoreDistance
-  ) %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
-    cols = 2:ncol(.),
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  tidyr::pivot_longer(
+    cols = 2:8,
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
-  ) %>%
-  mutate(level = 1) %>%
-  mutate_all(as.character)
+  ) |>
+  dplyr::mutate(level = 1) |>
+  dplyr::mutate_all(as.character)
 
 log_debug("... original references")
 dataOriginal <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedReferenceOriginal,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   ) %>%
-  select(
+  dplyr::select(
     referenceOriginal = referenceOriginal_original,
     doi_original = referenceTranslatedDoi,
     journal_original = referenceTranslatedJournal,
@@ -64,28 +64,28 @@ dataOriginal <-
     scoreCrossref_original = referenceTranslationScoreCrossref,
     scoreDistance_original = referenceTranslationScoreDistance
   ) %>%
-  group_by(referenceOriginal) %>%
-  mutate(level = row_number()) %>%
-  relocate(level, .after = referenceOriginal) %>%
-  ungroup() %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
+  dplyr::group_by(referenceOriginal) %>%
+  dplyr::mutate(level = dplyr::row_number()) %>%
+  dplyr::relocate(level, .after = referenceOriginal) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(as.character) %>%
+  tidyr::pivot_longer(
     cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate_all(as.character)
+  dplyr::mutate_all(as.character)
 
 log_debug("... PMID")
 dataPubmed <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedReferencePubmed,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
+  ) |>
   select(
     referenceOriginal = referenceOriginal_pubmed,
     doi_pubmed = referenceTranslatedDoi,
@@ -95,27 +95,27 @@ dataPubmed <-
     author_pubmed = referenceTranslatedAuthor,
     scoreCrossref_pubmed = referenceTranslationScoreCrossref,
     scoreDistance_pubmed = referenceTranslationScoreDistance
-  ) %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
-    cols = 2:ncol(.),
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  tidyr::pivot_longer(
+    cols = 2:8,
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
-  ) %>%
-  mutate(level = 1) %>%
-  mutate_all(as.character)
+  ) |>
+  dplyr::mutate(level = 1) |>
+  dplyr::mutate_all(as.character)
 
 log_debug("... publishing details")
 dataPublishingDetails <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedReferencePublishingDetails,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   ) %>%
-  select(
+  dplyr::select(
     referenceOriginal = referenceOriginal_publishingDetails,
     doi_publishingDetails = referenceTranslatedDoi,
     journal_publishingDetails = referenceTranslatedJournal,
@@ -125,29 +125,29 @@ dataPublishingDetails <-
     scoreCrossref_publishingDetails = referenceTranslationScoreCrossref,
     scoreDistance_publishingDetails = referenceTranslationScoreDistance
   ) %>%
-  group_by(referenceOriginal) %>%
-  mutate(level = row_number()) %>%
-  relocate(level, .after = referenceOriginal) %>%
-  ungroup() %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
+  dplyr::group_by(referenceOriginal) %>%
+  dplyr::mutate(level = dplyr::row_number()) %>%
+  dplyr::relocate(level, .after = referenceOriginal) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(as.character) %>%
+  tidyr::pivot_longer(
     cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate_all(as.character)
+  dplyr::mutate_all(as.character)
 
 log_debug("... titles")
 dataTitle <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedReferenceTitle,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   ) %>%
-  select(
+  dplyr::select(
     referenceOriginal = referenceOriginal_title,
     doi_title = referenceTranslatedDoi,
     journal_title = referenceTranslatedJournal,
@@ -157,26 +157,28 @@ dataTitle <-
     scoreCrossref_title = referenceTranslationScoreCrossref,
     scoreDistance_title = referenceTranslationScoreDistance
   ) %>%
-  group_by(referenceOriginal) %>%
-  mutate(level = row_number()) %>%
-  relocate(level, .after = referenceOriginal) %>%
-  ungroup() %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
+  dplyr::group_by(referenceOriginal) %>%
+  dplyr::mutate(level = dplyr::row_number()) %>%
+  dplyr::relocate(level, .after = referenceOriginal) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(as.character) %>%
+  tidyr::pivot_longer(
     cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate_all(as.character)
+  dplyr::mutate_all(as.character)
 
 log_debug("... split")
 dataSplit <-
-  read_delim(file = pathDataInterimTablesTranslatedReferenceSplit,
-             delim = "\t",
-             col_types = cols(.default = "c")) %>%
-  select(
+  readr::read_delim(
+    file = pathDataInterimTablesTranslatedReferenceSplit,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  ) %>%
+  dplyr::select(
     referenceOriginal = referenceOriginal_split,
     doi_split = referenceTranslatedDoi,
     journal_split = referenceTranslatedJournal,
@@ -186,77 +188,97 @@ dataSplit <-
     scoreCrossref_split = referenceTranslationScoreCrossref,
     scoreDistance_split = referenceTranslationScoreDistance
   ) %>%
-  group_by(referenceOriginal) %>%
-  mutate(level = row_number()) %>%
-  relocate(level, .after = referenceOriginal) %>%
-  ungroup() %>%
-  mutate_all(as.character) %>%
-  pivot_longer(
+  dplyr::group_by(referenceOriginal) %>%
+  dplyr::mutate(level = dplyr::row_number()) %>%
+  dplyr::relocate(level, .after = referenceOriginal) %>%
+  dplyr::ungroup() %>%
+  dplyr::mutate_all(as.character) %>%
+  tidyr::pivot_longer(
     cols = 3:ncol(.),
     names_to = c("referenceTranslatedType", "origin"),
     names_sep = "_",
     values_to = "referenceTranslatedValue",
     values_drop_na = TRUE
   ) %>%
-  mutate_all(as.character)
+  dplyr::mutate_all(as.character)
 
 log_debug("... full references")
 dataFull <-
-  read_delim(file = pathDataInterimTablesOriginalReferenceFull,
-             delim = "\t",
-             col_types = cols(.default = "c"))
+  readr::read_delim(
+    file = pathDataInterimTablesOriginalReferenceFull,
+    delim = "\t",
+    col_types = cols(.default = "c")
+  )
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
   dataCleanedOrganismManipulated_old <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesOrganismDictionary,
       delim = "\t",
       col_types = cols(.default = "c")
-    ) %>%
-    mutate(organismDetected =
-             word(organismDetected, 1, 2)) %>%
-    distinct(organismType,
-             organismValue,
-             organismDetected)
-  
+    ) |>
+    dplyr::mutate(
+      organismDetected =
+        word(organismDetected, 1, 2)
+    ) |>
+    dplyr::distinct(
+      organismType,
+      organismValue,
+      organismDetected
+    )
+
   dataCleanedOrganismManipulated_new <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimTablesProcessedOrganismFinal,
       delim = "\t",
       col_types = cols(.default = "c")
-    ) %>%
-    mutate(organismDetected =
-             word(organismDetected, 1, 2)) %>%
-    distinct(organismType,
-             organismValue,
-             organismDetected)
-  
+    ) |>
+    dplyr::mutate(
+      organismDetected =
+        word(organismDetected, 1, 2)
+    ) |>
+    dplyr::distinct(
+      organismType,
+      organismValue,
+      organismDetected
+    )
+
   dataCleanedOrganismManipulated <-
-    bind_rows(dataCleanedOrganismManipulated_old,
-              dataCleanedOrganismManipulated_new) %>%
-    distinct()
+    dplyr::bind_rows(
+      dataCleanedOrganismManipulated_old,
+      dataCleanedOrganismManipulated_new
+    ) |>
+    dplyr::distinct()
 }
 
 if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("... cleaned organisms")
   dataCleanedOrganismManipulated <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimTablesProcessedOrganismFinal,
       delim = "\t",
       col_types = cols(.default = "c")
-    ) %>%
-    mutate(organismDetected =
-             word(organismDetected, 1, 2)) %>%
-    distinct(organismType,
-             organismValue,
-             organismDetected)
+    ) |>
+    dplyr::mutate(
+      organismDetected =
+        stringr::word(
+          string = organismDetected,
+          start = 1,
+          end = 2
+        )
+    ) |>
+    dplyr::distinct(
+      organismType,
+      organismValue,
+      organismDetected
+    )
 }
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
   log_debug("... reference dictionary, this may take a while")
   referenceDictionary <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesReferenceDictionary,
       delim = "\t",
       col_types = cols(.default = "c")
@@ -266,7 +288,7 @@ if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... reference organism dictionary")
   referenceOrganismDictionary <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesReferenceOrganismDictionary,
       delim = "\t",
       col_types = cols(.default = "c")
@@ -275,15 +297,17 @@ if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
 
 log_debug("joining ...")
 log_debug("... all reference types")
-dataCrossref <- bind_rows(dataDoi,
-                          dataOriginal,
-                          dataPublishingDetails,
-                          dataPubmed,
-                          dataSplit,
-                          dataTitle) %>%
-  filter(!is.na(referenceOriginal)) %>%
-  filter(!is.na(referenceTranslatedValue)) %>%
-  distinct(
+dataCrossref <- dplyr::bind_rows(
+  dataDoi,
+  dataOriginal,
+  dataPublishingDetails,
+  dataPubmed,
+  dataSplit,
+  dataTitle
+) |>
+  dplyr::filter(!is.na(referenceOriginal)) |>
+  dplyr::filter(!is.na(referenceTranslatedValue)) |>
+  dplyr::distinct(
     referenceOriginal,
     referenceTranslatedType,
     origin,
@@ -292,13 +316,13 @@ dataCrossref <- bind_rows(dataDoi,
   )
 
 if (file.exists(pathDataInterimDictionariesReferenceDictionary)) {
-  dataCrossref <- bind_rows(dataCrossref, referenceDictionary)
+  dataCrossref <- dplyr::bind_rows(dataCrossref, referenceDictionary)
 }
 
-dataCrossref <- dataCrossref %>%
-  filter(!is.na(referenceOriginal)) %>%
-  filter(!is.na(referenceTranslatedValue)) %>%
-  distinct(
+dataCrossref <- dataCrossref |>
+  dplyr::filter(!is.na(referenceOriginal)) |>
+  dplyr::filter(!is.na(referenceTranslatedValue)) |>
+  dplyr::distinct(
     referenceOriginal,
     referenceTranslatedType,
     origin,
@@ -307,33 +331,25 @@ dataCrossref <- dataCrossref %>%
   )
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
-  dataFull <- dataFull %>%
-    anti_join(., referenceOrganismDictionary)
+  dataFull <- dataFull |>
+    dplyr::anti_join(referenceOrganismDictionary)
 }
 
 log_debug("... with organisms")
 dataTranslated <-
-  left_join(dataFull, dataCleanedOrganismManipulated) %>%
-  filter(!is.na(referenceValue)) %>%
-  distinct(organismType,
-           organismValue,
-           referenceType,
-           referenceValue,
-           organismDetected) %>%
-  data.table()
+  dplyr::left_join(dataFull, dataCleanedOrganismManipulated) |>
+  dplyr::filter(!is.na(referenceValue)) |>
+  dplyr::distinct(
+    organismType,
+    organismValue,
+    referenceType,
+    referenceValue,
+    organismDetected
+  ) |>
+  data.table::data.table()
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimDictionaries),
-  yes = dir.create(pathDataInterimDictionaries),
-  no = paste(pathDataInterimDictionaries, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesReference),
-  yes = dir.create(pathDataInterimDictionariesReference),
-  no = paste(pathDataInterimDictionariesReference, "exists")
-)
+create_dir(export = pathDataInterimDictionariesReference)
 
 log_debug("exporting, this may take a while if running full mode")
 log_debug(pathDataInterimTablesTranslatedReference)
@@ -345,7 +361,7 @@ split_data_table_quote(
 )
 
 log_debug(pathDataInterimDictionariesReferenceDictionary)
-write_delim(
+readr::write_delim(
   x = dataCrossref,
   delim = "\t",
   file = pathDataInterimDictionariesReferenceDictionary,
