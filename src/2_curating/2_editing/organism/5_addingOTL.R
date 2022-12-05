@@ -11,16 +11,21 @@ log_debug("loading ...")
 log_debug("... libraries")
 library(DBI)
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(purrr)
 library(readr)
 library(rotl)
 library(RSQLite)
 library(tidyr)
 
+source("r/progressr.R")
+
 canonical_name_colname <- "organismCleaned"
 
 dataCuratedOrganismAuto <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismFinal,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -29,7 +34,7 @@ dataCuratedOrganismAuto <-
 
 if (works_locally_only == FALSE) {
   triplesPostWikidata <-
-    read_delim(
+    readr::read_delim(
       file = wikidataLotusExporterDataOutputTriplesPath,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -37,81 +42,83 @@ if (works_locally_only == FALSE) {
     )
 
   organismsPostWikidata <-
-    read_delim(
+    readr::read_delim(
       file = wikidataLotusExporterDataOutputTaxaPath,
       delim = "\t",
       col_types = cols(.default = "c"),
       locale = locales
     )
 
-  postWikidata <- left_join(
-    triplesPostWikidata %>% distinct(taxon),
-    organismsPostWikidata %>% distinct(wikidataId, names_pipe_separated),
+  postWikidata <- dplyr::left_join(
+    triplesPostWikidata |>
+      dplyr::distinct(taxon),
+    organismsPostWikidata |>
+      dplyr::distinct(wikidataId, names_pipe_separated),
     by = c("taxon" = "wikidataId")
-  ) %>%
-    select(organismCleaned = names_pipe_separated)
+  ) |>
+    dplyr::select(organismCleaned = names_pipe_separated)
 
-  dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
-    bind_rows(., postWikidata) %>%
-    distinct()
+  dataCuratedOrganismAuto <- dataCuratedOrganismAuto |>
+    dplyr::bind_rows(postWikidata) |>
+    dplyr::distinct()
 }
 
-new_matched_names <- dataCuratedOrganismAuto %>%
-  drop_na(!!as.name(canonical_name_colname)) %>%
-  distinct(!!as.name(canonical_name_colname)) %>%
-  mutate(search_string = tolower(organismCleaned)) %>%
-  distinct(
+new_matched_names <- dataCuratedOrganismAuto |>
+  tidyr::drop_na(!!as.name(canonical_name_colname)) |>
+  dplyr::distinct(!!as.name(canonical_name_colname)) |>
+  dplyr::mutate(search_string = tolower(organismCleaned)) |>
+  dplyr::distinct(
     !!as.name(canonical_name_colname),
     search_string
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     canonical_name := !!as.name(canonical_name_colname),
     search_string
-  ) %>%
+  ) |>
   data.frame()
 
-drv <- SQLite()
+drv <- RSQLite::SQLite()
 
-db <- dbConnect(
+db <- DBI::dbConnect(
   drv = drv,
   dbname = pathDataInterimDictionariesOrganismDictionaryOTL
 )
 
 if ("taxa_names" %in% dbListTables(db)) {
-  previously_matched_names <- dbGetQuery(
+  previously_matched_names <- DBI::dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_names"
   )
 
   new_matched_names <-
-    anti_join(new_matched_names, previously_matched_names)
+    dplyr::anti_join(new_matched_names, previously_matched_names)
 }
 
 if ("taxa_otl" %in% dbListTables(db)) {
-  previously_matched_otl <- dbGetQuery(
+  previously_matched_otl <- DBI::dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_otl"
   )
 }
 
 if ("taxa_meta" %in% dbListTables(db)) {
-  previously_matched_meta <- dbGetQuery(
+  previously_matched_meta <- DBI::dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_meta"
   )
 }
 
-taxa_names <- new_matched_names %>%
-  distinct(search_string)
+taxa_names <- new_matched_names |>
+  dplyr::distinct(search_string)
 
 if ("taxa_names" %in% dbListTables(db)) {
-  dbAppendTable(
+  DBI::dbAppendTable(
     conn = db,
     name = "taxa_names",
     value = new_matched_names,
   )
 } else {
-  dbCreateTable(
+  DBI::dbCreateTable(
     conn = db,
     name = "taxa_names",
     fields = new_matched_names,
@@ -121,23 +128,23 @@ if ("taxa_names" %in% dbListTables(db)) {
 new_matched_names <- taxa_names$search_string
 
 if (is_empty(new_matched_names) == FALSE) {
-  new_matched_otl_exact <- tnrs_match_names(
+  new_matched_otl_exact <- rotl::tnrs_match_names(
     names = new_matched_names,
     do_approximate_matching = FALSE,
     include_suppressed = FALSE
   )
 
-  taxa_approx <- new_matched_otl_exact %>%
-    filter(is.na(unique_name)) %>%
-    drop_na(search_string) %>%
-    distinct(search_string)
+  taxa_approx <- new_matched_otl_exact |>
+    dplyr::filter(is.na(unique_name)) |>
+    tidyr::drop_na(search_string) |>
+    dplyr::distinct(search_string)
 
-  new_matched_otl_exact <- new_matched_otl_exact %>%
-    filter(!is.na(unique_name))
+  new_matched_otl_exact <- new_matched_otl_exact |>
+    dplyr::filter(!is.na(unique_name))
 
   ## very doubtful quality
   if (length(taxa_approx != 0)) {
-    new_matched_otl_approx <- tnrs_match_names(
+    new_matched_otl_approx <- rotl::tnrs_match_names(
       names = taxa_approx$search_string,
       do_approximate_matching = TRUE,
       include_suppressed = FALSE
@@ -146,25 +153,25 @@ if (is_empty(new_matched_names) == FALSE) {
 
   ## not joining it for now since results of fuzzy seem really bad
   new_matched_otl <-
-    bind_rows(new_matched_otl_exact) %>% ## new_matched_otl_approx
+    dplyr::bind_rows(new_matched_otl_exact) |> ## new_matched_otl_approx
     data.frame() ## loosing some comments with df conversion
 
   if ("taxa_otl" %in% dbListTables(db)) {
-    dbAppendTable(
+    DBI::dbAppendTable(
       conn = db,
       name = "taxa_otl",
       value = new_matched_otl
     )
   } else {
-    dbCreateTable(
+    DBI::dbCreateTable(
       conn = db,
       name = "taxa_otl",
       fields = new_matched_otl
     )
   }
 
-  new_ott_id <- new_matched_otl %>%
-    distinct(ott_id)
+  new_ott_id <- new_matched_otl |>
+    dplyr::distinct(ott_id)
 
   X <- seq_along(1:round(nrow(new_ott_id) / 100))
 
@@ -177,14 +184,14 @@ if (is_empty(new_matched_names) == FALSE) {
 
   get_otl_lineage <- function(X) {
     tryCatch({
-      taxon_info <- taxonomy_taxon_info(
+      taxon_info <- rotl::taxonomy_taxon_info(
         ott_ids = ott_list[[X]],
         include_lineage = TRUE,
         include_terminal_descendants = TRUE
       )
 
-      taxon_lineage <- taxon_info %>%
-        tax_lineage()
+      taxon_lineage <- taxon_info |>
+        rotl::tax_lineage()
 
       list_df <- list()
 
@@ -201,7 +208,7 @@ if (is_empty(new_matched_names) == FALSE) {
         )
       }
 
-      df <- bind_rows(list_df)
+      df <- dplyr::bind_rows(list_df)
       return(df)
     })
   }
@@ -212,9 +219,9 @@ if (is_empty(new_matched_names) == FALSE) {
       X = X
     )
 
-  new_matched_meta <- bind_rows(new_matched_meta_list)
+  new_matched_meta <- dplyr::bind_rows(new_matched_meta_list)
 
-  dbWriteTable(
+  DBI::dbWriteTable(
     conn = db,
     name = "taxa_meta",
     value = new_matched_meta,
@@ -223,7 +230,7 @@ if (is_empty(new_matched_names) == FALSE) {
   )
 }
 
-dbDisconnect(db)
+DBI::dbDisconnect(db)
 
 end <- Sys.time()
 

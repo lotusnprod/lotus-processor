@@ -13,9 +13,14 @@ source("r/get_jsd.R")
 log_debug("... libraries")
 library(data.table)
 library(dplyr)
+library(future)
+library(future.apply)
 library(philentropy)
+library(progressr)
 library(readr)
 library(tidyr)
+
+source("r/progressr.R")
 
 log_debug("loading the LOTUS, this may take a while")
 table <- read_csv(file = file.path(
