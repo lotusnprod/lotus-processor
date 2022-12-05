@@ -24,7 +24,7 @@ source("r/myDirtyValidationFig.R")
 
 log_debug("loading files ...")
 oldDbNames <-
-  read_delim(
+  readr::read_delim(
     file = "../data/external/dictionarySource/dbNames.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -34,63 +34,63 @@ oldDbNames <-
   )
 
 sampleAllONPDB_AR_old <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/old/AR.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "AR")
+  ) |>
+  dplyr::filter(curator == "AR")
 
 sampleAllONPDB_PMA_old <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/old/PMA.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "PMA")
+  ) |>
+  dplyr::filter(curator == "PMA")
 
 sampleAllONPDB_AR <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/AR.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "AR")
+  ) |>
+  dplyr::filter(curator == "AR")
 
 sampleAllONPDB_JB <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/JB.csv",
     delim = ",",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "JB") %>%
-  select(1:20)
+  ) |>
+  dplyr::filter(curator == "JB") |>
+  dplyr::select(1:20)
 
 sampleAllONPDB_PMA <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/PM.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "PMA")
+  ) |>
+  dplyr::filter(curator == "PMA")
 
 sampleAllONPDB_publishingDetails <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/publishingDetails.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -100,7 +100,7 @@ sampleAllONPDB_publishingDetails <-
   )
 
 sampleAllONPDB_additionalSet <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/additionalSet.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -110,7 +110,7 @@ sampleAllONPDB_additionalSet <-
   )
 
 sampleAllONPDB_additionalSetBis <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/new/additionalSetBis.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -120,20 +120,20 @@ sampleAllONPDB_additionalSetBis <-
   )
 
 sampleCondifent_PMA <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/confident/100confidentPMAChecked.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(curator == "PMA") %>%
-  mutate(curator = "PMA2")
+  ) |>
+  dplyr::filter(curator == "PMA") |>
+  dplyr::mutate(curator = "PMA2")
 
 log_debug("... documented pairs")
 inhouseDbMinimal <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesCuratedTable,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -142,13 +142,13 @@ inhouseDbMinimal <-
 
 log_debug("... structure metadata")
 structureMetadata <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesStructureMetadata,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct(
+  ) |>
+  dplyr::distinct(
     structureCleanedSmiles,
     structureCleaned_smiles2D,
     structureCleanedInchi,
@@ -160,9 +160,9 @@ structureMetadata <-
     structureCleaned_stereocenters_unspecified,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional
-  ) %>%
-  rowwise() %>%
-  mutate(
+  ) |>
+  dplyr::rowwise() |>
+  dplyr::mutate(
     structureCleaned_nameIupac = ifelse(
       test = is.na(structureCleaned_nameIupac),
       yes = structureCleanedInchikey,
@@ -177,13 +177,13 @@ structureMetadata <-
 
 log_debug("... organism metadata")
 organismMetadata <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesOrganismMetadata,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct(
+  ) |>
+  dplyr::distinct(
     organismCleaned,
     organismCleaned_id,
     organismCleaned_dbTaxo,
@@ -194,13 +194,13 @@ organismMetadata <-
 
 log_debug("... reference metadata")
 referenceMetadata <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesReferenceMetadata,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct(
+  ) |>
+  dplyr::distinct(
     organismType,
     organismValue,
     organismDetected,
@@ -228,9 +228,9 @@ colnames(sampleAllONPDB_old)[8] <- "reference_pubmed"
 colnames(sampleAllONPDB_old)[9] <- "reference_title"
 colnames(sampleAllONPDB_old)[10] <- "reference_original"
 
-table_old <- sampleAllONPDB_old %>%
-  mutate_all(as.character) %>%
-  mutate(
+table_old <- sampleAllONPDB_old |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     validated = gsub(
       pattern = "NOT_OK",
       replacement = "N",
@@ -241,27 +241,27 @@ table_old <- sampleAllONPDB_old %>%
       replacement = "Y",
       x = validated
     )
-  ) %>%
-  pivot_longer(
+  ) |>
+  tidyr::pivot_longer(
     6:10,
     names_to = c("origin1", "referenceType"),
     names_sep = "_",
     values_to = "referenceValue",
     values_drop_na = TRUE
-  ) %>%
-  pivot_longer(
+  ) |>
+  tidyr::pivot_longer(
     3:5,
     names_to = c("origin2", "structureType"),
     names_sep = "_",
     values_to = "structureValue",
     values_drop_na = TRUE
-  ) %>%
-  filter(!is.na(referenceValue)) %>%
-  group_by(inchikeySanitized) %>%
-  distinct(referenceCleanedDoi, .keep_all = TRUE) %>%
-  ungroup() %>%
-  select(-origin1, -origin2) %>%
-  select(
+  ) |>
+  dplyr::filter(!is.na(referenceValue)) |>
+  dplyr::group_by(inchikeySanitized) |>
+  dplyr::distinct(referenceCleanedDoi, .keep_all = TRUE) |>
+  dplyr::ungroup() |>
+  dplyr::select(-origin1, -origin2) |>
+  dplyr::select(
     database,
     organismOriginal,
     structureType,
@@ -279,7 +279,7 @@ table_old <- sampleAllONPDB_old %>%
     comments
   )
 
-sampleAllONPDB <- bind_rows(
+sampleAllONPDB <- dplyr::bind_rows(
   sampleAllONPDB_AR,
   sampleAllONPDB_JB,
   sampleAllONPDB_PMA,
@@ -289,9 +289,9 @@ sampleAllONPDB <- bind_rows(
   sampleCondifent_PMA
 )
 
-table <- sampleAllONPDB %>%
-  mutate_all(as.character) %>%
-  mutate(
+table <- sampleAllONPDB |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::mutate(
     validated = gsub(
       pattern = "NotOK",
       replacement = "N",
@@ -322,8 +322,8 @@ table <- sampleAllONPDB %>%
       replacement = "Y/N",
       x = validated
     )
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     database,
     organismOriginal,
     structureType,
@@ -342,9 +342,9 @@ table <- sampleAllONPDB %>%
     comments
   )
 
-globalSample <- bind_rows(table_old, table) %>%
-  mutate(organismValue = organismOriginal) %>%
-  distinct(
+globalSample <- dplyr::bind_rows(table_old, table) |>
+  dplyr::mutate(organismValue = organismOriginal) |>
+  dplyr::distinct(
     database,
     # organismValue,
     # structureType,
@@ -359,11 +359,11 @@ globalSample <- bind_rows(table_old, table) %>%
     curator,
     validated,
     comments
-  ) %>%
-  filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) %>%
-  left_join(., inhouseDbMinimal) %>%
-  select(
+  ) |>
+  dplyr::filter(!is.na(validated)) |>
+  dplyr::mutate(referenceCleanedDoi = toupper(referenceCleanedDoi)) |>
+  dplyr::left_join(inhouseDbMinimal) |>
+  dplyr::select(
     -database,
     -referenceCleanedTitle,
     -organismType,
@@ -372,19 +372,19 @@ globalSample <- bind_rows(table_old, table) %>%
     -structureValue,
     -referenceType,
     -referenceValue,
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 a <- paste0("\\b", oldDbNames$oldDbName, "\\b")
 b <- oldDbNames$newDbName
 
 log_debug("adding metadata")
-inhouseDbFull <- inhouseDbMinimal %>%
-  left_join(., referenceMetadata)
+inhouseDbFull <- inhouseDbMinimal |>
+  dplyr::left_join(referenceMetadata)
 
 log_debug("joining manual validation results with documented pairs")
-realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
-  distinct(
+realMetaSample <- dplyr::inner_join(globalSample, inhouseDbFull) |>
+  dplyr::distinct(
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -397,8 +397,8 @@ realMetaSample <- inner_join(globalSample, inhouseDbFull) %>%
     validated,
     comments,
     .keep_all = TRUE
-  ) %>%
-  filter(
+  ) |>
+  dplyr::filter(
     referenceType %in% c(
       "doi",
       "pubmed",
@@ -416,7 +416,7 @@ if (mode == "full") {
     filter_dirty(dataframe = realMetaSample)
 
   log_debug("... rejected set")
-  antiFilter <- anti_join(realMetaSample, realSampleFiltered)
+  antiFilter <- dplyr::anti_join(realMetaSample, realSampleFiltered)
 
   log_debug("counting results ...")
   log_debug("... per category on validation set")
@@ -494,8 +494,8 @@ if (mode == "full") {
   antifull
 
   log_debug("calculating statistics ...")
-  old <- table_count %>%
-    select(referenceType,
+  old <- table_count |>
+    dplyr::select(referenceType,
       tot,
       y,
       n,
@@ -503,8 +503,8 @@ if (mode == "full") {
     )
 
   log_debug("... true positives and false positives")
-  new <- tableFiltered_count %>%
-    select(
+  new <- tableFiltered_count |>
+    dplyr::select(
       referenceType,
       fil = tot,
       tp = y,
@@ -513,8 +513,8 @@ if (mode == "full") {
     )
 
   log_debug("... true negatives and false negatives")
-  anti <- tableAntiFiltered_count %>%
-    select(
+  anti <- tableAntiFiltered_count |>
+    dplyr::select(
       referenceType,
       anti = tot,
       fn = y,
@@ -522,28 +522,28 @@ if (mode == "full") {
       ratioAnti = ratio
     )
 
-  f1Table <- full_join(old, new) %>%
+  f1Table <- dplyr::full_join(old, new) %>%
     replace(is.na(.), 0)
 
   beta <- 0.5
 
   log_debug("... precision, recall and Fbeta", beta, "score")
-  f1Table <- full_join(f1Table, anti) %>%
-    mutate(
+  f1Table <- dplyr::full_join(f1Table, anti) %>%
+    dplyr::mutate(
       tpfn = tp + fn,
       tpfp = tp + fp
     ) %>%
-    mutate(
+    dplyr::mutate(
       recall = tp / tpfn,
       precision = tp / tpfp
     ) %>%
-    mutate(
+    dplyr::mutate(
       rxp = recall * precision,
       rpp = recall + precision
     ) %>%
-    mutate(f2 = 2 * rxp / rpp) %>%
-    select(-tpfn, -tpfp, -rxp, -rpp) %>%
-    mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
+    dplyr::mutate(f2 = 2 * rxp / rpp) %>%
+    dplyr::select(-tpfn, -tpfp, -rxp, -rpp) %>%
+    dplyr::mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
       2) + recall)) %>%
     replace(. == "NaN", 0)
 
@@ -551,28 +551,28 @@ if (mode == "full") {
 
   log_debug("... correcting with references ratios")
   refRatios <- inhouseDbFull %>%
-    filter(database %ni% forbidden_export) %>%
-    group_by(referenceType) %>%
-    count() %>%
-    mutate(prop = n / sum(.$n, na.rm = TRUE)) %>%
-    select(-n)
+    dplyr::filter(database %ni% forbidden_export) %>%
+    dplyr::group_by(referenceType) %>%
+    dplyr::count() %>%
+    dplyr::mutate(prop = n / sum(.$n, na.rm = TRUE)) %>%
+    dplyr::select(-n)
 
-  f2Table <- left_join(f1Table, refRatios) %>%
-    mutate(
+  f2Table <- dplyr::left_join(f1Table, refRatios) %>%
+    dplyr::mutate(
       f2corr_temp = f2 * prop,
       recall_temp = recall * prop,
       precision_temp = precision * prop
     ) %>%
-    mutate(
+    dplyr::mutate(
       f2corr = sum(.$f2corr_temp, na.rm = TRUE),
       recallcorr = sum(.$recall_temp, na.rm = TRUE),
       precisioncorr = sum(.$precision_temp, na.rm = TRUE)
     ) %>%
-    mutate()
+    dplyr::mutate()
 
   f2Table_reworked <- f2Table %>%
-    arrange(desc(prop)) %>%
-    select(
+    dplyr::arrange(dplyr::desc(prop)) %>%
+    dplyr::select(
       `reference type` = referenceType,
       `true positives` = tp,
       `false positives` = fp,
@@ -588,7 +588,7 @@ if (mode == "full") {
     ) %>%
     rbind(
       .,
-      tibble(
+      dplyr::tibble(
         `reference type` = "Total",
         `true positives` = sum(.$`true positives`, na.rm = TRUE),
         `false positives` = sum(.$`false positives`, na.rm = TRUE),
@@ -596,14 +596,14 @@ if (mode == "full") {
         `true negatives` = sum(.$`true negatives`, na.rm = TRUE),
         `relative abundance` = sum(.$`relative abundance`, na.rm = TRUE),
       ),
-      tibble(
+      dplyr::tibble(
         `reference type` = "Corrected total",
         `precision` = unique(.$precisioncorr),
         `recall` = unique(.$recallcorr),
         `F0.5 score` = unique(.$f2corr),
       )
     ) %>%
-    select(
+    dplyr::select(
       `reference type`,
       `true positives`,
       `false positives`,
@@ -617,11 +617,11 @@ if (mode == "full") {
 }
 
 log_debug("applying the filtering criteria to the whole DB, this may take a while")
-openDb <- inhouseDbFull %>%
-  filter_dirty() %>%
-  left_join(., structureMetadata) %>%
-  left_join(., organismMetadata) %>%
-  distinct(
+openDb <- inhouseDbFull |>
+  filter_dirty() |>
+  dplyr::left_join(structureMetadata) |>
+  dplyr::left_join(organismMetadata) |>
+  dplyr::distinct(
     database,
     organismCleaned,
     organismCleaned_id,
@@ -639,13 +639,13 @@ openDb <- inhouseDbFull %>%
     referenceCleanedPmid,
     referenceCleanedTitle,
     .keep_all = TRUE
-  ) %>%
-  mutate(structureCleaned_inchikey2D = substring(
+  ) |>
+  dplyr::mutate(structureCleaned_inchikey2D = substring(
     text = structureCleanedInchikey,
     first = 1,
     last = 14
-  )) %>%
-  select(
+  )) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -677,11 +677,11 @@ openDb <- inhouseDbFull %>%
   )
 
 log_debug("outputting closed pairs")
-closedDb <- inhouseDbFull %>%
-  filter(database %in% forbidden_export) %>%
-  left_join(., structureMetadata) %>%
-  left_join(., organismMetadata) %>%
-  distinct(
+closedDb <- inhouseDbFull |>
+  dplyr::filter(database %in% forbidden_export) |>
+  dplyr::left_join(structureMetadata) |>
+  dplyr::left_join(organismMetadata) |>
+  dplyr::distinct(
     database,
     organismCleaned,
     organismCleaned_id,
@@ -703,13 +703,13 @@ closedDb <- inhouseDbFull %>%
     referenceCleanedPmid,
     referenceCleanedTitle,
     .keep_all = TRUE
-  ) %>%
+  ) |>
   mutate(structureCleaned_inchikey2D = substring(
     text = structureCleanedInchikey,
     first = 1,
     last = 14
-  )) %>%
-  select(
+  )) |>
+  dplyr::select(
     database,
     organismType,
     organismValue,
@@ -741,9 +741,9 @@ closedDb <- inhouseDbFull %>%
   )
 
 log_debug("outputing correct entries from manually validated set")
-manuallyValidatedSet <- realMetaSample %>%
-  filter(validated == "Y") %>%
-  distinct(
+manuallyValidatedSet <- realMetaSample |>
+  dplyr::filter(validated == "Y") |>
+  dplyr::distinct(
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -753,9 +753,9 @@ manuallyValidatedSet <- realMetaSample %>%
   )
 
 log_debug("outputing incorrect entries from validated set")
-manuallyRemovedEntries <- realMetaSample %>%
-  filter(validated != "Y") %>%
-  distinct(
+manuallyRemovedEntries <- realMetaSample |>
+  dplyr::filter(validated != "Y") |>
+  dplyr::distinct(
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -764,7 +764,7 @@ manuallyRemovedEntries <- realMetaSample %>%
     referenceCleanedTitle
   )
 
-openDbClean <- anti_join(openDb, manuallyRemovedEntries)
+openDbClean <- dplyr::anti_join(openDb, manuallyRemovedEntries)
 
 if (mode == "full") {
   set.seed(
@@ -772,22 +772,22 @@ if (mode == "full") {
     kind = "Mersenne-Twister",
     normal.kind = "Inversion"
   )
-  validationSet <- anti_join(openDbClean, realMetaSample) %>%
-    sample_n(100)
+  validationSet <- dplyr::anti_join(openDbClean, realMetaSample) |>
+    dplyr::sample_n(100)
 }
 
 log_debug("loading validation set")
 validationSetFilled_1 <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/validationSet.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+  ) |>
+  dplyr::filter(!is.na(validated)) |>
+  dplyr::mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 if (mode == "full") {
   set.seed(
@@ -796,69 +796,69 @@ if (mode == "full") {
     normal.kind = "Inversion"
   )
   validationSet2 <-
-    anti_join(openDbClean, validationSetFilled_1) %>%
-    sample_n(13)
+    dplyr::anti_join(openDbClean, validationSetFilled_1) |>
+    dplyr::sample_n(13)
 }
 
 log_debug("loading validation set bis")
 validationSetFilled_2 <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/validationSetBis.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+  ) |>
+  dplyr::filter(!is.na(validated)) |>
+  dplyr::mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 if (mode == "test") {
   validationSet3 <-
-    anti_join(openDbClean, validationSetFilled_1) %>%
-    anti_join(., validationSetFilled_2)
+    dplyr::anti_join(openDbClean, validationSetFilled_1) |>
+    dplyr::anti_join(validationSetFilled_2)
 }
 
 log_debug("loading validation set ter")
 validationSetFilled_3 <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/validationSetTer.tsv",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales,
     escape_double = FALSE,
     trim_ws = TRUE
-  ) %>%
-  filter(!is.na(validated)) %>%
-  mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+  ) |>
+  dplyr::filter(!is.na(validated)) |>
+  dplyr::mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 # log_debug("loading validation set tetra")
 # validationSetFilled_4 <-
-#   read_delim(
+#   readr::read_delim(
 #     file = "../data/validation/validationSetTetra.tsv",
 #     delim = "\t",
 #     col_types = cols(.default = "c"),
 #     locale = locales,
 #     escape_double = FALSE,
 #     trim_ws = TRUE
-#   ) %>%
-#   filter(!is.na(validated)) %>%
-#   mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
+#   ) |>
+#   dplyr::filter(!is.na(validated)) |>
+#   dplyr::mutate(referenceCleanedDoi = toupper(referenceCleanedDoi))
 
 ## add validationSetFilled_4 below in case
 
 validationSetFilled <-
-  bind_rows(
+  dplyr::bind_rows(
     validationSetFilled_1,
     validationSetFilled_2,
     validationSetFilled_3
-  ) %>%
-  mutate(organismValue = organismOriginal) %>%
-  select(
+  ) |>
+  dplyr::mutate(organismValue = organismOriginal) |>
+  dplyr::select(
     structureCleanedInchikey = structureCleanedInchikey3D,
-    everything()
-  ) %>%
-  distinct(
+    dplyr::everything()
+  ) |>
+  dplyr::distinct(
     database,
     organismValue,
     structureType,
@@ -876,12 +876,12 @@ validationSetFilled <-
     curator,
     validated,
     comments
-  ) %>%
-  left_join(., inhouseDbMinimal) %>%
-  select(-referenceCleanedTitle, -organismType) %>%
-  distinct()
+  ) |>
+  dplyr::left_join(inhouseDbMinimal) |>
+  dplyr::select(-referenceCleanedTitle, -organismType) |>
+  dplyr::distinct()
 
-validationSetFilled$database <- stri_replace_all_regex(
+validationSetFilled$database <- stringi::stri_replace_all_regex(
   str = validationSetFilled$database,
   pattern = a,
   replacement = b,
@@ -890,8 +890,8 @@ validationSetFilled$database <- stri_replace_all_regex(
 )
 
 realValidationSetFilled <-
-  inner_join(validationSetFilled, openDbClean) %>%
-  distinct(
+  dplyr::inner_join(validationSetFilled, openDbClean) |>
+  dplyr::distinct(
     database,
     organismType,
     organismValue,
@@ -913,13 +913,13 @@ realValidationSetFilled <-
     .keep_all = TRUE
   )
 
-finalStats <- realValidationSetFilled %>%
-  group_by(referenceType) %>%
-  count(validated == "Y") %>%
-  ungroup()
+finalStats <- realValidationSetFilled |>
+  dplyr::group_by(referenceType) |>
+  dplyr::count(validated == "Y") |>
+  dplyr::ungroup()
 
 finalStats_reworked <- finalStats %>%
-  mutate(
+  dplyr::mutate(
     `true positives` = ifelse(
       test = `validated == "Y"` == TRUE,
       yes = n,
@@ -931,14 +931,12 @@ finalStats_reworked <- finalStats %>%
       no = 0
     )
   ) %>%
-  select(
+  dplyr::select(
     `reference type` = referenceType,
-    everything(),
-    -n,
-    -`validated == "Y"`
+    dplyr::everything(), -n, -`validated == "Y"`
   ) %>%
-  group_by(`reference type`) %>%
-  summarise(
+  dplyr::group_by(`reference type`) %>%
+  dplyr::summarise(
     `true positives Validation` = max(`true positives`),
     `false positives Validation` = max(`false positives`)
   ) %>%
@@ -952,14 +950,15 @@ finalStats_reworked <- finalStats %>%
   )
 
 if (mode == "full") {
-  finalTable <- left_join(f2Table_reworked, finalStats_reworked) %>%
-    mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
+  finalTable <-
+    dplyr::left_join(f2Table_reworked, finalStats_reworked) %>%
+    dplyr::mutate_if(.predicate = is.numeric, ~ round(., digits = 2))
 }
 
 log_debug("outputing correct entries from manually validated set")
-manuallyValidatedSet2 <- realValidationSetFilled %>%
-  filter(validated == "Y") %>%
-  distinct(
+manuallyValidatedSet2 <- realValidationSetFilled |>
+  dplyr::filter(validated == "Y") |>
+  dplyr::distinct(
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -969,15 +968,15 @@ manuallyValidatedSet2 <- realValidationSetFilled %>%
   )
 
 manuallyValidatedSet3 <-
-  bind_rows(manuallyValidatedSet, manuallyValidatedSet2)
+  dplyr::bind_rows(manuallyValidatedSet, manuallyValidatedSet2)
 
 log_debug("outputing incorrect entries from validated set")
-manuallyRemovedEntries2 <- realValidationSetFilled %>%
-  filter(validated != "Y")
+manuallyRemovedEntries2 <- realValidationSetFilled |>
+  dplyr::filter(validated != "Y")
 
 manuallyRemovedEntries3 <-
-  bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2) %>%
-  distinct(
+  dplyr::bind_rows(manuallyRemovedEntries, manuallyRemovedEntries2) |>
+  dplyr::distinct(
     organismCleaned,
     structureCleanedInchi,
     structureCleanedInchikey,
@@ -987,28 +986,28 @@ manuallyRemovedEntries3 <-
   )
 
 openDbClean2 <-
-  anti_join(openDbClean, manuallyRemovedEntries3) %>%
-  filter(!database %in% forbidden_export)
+  dplyr::anti_join(openDbClean, manuallyRemovedEntries3) |>
+  dplyr::filter(!database %in% forbidden_export)
 
 log_debug("removing dimers")
 ## at the moment no solution for it so discarding for safety
-openDbClean3 <- openDbClean2 %>%
-  filter(!grepl(
+openDbClean3 <- openDbClean2 |>
+  dplyr::filter(!grepl(
     pattern = "\\.",
     x = structureCleanedSmiles
   ))
 
-closedDb3 <- closedDb %>%
-  filter(!grepl(
+closedDb3 <- closedDb |>
+  dplyr::filter(!grepl(
     pattern = "\\.",
     x = structureCleanedSmiles
   ))
 
 log_debug("non-validated entries")
-non_validated <- inhouseDbMinimal %>%
-  anti_join(openDbClean3) %>%
-  filter(!database %in% forbidden_export) %>%
-  distinct(
+non_validated <- inhouseDbMinimal |>
+  dplyr::anti_join(openDbClean3) |>
+  dplyr::filter(!database %in% forbidden_export) |>
+  dplyr::distinct(
     organismType,
     organismValue,
     structureType,
@@ -1024,11 +1023,7 @@ non_validated <- inhouseDbMinimal %>%
   )
 
 log_debug("exporting")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesAnalyzed),
-  yes = dir.create(pathDataInterimTablesAnalyzed),
-  no = paste(pathDataInterimTablesAnalyzed, "exists")
-)
+create_dir(export = pathDataInterimTablesAnalyzed)
 
 if (mode == "full") {
   log_debug("../data/validation/manuallyValidated.tsv.gz")
@@ -1076,29 +1071,30 @@ if (mode == "full") {
 
 log_debug(
   nrow(
-    openDbClean3 %>% distinct(
-      structureCleanedInchikey,
-      organismCleaned,
-      referenceCleanedDoi
-    )
+    openDbClean3 |>
+      dplyr::distinct(
+        structureCleanedInchikey,
+        organismCleaned,
+        referenceCleanedDoi
+      )
   ),
   "referenced pairs are being exported to",
   pathDataInterimTablesAnalyzedPlatinum
 )
-write_delim(
+readr::write_delim(
   x = openDbClean3,
   delim = "\t",
   file = pathDataInterimTablesAnalyzedPlatinum
 )
 
 log_debug(file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz"))
-write_delim(
+readr::write_delim(
   x = closedDb3,
   delim = "\t",
   file = file.path(pathDataInterimTablesAnalyzed, "closed.tsv.gz")
 )
 
-write_delim(
+readr::write_delim(
   x = non_validated,
   delim = "\t",
   file = pathDataInterimTablesAnalyzedGarbage

@@ -23,20 +23,20 @@ library(tidyr)
 
 log_debug("importing ...")
 platinum_pairs_raw <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesAnalyzedPlatinum,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  filter(
+  ) |>
+  dplyr::filter(
     !is.na(structureCleanedInchikey) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
   )
 
-platinum_pairs <- platinum_pairs_raw %>%
-  distinct(
+platinum_pairs <- platinum_pairs_raw |>
+  dplyr::distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
     reference_doi = referenceCleanedDoi
@@ -49,30 +49,31 @@ log_debug(
 )
 
 manually_validated_pairs <-
-  read_delim(
+  readr::read_delim(
     file = "../data/validation/manuallyValidated.tsv.gz",
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct(
+  ) |>
+  dplyr::distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned,
     reference_doi = referenceCleanedDoi
-  ) %>%
-  mutate(manual_validation = "Y")
+  ) |>
+  dplyr::mutate(manual_validation = "Y")
 
 platinum_pairs <-
-  left_join(platinum_pairs, manually_validated_pairs)
+  dplyr::left_join(platinum_pairs, manually_validated_pairs)
 
 log_debug(
   "Of which",
-  nrow(platinum_pairs %>% filter(manual_validation == "Y")),
+  nrow(platinum_pairs |>
+    dplyr::filter(manual_validation == "Y")),
   "manually validated."
 )
 
 data_organism <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputTaxaPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -81,15 +82,15 @@ data_organism <-
       "organism_wikidata" = "wikidataId",
       "organismCleaned" = "names_pipe_separated"
     )
-  ) %>%
-  cSplit("organismCleaned",
+  ) |>
+  splitstackshape::cSplit("organismCleaned",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 data_structures <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputStructuresPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -101,28 +102,30 @@ data_structures <-
     )
   )
 
-data_structures_1 <- data_structures %>%
-  filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey))
+data_structures_1 <- data_structures |>
+  dplyr::filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey))
 
-data_structures_2 <- data_structures %>%
-  filter(grepl(pattern = "\\|", x = structureCleanedInchiKey)) %>%
-  cSplit(c("structureCleanedInchiKey", "structureCleanedInchi"),
+data_structures_2 <- data_structures |>
+  dplyr::filter(grepl(pattern = "\\|", x = structureCleanedInchiKey)) |>
+  splitstackshape::cSplit(c("structureCleanedInchiKey", "structureCleanedInchi"),
     sep = "|"
-  ) %>%
-  pivot_longer(cols = contains(c("structureCleanedInchiKey", "structureCleanedInchi"))) %>%
-  filter(!is.na(value)) %>%
-  cSplit("name",
+  ) |>
+  tidyr::pivot_longer(cols = contains(c(
+    "structureCleanedInchiKey", "structureCleanedInchi"
+  ))) |>
+  dplyr::filter(!is.na(value)) |>
+  splitstackshape::cSplit("name",
     sep = "_"
-  ) %>%
-  pivot_wider(names_from = "name_1") %>%
-  select(-name_2) %>%
-  distinct()
+  ) |>
+  tidyr::pivot_wider(names_from = "name_1") |>
+  dplyr::select(-name_2) |>
+  dplyr::distinct()
 
-data_structures <- data_structures_1 %>%
-  bind_rows(data_structures_2)
+data_structures <- data_structures_1 |>
+  dplyr::bind_rows(data_structures_2)
 
 data_references <-
-  read_delim(
+  readr::read_delim(
     file = wikidataLotusExporterDataOutputReferencesPath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -132,15 +135,15 @@ data_references <-
       "referenceCleanedDoi" = "dois_pipe_separated",
       "referenceCleanedTitle" = "title",
     )
-  ) %>%
-  cSplit("referenceCleanedDoi",
+  ) |>
+  splitstackshape::cSplit("referenceCleanedDoi",
     sep = "|",
     direction = "long"
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 wikidata_pairs <-
-  read_delim(
+  readr::read_delim(
     file = pathLastWdExport,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -150,16 +153,16 @@ wikidata_pairs <-
       "organismCleaned" = "organism_clean",
       "referenceCleanedDoi" = "reference_doi"
     )
-  ) %>%
-  filter(
+  ) |>
+  dplyr::filter(
     !is.na(structureCleanedInchi) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
-  ) %>%
-  left_join(., data_organism) %>%
-  left_join(., data_structures) %>%
-  left_join(., data_references) %>%
-  distinct(
+  ) |>
+  dplyr::left_join(data_organism) |>
+  dplyr::left_join(data_structures) |>
+  dplyr::left_join(data_references) |>
+  dplyr::distinct(
     structure_wikidata,
     structure_inchikey = structureCleanedInchiKey,
     organism_wikidata,
@@ -175,8 +178,8 @@ log_debug(
 )
 
 platinum_u_wd <-
-  inner_join(platinum_pairs, wikidata_pairs) %>%
-  distinct(
+  dplyr::inner_join(platinum_pairs, wikidata_pairs) |>
+  dplyr::distinct(
     structure_wikidata,
     structure_inchikey,
     organism_wikidata,
@@ -187,16 +190,16 @@ platinum_u_wd <-
   )
 
 platinum_no_wd <-
-  anti_join(platinum_pairs, wikidata_pairs) %>%
-  distinct(
+  dplyr::anti_join(platinum_pairs, wikidata_pairs) |>
+  dplyr::distinct(
     structureCleanedInchikey = structure_inchikey,
     organismCleaned = organism_name,
     referenceCleanedDoi = reference_doi
-  ) %>%
-  left_join(platinum_pairs_raw) %>%
-  #' subspecies not pushed to WD yet
-  filter(!grepl(pattern = "subspecies", x = organismCleaned_dbTaxoTaxonRanks)) %>%
-  filter(organismCleaned %in% data_organism$organismCleaned)
+  ) |>
+  dplyr::left_join(platinum_pairs_raw) |>
+  ## subspecies not pushed to WD yet
+  dplyr::filter(!grepl(pattern = "subspecies", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(organismCleaned %in% data_organism$organismCleaned)
 
 log_debug(
   "We have",
@@ -205,8 +208,8 @@ log_debug(
 )
 
 platinum_only <-
-  anti_join(platinum_pairs, wikidata_pairs) %>%
-  distinct()
+  dplyr::anti_join(platinum_pairs, wikidata_pairs) |>
+  dplyr::distinct()
 
 platinum_u_wd_complete <- add_metadata(df = platinum_u_wd)
 
@@ -223,7 +226,7 @@ if (safety == TRUE) {
     )
   )
 
-  write_delim(
+  readr::write_delim(
     x = platinum_u_wd,
     delim = ",",
     file = file.path(
@@ -236,7 +239,7 @@ if (safety == TRUE) {
     )
   )
 
-  write_delim(
+  readr::write_delim(
     x = platinum_no_wd,
     delim = "\t",
     file = pathDataInterimTablesAnalyzedPlatinumNew
@@ -250,7 +253,7 @@ if (safety == TRUE) {
     )
   )
 
-  write_delim(
+  readr::write_delim(
     x = platinum_u_wd_complete,
     delim = ",",
     file = file.path(

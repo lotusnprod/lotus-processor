@@ -11,11 +11,11 @@ library(splitstackshape)
 library(readr)
 
 log_debug("loading the LOTUS, this may take a while")
-frozen_lotus <- read_csv(file = file.path(
+frozen_lotus <- readr::read_csv(file = file.path(
   pathDataProcessed,
   pathLastFrozen
-)) %>%
-  mutate(structure_inchikey_2D = substring(
+)) |>
+  dplyr::mutate(structure_inchikey_2D = substring(
     text = structure_inchikey,
     first = 1,
     last = 14
@@ -33,43 +33,44 @@ TAX_LEVEL_2 <- "organism_taxonomy_02kingdom"
 # TAX_LEVEL <- "organism_taxonomy_10varietas"
 
 ## BEWARE some taxa are not in OTL!
-domain <- frozen_lotus %>%
-  filter(!is.na(!!as.name(TAX_LEVEL_1)) |
-    !is.na(!!as.name(TAX_LEVEL_2))) %>%
-  cSplit(
+domain <- frozen_lotus |>
+  dplyr::filter(!is.na(!!as.name(TAX_LEVEL_1)) |
+    !is.na(!!as.name(TAX_LEVEL_2))) |>
+  splitstackshape::cSplit(
     "structure_taxonomy_npclassifier_01pathway",
     sep = "|",
     direction = "long"
-  ) %>%
-  cSplit(
+  ) |>
+  splitstackshape::cSplit(
     "structure_taxonomy_npclassifier_02superclass",
     sep = "|",
     direction = "long"
-  ) %>%
-  cSplit("structure_taxonomy_npclassifier_03class",
+  ) |>
+  splitstackshape::cSplit("structure_taxonomy_npclassifier_03class",
     sep = "|",
     direction = "long"
-  ) %>%
-  filter(!is.na(structure_inchikey_2D) & !is.na(organism_name)) %>%
-  mutate(Group = paste(
+  ) |>
+  dplyr::filter(!is.na(structure_inchikey_2D) &
+    !is.na(organism_name)) |>
+  dplyr::mutate(Group = paste(
     organism_taxonomy_01domain,
     organism_taxonomy_02kingdom,
     sep = "_"
-  )) %>%
-  filter(
+  )) |>
+  dplyr::filter(
     Group == "Eukaryota_Archaeplastida" |
       Group == "Eukaryota_Fungi" |
       Group == "Eukaryota_Metazoa" |
       Group == "Bacteria_NA"
-  ) %>%
-  mutate(
-    Group = if_else(
+  ) |>
+  dplyr::mutate(
+    Group = dplyr::if_else(
       condition = Group == "Eukaryota_Archaeplastida",
       true = "Plantae",
-      false = if_else(
+      false = dplyr::if_else(
         condition = Group == "Eukaryota_Fungi",
         true = "Fungi",
-        false = if_else(
+        false = dplyr::if_else(
           condition = Group == "Eukaryota_Metazoa",
           true = "Animalia",
           false = "Bacteria"
@@ -78,72 +79,72 @@ domain <- frozen_lotus %>%
     )
   )
 
-domain_unique <- domain %>%
-  distinct(structure_inchikey_2D, organism_name, .keep_all = TRUE)
+domain_unique <- domain |>
+  dplyr::distinct(structure_inchikey_2D, organism_name, .keep_all = TRUE)
 
-domain_unique_organisms <- domain_unique %>%
-  distinct(organism_name, Group) %>%
-  group_by(Group) %>%
-  count(
+domain_unique_organisms <- domain_unique |>
+  dplyr::distinct(organism_name, Group) |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "Organisms",
     sort = TRUE
   )
 
-domain_unique_pairs <- domain_unique %>%
-  group_by(Group) %>%
-  count(
+domain_unique_pairs <- domain_unique |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "2D Structure-Organism Pairs",
     sort = TRUE
   )
 
-domain_unique_structures_2D <- domain_unique %>%
-  distinct(Group, structure_inchikey_2D) %>%
-  group_by(Group) %>%
-  count(
+domain_unique_structures_2D <- domain_unique |>
+  dplyr::distinct(Group, structure_inchikey_2D) |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "2D Chemical Structures",
     sort = TRUE
   )
 
-domain_unique_classes <- domain_unique %>%
-  distinct(Group, structure_taxonomy_npclassifier_03class) %>%
-  group_by(Group) %>%
-  count(
+domain_unique_classes <- domain_unique |>
+  dplyr::distinct(Group, structure_taxonomy_npclassifier_03class) |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "Chemical Classes",
     sort = TRUE
   )
 
-domain_unique_structures_2D_specific <- domain_unique %>%
-  distinct(Group, structure_inchikey_2D) %>%
-  group_by(structure_inchikey_2D) %>%
-  add_count() %>%
-  filter(n == 1) %>%
-  ungroup() %>%
-  group_by(Group) %>%
-  count(
+domain_unique_structures_2D_specific <- domain_unique |>
+  dplyr::distinct(Group, structure_inchikey_2D) |>
+  dplyr::group_by(structure_inchikey_2D) |>
+  dplyr::add_count() |>
+  dplyr::filter(n == 1) |>
+  dplyr::ungroup() |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "Specific 2D Chemical Structures",
     sort = TRUE
   )
 
-domain_unique_classes_specific <- domain_unique %>%
-  distinct(Group, structure_taxonomy_npclassifier_03class) %>%
-  group_by(structure_taxonomy_npclassifier_03class) %>%
-  add_count() %>%
-  filter(n == 1) %>%
-  ungroup() %>%
-  group_by(Group) %>%
-  count(
+domain_unique_classes_specific <- domain_unique |>
+  dplyr::distinct(Group, structure_taxonomy_npclassifier_03class) |>
+  dplyr::group_by(structure_taxonomy_npclassifier_03class) |>
+  dplyr::add_count() |>
+  dplyr::filter(n == 1) |>
+  dplyr::ungroup() |>
+  dplyr::group_by(Group) |>
+  dplyr::count(
     name = "Specific Chemical Classes",
     sort = TRUE
   )
 
 domain <-
-  left_join(domain_unique_organisms, domain_unique_pairs) %>%
-  left_join(., domain_unique_structures_2D) %>%
-  left_join(., domain_unique_structures_2D_specific) %>%
-  left_join(., domain_unique_classes) %>%
-  left_join(., domain_unique_classes_specific) %>%
-  ungroup() %>%
-  mutate(
+  dplyr::left_join(domain_unique_organisms, domain_unique_pairs) |>
+  dplyr::left_join(domain_unique_structures_2D) |>
+  dplyr::left_join(domain_unique_structures_2D_specific) |>
+  dplyr::left_join(domain_unique_classes) |>
+  dplyr::left_join(domain_unique_classes_specific) |>
+  dplyr::ungroup() |>
+  dplyr::mutate(
     `Specific 2D Chemical Structures` = paste0(
       `Specific 2D Chemical Structures`,
       " (",
@@ -170,7 +171,7 @@ if (safety == TRUE) {
     "../docs/repartition.csv"
   )
 
-  write_csv(
+  readr::write_csv(
     x = domain,
     file = "../docs/repartition.csv",
     na = ""
