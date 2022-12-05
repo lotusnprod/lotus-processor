@@ -6,10 +6,10 @@ Author: PMA
 Contributor: JB, AR
 '''
 import errno
+import numpy as np
 import os
 import sys
 from chemosanitizer_functions import *
-import numpy as np
 from tqdm import tqdm
 
 # defining the command line arguments
@@ -34,11 +34,11 @@ except:
 if __name__ == "__main__":
     myZip = gzip.open(input_file_path)
     df = pd.read_csv(
-        myZip, 
+        myZip,
         sep='\t',
-         encoding='utf-8',
-         on_bad_lines='error'
-         )
+        encoding='utf-8',
+        on_bad_lines='error'
+    )
 
     if (len(df) == 1) and df.empty:
         df['structureTranslated'] = '[Pu]'
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         print('your dataframe is not empty :)')
 
     df = df[df[smiles_column_header].notnull()]
-    df_chunks = np.array_split(df, cpus * len(df)/cpus)
+    df_chunks = np.array_split(df, cpus * len(df) / cpus)
     f = CleaningFunc(smiles_column_header).f
 
     # old multiprocessing version
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         processed_list = list(tqdm(executor.map(f, df_chunks), total=len(df_chunks)))
 
     processed_df = pd.concat(processed_list, ignore_index=True)
-    
+
     output_path = os.path.dirname(ouput_file_path)
 
     if output_path != '' and not os.path.exists(output_path):
