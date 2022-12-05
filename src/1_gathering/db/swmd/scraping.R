@@ -6,59 +6,67 @@ source("r/y_as_na.R")
 
 library(dplyr)
 library(data.table)
+library(future)
+library(future.apply)
+library(progressr)
 library(splitstackshape) # provides cSplit
 library(rvest) # provides read_html
+
+source("r/progressr.R")
 
 # get paths
 database <- databases$get("swmd")
 
-ids <-
-  gsub(
-    pattern = ".mol",
-    replacement = "",
-    x = list.files(path = pathDataExternalDbSourceSwmdDirectory)
-  )
-
 url <- "http://www.swmd.co.in/search.php?No="
 
-X <- ids
+xs <- list.files(path = pathDataExternalDbSourceSwmdDirectory) |>
+  gsub(
+    pattern = ".mol",
+    replacement = ""
+  )
 
-getswmd <- function(X) {
-  tryCatch(
-    {
-      cd_id <- X
-      url_id <- paste0(url, cd_id)
+getswmd <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          cd_id <- x
+          url_id <- paste0(url, cd_id)
 
-      df0 <- rvest::read_html(url_id, ) |>
-        rvest::html_element(xpath = "body")
+          df0 <- rvest::read_html(url_id) |>
+            rvest::html_element(xpath = "body")
 
-      df1 <- df0 |>
-        rvest::html_element(xpath = "div[1]/table[3]") |>
-        rvest::html_table(fill = TRUE) |>
-        dplyr::select(1, 2)
+          df1 <- df0 |>
+            rvest::html_element(xpath = "div[1]/table[3]") |>
+            rvest::html_table(fill = TRUE) |>
+            dplyr::select(1, 2)
 
-      df2 <- df0 |>
-        rvest::html_element(xpath = "div[2]/table") |>
-        rvest::html_table(fill = TRUE)
+          df2 <- df0 |>
+            rvest::html_element(xpath = "div[2]/table") |>
+            rvest::html_table(fill = TRUE)
 
-      df3 <- df0 |>
-        rvest::html_element(xpath = "div[4]/div/table") |>
-        rvest::html_table(fill = TRUE)
+          df3 <- df0 |>
+            rvest::html_element(xpath = "div[4]/div/table") |>
+            rvest::html_table(fill = TRUE)
 
-      df4 <- rbind(df1, df2, df3)
+          df4 <- rbind(df1, df2, df3)
 
-      return(df4)
-    },
-    error = function(e) {
-      "Timed out!"
+          return(df4)
+        },
+        error = function(e) {
+          "Timed out!"
+        }
+      )
     }
   )
 }
 
-SWMD <- invisible(lapply(
-  FUN = getswmd,
-  X = X
-))
+SWMD <- getswmd(xs = xs) |>
+  progressr::with_progress()
 
 SWMD <- SWMD[SWMD != "Timed out!"]
 
@@ -108,10 +116,5 @@ SWMD_3[] <- lapply(SWMD_3, function(x) {
 })
 
 # exporting
-ifelse(
-  test = !dir.exists(dirname(database$sourceFiles$tsv)),
-  yes = dir.create(dirname(database$sourceFiles$tsv)),
-  no = paste(dirname(database$sourceFiles$tsv), "exists")
-)
-
+create_dir(export = database$sourceFiles$tsv)
 database$writeFile(database$sourceFiles$tsv, SWMD_3)

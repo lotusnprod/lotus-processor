@@ -9,6 +9,9 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(readr)
 library(splitstackshape)
 library(stringr)
@@ -18,11 +21,12 @@ source("r/capitalize.R")
 source("r/name2structure_cactus.R")
 source("r/name2structure_pubchem.R")
 source("r/preparing_name.R")
+source("r/progressr.R")
 source("r/y_as_na.R")
 
 log_debug("loading chemical names lists")
 dataOriginal <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalStructureNominal,
     delim = "\t"
   )
@@ -37,21 +41,11 @@ colnames(dataOriginal)[1] <- "structureOriginal_nominal"
 log_debug("preparing names")
 dataPreparedNames <- preparing_name(x = dataOriginal)
 
-dataPreparedNamesDistinct <- dataPreparedNames %>%
-  distinct(nameCleaned)
+dataPreparedNamesDistinct <- dataPreparedNames |>
+  dplyr::distinct(nameCleaned)
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedStructure),
-  yes = dir.create(pathDataInterimTablesTranslatedStructure),
-  no = paste(pathDataInterimTablesTranslatedStructure, "exists")
-)
+create_dir(export = pathDataInterimTablesTranslatedStructure)
 
 log_debug("exporting prepared names ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal)
@@ -82,78 +76,79 @@ system(
 
 log_debug("loading opsin results")
 dataOpsin <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesTranslatedStructureOpsin,
     delim = "\t",
     skip_empty_rows = FALSE,
     escape_double = TRUE,
     trim_ws = TRUE
-  ) %>%
-  mutate_all(as.character) %>%
-  select(smilesNominal_opsin = `...1`)
+  ) |>
+  dplyr::mutate_all(as.character) |>
+  dplyr::select(smilesNominal_opsin = `...1`)
 
-dataInterim <- bind_cols(dataPreparedNamesDistinct, dataOpsin)
+dataInterim <-
+  dplyr::bind_cols(dataPreparedNamesDistinct, dataOpsin)
 
-dataInterim <- left_join(dataPreparedNames, dataInterim) %>%
-  distinct()
+dataInterim <- dplyr::left_join(dataPreparedNames, dataInterim) |>
+  dplyr::distinct()
 
 log_debug("exporting interim ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal_opsin)
-write_delim(
+readr::write_delim(
   x = dataInterim,
   file = pathDataInterimTablesTranslatedStructureNominal_opsin,
   delim = "\t",
   na = ""
 )
 
-dataForPubchem <- dataInterim %>%
-  filter(is.na(smilesNominal_opsin)) %>%
-  distinct(nameCleaned, .keep_all = TRUE) %>%
-  select(structureOriginal_nominal, nameCleaned)
+dataForPubchem <- dataInterim |>
+  dplyr::filter(is.na(smilesNominal_opsin)) |>
+  dplyr::distinct(nameCleaned, .keep_all = TRUE) |>
+  dplyr::select(structureOriginal_nominal, nameCleaned)
 
 if (nrow(dataForPubchem) == 0) {
   dataForPubchem[1, "nameCleaned"] <- NA
 }
 
 log_debug("translating structures with pubchem")
-dataTranslatedNominal_pubchem <- dataForPubchem %>%
-  select(-structureOriginal_nominal) %>%
-  mutate(smilesNominal_pubchem = invisible(
-    lapply(
-      FUN = name2smiles_pubchem,
-      X = seq_len(nrow(dataForPubchem))
-    )
-  )) %>%
-  cSplit("smilesNominal_pubchem",
+dataTranslatedNominal_pubchem <- dataForPubchem |>
+  dplyr::select(-structureOriginal_nominal) |>
+  dplyr::mutate(smilesNominal_pubchem = name2smiles_pubchem(xs = seq_len(
+    nrow(dataForPubchem)
+  ) |>
+    progressr::with_progress())) |>
+  splitstackshape::cSplit("smilesNominal_pubchem",
     sep = "\n",
     direction = "long"
-  ) %>%
-  mutate(smilesNominal_pubchem = y_as_na(
+  ) |>
+  dplyr::mutate(smilesNominal_pubchem = y_as_na(
     x = trimws(smilesNominal_pubchem),
     y = "NA"
-  )) %>%
-  mutate(smilesNominal_pubchem = gsub(
-    pattern = "^http.*",
-    replacement = NA,
-    x = smilesNominal_pubchem
-  ))
+  )) |>
+  dplyr::mutate(
+    smilesNominal_pubchem = gsub(
+      pattern = "^http.*",
+      replacement = NA,
+      x = smilesNominal_pubchem
+    )
+  )
 
-dataInterim_1 <- left_join(
+dataInterim_1 <- dplyr::left_join(
   dataInterim,
   dataTranslatedNominal_pubchem
-) %>%
-  distinct()
+) |>
+  dplyr::distinct()
 
 log_debug("exporting interim ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal_pubchem)
-write_delim(
+readr::write_delim(
   x = dataInterim_1,
   file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
   delim = "\t",
   na = ""
 )
 
-# dataInterim_1 <- read_delim(
+# dataInterim_1 <- readr::read_delim(
 #   file = pathDataInterimTablesTranslatedStructureNominal_pubchem,
 #   delim = "\t"
 # )
@@ -164,48 +159,46 @@ write_delim(
 ### or https://cactus.nci.nih.gov/chemical/structure?identifier=PONGAMOL&representation=smiles
 ### or https://cactus.nci.nih.gov/chemical/structure/Combretastatin%20b-2%20/smiles
 
-dataForCactus <- dataInterim_1 %>%
-  filter(is.na(smilesNominal_opsin)) %>%
-  filter(is.na(smilesNominal_pubchem))
+dataForCactus <- dataInterim_1 |>
+  dplyr::filter(is.na(smilesNominal_opsin)) |>
+  dplyr::filter(is.na(smilesNominal_pubchem))
 
 if (nrow(dataForCactus) == 0) {
   dataForCactus[1, "nameCleaned"] <- NA
 }
 
 log_debug("... with cactus (fast)")
-dataTranslatedNominal_cactus <- dataForCactus %>%
-  select(-structureOriginal_nominal) %>%
-  mutate(smilesNominal_cactus = invisible(
-    lapply(
-      FUN = name2smiles_cactus,
-      X = seq_len(nrow(dataForCactus))
-    )
-  )) %>%
-  mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) %>%
-  mutate(smilesNominal_cactus = y_as_na(
+dataTranslatedNominal_cactus <- dataForCactus |>
+  dplyr::select(-structureOriginal_nominal) |>
+  dplyr::mutate(smilesNominal_cactus = name2smiles_cactus(xs = seq_len(
+    nrow(dataForCactus)
+  ) |>
+    progressr::with_progress())) |>
+  dplyr::mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) |>
+  dplyr::mutate(smilesNominal_cactus = y_as_na(
     x = smilesNominal_cactus,
     y = "character(0)"
-  )) %>%
-  mutate(smilesNominal_cactus = y_as_na(
+  )) |>
+  dplyr::mutate(smilesNominal_cactus = y_as_na(
     x = smilesNominal_cactus,
     y = "NA"
-  )) %>%
-  mutate(smilesNominal_cactus = gsub(
+  )) |>
+  dplyr::mutate(smilesNominal_cactus = gsub(
     pattern = "^http.*",
     replacement = NA,
     x = smilesNominal_cactus
-  )) %>%
-  mutate(smilesNominal_cactus = gsub(
+  )) |>
+  dplyr::mutate(smilesNominal_cactus = gsub(
     pattern = "^NCI.*",
     replacement = NA,
     x = smilesNominal_cactus
   ))
 
-dataTranslated <- left_join(
+dataTranslated <- dplyr::left_join(
   dataInterim_1,
   dataTranslatedNominal_cactus
-) %>%
-  mutate(structureTranslated_nominal = ifelse(
+) |>
+  dplyr::mutate(structureTranslated_nominal = ifelse(
     test = !is.na(smilesNominal_opsin),
     yes = smilesNominal_opsin,
     no = ifelse(
@@ -213,12 +206,12 @@ dataTranslated <- left_join(
       yes = smilesNominal_pubchem,
       no = smilesNominal_cactus
     )
-  )) %>%
-  distinct()
+  )) |>
+  dplyr::distinct()
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedStructureNominal)
-write_delim(
+readr::write_delim(
   x = dataTranslated,
   file = pathDataInterimTablesTranslatedStructureNominal,
   delim = "\t",
@@ -226,7 +219,7 @@ write_delim(
 )
 
 # dataTranslated <-
-#   read_delim(file = pathDataInterimTablesTranslatedStructureNominal,
+#   readr::read_delim(file = pathDataInterimTablesTranslatedStructureNominal,
 #              delim = "\t")
 
 end <- Sys.time()

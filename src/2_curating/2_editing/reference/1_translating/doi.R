@@ -9,16 +9,20 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(readr)
 
 log_debug("... functions")
 source("r/getrefDoi.R")
+source("r/progressr.R")
 
 packageVersion("rcrossref")
 
 log_debug("loading DOI list")
 dataDoi <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalReferenceDoi,
     delim = "\t",
     col_types = cols(.default = "c")
@@ -27,10 +31,8 @@ dataDoi <-
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 0) {
   reflistDoi <-
-    lapply(
-      FUN = getrefDoi,
-      X = dataDoi$referenceOriginal_doi
-    )
+    getrefDoi(xs = dataDoi$referenceOriginal_doi) |>
+    progressr::with_progress()
 
   log_debug("joining results with original list")
   for (i in seq_along(reflistDoi)) {
@@ -124,8 +126,8 @@ if (nrow(dataDoi) != 0) {
       )[1])
   }
 } else {
-  dataDoi <- data.frame() %>%
-    mutate(
+  dataDoi <- data.frame() |>
+    dplyr::mutate(
       referenceOriginal_doi = NA,
       referenceTranslatedDoi = NA,
       referenceTranslatedJournal = NA,
@@ -138,8 +140,8 @@ if (nrow(dataDoi) != 0) {
 }
 
 log_debug("removing unfriendly characters")
-dataDoi <- dataDoi %>%
-  mutate_all(as.character)
+dataDoi <- dataDoi |>
+  dplyr::mutate_all(as.character)
 
 dataDoi[] <-
   lapply(dataDoi, function(x) {
@@ -159,21 +161,11 @@ dataDoi[] <-
   })
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReference),
-  yes = dir.create(pathDataInterimTablesTranslatedReference),
-  no = paste(pathDataInterimTablesTranslatedReference, "exists")
-)
+create_dir(export = pathDataInterimTablesTranslatedReference)
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceDoi)
-write_delim(
+readr::write_delim(
   x = dataDoi,
   delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceDoi,

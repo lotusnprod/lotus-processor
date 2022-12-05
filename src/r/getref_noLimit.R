@@ -1,25 +1,38 @@
 source("paths.R")
+library(future)
+library(future.apply)
+library(progressr)
 library(rcrossref)
+
+source("r/progressr.R")
 
 #' Title
 #'
-#' @param X
+#' @param xs
 #'
 #' @return
 #' @export
 #'
 #' @examples
-getref_noLimit <- function(X) {
-  tryCatch(
-    {
-      cr_works(
-        flq = c(query.bibliographic = X),
-        sort = "score",
-        order = "desc"
+getref_noLimit <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          rcrossref::cr_works(
+            flq = c(query.bibliographic = x),
+            sort = "score",
+            order = "desc"
+          )
+        },
+        error = function(e) {
+          NA
+        }
       )
-    },
-    error = function(e) {
-      NA
     }
   )
 }

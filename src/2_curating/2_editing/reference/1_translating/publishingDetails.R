@@ -9,12 +9,16 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(readr)
 library(stringr)
 
 log_debug("... functions")
 source("r/getref_noLimit_publishingDetails.R")
 source("r/getAllReferences.R")
+source("r/progressr.R")
 
 log_debug("loading title lists")
 length <-
@@ -34,39 +38,15 @@ num <- as.integer(seq(
 ))
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReference),
-  yes = dir.create(pathDataInterimTablesTranslatedReference),
-  no = paste(pathDataInterimTablesTranslatedReference, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReferencePublishingDetailsFolder),
-  yes = dir.create(pathDataInterimTablesTranslatedReferencePublishingDetailsFolder),
-  no = file.remove(
-    list.files(
-      path = pathDataInterimTablesTranslatedReferencePublishingDetailsFolder,
-      full.names = TRUE
-    )
-  ) &
-    dir.create(
-      pathDataInterimTablesTranslatedReferencePublishingDetailsFolder,
-      showWarnings = FALSE
-    )
-)
+create_dir(export = pathDataInterimTablesTranslatedReference)
+create_dir_with_rm(export = pathDataInterimTablesTranslatedReferencePublishingDetailsFolder)
 
 for (i in num) {
   inpath <-
     paste0(
       pathDataInterimTablesOriginalReferencePublishingDetailsFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -78,7 +58,7 @@ for (i in num) {
     paste0(
       pathDataInterimTablesTranslatedReferencePublishingDetailsFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -88,7 +68,7 @@ for (i in num) {
 
   log_debug(paste("step", i / cut, "of", length))
 
-  dataPublishingDetails <- read_delim(
+  dataPublishingDetails <- readr::read_delim(
     file = inpath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -98,12 +78,8 @@ for (i in num) {
 
   log_debug("submitting to crossRef")
   if (nrow(dataPublishingDetails) != 0) {
-    reflist <- invisible(
-      lapply(
-        FUN = getref_noLimit_publishingDetails,
-        X = dataPublishingDetails$referenceOriginal_publishingDetails
-      )
-    )
+    reflist <- getref_noLimit_publishingDetails(xs = dataPublishingDetails$referenceOriginal_publishingDetails) |>
+      progressr::with_progress()
     log_debug("treating results, may take a while if full mode")
     dataPublishingDetails2 <-
       getAllReferences(
@@ -112,8 +88,8 @@ for (i in num) {
         method = "osa"
       )
   } else {
-    dataPublishingDetails2 <- data.frame() %>%
-      mutate(
+    dataPublishingDetails2 <- data.frame() |>
+      dplyr::mutate(
         referenceOriginal_publishingDetails = NA,
         referenceTranslatedDoi = NA,
         referenceTranslatedJournal = NA,
@@ -126,7 +102,7 @@ for (i in num) {
   }
 
   log_debug("exporting ...")
-  write_delim(
+  readr::write_delim(
     x = dataPublishingDetails2,
     delim = "\t",
     file = outpath,
@@ -146,20 +122,25 @@ dataPublishingDetails3 <- do.call(
   "rbind",
   lapply(
     list.files(
-      path = file.path(pathDataInterimTablesTranslatedReferencePublishingDetailsFolder),
+      path = file.path(
+        pathDataInterimTablesTranslatedReferencePublishingDetailsFolder
+      ),
       pattern = "*.tsv.gz",
       full.names = FALSE
     ),
     function(x) {
-      read_delim(
+      readr::read_delim(
         file = gzfile(
-          file.path(pathDataInterimTablesTranslatedReferencePublishingDetailsFolder, x)
+          description = file.path(
+            pathDataInterimTablesTranslatedReferencePublishingDetailsFolder,
+            x
+          )
         ),
         delim = "\t",
         col_types = cols(.default = "c"),
         escape_double = TRUE,
         trim_ws = TRUE
-      ) %>%
+      ) |>
         mutate_all(as.character)
     }
   )
@@ -167,7 +148,7 @@ dataPublishingDetails3 <- do.call(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferencePublishingDetails)
-write_delim(
+readr::write_delim(
   x = dataPublishingDetails3,
   delim = "\t",
   file = pathDataInterimTablesTranslatedReferencePublishingDetails,

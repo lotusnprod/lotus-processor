@@ -9,35 +9,38 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+# library(future)
+# library(future.apply)
+# library(progressr)
 library(readr)
 
 log_debug("... functions")
 source("r/getrefPubmed.R")
+# source("r/progressr.R")
 
 log_debug("loading PMID list")
 dataPubmed <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesOriginalReferencePubmed,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   )
 
-# getting references ##getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
-# mc cores set to 1 because fails otherwise (entrez limitation of 10 calls per sec probably)
+## getting references
+## getting them with pubmed API and not crossRef because crossRef pubmed ID not working!!
+## no parallelism because fails otherwise (entrez limitation of 10 calls per sec probably)
 log_debug("submitting to entrez")
 if (nrow(dataPubmed) != 0) {
-  reflistPubmed <- invisible(
-    lapply(
-      FUN = getrefPubmed,
-      X = as.character(dataPubmed$referenceOriginal_pubmed)
-    )
-  )
+  reflistPubmed <- invisible(lapply(
+    FUN = getrefPubmed,
+    X = as.character(dataPubmed$referenceOriginal_pubmed)
+  ))
 
   if (is.null(reflistPubmed$value)) {
-    reflistPubmedBound <- bind_rows(reflistPubmed)
+    reflistPubmedBound <- dplyr::bind_rows(reflistPubmed)
   } else {
-    reflistPubmedBound <- bind_rows(reflistPubmed$value)
+    reflistPubmedBound <- dplyr::bind_rows(reflistPubmed$value)
   }
 
   log_debug("joining results with original list")
@@ -71,8 +74,8 @@ if (nrow(dataPubmed) != 0) {
     dataPubmed[i, "referenceTranslationScoreDistance"] <- 0
   }
 } else {
-  dataPubmed <- data.frame() %>%
-    mutate(
+  dataPubmed <- data.frame() |>
+    dplyr::mutate(
       referenceOriginal_pubmed = NA,
       referenceTranslatedDoi = NA,
       referenceTranslatedJournal = NA,
@@ -85,8 +88,8 @@ if (nrow(dataPubmed) != 0) {
 }
 
 log_debug("removing unfriendly characters")
-dataPubmed <- dataPubmed %>%
-  mutate_all(as.character)
+dataPubmed <- dataPubmed |>
+  dplyr::mutate_all(as.character)
 
 dataPubmed[] <-
   lapply(dataPubmed, function(x) {
@@ -106,21 +109,11 @@ dataPubmed[] <-
   })
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReference),
-  yes = dir.create(pathDataInterimTablesTranslatedReference),
-  no = paste(pathDataInterimTablesTranslatedReference, "exists")
-)
+create_dir(export = pathDataInterimTablesTranslatedReference)
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferencePubmed)
-write_delim(
+readr::write_delim(
   x = dataPubmed,
   delim = "\t",
   file = pathDataInterimTablesTranslatedReferencePubmed,

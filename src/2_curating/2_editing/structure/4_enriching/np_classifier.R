@@ -10,33 +10,37 @@ source("paths.R")
 log_debug("... libraries")
 library(data.table)
 library(dplyr)
+library(future)
+library(future.apply)
 library(jsonlite)
+library(progressr)
 library(RCurl)
 library(readr)
 library(tidyr)
 
 log_debug("... functions")
 source("r/getClass.R")
+source("r/progressr.R")
 source("r/treat_npclassifier_json.R")
 
 log_debug("loading smiles ...")
 smiles <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
     delim = "\t",
     col_types = cols(.default = "c")
-  ) %>%
-  distinct(structure_smiles_2D = smilesSanitizedFlat)
+  ) |>
+  dplyr::distinct(structure_smiles_2D = smilesSanitizedFlat)
 # smiles <-
-#   read_delim(
+#   readr::read_delim(
 #     file = pathDataInterimDictionariesStructureMetadata,
 #     delim = "\t",
 #     col_types = cols(.default = "c")
-#   ) %>%
-#   distinct(structure_smiles_2D = structureCleaned_smiles2D)
+#   ) |>
+#   dplyr::distinct(structure_smiles_2D = structureCleaned_smiles2D)
 
 log_debug("loading npClassifier taxonomy ...")
-taxonomy <- fromJSON(txt = list.files(
+taxonomy <- jsonlite::fromJSON(txt = list.files(
   path = file.path(
     pathDataExternal,
     "taxonomySource/structure/npclassifier/"
@@ -47,42 +51,38 @@ taxonomy <- fromJSON(txt = list.files(
 
 if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile)) {
   old <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
       delim = "\t",
       col_types = cols(.default = "c")
-    ) %>%
-    distinct() %>%
-    mutate_all(as.character)
+    ) |>
+    dplyr::distinct() |>
+    dplyr::mutate_all(as.character)
 
-  new <- anti_join(smiles, old)
+  new <- dplyr::anti_join(smiles, old)
 } else {
   new <- smiles
 }
 
-url <- "https://npclassifier.ucsd.edu"
+url <- "https://npclassifier.gnps2.edu"
 order <- "/classify?smiles="
-new <- new %>%
-  mutate(query = curlEscape(structure_smiles_2D))
+new <- new |>
+  dplyr::mutate(query = RCurl::curlEscape(urls = structure_smiles_2D))
 queries <- new$query
 cached <- "&cached" # actually return wrong results?
 
 if (length(queries) != 0) {
-  X <- seq_len(length(queries))
+  xs <- seq_len(length(queries))
 
-  list_df <- invisible(
-    lapply(
-      FUN = getClass,
-      X = X
-    )
-  )
+  list_df <- getClass(xs = xs) |>
+    progressr::with_progress()
 
-  df_new <- bind_rows(list_df) %>%
-    mutate_all(as.character)
+  df_new <- dplyr::bind_rows(list_df) |>
+    dplyr::mutate_all(as.character)
 
   if (exists("old")) {
-    df <- bind_rows(old, df_new) %>%
-      distinct()
+    df <- dplyr::bind_rows(old, df_new) |>
+      dplyr::distinct()
   } else {
     df <- df_new
   }
@@ -92,51 +92,34 @@ if (length(queries) != 0) {
 
 taxonomy_semiclean <- treat_npclassifier_json()
 
-df_semiclean_1 <- df %>%
-  filter(!is.na(class)) %>%
-  select(-pathway, -superclass) %>%
-  full_join(taxonomy_semiclean, by = c("class" = "class"))
+df_semiclean_1 <- df |>
+  dplyr::filter(!is.na(class)) |>
+  dplyr::select(-pathway, -superclass) |>
+  dplyr::full_join(taxonomy_semiclean, by = c("class" = "class"))
 
-df_semiclean_2 <- df %>%
-  filter(is.na(class) & !is.na(superclass)) %>%
-  select(-pathway) %>%
-  full_join(taxonomy_semiclean, by = c("superclass" = "superclass")) %>%
-  select(-class.y) %>%
-  rename(class = class.x)
+df_semiclean_2 <- df |>
+  dplyr::filter(is.na(class) & !is.na(superclass)) |>
+  dplyr::select(-pathway) |>
+  dplyr::full_join(taxonomy_semiclean, by = c("superclass" = "superclass")) |>
+  dplyr::select(-class.y) |>
+  dplyr::rename(class = class.x)
 
-df_semiclean_3 <- df %>%
-  filter(is.na(class) & is.na(superclass))
+df_semiclean_3 <- df |>
+  dplyr::filter(is.na(class) & is.na(superclass))
 
 df_semiclean <-
-  rbind(df_semiclean_1, df_semiclean_2, df_semiclean_3) %>%
-  filter(!is.na(query)) %>%
-  filter(!is.na(class) |
+  rbind(df_semiclean_1, df_semiclean_2, df_semiclean_3) |>
+  dplyr::filter(!is.na(query)) |>
+  dplyr::filter(!is.na(class) |
     !is.na(superclass) |
-    !is.na(pathway)) %>%
-  distinct()
+    !is.na(pathway)) |>
+  dplyr::distinct()
 
 log_debug("ensuring directories exist")
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionaries),
-  yes = dir.create(pathDataInterimDictionaries),
-  no = paste(pathDataInterimDictionaries, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesStructure),
-  yes = dir.create(pathDataInterimDictionariesStructure),
-  no = paste(pathDataInterimDictionariesStructure, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimDictionariesStructureDictionaryNpclassifier),
-  yes = dir.create(pathDataInterimDictionariesStructureDictionaryNpclassifier),
-  no = paste(pathDataInterimDictionariesStructureDictionaryNpclassifier, "exists")
-)
+create_dir(export = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
 
 log_debug("Exporting")
-write_delim(
+readr::write_delim(
   x = df_semiclean,
   delim = "\t",
   file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,

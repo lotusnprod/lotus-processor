@@ -1,21 +1,34 @@
 source("paths.R")
+library(future)
+library(future.apply)
+library(progressr)
 library(rcrossref)
+
+source("r/progressr.R")
 
 #' Title
 #'
-#' @param X
+#' @param xs
 #'
 #' @return
 #' @export
 #'
 #' @examples
-getrefDoi <- function(X) {
-  tryCatch(
-    {
-      cr_works(dois = X)
-    },
-    error = function(e) {
-      NA
+getrefDoi <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          rcrossref::cr_works(dois = x)
+        },
+        error = function(e) {
+          NA
+        }
+      )
     }
   )
 }

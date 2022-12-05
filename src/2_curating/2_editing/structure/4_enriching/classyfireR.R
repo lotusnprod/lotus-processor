@@ -11,17 +11,23 @@ source("paths.R")
 log_debug("... libraries")
 library(classyfireR)
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(purrr)
 library(readr)
 
+source("r/progressr.R")
+
 log_debug("opening cache...")
+create_dir(export = pathDataInterimDictionariesStructureDictionaryClassyfireDB)
 ClassyFireCache <-
-  classyfireR::open_cache(dbname = "../data/interim/dictionaries_full/structure/classyfire/classyfire.sqlite")
+  classyfireR::open_cache(dbname = pathDataInterimDictionariesStructureDictionaryClassyfireDB)
 
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
     delim = "\t",
     col_types = cols(.default = "c")
@@ -30,55 +36,63 @@ structureCounted <-
 #' if you want to query again what was not classified
 #' in the dictionary
 # structureCounted <-
-#   read_delim(
+#   readr::read_delim(
 #     file = pathDataInterimDictionariesStructureMetadata,
 #     delim = "\t",
 #     col_types = cols(.default = "c"),
 #     locale = locales
-#   ) %>%
-#   mutate(inchikeySanitized = structureCleanedInchikey)
+#   ) |>
+#   dplyr::mutate(inchikeySanitized = structureCleanedInchikey)
 
-old <-
-  read_delim(
-    file = file.path(
-      pathDataInterimDictionariesStructureDictionaryClassyfire,
-      "direct_parent.tsv.gz"
-    ),
-    delim = "\t",
-    col_types = cols(.default = "c")
-  ) %>%
-  distinct(inchikey)
+if (file.exists(
+  pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent
+)) {
+  old <-
+    readr::read_delim(
+      file = pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent,
+      delim = "\t",
+      col_types = cols(.default = "c")
+    ) |>
+    dplyr::distinct(inchikey)
 
-structuresForClassification <- structureCounted %>%
-  anti_join(old %>% select(inchikeySanitized = inchikey)) %>%
-  filter(!is.na(inchikeySanitized)) %>%
-  distinct(inchikeySanitized)
 
-#' if you want to query again what was was classified
-#' in the dictionary to put it in the local cache
-#' (in case you lost it)
-# structuresForClassification <- old %>% select(inchikeySanitized = inchikey) %>%
-#   filter(!is.na(inchikeySanitized)) %>%
-#   distinct(inchikeySanitized)
+  structuresForClassification <- structureCounted |>
+    dplyr::anti_join(old |>
+      dplyr::select(inchikeySanitized = inchikey)) |>
+    dplyr::filter(!is.na(inchikeySanitized)) |>
+    dplyr::distinct(inchikeySanitized)
+} else {
+  structuresForClassification <- structureCounted |>
+    dplyr::filter(!is.na(inchikeySanitized)) |>
+    dplyr::distinct(inchikeySanitized)
+}
+
+## if you want to query again what was was classified
+## in the dictionary to put it in the local cache
+## (in case you lost it)
+# structuresForClassification <- old |>
+#   dplyr::select(inchikeySanitized = inchikey) |>
+#   dplyr::filter(!is.na(inchikeySanitized)) |>
+#   dplyr::distinct(inchikeySanitized)
 
 # RSQLite::dbListObjects(ClassyFireCache)
 
-#' If you want to put things you have in your cache to your dictionary
+## If you want to put things you have in your cache to your dictionary
 # incache <- RSQLite::dbGetQuery(conn = ClassyFireCache,
 #                                statement = "SELECT *
 #   FROM classyfire;")
-# structuresForClassification <- inner_join(
+# structuresForClassification <- dplyr::inner_join(
 #   structuresForClassification,
 #   incache,
 #   by = c("inchikeySanitized" = "InChikey"))
 
-#' if you want to query again what was was classified
-#' in the dictionary to put it in the local cache
-#' (in case you lost it)
+## if you want to query again what was was classified
+## in the dictionary to put it in the local cache
+## (in case you lost it)
 # incache <- RSQLite::dbGetQuery(conn = ClassyFireCache,
 #                                statement = "SELECT *
 #   FROM classyfire;")
-# structuresForClassification <- anti_join(
+# structuresForClassification <- dplyr::anti_join(
 #   structuresForClassification,
 #   incache,
 #   by = c("inchikeySanitized" = "InChikey"))
@@ -100,74 +114,93 @@ log_debug("worked!")
 # classyfireR::meta(object = clasification_list_inchikey[[1]])
 # classyfireR::show(object = clasification_list_inchikey[[1]])
 
-X <- seq_along(clasification_list_inchikey)
+xs <- seq_along(clasification_list_inchikey)
 
-get_alternative_parents <- function(X) {
-  tryCatch(
-    {
-      alternative_parents <-
-        bind_cols(
-          "inchikey" = clasification_list_inchikey[[X]]@meta[["inchikey"]],
-          "chemontId" = clasification_list_inchikey[[X]]@alternative_parents[["chemont_id"]]
-        )
-      return(alternative_parents)
-    },
-    error = function(e) {
-      "Error"
+get_alternative_parents <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          alternative_parents <-
+            dplyr::bind_cols(
+              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
+              "chemontId" = clasification_list_inchikey[[x]]@alternative_parents[["chemont_id"]]
+            )
+          return(alternative_parents)
+        },
+        error = function(e) {
+          "Error"
+        }
+      )
     }
   )
 }
 
-get_chebi <- function(X) {
-  tryCatch(
-    {
-      chebi <-
-        bind_cols(
-          "inchikey" = clasification_list_inchikey[[X]]@meta[["inchikey"]],
-          "chebi" = clasification_list_inchikey[[X]]@predicted_chebi
-        )
-      return(chebi)
-    },
-    error = function(e) {
-      "Error"
+get_chebi <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          chebi <-
+            dplyr::bind_cols(
+              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
+              "chebi" = clasification_list_inchikey[[x]]@predicted_chebi
+            )
+          return(chebi)
+        },
+        error = function(e) {
+          "Error"
+        }
+      )
     }
   )
 }
 
-get_direct_parent <- function(X) {
-  tryCatch(
-    {
-      direct_parent <-
-        bind_cols(
-          "inchikey" = clasification_list_inchikey[[X]]@meta[["inchikey"]],
-          "directParent" = clasification_list_inchikey[[X]]@direct_parent[["chemont_id"]]
-        )
-      return(direct_parent)
-    },
-    error = function(e) {
-      "Error"
+get_direct_parent <- function(xs) {
+  p <- progressr::progressor(along = xs)
+  future.apply::future_lapply(
+    future.seed = TRUE,
+    X = xs,
+    FUN = function(x) {
+      tryCatch(
+        {
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          direct_parent <-
+            dplyr::bind_cols(
+              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
+              "directParent" = clasification_list_inchikey[[x]]@direct_parent[["chemont_id"]]
+            )
+          return(direct_parent)
+        },
+        error = function(e) {
+          "Error"
+        }
+      )
     }
   )
 }
 
-alternative_parents <- invisible(
-  lapply(
-    FUN = get_alternative_parents,
-    X = X
-  )
-)
+alternative_parents <- get_alternative_parents(xs = xs) |>
+  progressr::with_progress()
 
 if (!is_empty(alternative_parents)) {
   alternative_parents <-
-    bind_rows(alternative_parents[alternative_parents != "Error"])
+    dplyr::bind_rows(alternative_parents[alternative_parents != "Error"])
 } else {
   alternative_parents <- data.frame()
 }
 
-
 if (nrow(alternative_parents != 0)) {
-  alternative_parents <- alternative_parents %>%
-    mutate(inchikey = gsub(
+  alternative_parents <- alternative_parents |>
+    dplyr::mutate(inchikey = gsub(
       pattern = "InChIKey=",
       replacement = "",
       x = inchikey,
@@ -175,22 +208,18 @@ if (nrow(alternative_parents != 0)) {
     ))
 }
 
-chebi <- invisible(
-  lapply(
-    FUN = get_chebi,
-    X = X
-  )
-)
+chebi <- get_chebi(xs = xs) |>
+  progressr::with_progress()
 
 if (!is_empty(chebi)) {
-  chebi <- bind_rows(chebi[chebi != "Error"])
+  chebi <- dplyr::bind_rows(chebi[chebi != "Error"])
 } else {
   chebi <- data.frame()
 }
 
 if (nrow(chebi != 0)) {
-  chebi <- chebi %>%
-    mutate(inchikey = gsub(
+  chebi <- chebi |>
+    dplyr::mutate(inchikey = gsub(
       pattern = "InChIKey=",
       replacement = "",
       x = inchikey,
@@ -198,23 +227,19 @@ if (nrow(chebi != 0)) {
     ))
 }
 
-direct_parent <- invisible(
-  lapply(
-    FUN = get_direct_parent,
-    X = X
-  )
-)
+direct_parent <- get_direct_parent(xs = xs) |>
+  progressr::with_progress()
 
 if (!is_empty(direct_parent)) {
   direct_parent <-
-    bind_rows(direct_parent[direct_parent != "Error"])
+    dplyr::bind_rows(direct_parent[direct_parent != "Error"])
 } else {
   direct_parent <- data.frame()
 }
 
 if (nrow(direct_parent != 0)) {
-  direct_parent <- direct_parent %>%
-    mutate(inchikey = gsub(
+  direct_parent <- direct_parent |>
+    dplyr::mutate(inchikey = gsub(
       pattern = "InChIKey=",
       replacement = "",
       x = inchikey,
@@ -223,56 +248,57 @@ if (nrow(direct_parent != 0)) {
 }
 
 log_debug("exporting")
+create_dir(export = pathDataInterimDictionariesStructureDictionaryChebiFile)
 
 if (file.exists(
-  "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz"
+  pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent
 )) {
-  write_delim(
+  readr::write_delim(
     x = alternative_parents,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent,
     na = "",
     append = TRUE
   )
 } else {
-  write_delim(
+  readr::write_delim(
     x = alternative_parents,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/alternative_parents.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent,
     na = ""
   )
 }
 
-if (file.exists("../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz")) {
-  write_delim(
+if (file.exists(pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent)) {
+  readr::write_delim(
     x = direct_parent,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent,
     na = "",
     append = TRUE
   )
 } else {
-  write_delim(
+  readr::write_delim(
     x = direct_parent,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/classyfire/direct_parent.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent,
     na = ""
   )
 }
 
-if (file.exists("../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz")) {
-  write_delim(
+if (file.exists(pathDataInterimDictionariesStructureDictionaryChebiFile)) {
+  readr::write_delim(
     x = chebi,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryChebiFile,
     na = "",
     append = TRUE
   )
 } else {
-  write_delim(
+  readr::write_delim(
     x = chebi,
     delim = "\t",
-    file = "../data/interim/dictionaries_full/structure/chebi/chebi.tsv.gz",
+    file = pathDataInterimDictionariesStructureDictionaryChebiFile,
     na = ""
   )
 }

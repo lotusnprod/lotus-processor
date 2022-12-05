@@ -9,12 +9,16 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+library(future)
+library(future.apply)
+library(progressr)
 library(readr)
 library(stringr)
 
 log_debug("... functions")
 source("r/getref_noLimit.R")
 source("r/getAllReferences.R")
+source("r/progressr.R")
 
 log_debug("loading title lists")
 length <-
@@ -34,39 +38,15 @@ num <- as.integer(seq(
 ))
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReference),
-  yes = dir.create(pathDataInterimTablesTranslatedReference),
-  no = paste(pathDataInterimTablesTranslatedReference, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReferenceTitleFolder),
-  yes = dir.create(pathDataInterimTablesTranslatedReferenceTitleFolder),
-  no = file.remove(
-    list.files(
-      path = pathDataInterimTablesTranslatedReferenceTitleFolder,
-      full.names = TRUE
-    )
-  ) &
-    dir.create(
-      pathDataInterimTablesTranslatedReferenceTitleFolder,
-      showWarnings = FALSE
-    )
-)
+create_dir(export = pathDataInterimTablesTranslatedReference)
+create_dir_with_rm(export = pathDataInterimTablesTranslatedReferenceTitleFolder)
 
 for (i in num) {
   inpath <-
     paste0(
       pathDataInterimTablesOriginalReferenceTitleFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -78,7 +58,7 @@ for (i in num) {
     paste0(
       pathDataInterimTablesTranslatedReferenceTitleFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -88,7 +68,7 @@ for (i in num) {
 
   log_debug(paste("step", i / cut, "of", length))
 
-  dataTitle <- read_delim(
+  dataTitle <- readr::read_delim(
     file = inpath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -98,12 +78,8 @@ for (i in num) {
 
   log_debug("submitting to crossRef")
   if (nrow(dataTitle) != 0) {
-    reflist <- invisible(
-      lapply(
-        FUN = getref_noLimit,
-        X = dataTitle$referenceOriginal_title
-      )
-    )
+    reflist <- getref_noLimit(xs = dataTitle$referenceOriginal_title) |>
+      progressr::with_progress()
     log_debug("treating results, may take a while if full mode")
     dataTitle2 <-
       getAllReferences(
@@ -112,8 +88,8 @@ for (i in num) {
         method = "osa"
       )
   } else {
-    dataTitle2 <- data.frame() %>%
-      mutate(
+    dataTitle2 <- data.frame() |>
+      dplyr::mutate(
         referenceOriginal_title = NA,
         referenceTranslatedDoi = NA,
         referenceTranslatedJournal = NA,
@@ -126,7 +102,7 @@ for (i in num) {
   }
 
   log_debug("exporting ...")
-  write_delim(
+  readr::write_delim(
     x = dataTitle2,
     delim = "\t",
     file = outpath,
@@ -151,14 +127,14 @@ dataTitle3 <- do.call(
       full.names = FALSE
     ),
     function(x) {
-      read_delim(
+      readr::read_delim(
         file = gzfile(
-          file.path(pathDataInterimTablesTranslatedReferenceTitleFolder, x)
+          description = file.path(pathDataInterimTablesTranslatedReferenceTitleFolder, x)
         ),
         delim = "\t",
         escape_double = TRUE,
         trim_ws = TRUE
-      ) %>%
+      ) |>
         mutate_all(as.character)
     }
   )
@@ -166,7 +142,7 @@ dataTitle3 <- do.call(
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceTitle)
-write_delim(
+readr::write_delim(
   x = dataTitle3,
   delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceTitle,
