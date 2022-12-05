@@ -102,16 +102,18 @@ data_structures <-
   )
 
 data_structures_1 <- data_structures %>%
-  filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey)) 
+  filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey))
 
 data_structures_2 <- data_structures %>%
   filter(grepl(pattern = "\\|", x = structureCleanedInchiKey)) %>%
   cSplit(c("structureCleanedInchiKey", "structureCleanedInchi"),
-         sep = "|") %>%
-  pivot_longer(cols = contains(c("structureCleanedInchiKey","structureCleanedInchi"))) %>%
+    sep = "|"
+  ) %>%
+  pivot_longer(cols = contains(c("structureCleanedInchiKey", "structureCleanedInchi"))) %>%
   filter(!is.na(value)) %>%
   cSplit("name",
-         sep = "_") %>%
+    sep = "_"
+  ) %>%
   pivot_wider(names_from = "name_1") %>%
   select(-name_2) %>%
   distinct()

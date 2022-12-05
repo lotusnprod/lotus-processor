@@ -40,6 +40,7 @@ locales <- readr::locale(
 ##################################   Paths   ##################################
 ###############################################################################
 source("r/database.R")
+source("r/create_dir.R")
 
 ## for steps where paths need to be adapted locally or related to other repos
 molconvertPath <- "~/../../Applications/ChemAxon/JChemSuite/bin/molconvert"
@@ -739,22 +740,46 @@ pathDataInterimDictionariesStructureAntiDictionary <-
 pathDataInterimDictionariesStructureMetadata <-
   file.path(pathDataInterimDictionariesStructure, "structure_metadata.tsv.gz")
 
-pathDataInterimDictionariesStructureDictionaryClassyfire <-
+pathDataInterimDictionariesStructureDictionaryChebi <-
   file.path(
-    pathDataInterimDictionaries,
-    "structure/classyfire"
+    pathDataInterimDictionariesStructure,
+    "chebi"
   )
 
-pathDataInterimDictionariesStructureDictionaryClassyfireFile <-
+pathDataInterimDictionariesStructureDictionaryChebiFile <-
+  file.path(
+    pathDataInterimDictionariesStructureDictionaryChebi,
+    "chebi.tsv.gz"
+  )
+
+pathDataInterimDictionariesStructureDictionaryClassyfire <-
+  file.path(
+    pathDataInterimDictionariesStructure,
+    "classyfire"
+  )
+
+pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent <-
   file.path(
     pathDataInterimDictionariesStructureDictionaryClassyfire,
-    "classy.tsv.gz"
+    "alternative_parents.tsv.gz"
+  )
+
+pathDataInterimDictionariesStructureDictionaryClassyfireDB <-
+  file.path(
+    pathDataInterimDictionariesStructureDictionaryClassyfire,
+    "classyfire.sqlite"
+  )
+
+pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent <-
+  file.path(
+    pathDataInterimDictionariesStructureDictionaryClassyfire,
+    "direct_parent.tsv.gz"
   )
 
 pathDataInterimDictionariesStructureDictionaryNpclassifier <-
   file.path(
-    pathDataInterimDictionaries,
-    "structure/npclassifier"
+    pathDataInterimDictionariesStructure,
+    "npclassifier"
   )
 
 pathDataInterimDictionariesStructureDictionaryNpclassifierFile <-

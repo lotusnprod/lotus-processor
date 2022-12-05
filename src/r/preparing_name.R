@@ -161,27 +161,29 @@ preparing_name <- function(x) {
 
   x$nameCleaned <- trimws(x = x$nameCleaned)
   x$nameCleaned <- tolower(x = x$nameCleaned)
-  x$nameCleaned <-
-    gsub(
-      pattern = "-NA$",
-      replacement = "",
-      x = gsub(
-        pattern = ",$",
+  if (mode != "custom") {
+    x$nameCleaned <-
+      gsub(
+        pattern = "-NA$",
         replacement = "",
-        x = (paste0(
-          gsub(
-            pattern = ".*,([^.]+)\\:.*",
-            replacement = "\\1",
-            x = x$nameCleaned
-          ),
-          "-",
-          str_extract(
-            pattern = ".*,",
-            string = x$nameCleaned
-          )
-        ))
+        x = gsub(
+          pattern = ",$",
+          replacement = "",
+          x = (paste0(
+            gsub(
+              pattern = ".*,([^.]+)\\:.*",
+              replacement = "\\1",
+              x = x$nameCleaned
+            ),
+            "-",
+            str_extract(
+              pattern = ".*,",
+              string = x$nameCleaned
+            )
+          ))
+        )
       )
-    )
+  }
   x$nameCleaned <- y_as_na(x = x$nameCleaned, y = "NA")
 
   return(x)

@@ -34,39 +34,15 @@ num <- as.integer(seq(
 ))
 
 log_debug("ensuring directories exist")
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslated),
-  yes = dir.create(pathDataInterimTablesTranslated),
-  no = paste(pathDataInterimTablesTranslated, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReference),
-  yes = dir.create(pathDataInterimTablesTranslatedReference),
-  no = paste(pathDataInterimTablesTranslatedReference, "exists")
-)
-
-ifelse(
-  test = !dir.exists(pathDataInterimTablesTranslatedReferenceSplitFolder),
-  yes = dir.create(pathDataInterimTablesTranslatedReferenceSplitFolder),
-  no = file.remove(
-    list.files(
-      path = pathDataInterimTablesTranslatedReferenceSplitFolder,
-      full.names = TRUE
-    )
-  ) &
-    dir.create(
-      pathDataInterimTablesTranslatedReferenceSplitFolder,
-      showWarnings = FALSE
-    )
-)
+create_dir(export = pathDataInterimTablesTranslatedReference)
+create_dir_with_rm(export = pathDataInterimTablesTranslatedReferenceSplitFolder)
 
 for (i in num) {
   inpath <-
     paste0(
       pathDataInterimTablesOriginalReferenceSplitFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -78,7 +54,7 @@ for (i in num) {
     paste0(
       pathDataInterimTablesTranslatedReferenceSplitFolder,
       "/",
-      str_pad(
+      stringr::str_pad(
         string = i,
         width = 6,
         pad = "0"
@@ -88,7 +64,7 @@ for (i in num) {
 
   log_debug(paste("step", i / cut, "of", length))
 
-  dataSplit <- read_delim(
+  dataSplit <- readr::read_delim(
     file = inpath,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -99,12 +75,8 @@ for (i in num) {
 
   log_debug("submitting to crossRef")
   if (nrow(dataSplit) != 0) {
-    reflist <- invisible(
-      lapply(
-        FUN = getref_noLimit,
-        X = dataSplit$referenceOriginal_split
-      )
-    )
+    reflist <- getref_noLimit(xs = dataSplit$referenceOriginal_split) |>
+      progressr::with_progress()
     log_debug("treating results, may take a while if full mode")
     dataSplit2 <-
       getAllReferences(
@@ -113,8 +85,8 @@ for (i in num) {
         method = "osa"
       )
   } else {
-    dataSplit2 <- data.frame() %>%
-      mutate(
+    dataSplit2 <- data.frame() |>
+      dplyr::mutate(
         referenceOriginal_split = NA,
         referenceTranslatedDoi = NA,
         referenceTranslatedJournal = NA,
@@ -127,7 +99,7 @@ for (i in num) {
   }
 
   log_debug("exporting ...")
-  write_delim(
+  readr::write_delim(
     x = dataSplit2,
     delim = "\t",
     file = outpath,
@@ -152,24 +124,24 @@ dataSplit3 <- do.call(
       full.names = FALSE
     ),
     function(x) {
-      read_delim(
+      readr::read_delim(
         file = gzfile(
-          file.path(pathDataInterimTablesTranslatedReferenceSplitFolder, x)
+          description = file.path(pathDataInterimTablesTranslatedReferenceSplitFolder, x)
         ),
         delim = "\t",
         col_types = cols(.default = "c"),
         locale = locales,
         escape_double = TRUE,
         trim_ws = TRUE
-      ) %>%
-        mutate_all(as.character)
+      ) |>
+        dplyr::mutate_all(as.character)
     }
   )
 )
 
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesTranslatedReferenceSplit)
-write_delim(
+readr::write_delim(
   x = dataSplit3,
   delim = "\t",
   file = pathDataInterimTablesTranslatedReferenceSplit,

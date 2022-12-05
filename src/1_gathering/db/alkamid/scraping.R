@@ -52,11 +52,6 @@ ALKAMID_REF_2 <- ALKAMID_REF[!is.na(ALKAMID_REF)]
 ALKAMID_REF_3 <- bind_rows(ALKAMID_REF_2, .id = "entry_id")
 
 # exporting
-ifelse(
-  test = !dir.exists(dirname(database$sourceFiles$tsv)),
-  yes = dir.create(dirname(database$sourceFiles$tsv)),
-  no = paste(dirname(database$sourceFiles$tsv), "exists")
-)
-
+create_dir(export = database$sourceFiles$tsv)
 database$writeFile(database$sourceFiles$tsv, ALKAMID)
 database$writeFile(database$sourceFiles$tsvRef, ALKAMID_REF_3)

@@ -36,14 +36,5 @@ data_standard <-
   )
 
 # exporting
-ifelse(
-  test = !dir.exists(pathDataInterim),
-  yes = dir.create(pathDataInterim),
-  no = paste(pathDataInterim, "exists")
-)
-ifelse(
-  test = !dir.exists(file.path(pathDataInterim, "custom")),
-  yes = dir.create(file.path(pathDataInterim, "custom")),
-  no = paste(file.path(pathDataInterim, "custom"), "exists")
-)
+create_dir(export = file.path(pathDataInterim, "custom"))
 database$writeInterim(data_standard)

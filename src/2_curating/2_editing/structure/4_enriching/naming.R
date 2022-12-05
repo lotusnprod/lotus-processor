@@ -14,23 +14,23 @@ library(readr)
 log_debug("loading files ...")
 log_debug("...  counted structures")
 structureCounted <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedStructureStereoCounted,
     delim = "\t"
   )
 
 log_debug("keeping smiles only ...")
-smilesDictionary <- structureCounted %>%
-  distinct(smilesSanitized) %>%
-  select(smiles = smilesSanitized)
-#' if some names are missing in structures metadata
-# smilesDictionary <- structureMetadata %>%
-#   filter(is.na(structureCleaned_nameTraditional)) %>%
-#   distinct(structureCleanedSmiles) %>%
-#   select(smiles = structureCleanedSmiles)
+smilesDictionary <- structureCounted |>
+  dplyr::distinct(smilesSanitized) |>
+  dplyr::select(smiles = smilesSanitized)
+## if some names are missing in structures metadata
+# smilesDictionary <- structureMetadata |>
+#   dplyr::filter(is.na(structureCleaned_nameTraditional)) |>
+#   dplyr::distinct(structureCleanedSmiles) |>
+#   dplyr::select(smiles = structureCleanedSmiles)
 
 log_debug("writing the smiles table")
-write_delim(
+readr::write_delim(
   x = smilesDictionary,
   delim = "\t",
   file = pathDataInterimTablesProcessedStructureSmiles,
@@ -91,7 +91,7 @@ if (works_locally_only == FALSE) {
   # )
 
   log_debug("loading files ...")
-  structureNamesTraditional <- read_delim(
+  structureNamesTraditional <- readr::read_delim(
     file = pathDataInterimTablesProcessedStructureSmiles_1,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -99,10 +99,10 @@ if (works_locally_only == FALSE) {
     col_names = FALSE,
     skip_empty_rows = FALSE,
     trim_ws = TRUE
-  ) %>%
-    select(structureCleaned_nameTraditional = X1)
+  ) |>
+    dplyr::select(structureCleaned_nameTraditional = X1)
 
-  structureNamesIupac <- read_delim(
+  structureNamesIupac <- readr::read_delim(
     file = pathDataInterimTablesProcessedStructureSmiles_2,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -110,10 +110,10 @@ if (works_locally_only == FALSE) {
     col_names = FALSE,
     skip_empty_rows = FALSE,
     trim_ws = TRUE
-  ) %>%
-    select(structureCleaned_nameIupac = X1)
+  ) |>
+    dplyr::select(structureCleaned_nameIupac = X1)
 
-  # structureNamesCommon <- read_delim(
+  # structureNamesCommon <- readr::read_delim(
   #   file = pathDataInterimTablesProcessedStructureSmiles_3,
   #   delim = "\t",
   #   col_types = cols(.default = "c"),
@@ -121,10 +121,10 @@ if (works_locally_only == FALSE) {
   #   col_names = FALSE,
   #   skip_empty_rows = FALSE,
   #   trim_ws = TRUE
-  # ) %>%
-  #   select(structureCleanedNameCommon = X1)
+  # ) |>
+  #   dplyr::select(structureCleanedNameCommon = X1)
 
-  # structureNamesCommonAll <- read_delim(
+  # structureNamesCommonAll <- readr::read_delim(
   #   file = pathDataInterimTablesProcessedStructureSmiles_4,
   #   delim = "\t",
   #   col_types = cols(.default = "c"),
@@ -132,8 +132,8 @@ if (works_locally_only == FALSE) {
   #   col_names = FALSE,
   #   skip_empty_rows = FALSE,
   #   trim_ws = TRUE
-  # ) %>%
-  #   select(structureCleanedNameCommonAll = X1)
+  # ) |>
+  #   dplyr::select(structureCleanedNameCommonAll = X1)
 }
 
 if (works_locally_only == TRUE) {
@@ -144,109 +144,109 @@ if (works_locally_only == TRUE) {
     data.frame(structureCleaned_nameIupac = NA)
 }
 
-smilesFilled <- bind_cols(
+smilesFilled <- dplyr::bind_cols(
   smilesDictionary,
   structureNamesTraditional,
   structureNamesIupac
 )
 
 #' if some names are missing in structures metadata
-# part_1 <- structureMetadata %>%
-#   filter(is.na(structureCleaned_nameTraditional)) %>%
-#   select(-structureCleaned_nameTraditional,
-#          -structureCleaned_nameIupac) %>%
-#   left_join(smilesFilled, by = c("structureCleanedSmiles"="smiles"))
-# part_2 <- structureMetadata %>%
-#   filter(!is.na(structureCleaned_nameTraditional))
+# part_1 <- structureMetadata |>
+#   dplyr::filter(is.na(structureCleaned_nameTraditional)) |>
+#   dplyr::select(-structureCleaned_nameTraditional,
+#          -structureCleaned_nameIupac) |>
+#   dplyr::left_join(smilesFilled, by = c("structureCleanedSmiles"="smiles"))
+# part_2 <- structureMetadata |>
+#   dplyr::filter(!is.na(structureCleaned_nameTraditional))
 # structureMetadata <- rbind(part_1, part_2)
 
 structureNamed <-
-  left_join(structureCounted,
+  dplyr::left_join(structureCounted,
     smilesFilled,
     by = c("smilesSanitized" = "smiles")
   )
 
-structureNamed_defined <- structureNamed %>%
-  filter(count_unspecified_atomic_stereocenters == 0) %>%
-  mutate_all(as.character)
+structureNamed_defined <- structureNamed |>
+  dplyr::filter(count_unspecified_atomic_stereocenters == 0) |>
+  dplyr::mutate_all(as.character)
 
-structureNamed_undefined <- structureNamed %>%
-  filter(count_unspecified_atomic_stereocenters != 0) %>%
-  mutate(
+structureNamed_undefined <- structureNamed |>
+  dplyr::filter(count_unspecified_atomic_stereocenters != 0) |>
+  dplyr::mutate(
     structureCleaned_nameTraditional = gsub(
       pattern = "(-)-",
       replacement = "",
       x = structureCleaned_nameTraditional,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     structureCleaned_nameTraditional = gsub(
       pattern = "(+)-",
       replacement = "",
       x = structureCleaned_nameTraditional,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     structureCleaned_nameTraditional = gsub(
       pattern = "(-)",
       replacement = "",
       x = structureCleaned_nameTraditional,
       fixed = TRUE
     )
-  ) %>%
-  mutate(
+  ) |>
+  dplyr::mutate(
     structureCleaned_nameTraditional = gsub(
       pattern = "(+)",
       replacement = "",
       x = structureCleaned_nameTraditional,
       fixed = TRUE
     )
-  ) %>%
-  mutate_all(as.character)
+  ) |>
+  dplyr::mutate_all(as.character)
 
 structureNamed_cleaned <-
-  bind_rows(structureNamed_defined, structureNamed_undefined)
+  dplyr::bind_rows(structureNamed_defined, structureNamed_undefined)
 
 if (mode == "custom") {
   library(tidyr)
   structureNamed <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimTablesOriginalStructureFull,
       delim = "\t"
     ) %>%
-    # using https://stackoverflow.com/a/58837832 to allow multiple smiles/inchi/nominal
-    group_by(structureType) %>%
-    mutate(row = row_number()) %>%
-    pivot_wider(
+    ## using https://stackoverflow.com/a/58837832 to allow multiple smiles/inchi/nominal
+    dplyr::group_by(structureType) %>%
+    dplyr::mutate(row = dplyr::row_number()) %>%
+    tidyr::pivot_wider(
       names_from = structureType,
       values_from = structureValue
     ) %>%
-    unnest(cols = c(inchi, smiles, nominal)) %>%
-    pivot_longer(cols = colnames(.)[grepl(pattern = "inchi|smiles", x = colnames(.))]) %>%
-    distinct(
+    tidyr::unnest(cols = c(inchi, smiles, nominal)) %>%
+    tidyr::pivot_longer(cols = colnames(.)[grepl(pattern = "inchi|smiles", x = colnames(.))]) %>%
+    dplyr::distinct(
       structureType = name,
       structureValue = value,
       structureCleaned_nameTraditional = nominal
     ) %>%
-    filter(!is.na(structureValue))
+    dplyr::filter(!is.na(structureValue))
 
   structureTranslated <-
-    read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
+    readr::read_delim(file = pathDataInterimTablesTranslatedStructureFinal)
 
-  structureNamed_cleaned <- structureNamed_cleaned %>%
-    select(-structureCleaned_nameTraditional) %>%
-    left_join(structureTranslated) %>%
-    left_join(structureNamed) %>%
-    select(-structureType, -structureValue)
+  structureNamed_cleaned <- structureNamed_cleaned |>
+    dplyr::select(-structureCleaned_nameTraditional) |>
+    dplyr::left_join(structureTranslated) |>
+    dplyr::left_join(structureNamed) |>
+    dplyr::select(-structureType, -structureValue)
 }
 
 log_debug("ensuring directories exist")
 log_debug("exporting ...")
 log_debug(pathDataInterimTablesProcessedStructureNamed)
 
-write_delim(
+readr::write_delim(
   x = structureNamed_cleaned,
   delim = "\t",
   file = pathDataInterimTablesProcessedStructureNamed,

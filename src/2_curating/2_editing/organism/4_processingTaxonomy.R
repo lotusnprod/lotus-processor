@@ -24,17 +24,17 @@ log_debug(" Step 4")
 log_debug("... files ...")
 log_debug("... cleaned organisms")
 dataCleanedOrganism <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimTablesProcessedOrganismTranslatedTable,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 log_debug("... taxa ranks dictionary")
 taxaRanksDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaRanks,
     delim = "\t",
     col_types = cols(.default = "c"),
@@ -42,27 +42,27 @@ taxaRanksDictionary <-
   )
 log_debug("... manual fixes dictionaries")
 wrongVerifiedDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaWrongVerified,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
-  ) %>%
+  ) |>
   as.list()
 
 wrongHomonymsDictionary <-
-  read_delim(
+  readr::read_delim(
     file = pathDataInterimDictionariesTaxaWrongHomonyms,
     delim = "\t",
     col_types = cols(.default = "c"),
     locale = locales
   )
 
-dataCleanedOrganismVerify <- dataCleanedOrganism %>%
-  filter(!is.na(organismCleaned)) %>%
-  distinct(organismCleaned)
+dataCleanedOrganismVerify <- dataCleanedOrganism |>
+  dplyr::filter(!is.na(organismCleaned)) |>
+  dplyr::distinct(organismCleaned)
 
-write_delim(
+readr::write_delim(
   x = dataCleanedOrganismVerify,
   file = gzfile(
     description = pathDataInterimTablesProcessedOrganismVerifyTable,
@@ -84,18 +84,18 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
+  jsonlite::stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
 
-verified_df <- verified %>%
-  data.frame() %>%
-  select(-curation, -matchType) %>%
-  unnest(results, names_repair = "minimal") %>%
-  filter(dataSourceTitleShort != "IRMNG (old)" &
-    dataSourceTitleShort != "IPNI") %>%
-  filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) %>%
-  arrange(desc(sortScore)) %>%
-  distinct(name, dataSourceTitleShort, .keep_all = TRUE) %>%
-  select(
+verified_df <- verified |>
+  data.frame() |>
+  dplyr::select(-curation, -matchType) |>
+  tidyr::unnest(results, names_repair = "minimal") |>
+  dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
+    dataSourceTitleShort != "IPNI") |>
+  dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+  dplyr::arrange(dplyr::desc(sortScore)) |>
+  dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
+  dplyr::select(
     organismCleaned = name,
     organismDbTaxo = dataSourceTitleShort,
     taxonId = currentRecordId,
@@ -109,11 +109,11 @@ verified_df <- verified %>%
 verified_df$organismDbTaxo <-
   y_as_na(verified_df$organismDbTaxo, "")
 
-dataCleanedOrganismVerified <- left_join(
+dataCleanedOrganismVerified <- dplyr::left_join(
   dataCleanedOrganism,
   verified_df
-) %>%
-  select(
+) |>
+  dplyr::select(
     organismType,
     organismValue,
     organismCleaned,
@@ -123,13 +123,13 @@ dataCleanedOrganismVerified <- left_join(
     currentCanonicalFull,
     taxonomy,
     rank
-  ) %>%
-  filter(!is.na(organismDbTaxo))
+  ) |>
+  dplyr::filter(!is.na(organismDbTaxo))
 
 ## last version does not contain "species"
-indexFungorum <- dataCleanedOrganismVerified %>%
-  filter(organismDbTaxo == "Index Fungorum") %>%
-  mutate(
+indexFungorum <- dataCleanedOrganismVerified |>
+  dplyr::filter(organismDbTaxo == "Index Fungorum") |>
+  dplyr::mutate(
     rank = ifelse(
       test = rank == "kingdom|phylum|class|order|family|",
       yes = "kingdom|phylum|class|order|family|species",
@@ -138,9 +138,9 @@ indexFungorum <- dataCleanedOrganismVerified %>%
   )
 
 if (nrow(indexFungorum != 0)) {
-  dataCleanedOrganismVerified <- dataCleanedOrganismVerified %>%
-    filter(organismDbTaxo != "Index Fungorum") %>%
-    bind_rows(., indexFungorum)
+  dataCleanedOrganismVerified <- dataCleanedOrganismVerified |>
+    dplyr::filter(organismDbTaxo != "Index Fungorum") |>
+    dplyr::bind_rows(indexFungorum)
 }
 
 log_debug("manipulating taxonomic levels ")
@@ -153,8 +153,8 @@ if (nrow(dataCleanedOrganism) != 0) {
 }
 
 if (nrow(dataCleanedOrganism) == 0) {
-  dataCleanedOrganismManipulated <- data.frame() %>%
-    mutate(
+  dataCleanedOrganismManipulated <- data.frame() |>
+    dplyr::mutate(
       organismType = NA,
       organismValue = NA,
       organismDetected = NA,
@@ -195,15 +195,14 @@ dataCleanedOrganismManipulated <-
   )), ]
 
 dataCleanedOrganismManipulated_clean <-
-  dataCleanedOrganismManipulated %>%
-  distinct(
-    organismType,
+  dataCleanedOrganismManipulated |>
+  dplyr::distinct(organismType,
     organismValue,
     organismDetected,
     organismCleaned,
     .keep_all = TRUE
-  ) %>%
-  select(
+  ) |>
+  dplyr::select(
     organismType,
     organismValue,
     organismDetected,
@@ -212,11 +211,11 @@ dataCleanedOrganismManipulated_clean <-
   )
 
 dataCleanedOrganismManipulated_clean_2 <-
-  left_join(
+  dplyr::left_join(
     dataCleanedOrganismManipulated_clean,
     dataCleanedOrganismManipulated
-  ) %>%
-  distinct()
+  ) |>
+  dplyr::distinct()
 
 dataCuratedOrganismAuto <-
   taxo_cleaning_auto(dfsel = dataCleanedOrganismManipulated_clean_2)
@@ -257,8 +256,8 @@ dataCuratedOrganismAuto[setdiff(
   y = names(dataCuratedOrganismAuto)
 )] <- NA
 
-dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
-  select(
+dataCuratedOrganismAuto <- dataCuratedOrganismAuto |>
+  dplyr::select(
     organismType,
     organismValue,
     organismDetected,
@@ -288,18 +287,20 @@ dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
     # organism_6_genus_id,
     # organism_7_species_id,
     # organism_8_variety_id,
-  ) %>%
-  filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
+  ) |>
+  dplyr::filter(grepl(pattern = "[[:alnum:]]", x = organismTaxonRanks))
 
-dataCuratedOrganismAuto <- dataCuratedOrganismAuto %>%
-  anti_join(wrongHomonymsDictionary %>%
-    distinct(organismCleaned,
-      organismCleanedRank = organismCleaned_rank
-    ))
+dataCuratedOrganismAuto <- dataCuratedOrganismAuto |>
+  dplyr::anti_join(
+    wrongHomonymsDictionary |>
+      dplyr::distinct(organismCleaned,
+        organismCleanedRank = organismCleaned_rank
+      )
+  )
 
 log_debug("exporting ... ")
 log_debug(pathDataInterimTablesProcessedOrganismFinal)
-write_delim(
+readr::write_delim(
   x = dataCuratedOrganismAuto,
   delim = "\t",
   file = pathDataInterimTablesProcessedOrganismFinal,
