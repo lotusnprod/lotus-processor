@@ -5,8 +5,8 @@ channels:
   - defaults
   - rdkit
 dependencies:
+  - chembl_structure_pipeline
   - conda-build
-  - molvs
   - openjdk
   - pandas
   - python
