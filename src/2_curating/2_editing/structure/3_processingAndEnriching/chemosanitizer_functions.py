@@ -6,31 +6,30 @@ import pandas as pd
 import sys
 import gzip
 
+# ChEMBL specific modules
+from chembl_structure_pipeline import checker
+from chembl_structure_pipeline import standardizer
+
 # RDkit specific modules
 from rdkit import Chem
-from rdkit.Chem import Descriptors
-from rdkit.Chem import PandasTools
 from rdkit.Chem import AllChem
+from rdkit.Chem import Descriptors
 from rdkit.Chem import rdMolDescriptors
-from rdkit.Chem import SanitizeMol
-from rdkit.Chem.MolStandardize import rdMolStandardize
+from rdkit.Chem import rdmolfiles
 
 
-# MolVS specific modules
-import molvs
-from molvs import Standardizer
-from molvs import Validator
-# from molvs.fragment import LargestFragmentChooser
-# from molvs.fragment import FragmentRemover
-# or eventually load the local (modified) fragment.py
-import fragment
-from fragment import LargestFragmentChooser
-from fragment import FragmentRemover
-from molvs.charge import Uncharger
+# def canonicalizor_fun(romol):
+#     m = rdMolStandardize.TautomerEnumerator().Canonicalize(romol)
+#     if m:
+#         return m
+#     return None
 
 
-def printer(inchi):
-    print(inchi)
+def GetParent_fun(romol):
+    m, _ = standardizer.get_parent_mol(romol)
+    if m:
+        return m
+    return None
 
 
 def MolFromInchi_fun(inchi):
@@ -47,8 +46,21 @@ def MolFromSmiles_fun(smiles):
     return None
 
 
-def MolToSmiles_fun(romol):
-    m = Chem.MolToSmiles(romol)
+def MolToEmass_fun(romol):
+    m = Descriptors.ExactMolWt(romol)
+    if m:
+        return m
+    return None
+
+
+def MolToFlatMol_fun(romol):
+    Chem.RemoveStereochemistry(
+        romol)  # See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
+    return romol
+
+
+def MolToIK_fun(romol):
+    m = Chem.MolToInchiKey(romol)
     if m:
         return m
     return None
@@ -61,17 +73,11 @@ def MolToInchi_fun(romol):
     return None
 
 
-def MolToIK_fun(romol):
-    m = Chem.MolToInchiKey(romol)
+def MolToLogP_fun(romol):
+    m = Descriptors.MolLogP(romol)
     if m:
         return m
     return None
-
-
-def MolToFlatMol_fun(romol):
-    Chem.RemoveStereochemistry(
-        romol)  # See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
-    return romol
 
 
 def MolToMF_fun(romol):
@@ -81,64 +87,8 @@ def MolToMF_fun(romol):
     return None
 
 
-def MolToEmass_fun(romol):
-    m = Descriptors.ExactMolWt(romol)
-    if m:
-        return m
-    return None
-
-
-def MolToLogP_fun(romol):
-    m = Chem.Crippen.MolLogP(romol)
-    if m:
-        return m
-    return None
-
-
-# defining the validator log output format
-fmt = '%(levelname)s - %(validation)s - %(message)s'
-
-
-# save the Standardizer and LargestFragmentChooser classes as variables
-
-
-def validator_fun(romol):
-    m = Validator(log_format=fmt).validate(romol)
-    if m:
-        return m
-    return None
-
-
-def standardizor_fun(romol):
-    m = Standardizer().standardize(romol)
-    if m:
-        return m
-    return None
-
-
-def canonicalizor_fun(romol):
-    m = rdMolStandardize.TautomerEnumerator().Canonicalize(romol)
-    if m:
-        return m
-    return None
-
-
-def fragremover_fun(romol):
-    m = FragmentRemover().remove(romol)
-    if m:
-        return m
-    return None
-
-
-def fragchooser_fun(romol):
-    m = LargestFragmentChooser().choose(romol)
-    if m:
-        return m
-    return None
-
-
-def uncharger_fun(romol):
-    m = Uncharger().uncharge(romol)
+def MolToSmiles_fun(romol):
+    m = Chem.MolToSmiles(romol)
     if m:
         return m
     return None
@@ -150,6 +100,20 @@ def sik_fun(ik):
         if m:
             return m
         return None
+    return None
+
+
+def standardizor_fun(romol):
+    m = standardizer.standardize_mol(romol)
+    if m:
+        return m
+    return None
+
+
+def validator_fun(romol):
+    m = checker.check_molblock(rdmolfiles.MolToMolBlock(romol))
+    if m:
+        return m
     return None
 
 
@@ -292,19 +256,19 @@ def long_cleaning_function(myslice, smiles_column_header):
     myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
     myslice = myslice[~myslice['ROMol'].isnull()]
     myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
-    myslice['ROMolSanitizedLargestFragmentUncharged'] = myslice['ROMol'].apply(standardizor_fun).apply(
-        fragremover_fun).apply(uncharger_fun).apply(tautomerizor_fun)
-    myslice['smilesSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToSmiles_fun)
-    myslice['inchiSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToInchi_fun)
-    myslice['inchikeySanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToIK_fun)
-    myslice['flatROMol'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToFlatMol_fun)
+    myslice['ROMolSanitized'] = myslice['ROMol'].apply(
+        GetParent_fun).apply(tautomerizor_fun).apply(standardizor_fun)
+    myslice['smilesSanitized'] = myslice['ROMolSanitized'].apply(MolToSmiles_fun)
+    myslice['inchiSanitized'] = myslice['ROMolSanitized'].apply(MolToInchi_fun)
+    myslice['inchikeySanitized'] = myslice['ROMolSanitized'].apply(MolToIK_fun)
+    myslice['flatROMol'] = myslice['ROMolSanitized'].apply(MolToFlatMol_fun)
     myslice['smilesSanitizedFlat'] = myslice['flatROMol'].apply(MolToSmiles_fun)
     myslice['inchiSanitizedFlat'] = myslice['flatROMol'].apply(MolToInchi_fun)
     myslice['shortikSanitized'] = myslice['inchikeySanitized'].apply(sik_fun)
-    myslice['formulaSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToMF_fun)
-    myslice['exactmassSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToEmass_fun)
-    myslice['xlogpSanitized'] = myslice['ROMolSanitizedLargestFragmentUncharged'].apply(MolToLogP_fun)
-    myslice = myslice.drop(myslice.loc[:, ['ROMol', 'flatROMol', 'ROMolSanitizedLargestFragmentUncharged']], axis=1)
+    myslice['formulaSanitized'] = myslice['ROMolSanitized'].apply(MolToMF_fun)
+    myslice['exactmassSanitized'] = myslice['ROMolSanitized'].apply(MolToEmass_fun)
+    myslice['xlogpSanitized'] = myslice['ROMolSanitized'].apply(MolToLogP_fun)
+    myslice = myslice.drop(myslice.loc[:, ['ROMol', 'flatROMol', 'ROMolSanitized']], axis=1)
     return myslice
 
 
