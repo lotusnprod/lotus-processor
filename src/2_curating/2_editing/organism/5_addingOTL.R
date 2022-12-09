@@ -79,6 +79,8 @@ new_matched_names <- dataCuratedOrganismAuto |>
 
 drv <- RSQLite::SQLite()
 
+create_dir(export = pathDataInterimDictionariesOrganismDictionaryOTL)
+
 db <- DBI::dbConnect(
   drv = drv,
   dbname = pathDataInterimDictionariesOrganismDictionaryOTL
@@ -173,51 +175,57 @@ if (is_empty(new_matched_names) == FALSE) {
   new_ott_id <- new_matched_otl |>
     dplyr::distinct(ott_id)
 
-  X <- seq_along(1:round(nrow(new_ott_id) / 100))
+  xs <- seq_along(1:round(nrow(new_ott_id) / 100))
 
   ott_list <- list()
-  for (i in X) {
+  for (i in xs) {
     ott_list[[i]] <-
       new_ott_id$ott_id[(i * 100 - 99):(i * 100)][!is.na(new_ott_id$ott_id[(i *
         100 - 99):(i * 100)])]
   }
 
-  get_otl_lineage <- function(X) {
-    tryCatch({
-      taxon_info <- rotl::taxonomy_taxon_info(
-        ott_ids = ott_list[[X]],
-        include_lineage = TRUE,
-        include_terminal_descendants = TRUE
-      )
+  get_otl_lineage <- function(xs) {
+    p <- progressr::progressor(along = xs)
+    future.apply::future_lapply(
+      future.seed = TRUE,
+      X = xs,
+      FUN = function(x) {
+        tryCatch({
+          p(sprintf("x=%g", as.numeric(x))) ## little hack
+          taxon_info <- rotl::taxonomy_taxon_info(
+            ott_ids = ott_list[[x]],
+            include_lineage = TRUE,
+            include_terminal_descendants = TRUE
+          )
 
-      taxon_lineage <- taxon_info |>
-        rotl::tax_lineage()
+          taxon_lineage <- taxon_info |>
+            rotl::tax_lineage()
 
-      list_df <- list()
+          list_df <- list()
 
-      for (i in seq_along(1:length(taxon_lineage))) {
-        list_df[[i]] <- bind_rows(
-          data.frame(
-            id = ott_list[[X]][i],
-            rank = taxon_info[[i]]$rank,
-            name = taxon_info[[i]]$name,
-            unique_name = taxon_info[[i]]$unique_name,
-            ott_id = as.character(taxon_info[[i]]$ott_id)
-          ),
-          data.frame(id = ott_list[[X]][i], taxon_lineage[[i]])
-        )
+          for (i in seq_along(1:length(taxon_lineage))) {
+            list_df[[i]] <- dplyr::bind_rows(
+              data.frame(
+                id = ott_list[[x]][i],
+                rank = taxon_info[[i]]$rank,
+                name = taxon_info[[i]]$name,
+                unique_name = taxon_info[[i]]$unique_name,
+                ott_id = as.character(taxon_info[[i]]$ott_id)
+              ),
+              data.frame(id = ott_list[[x]][i], taxon_lineage[[i]])
+            )
+          }
+
+          df <- dplyr::bind_rows(list_df)
+          return(df)
+        })
       }
-
-      df <- dplyr::bind_rows(list_df)
-      return(df)
-    })
+    )
   }
 
   new_matched_meta_list <-
-    lapply(
-      FUN = get_otl_lineage,
-      X = X
-    )
+    get_otl_lineage(xs = xs) |>
+    progressr::with_progress()
 
   new_matched_meta <- dplyr::bind_rows(new_matched_meta_list)
 
