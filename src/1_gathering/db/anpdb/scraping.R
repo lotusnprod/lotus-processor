@@ -50,7 +50,7 @@ getanp <- function(xs) {
 
           colnames(df2) <- df2[1, ]
 
-          df3 <- data.frame(df2) |> 
+          df3 <- data.frame(df2) |>
             slice(2)
 
           df3[setdiff(
