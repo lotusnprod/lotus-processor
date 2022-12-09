@@ -27,6 +27,7 @@ xs <- 1:63574
 GetKnapSack <- function(xs) {
   p <- progressr::progressor(along = xs)
   future.apply::future_lapply(
+    future.seed = TRUE,
     X = xs,
     FUN = function(x) {
       tryCatch(
@@ -86,6 +87,7 @@ GetKnapSack <- function(xs) {
 GetKnapSackRef <- function(xs) {
   p <- progressr::progressor(along = xs)
   future.apply::future_lapply(
+    future.seed = TRUE,
     X = xs,
     FUN = function(x) {
       tryCatch(
@@ -129,7 +131,7 @@ xs <- KnapSackTable$link
 df3 <- GetKnapSackRef(xs = xs) |>
   progressr::with_progress()
 
-df4 <- bind_rows(df3[!is.na(df3)])
+df4 <- dplyr::bind_rows(df3[!is.na(df3)])
 
 KNApSAcK_db <- KnapSackTable |>
   dplyr::full_join(df4)

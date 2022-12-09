@@ -43,7 +43,7 @@ source("r/database.R")
 source("r/create_dir.R")
 
 ## for steps where paths need to be adapted locally or related to other repos
-molconvertPath <- "~/../../Applications/ChemAxon/JChemSuite/bin/molconvert"
+molconvertPath <- "~/../../Applications/MarvinSuite/bin/molconvert"
 
 ## can be easily replaced locally
 wikidataLotusExporterDataOutputPath <-
