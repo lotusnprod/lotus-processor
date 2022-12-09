@@ -438,6 +438,16 @@ if (mode == "full") {
       pattern = "\\[.*\\]",
       replacement = "",
       x = vernacularName
+    )) |>
+    dplyr::mutate(vernacularName = gsub(
+      pattern = "\\[",
+      replacement = "",
+      x = vernacularName
+    )) |>
+    dplyr::mutate(vernacularName = gsub(
+      pattern = "\\]",
+      replacement = "",
+      x = vernacularName
     ))
 
   ## sampling rows for test mode
