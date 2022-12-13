@@ -103,8 +103,7 @@ readr::write_delim(
 
 dataForPubchem <- dataInterim |>
   dplyr::filter(is.na(smilesNominal_opsin)) |>
-  dplyr::distinct(nameCleaned, .keep_all = TRUE) |>
-  dplyr::select(structureOriginal_nominal, nameCleaned)
+  dplyr::distinct(nameCleaned)
 
 if (nrow(dataForPubchem) == 0) {
   dataForPubchem[1, "nameCleaned"] <- NA
@@ -112,7 +111,6 @@ if (nrow(dataForPubchem) == 0) {
 
 log_debug("translating structures with pubchem")
 dataTranslatedNominal_pubchem <- dataForPubchem |>
-  dplyr::select(-structureOriginal_nominal) |>
   dplyr::mutate(smilesNominal_pubchem = name2smiles_pubchem(xs = seq_len(
     nrow(dataForPubchem)
   ) |>
@@ -161,7 +159,9 @@ readr::write_delim(
 
 dataForCactus <- dataInterim_1 |>
   dplyr::filter(is.na(smilesNominal_opsin)) |>
-  dplyr::filter(is.na(smilesNominal_pubchem))
+  dplyr::filter(is.na(smilesNominal_pubchem)) |> 
+  dplyr::select(-structureOriginal_nominal) |>
+  dplyr::distinct()
 
 if (nrow(dataForCactus) == 0) {
   dataForCactus[1, "nameCleaned"] <- NA
@@ -169,7 +169,6 @@ if (nrow(dataForCactus) == 0) {
 
 log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus |>
-  dplyr::select(-structureOriginal_nominal) |>
   dplyr::mutate(smilesNominal_cactus = name2smiles_cactus(xs = seq_len(
     nrow(dataForCactus)
   ) |>

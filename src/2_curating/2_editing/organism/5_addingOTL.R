@@ -225,7 +225,7 @@ if (is_empty(new_matched_names) == FALSE) {
 
   new_matched_meta_list <-
     get_otl_lineage(xs = xs) |>
-    progressr::with_progress()
+    progressr::with_progress(enable = TRUE)
 
   new_matched_meta <- dplyr::bind_rows(new_matched_meta_list)
 

@@ -78,7 +78,7 @@ getanp <- function(xs) {
 }
 
 ANPDB <- getanp(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 ANPDB_2 <- bind_rows(ANPDB[!is.na(ANPDB)])
 
