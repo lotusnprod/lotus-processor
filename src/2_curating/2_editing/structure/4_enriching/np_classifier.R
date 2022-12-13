@@ -64,13 +64,14 @@ if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile))
   new <- smiles
 }
 
-url <- "https://npclassifier.gnps2.edu"
+url <- "https://npclassifier.gnps2.org"
 order <- "/classify?smiles="
 new <- new |>
   dplyr::mutate(query = RCurl::curlEscape(urls = structure_smiles_2D))
 queries <- new$query
 cached <- "&cached" # actually return wrong results?
 
+log_debug("Classifying ...")
 if (length(queries) != 0) {
   xs <- seq_len(length(queries))
 
