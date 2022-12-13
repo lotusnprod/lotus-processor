@@ -47,7 +47,7 @@ getsanc <- function(xs) {
 }
 
 SANCDB <- getsanc(xs = xs) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   as.data.table() |>
   t() |>
   splitstackshape::cSplit("V1", "\n")

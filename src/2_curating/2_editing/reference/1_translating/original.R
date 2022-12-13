@@ -80,7 +80,7 @@ for (i in num) {
   if (nrow(dataOriginal) != 0) {
     reflist <-
       getref_noLimit(xs = dataOriginal$referenceOriginal_original) |>
-      progressr::with_progress()
+      progressr::with_progress(enable = TRUE)
     log_debug("treating results, may take a while if full mode")
     dataOriginal2 <-
       getAllReferences(

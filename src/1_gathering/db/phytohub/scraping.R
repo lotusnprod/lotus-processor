@@ -78,7 +78,7 @@ getphytohub <- function(xs) {
 }
 
 PHYTOHUB <- getphytohub(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 PHYTOHUB_2 <- PHYTOHUB[PHYTOHUB != "Timed out!"]
 
@@ -143,7 +143,7 @@ getphytohubref <- function(xs) {
 }
 
 PHYTOHUB_REF <- getphytohubref(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 PHYTOHUB_5 <- PHYTOHUB_REF[PHYTOHUB_REF != "Timed out!"]
 

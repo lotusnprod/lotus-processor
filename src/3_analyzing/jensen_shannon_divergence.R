@@ -129,7 +129,7 @@ Y <-
 X <- seq_along(Y)
 
 class_1 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -140,7 +140,7 @@ Y <-
 X <- seq_along(Y)
 
 class_2 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -151,7 +151,7 @@ Y <-
 X <- seq_along(Y)
 
 class_3 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 class <- class_1 |>
@@ -173,7 +173,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_1 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -184,7 +184,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_2 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -195,7 +195,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_3 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 superclass <- superclass_1 |>
@@ -217,7 +217,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_1 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -228,7 +228,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_2 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -239,7 +239,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_3 <- get_jsd(xs = X) |>
-  progressr::with_progress() |>
+  progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 pathway <- pathway_1 |>

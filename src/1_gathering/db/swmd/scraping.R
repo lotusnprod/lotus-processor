@@ -66,7 +66,7 @@ getswmd <- function(xs) {
 }
 
 SWMD <- getswmd(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 SWMD <- SWMD[SWMD != "Timed out!"]
 

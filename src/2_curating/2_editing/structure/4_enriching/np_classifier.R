@@ -75,7 +75,7 @@ if (length(queries) != 0) {
   xs <- seq_len(length(queries))
 
   list_df <- getClass(xs = xs) |>
-    progressr::with_progress()
+    progressr::with_progress(enable = TRUE)
 
   df_new <- dplyr::bind_rows(list_df) |>
     dplyr::mutate_all(as.character)

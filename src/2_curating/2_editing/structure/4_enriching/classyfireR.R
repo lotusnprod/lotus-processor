@@ -189,7 +189,7 @@ get_direct_parent <- function(xs) {
 }
 
 alternative_parents <- get_alternative_parents(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 if (!is_empty(alternative_parents)) {
   alternative_parents <-
@@ -209,7 +209,7 @@ if (nrow(alternative_parents != 0)) {
 }
 
 chebi <- get_chebi(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 if (!is_empty(chebi)) {
   chebi <- dplyr::bind_rows(chebi[chebi != "Error"])
@@ -228,7 +228,7 @@ if (nrow(chebi != 0)) {
 }
 
 direct_parent <- get_direct_parent(xs = xs) |>
-  progressr::with_progress()
+  progressr::with_progress(enable = TRUE)
 
 if (!is_empty(direct_parent)) {
   direct_parent <-
