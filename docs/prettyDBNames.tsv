@@ -1,7 +1,7 @@
 database	prettyDataBase
 afrotryp	Afrotryp
 alkamid	Alkamid
-anpdb	NNPDB
+anpdb	ANPDB
 antibase	AntiBase
 antimarin	AntiMarin
 biofacquim	BIOFACQUIM
@@ -19,7 +19,6 @@ knapsack	KNApSAcK
 metabolights	MetaboLights
 mibig	MIBiG
 mitishamba	Mitishamba
-nanpdb	NANPDB
 napralert	NAPRALERT
 npass	NPASS
 npatlas	NPAtlas

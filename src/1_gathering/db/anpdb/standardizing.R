@@ -85,7 +85,7 @@ data_selected <- data_original |>
 data_standard <-
   standardizing_original(
     data_selected = data_selected,
-    db = "nanpdb",
+    db = "anpdb",
     structure_field = "structure_smiles",
     organism_field = "organism_clean",
     reference_field = c(
