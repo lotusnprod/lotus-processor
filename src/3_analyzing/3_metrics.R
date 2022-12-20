@@ -576,6 +576,7 @@ cat(
   file = "../docs/metrics.md"
 )
 
+create_dir(pathDataProcessed)
 readr::write_delim(
   x = structuresPerOrganism_2D,
   delim = "\t",

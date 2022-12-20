@@ -70,6 +70,7 @@ dbNum <-
     distinct(inhouseDb$database)))
 
 log_debug("drawing upset plot of structures repartition in sub-DBs")
+create_dir("../res")
 inhouseDb_structures_2plot_wide <-
   prepare_upset(
     table = inhouseDb,

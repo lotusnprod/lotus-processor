@@ -452,6 +452,7 @@ chord_24 <- draw_chord(
 )
 
 if (mode == "full") {
+  create_dir("../res/html")
   setwd("../res/html")
   htmlwidgets::saveWidget(
     widget = as_widget(chord_big),

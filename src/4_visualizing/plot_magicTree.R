@@ -735,6 +735,7 @@ u <-
   tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
 
 if (mode == "full") {
+  create_dir("../res")
   ggsave(
     filename = file.path("../res", "magicTree_old.pdf"),
     plot = p_old,
