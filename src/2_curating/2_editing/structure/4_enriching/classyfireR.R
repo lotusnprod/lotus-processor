@@ -11,13 +11,8 @@ source("paths.R")
 log_debug("... libraries")
 library(classyfireR)
 library(dplyr)
-library(future)
-library(future.apply)
-library(progressr)
 library(purrr)
 library(readr)
-
-source("r/progressr.R")
 
 log_debug("opening cache...")
 create_dir(export = pathDataInterimDictionariesStructureDictionaryClassyfireDB)
@@ -117,79 +112,54 @@ log_debug("worked!")
 xs <- seq_along(clasification_list_inchikey)
 
 get_alternative_parents <- function(xs) {
-  p <- progressr::progressor(along = xs)
-  future.apply::future_lapply(
-    future.seed = TRUE,
-    X = xs,
-    FUN = function(x) {
-      tryCatch(
-        {
-          p(sprintf("x=%g", as.numeric(x))) ## little hack
-          alternative_parents <-
-            dplyr::bind_cols(
-              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
-              "chemontId" = clasification_list_inchikey[[x]]@alternative_parents[["chemont_id"]]
-            )
-          return(alternative_parents)
-        },
-        error = function(e) {
-          "Error"
-        }
-      )
+  tryCatch(
+    {
+      alternative_parents <-
+        dplyr::bind_cols(
+          "inchikey" = clasification_list_inchikey[[xs]]@meta[["inchikey"]],
+          "chemontId" = clasification_list_inchikey[[xs]]@alternative_parents[["chemont_id"]]
+        )
+      return(alternative_parents)
+    },
+    error = function(e) {
+      "Error"
     }
   )
 }
 
 get_chebi <- function(xs) {
-  p <- progressr::progressor(along = xs)
-  future.apply::future_lapply(
-    future.seed = TRUE,
-    X = xs,
-    FUN = function(x) {
-      tryCatch(
-        {
-          p(sprintf("x=%g", as.numeric(x))) ## little hack
-          chebi <-
-            dplyr::bind_cols(
-              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
-              "chebi" = clasification_list_inchikey[[x]]@predicted_chebi
-            )
-          return(chebi)
-        },
-        error = function(e) {
-          "Error"
-        }
-      )
+  tryCatch(
+    {
+      chebi <-
+        dplyr::bind_cols(
+          "inchikey" = clasification_list_inchikey[[xs]]@meta[["inchikey"]],
+          "chebi" = clasification_list_inchikey[[xs]]@predicted_chebi
+        )
+      return(chebi)
+    },
+    error = function(e) {
+      "Error"
     }
   )
 }
 
 get_direct_parent <- function(xs) {
-  p <- progressr::progressor(along = xs)
-  future.apply::future_lapply(
-    future.seed = TRUE,
-    X = xs,
-    FUN = function(x) {
-      tryCatch(
-        {
-          p(sprintf("x=%g", as.numeric(x))) ## little hack
-          direct_parent <-
-            dplyr::bind_cols(
-              "inchikey" = clasification_list_inchikey[[x]]@meta[["inchikey"]],
-              "directParent" = clasification_list_inchikey[[x]]@direct_parent[["chemont_id"]]
-            )
-          return(direct_parent)
-        },
-        error = function(e) {
-          "Error"
-        }
-      )
+  tryCatch(
+    {
+      direct_parent <-
+        dplyr::bind_cols(
+          "inchikey" = clasification_list_inchikey[[xs]]@meta[["inchikey"]],
+          "directParent" = clasification_list_inchikey[[xs]]@direct_parent[["chemont_id"]]
+        )
+      return(direct_parent)
+    },
+    error = function(e) {
+      "Error"
     }
   )
 }
 
-alternative_parents <- get_alternative_parents(xs = xs) |>
-  progressr::with_progress(enable = TRUE)
+alternative_parents <- lapply(X = xs, FUN = get_alternative_parents)
 
 if (!is_empty(alternative_parents)) {
   alternative_parents <-
@@ -208,8 +178,7 @@ if (nrow(alternative_parents != 0)) {
     ))
 }
 
-chebi <- get_chebi(xs = xs) |>
-  progressr::with_progress(enable = TRUE)
+chebi <- lapply(X = xs, FUN = get_chebi)
 
 if (!is_empty(chebi)) {
   chebi <- dplyr::bind_rows(chebi[chebi != "Error"])
@@ -227,8 +196,7 @@ if (nrow(chebi != 0)) {
     ))
 }
 
-direct_parent <- get_direct_parent(xs = xs) |>
-  progressr::with_progress(enable = TRUE)
+direct_parent <- lapply(X = xs, FUN = get_direct_parent)
 
 if (!is_empty(direct_parent)) {
   direct_parent <-
