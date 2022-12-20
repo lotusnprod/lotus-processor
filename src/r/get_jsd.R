@@ -14,7 +14,7 @@ source(file = "r/progressr.R")
 #' @export
 #'
 #' @examples
-get_jsd <- function(x) {
+get_jsd <- function(xs) {
   p <- progressr::progressor(along = xs)
   future.apply::future_lapply(
     future.seed = TRUE,
