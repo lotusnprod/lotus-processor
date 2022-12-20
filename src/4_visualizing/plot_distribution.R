@@ -229,12 +229,13 @@ fig <- plot_ly() %>%
 fig
 
 if (mode == "full") {
-  plotly::save_image(
-    p = fig,
-    file = file.path("../res", "distribution.pdf"),
-    width = 800,
-    height = 450
-  )
+  create_dir("../res/html")
+  # plotly::save_image(
+  #   p = fig,
+  #   file = file.path("../res", "distribution.pdf"),
+  #   width = 800,
+  #   height = 450
+  # )
 
   setwd("../res/html")
   htmlwidgets::saveWidget(

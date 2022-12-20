@@ -238,7 +238,7 @@ legend <- with(sunk, reorder(prettyDataBase, count))
 legend_v <- with(sunk, reorder(validation, desc(count)))
 
 log_debug("drawing alluvial")
-
+create_dir("../res")
 pdf(
   file = file.path("../res", "alluvial.pdf"),
   width = 16,
