@@ -159,7 +159,7 @@ readr::write_delim(
 
 dataForCactus <- dataInterim_1 |>
   dplyr::filter(is.na(smilesNominal_opsin)) |>
-  dplyr::filter(is.na(smilesNominal_pubchem)) |> 
+  dplyr::filter(is.na(smilesNominal_pubchem)) |>
   dplyr::select(-structureOriginal_nominal) |>
   dplyr::distinct()
 
