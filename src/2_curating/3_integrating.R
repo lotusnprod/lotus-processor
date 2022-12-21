@@ -204,7 +204,7 @@ structureFull <-
 if (file.exists(pathDataInterimDictionariesStructureDictionary) &
   file.exists(pathDataInterimDictionariesStructureMetadata)) {
   log_debug("... previously cleaned structures")
-  dplyr::structureFull <-
+  structureFull <-
     dplyr::bind_rows(structureFull, structureOld) |>
     dplyr::distinct(
       structureType,
@@ -218,7 +218,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
 
 if (file.exists(pathDataInterimDictionariesReferenceOrganismDictionary)) {
   log_debug("... previously cleaned references")
-  dplyr::referenceTableFull <-
+  referenceTableFull <-
     dplyr::bind_rows(referenceTableFull, referenceOrganismDictionary) |>
     dplyr::distinct()
 }
