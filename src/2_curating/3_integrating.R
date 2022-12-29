@@ -145,6 +145,7 @@ cleanedStructureTableFull <-
     structureCleaned_xlogp = xlogpSanitized,
     structureCleaned_stereocenters_unspecified = count_unspecified_atomic_stereocenters,
     structureCleaned_stereocenters_total = count_atomic_stereocenters,
+    structureCleaned_cid,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional
   )
@@ -198,6 +199,7 @@ structureFull <-
     structureCleanedSmiles,
     structureCleanedInchi,
     structureCleanedInchikey,
+    structureCleaned_cid,
     .keep_all = TRUE
   )
 
@@ -212,6 +214,7 @@ if (file.exists(pathDataInterimDictionariesStructureDictionary) &
       structureCleanedSmiles,
       structureCleanedInchi,
       structureCleanedInchikey,
+      structureCleaned_cid,
       .keep_all = TRUE
     )
 }
@@ -250,6 +253,7 @@ structureMetadata <- structureFull |>
     structureCleanedInchi,
     structureCleanedInchikey,
     structureCleanedSmiles,
+    structureCleaned_cid,
     .keep_all = TRUE
   )
 
@@ -359,6 +363,7 @@ structureNA <- dplyr::left_join(structureNA, structureFull) |>
     structureCleanedInchi,
     structureCleanedInchikey,
     structureCleanedSmiles,
+    # structureCleanedCid,
     # structureCleanedName,
     # structureCleanedNameIupac
   ) |>

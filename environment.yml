@@ -22,6 +22,7 @@ dependencies:
   - r-future
   - r-future.apply
   - r-gdata
+  - r-httr
   - r-jsonlite
   - r-philentropy
   - r-plotly

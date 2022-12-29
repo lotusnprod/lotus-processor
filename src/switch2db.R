@@ -770,6 +770,7 @@ structure_cleaned <- structureOld |>
     xlogp = as.numeric(structureCleaned_xlogp)
   ) |>
   dplyr::select(
+    cid = structureCleaned_cid,
     traditional_name = structureCleaned_nameTraditional,
     iupac_name = structureCleaned_nameIupac,
     inchikey = structureCleanedInchikey,

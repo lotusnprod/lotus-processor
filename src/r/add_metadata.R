@@ -15,13 +15,13 @@ source("temp_classyfireTaxonomy.R")
 #' @examples
 add_metadata <- function(df) {
   chemical_metadata <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesStructureMetadata,
       delim = "\t",
       col_types = cols(.default = "c"),
       locale = locales
-    ) %>%
-    distinct(
+    ) |>
+    dplyr::distinct(
       structure_inchikey = structureCleanedInchikey,
       structure_inchi = structureCleanedInchi,
       structure_smiles = structureCleanedSmiles,
@@ -31,34 +31,38 @@ add_metadata <- function(df) {
       structure_smiles_2D = structureCleaned_smiles2D,
       structure_nameIupac = structureCleaned_nameIupac,
       structure_nameTraditional = structureCleaned_nameTraditional,
+      structure_cid = structureCleaned_cid,
       structure_stereocenters_total = structureCleaned_stereocenters_total,
       structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
-    ) %>%
-    distinct(structure_inchikey,
+    ) |>
+    dplyr::distinct(structure_inchikey,
+      structure_cid,
       .keep_all = TRUE
     )
 
   biological_metadata_2 <-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesOrganismMetadata,
       delim = "\t",
       col_types = cols(.default = "c"),
       locale = locales
-    ) %>%
-    filter(organismCleaned_dbTaxo == "GBIF Backbone Taxonomy" |
-      organismCleaned_dbTaxo == "NCBI") %>%
-    distinct(
+    ) |>
+    dplyr::filter(
+      organismCleaned_dbTaxo == "GBIF Backbone Taxonomy" |
+        organismCleaned_dbTaxo == "NCBI"
+    ) |>
+    dplyr::distinct(
       organism_name = organismCleaned,
       organismCleaned_id,
       organismCleaned_dbTaxo
-    ) %>%
-    pivot_wider(names_from = organismCleaned_dbTaxo, values_from = organismCleaned_id) %>%
-    distinct(
+    ) |>
+    tidyr::pivot_wider(names_from = organismCleaned_dbTaxo, values_from = organismCleaned_id) |>
+    dplyr::distinct(
       organism_name,
       organism_taxonomy_gbifid = `GBIF Backbone Taxonomy`,
       organism_taxonomy_ncbiid = NCBI
-    ) %>%
-    mutate_all(as.character)
+    ) |>
+    dplyr::mutate_all(as.character)
   biological_metadata_2[biological_metadata_2 == "NULL"] <- NA
 
   log_debug(
@@ -68,7 +72,7 @@ add_metadata <- function(df) {
   )
 
   chemical_taxonomy_1 <<-
-    read_delim(
+    readr::read_delim(
       file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
       delim = "\t",
       col_types = cols(.default = "c"),
@@ -99,24 +103,24 @@ add_metadata <- function(df) {
   names <- dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_names"
-  ) %>%
-    mutate_all(as.character)
+  ) |>
+    dplyr::mutate_all(as.character)
 
   otl <- dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_otl"
-  ) %>%
-    mutate_all(as.character)
+  ) |>
+    dplyr::mutate_all(as.character)
 
   meta <- dbGetQuery(
     conn = db,
     statement = "SELECT * FROM taxa_meta"
-  ) %>%
-    mutate_all(as.character)
+  ) |>
+    dplyr::mutate_all(as.character)
 
-  biological_metadata <- left_join(names, otl) %>%
-    left_join(., meta, by = c("ott_id" = "id")) %>%
-    filter(
+  biological_metadata <- dplyr::left_join(names, otl) |>
+    dplyr::left_join(meta, by = c("ott_id" = "id")) |>
+    dplyr::filter(
       rank %in% c(
         "domain",
         "kingdom",
@@ -134,17 +138,17 @@ add_metadata <- function(df) {
         "subspecies",
         "varietas"
       )
-    ) %>%
-    distinct() %>%
-    map_df(rev) %>%
+    ) |>
+    dplyr::distinct() |>
+    purrr::map_df(rev) |>
     ## feeling it is better that way
-    distinct(canonical_name, ott_id, rank, .keep_all = TRUE) %>%
+    dplyr::distinct(canonical_name, ott_id, rank, .keep_all = TRUE) |>
     ## canonical_name important for synonyms
-    pivot_wider(
+    tidyr::pivot_wider(
       names_from = "rank",
       values_from = c("name", "unique_name.y", "ott_id.y")
-    ) %>%
-    select(
+    ) |>
+    dplyr::select(
       organism_name = canonical_name,
       organism_taxonomy_ottid = ott_id,
       organism_taxonomy_01domain = dplyr::matches("name_domain"),
@@ -157,9 +161,9 @@ add_metadata <- function(df) {
       organism_taxonomy_08genus = dplyr::matches("name_genus"),
       organism_taxonomy_09species = dplyr::matches("name_species"),
       organism_taxonomy_10varietas = dplyr::matches("name_varietas")
-    ) %>%
-    map_df(rev) %>%
-    coalesce()
+    ) |>
+    purrr::map_df(rev) |>
+    dplyr::coalesce()
 
   if (nrow(biological_metadata) != 0) {
     biological_metadata[dplyr::setdiff(
@@ -188,13 +192,13 @@ add_metadata <- function(df) {
   )
 
   log_debug("Adding useful metadata")
-  df_complete <- df %>%
-    left_join(., biological_metadata) %>%
-    left_join(., biological_metadata_2) %>%
-    left_join(., chemical_metadata) %>%
-    left_join(., chemical_taxonomy_1) %>%
-    left_join(., chemical_taxonomy_2) %>%
-    select(any_of(
+  df_complete <- df |>
+    dplyr::left_join(biological_metadata) |>
+    dplyr::left_join(biological_metadata_2) |>
+    dplyr::left_join(chemical_metadata) |>
+    dplyr::left_join(chemical_taxonomy_1) |>
+    dplyr::left_join(chemical_taxonomy_2) |>
+    dplyr::select(dplyr::any_of(
       c(
         "structure_wikidata",
         "structure_inchikey",
@@ -204,6 +208,7 @@ add_metadata <- function(df) {
         "structure_exact_mass",
         "structure_xlogp",
         "structure_smiles_2D",
+        "structure_cid",
         "structure_nameIupac",
         "structure_nameTraditional",
         "structure_stereocenters_total",
