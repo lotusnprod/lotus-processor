@@ -158,6 +158,7 @@ structureMetadata <-
     structureCleaned_molecularFormula,
     structureCleaned_stereocenters_total,
     structureCleaned_stereocenters_unspecified,
+    structureCleaned_cid,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional
   ) |>
@@ -666,6 +667,7 @@ openDb <- inhouseDbFull |>
     structureCleaned_inchi2D,
     structureCleaned_smiles2D,
     structureCleaned_molecularFormula,
+    structureCleaned_cid,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,
@@ -694,6 +696,7 @@ closedDb <- inhouseDbFull |>
     structureCleanedSmiles,
     structureCleaned_inchi2D,
     structureCleaned_smiles2D,
+    structureCleaned_cid,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,
@@ -730,6 +733,7 @@ closedDb <- inhouseDbFull |>
     structureCleaned_inchi2D,
     structureCleaned_smiles2D,
     structureCleaned_molecularFormula,
+    structureCleaned_cid,
     structureCleaned_nameIupac,
     structureCleaned_nameTraditional,
     structureCleaned_stereocenters_total,

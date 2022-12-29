@@ -1,5 +1,5 @@
 source("r/log_debug.R")
-log_debug("This script adds chemical names to structures dictionary")
+log_debug("This script adds chemical names (and CIDs) to structures dictionary")
 
 start <- Sys.time()
 
@@ -9,6 +9,7 @@ source("paths.R")
 
 log_debug("... libraries")
 library(dplyr)
+library(httr)
 library(readr)
 
 log_debug("loading files ...")
@@ -19,195 +20,135 @@ structureCounted <-
     delim = "\t"
   )
 
-log_debug("keeping smiles only ...")
-smilesDictionary <- structureCounted |>
-  dplyr::distinct(smilesSanitized) |>
-  dplyr::select(smiles = smilesSanitized)
+log_debug("keeping inchikey only ...")
+inchikeyDictionary <- structureCounted |>
+  dplyr::distinct(inchikeySanitized) |>
+  dplyr::select(inchikey = inchikeySanitized)
 ## if some names are missing in structures metadata
-# smilesDictionary <- structureMetadata |>
+# inchikeyDictionary <- readr::read_delim(
+#     file = pathDataInterimDictionariesStructureMetadata,
+#     delim = "\t",
+#     col_types = cols(.default = "c"),
+#     locale = locales
+#   ) |>
 #   dplyr::filter(is.na(structureCleaned_nameTraditional)) |>
-#   dplyr::distinct(structureCleanedSmiles) |>
-#   dplyr::select(smiles = structureCleanedSmiles)
+#   dplyr::distinct(structureCleanedInchikey) |>
+#   dplyr::select(inchikey = structureCleanedInchikey)
 
-log_debug("writing the smiles table")
-readr::write_delim(
-  x = smilesDictionary,
-  delim = "\t",
-  file = pathDataInterimTablesProcessedStructureSmiles,
-  na = ""
-)
+chunk <- 5000
+n <- nrow(inchikeyDictionary)
+r <- rep(1:ceiling(n / chunk), each = chunk)[1:n]
+lists <- split(inchikeyDictionary, r)
 
-if (works_locally_only == FALSE) {
-  log_debug("submitting to molconvert (traditional names) (no worries...running long)")
-  system(
-    command = paste(
-      "bash",
-      molconvertPath,
-      "name:t",
-      pathDataInterimTablesProcessedStructureSmiles,
-      "-o",
-      pathDataInterimTablesProcessedStructureSmiles_1,
-      "-g"
-    )
+lists_ready <-
+  lapply(
+    X = lists,
+    FUN = function(x) {
+      paste0(
+        "inchikey=",
+        paste(
+          x |>
+            dplyr::pull() |>
+            as.character(),
+          collapse = ","
+        )
+      )
+    }
   )
 
-  log_debug("submitting to molconvert (iupac) (no worries...running long)")
-  system(
-    command = paste(
-      "bash",
-      molconvertPath,
-      "name:i",
-      pathDataInterimTablesProcessedStructureSmiles,
-      "-o",
-      pathDataInterimTablesProcessedStructureSmiles_2,
-      "-g"
-    )
+url <-
+  "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/inchikey/property/Title,IUPACName,inchikey/JSON"
+
+post_to_pubchem <- function(url, vals) {
+  content <- httr::RETRY(
+    verb = "POST",
+    url = url,
+    body = vals
+  ) |>
+    httr::content()
+
+  df <- content[["PropertyTable"]][["Properties"]] |>
+    dplyr::bind_rows()
+
+  return(df)
+}
+
+list_results <-
+  lapply(
+    X = lists_ready,
+    FUN = post_to_pubchem,
+    url = url
   )
 
-  # log_debug("submitting to molconvert (common name)")
-  # system(
-  #   command = paste(
-  #     "bash",
-  #     molconvertPath,
-  #     "name:common",
-  #     pathDataInterimTablesProcessedStructureSmiles,
-  #     "-o",
-  #     pathDataInterimTablesProcessedStructureSmiles_3,
-  #     "-g"
-  #   )
-  # )
+results <- list_results |>
+  dplyr::bind_rows() |>
+  dplyr::distinct() |>
+  dplyr::select(
+    inchikeySanitized = InChIKey,
+    structureCleaned_nameTraditional = Title,
+    structureCleaned_nameIupac = IUPACName,
+    structureCleaned_cid = CID
+  )
 
-  # log_debug("submitting to molconvert (all common name)")
-  # system(
-  #   command = paste(
-  #     "bash",
-  #     molconvertPath,
-  #     "name:common,all",
-  #     pathDataInterimTablesProcessedStructureSmiles,
-  #     "-o",
-  #     pathDataInterimTablesProcessedStructureSmiles_4,
-  #     "-g"
-  #   )
-  # )
-
-  log_debug("loading files ...")
-  structureNamesTraditional <- readr::read_delim(
-    file = pathDataInterimTablesProcessedStructureSmiles_1,
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    col_names = FALSE,
-    skip_empty_rows = FALSE,
-    trim_ws = TRUE
-  ) |>
-    dplyr::select(structureCleaned_nameTraditional = X1)
-
-  structureNamesIupac <- readr::read_delim(
-    file = pathDataInterimTablesProcessedStructureSmiles_2,
-    delim = "\t",
-    col_types = cols(.default = "c"),
-    escape_double = FALSE,
-    col_names = FALSE,
-    skip_empty_rows = FALSE,
-    trim_ws = TRUE
-  ) |>
-    dplyr::select(structureCleaned_nameIupac = X1)
-
-  # structureNamesCommon <- readr::read_delim(
-  #   file = pathDataInterimTablesProcessedStructureSmiles_3,
-  #   delim = "\t",
-  #   col_types = cols(.default = "c"),
-  #   escape_double = FALSE,
-  #   col_names = FALSE,
-  #   skip_empty_rows = FALSE,
-  #   trim_ws = TRUE
-  # ) |>
-  #   dplyr::select(structureCleanedNameCommon = X1)
-
-  # structureNamesCommonAll <- readr::read_delim(
-  #   file = pathDataInterimTablesProcessedStructureSmiles_4,
-  #   delim = "\t",
-  #   col_types = cols(.default = "c"),
-  #   escape_double = FALSE,
-  #   col_names = FALSE,
-  #   skip_empty_rows = FALSE,
-  #   trim_ws = TRUE
-  # ) |>
-  #   dplyr::select(structureCleanedNameCommonAll = X1)
-}
-
-if (works_locally_only == TRUE) {
-  structureNamesTraditional <-
-    data.frame(structureCleaned_nameTraditional = NA)
-
-  structureNamesIupac <-
-    data.frame(structureCleaned_nameIupac = NA)
-}
-
-smilesFilled <- dplyr::bind_cols(
-  smilesDictionary,
-  structureNamesTraditional,
-  structureNamesIupac
-)
-
-#' if some names are missing in structures metadata
+## if some names are missing in structures metadata
 # part_1 <- structureMetadata |>
 #   dplyr::filter(is.na(structureCleaned_nameTraditional)) |>
 #   dplyr::select(-structureCleaned_nameTraditional,
 #          -structureCleaned_nameIupac) |>
-#   dplyr::left_join(smilesFilled, by = c("structureCleanedSmiles"="smiles"))
+#   dplyr::left_join(results, by = c("structureCleanedInchikey" = "inchikeySanitized"))
 # part_2 <- structureMetadata |>
 #   dplyr::filter(!is.na(structureCleaned_nameTraditional))
 # structureMetadata <- rbind(part_1, part_2)
 
-structureNamed <-
-  dplyr::left_join(structureCounted,
-    smilesFilled,
-    by = c("smilesSanitized" = "smiles")
+structureNamed_cleaned <-
+  dplyr::left_join(
+    structureCounted,
+    results
   )
 
-structureNamed_defined <- structureNamed |>
-  dplyr::filter(count_unspecified_atomic_stereocenters == 0) |>
-  dplyr::mutate_all(as.character)
-
-structureNamed_undefined <- structureNamed |>
-  dplyr::filter(count_unspecified_atomic_stereocenters != 0) |>
-  dplyr::mutate(
-    structureCleaned_nameTraditional = gsub(
-      pattern = "(-)-",
-      replacement = "",
-      x = structureCleaned_nameTraditional,
-      fixed = TRUE
-    )
-  ) |>
-  dplyr::mutate(
-    structureCleaned_nameTraditional = gsub(
-      pattern = "(+)-",
-      replacement = "",
-      x = structureCleaned_nameTraditional,
-      fixed = TRUE
-    )
-  ) |>
-  dplyr::mutate(
-    structureCleaned_nameTraditional = gsub(
-      pattern = "(-)",
-      replacement = "",
-      x = structureCleaned_nameTraditional,
-      fixed = TRUE
-    )
-  ) |>
-  dplyr::mutate(
-    structureCleaned_nameTraditional = gsub(
-      pattern = "(+)",
-      replacement = "",
-      x = structureCleaned_nameTraditional,
-      fixed = TRUE
-    )
-  ) |>
-  dplyr::mutate_all(as.character)
-
-structureNamed_cleaned <-
-  dplyr::bind_rows(structureNamed_defined, structureNamed_undefined)
+## old legacy version with molconvert which generated a lot of (+/-) without stereo
+# structureNamed_defined <- structureNamed |>
+#   dplyr::filter(count_unspecified_atomic_stereocenters == 0) |>
+#   dplyr::mutate_all(as.character)
+#
+# structureNamed_undefined <- structureNamed |>
+#   dplyr::filter(count_unspecified_atomic_stereocenters != 0) |>
+#   dplyr::mutate(
+#     structureCleaned_nameTraditional = gsub(
+#       pattern = "(-)-",
+#       replacement = "",
+#       x = structureCleaned_nameTraditional,
+#       fixed = TRUE
+#     )
+#   ) |>
+#   dplyr::mutate(
+#     structureCleaned_nameTraditional = gsub(
+#       pattern = "(+)-",
+#       replacement = "",
+#       x = structureCleaned_nameTraditional,
+#       fixed = TRUE
+#     )
+#   ) |>
+#   dplyr::mutate(
+#     structureCleaned_nameTraditional = gsub(
+#       pattern = "(-)",
+#       replacement = "",
+#       x = structureCleaned_nameTraditional,
+#       fixed = TRUE
+#     )
+#   ) |>
+#   dplyr::mutate(
+#     structureCleaned_nameTraditional = gsub(
+#       pattern = "(+)",
+#       replacement = "",
+#       x = structureCleaned_nameTraditional,
+#       fixed = TRUE
+#     )
+#   ) |>
+#   dplyr::mutate_all(as.character)
+#
+# structureNamed_cleaned <-
+#   dplyr::bind_rows(structureNamed_defined, structureNamed_undefined)
 
 if (mode == "custom") {
   library(tidyr)
