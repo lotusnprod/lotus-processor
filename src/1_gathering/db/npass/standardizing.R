@@ -96,6 +96,16 @@ data_manipulated <- data_selected |>
 data_manipulated$structure_name <-
   y_as_na(data_manipulated$structure_name, "n.a.")
 
+# removing completely aberrant structure failing with RDKit
+data_manipulated <- data_manipulated |>
+  dplyr::filter(
+    !grepl(
+      pattern = "c1cc(ccc1[CH2+]1C(=Cc2c(cc(cc2O1)O)O)O[C@H]1[C@@H]([C@H]([C@@H]([C@@H](CO)O1)O)O)O)O",
+      x = structure_smiles,
+      fixed = TRUE
+    )
+  )
+
 # standardizing
 data_standard <-
   standardizing_original(
