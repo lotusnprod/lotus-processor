@@ -18,8 +18,17 @@ data_original_1 <-
   data.frame()
 
 data_original_2 <-
-  readr::read_delim(file = database$sourceFiles$tsvProperties) |>
+  readr::read_delim(
+    file = database$sourceFiles$tsvStructure,
+    col_names = FALSE
+  ) |>
   dplyr::mutate_all(as.character) |>
+  dplyr::select(
+    np_id = X1,
+    standard_inchi = X2,
+    standard_inchi_key = X3,
+    canonical_smiles = X4
+  ) |>
   data.frame()
 
 data_original_3 <-

@@ -297,10 +297,10 @@ databases$add(
 databases$add(
   name = "npass",
   sourceFiles = list(
-    tsvGeneral = "NPASSv1.0_download_naturalProducts_generalInfo.txt",
-    tsvProperties = "NPASSv1.0_download_naturalProducts_properties.txt",
-    tsvSpeciesInfo = "NPASSv1.0_download_naturalProducts_speciesInfo.txt",
-    tsvSpeciesPair = "NPASSv1.0_download_naturalProducts_species_pair.txt"
+    tsvGeneral = "NPASSv2.0_download_naturalProducts_generalInfo.txt",
+    tsvSpeciesInfo = "NPASSv2.0_download_naturalProducts_speciesInfo.txt",
+    tsvSpeciesPair = "NPASSv2.0_download_naturalProducts_species_pair.txt",
+    tsvStructure = "NPASSv2.0_download_naturalProducts_structureInfo.txt"
   ),
   interimFile = "npass.tsv.gz"
 )
