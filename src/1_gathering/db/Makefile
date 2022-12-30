@@ -219,7 +219,7 @@ napralert-download: ## TODO target multiple files
 	cd ${PWD}/src && bash ${SRC_GATHERING_DB_PATH}/napralert/downloading.sh
 
 npass: ${INTERIM_DB_PATH}/npass.tsv.gz
-${INTERIM_DB_PATH}/npass.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_generalInfo.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_properties.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_speciesInfo.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv1.0_download_naturalProducts_species_pair.txt ${SRC_GATHERING_DB_PATH}/npass/standardizing.R
+${INTERIM_DB_PATH}/npass.tsv.gz: ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv2.0_download_naturalProducts_generalInfo.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv2.0_download_naturalProducts_structureInfo.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv2.0_download_naturalProducts_speciesInfo.txt ${EXTERNAL_DB_SOURCE_PATH}/npass/NPASSv2.0_download_naturalProducts_species_pair.txt ${SRC_GATHERING_DB_PATH}/npass/standardizing.R
 	cd ${PWD}/src && Rscript ${SRC_GATHERING_DB_PATH}/npass/standardizing.R
 
 npass-download: ## TODO target multiple files
