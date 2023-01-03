@@ -13,14 +13,14 @@ source("r/get_jsd.R")
 log_debug("... libraries")
 library(data.table)
 library(dplyr)
-library(future)
-library(future.apply)
+# library(future)
+# library(future.apply)
 library(philentropy)
-library(progressr)
+# library(progressr)
 library(readr)
 library(tidyr)
 
-source("r/progressr.R")
+# source("r/progressr.R")
 
 log_debug("loading the LOTUS, this may take a while")
 table <- readr::read_csv(file = file.path(
@@ -128,8 +128,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_1 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+class_1 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -139,8 +139,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_2 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+class_2 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -150,8 +150,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-class_3 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+class_3 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 class <- class_1 |>
@@ -172,8 +172,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_1 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+superclass_1 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -183,8 +183,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_2 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+superclass_2 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -194,8 +194,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-superclass_3 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+superclass_3 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 superclass <- superclass_1 |>
@@ -216,8 +216,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_1 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+pathway_1 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -227,8 +227,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_2 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+pathway_2 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -238,8 +238,8 @@ Y <-
     !is.na(table_counted[, bio_level])])
 X <- seq_along(Y)
 
-pathway_3 <- get_jsd(xs = X) |>
-  progressr::with_progress(enable = TRUE) |>
+pathway_3 <- lapply(X, get_jsd) |>
+  # progressr::with_progress(enable = TRUE) |>
   data.table::rbindlist()
 
 pathway <- pathway_1 |>
