@@ -210,6 +210,15 @@ dataCleanedOrganismManipulated_clean <-
     organismCleanedRank
   )
 
+## Avoid generic homonyms
+dataCleanedOrganismManipulated_clean <-
+  dataCleanedOrganismManipulated_clean |>
+  dplyr::mutate(n = stringr::str_count(
+    string = organismDetected,
+    pattern = stringr::fixed(" ")
+  )) |>
+  dplyr::filter(n != 0 | organismCleaned == organismDetected)
+
 dataCleanedOrganismManipulated_clean_2 <-
   dplyr::left_join(
     dataCleanedOrganismManipulated_clean,
