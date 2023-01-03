@@ -450,6 +450,14 @@ if (mode == "full") {
       x = vernacularName
     ))
 
+  ## New in GBIF backbone
+  common2Sci <- common2Sci |>
+    dplyr::filter(!grepl(
+      pattern = "| ",
+      x = vernacularName,
+      fixed = TRUE
+    ))
+
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")
   set.seed(
