@@ -12,7 +12,7 @@ dependencies:
   - python
   - rdkit
   - scipy
-  - r-base
+  - r-base >=4.1.0
   - r-clisymbols ## needed by classyfirer
   - r-codetools
   - r-data.table
