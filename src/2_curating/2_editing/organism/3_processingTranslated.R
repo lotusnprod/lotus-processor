@@ -187,6 +187,7 @@ if (nrow(dataCleanedOrganismVerify != 0)) {
     dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
       dataSourceTitleShort != "IPNI") |>
     dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+    dplyr::filter(isSynonym == FALSE) |>
     dplyr::arrange(dplyr::desc(sortScore)) |>
     dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
     dplyr::select(
