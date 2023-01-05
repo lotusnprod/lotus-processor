@@ -217,7 +217,8 @@ dataCleanedOrganismManipulated_clean <-
     string = organismDetected,
     pattern = stringr::fixed(" ")
   )) |>
-  dplyr::filter(n != 0 | organismCleaned == organismDetected)
+  dplyr::filter(n != 0 | organismCleaned == organismDetected) |>
+  dplyr::select(-n)
 
 dataCleanedOrganismManipulated_clean_2 <-
   dplyr::left_join(
