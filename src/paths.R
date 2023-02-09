@@ -14,7 +14,7 @@ password <- Sys.getenv("LOTUS_DB_PWD")
 ##################################   Modes   ##################################
 ###############################################################################
 
-mode <- Sys.getenv("MODE", unset = "full")
+mode <- Sys.getenv("MODE", unset = "test")
 if (exists("mode_test")) {
   mode <- "test"
 }
@@ -23,7 +23,7 @@ if (exists("mode_custom")) {
 }
 
 works_locally_only <- TRUE
-safety <- TRUE
+safety <- FALSE
 
 locales <- readr::locale(
   date_names = "en",
