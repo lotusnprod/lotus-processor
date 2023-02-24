@@ -134,7 +134,7 @@ def subsuck(data, element, parname=''):
 print('DNP Cleaner')
 print('- Treating jar files')
 # We grab all the jar files
-for filename in glob.glob('../data/external/dbSource/dnp/31_1/xmlfiles/*.jar'):
+for filename in glob.glob('../data/external/dbSource/dnp/31_2/xmlfiles/*.jar'):
     count = 0
     # We open the zip files
     with zipfile.ZipFile(filename, 'r') as zip:
@@ -181,13 +181,13 @@ order_rows = ["InChIKey", "MolfileName", "CRC_Number", "Molecule_Name",
               "Optical_Rotation", "Biological_Use", "Toxicity", "Use"]
 # Any compound with an inchi gets exported in full_set
 df[df.MolfileName.notnull()][order_rows].to_csv(
-    "../data/external/dbSource/dnp/31_1/full_set.csv", index=False)
+    "../data/external/dbSource/dnp/31_2/full_set.csv", index=False)
 
 print("- Generating the CSV with the InChi")
 order_rows_small = ["CRC_Number", "Molecule_Name",
                     "MolfileName"]
 # This is just a file with less columns, not really useful
-df[df.MolfileName.notnull()][order_rows_small].to_csv("../data/external/dbSource/dnp/31_1/id_inchi.csv",
+df[df.MolfileName.notnull()][order_rows_small].to_csv("../data/external/dbSource/dnp/31_2/id_inchi.csv",
                                                       index=False)
 # If there is last year data
 try:
