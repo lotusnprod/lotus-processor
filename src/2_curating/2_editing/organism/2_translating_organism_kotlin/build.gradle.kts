@@ -9,7 +9,7 @@ version = "0.5-SNAPSHOT"
 plugins {
     kotlin("jvm") version "1.8.10"
     application
-    id("com.github.johnrengelman.shadow") version "8.0.0"
+    id("com.github.johnrengelman.shadow") version "8.1.0"
 }
 
 repositories {
