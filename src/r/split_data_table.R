@@ -19,7 +19,7 @@ split_data_table <-
       sample <- x[split_cut:(split_cut + (no_rows_per_frame - 1))]
 
       sample <- sample %>%
-        filter(!is.na(sample[, 1]))
+        filter(!is.na(!!as.name(colnames(.))))
 
       write.table(
         x = sample,
