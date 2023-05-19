@@ -202,7 +202,7 @@ databases$add(
 
 databases$add(
   name = "cyanometdb",
-  sourceFiles = list(tsv = "CyanoMetDB_WR_Feb2021.csv"),
+  sourceFiles = list(tsv = "CyanoMetDB_v02_2023.csv"),
   interimFile = "cyanometdb.tsv.gz"
 )
 
