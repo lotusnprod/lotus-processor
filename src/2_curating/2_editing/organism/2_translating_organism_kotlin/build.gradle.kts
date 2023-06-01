@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val univocityParserVersion = "2.9.1"
 val junitApiVersion = "5.9.3"
+val jvmVersion = "17"
 
 group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
@@ -34,7 +35,12 @@ dependencies {
  * We need to compile for the outdated conda java version
  */
 tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = "17"
+    kotlinOptions.jvmTarget = jvmVersion
+}
+tasks.withType<JavaCompile> {
+    sourceCompatibility = jvmVersion
+    targetCompatibility = jvmVersion
+    options.encoding = "UTF-8"
 }
 
 /**
