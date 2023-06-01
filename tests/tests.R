@@ -127,15 +127,19 @@ log_debug("testing ...")
 log_debug("... organisms")
 test_that(
   desc = "organisms",
-  code = expect_equal(object = organismTableFull,
-                      expected = organismTableFullExpectation)
+  code = expect_equal(
+    object = organismTableFull,
+    expected = organismTableFullExpectation
+  )
 )
 
 log_debug("... structures")
 test_that(
   desc = "structures",
-  code = expect_equal(object = structureFull,
-                      expected = structureFullExpectation)
+  code = expect_equal(
+    object = structureFull,
+    expected = structureFullExpectation
+  )
 )
 
 log_debug("... not testing unvalidated references since they vary because of Crossref")
@@ -160,7 +164,7 @@ log_debug("... not testing unvalidated references since they vary because of Cro
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
-# 
+#
 # write.table(
 #   x = structureFull,
 #   file = pathTestsStructures,
@@ -169,7 +173,7 @@ log_debug("... not testing unvalidated references since they vary because of Cro
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
-# 
+#
 # write.table(
 #   x = referenceTableFull,
 #   file = pathTestsReferences,
@@ -178,7 +182,7 @@ log_debug("... not testing unvalidated references since they vary because of Cro
 #   sep = "\t",
 #   fileEncoding = "UTF-8"
 # )
-# 
+#
 # write.table(
 #   x = validatedTable,
 #   file = pathTestsPlatinum,
