@@ -147,7 +147,7 @@ for filename in glob.glob('../data/external/dbSource/dnp/31_2/xmlfiles/*.jar'):
             # If the file is a cache file we do something with it
             if '.cache' in file.filename:
                 output = treat_file(zip.open(file.filename).read())
-                if output == True:
+                if output is True:
                     status = status & output
                 else:
                     status = status

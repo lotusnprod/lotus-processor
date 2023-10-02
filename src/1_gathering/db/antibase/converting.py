@@ -19,7 +19,7 @@ sdf_frame = PandasTools.LoadSDF(my_sdf_file,
                                 includeFingerprints=False)
 
 # to get smiles
-mols = [mol for mol in Chem.SDMolSupplier(my_sdf_file) if mol != None]
+mols = [mol for mol in Chem.SDMolSupplier(my_sdf_file) if mol is not None]
 
 # make writer object with a file name.
 writer = SmilesWriter(my_smi_file)
