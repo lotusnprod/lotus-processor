@@ -127,7 +127,11 @@ if (mode == "full" | mode == "custom") {
 
   log_debug("renaming and selecting columns")
   dbTable <- data.table::rbindlist(l = dbList, fill = TRUE) |>
-    data.frame()
+    data.frame() |>
+    ## see https://github.com/lotusnprod/lotus-processor/issues/58
+    ## removing for now
+    dplyr::filter(database != "metabolights")
+
 
   dbTable[setdiff(
     x = accepted_fields,
