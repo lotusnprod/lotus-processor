@@ -74,7 +74,7 @@ pathBin <- Sys.getenv("BIN_PATH",
 ## opsin
 pathBinOpsin <- file.path(
   pathBin,
-  "opsin-cli-2.7.0-jar-with-dependencies.jar"
+  "opsin-cli-2.8.0-jar-with-dependencies.jar"
 )
 
 ## data
