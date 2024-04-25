@@ -22,7 +22,7 @@ database <- databases$get("knapsack")
 url <-
   "http://www.knapsackfamily.com/knapsack_core/information.jsp?word=C00"
 
-xs <- 1:63574
+xs <- 1:64652
 
 GetKnapSack <- function(xs) {
   p <- progressr::progressor(along = xs)
