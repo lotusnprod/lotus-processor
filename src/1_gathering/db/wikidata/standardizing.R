@@ -84,10 +84,10 @@ data_manipulated <- data_triples |>
   )) |>
   dplyr::select(
     structure_smiles,
-    structure_inchi = inchi,
+    # structure_inchi = inchi,
     organism_clean = names_pipe_separated,
-    reference_doi = dois_pipe_separated,
-    reference_title = title
+    reference_doi = dois_pipe_separated
+    # reference_title = title
   ) |>
   distinct() |>
   data.frame()
@@ -97,7 +97,7 @@ data_standard <-
   standardizing_original(
     data_selected = data_manipulated,
     db = "wikidata",
-    structure_field = "structure_inchi",
+    structure_field = "structure_smiles",
     organism_field = "organism_clean",
     reference_field = "reference_doi"
   )

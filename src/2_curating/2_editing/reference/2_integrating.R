@@ -212,15 +212,25 @@ dataFull <-
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
+  extract_first_two_words <- function(text) {
+    words <- unlist(strsplit(text, "\\s+"))
+    if (length(words) >= 2) {
+      return(paste(words[1], words[2], sep = " "))
+    } else {
+      return(text)
+    }
+  }
+
   dataCleanedOrganismManipulated_old <-
     readr::read_delim(
       file = pathDataInterimDictionariesOrganismDictionary,
       delim = "\t",
       col_types = cols(.default = "c")
     ) |>
+    dplyr::rowwise() |>
     dplyr::mutate(
       organismDetected =
-        word(organismDetected, 1, 2)
+        extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,
@@ -234,9 +244,10 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       delim = "\t",
       col_types = cols(.default = "c")
     ) |>
+    dplyr::rowwise() |>
     dplyr::mutate(
       organismDetected =
-        word(organismDetected, 1, 2)
+        extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,
@@ -260,13 +271,10 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
       delim = "\t",
       col_types = cols(.default = "c")
     ) |>
+    dplyr::rowwise() |>
     dplyr::mutate(
       organismDetected =
-        stringr::word(
-          string = organismDetected,
-          start = 1,
-          end = 2
-        )
+        extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,
