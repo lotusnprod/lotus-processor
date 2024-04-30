@@ -98,31 +98,44 @@ data_structures <-
     col_select = c(
       "structure_wikidata" = "wikidataId",
       "structureCleanedInchiKey" = "inchiKey",
-      "structureCleanedInchi" = "inchi"
+      "structureCleanedInchi" = "inchi",
+      "canonicalSmiles",
+      "isomericSmiles"
     )
+  ) |>
+  dplyr::distinct() |>
+  dplyr::mutate(structureValue = if_else(
+    condition = !is.na(isomericSmiles),
+    true = isomericSmiles,
+    false = canonicalSmiles
+  ))
+
+data_structures_translation <-
+  readr::read_delim(
+    file = pathDataInterimDictionariesStructureDictionary
   )
 
-data_structures_1 <- data_structures |>
-  dplyr::filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey))
+# data_structures_1 <- data_structures |>
+#   dplyr::filter(!grepl(pattern = "\\|", x = structureCleanedInchiKey))
+#
+# data_structures_2 <- data_structures |>
+#   dplyr::filter(grepl(pattern = "\\|", x = structureCleanedInchiKey)) |>
+#   splitstackshape::cSplit(c("structureCleanedInchiKey", "structureCleanedInchi"),
+#     sep = "|"
+#   ) |>
+#   tidyr::pivot_longer(cols = contains(c(
+#     "structureCleanedInchiKey", "structureCleanedInchi"
+#   ))) |>
+#   dplyr::filter(!is.na(value)) |>
+#   splitstackshape::cSplit("name",
+#     sep = "_"
+#   ) |>
+#   tidyr::pivot_wider(names_from = "name_1") |>
+#   dplyr::select(-name_2) |>
+#   dplyr::distinct()
 
-data_structures_2 <- data_structures |>
-  dplyr::filter(grepl(pattern = "\\|", x = structureCleanedInchiKey)) |>
-  splitstackshape::cSplit(c("structureCleanedInchiKey", "structureCleanedInchi"),
-    sep = "|"
-  ) |>
-  tidyr::pivot_longer(cols = contains(c(
-    "structureCleanedInchiKey", "structureCleanedInchi"
-  ))) |>
-  dplyr::filter(!is.na(value)) |>
-  splitstackshape::cSplit("name",
-    sep = "_"
-  ) |>
-  tidyr::pivot_wider(names_from = "name_1") |>
-  dplyr::select(-name_2) |>
-  dplyr::distinct()
-
-data_structures <- data_structures_1 |>
-  dplyr::bind_rows(data_structures_2)
+# data_structures <- data_structures_1 |>
+#   dplyr::bind_rows(data_structures_2)
 
 data_references <-
   readr::read_delim(
@@ -149,16 +162,17 @@ wikidata_pairs <-
     col_types = cols(.default = "c"),
     locale = locales,
     col_select = c(
-      "structureCleanedInchi" = "structure_inchi",
+      "structureValue" = "structure_smiles",
       "organismCleaned" = "organism_clean",
       "referenceCleanedDoi" = "reference_doi"
     )
   ) |>
-  dplyr::filter(
-    !is.na(structureCleanedInchi) &
+  filter(
+    !is.na(structureValue) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
   ) |>
+  dplyr::left_join(data_structures_translation) |>
   dplyr::left_join(data_organism) |>
   dplyr::left_join(data_structures) |>
   dplyr::left_join(data_references) |>
