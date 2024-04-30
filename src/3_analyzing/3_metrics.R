@@ -120,10 +120,22 @@ data_structures <-
     col_select = c(
       "structure_wikidata" = "wikidataId",
       "structureCleanedInchiKey" = "inchiKey",
-      "structureCleanedInchi" = "inchi"
+      "structureCleanedInchi" = "inchi",
+      "canonicalSmiles",
+      "isomericSmiles"
     )
   ) |>
-  dplyr::distinct()
+  dplyr::distinct() |>
+  dplyr::mutate(structureValue = if_else(
+    condition = !is.na(isomericSmiles),
+    true = isomericSmiles,
+    false = canonicalSmiles
+  ))
+
+data_structures_translation <-
+  readr::read_delim(
+    file = pathDataInterimDictionariesStructureDictionary
+  )
 
 data_references <-
   readr::read_delim(
@@ -150,16 +162,17 @@ wikidata_pairs <-
     col_types = cols(.default = "c"),
     locale = locales,
     col_select = c(
-      "structureCleanedInchi" = "structure_inchi",
+      "structureValue" = "structure_smiles",
       "organismCleaned" = "organism_clean",
       "referenceCleanedDoi" = "reference_doi"
     )
   ) |>
-  dplyr::filter(
-    !is.na(structureCleanedInchi) &
+  filter(
+    !is.na(structureValue) &
       !is.na(organismCleaned) &
       !is.na(referenceCleanedDoi)
   ) |>
+  dplyr::left_join(data_structures_translation) |>
   dplyr::left_join(data_organism) |>
   dplyr::left_join(data_structures) |>
   dplyr::left_join(data_references) |>
