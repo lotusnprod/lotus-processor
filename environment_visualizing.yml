@@ -4,25 +4,27 @@ channels:
   - bioconda
   - defaults
   - tmap
+  - rdkit
+  - r
 dependencies:
   - bioconductor-ggtree
-  - bioconductor-ggtreeextra 
-  - conda-build
-  - cmcrameri
-  - pandas
-  - python=3.*
-  - python-kaleido 
-  - rdkit
+  - bioconductor-ggtreeextra
+  - python >=3.11
+  - conda-build >=2.1.5
+  - cmcrameri >=1.9
+  - pandas >=2.2.2
+  - python-kaleido >=0.2.1
+  - rdkit >=2023.9.6
   - tmap
-  - scipy
-  - matplotlib
-  - mhfp
+  - scipy >=1.13
+  - matplotlib >=3.8.4
+  - mhfp >=1.9.2
   - pip
   - pip:
       - faerun
       - git+https://github.com/reymond-group/map4
   - r-aplot ## needed by ggtree
-  - r-base
+  - r-base >=4.3.3
   - r-chorddiag
   - r-codetools
   - r-data.table
@@ -34,7 +36,7 @@ dependencies:
   - r-ggplot2
   - r-ggraph
   - r-plotly
-  - r-readr>=2.0.1
+  - r-readr >=2.0.1
   - r-reticulate
   - r-rotl
   - r-R.utils ## needed for new version of data.table to read .gz

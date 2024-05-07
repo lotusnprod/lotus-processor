@@ -5,14 +5,14 @@ channels:
   - defaults
   - rdkit
 dependencies:
-  - chembl_structure_pipeline
-  - conda-build
+  - chembl_structure_pipeline >=1.2.0
+  - conda-build >=2.1.5
   - openjdk
-  - pandas
-  - python
-  - rdkit
-  - scipy
-  - r-base >=4.1.0
+  - pandas >=2.2.2
+  - python >=3.11
+  - rdkit >=2023.9.6
+  - scipy >=1.13
+  - r-base >=4.3.3
   - r-clisymbols ## needed by classyfirer
   - r-codetools
   - r-data.table
