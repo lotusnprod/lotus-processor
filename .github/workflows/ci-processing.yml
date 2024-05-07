@@ -18,7 +18,7 @@ jobs:
       matrix:
         os: [
           'ubuntu-latest', 
-          'macos-latest'
+          # 'macos-latest'
           # 'windows-latest'
         ]
     defaults:
@@ -38,7 +38,7 @@ jobs:
           cache-env: true
           environment-file: environment.yml
           extra-specs: |
-            python=3.8
+            python=3.11
       - name: Create and populate .Renviron file
         env:
           CROSSREF_EMAIL: ${{ secrets.CROSSREF_EMAIL }}

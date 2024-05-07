@@ -4,6 +4,6 @@ channels:
   - bioconda
   - defaults
 dependencies:
-  - dvc>=2.9.5
-  - dvc-s3 ## needed by the new versions of dvc
-  - lxml
+  - dvc >=3.50.1
+  - dvc-s3 >= 3.2.0 ## needed by the new versions of dvc
+  - lxml >=5.2.1
