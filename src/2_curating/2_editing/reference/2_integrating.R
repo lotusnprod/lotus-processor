@@ -16,6 +16,15 @@ library(tidyr)
 
 source("r/split_data_table_quote.R")
 
+extract_first_two_words <- function(text) {
+  words <- unlist(strsplit(text, "\\s+"))
+  if (length(words) >= 2) {
+    return(paste(words[1], words[2], sep = " "))
+  } else {
+    return(text)
+  }
+}
+
 log_debug("... files ...")
 log_debug("... DOI")
 dataDoi <-
@@ -212,14 +221,6 @@ dataFull <-
 
 if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
   log_debug("...  cleaned organisms")
-  extract_first_two_words <- function(text) {
-    words <- unlist(strsplit(text, "\\s+"))
-    if (length(words) >= 2) {
-      return(paste(words[1], words[2], sep = " "))
-    } else {
-      return(text)
-    }
-  }
 
   dataCleanedOrganismManipulated_old <-
     readr::read_delim(
