@@ -156,38 +156,38 @@ log_debug("... not testing unvalidated references since they vary because of Cro
 #                       expected = validatedTableExpectation)
 # )
 
-# write.table(
-#   x = organismTableFull,
-#   file = pathTestsOrganisms,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-#
-# write.table(
-#   x = structureFull,
-#   file = pathTestsStructures,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-#
-# write.table(
-#   x = referenceTableFull,
-#   file = pathTestsReferences,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
-#
-# write.table(
-#   x = validatedTable,
-#   file = pathTestsPlatinum,
-#   row.names = FALSE,
-#   quote = FALSE,
-#   sep = "\t",
-#   fileEncoding = "UTF-8"
-# )
+write.table(
+  x = organismTableFull,
+  file = pathTestsOrganisms,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = structureFull,
+  file = pathTestsStructures,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = referenceTableFull,
+  file = pathTestsReferences,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
+
+write.table(
+  x = validatedTable,
+  file = pathTestsPlatinum,
+  row.names = FALSE,
+  quote = FALSE,
+  sep = "\t",
+  fileEncoding = "UTF-8"
+)
