@@ -1,6 +1,8 @@
 # License
 
-Website often down [website](http://ab-openlab.csir.res.in/biophytmol/)
+
+<!-- Website often down [website](http://ab-openlab.csir.res.in/biophytmol/) -->
+Website often down [website](http://crdd.osdd.net/servers/biophytmol/)
 but written on it: 
 If you are using this resource in your research work, please cite: 
 Sharma et al.: BioPhytMol: a drug discovery community resource on anti-mycobacterial phytomolecules and plant extracts. Journal of Cheminformatics 2014 6:46. 

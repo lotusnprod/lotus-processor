@@ -6,7 +6,10 @@
 
 [reuse permission](https://pubs.acs.org/page/copyright/permissions.html)
 
-[website](https://www.agroscope.admin.ch/agroscope/en/home/publications/apps/tppt.html)
+<!-- This website is no longer accessible -->
+<!-- [website](https://www.agroscope.admin.ch/agroscope/en/home/publications/apps/tppt.html) -->
+[website](https://opendata.swiss/en/dataset/giftpflanzen-phytotoxin-datenbank)
+
 
 (table in also available)
 
