@@ -1,6 +1,6 @@
-# https://github.com/marketplace/actions/run-linkspector-with-reviewdog
+# from: https://github.com/gaurav-nelson/github-action-markdown-link-check
 
-name: Linkspector
+name: Check Markdown links
 
 # Controls when the workflow will run
 on:
@@ -11,14 +11,8 @@ on:
     branches: [ main ]
 
 jobs:
-  check-links:
-    name: runner / linkspector
+  markdown-link-check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Run linkspector
-        uses: umbrelladocs/action-linkspector@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          reporter: github-pr-review
-          fail_on_error: true
+      - uses: actions/checkout@master
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
