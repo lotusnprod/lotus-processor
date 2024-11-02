@@ -15,7 +15,6 @@ password <- Sys.getenv("LOTUS_DB_PWD")
 ###############################################################################
 
 mode <- Sys.getenv("MODE", unset = "test")
-mode <- Sys.getenv("MODE", unset = "custom")
 if (exists("mode_test")) {
   mode <- "test"
 }
@@ -24,9 +23,7 @@ if (exists("mode_custom")) {
 }
 
 works_locally_only <- TRUE
-works_locally_only <- FALSE
 safety <- FALSE
-safety <- TRUE
 
 locales <- readr::locale(
   date_names = "en",
@@ -1359,9 +1356,9 @@ path_accepted_fields <- file.path(
 
 pathLastWdExport <- "../data/interim/db/wikidata.tsv.gz"
 
-pathLastFrozen <- "240412_frozen_metadata.csv.gz"
+pathLastFrozen <- "230106_frozen_metadata.csv.gz"
 
-pathLastFrozenClosed <- "240412_closed_metadata.csv.gz"
+pathLastFrozenClosed <- "230106_closed_metadata.csv.gz"
 
 pathDataInterimTablesAnalyzedGarbage <-
   file.path(
