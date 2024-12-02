@@ -31,8 +31,7 @@ dataDoi <-
 log_debug("submitting to crossRef")
 if (nrow(dataDoi) != 0) {
   reflistDoi <-
-    getrefDoi(xs = dataDoi$referenceOriginal_doi) |>
-    progressr::with_progress()
+    getrefDoi(xs = dataDoi$referenceOriginal_doi)
 
   log_debug("joining results with original list")
   for (i in seq_along(reflistDoi)) {

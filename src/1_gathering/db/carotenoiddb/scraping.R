@@ -55,8 +55,7 @@ getcarotenoid <- function(xs) {
   )
 }
 
-CAROTENOIDDB <- getcarotenoid(xs = xs) |>
-  progressr::with_progress()
+CAROTENOIDDB <- getcarotenoid(xs = xs)
 
 CAROTENOIDDB_2 <- dplyr::bind_rows(CAROTENOIDDB) |>
   dplyr::select(X1, X2)

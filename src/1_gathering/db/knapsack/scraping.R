@@ -121,15 +121,13 @@ GetKnapSackRef <- function(xs) {
   )
 }
 
-df1 <- GetKnapSack(xs = xs) |>
-  progressr::with_progress()
+df1 <- GetKnapSack(xs = xs)
 
 KnapSackTable <- dplyr::bind_rows(df1[!is.na(df1)])
 
 xs <- KnapSackTable$link
 
-df3 <- GetKnapSackRef(xs = xs) |>
-  progressr::with_progress()
+df3 <- GetKnapSackRef(xs = xs)
 
 df4 <- dplyr::bind_rows(df3[!is.na(df3)])
 
