@@ -76,7 +76,7 @@ for (i in num) {
   log_debug("submitting to crossRef")
   if (nrow(dataSplit) != 0) {
     reflist <- getref_noLimit(xs = dataSplit$referenceOriginal_split) |>
-      progressr::with_progress(enable = TRUE)
+      progressr::with_progress()
     log_debug("treating results, may take a while if full mode")
     dataSplit2 <-
       getAllReferences(

@@ -79,7 +79,7 @@ for (i in num) {
   log_debug("submitting to crossRef")
   if (nrow(dataTitle) != 0) {
     reflist <- getref_noLimit(xs = dataTitle$referenceOriginal_title) |>
-      progressr::with_progress(enable = TRUE)
+      progressr::with_progress()
     log_debug("treating results, may take a while if full mode")
     dataTitle2 <-
       getAllReferences(
