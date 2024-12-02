@@ -129,7 +129,7 @@ Y <-
 X <- seq_along(Y)
 
 class_1 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -140,7 +140,7 @@ Y <-
 X <- seq_along(Y)
 
 class_2 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -151,7 +151,7 @@ Y <-
 X <- seq_along(Y)
 
 class_3 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 class <- class_1 |>
@@ -173,7 +173,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_1 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -184,7 +184,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_2 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -195,7 +195,7 @@ Y <-
 X <- seq_along(Y)
 
 superclass_3 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 superclass <- superclass_1 |>
@@ -217,7 +217,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_1 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological family level")
@@ -228,7 +228,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_2 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 log_debug("... at the biological kingdom level")
@@ -239,7 +239,7 @@ Y <-
 X <- seq_along(Y)
 
 pathway_3 <- lapply(X, get_jsd) |>
-  # progressr::with_progress(enable = TRUE) |>
+  # progressr::with_progress() |>
   data.table::rbindlist()
 
 pathway <- pathway_1 |>
