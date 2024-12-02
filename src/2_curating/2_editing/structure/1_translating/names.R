@@ -113,8 +113,7 @@ log_debug("translating structures with pubchem")
 dataTranslatedNominal_pubchem <- dataForPubchem |>
   dplyr::mutate(smilesNominal_pubchem = name2smiles_pubchem(xs = seq_len(
     nrow(dataForPubchem)
-  ) |>
-    progressr::with_progress())) |>
+  ))) |>
   splitstackshape::cSplit("smilesNominal_pubchem",
     sep = "\n",
     direction = "long"
@@ -171,8 +170,7 @@ log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus |>
   dplyr::mutate(smilesNominal_cactus = name2smiles_cactus(xs = seq_len(
     nrow(dataForCactus)
-  ) |>
-    progressr::with_progress())) |>
+  ))) |>
   dplyr::mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) |>
   dplyr::mutate(smilesNominal_cactus = y_as_na(
     x = smilesNominal_cactus,
