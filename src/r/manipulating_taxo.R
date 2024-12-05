@@ -47,7 +47,7 @@ manipulating_taxo <- function(dfsel, dic) {
   # )
 
   # selecting and splitting taxonomy and ranks
-  df1 <- dfsel %>%
+  predf1 <- dfsel %>%
     select(
       organismCleaned,
       organismDbTaxo,
@@ -63,21 +63,26 @@ manipulating_taxo <- function(dfsel, dic) {
       organismDbTaxo,
       taxonId, # because some organisms can have multiple ids
       .keep_all = TRUE
-    ) %>%
-    cSplit(
-      splitCols = "name",
-      sep = "|"
-    ) %>%
-    cSplit(
-      splitCols = "rank",
-      sep = "|"
-    ) %>%
-    # cSplit(
-    #   splitCols = "id",
-    #   sep = "|"
-    # ) %>%
-    mutate_all(as.character) %>%
-    tibble()
+    )
+  if (nrow(predf1 != 0)) {
+    df1 <- predf1 %>%
+      cSplit(
+        splitCols = "name",
+        sep = "|"
+      ) %>%
+      cSplit(
+        splitCols = "rank",
+        sep = "|"
+      ) %>%
+      # cSplit(
+      #   splitCols = "id",
+      #   sep = "|"
+      # ) %>%
+      mutate_all(as.character) %>%
+      tibble()
+  } else {
+    df1 <- predf1
+  }
 
   # manipulating taxa
   df2 <- df1 %>%
