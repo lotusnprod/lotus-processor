@@ -138,7 +138,8 @@ test_that(
   desc = "structures",
   code = expect_equal(
     object = structureFull,
-    expected = structureFullExpectation
+    expected = structureFullExpectation,
+    tolerance = 1e-9
   )
 )
 
