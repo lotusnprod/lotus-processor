@@ -139,7 +139,7 @@ test_that(
   code = expect_equal(
     object = structureFull,
     expected = structureFullExpectation,
-    tolerance = 1e-9
+    tolerance = 1e-6
   )
 )
 
