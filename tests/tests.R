@@ -13,10 +13,7 @@ log_debug("... initial table")
 originalTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesOriginalTable),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  locale = locales,
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -25,9 +22,7 @@ log_debug("... organisms")
 organismTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesProcessedOrganismFinal),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -36,9 +31,7 @@ log_debug("... translated")
 translatedStructureTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesTranslatedStructureFinal),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -46,9 +39,7 @@ log_debug("... cleaned")
 cleanedStructureTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesProcessedStructureNamed),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   select(-validatorLog) %>%
   tibble()
@@ -59,9 +50,7 @@ log_debug("... references")
 referenceTableFull <- read_delim(
   file = gzfile(description = pathDataInterimTablesProcessedReferenceFile),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   select(-referenceCleaned_score_crossref) %>%
   tibble()
@@ -70,9 +59,7 @@ log_debug("validated table ")
 validatedTable <- read_delim(
   file = gzfile(description = pathDataInterimTablesAnalyzedPlatinum),
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -87,9 +74,7 @@ log_debug("... organisms")
 organismTableFullExpectation <- read_delim(
   file = pathTestsOrganisms,
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -97,9 +82,7 @@ log_debug("... structures")
 structureFullExpectation <- read_delim(
   file = pathTestsStructures,
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -107,9 +90,7 @@ log_debug("... references")
 referenceTableFullExpectation <- read_delim(
   file = pathTestsReferences,
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -117,9 +98,7 @@ log_debug("... validated table")
 validatedTableExpectation <- read_delim(
   file = pathTestsPlatinum,
   delim = "\t",
-  col_types = cols(.default = "c"),
-  escape_double = FALSE,
-  trim_ws = TRUE
+  locale = locales
 ) %>%
   tibble()
 
@@ -138,8 +117,7 @@ test_that(
   desc = "structures",
   code = expect_equal(
     object = structureFull,
-    expected = structureFullExpectation,
-    tolerance = 1e-6
+    expected = structureFullExpectation
   )
 )
 
