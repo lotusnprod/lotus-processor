@@ -80,15 +80,31 @@ list_results <-
     url = url
   )
 
-results <- list_results |>
-  dplyr::bind_rows() |>
-  dplyr::distinct() |>
-  dplyr::select(
-    inchikeySanitized = InChIKey,
-    structureCleaned_nameTraditional = Title,
-    structureCleaned_nameIupac = IUPACName,
-    structureCleaned_cid = CID
-  )
+
+empty_df <- tibble(
+  inchikeySanitized = character(),
+  structureCleaned_nameTraditional = character(),
+  structureCleaned_nameIupac = character(),
+  structureCleaned_cid = character()
+)
+
+results <- tryCatch(
+  {
+    list_results |>
+      dplyr::bind_rows() |>
+      dplyr::distinct() |>
+      dplyr::select(
+        inchikeySanitized = InChIKey,
+        structureCleaned_nameTraditional = Title,
+        structureCleaned_nameIupac = IUPACName,
+        structureCleaned_cid = CID
+      )
+  },
+  error = function(e) {
+    message("An error occurred, returning an empty dataframe: ", e$message)
+    empty_df
+  }
+)
 
 ## if some names are missing in structures metadata
 # part_1 <- structureMetadata |>
