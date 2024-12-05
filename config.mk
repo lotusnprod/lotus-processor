@@ -8,7 +8,7 @@ export SRC_PATH ?= ${PWD}/src
 export BIN_PATH ?= ${PWD}/bin
 export TESTS_PATH ?= ${PWD}/tests
 
-export GNFINDER_VERSION = v1.1.4
+export GNFINDER_VERSION = v1.1.6
 export GNVERIFIER_VERSION = v1.1.5
 export OPSIN_VERSION = 2.8.0
 
