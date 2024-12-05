@@ -10,7 +10,7 @@ dependencies:
   - openjdk
   - pandas >=2.2.2
   - python >=3.11
-  - rdkit >=2023.9.6
+  - rdkit >=2024.3.6
   - scipy >=1.13
   - r-base >=4.3.3
   - r-clisymbols ## needed by classyfirer
