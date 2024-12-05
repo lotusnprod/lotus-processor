@@ -51,16 +51,9 @@ taxo_cleaning_auto <- function(dfsel) {
       start = 1,
       end = 1
     )) %>%
-    group_by(
-      organismDbTaxo,
-      organismDetected_1,
-      organism_1_kingdom
-    ) %>% # intraDB consistency complex (Echinacea example)
+    group_by(organismDbTaxo, organismDetected_1, organism_1_kingdom) %>% # intraDB consistency complex (Echinacea example)
     add_count() %>%
-    group_by(
-      organismDbTaxo,
-      organismDetected_1
-    ) %>%
+    group_by(organismDbTaxo, organismDetected_1) %>%
     add_count(name = "m") %>%
     mutate(ratio = n / m) %>%
     ungroup() %>%
@@ -87,15 +80,9 @@ taxo_cleaning_auto <- function(dfsel) {
 
   df1_c <- left_join(df1_b, df1_a)
 
-  df2_a <- semi_join(
-    dfsel,
-    df1_c
-  )
+  df2_a <- semi_join(dfsel, df1_c)
 
-  df2_b <- anti_join(
-    dfsel,
-    df1_c
-  ) %>%
+  df2_b <- anti_join(dfsel, df1_c) %>%
     distinct(
       organismType,
       organismValue,
@@ -104,20 +91,11 @@ taxo_cleaning_auto <- function(dfsel) {
     )
 
   df2_c <- df2_b %>%
-    distinct(
-      organismDbTaxo,
-      organismDetected
-    )
+    distinct(organismDbTaxo, organismDetected)
 
-  df3_a <- left_join(
-    df2_c,
-    df1_c
-  ) %>%
+  df3_a <- left_join(df2_c, df1_c) %>%
     filter(!is.na(organismCleaned)) %>%
-    select(
-      -organismType,
-      -organismValue
-    ) %>%
+    select(-organismType, -organismValue) %>%
     distinct()
 
   df3_b <- left_join(df2_b, df3_a) %>%
@@ -161,19 +139,34 @@ taxo_cleaning_auto <- function(dfsel) {
       tail(na.omit(x), 1)
     }))
 
-  df5 <- df4 %>%
-    filter(name == organismCleanedBis) %>%
-    distinct(
-      organismType,
-      organismValue,
-      organismDetected,
-      organismDbTaxo,
-      organismDbTaxoQuality,
-      # organismTaxonIds,
-      organismTaxonRanks,
-      organismTaxonomy,
-      organismCleaned
+  if (nrow(df4) != 0) {
+    df5 <- df4 %>%
+      filter(name == organismCleanedBis) %>%
+      distinct(
+        organismType,
+        organismValue,
+        organismDetected,
+        organismDbTaxo,
+        organismDbTaxoQuality,
+        # organismTaxonIds,
+        organismTaxonRanks,
+        organismTaxonomy,
+        organismCleaned
+      )
+  } else {
+    df5 <- tibble(
+      organismType = NA,
+      organismValue = NA,
+      organismDetected = NA,
+      organismDbTaxo = NA,
+      organismDbTaxoQuality = NA,
+      # organismTaxonIds=NA,
+      organismTaxonRanks = NA,
+      organismTaxonomy = NA,
+      organismCleaned = NA,
+      name = NA,
     )
+  }
 
   # df6 <- left_join(df5, df_sel)
   df6 <- left_join(df5, df3_c) %>%
