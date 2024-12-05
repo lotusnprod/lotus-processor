@@ -35,7 +35,7 @@ jobs:
       - uses: mamba-org/setup-micromamba@v2
         with:
           cache-downloads: true
-          cache-env: true
+          cache-environment: true
           environment-file: environment.yml
           create-args: >-
             python=3.10
