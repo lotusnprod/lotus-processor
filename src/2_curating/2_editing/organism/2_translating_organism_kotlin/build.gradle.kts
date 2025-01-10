@@ -8,7 +8,7 @@ group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "2.0.21"
+    kotlin("jvm") version "2.1.0"
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
