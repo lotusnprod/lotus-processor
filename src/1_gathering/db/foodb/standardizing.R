@@ -76,7 +76,7 @@ compounds_flavors <- dplyr::left_join(compounds,
 
 compounds_flavors_casted <- compounds_flavors |>
   dplyr::group_by(id) |>
-  dplyr::summarise(
+  dplyr::summarize(
     flavor_id = paste(flavor_id, collapse = "|"),
     flavor_citations = paste(flavor_citations, collapse = "|"),
     flavor_name = paste(flavor_name, collapse = "|"),
