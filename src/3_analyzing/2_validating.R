@@ -164,15 +164,15 @@ structureMetadata <-
   ) |>
   dplyr::rowwise() |>
   dplyr::mutate(
-    structureCleaned_nameIupac = ifelse(
-      test = is.na(structureCleaned_nameIupac),
-      yes = structureCleanedInchikey,
-      no = structureCleaned_nameIupac
+    structureCleaned_nameIupac = dplyr::if_else(
+      condition = is.na(structureCleaned_nameIupac),
+      true = structureCleanedInchikey,
+      false = structureCleaned_nameIupac
     ),
-    structureCleaned_nameTraditional = ifelse(
-      test = is.na(structureCleaned_nameTraditional),
-      yes = structureCleanedInchikey,
-      no = structureCleaned_nameTraditional
+    structureCleaned_nameTraditional = dplyr::if_else(
+      condition = is.na(structureCleaned_nameTraditional),
+      true = structureCleanedInchikey,
+      false = structureCleaned_nameTraditional
     )
   )
 
@@ -924,15 +924,15 @@ finalStats <- realValidationSetFilled |>
 
 finalStats_reworked <- finalStats %>%
   dplyr::mutate(
-    `true positives` = ifelse(
-      test = `validated == "Y"` == TRUE,
-      yes = n,
-      no = 0
+    `true positives` = dplyr::if_else(
+      condition = `validated == "Y"` == TRUE,
+      true = n,
+      false = 0
     ),
-    `false positives` = ifelse(
-      test = `validated == "Y"` == FALSE,
-      yes = n,
-      no = 0
+    `false positives` = dplyr::if_else(
+      condition = `validated == "Y"` == FALSE,
+      true = n,
+      false = 0
     )
   ) %>%
   dplyr::select(
