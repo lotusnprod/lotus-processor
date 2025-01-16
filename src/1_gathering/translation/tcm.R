@@ -174,7 +174,7 @@ if (mode == "full") {
       stripWhite = FALSE
     ) %>%
     dplyr::group_by(rownames(.)) %>%
-    dplyr::summarise(
+    dplyr::summarize(
       common = first(common),
       biologicalsource = paste(
         biologicalsource_1[!is.na(biologicalsource_1)],

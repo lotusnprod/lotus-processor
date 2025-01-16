@@ -940,7 +940,7 @@ finalStats_reworked <- finalStats %>%
     dplyr::everything(), -n, -`validated == "Y"`
   ) %>%
   dplyr::group_by(`reference type`) %>%
-  dplyr::summarise(
+  dplyr::summarize(
     `true positives Validation` = max(`true positives`),
     `false positives Validation` = max(`false positives`)
   ) %>%
