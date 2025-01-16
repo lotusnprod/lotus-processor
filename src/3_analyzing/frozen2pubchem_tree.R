@@ -64,29 +64,29 @@ structures_cleaned <- structures_classified |>
     chemical_superclass = superclass,
     chemical_class = class
   ) |>
-  dplyr::mutate(chemical_pathway = ifelse(
-    test = is.na(chemical_pathway),
-    yes = "Not classified",
-    no = chemical_pathway
+  dplyr::mutate(chemical_pathway = dplyr::if_else(
+    condition = is.na(chemical_pathway),
+    true = "Not classified",
+    false = chemical_pathway
   )) |>
-  dplyr::mutate(chemical_superclass = ifelse(
-    test = is.na(chemical_superclass),
-    yes = ifelse(
-      test = chemical_pathway == "Not classified",
-      yes = chemical_superclass,
-      no = "Not classified"
+  dplyr::mutate(chemical_superclass = dplyr::if_else(
+    condition = is.na(chemical_superclass),
+    true = dplyr::if_else(
+      condition = chemical_pathway == "Not classified",
+      true = chemical_superclass,
+      false = "Not classified"
     ),
-    no = chemical_superclass
+    false = chemical_superclass
   )) |>
-  dplyr::mutate(chemical_class = ifelse(
-    test = is.na(chemical_class),
-    yes = ifelse(
-      test = chemical_superclass == "Not classified" |
+  dplyr::mutate(chemical_class = dplyr::if_else(
+    condition = is.na(chemical_class),
+    true = dplyr::if_else(
+      condition = chemical_superclass == "Not classified" |
         is.na(chemical_superclass),
-      yes = chemical_class,
-      no = "Not classified"
+      true = chemical_class,
+      false = "Not classified"
     ),
-    no = chemical_class
+    false = chemical_class
   )) |>
   data.frame()
 

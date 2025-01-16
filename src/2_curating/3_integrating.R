@@ -621,7 +621,7 @@ inhouseDbMinimal <- inhouseDbMinimal |>
     ),
     spaces = stringr::str_count(string = organismCleaned, pattern = " ")
   ) |>
-  dplyr::mutate(spaces = ifelse(test = spaces == 0, yes = spaces, no = 1)) |>
+  dplyr::mutate(spaces = dplyr::if_else(condition = spaces == 0, true = spaces, false = 1)) |>
   ## remove genera where species are found but not species with var
   dplyr::group_by(
     temp_org,
