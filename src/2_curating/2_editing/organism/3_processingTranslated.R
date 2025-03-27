@@ -1,5 +1,7 @@
 source("r/log_debug.R")
-log_debug("This script performs canonical name recognition on the translated organism field.")
+log_debug(
+  "This script performs canonical name recognition on the translated organism field."
+)
 
 start <- Sys.time()
 
@@ -65,7 +67,13 @@ taxaRanksDictionary <-
 log_debug("ensuring directories exist")
 create_dir_with_rm(export = pathDataInterimTablesProcessedOrganismTranslated)
 
-if (length(list.files(path = pathDataInterimTablesTranslatedOrganism, pattern = "tsv")) != 0) {
+if (
+  length(list.files(
+    path = pathDataInterimTablesTranslatedOrganism,
+    pattern = "tsv"
+  )) !=
+    0
+) {
   log_debug("submitting to GNFinder")
   if (.Platform$OS.type == "unix") {
     system(command = paste("bash", pathTranslatedGnfinderScript))
@@ -177,16 +185,22 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  jsonlite::stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
+  jsonlite::stream_in(
+    con = file(pathDataInterimTablesProcessedOrganismVerifiedTable)
+  )
 
 if (nrow(dataCleanedOrganismVerify != 0)) {
   verified_df <- verified |>
     data.frame() |>
     dplyr::select(-curation, -matchType) |>
     tidyr::unnest(results, names_repair = "minimal") |>
-    dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
-      dataSourceTitleShort != "IPNI") |>
-    dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+    dplyr::filter(
+      dataSourceTitleShort != "IRMNG (old)" &
+        dataSourceTitleShort != "IPNI"
+    ) |>
+    dplyr::filter(
+      !matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified
+    ) |>
     dplyr::filter(isSynonym == FALSE) |>
     dplyr::arrange(dplyr::desc(sortScore)) |>
     dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
@@ -241,11 +255,7 @@ if (length != 0) {
         )
     ) |>
     dplyr::select(-organismInterim) |>
-    dplyr::distinct(organismValue,
-      organismCleaned,
-      taxonId,
-      .keep_all = TRUE
-    )
+    dplyr::distinct(organismValue, organismCleaned, taxonId, .keep_all = TRUE)
 }
 
 if (length != 0) {
@@ -269,16 +279,14 @@ if (length == 0) {
 }
 
 dataCleanedOrganism <- dataCleanedOrganism |>
-  dplyr::distinct(organismValue,
-    organismCleaned,
-    taxonId,
-    .keep_all = TRUE
-  ) |>
+  dplyr::distinct(organismValue, organismCleaned, taxonId, .keep_all = TRUE) |>
   dplyr::group_by(organismValue) |>
   dplyr::add_count() |>
   dplyr::ungroup() |>
-  dplyr::filter(!is.na(organismCleaned) |
-    !n > 1) |>
+  dplyr::filter(
+    !is.na(organismCleaned) |
+      !n > 1
+  ) |>
   dplyr::select(-n) |>
   dplyr::distinct(
     organismValue,

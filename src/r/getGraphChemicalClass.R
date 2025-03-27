@@ -10,7 +10,8 @@ getGraphChemicalClass <- function(subclass) {
   inhouseDb_most_chemical_class_2plot <-
     inhouseDbMeta %>%
     filter(structure_taxonomy_npclassifier_03class == subclass) %>%
-    distinct(structure_inchikey_2D,
+    distinct(
+      structure_inchikey_2D,
       organism_name,
       database,
       .keep_all = TRUE

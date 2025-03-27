@@ -36,8 +36,7 @@ cleaning_alkamid <- function(x) {
   df12 <- df1 %>%
     filter(V1_032 != "No .hin file found to display.")
 
-  for (i in (ncol(df11):9))
-  {
+  for (i in (ncol(df11):9)) {
     df11[, i] <- df11[, i - 8]
   }
 
@@ -50,8 +49,7 @@ cleaning_alkamid <- function(x) {
   df22 <- df2 %>%
     filter(grepl("Alkamid", V1_042))
 
-  for (i in (ncol(df22):2))
-  {
+  for (i in (ncol(df22):2)) {
     df22[, i] <- df22[, i - 1]
   }
 
@@ -83,8 +81,7 @@ cleaning_alkamid <- function(x) {
   df42 <- df4 %>%
     filter(grepl("Tribe", biologicalsource_01))
 
-  for (i in (2:(ncol(df41) - 1)))
-  {
+  for (i in (2:(ncol(df41) - 1))) {
     df41[, i] <- df41[, i + 1]
   }
 
@@ -122,7 +119,11 @@ cleaning_alkamid <- function(x) {
     cSplit("name_1_1", sep = "Trivial name", stripWhite = FALSE) %>%
     cSplit("name_1_1_1", sep = "IUPAC name", stripWhite = FALSE) %>%
     cSplit("name_1_1_1_1", sep = "Chemical name", stripWhite = FALSE) %>%
-    cSplit("name_1_1_1_1_1", sep = "	Alkamid moleculeID", stripWhite = FALSE) %>%
+    cSplit(
+      "name_1_1_1_1_1",
+      sep = "	Alkamid moleculeID",
+      stripWhite = FALSE
+    ) %>%
     select(
       uniqueid = name_1_1_1_1_1_1,
       name = name_1_1_2,
@@ -161,7 +162,11 @@ data_standard <-
     db = "alkamid",
     structure_field = "structure_smiles",
     organism_field = "organism_clean",
-    reference_field = c("reference_authors", "reference_journal", "reference_title")
+    reference_field = c(
+      "reference_authors",
+      "reference_journal",
+      "reference_title"
+    )
   )
 
 # exporting

@@ -19,18 +19,22 @@ data_original <-
 
 data_manipulated <- data_original |>
   dplyr::filter(!is.na(biologicalsource)) |>
-  dplyr::mutate(reference = gsub(
-    pattern = "doi: ",
-    replacement = "$",
-    x = reference
-  )) |>
-  splitstackshape::cSplit("reference",
+  dplyr::mutate(
+    reference = gsub(
+      pattern = "doi: ",
+      replacement = "$",
+      x = reference
+    )
+  ) |>
+  splitstackshape::cSplit(
+    "reference",
     sep = "$",
     direction = "long",
     fixed = TRUE
   ) |>
   dplyr::filter(grepl(pattern = "^10.", x = reference)) |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = " ",
     direction = "long",
     fixed = TRUE
@@ -39,12 +43,14 @@ data_manipulated <- data_original |>
     grepl(pattern = "^10.", x = reference) |
       grepl(pattern = "[PubMed:", x = reference, fixed = TRUE)
   ) |>
-  dplyr::mutate(reference_pubmed = gsub(
-    pattern = "[PubMed:",
-    replacement = "",
-    x = reference,
-    fixed = TRUE
-  )) |>
+  dplyr::mutate(
+    reference_pubmed = gsub(
+      pattern = "[PubMed:",
+      replacement = "",
+      x = reference,
+      fixed = TRUE
+    )
+  ) |>
   dplyr::mutate(
     reference_pubmed = gsub(
       pattern = "]",

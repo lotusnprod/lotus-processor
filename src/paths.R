@@ -67,9 +67,7 @@ forbidden_export <- c("antibase", "antimarin", "dnp", "foodb")
 
 # root
 ## bin
-pathBin <- Sys.getenv("BIN_PATH",
-  unset = "../bin"
-)
+pathBin <- Sys.getenv("BIN_PATH", unset = "../bin")
 
 ## opsin
 pathBinOpsin <- file.path(
@@ -78,9 +76,7 @@ pathBinOpsin <- file.path(
 )
 
 ## data
-pathData <- Sys.getenv("DATA_PATH",
-  unset = "../data"
-)
+pathData <- Sys.getenv("DATA_PATH", unset = "../data")
 
 ### external
 pathDataExternal <-
@@ -331,17 +327,19 @@ pathDataExternalDbSourceNubbe <-
 
 databases$add(
   name = "nubbe",
-  sourceFiles = list(tsvPath = file.path(
-    "nubbe_raw",
-    list.files(
-      path = file.path(
-        pathDataExternalDbSourceNubbe,
-        "nubbe_raw"
-      ),
-      pattern = "*.xml",
-      full.names = FALSE
+  sourceFiles = list(
+    tsvPath = file.path(
+      "nubbe_raw",
+      list.files(
+        path = file.path(
+          pathDataExternalDbSourceNubbe,
+          "nubbe_raw"
+        ),
+        pattern = "*.xml",
+        full.names = FALSE
+      )
     )
-  )),
+  ),
   interimFile = "nubbe.tsv.gz"
 )
 
@@ -387,17 +385,19 @@ pathDataExternalDbSourceRespect <-
 
 databases$add(
   name = "respect",
-  sourceFiles = list(tsvPath = file.path(
-    "respect",
-    list.files(
-      path = file.path(
-        pathDataExternalDbSourceRespect,
-        "respect"
-      ),
-      pattern = "*.txt",
-      full.names = FALSE
+  sourceFiles = list(
+    tsvPath = file.path(
+      "respect",
+      list.files(
+        path = file.path(
+          pathDataExternalDbSourceRespect,
+          "respect"
+        ),
+        pattern = "*.txt",
+        full.names = FALSE
+      )
     )
-  )),
+  ),
   interimFile = "respect.tsv.gz"
 )
 
@@ -1282,28 +1282,32 @@ pathDataInterimTimestamps <-
   )
 
 ## dirty for the moment
-pathOriginalGnfinderScript <- switch(mode,
+pathOriginalGnfinderScript <- switch(
+  mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_full.sh",
   "custom" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnfinderLauncher_test.sh"
 )
 
-pathTranslatedGnfinderScript <- switch(mode,
+pathTranslatedGnfinderScript <- switch(
+  mode,
   "full" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_full.sh",
   "custom" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/translatedGnfinderLauncher_test.sh"
 )
 
-pathOriginalGnverifierScript <- switch(mode,
+pathOriginalGnverifierScript <- switch(
+  mode,
   "full" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_full.sh",
   "custom" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_min.sh",
   "test" = "2_curating/2_editing/organism/shell/originalGnverifierLauncher_test.sh"
 )
 
-pathGnverifierScript <- switch(mode,
+pathGnverifierScript <- switch(
+  mode,
   "full" = "2_curating/2_editing/organism/shell/gnverifierLauncher_full.sh",
   "custom" = "2_curating/2_editing/organism/shell/gnverifierLauncher_custom.sh",
   "min" = "2_curating/2_editing/organism/shell/gnverifierLauncher_min.sh",
@@ -1315,11 +1319,15 @@ pathTimestampsScript <- "3_analyzing/timestamps.sh"
 pathTests <- file.path("../tests")
 
 pathTestsFile <-
-  file.path(pathTests, switch(mode,
-    "full" = "tests_min.tsv",
-    "min" = "tests_min.tsv",
-    "test" = "tests.tsv"
-  ))
+  file.path(
+    pathTests,
+    switch(
+      mode,
+      "full" = "tests_min.tsv",
+      "min" = "tests_min.tsv",
+      "test" = "tests.tsv"
+    )
+  )
 
 pathTestsDicCommonFile <-
   file.path(pathTests, "tests_dic_common_min.tsv.gz")

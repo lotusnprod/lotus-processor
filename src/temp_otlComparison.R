@@ -1,5 +1,7 @@
 source("r/log_debug.R")
-log_debug("This script compares OTL (Open Tree of Life) IDs obtained via gnverify and via rotl API")
+log_debug(
+  "This script compares OTL (Open Tree of Life) IDs obtained via gnverify and via rotl API"
+)
 
 start <- Sys.time()
 
@@ -73,8 +75,10 @@ gnverifyStrepto
 log_debug("so when keeping only one name per ID...")
 
 otlVersionDistinct <- otlVersion |>
-  dplyr::left_join(gnverifyVersion |>
-    dplyr::mutate(isInBoth = "Y")) |>
+  dplyr::left_join(
+    gnverifyVersion |>
+      dplyr::mutate(isInBoth = "Y")
+  ) |>
   ## to keep the same synonym for both
   dplyr::arrange(isInBoth) |>
   dplyr::distinct(organismCleanedId, .keep_all = TRUE)
@@ -105,7 +109,9 @@ log_debug(
   "names that are not in rotl"
 )
 
-log_debug("Conclusion: almost the same but very interesting for synonyms filtering")
+log_debug(
+  "Conclusion: almost the same but very interesting for synonyms filtering"
+)
 
 end <- Sys.time()
 

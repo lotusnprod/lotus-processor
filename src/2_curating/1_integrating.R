@@ -132,7 +132,6 @@ if (mode == "full" | mode == "custom") {
     ## removing for now
     dplyr::filter(database != "metabolights")
 
-
   dbTable[setdiff(
     x = accepted_fields,
     y = names(dbTable)
@@ -157,7 +156,9 @@ if (mode == "full" | mode == "custom") {
       referenceOriginal_split = reference_split,
       referenceOriginal_title = reference_title,
     ) |>
-    dplyr::mutate(referenceOriginal_pubmed = as.character(referenceOriginal_pubmed))
+    dplyr::mutate(
+      referenceOriginal_pubmed = as.character(referenceOriginal_pubmed)
+    )
 
   if (mode == "full") {
     log_debug("sampling rows for test mode")
@@ -170,13 +171,12 @@ if (mode == "full" | mode == "custom") {
     dbTable_sampled_1 <- dbTable |>
       dplyr::filter(database %ni% forbidden_export) |>
       dplyr::filter(is.na(referenceOriginal_external)) |>
-      dplyr::filter(!(
-        !is.na(structureOriginal_inchi) &
-          !is.na(structureOriginal_nominal)
-      ) | !(
-        !is.na(structureOriginal_smiles) &
-          !is.na(structureOriginal_nominal)
-      )) |> ## to avoid too many names (long for CI)
+      dplyr::filter(
+        !(!is.na(structureOriginal_inchi) &
+          !is.na(structureOriginal_nominal)) |
+          !(!is.na(structureOriginal_smiles) &
+            !is.na(structureOriginal_nominal))
+      ) |> ## to avoid too many names (long for CI)
       dplyr::sample_n(size = 490)
     set.seed(
       seed = 42,
@@ -187,13 +187,12 @@ if (mode == "full" | mode == "custom") {
       dplyr::filter(database %ni% forbidden_export) |>
       dplyr::filter(!is.na(organismOriginal_dirty)) |>
       dplyr::filter(is.na(referenceOriginal_external)) |>
-      dplyr::filter(!(
-        !is.na(structureOriginal_inchi) &
-          !is.na(structureOriginal_nominal)
-      ) | !(
-        !is.na(structureOriginal_smiles) &
-          !is.na(structureOriginal_nominal)
-      )) |> ## to avoid too many names (long for CI)
+      dplyr::filter(
+        !(!is.na(structureOriginal_inchi) &
+          !is.na(structureOriginal_nominal)) |
+          !(!is.na(structureOriginal_smiles) &
+            !is.na(structureOriginal_nominal))
+      ) |> ## to avoid too many names (long for CI)
       dplyr::sample_n(size = 10)
     dbTable_sampled <-
       dplyr::bind_rows(dbTable_sampled_1, dbTable_sampled_2)
@@ -442,19 +441,13 @@ structureTable_full <-
   dplyr::bind_rows(
     structureTable_inchi |>
       dplyr::mutate(structureType = "inchi") |>
-      dplyr::select(structureType,
-        structureValue = structureOriginal_inchi
-      ),
+      dplyr::select(structureType, structureValue = structureOriginal_inchi),
     structureTable_smiles |>
       dplyr::mutate(structureType = "smiles") |>
-      dplyr::select(structureType,
-        structureValue = structureOriginal_smiles
-      ),
+      dplyr::select(structureType, structureValue = structureOriginal_smiles),
     structureTable_nominal |>
       dplyr::mutate(structureType = "nominal") |>
-      dplyr::select(structureType,
-        structureValue = structureOriginal_nominal
-      )
+      dplyr::select(structureType, structureValue = structureOriginal_nominal)
   ) |>
   dplyr::distinct()
 
@@ -512,14 +505,10 @@ log_debug("... structures table")
 organismTable_full <- dplyr::bind_rows(
   organismTable_clean |>
     dplyr::mutate(organismType = "clean") |>
-    dplyr::select(organismType,
-      organismValue = organismOriginal_clean
-    ),
+    dplyr::select(organismType, organismValue = organismOriginal_clean),
   organismTable_dirty |>
     dplyr::mutate(organismType = "dirty") |>
-    dplyr::select(organismType,
-      organismValue = organismOriginal_dirty
-    )
+    dplyr::select(organismType, organismValue = organismOriginal_dirty)
 ) |>
   dplyr::distinct()
 
@@ -733,8 +722,12 @@ create_dir(export = pathDataInterimTablesOriginalStructure)
 
 ##### with rm
 create_dir_with_rm(export = pathDataInterimTablesOriginalOrganism)
-create_dir_with_rm(export = pathDataInterimTablesOriginalReferenceOriginalFolder)
-create_dir_with_rm(export = pathDataInterimTablesOriginalReferencePublishingDetailsFolder)
+create_dir_with_rm(
+  export = pathDataInterimTablesOriginalReferenceOriginalFolder
+)
+create_dir_with_rm(
+  export = pathDataInterimTablesOriginalReferencePublishingDetailsFolder
+)
 create_dir_with_rm(export = pathDataInterimTablesOriginalReferenceSplitFolder)
 create_dir_with_rm(export = pathDataInterimTablesOriginalReferenceTitleFolder)
 

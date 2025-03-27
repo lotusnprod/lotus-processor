@@ -152,9 +152,7 @@ biocleaning <- function(gnfound, names, organismCol) {
     group_by(id) %>%
     arrange(desc(n), !is.na(isSynonym)) %>%
     ungroup() %>%
-    distinct(id,
-      .keep_all = TRUE
-    ) %>%
+    distinct(id, .keep_all = TRUE) %>%
     arrange(id) %>%
     select(id)
 

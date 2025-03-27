@@ -11,15 +11,19 @@ library(splitstackshape)
 library(readr)
 
 log_debug("loading the LOTUS, this may take a while")
-frozen_lotus <- readr::read_csv(file = file.path(
-  pathDataProcessed,
-  pathLastFrozen
-)) |>
-  dplyr::mutate(structure_inchikey_2D = substring(
-    text = structure_inchikey,
-    first = 1,
-    last = 14
-  ))
+frozen_lotus <- readr::read_csv(
+  file = file.path(
+    pathDataProcessed,
+    pathLastFrozen
+  )
+) |>
+  dplyr::mutate(
+    structure_inchikey_2D = substring(
+      text = structure_inchikey,
+      first = 1,
+      last = 14
+    )
+  )
 
 TAX_LEVEL_1 <- "organism_taxonomy_01domain"
 TAX_LEVEL_2 <- "organism_taxonomy_02kingdom"
@@ -34,8 +38,10 @@ TAX_LEVEL_2 <- "organism_taxonomy_02kingdom"
 
 ## BEWARE some taxa are not in OTL!
 domain <- frozen_lotus |>
-  dplyr::filter(!is.na(!!as.name(TAX_LEVEL_1)) |
-    !is.na(!!as.name(TAX_LEVEL_2))) |>
+  dplyr::filter(
+    !is.na(!!as.name(TAX_LEVEL_1)) |
+      !is.na(!!as.name(TAX_LEVEL_2))
+  ) |>
   splitstackshape::cSplit(
     "structure_taxonomy_npclassifier_01pathway",
     sep = "|",
@@ -46,17 +52,22 @@ domain <- frozen_lotus |>
     sep = "|",
     direction = "long"
   ) |>
-  splitstackshape::cSplit("structure_taxonomy_npclassifier_03class",
+  splitstackshape::cSplit(
+    "structure_taxonomy_npclassifier_03class",
     sep = "|",
     direction = "long"
   ) |>
-  dplyr::filter(!is.na(structure_inchikey_2D) &
-    !is.na(organism_name)) |>
-  dplyr::mutate(Group = paste(
-    organism_taxonomy_01domain,
-    organism_taxonomy_02kingdom,
-    sep = "_"
-  )) |>
+  dplyr::filter(
+    !is.na(structure_inchikey_2D) &
+      !is.na(organism_name)
+  ) |>
+  dplyr::mutate(
+    Group = paste(
+      organism_taxonomy_01domain,
+      organism_taxonomy_02kingdom,
+      sep = "_"
+    )
+  ) |>
   dplyr::filter(
     Group == "Eukaryota_Archaeplastida" |
       Group == "Eukaryota_Fungi" |

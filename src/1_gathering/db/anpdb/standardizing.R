@@ -29,7 +29,8 @@ data_selected <- data_original |>
     reference = Reference.information,
     reference_authors = Authors.information
   ) |>
-  splitstackshape::cSplit("biologicalsource",
+  splitstackshape::cSplit(
+    "biologicalsource",
     " Known use:",
     stripWhite = FALSE,
     fixed = FALSE
@@ -43,33 +44,40 @@ data_selected <- data_original |>
     reference,
     reference_authors
   ) |>
-  dplyr::mutate(organism_clean = gsub(
-    "Source: ",
-    "",
-    biologicalsource
-  )) |>
+  dplyr::mutate(
+    organism_clean = gsub(
+      "Source: ",
+      "",
+      biologicalsource
+    )
+  ) |>
   dplyr::mutate_all(as.character) |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     "Title: ",
     stripWhite = FALSE,
     fixed = FALSE
   ) |>
-  splitstackshape::cSplit("reference_2",
+  splitstackshape::cSplit(
+    "reference_2",
     " PubMed: ",
     stripWhite = FALSE,
     fixed = FALSE
   ) |>
-  splitstackshape::cSplit("reference_1",
+  splitstackshape::cSplit(
+    "reference_1",
     " Reference: ",
     stripWhite = FALSE,
     fixed = FALSE
   ) |>
-  splitstackshape::cSplit("reference_authors",
+  splitstackshape::cSplit(
+    "reference_authors",
     "Author(s): ",
     stripWhite = FALSE,
     fixed = TRUE
   ) |>
-  splitstackshape::cSplit("reference_authors_2",
+  splitstackshape::cSplit(
+    "reference_authors_2",
     "Curator(s): ",
     stripWhite = FALSE,
     fixed = TRUE

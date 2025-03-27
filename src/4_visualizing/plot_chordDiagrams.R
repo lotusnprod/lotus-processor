@@ -338,9 +338,7 @@ top_chemo_06 <- pairs_metadata %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structure_taxonomy_npclassifier_03class,
-    .keep_all = TRUE
-  ) %>%
+  distinct(structure_taxonomy_npclassifier_03class, .keep_all = TRUE) %>%
   head(6)
 
 top_chemo_06 <-
@@ -385,9 +383,7 @@ top_chemo_12 <- pairs_metadata %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structure_taxonomy_npclassifier_03class,
-    .keep_all = TRUE
-  ) %>%
+  distinct(structure_taxonomy_npclassifier_03class, .keep_all = TRUE) %>%
   head(12)
 
 top_chemo_12 <-
@@ -432,9 +428,7 @@ top_chemo_24 <- pairs_metadata %>%
   add_count() %>%
   ungroup() %>%
   arrange(desc(n)) %>%
-  distinct(structure_taxonomy_npclassifier_03class,
-    .keep_all = TRUE
-  ) %>%
+  distinct(structure_taxonomy_npclassifier_03class, .keep_all = TRUE) %>%
   head(24)
 
 top_chemo_24 <-

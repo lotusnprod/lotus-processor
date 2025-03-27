@@ -13,10 +13,7 @@ library(tidyr)
 #'
 #' @examples
 getBestReference <- function(data, referenceType, method = "osa") {
-  referenceColumnName <- paste("referenceOriginal",
-    referenceType,
-    sep = "_"
-  )
+  referenceColumnName <- paste("referenceOriginal", referenceType, sep = "_")
 
   tableIntial <- data %>%
     mutate(level = row.names(.))
@@ -66,7 +63,8 @@ getBestReference <- function(data, referenceType, method = "osa") {
       cols = referenceTranslatedAuthor,
       keep_empty = TRUE
     ) %>%
-    distinct_at(.,
+    distinct_at(
+      .,
       .vars = (c(
         1,
         4
@@ -85,10 +83,7 @@ getBestReference <- function(data, referenceType, method = "osa") {
     ) %>%
     group_by_at(1) %>%
     arrange(referenceTranslationScoreDistance) %>%
-    distinct_at(.,
-      .vars = (1),
-      .keep_all = TRUE
-    ) %>%
+    distinct_at(., .vars = (1), .keep_all = TRUE) %>%
     ungroup() %>%
     mutate_all(as.character)
 

@@ -67,8 +67,10 @@ platinum_pairs <-
 
 log_debug(
   "Of which",
-  nrow(platinum_pairs |>
-    dplyr::filter(manual_validation == "Y")),
+  nrow(
+    platinum_pairs |>
+      dplyr::filter(manual_validation == "Y")
+  ),
   "manually validated."
 )
 
@@ -83,10 +85,7 @@ data_organism <-
       "organismCleaned" = "names_pipe_separated"
     )
   ) |>
-  splitstackshape::cSplit("organismCleaned",
-    sep = "|",
-    direction = "long"
-  ) |>
+  splitstackshape::cSplit("organismCleaned", sep = "|", direction = "long") |>
   dplyr::distinct()
 
 data_structures <-
@@ -104,11 +103,13 @@ data_structures <-
     )
   ) |>
   dplyr::distinct() |>
-  dplyr::mutate(structureValue = if_else(
-    condition = !is.na(isomericSmiles),
-    true = isomericSmiles,
-    false = canonicalSmiles
-  ))
+  dplyr::mutate(
+    structureValue = if_else(
+      condition = !is.na(isomericSmiles),
+      true = isomericSmiles,
+      false = canonicalSmiles
+    )
+  )
 
 data_structures_translation <-
   readr::read_delim(
@@ -149,7 +150,8 @@ data_references <-
       "referenceCleanedTitle" = "title",
     )
   ) |>
-  splitstackshape::cSplit("referenceCleanedDoi",
+  splitstackshape::cSplit(
+    "referenceCleanedDoi",
     sep = "|",
     direction = "long"
   ) |>
@@ -212,7 +214,9 @@ platinum_no_wd <-
   ) |>
   dplyr::left_join(platinum_pairs_raw) |>
   ## subspecies not pushed to WD yet
-  dplyr::filter(!grepl(pattern = "subspecies", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(
+    !grepl(pattern = "subspecies", x = organismCleaned_dbTaxoTaxonRanks)
+  ) |>
   dplyr::filter(organismCleaned %in% data_organism$organismCleaned)
 
 log_debug(

@@ -39,7 +39,9 @@ num <- as.integer(seq(
 
 log_debug("ensuring directories exist")
 create_dir(export = pathDataInterimTablesTranslatedReference)
-create_dir_with_rm(export = pathDataInterimTablesTranslatedReferencePublishingDetailsFolder)
+create_dir_with_rm(
+  export = pathDataInterimTablesTranslatedReferencePublishingDetailsFolder
+)
 
 for (i in num) {
   inpath <-
@@ -78,7 +80,9 @@ for (i in num) {
 
   log_debug("submitting to crossRef")
   if (nrow(dataPublishingDetails) != 0) {
-    reflist <- getref_noLimit_publishingDetails(xs = dataPublishingDetails$referenceOriginal_publishingDetails)
+    reflist <- getref_noLimit_publishingDetails(
+      xs = dataPublishingDetails$referenceOriginal_publishingDetails
+    )
     log_debug("treating results, may take a while if full mode")
     dataPublishingDetails2 <-
       getAllReferences(

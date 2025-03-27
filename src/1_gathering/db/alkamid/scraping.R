@@ -22,10 +22,14 @@ getalkamid <- function(X) {
   html <- read_html(url_id) %>% html_element("body")
   data <-
     html %>%
-    html_element(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div") %>%
+    html_element(
+      xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div"
+    ) %>%
     html_text()
   ref <- html %>%
-    html_element(xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div[8]/div[2]/table") %>%
+    html_element(
+      xpath = "/html/body/div[2]/div/div[2]/div/div[2]/div/div[2]/div/div/div/div/div/div/div/div[8]/div[2]/table"
+    ) %>%
     html_table() %>%
     mutate_all(as.character)
   list(data = data, ref = ref)

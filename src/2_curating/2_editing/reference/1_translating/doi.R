@@ -91,7 +91,9 @@ if (nrow(dataDoi) != 0) {
       as.character(ifelse(
         test = !is.na(reflistDoi[[i]]),
         yes = ifelse(
-          test = !is.null(reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1]),
+          test = !is.null(reflistDoi[[i]][["data"]][["author"]][[1]][[
+            "family"
+          ]][1]),
           yes = reflistDoi[[i]][["data"]][["author"]][[1]][["family"]][1],
           no = NA
         ),

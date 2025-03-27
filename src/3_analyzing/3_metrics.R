@@ -105,10 +105,7 @@ data_organism <-
       "organismCleaned" = "names_pipe_separated"
     )
   ) |>
-  splitstackshape::cSplit("organismCleaned",
-    sep = "|",
-    direction = "long"
-  ) |>
+  splitstackshape::cSplit("organismCleaned", sep = "|", direction = "long") |>
   dplyr::distinct()
 
 data_structures <-
@@ -126,11 +123,13 @@ data_structures <-
     )
   ) |>
   dplyr::distinct() |>
-  dplyr::mutate(structureValue = if_else(
-    condition = !is.na(isomericSmiles),
-    true = isomericSmiles,
-    false = canonicalSmiles
-  ))
+  dplyr::mutate(
+    structureValue = if_else(
+      condition = !is.na(isomericSmiles),
+      true = isomericSmiles,
+      false = canonicalSmiles
+    )
+  )
 
 data_structures_translation <-
   readr::read_delim(
@@ -149,7 +148,8 @@ data_references <-
       "referenceCleanedTitle" = "title",
     )
   ) |>
-  splitstackshape::cSplit("referenceCleanedDoi",
+  splitstackshape::cSplit(
+    "referenceCleanedDoi",
     sep = "|",
     direction = "long"
   ) |>
@@ -216,11 +216,13 @@ dates <- timestamps$X1 |>
     ),
     timestamp = as.character.POSIXt(X2)
   ) |>
-  dplyr::mutate(database = gsub(
-    pattern = "/.*",
-    replacement = "",
-    x = database
-  )) |>
+  dplyr::mutate(
+    database = gsub(
+      pattern = "/.*",
+      replacement = "",
+      x = database
+    )
+  ) |>
   dplyr::arrange(dplyr::desc(timestamp)) |>
   dplyr::distinct(database, .keep_all = TRUE) |>
   dplyr::select(database, timestamp)
@@ -284,17 +286,19 @@ dataset <- dataset %>%
   dplyr::mutate_all(~ replace(., is.na(.), "-"))
 
 pairsOpenDb_3D <- openDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchi)) |>
-  dplyr::distinct(structureCleanedInchi,
-    organismCleaned,
-    .keep_all = TRUE
-  )
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleanedInchi)
+  ) |>
+  dplyr::distinct(structureCleanedInchi, organismCleaned, .keep_all = TRUE)
 
 pairsOpenDb_2D <- openDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleaned_inchikey2D)) |>
-  dplyr::distinct(structureCleaned_inchikey2D,
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleaned_inchikey2D)
+  ) |>
+  dplyr::distinct(
+    structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   )
@@ -302,47 +306,49 @@ pairsOpenDb_2D <- openDb |>
 "%ni%" <- Negate("%in%")
 
 pairsOutsideClosed_3D <- inhouseDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchi)) |>
-  dplyr::distinct(structureCleanedInchi,
-    organismCleaned,
-    .keep_all = TRUE
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleanedInchi)
   ) |>
+  dplyr::distinct(structureCleanedInchi, organismCleaned, .keep_all = TRUE) |>
   dplyr::filter(database %ni% forbidden_export)
 
 pairsOutsideClosed_2D <- inhouseDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleaned_inchikey2D)) |>
-  dplyr::distinct(structureCleaned_inchikey2D,
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleaned_inchikey2D)
+  ) |>
+  dplyr::distinct(
+    structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   ) |>
   dplyr::filter(database %ni% forbidden_export)
 
 pairsFull_3D <- inhouseDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleanedInchi)) |>
-  dplyr::distinct(structureCleanedInchi,
-    organismCleaned,
-    .keep_all = TRUE
-  )
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleanedInchi)
+  ) |>
+  dplyr::distinct(structureCleanedInchi, organismCleaned, .keep_all = TRUE)
 
 pairsFull_2D <- inhouseDb |>
-  dplyr::filter(!is.na(organismCleaned) &
-    !is.na(structureCleaned_inchikey2D)) |>
-  dplyr::distinct(structureCleaned_inchikey2D,
+  dplyr::filter(
+    !is.na(organismCleaned) &
+      !is.na(structureCleaned_inchikey2D)
+  ) |>
+  dplyr::distinct(
+    structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   )
 
 pairsClosed_3D <- closedDb |>
-  dplyr::distinct(structureCleanedInchi,
-    organismCleaned,
-    .keep_all = TRUE
-  )
+  dplyr::distinct(structureCleanedInchi, organismCleaned, .keep_all = TRUE)
 
 pairsClosed_2D <- closedDb |>
-  dplyr::distinct(structureCleaned_inchikey2D,
+  dplyr::distinct(
+    structureCleaned_inchikey2D,
     organismCleaned,
     .keep_all = TRUE
   )
@@ -382,7 +388,12 @@ closedDbOrganism <- closedDb |>
   dplyr::filter(!is.na(organismCleaned)) |>
   dplyr::distinct(organismCleaned)
 
-log_debug(paste("closed:", nrow(closedDbOrganism), "distinct organisms", sep = " "))
+log_debug(paste(
+  "closed:",
+  nrow(closedDbOrganism),
+  "distinct organisms",
+  sep = " "
+))
 
 ## structures
 log_debug("analyzing unique structures (2D) per db")
@@ -444,14 +455,20 @@ log_debug(paste(
 ))
 
 structuresPerOrganism_3D <- pairsOpenDb_3D |>
-  dplyr::filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "species",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::filter(grepl(pattern = " ", x = organismCleaned)) |>
   dplyr::distinct(organismCleaned, structureCleanedInchi) |>
   dplyr::group_by(organismCleaned) |>
   dplyr::count()
 
 structuresPerOrganism_2D <- pairsOpenDb_2D |>
-  dplyr::filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "species",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::filter(grepl(pattern = " ", x = organismCleaned)) |>
   dplyr::distinct(organismCleaned, structureCleaned_inchikey2D) |>
   dplyr::group_by(organismCleaned) |>
@@ -492,14 +509,20 @@ tableStructures_2D <-
 colnames(tableStructures_2D)[1] <- "organisms"
 
 organismsPerStructure_3D <- pairsOpenDb_3D |>
-  dplyr::filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "species",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::filter(grepl(pattern = " ", x = organismCleaned)) |>
   dplyr::distinct(organismCleaned, structureCleanedInchi) |>
   dplyr::group_by(structureCleanedInchi) |>
   dplyr::count()
 
 organismsPerStructure_2D <- pairsOpenDb_2D %>%
-  dplyr::filter(grepl(pattern = "species", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "species",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::filter(grepl(pattern = " ", x = organismCleaned)) |>
   dplyr::distinct(organismCleaned, structureCleaned_inchikey2D) |>
   dplyr::group_by(structureCleaned_inchikey2D) |>
@@ -561,8 +584,10 @@ cat(
     nrow(openDbOrganism),
     "unique organisms,\n",
     "originating from \n",
-    nrow(pairsOpenDb_2D |>
-      dplyr::distinct(database)),
+    nrow(
+      pairsOpenDb_2D |>
+        dplyr::distinct(database)
+    ),
     "initial open databases. \n",
     "\n",
     "Among 2D structures, \n",

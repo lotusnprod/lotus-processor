@@ -29,11 +29,13 @@ data_selected <- data_original |>
   splitstackshape::cSplit("reference", sep = "§") |>
   splitstackshape::cSplit("reference_1", sep = ",", direction = "long") |>
   splitstackshape::cSplit("reference_2", sep = ".", fixed = TRUE) |>
-  dplyr::mutate(reference_authors = gsub(
-    pattern = "[0-9]\\) ",
-    replacement = "",
-    x = reference_2_01
-  )) |>
+  dplyr::mutate(
+    reference_authors = gsub(
+      pattern = "[0-9]\\) ",
+      replacement = "",
+      x = reference_2_01
+    )
+  ) |>
   dplyr::select(
     uniqueid,
     structure_name = name,

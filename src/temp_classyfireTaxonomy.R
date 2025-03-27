@@ -26,7 +26,9 @@ library(tidyr)
 #   )
 
 classyfire_json <-
-  jsonlite::fromJSON(txt = "../data/external/taxonomySource/structure/classyfire/tax_nodes.json")
+  jsonlite::fromJSON(
+    txt = "../data/external/taxonomySource/structure/classyfire/tax_nodes.json"
+  )
 
 classyfire_direct_parent <-
   readr::read_delim(
@@ -34,9 +36,7 @@ classyfire_direct_parent <-
     delim = "\t",
     locale = locales
   ) |>
-  dplyr::distinct(inchikey,
-    chemontId = directParent
-  )
+  dplyr::distinct(inchikey, chemontId = directParent)
 
 # classyfire_alternative_parent <-
 #   readr::read_delim(file = "../data/interim/dictionaries/structure/classyfire/alternative_parents.tsv.gz",
@@ -140,7 +140,8 @@ superclass <- dplyr::left_join(
     name_02superclass
   )
 
-class <- dplyr::left_join(parents,
+class <- dplyr::left_join(
+  parents,
   classyfire_taxonomy_long,
   by = c("parent_chemont_id" = "chemont_id_03class")
 ) |>
@@ -284,13 +285,19 @@ classyfire_full <- dplyr::bind_rows(
   parent_09,
   parent_10
 ) %>%
-  mutate(chemont_id = apply(.[, grepl(
-    pattern = "chemont_id",
-    x = colnames(.),
-    fixed = TRUE
-  )], 1, function(x) {
-    tail(na.omit(x), 1)
-  })) %>%
+  mutate(
+    chemont_id = apply(
+      .[, grepl(
+        pattern = "chemont_id",
+        x = colnames(.),
+        fixed = TRUE
+      )],
+      1,
+      function(x) {
+        tail(na.omit(x), 1)
+      }
+    )
+  ) %>%
   dplyr::select(
     chemont_id,
     starts_with("name")
@@ -307,22 +314,27 @@ classy_temp <-
     classyfire_taxonomy_wide,
     by = c("chemontId" = "chemont_id")
   ) |>
-  dplyr::mutate(chemont_id = gsub(
-    pattern = "CHEMONTID:",
-    replacement = "",
-    x = chemontId,
-    fixed = TRUE
-  )) |>
+  dplyr::mutate(
+    chemont_id = gsub(
+      pattern = "CHEMONTID:",
+      replacement = "",
+      x = chemontId,
+      fixed = TRUE
+    )
+  ) |>
   dplyr::select(
     inchikey,
     chemont_id,
-    dplyr::everything(), -chemontId
+    dplyr::everything(),
+    -chemontId
   )
 
 chemical_taxonomy_2 <<- classy_temp %>%
-  dplyr::mutate(direct_parent = apply(.[, 3:13], 1, function(x) {
-    tail(na.omit(x), 1)
-  })) %>%
+  dplyr::mutate(
+    direct_parent = apply(.[, 3:13], 1, function(x) {
+      tail(na.omit(x), 1)
+    })
+  ) %>%
   dplyr::distinct(
     structure_inchikey = inchikey,
     structure_taxonomy_classyfire_chemontid = chemont_id,

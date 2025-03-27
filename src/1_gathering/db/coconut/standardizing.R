@@ -113,10 +113,13 @@ data_hard_harborne_treated <- data_hard_harborne |>
   dplyr::group_by(smiles) |>
   dplyr::add_count() |>
   dplyr::ungroup() |>
-  dplyr::filter(n == 1 |
-    biologicalsource %ni% c("plants", "marine", "fungi")) |>
+  dplyr::filter(
+    n == 1 |
+      biologicalsource %ni% c("plants", "marine", "fungi")
+  ) |>
   dplyr::select(-n) |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = ", ",
     direction = "long",
     fixed = TRUE
@@ -159,10 +162,13 @@ data_nosplit_treated <- data_nosplit |>
   dplyr::group_by(smiles) |>
   dplyr::add_count() |>
   dplyr::ungroup() |>
-  dplyr::filter(n == 1 |
-    biologicalsource %ni% c("plants", "marine", "fungi")) |>
+  dplyr::filter(
+    n == 1 |
+      biologicalsource %ni% c("plants", "marine", "fungi")
+  ) |>
   dplyr::select(-n) |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = ", ",
     direction = "long",
     fixed = TRUE
@@ -172,14 +178,8 @@ data_nosplit_treated <- data_nosplit |>
   data.frame()
 
 data_easy_treated <- data_easy |>
-  splitstackshape::cSplit("biologicalsource",
-    sep = ", ",
-    fixed = TRUE
-  ) %>%
-  splitstackshape::cSplit("reference",
-    sep = ", ",
-    fixed = TRUE
-  ) %>%
+  splitstackshape::cSplit("biologicalsource", sep = ", ", fixed = TRUE) %>%
+  splitstackshape::cSplit("reference", sep = ", ", fixed = TRUE) %>%
   dplyr::mutate_all(as.character) %>%
   tidyr::pivot_longer(
     cols = 7:(ncol(.)),
@@ -193,8 +193,10 @@ data_easy_treated <- data_easy |>
   dplyr::group_by(inchi) %>%
   dplyr::add_count() %>%
   dplyr::ungroup() %>%
-  dplyr::filter(n == 1 |
-    biologicalsource %ni% c("plants", "marine", "fungi")) %>%
+  dplyr::filter(
+    n == 1 |
+      biologicalsource %ni% c("plants", "marine", "fungi")
+  ) %>%
   dplyr::select(-n) %>%
   dplyr::filter(stringr::str_length(string = reference) >= 8) %>%
   dplyr::select(-nrefs, -norganisms, -number) %>%
@@ -210,10 +212,13 @@ data_hard_treated <- data_hard_2 %>%
   dplyr::group_by(smiles) |>
   dplyr::add_count() |>
   dplyr::ungroup() |>
-  dplyr::filter(n == 1 |
-    biologicalsource %ni% c("plants", "marine", "fungi")) |>
+  dplyr::filter(
+    n == 1 |
+      biologicalsource %ni% c("plants", "marine", "fungi")
+  ) |>
   dplyr::select(-n) |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = ", ",
     direction = "long",
     fixed = TRUE
@@ -251,12 +256,18 @@ data_corrected <- data_treated |>
     ),
     reference_split = ifelse(
       test = n >= 20,
-      yes = stringr::str_extract(string = reference_split, pattern = "^[A-Z].*"),
+      yes = stringr::str_extract(
+        string = reference_split,
+        pattern = "^[A-Z].*"
+      ),
       no = NA
     ),
     reference_authors = ifelse(
       test = n < 20,
-      yes = stringr::str_extract(string = reference_authors, pattern = "^[A-Z].*"),
+      yes = stringr::str_extract(
+        string = reference_authors,
+        pattern = "^[A-Z].*"
+      ),
       no = NA
     )
   ) |>
@@ -324,7 +335,8 @@ findCapitals_3 <-
   ) |>
   dplyr::filter(capitals_x > capitals_y)
 
-data_corrected_capitals <- dplyr::left_join(data_corrected,
+data_corrected_capitals <- dplyr::left_join(
+  data_corrected,
   findCapitals_3,
   by = c("biologicalsource" = "x")
 ) |>
@@ -336,11 +348,13 @@ data_corrected_capitals <- dplyr::left_join(data_corrected,
     structure_name = name,
     dplyr::everything()
   ) |>
-  dplyr::filter(!grepl(
-    pattern = "$",
-    x = organism_clean,
-    fixed = TRUE
-  ))
+  dplyr::filter(
+    !grepl(
+      pattern = "$",
+      x = organism_clean,
+      fixed = TRUE
+    )
+  )
 
 # standardizing
 data_standard <-

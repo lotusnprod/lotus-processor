@@ -16,7 +16,9 @@ if (mode == "full") {
   ##  files
   ### common names from PhenolExplorer
   commonSciPhe <-
-    readr::read_delim(file = pathDataExternalTranslationSourceCommonPhenolexplorer) |>
+    readr::read_delim(
+      file = pathDataExternalTranslationSourceCommonPhenolexplorer
+    ) |>
     dplyr::select(
       vernacularName = name,
       canonicalName = food_source_scientific_name
@@ -36,7 +38,9 @@ if (mode == "full") {
 
   ### common names from DrDuke
   commonDuk <-
-    readr::read_delim(file = pathDataExternalTranslationSourceCommonDrdukeCommon) |>
+    readr::read_delim(
+      file = pathDataExternalTranslationSourceCommonDrdukeCommon
+    ) |>
     dplyr::select(
       vernacularName = CNNAM,
       FNFNUM
@@ -44,10 +48,10 @@ if (mode == "full") {
 
   ### scientific names from DrDuke
   sciDuk <-
-    readr::read_delim(file = pathDataExternalTranslationSourceCommonDrdukeScientific) |>
-    dplyr::select(FNFNUM,
-      canonicalName = TAXON
-    )
+    readr::read_delim(
+      file = pathDataExternalTranslationSourceCommonDrdukeScientific
+    ) |>
+    dplyr::select(FNFNUM, canonicalName = TAXON)
 
   ## forcing organisms in test file to be in sampled dic
   test_organisms <- readr::read_delim(
@@ -75,10 +79,12 @@ if (mode == "full") {
       genericName,
       specificEpithet
     ) |>
-    dplyr::filter(!grepl(
-      pattern = "\\?",
-      x = canonicalName
-    ))
+    dplyr::filter(
+      !grepl(
+        pattern = "\\?",
+        x = canonicalName
+      )
+    )
 
   #### taxa
   vernacular <- readr::read_delim(
@@ -92,10 +98,12 @@ if (mode == "full") {
       taxonID,
       vernacularName
     ) |>
-    dplyr::filter(!grepl(
-      pattern = "\\?",
-      x = vernacularName
-    ))
+    dplyr::filter(
+      !grepl(
+        pattern = "\\?",
+        x = vernacularName
+      )
+    )
 
   ### manually subtracted entries
   manualSubtraction <-
@@ -277,17 +285,23 @@ if (mode == "full") {
 
   # removing approximative additions of specific names
   commonSci <- commonSci |>
-    dplyr::filter(vernacularName != stringr::word(
-      string = canonicalName,
-      start = 1
-    ))
+    dplyr::filter(
+      vernacularName !=
+        stringr::word(
+          string = canonicalName,
+          start = 1
+        )
+    )
 
   ## explanation
   explanation <- commonSci |>
-    dplyr::filter(vernacularName == stringr::word(
-      string = canonicalName,
-      start = 1
-    ))
+    dplyr::filter(
+      vernacularName ==
+        stringr::word(
+          string = canonicalName,
+          start = 1
+        )
+    )
 
   # filtering only results with canonical name
   commonSci$canonicalName <- y_as_na(
@@ -364,27 +378,25 @@ if (mode == "full") {
     dplyr::filter(specificRatio > 0.5) |>
     dplyr::arrange(dplyr::desc(specificRatio)) |>
     dplyr::distinct(vernacularName, .keep_all = TRUE) |>
-    dplyr::mutate(newCanonicalName = paste(canonicalName_1,
-      canonicalName_2,
-      sep = " "
-    )) |>
-    dplyr::select(vernacularName,
-      canonicalName = newCanonicalName
+    dplyr::mutate(
+      newCanonicalName = paste(canonicalName_1, canonicalName_2, sep = " ")
     ) |>
+    dplyr::select(vernacularName, canonicalName = newCanonicalName) |>
     dplyr::arrange(vernacularName)
 
   ## generic name matching
-  commonSci_5 <- dplyr::anti_join(commonSci_3,
+  commonSci_5 <- dplyr::anti_join(
+    commonSci_3,
     commonSci_4,
     by = "vernacularName"
   ) |>
-    dplyr::filter(specificRatio <= 0.5 &
-      genericRatio > 0.5) |>
+    dplyr::filter(
+      specificRatio <= 0.5 &
+        genericRatio > 0.5
+    ) |>
     dplyr::arrange(dplyr::desc(genericRatio)) |>
     dplyr::distinct(vernacularName, .keep_all = TRUE) |>
-    dplyr::select(vernacularName,
-      canonicalName = canonicalName_1
-    ) |>
+    dplyr::select(vernacularName, canonicalName = canonicalName_1) |>
     dplyr::arrange(vernacularName)
 
   # joining again cleaned results
@@ -434,29 +446,37 @@ if (mode == "full") {
     )
 
   common2Sci <- common2Sci |>
-    dplyr::mutate(vernacularName = gsub(
-      pattern = "\\[.*\\]",
-      replacement = "",
-      x = vernacularName
-    )) |>
-    dplyr::mutate(vernacularName = gsub(
-      pattern = "\\[",
-      replacement = "",
-      x = vernacularName
-    )) |>
-    dplyr::mutate(vernacularName = gsub(
-      pattern = "\\]",
-      replacement = "",
-      x = vernacularName
-    ))
+    dplyr::mutate(
+      vernacularName = gsub(
+        pattern = "\\[.*\\]",
+        replacement = "",
+        x = vernacularName
+      )
+    ) |>
+    dplyr::mutate(
+      vernacularName = gsub(
+        pattern = "\\[",
+        replacement = "",
+        x = vernacularName
+      )
+    ) |>
+    dplyr::mutate(
+      vernacularName = gsub(
+        pattern = "\\]",
+        replacement = "",
+        x = vernacularName
+      )
+    )
 
   ## New in GBIF backbone
   common2Sci <- common2Sci |>
-    dplyr::filter(!grepl(
-      pattern = "| ",
-      x = vernacularName,
-      fixed = TRUE
-    ))
+    dplyr::filter(
+      !grepl(
+        pattern = "| ",
+        x = vernacularName,
+        fixed = TRUE
+      )
+    )
 
   ## sampling rows for test mode
   "%ni%" <- Negate("%in%")

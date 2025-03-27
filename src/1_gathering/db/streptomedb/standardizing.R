@@ -17,7 +17,8 @@ data_original <-
 
 ## selecting
 data_selected <- data_original |>
-  dplyr::select(uniqueid,
+  dplyr::select(
+    uniqueid,
     name,
     smiles,
     pubchem,

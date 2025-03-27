@@ -46,20 +46,24 @@ taxo_cleaning_auto <- function(dfsel) {
     ungroup() %>%
     filter(ratio > 0.1 | is.na(organism_6_genus)) %>%
     select(-n, -m, -ratio) %>%
-    mutate(organismDetected_1 = word(
-      string = organismDetected,
-      start = 1,
-      end = 1
-    )) %>%
+    mutate(
+      organismDetected_1 = word(
+        string = organismDetected,
+        start = 1,
+        end = 1
+      )
+    ) %>%
     group_by(organismDbTaxo, organismDetected_1, organism_1_kingdom) %>% # intraDB consistency complex (Echinacea example)
     add_count() %>%
     group_by(organismDbTaxo, organismDetected_1) %>%
     add_count(name = "m") %>%
     mutate(ratio = n / m) %>%
     ungroup() %>%
-    filter((ratio > 0.5 |
-      is.na(organism_1_kingdom)) |
-      str_count(string = organismDetected, pattern = "\\b") > 2) %>%
+    filter(
+      (ratio > 0.5 |
+        is.na(organism_1_kingdom)) |
+        str_count(string = organismDetected, pattern = "\\b") > 2
+    ) %>%
     select(-n, -m, -ratio, -organismDetected_1) %>%
     group_by(organismDetected, organism_5_family, organism_6_genus) %>% # interDB consistency
     add_count() %>%
@@ -131,13 +135,19 @@ taxo_cleaning_auto <- function(dfsel) {
     group_by(organismType, organismValue) %>%
     fill(organism_1_kingdom, .direction = "downup") %>%
     ungroup() %>%
-    mutate(organismCleanedBis = apply(.[, grepl(
-      pattern = "organism_",
-      x = colnames(.),
-      fixed = TRUE
-    )], 1, function(x) {
-      tail(na.omit(x), 1)
-    }))
+    mutate(
+      organismCleanedBis = apply(
+        .[, grepl(
+          pattern = "organism_",
+          x = colnames(.),
+          fixed = TRUE
+        )],
+        1,
+        function(x) {
+          tail(na.omit(x), 1)
+        }
+      )
+    )
 
   if (nrow(df4) != 0) {
     df5 <- df4 %>%

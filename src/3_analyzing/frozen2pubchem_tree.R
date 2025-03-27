@@ -16,18 +16,27 @@ library(tidyr)
 LIMIT <- 999999
 options(max.print = LIMIT)
 
-lotus <- readr::read_delim(file = file.path(
-  pathDataProcessed,
-  pathLastFrozen
-))
+lotus <- readr::read_delim(
+  file = file.path(
+    pathDataProcessed,
+    pathLastFrozen
+  )
+)
 
 #' since PubChem matching is based on NCBI taxonomy
-organisms_ids <- readr::read_delim(file = pathDataInterimDictionariesOrganismMetadata) |>
+organisms_ids <- readr::read_delim(
+  file = pathDataInterimDictionariesOrganismMetadata
+) |>
   dplyr::filter(organismCleaned_dbTaxo == "NCBI") |>
-  dplyr::distinct(organism_name = organismCleaned, organism_ncbi_id = organismCleaned_id)
+  dplyr::distinct(
+    organism_name = organismCleaned,
+    organism_ncbi_id = organismCleaned_id
+  )
 
 classified <-
-  readr::read_delim(file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+  readr::read_delim(
+    file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+  )
 
 structures_classified <- lotus |>
   dplyr::select(
@@ -64,30 +73,36 @@ structures_cleaned <- structures_classified |>
     chemical_superclass = superclass,
     chemical_class = class
   ) |>
-  dplyr::mutate(chemical_pathway = dplyr::if_else(
-    condition = is.na(chemical_pathway),
-    true = "Not classified",
-    false = chemical_pathway
-  )) |>
-  dplyr::mutate(chemical_superclass = dplyr::if_else(
-    condition = is.na(chemical_superclass),
-    true = dplyr::if_else(
-      condition = chemical_pathway == "Not classified",
-      true = chemical_superclass,
-      false = "Not classified"
-    ),
-    false = chemical_superclass
-  )) |>
-  dplyr::mutate(chemical_class = dplyr::if_else(
-    condition = is.na(chemical_class),
-    true = dplyr::if_else(
-      condition = chemical_superclass == "Not classified" |
-        is.na(chemical_superclass),
-      true = chemical_class,
-      false = "Not classified"
-    ),
-    false = chemical_class
-  )) |>
+  dplyr::mutate(
+    chemical_pathway = dplyr::if_else(
+      condition = is.na(chemical_pathway),
+      true = "Not classified",
+      false = chemical_pathway
+    )
+  ) |>
+  dplyr::mutate(
+    chemical_superclass = dplyr::if_else(
+      condition = is.na(chemical_superclass),
+      true = dplyr::if_else(
+        condition = chemical_pathway == "Not classified",
+        true = chemical_superclass,
+        false = "Not classified"
+      ),
+      false = chemical_superclass
+    )
+  ) |>
+  dplyr::mutate(
+    chemical_class = dplyr::if_else(
+      condition = is.na(chemical_class),
+      true = dplyr::if_else(
+        condition = chemical_superclass == "Not classified" |
+          is.na(chemical_superclass),
+        true = chemical_class,
+        false = "Not classified"
+      ),
+      false = chemical_class
+    )
+  ) |>
   data.frame()
 
 organisms_cleaned <- organisms_classified |>
@@ -148,16 +163,20 @@ tree_bio_list <- data.tree::ToListExplicit(x = tree_bio_txt)[2]
 
 tree_bio_json <- jsonlite::toJSON(tree_bio_list)
 
-sink(file = file.path(
-  pathDataProcessed,
-  pathLastTreeChemo
-))
+sink(
+  file = file.path(
+    pathDataProcessed,
+    pathLastTreeChemo
+  )
+)
 tree_chem_json
 sink()
 
-sink(file = file.path(
-  pathDataProcessed,
-  pathLastTreeBio
-))
+sink(
+  file = file.path(
+    pathDataProcessed,
+    pathLastTreeBio
+  )
+)
 tree_bio_json
 sink()

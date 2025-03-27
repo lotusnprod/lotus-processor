@@ -143,19 +143,22 @@ sunk <- ready_2 %>%
     validation
   ) %>%
   count(name = "count") %>%
-  filter(substr(
-    x = gsub(
-      pattern = ".*_",
-      replacement = "",
-      x = cleanedType
-    ),
-    start = 1,
-    stop = 8
-  ) %in% substr(
-    x = originalType,
-    start = 1,
-    stop = 8
-  )) %>%
+  filter(
+    substr(
+      x = gsub(
+        pattern = ".*_",
+        replacement = "",
+        x = cleanedType
+      ),
+      start = 1,
+      stop = 8
+    ) %in%
+      substr(
+        x = originalType,
+        start = 1,
+        stop = 8
+      )
+  ) %>%
   ungroup() %>%
   arrange(
     desc(count),

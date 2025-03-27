@@ -47,22 +47,23 @@ data_manipulated <- data_selected %>%
   ) %>%
   mutate(reference = sub(pattern = ":", replacement = "§", reference)) %>%
   cSplit("reference", sep = "§") %>%
-  cSplit("reference_2",
-    sep = "PMID",
-    fixed = TRUE,
-    stripWhite = FALSE
-  ) %>%
+  cSplit("reference_2", sep = "PMID", fixed = TRUE, stripWhite = FALSE) %>%
   mutate_all(as.character) %>%
   mutate(
     reference_authors = reference_1,
     reference_split = reference_2_1,
-    reference_pubmed = str_extract(string = reference_2_2, pattern = "[0-9]{6,9}")
+    reference_pubmed = str_extract(
+      string = reference_2_2,
+      pattern = "[0-9]{6,9}"
+    )
   ) %>%
-  mutate(reference_split = ifelse(
-    test = !grepl(pattern = "[A-Za-z]", x = reference_split),
-    yes = reference_authors,
-    no = reference_split
-  )) %>%
+  mutate(
+    reference_split = ifelse(
+      test = !grepl(pattern = "[A-Za-z]", x = reference_split),
+      yes = reference_authors,
+      no = reference_split
+    )
+  ) %>%
   mutate(
     reference_authors = ifelse(
       test = reference_authors == reference_split,

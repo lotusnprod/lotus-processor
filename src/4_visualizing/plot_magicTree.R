@@ -19,10 +19,12 @@ source(file = "paths.R")
 source(file = "r/colors.R")
 source(file = "r/tree_presence_absence.R")
 
-pairs_metadata <- read_delim(file = file.path(
-  pathDataProcessed,
-  pathLastFrozen
-)) %>%
+pairs_metadata <- read_delim(
+  file = file.path(
+    pathDataProcessed,
+    pathLastFrozen
+  )
+) %>%
   data.table()
 
 n_min <- 50
@@ -42,7 +44,9 @@ families_matched_restricted <-
   )
 
 ott_in_tree <-
-  ott_id(families_matched_restricted)[is_in_tree(ott_id(families_matched_restricted))]
+  ott_id(families_matched_restricted)[is_in_tree(ott_id(
+    families_matched_restricted
+  ))]
 
 families_restricted <- families_restricted %>%
   filter(organism_taxonomy_06family %in% names(ott_in_tree))
@@ -54,16 +58,18 @@ families_matched_restricted <-
   )
 
 families_matched_restricted <- families_matched_restricted %>%
-  mutate(key = paste(
-    gsub(
-      x = unique_name,
-      pattern = " ",
-      replacement = "_",
-      fixed = TRUE
-    ),
-    paste0("ott", ott_id),
-    sep = "_"
-  ))
+  mutate(
+    key = paste(
+      gsub(
+        x = unique_name,
+        pattern = " ",
+        replacement = "_",
+        fixed = TRUE
+      ),
+      paste0("ott", ott_id),
+      sep = "_"
+    )
+  )
 
 tr_restricted <- tol_induced_subtree(ott_ids = ott_in_tree)
 
@@ -82,12 +88,11 @@ specific_classes <- pairs_metadata %>%
       !is.na(structure_taxonomy_npclassifier_03class)
   ) %>%
   mutate_all(as.character) %>%
-  filter(organism_taxonomy_06family %in% families_matched_restricted$unique_name) %>%
+  filter(
+    organism_taxonomy_06family %in% families_matched_restricted$unique_name
+  ) %>%
   filter(!is.na(structure_taxonomy_npclassifier_03class)) %>%
-  distinct(organism_taxonomy_06family,
-    structure_inchikey,
-    .keep_all = TRUE
-  )
+  distinct(organism_taxonomy_06family, structure_inchikey, .keep_all = TRUE)
 
 specific_classes_n <- specific_classes %>%
   group_by(organism_taxonomy_06family) %>%
@@ -214,10 +219,12 @@ bar_data_old <- specific_classes_old %>%
       structure_taxonomy_npclassifier_01pathway
     )
   ) %>%
-  mutate(class = fct_reorder(
-    structure_taxonomy_npclassifier_03class,
-    !is.na(structure_taxonomy_npclassifier_02superclass)
-  ))
+  mutate(
+    class = fct_reorder(
+      structure_taxonomy_npclassifier_03class,
+      !is.na(structure_taxonomy_npclassifier_02superclass)
+    )
+  )
 
 bar_data_jaccard <- specific_classes_jaccard %>%
   select(
@@ -236,10 +243,12 @@ bar_data_jaccard <- specific_classes_jaccard %>%
       structure_taxonomy_npclassifier_01pathway
     )
   ) %>%
-  mutate(class = fct_reorder(
-    structure_taxonomy_npclassifier_03class,
-    !is.na(structure_taxonomy_npclassifier_02superclass)
-  ))
+  mutate(
+    class = fct_reorder(
+      structure_taxonomy_npclassifier_03class,
+      !is.na(structure_taxonomy_npclassifier_02superclass)
+    )
+  )
 
 bar_data_overlap <- specific_classes_overlap %>%
   select(
@@ -258,10 +267,12 @@ bar_data_overlap <- specific_classes_overlap %>%
       structure_taxonomy_npclassifier_01pathway
     )
   ) %>%
-  mutate(class = fct_reorder(
-    structure_taxonomy_npclassifier_03class,
-    !is.na(structure_taxonomy_npclassifier_02superclass)
-  ))
+  mutate(
+    class = fct_reorder(
+      structure_taxonomy_npclassifier_03class,
+      !is.na(structure_taxonomy_npclassifier_02superclass)
+    )
+  )
 
 info_old <- info %>%
   filter(id %in% bar_data_old$id)
@@ -315,62 +326,76 @@ tr_overlap$tip.label <-
   )
 
 sitosterol_3D <- pairs_metadata %>%
-  mutate(structure_inchikey = ifelse(
-    test = grepl(
-      pattern = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
-      x = structure_inchikey,
-      fixed = TRUE
-    ),
-    yes = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
-    no = NA
-  )) %>%
+  mutate(
+    structure_inchikey = ifelse(
+      test = grepl(
+        pattern = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
+        x = structure_inchikey,
+        fixed = TRUE
+      ),
+      yes = "KZJWDPNRJALLNS-VJSFXXLFSA-N",
+      no = NA
+    )
+  ) %>%
   group_by(organism_taxonomy_06family) %>%
   fill(structure_inchikey, .direction = "downup") %>%
   distinct(organism_taxonomy_06family, structure_inchikey) %>%
-  left_join(families_matched_restricted,
+  left_join(
+    families_matched_restricted,
     .,
     by = c("unique_name" = "organism_taxonomy_06family")
   ) %>%
-  mutate(structure_inchikey = ifelse(
-    test = !is.na(structure_inchikey),
-    yes = structure_inchikey,
-    no = "noSitosterol_3D"
-  )) %>%
-  mutate(key = gsub(
-    pattern = "_.*",
-    replacement = "",
-    x = key
-  )) %>%
+  mutate(
+    structure_inchikey = ifelse(
+      test = !is.na(structure_inchikey),
+      yes = structure_inchikey,
+      no = "noSitosterol_3D"
+    )
+  ) %>%
+  mutate(
+    key = gsub(
+      pattern = "_.*",
+      replacement = "",
+      x = key
+    )
+  ) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
 sitosterol_2D <- pairs_metadata %>%
-  mutate(structure_inchikey = ifelse(
-    test = grepl(
-      pattern = "KZJWDPNRJALLNS",
-      x = structure_inchikey,
-      fixed = TRUE
-    ),
-    yes = "KZJWDPNRJALLNS",
-    no = NA
-  )) %>%
+  mutate(
+    structure_inchikey = ifelse(
+      test = grepl(
+        pattern = "KZJWDPNRJALLNS",
+        x = structure_inchikey,
+        fixed = TRUE
+      ),
+      yes = "KZJWDPNRJALLNS",
+      no = NA
+    )
+  ) %>%
   group_by(organism_taxonomy_06family) %>%
   fill(structure_inchikey, .direction = "downup") %>%
   distinct(organism_taxonomy_06family, structure_inchikey) %>%
-  left_join(families_matched_restricted,
+  left_join(
+    families_matched_restricted,
     .,
     by = c("unique_name" = "organism_taxonomy_06family")
   ) %>%
-  mutate(structure_inchikey = ifelse(
-    test = !is.na(structure_inchikey),
-    yes = structure_inchikey,
-    no = "noSitosterol_2D"
-  )) %>%
-  mutate(key = gsub(
-    pattern = "_.*",
-    replacement = "",
-    x = key
-  )) %>%
+  mutate(
+    structure_inchikey = ifelse(
+      test = !is.na(structure_inchikey),
+      yes = structure_inchikey,
+      no = "noSitosterol_2D"
+    )
+  ) %>%
+  mutate(
+    key = gsub(
+      pattern = "_.*",
+      replacement = "",
+      x = key
+    )
+  ) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
@@ -388,7 +413,8 @@ stigmastanes <- pairs_metadata %>%
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_03class
   ) %>%
-  left_join(families_matched_restricted,
+  left_join(
+    families_matched_restricted,
     .,
     by = c("unique_name" = "organism_taxonomy_06family")
   ) %>%
@@ -399,11 +425,13 @@ stigmastanes <- pairs_metadata %>%
       no = "zNo_stigmastane_steroids"
     )
   ) %>%
-  mutate(key = gsub(
-    pattern = "_.*",
-    replacement = "",
-    x = key
-  )) %>%
+  mutate(
+    key = gsub(
+      pattern = "_.*",
+      replacement = "",
+      x = key
+    )
+  ) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
@@ -421,7 +449,8 @@ steroids <- pairs_metadata %>%
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_02superclass
   ) %>%
-  left_join(families_matched_restricted,
+  left_join(
+    families_matched_restricted,
     .,
     by = c("unique_name" = "organism_taxonomy_06family")
   ) %>%
@@ -432,11 +461,13 @@ steroids <- pairs_metadata %>%
       no = "zNo_steroids"
     )
   ) %>%
-  mutate(key = gsub(
-    pattern = "_.*",
-    replacement = "",
-    x = key
-  )) %>%
+  mutate(
+    key = gsub(
+      pattern = "_.*",
+      replacement = "",
+      x = key
+    )
+  ) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
@@ -454,7 +485,8 @@ terpenoids <- pairs_metadata %>%
     organism_taxonomy_06family,
     structure_taxonomy_npclassifier_01pathway
   ) %>%
-  left_join(families_matched_restricted,
+  left_join(
+    families_matched_restricted,
     .,
     by = c("unique_name" = "organism_taxonomy_06family")
   ) %>%
@@ -465,11 +497,13 @@ terpenoids <- pairs_metadata %>%
       no = "zNo_terpenoids"
     )
   ) %>%
-  mutate(key = gsub(
-    pattern = "_.*",
-    replacement = "",
-    x = key
-  )) %>%
+  mutate(
+    key = gsub(
+      pattern = "_.*",
+      replacement = "",
+      x = key
+    )
+  ) %>%
   relocate(key, .before = search_string) %>%
   data.frame()
 
@@ -490,12 +524,11 @@ p_old <- tree_old %<+%
   geom_fruit(
     data = bar_data_old,
     geom = geom_bar,
-    mapping =
-      aes(
-        y = id,
-        x = q,
-        fill = structure_taxonomy_npclassifier_01pathway
-      ),
+    mapping = aes(
+      y = id,
+      x = q,
+      fill = structure_taxonomy_npclassifier_01pathway
+    ),
     offset = rel(0.2),
     pwidth = rel(1.6),
     orientation = "y",
@@ -572,12 +605,11 @@ p_jaccard <- tree_jaccard %<+%
   geom_fruit(
     data = bar_data_jaccard,
     geom = geom_bar,
-    mapping =
-      aes(
-        y = id,
-        x = q,
-        fill = structure_taxonomy_npclassifier_01pathway
-      ),
+    mapping = aes(
+      y = id,
+      x = q,
+      fill = structure_taxonomy_npclassifier_01pathway
+    ),
     offset = rel(0.2),
     pwidth = rel(1.6),
     orientation = "y",
@@ -654,12 +686,11 @@ p_overlap <- tree_overlap %<+%
   geom_fruit(
     data = bar_data_overlap,
     geom = geom_bar,
-    mapping =
-      aes(
-        y = id,
-        x = q,
-        fill = structure_taxonomy_npclassifier_01pathway
-      ),
+    mapping = aes(
+      y = id,
+      x = q,
+      fill = structure_taxonomy_npclassifier_01pathway
+    ),
     offset = rel(0.2),
     pwidth = rel(1.6),
     orientation = "y",
@@ -726,13 +757,22 @@ r <-
   tree_presence_absence(table = sitosterol_2D, level = "structure_inchikey")
 
 s <-
-  tree_presence_absence(table = stigmastanes, level = "structure_taxonomy_npclassifier_03class")
+  tree_presence_absence(
+    table = stigmastanes,
+    level = "structure_taxonomy_npclassifier_03class"
+  )
 
 t <-
-  tree_presence_absence(table = steroids, level = "structure_taxonomy_npclassifier_02superclass")
+  tree_presence_absence(
+    table = steroids,
+    level = "structure_taxonomy_npclassifier_02superclass"
+  )
 
 u <-
-  tree_presence_absence(table = terpenoids, level = "structure_taxonomy_npclassifier_01pathway")
+  tree_presence_absence(
+    table = terpenoids,
+    level = "structure_taxonomy_npclassifier_01pathway"
+  )
 
 if (mode == "full") {
   create_dir("../res")

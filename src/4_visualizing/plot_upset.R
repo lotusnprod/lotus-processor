@@ -66,8 +66,10 @@ inhouseDb <- bind_rows(closedDb, openDb) %>%
 
 log_debug("counting sub-DBs")
 dbNum <-
-  as.numeric(nrow(inhouseDb %>%
-    distinct(inhouseDb$database)))
+  as.numeric(nrow(
+    inhouseDb %>%
+      distinct(inhouseDb$database)
+  ))
 
 log_debug("drawing upset plot of structures repartition in sub-DBs")
 create_dir("../res")
@@ -168,11 +170,13 @@ inhouseDbMeta <- inhouseDb %>%
     structure_inchikey_2D = structureCleaned_inchikey2D
   ) %>%
   add_metadata() %>%
-  mutate(structure_inchikey_2D = substring(
-    text = structure_inchikey,
-    first = 1,
-    last = 14
-  )) %>%
+  mutate(
+    structure_inchikey_2D = substring(
+      text = structure_inchikey,
+      first = 1,
+      last = 14
+    )
+  ) %>%
   left_join(
     inhouseDb %>%
       distinct(
@@ -227,10 +231,7 @@ inhouseDb_most_structures_2plot_wide <-
     .,
     bio
   ) %>%
-  distinct(structure_inchikey_2D,
-    organism_name,
-    .keep_all = TRUE
-  )
+  distinct(structure_inchikey_2D, organism_name, .keep_all = TRUE)
 
 mostkingdom <- inhouseDb_most_structures_2plot_wide %>%
   filter(!is.na(organism_taxonomy_03phylum)) %>%

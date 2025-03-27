@@ -32,11 +32,13 @@ data_selected <- data_original |>
   )
 
 data_manipulated <- data_selected |>
-  dplyr::mutate(reference_title = gsub(
-    pattern = "\"",
-    replacement = "",
-    x = stringr::str_extract(string = reference, pattern = "\".*\"")
-  )) |>
+  dplyr::mutate(
+    reference_title = gsub(
+      pattern = "\"",
+      replacement = "",
+      x = stringr::str_extract(string = reference, pattern = "\".*\"")
+    )
+  ) |>
   dplyr::mutate(
     reference_authors_1 = ifelse(
       test = !is.na(reference_title),
@@ -58,7 +60,8 @@ data_manipulated <- data_selected |>
       no = reference
     )
   ) |>
-  splitstackshape::cSplit("reference_2",
+  splitstackshape::cSplit(
+    "reference_2",
     sep = "\\.,",
     stripWhite = FALSE,
     fixed = FALSE
@@ -76,8 +79,10 @@ data_manipulated <- data_selected |>
       no = reference_2_1
     )
   ) |>
-  splitstackshape::cSplit("reference_authors_2",
-    sep = "et.al.", stripWhite = FALSE
+  splitstackshape::cSplit(
+    "reference_authors_2",
+    sep = "et.al.",
+    stripWhite = FALSE
   ) |>
   dplyr::mutate_all(as.character) |>
   dplyr::mutate(
@@ -112,18 +117,18 @@ data_manipulated <- data_selected |>
       x = reference_original
     )
   ) |>
-  dplyr::mutate(n = stringr::str_count(
-    string = organism_clean,
-    pattern = "\\S+"
-  )) |>
-  dplyr::mutate(organism_dirty = ifelse(test = n > 2,
-    yes = organism_clean,
-    no = NA
-  )) |>
-  mutate(organism_clean = ifelse(test = n == 2,
-    yes = organism_clean,
-    no = NA
-  )) |>
+  dplyr::mutate(
+    n = stringr::str_count(
+      string = organism_clean,
+      pattern = "\\S+"
+    )
+  ) |>
+  dplyr::mutate(
+    organism_dirty = ifelse(test = n > 2, yes = organism_clean, no = NA)
+  ) |>
+  mutate(
+    organism_clean = ifelse(test = n == 2, yes = organism_clean, no = NA)
+  ) |>
   data.frame()
 
 # standardizing

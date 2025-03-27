@@ -30,7 +30,8 @@ data_selected <- data_original |>
   dplyr::mutate(organism_clean = "Pseudomonas aeruginosa")
 
 data_manipulated <- data_selected |>
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = "Pubmed:",
     fixed = TRUE,
     stripWhite = FALSE
@@ -44,7 +45,8 @@ data_manipulated <- data_selected |>
       no = reference_1
     )
   ) |>
-  splitstackshape::cSplit("reference_2",
+  splitstackshape::cSplit(
+    "reference_2",
     sep = " ",
     fixed = TRUE,
     stripWhite = FALSE

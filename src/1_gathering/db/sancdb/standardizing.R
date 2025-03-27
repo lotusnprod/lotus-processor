@@ -23,22 +23,33 @@ data_original <- readr::read_delim(
 ## function
 internal_clean <- function(df, num, var) {
   colname_1 <-
-    paste("V1", stringr::str_pad(
-      string = num,
-      width = 3,
-      pad = 0
-    ), sep = "_")
+    paste(
+      "V1",
+      stringr::str_pad(
+        string = num,
+        width = 3,
+        pad = 0
+      ),
+      sep = "_"
+    )
   colname_2 <-
-    paste("V1", stringr::str_pad(
-      string = num + 1,
-      width = 3,
-      pad = 0
-    ), sep = "_")
+    paste(
+      "V1",
+      stringr::str_pad(
+        string = num + 1,
+        width = 3,
+        pad = 0
+      ),
+      sep = "_"
+    )
   df1 <- df |>
     dplyr::filter(!!as.name(colname_1) != var)
   df1[, (num + 2):ncol(df)] <- df1[, num:(ncol(df) - 2)]
   df1 <- df1 |>
-    dplyr::mutate(!!as.name(colname_1) := NA_character_, !!as.name(colname_2) := NA_character_, )
+    dplyr::mutate(
+      !!as.name(colname_1) := NA_character_,
+      !!as.name(colname_2) := NA_character_,
+    )
   df2 <- df |>
     dplyr::filter(!!as.name(colname_1) == var)
   df_clean <- df1 |>
@@ -48,25 +59,35 @@ internal_clean <- function(df, num, var) {
 
 int_clean_min <- function(df, num, var) {
   colname_1 <-
-    paste("V1", stringr::str_pad(
-      string = num,
-      width = 3,
-      pad = 0
-    ), sep = "_")
+    paste(
+      "V1",
+      stringr::str_pad(
+        string = num,
+        width = 3,
+        pad = 0
+      ),
+      sep = "_"
+    )
   colname_2 <-
-    paste("V1", stringr::str_pad(
-      string = num + 1,
-      width = 3,
-      pad = 0
-    ), sep = "_")
+    paste(
+      "V1",
+      stringr::str_pad(
+        string = num + 1,
+        width = 3,
+        pad = 0
+      ),
+      sep = "_"
+    )
   df1 <- df |>
     dplyr::filter(!!as.name(colname_1) == var)
   df1[, (num + 1):ncol(df)] <- df1[, num:(ncol(df) - 1)]
   df1 <- df1 |>
     dplyr::mutate(!!as.name(colname_1) := NA_character_)
   df2 <- df |>
-    dplyr::filter(!!as.name(colname_1) != var |
-      !!as.name(colname_2) == var)
+    dplyr::filter(
+      !!as.name(colname_1) != var |
+        !!as.name(colname_2) == var
+    )
   df_clean <- df1 |>
     dplyr::bind_rows(df2)
   return(df_clean)
@@ -74,11 +95,15 @@ int_clean_min <- function(df, num, var) {
 
 int_clean_rev <- function(df, num, var) {
   colname_1 <-
-    paste("V1", stringr::str_pad(
-      string = num,
-      width = 3,
-      pad = 0
-    ), sep = "_")
+    paste(
+      "V1",
+      stringr::str_pad(
+        string = num,
+        width = 3,
+        pad = 0
+      ),
+      sep = "_"
+    )
   df1 <- df |>
     dplyr::filter(!!as.name(colname_1) != var)
   df1[, (num):(ncol(df) - 1)] <- df1[, (num + 1):(ncol(df))]
@@ -257,11 +282,13 @@ SANCDB_clean <- function(dfsel) {
   df98 <-
     int_clean_min(df = df97, num = 111, var = "Compound Uses")
   df99 <- df98 |>
-    dplyr::mutate(V1_112 = ifelse(
-      test = V1_112 == "Compound Uses",
-      yes = NA_character_,
-      no = V1_112
-    ))
+    dplyr::mutate(
+      V1_112 = ifelse(
+        test = V1_112 == "Compound Uses",
+        yes = NA_character_,
+        no = V1_112
+      )
+    )
 
   df_selected <- df99 |>
     dplyr::select(
@@ -306,12 +333,13 @@ SANCDB_clean <- function(dfsel) {
     data.frame() |>
     dplyr::filter(!is.na(value)) |>
     dplyr::filter(grepl(pattern = "^\\([0-9]{4}\\)", x = value)) |>
-    dplyr::mutate(reference = gsub(
-      pattern = "^\\([0-9]{4}\\) ",
-      replacement = "",
-      x = value
-    ))
-
+    dplyr::mutate(
+      reference = gsub(
+        pattern = "^\\([0-9]{4}\\) ",
+        replacement = "",
+        x = value
+      )
+    )
 
   return(df_pivoted)
 }

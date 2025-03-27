@@ -80,12 +80,13 @@ gnfinder_cleaning <- function(num, organismCol) {
   ) %>%
     mutate_all(as.character)
 
-  if (fromJSON(
-    txt = inpath_gnfinder_f,
-    simplifyDataFrame = TRUE
-  )$
-    metadata$
-    totalNames != 0) {
+  if (
+    fromJSON(
+      txt = inpath_gnfinder_f,
+      simplifyDataFrame = TRUE
+    )$metadata$totalNames !=
+      0
+  ) {
     gnfound <- data.frame(fromJSON(
       txt = inpath_gnfinder_f,
       simplifyDataFrame = TRUE

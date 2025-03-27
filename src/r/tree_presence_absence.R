@@ -13,12 +13,15 @@ tree_presence_absence <- function(table, level) {
       tr = tr_old,
       layout = "circular",
       size = 5,
-      aes(color = switch(level,
-        "structure_inchikey" = structure_inchikey,
-        "structure_taxonomy_npclassifier_03class" = structure_taxonomy_npclassifier_03class,
-        "structure_taxonomy_npclassifier_02superclass" = structure_taxonomy_npclassifier_02superclass,
-        "structure_taxonomy_npclassifier_01pathway" = structure_taxonomy_npclassifier_01pathway
-      ))
+      aes(
+        color = switch(
+          level,
+          "structure_inchikey" = structure_inchikey,
+          "structure_taxonomy_npclassifier_03class" = structure_taxonomy_npclassifier_03class,
+          "structure_taxonomy_npclassifier_02superclass" = structure_taxonomy_npclassifier_02superclass,
+          "structure_taxonomy_npclassifier_01pathway" = structure_taxonomy_npclassifier_01pathway
+        )
+      )
     ) %<+%
     table +
     scale_color_manual(

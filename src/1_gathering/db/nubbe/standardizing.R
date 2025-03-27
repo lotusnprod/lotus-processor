@@ -103,7 +103,8 @@ data_original <- bind_rows(list)
 
 data_manipulated <- data_original %>%
   mutate(
-    biologicalsource = paste(organismGenus,
+    biologicalsource = paste(
+      organismGenus,
       organismSpecies,
       organismFamily,
       sep = " "

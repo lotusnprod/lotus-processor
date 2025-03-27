@@ -23,10 +23,12 @@ library(tidyr)
 # source("r/progressr.R")
 
 log_debug("loading the LOTUS, this may take a while")
-table <- readr::read_csv(file = file.path(
-  pathDataProcessed,
-  pathLastFrozen
-)) |>
+table <- readr::read_csv(
+  file = file.path(
+    pathDataProcessed,
+    pathLastFrozen
+  )
+) |>
   dplyr::select(
     structure_smiles_2D,
     structure_taxonomy_npclassifier_01pathway,
@@ -53,47 +55,65 @@ table_counted <- table |>
     structure_taxonomy_npclassifier_01pathway,
     organism_taxonomy_02kingdom
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_02kingdom") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_02kingdom"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_02superclass,
     organism_taxonomy_02kingdom
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_02kingdom") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_02kingdom"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_03class,
     organism_taxonomy_02kingdom
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_02kingdom") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_02kingdom"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_01pathway,
     organism_taxonomy_06family
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_06family") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_06family"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_02superclass,
     organism_taxonomy_06family
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_06family") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_06family"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_03class,
     organism_taxonomy_06family
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_06family") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_06family"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_01pathway,
     organism_taxonomy_08genus
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_08genus") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_01pathway_organism_taxonomy_08genus"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_02superclass,
     organism_taxonomy_08genus
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_08genus") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_02superclass_organism_taxonomy_08genus"
+  ) |>
   dplyr::group_by(
     structure_taxonomy_npclassifier_03class,
     organism_taxonomy_08genus
   ) |>
-  dplyr::add_count(name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_08genus") |>
+  dplyr::add_count(
+    name = "structure_taxonomy_npclassifier_03class_organism_taxonomy_08genus"
+  ) |>
   dplyr::ungroup() |>
   dplyr::distinct(
     structure_taxonomy_npclassifier_01pathway,
@@ -124,8 +144,10 @@ chem_level <- "structure_taxonomy_npclassifier_03class"
 log_debug("... at the biological genus level")
 bio_level <- "organism_taxonomy_08genus"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 class_1 <- lapply(X, get_jsd) |>
@@ -134,8 +156,10 @@ class_1 <- lapply(X, get_jsd) |>
 log_debug("... at the biological family level")
 bio_level <- "organism_taxonomy_06family"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 class_2 <- lapply(X, get_jsd) |>
@@ -144,8 +168,10 @@ class_2 <- lapply(X, get_jsd) |>
 log_debug("... at the biological kingdom level")
 bio_level <- "organism_taxonomy_02kingdom"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 class_3 <- lapply(X, get_jsd) |>
@@ -157,7 +183,11 @@ class <- class_1 |>
   data.frame()
 
 colnames(class)[grepl(pattern = "organism", x = colnames(class))] <-
-  paste(colnames(class)[grepl(pattern = "organism", x = colnames(class))], "JSD", sep = "_")
+  paste(
+    colnames(class)[grepl(pattern = "organism", x = colnames(class))],
+    "JSD",
+    sep = "_"
+  )
 
 log_debug("... at the chemical superclass level ...")
 chem_level <- "structure_taxonomy_npclassifier_02superclass"
@@ -165,8 +195,10 @@ chem_level <- "structure_taxonomy_npclassifier_02superclass"
 log_debug("... at the biological genus level")
 bio_level <- "organism_taxonomy_08genus"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 superclass_1 <- lapply(X, get_jsd) |>
@@ -175,8 +207,10 @@ superclass_1 <- lapply(X, get_jsd) |>
 log_debug("... at the biological family level")
 bio_level <- "organism_taxonomy_06family"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 superclass_2 <- lapply(X, get_jsd) |>
@@ -185,8 +219,10 @@ superclass_2 <- lapply(X, get_jsd) |>
 log_debug("... at the biological kingdom level")
 bio_level <- "organism_taxonomy_02kingdom"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 superclass_3 <- lapply(X, get_jsd) |>
@@ -198,7 +234,11 @@ superclass <- superclass_1 |>
   data.frame()
 
 colnames(superclass)[grepl(pattern = "organism", x = colnames(superclass))] <-
-  paste(colnames(superclass)[grepl(pattern = "organism", x = colnames(superclass))], "JSD", sep = "_")
+  paste(
+    colnames(superclass)[grepl(pattern = "organism", x = colnames(superclass))],
+    "JSD",
+    sep = "_"
+  )
 
 log_debug("... at the chemical pathway level ...")
 chem_level <- "structure_taxonomy_npclassifier_01pathway"
@@ -206,8 +246,10 @@ chem_level <- "structure_taxonomy_npclassifier_01pathway"
 log_debug("... at the biological genus level")
 bio_level <- "organism_taxonomy_08genus"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 pathway_1 <- lapply(X, get_jsd) |>
@@ -216,8 +258,10 @@ pathway_1 <- lapply(X, get_jsd) |>
 log_debug("... at the biological family level")
 bio_level <- "organism_taxonomy_06family"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 pathway_2 <- lapply(X, get_jsd) |>
@@ -226,8 +270,10 @@ pathway_2 <- lapply(X, get_jsd) |>
 log_debug("... at the biological kingdom level")
 bio_level <- "organism_taxonomy_02kingdom"
 Y <-
-  unique(table_counted[, chem_level][!is.na(table_counted[, chem_level]) &
-    !is.na(table_counted[, bio_level])])
+  unique(table_counted[, chem_level][
+    !is.na(table_counted[, chem_level]) &
+      !is.na(table_counted[, bio_level])
+  ])
 X <- seq_along(Y)
 
 pathway_3 <- lapply(X, get_jsd) |>
@@ -239,7 +285,11 @@ pathway <- pathway_1 |>
   data.frame()
 
 colnames(pathway)[grepl(pattern = "organism", x = colnames(pathway))] <-
-  paste(colnames(pathway)[grepl(pattern = "organism", x = colnames(pathway))], "JSD", sep = "_")
+  paste(
+    colnames(pathway)[grepl(pattern = "organism", x = colnames(pathway))],
+    "JSD",
+    sep = "_"
+  )
 
 log_debug("pivoting results")
 class_pivoted <- class |>

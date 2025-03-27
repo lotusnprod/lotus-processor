@@ -29,12 +29,14 @@ data_selected <- data_original |>
     reference_doi = DOI,
     reference_publishingDetails = Reference
   ) |>
-  dplyr::mutate(organism_clean = gsub(
-    pattern = "_",
-    replacement = " ",
-    x = organism_clean,
-    fixed = TRUE
-  ))
+  dplyr::mutate(
+    organism_clean = gsub(
+      pattern = "_",
+      replacement = " ",
+      x = organism_clean,
+      fixed = TRUE
+    )
+  )
 
 ## standardizing
 data_standard <-

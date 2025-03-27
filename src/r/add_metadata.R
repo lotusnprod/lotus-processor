@@ -35,10 +35,7 @@ add_metadata <- function(df) {
       structure_stereocenters_total = structureCleaned_stereocenters_total,
       structure_stereocenters_unspecified = structureCleaned_stereocenters_unspecified
     ) |>
-    dplyr::distinct(structure_inchikey,
-      structure_cid,
-      .keep_all = TRUE
-    )
+    dplyr::distinct(structure_inchikey, structure_cid, .keep_all = TRUE)
 
   biological_metadata_2 <-
     readr::read_delim(
@@ -56,7 +53,10 @@ add_metadata <- function(df) {
       organismCleaned_id,
       organismCleaned_dbTaxo
     ) |>
-    tidyr::pivot_wider(names_from = organismCleaned_dbTaxo, values_from = organismCleaned_id) |>
+    tidyr::pivot_wider(
+      names_from = organismCleaned_dbTaxo,
+      values_from = organismCleaned_id
+    ) |>
     dplyr::distinct(
       organism_name,
       organism_taxonomy_gbifid = `GBIF Backbone Taxonomy`,
@@ -121,23 +121,24 @@ add_metadata <- function(df) {
   biological_metadata <- dplyr::left_join(names, otl) |>
     dplyr::left_join(meta, by = c("ott_id" = "id")) |>
     dplyr::filter(
-      rank %in% c(
-        "domain",
-        "kingdom",
-        "phylum",
-        "class",
-        "order",
-        "infraorder",
-        "family",
-        "subfamily",
-        "tribe",
-        "subtribe",
-        "genus",
-        "subgenus",
-        "species",
-        "subspecies",
-        "varietas"
-      )
+      rank %in%
+        c(
+          "domain",
+          "kingdom",
+          "phylum",
+          "class",
+          "order",
+          "infraorder",
+          "family",
+          "subfamily",
+          "tribe",
+          "subtribe",
+          "genus",
+          "subgenus",
+          "species",
+          "subspecies",
+          "varietas"
+        )
     ) |>
     dplyr::distinct() |>
     purrr::map_df(rev) |>

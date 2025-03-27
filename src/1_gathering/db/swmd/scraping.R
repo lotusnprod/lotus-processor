@@ -79,10 +79,12 @@ SWMD_2$name <- y_as_na(SWMD_2$name, "")
 SWMD_2$value <- y_as_na(SWMD_2$value, "")
 
 SWMD_3 <- SWMD_2 |>
-  dplyr::filter(!stringr::str_detect(
-    string = name,
-    pattern = "Accession Number\r\n"
-  )) |>
+  dplyr::filter(
+    !stringr::str_detect(
+      string = name,
+      pattern = "Accession Number\r\n"
+    )
+  ) |>
   dplyr::filter(!is.na(name)) |>
   dplyr::group_by(level) |>
   tidyr::pivot_wider(

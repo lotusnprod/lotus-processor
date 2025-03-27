@@ -230,8 +230,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     ) |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      organismDetected =
-        extract_first_two_words(organismDetected)
+      organismDetected = extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,
@@ -247,8 +246,7 @@ if (file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     ) |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      organismDetected =
-        extract_first_two_words(organismDetected)
+      organismDetected = extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,
@@ -274,8 +272,7 @@ if (!file.exists(pathDataInterimDictionariesOrganismDictionary)) {
     ) |>
     dplyr::rowwise() |>
     dplyr::mutate(
-      organismDetected =
-        extract_first_two_words(organismDetected)
+      organismDetected = extract_first_two_words(organismDetected)
     ) |>
     dplyr::distinct(
       organismType,

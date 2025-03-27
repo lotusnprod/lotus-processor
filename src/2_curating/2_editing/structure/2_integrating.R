@@ -70,11 +70,14 @@ translatedStructureTable <- translatedStructureTable |>
   dplyr::filter(!is.na(structureTranslated))
 
 if (nrow(translatedStructureTable) == 0) {
-  translatedStructureTable[1, c(
-    "structureType",
-    "structureValue",
-    "structureTranslated"
-  )] <- NA
+  translatedStructureTable[
+    1,
+    c(
+      "structureType",
+      "structureValue",
+      "structureTranslated"
+    )
+  ] <- NA
 }
 
 log_debug("filtering out bad SMILES for next step")
@@ -95,22 +98,23 @@ bad_smiles <- c(
 
 translatedStructureTable <- translatedStructureTable |>
   dplyr::filter(!structureTranslated %in% bad_smiles) |>
-  dplyr::mutate(di = gsub(
-    pattern = "\\..*",
-    replacement = "",
-    x = structureTranslated
-  )) |>
-  dplyr::filter(
-    structureTranslated == di | gsub(
-      pattern = ".*\\.",
+  dplyr::mutate(
+    di = gsub(
+      pattern = "\\..*",
       replacement = "",
       x = structureTranslated
-    ) == di
+    )
   ) |>
-  dplyr::select(structureType,
-    structureValue,
-    structureTranslated = di
+  dplyr::filter(
+    structureTranslated == di |
+      gsub(
+        pattern = ".*\\.",
+        replacement = "",
+        x = structureTranslated
+      ) ==
+        di
   ) |>
+  dplyr::select(structureType, structureValue, structureTranslated = di) |>
   dplyr::distinct()
 
 log_debug("outputing unique structures")

@@ -4,7 +4,8 @@ library(readr)
 
 accepted_fields <- read_delim(file = path_accepted_fields)
 
-accepted_fields <- paste(accepted_fields$object,
+accepted_fields <- paste(
+  accepted_fields$object,
   accepted_fields$type,
   sep = "_"
 )
@@ -21,11 +22,13 @@ accepted_fields <- paste(accepted_fields$object,
 #' @export
 #'
 #' @examples
-standardizing_original <- function(data_selected,
-                                   db,
-                                   organism_field,
-                                   structure_field,
-                                   reference_field) {
+standardizing_original <- function(
+  data_selected,
+  db,
+  organism_field,
+  structure_field,
+  reference_field
+) {
   data_selected[setdiff(
     accepted_fields,
     names(data_selected)
@@ -40,11 +43,20 @@ standardizing_original <- function(data_selected,
       all_of(reference_field)
     ) %>%
     filter_at(vars(all_of(structure_field)), any_vars(!is.na(.))) %>%
-    filter_at(vars(all_of(structure_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
+    filter_at(
+      vars(all_of(structure_field)),
+      any_vars(grepl(pattern = "[[:alnum:]]", x = .))
+    ) %>%
     filter_at(vars(all_of(organism_field)), any_vars(!is.na(.))) %>%
-    filter_at(vars(all_of(organism_field)), any_vars(grepl(pattern = "[[:alpha:]]", x = .))) %>%
+    filter_at(
+      vars(all_of(organism_field)),
+      any_vars(grepl(pattern = "[[:alpha:]]", x = .))
+    ) %>%
     filter_at(vars(all_of(reference_field)), any_vars(!is.na(.))) %>%
-    filter_at(vars(all_of(reference_field)), any_vars(grepl(pattern = "[[:alnum:]]", x = .))) %>%
+    filter_at(
+      vars(all_of(reference_field)),
+      any_vars(grepl(pattern = "[[:alnum:]]", x = .))
+    ) %>%
     distinct_at(
       vars(
         all_of(structure_field),
@@ -72,11 +84,13 @@ standardizing_original <- function(data_selected,
     })
 
   data_standard <- data_standard %>%
-    mutate_all(~ iconv(
-      x = .,
-      from = "utf-8",
-      to = "utf-8//ignore"
-    )) %>%
+    mutate_all(
+      ~ iconv(
+        x = .,
+        from = "utf-8",
+        to = "utf-8//ignore"
+      )
+    ) %>%
     mutate_all(
       .tbl = .,
       .funs = trimws

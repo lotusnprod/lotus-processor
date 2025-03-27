@@ -9,11 +9,15 @@
 getGraphStudiedPlant <- function(plant) {
   try({
     mostplant <-
-      as.character(inhouseDb_most_plant[inhouseDb_most_plant$organism_name == plant, 1])
+      as.character(inhouseDb_most_plant[
+        inhouseDb_most_plant$organism_name == plant,
+        1
+      ])
     inhouseDb_most_organism_2plot <-
       inhouseDbMeta %>%
       filter(organism_name == mostplant) %>%
-      distinct(structure_inchikey_2D,
+      distinct(
+        structure_inchikey_2D,
         organism_name,
         database,
         .keep_all = TRUE
@@ -49,10 +53,7 @@ getGraphStudiedPlant <- function(plant) {
         inhouseDb_most_organism_2plot_wide,
         chemo
       ) %>%
-      distinct(structure_inchikey_2D,
-        organism_name,
-        .keep_all = TRUE
-      )
+      distinct(structure_inchikey_2D, organism_name, .keep_all = TRUE)
     dbnumostorganism <- as.numeric(nrow(
       inhouseDbMeta %>%
         filter(organism_name == mostplant) %>%
