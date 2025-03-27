@@ -1,5 +1,7 @@
 source("r/log_debug.R")
-log_debug("This script performs canonical name recognition on the original organism field.")
+log_debug(
+  "This script performs canonical name recognition on the original organism field."
+)
 
 start <- Sys.time()
 
@@ -62,17 +64,23 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  jsonlite::stream_in(con = file(
-    pathDataInterimTablesProcessedOrganismVerifiedOriginalTable
-  ))
+  jsonlite::stream_in(
+    con = file(
+      pathDataInterimTablesProcessedOrganismVerifiedOriginalTable
+    )
+  )
 
 verified_df <- verified |>
   data.frame() |>
   dplyr::select(-curation, -matchType) |>
   tidyr::unnest(results, names_repair = "minimal") |>
-  dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
-    dataSourceTitleShort != "IPNI") |>
-  dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+  dplyr::filter(
+    dataSourceTitleShort != "IRMNG (old)" &
+      dataSourceTitleShort != "IPNI"
+  ) |>
+  dplyr::filter(
+    !matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified
+  ) |>
   dplyr::filter(isSynonym == FALSE) |>
   dplyr::mutate(organismType = "clean") |>
   dplyr::arrange(dplyr::desc(sortScore)) |>

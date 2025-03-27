@@ -19,7 +19,8 @@ data_original_ISDB <-
 
 # selecting
 data_translated <-
-  dplyr::left_join(data_original,
+  dplyr::left_join(
+    data_original,
     data_original_ISDB,
     by = c("inchik" = "inchik")
   ) |>

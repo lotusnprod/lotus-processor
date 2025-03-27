@@ -19,7 +19,8 @@ data_original <-
 # manipulating
 data_manipulated <- data_original |>
   splitstackshape::cSplit("reference", sep = "; ") |>
-  splitstackshape::cSplit("remarks",
+  splitstackshape::cSplit(
+    "remarks",
     sep = "; ",
     direction = "long",
     fixed = TRUE
@@ -51,14 +52,16 @@ data_manipulated <- data_original |>
   dplyr::mutate_all(trimws) |>
   dplyr::mutate(
     reference_title = ifelse(
-      test = reference_title == "Giftpflanzen Pflanzengifte4. ?berarbeitete Aufl.",
+      test = reference_title ==
+        "Giftpflanzen Pflanzengifte4. ?berarbeitete Aufl.",
       yes = "Giftpflanzen Pflanzengifte, 4. ?berarbeitete Aufl.",
       no = reference_title
     )
   ) |>
   dplyr::mutate(
     reference_isbn = ifelse(
-      test = reference_title == "Giftpflanzen Pflanzengifte, 4. ?berarbeitete Aufl.",
+      test = reference_title ==
+        "Giftpflanzen Pflanzengifte, 4. ?berarbeitete Aufl.",
       yes = "978-3-933203-31-1",
       no = "3-8047-1053-0"
     )
@@ -72,7 +75,11 @@ data_standard <-
     db = "datawarrior",
     structure_field = "structure_smiles",
     organism_field = "organism_clean",
-    reference_field = c("reference_authors", "reference_title", "reference_isbn")
+    reference_field = c(
+      "reference_authors",
+      "reference_title",
+      "reference_isbn"
+    )
   )
 
 # exporting

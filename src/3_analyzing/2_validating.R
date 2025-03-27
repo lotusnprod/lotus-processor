@@ -400,14 +400,15 @@ realMetaSample <- dplyr::inner_join(globalSample, inhouseDbFull) |>
     .keep_all = TRUE
   ) |>
   dplyr::filter(
-    referenceType %in% c(
-      "doi",
-      "pubmed",
-      "title",
-      "publishingDetails",
-      "split",
-      "original"
-    )
+    referenceType %in%
+      c(
+        "doi",
+        "pubmed",
+        "title",
+        "publishingDetails",
+        "split",
+        "original"
+      )
   )
 
 if (mode == "full") {
@@ -496,12 +497,7 @@ if (mode == "full") {
 
   log_debug("calculating statistics ...")
   old <- table_count |>
-    dplyr::select(referenceType,
-      tot,
-      y,
-      n,
-      ratio1 = ratio
-    )
+    dplyr::select(referenceType, tot, y, n, ratio1 = ratio)
 
   log_debug("... true positives and false positives")
   new <- tableFiltered_count |>
@@ -544,8 +540,11 @@ if (mode == "full") {
     ) %>%
     dplyr::mutate(f2 = 2 * rxp / rpp) %>%
     dplyr::select(-tpfn, -tpfp, -rxp, -rpp) %>%
-    dplyr::mutate(fbeta = (1 + beta^2) * (precision * recall) / ((precision * beta^
-      2) + recall)) %>%
+    dplyr::mutate(
+      fbeta = (1 + beta^2) *
+        (precision * recall) /
+        ((precision * beta^2) + recall)
+    ) %>%
     replace(. == "NaN", 0)
 
   "%ni%" <- Negate("%in%")
@@ -617,7 +616,9 @@ if (mode == "full") {
     )
 }
 
-log_debug("applying the filtering criteria to the whole DB, this may take a while")
+log_debug(
+  "applying the filtering criteria to the whole DB, this may take a while"
+)
 openDb <- inhouseDbFull |>
   filter_dirty() |>
   dplyr::left_join(structureMetadata) |>
@@ -641,11 +642,13 @@ openDb <- inhouseDbFull |>
     referenceCleanedTitle,
     .keep_all = TRUE
   ) |>
-  dplyr::mutate(structureCleaned_inchikey2D = substring(
-    text = structureCleanedInchikey,
-    first = 1,
-    last = 14
-  )) |>
+  dplyr::mutate(
+    structureCleaned_inchikey2D = substring(
+      text = structureCleanedInchikey,
+      first = 1,
+      last = 14
+    )
+  ) |>
   dplyr::select(
     database,
     organismType,
@@ -707,11 +710,13 @@ closedDb <- inhouseDbFull |>
     referenceCleanedTitle,
     .keep_all = TRUE
   ) |>
-  mutate(structureCleaned_inchikey2D = substring(
-    text = structureCleanedInchikey,
-    first = 1,
-    last = 14
-  )) |>
+  mutate(
+    structureCleaned_inchikey2D = substring(
+      text = structureCleanedInchikey,
+      first = 1,
+      last = 14
+    )
+  ) |>
   dplyr::select(
     database,
     organismType,
@@ -937,7 +942,9 @@ finalStats_reworked <- finalStats %>%
   ) %>%
   dplyr::select(
     `reference type` = referenceType,
-    dplyr::everything(), -n, -`validated == "Y"`
+    dplyr::everything(),
+    -n,
+    -`validated == "Y"`
   ) %>%
   dplyr::group_by(`reference type`) %>%
   dplyr::summarize(
@@ -948,8 +955,14 @@ finalStats_reworked <- finalStats %>%
     .,
     tibble(
       `reference type` = "Total",
-      `true positives Validation` = sum(.$`true positives Validation`, na.rm = TRUE),
-      `false positives Validation` = sum(.$`false positives Validation`, na.rm = TRUE)
+      `true positives Validation` = sum(
+        .$`true positives Validation`,
+        na.rm = TRUE
+      ),
+      `false positives Validation` = sum(
+        .$`false positives Validation`,
+        na.rm = TRUE
+      )
     )
   )
 
@@ -996,16 +1009,20 @@ openDbClean2 <-
 log_debug("removing dimers")
 ## at the moment no solution for it so discarding for safety
 openDbClean3 <- openDbClean2 |>
-  dplyr::filter(!grepl(
-    pattern = "\\.",
-    x = structureCleanedSmiles
-  ))
+  dplyr::filter(
+    !grepl(
+      pattern = "\\.",
+      x = structureCleanedSmiles
+    )
+  )
 
 closedDb3 <- closedDb |>
-  dplyr::filter(!grepl(
-    pattern = "\\.",
-    x = structureCleanedSmiles
-  ))
+  dplyr::filter(
+    !grepl(
+      pattern = "\\.",
+      x = structureCleanedSmiles
+    )
+  )
 
 log_debug("non-validated entries")
 non_validated <- inhouseDbMinimal |>

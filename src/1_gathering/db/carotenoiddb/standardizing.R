@@ -48,7 +48,8 @@ data_manipulated <- data_manipulated |>
   dplyr::mutate(dplyr::across(.cols = dplyr::everything(), as.character))
 
 data_manipulated_long <- data_manipulated |>
-  tidyr::gather(8:ncol(data_manipulated),
+  tidyr::gather(
+    8:ncol(data_manipulated),
     key = "n",
     value = "biologicalsource"
   ) |>
@@ -69,16 +70,14 @@ data_manipulated_long$reference <-
   )
 
 data_manipulated_long_ref <- data_manipulated_long %>%
-  splitstackshape::cSplit("reference",
+  splitstackshape::cSplit(
+    "reference",
     sep = "SPLIT",
     stripWhite = FALSE,
     fixed = FALSE
   ) %>%
   dplyr::mutate_all(as.character) %>%
-  tidyr::gather(8:ncol(.),
-    key = "n",
-    value = "reference"
-  ) %>%
+  tidyr::gather(8:ncol(.), key = "n", value = "reference") %>%
   dplyr::select(-n) %>%
   group_by(uniqueid) %>%
   dplyr::distinct(biologicalsource, reference, .keep_all = TRUE) %>%
@@ -92,16 +91,26 @@ data_manipulated_long_ref <- data_manipulated_long %>%
 
 data_manipulated_long_ref_unique <- data_manipulated_long_ref |>
   dplyr::mutate(
-    refnum = stringr::str_extract(string = data_manipulated_long_ref$reference, pattern = "(Ref.\\d*)"),
-    biorefnum = stringr::str_extract(string = data_manipulated_long_ref$biologicalsource, pattern = "(Ref.\\d*)")
+    refnum = stringr::str_extract(
+      string = data_manipulated_long_ref$reference,
+      pattern = "(Ref.\\d*)"
+    ),
+    biorefnum = stringr::str_extract(
+      string = data_manipulated_long_ref$biologicalsource,
+      pattern = "(Ref.\\d*)"
+    )
   ) |>
-  dplyr::filter(refnum == biorefnum |
-    is.na(refnum)) |>
-  dplyr::mutate(reference_unsplittable = gsub(
-    pattern = "(Ref.\\d* : )",
-    replacement = "",
-    x = reference
-  )) |>
+  dplyr::filter(
+    refnum == biorefnum |
+      is.na(refnum)
+  ) |>
+  dplyr::mutate(
+    reference_unsplittable = gsub(
+      pattern = "(Ref.\\d* : )",
+      replacement = "",
+      x = reference
+    )
+  ) |>
   dplyr::mutate(
     reference_title = gsub(
       pattern = "\"",
@@ -111,30 +120,30 @@ data_manipulated_long_ref_unique <- data_manipulated_long_ref |>
         pattern = "\".*\""
       )
     ),
-    reference_doi_1 =
-      gsub(
-        pattern = "\"",
-        replacement = "",
-        x = stringr::str_extract(
-          string = reference_unsplittable,
-          pattern = "doi:.*"
-        )
-      ),
-    reference_doi_2 =
-      gsub(
-        pattern = "\"",
-        replacement = "",
-        x = stringr::str_extract(
-          string = reference_unsplittable,
-          pattern = "DOI:.*"
-        )
+    reference_doi_1 = gsub(
+      pattern = "\"",
+      replacement = "",
+      x = stringr::str_extract(
+        string = reference_unsplittable,
+        pattern = "doi:.*"
       )
+    ),
+    reference_doi_2 = gsub(
+      pattern = "\"",
+      replacement = "",
+      x = stringr::str_extract(
+        string = reference_unsplittable,
+        pattern = "DOI:.*"
+      )
+    )
   ) |>
-  dplyr::mutate(reference_doi = ifelse(
-    test = !is.na(reference_doi_1),
-    yes = reference_doi_1,
-    no = reference_doi_2
-  )) |>
+  dplyr::mutate(
+    reference_doi = ifelse(
+      test = !is.na(reference_doi_1),
+      yes = reference_doi_1,
+      no = reference_doi_2
+    )
+  ) |>
   splitstackshape::cSplit("reference_doi", sep = ",") |>
   splitstackshape::cSplit(
     "biologicalsource",

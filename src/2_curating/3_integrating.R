@@ -166,22 +166,28 @@ create_dir(export = pathDataInterimDictionariesReference)
 create_dir(export = pathDataInterimDictionariesStructure)
 
 log_debug("joining ...")
-if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
+if (
+  file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata)
+) {
   log_debug("... previously cleaned organisms with metadata")
   organismOld <-
     dplyr::left_join(organismDictionary, organismMetadata)
 }
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-  file.exists(pathDataInterimDictionariesStructureMetadata)) {
+if (
+  file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata)
+) {
   log_debug("... previously cleaned structures with metadata")
   structureOld <-
     dplyr::left_join(structureDictionary, structureMetadata)
 }
 
-if (file.exists(pathDataInterimDictionariesOrganismDictionary) &
-  file.exists(pathDataInterimDictionariesOrganismMetadata)) {
+if (
+  file.exists(pathDataInterimDictionariesOrganismDictionary) &
+    file.exists(pathDataInterimDictionariesOrganismMetadata)
+) {
   log_debug("... previously cleaned organism with new ones")
   organismTableFull <-
     dplyr::bind_rows(organismTableFull, organismOld) |>
@@ -203,8 +209,10 @@ structureFull <-
     .keep_all = TRUE
   )
 
-if (file.exists(pathDataInterimDictionariesStructureDictionary) &
-  file.exists(pathDataInterimDictionariesStructureMetadata)) {
+if (
+  file.exists(pathDataInterimDictionariesStructureDictionary) &
+    file.exists(pathDataInterimDictionariesStructureMetadata)
+) {
   log_debug("... previously cleaned structures")
   structureFull <-
     dplyr::bind_rows(structureFull, structureOld) |>
@@ -260,7 +268,10 @@ structureMetadata <- structureFull |>
 log_debug("... organisms")
 organismMinimal <- organismTableFull |>
   dplyr::filter(!is.na(organismCleaned)) |>
-  dplyr::filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "[A-Za-z]",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::distinct(
     organismType,
     organismValue,
@@ -270,7 +281,10 @@ organismMinimal <- organismTableFull |>
 
 organismMetadata <- organismTableFull |>
   dplyr::filter(!is.na(organismCleaned)) |>
-  dplyr::filter(grepl(pattern = "[A-Za-z]", x = organismCleaned_dbTaxoTaxonRanks)) |>
+  dplyr::filter(grepl(
+    pattern = "[A-Za-z]",
+    x = organismCleaned_dbTaxoTaxonRanks
+  )) |>
   dplyr::distinct(
     organismCleaned,
     organismCleaned_id,
@@ -353,10 +367,7 @@ structureNA <- dplyr::anti_join(
 
 structureNA <- dplyr::left_join(structureNA, structureFull) |>
   dplyr::filter(is.na(structureCleanedInchikey)) |>
-  dplyr::distinct(structureType,
-    structureValue,
-    .keep_all = TRUE
-  ) |>
+  dplyr::distinct(structureType, structureValue, .keep_all = TRUE) |>
   dplyr::select(
     structureType,
     structureValue,
@@ -478,8 +489,10 @@ log_debug("joining minimal table ...")
 inhouseDbMinimal <-
   dplyr::inner_join(originalTable, structureMinimal) |>
   dplyr::inner_join(organismMinimal) |>
-  dplyr::left_join(referenceMinimal |>
-    dplyr::select(-organismDetected))
+  dplyr::left_join(
+    referenceMinimal |>
+      dplyr::select(-organismDetected)
+  )
 
 rm(originalTable)
 
@@ -608,7 +621,11 @@ inhouseDbMinimal <- inhouseDbMinimal |>
   dplyr::ungroup() |>
   dplyr::filter(specified_stereo == best_stereo) |>
   dplyr::select(
-    -structureCleaned_inchikey2D, -structureCleaned_stereocenters_unspecified, -structureCleaned_stereocenters_total, -specified_stereo, -best_stereo
+    -structureCleaned_inchikey2D,
+    -structureCleaned_stereocenters_unspecified,
+    -structureCleaned_stereocenters_total,
+    -specified_stereo,
+    -best_stereo
   )
 
 log_debug("removing redundant upper taxa")
@@ -621,7 +638,9 @@ inhouseDbMinimal <- inhouseDbMinimal |>
     ),
     spaces = stringr::str_count(string = organismCleaned, pattern = " ")
   ) |>
-  dplyr::mutate(spaces = dplyr::if_else(condition = spaces == 0, true = spaces, false = 1)) |>
+  dplyr::mutate(
+    spaces = dplyr::if_else(condition = spaces == 0, true = spaces, false = 1)
+  ) |>
   ## remove genera where species are found but not species with var
   dplyr::group_by(
     temp_org,
@@ -634,7 +653,9 @@ inhouseDbMinimal <- inhouseDbMinimal |>
   dplyr::filter(spaces == best_org) |>
   dplyr::select(-temp_org, -spaces, -best_org)
 
-log_debug("writing the monster table, if running fullmode, this may take a while")
+log_debug(
+  "writing the monster table, if running fullmode, this may take a while"
+)
 log_debug(pathDataInterimTablesCuratedTable)
 readr::write_delim(
   x = inhouseDbMinimal,

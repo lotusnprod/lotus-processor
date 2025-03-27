@@ -180,8 +180,13 @@ if (is_empty(new_matched_names) == FALSE) {
   ott_list <- list()
   for (i in xs) {
     ott_list[[i]] <-
-      new_ott_id$ott_id[(i * 100 - 99):(i * 100)][!is.na(new_ott_id$ott_id[(i *
-        100 - 99):(i * 100)])]
+      new_ott_id$ott_id[(i * 100 - 99):(i * 100)][
+        !is.na(new_ott_id$ott_id[
+          (i *
+            100 -
+            99):(i * 100)
+        ])
+      ]
   }
 
   get_otl_lineage <- function(xs) {

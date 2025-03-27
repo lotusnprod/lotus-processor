@@ -1,5 +1,7 @@
 source("r/log_debug.R")
-log_debug("This script draws the distribution of organisms per structure and vice versa")
+log_debug(
+  "This script draws the distribution of organisms per structure and vice versa"
+)
 
 start <- Sys.time()
 
@@ -19,16 +21,20 @@ library(plotly)
 library(readr)
 
 organismsPerStructure_2D <-
-  read_delim(file = file.path(
-    pathDataProcessed,
-    "organismsPerStructure2D.tsv.gz"
-  ))
+  read_delim(
+    file = file.path(
+      pathDataProcessed,
+      "organismsPerStructure2D.tsv.gz"
+    )
+  )
 
 structuresPerOrganism_2D <-
-  read_delim(file = file.path(
-    pathDataProcessed,
-    "structures2DPerOrganism.tsv.gz"
-  ))
+  read_delim(
+    file = file.path(
+      pathDataProcessed,
+      "structures2DPerOrganism.tsv.gz"
+    )
+  )
 
 organismsPerStructure_2D_cum <- organismsPerStructure_2D %>%
   ungroup() %>%
@@ -55,12 +61,19 @@ top_structure <-
 
 ## actually third but better to ilustrate
 top_organism <-
-  structuresPerOrganism_2D_cum[structuresPerOrganism_2D_cum$organismCleaned == "Arabidopsis thaliana", ]
+  structuresPerOrganism_2D_cum[
+    structuresPerOrganism_2D_cum$organismCleaned == "Arabidopsis thaliana",
+  ]
 
 a <- list(
   x = top_organism$per_x,
   y = top_organism$per_y,
-  text = paste("<i>", top_organism$organismCleaned, "</i> \n Number of 2D structures =", top_organism$n),
+  text = paste(
+    "<i>",
+    top_organism$organismCleaned,
+    "</i> \n Number of 2D structures =",
+    top_organism$n
+  ),
   xref = "x",
   yref = "y",
   showarrow = TRUE,
@@ -92,9 +105,15 @@ b <- list(
 c <- list(
   x = "per species",
   y = mean(structuresPerOrganism_2D$n),
-  text = paste("mean ", round(mean(
-    structuresPerOrganism_2D$n
-  ), 2)),
+  text = paste(
+    "mean ",
+    round(
+      mean(
+        structuresPerOrganism_2D$n
+      ),
+      2
+    )
+  ),
   xref = "x2",
   yref = "y2",
   showarrow = TRUE,
@@ -108,9 +127,15 @@ c <- list(
 d <- list(
   x = "per structure",
   y = mean(organismsPerStructure_2D$n),
-  text = paste("mean ", round(mean(
-    organismsPerStructure_2D$n
-  ), 2)),
+  text = paste(
+    "mean ",
+    round(
+      mean(
+        organismsPerStructure_2D$n
+      ),
+      2
+    )
+  ),
   xref = "x2",
   yref = "y2",
   showarrow = TRUE,

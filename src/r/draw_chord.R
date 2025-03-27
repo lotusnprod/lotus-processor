@@ -14,14 +14,16 @@
 #'
 #' @examples
 draw_chord <-
-  function(data,
-           biological_level,
-           chemical_level,
-           biological_filter_value = NULL,
-           biological_filter_level = NULL,
-           chemical_filter_value = NULL,
-           chemical_filter_level = NULL,
-           palette = paired_palette_med) {
+  function(
+    data,
+    biological_level,
+    chemical_level,
+    biological_filter_value = NULL,
+    biological_filter_level = NULL,
+    chemical_filter_value = NULL,
+    chemical_filter_level = NULL,
+    palette = paired_palette_med
+  ) {
     try({
       table <- data.frame(data)
       table <- table[!is.na(table[, biological_level]), ]

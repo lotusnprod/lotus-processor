@@ -21,11 +21,13 @@ data_original <- readr::read_delim(
 # selecting
 ## atomizing references
 data_selected <- data_original |>
-  dplyr::mutate(reference = gsub(
-    pattern = "(\\(\\d+).\\s",
-    replacement = "|",
-    x = ref
-  )) |>
+  dplyr::mutate(
+    reference = gsub(
+      pattern = "(\\(\\d+).\\s",
+      replacement = "|",
+      x = ref
+    )
+  ) |>
   splitstackshape::cSplit("reference", sep = "|", direction = "long") |>
   dplyr::mutate_all(as.character) |>
   splitstackshape::cSplit(
@@ -59,19 +61,21 @@ data_manipulated <- data_selected |>
     )
   ) |>
   dplyr::mutate(reference_original = y_as_na(reference_original, y = "")) %>%
-  dplyr::mutate(reference_original = ifelse(
-    test = !grepl(pattern = "[^ -~]", x = reference_original),
-    yes = reference_original,
-    no = NA
-  )) |>
   dplyr::mutate(
-    reference_split =
-      ifelse(
-        test = grepl(
-          pattern = ".*et al.",
-          x = reference_original
-        ),
-        yes = trimws(x = sub(
+    reference_original = ifelse(
+      test = !grepl(pattern = "[^ -~]", x = reference_original),
+      yes = reference_original,
+      no = NA
+    )
+  ) |>
+  dplyr::mutate(
+    reference_split = ifelse(
+      test = grepl(
+        pattern = ".*et al.",
+        x = reference_original
+      ),
+      yes = trimws(
+        x = sub(
           pattern = "^.;",
           replacement = "",
           x = sub(
@@ -95,9 +99,10 @@ data_manipulated <- data_selected |>
               )
             )
           )
-        )),
-        no = NA
-      )
+        )
+      ),
+      no = NA
+    )
   ) |>
   data.frame()
 

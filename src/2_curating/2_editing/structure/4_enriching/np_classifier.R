@@ -40,16 +40,20 @@ smiles <-
 #   dplyr::distinct(structure_smiles_2D = structureCleaned_smiles2D)
 
 log_debug("loading npClassifier taxonomy ...")
-taxonomy <- jsonlite::fromJSON(txt = list.files(
-  path = file.path(
-    pathDataExternal,
-    "taxonomySource/structure/npclassifier/"
-  ),
-  pattern = ".json",
-  full.names = TRUE
-))
+taxonomy <- jsonlite::fromJSON(
+  txt = list.files(
+    path = file.path(
+      pathDataExternal,
+      "taxonomySource/structure/npclassifier/"
+    ),
+    pattern = ".json",
+    full.names = TRUE
+  )
+)
 
-if (file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile)) {
+if (
+  file.exists(pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+) {
   old <-
     readr::read_delim(
       file = pathDataInterimDictionariesStructureDictionaryNpclassifierFile,
@@ -110,13 +114,17 @@ df_semiclean_3 <- df |>
 df_semiclean <-
   rbind(df_semiclean_1, df_semiclean_2, df_semiclean_3) |>
   dplyr::filter(!is.na(query)) |>
-  dplyr::filter(!is.na(class) |
-    !is.na(superclass) |
-    !is.na(pathway)) |>
+  dplyr::filter(
+    !is.na(class) |
+      !is.na(superclass) |
+      !is.na(pathway)
+  ) |>
   dplyr::distinct()
 
 log_debug("ensuring directories exist")
-create_dir(export = pathDataInterimDictionariesStructureDictionaryNpclassifierFile)
+create_dir(
+  export = pathDataInterimDictionariesStructureDictionaryNpclassifierFile
+)
 
 log_debug("Exporting")
 readr::write_delim(

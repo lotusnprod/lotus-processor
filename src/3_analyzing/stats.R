@@ -23,10 +23,12 @@ inhouseDbMinimal <-
   data.frame()
 
 frozen_metadata <-
-  readr::read_csv(file = file.path(
-    pathDataProcessed,
-    pathLastFrozen
-  ))
+  readr::read_csv(
+    file = file.path(
+      pathDataProcessed,
+      pathLastFrozen
+    )
+  )
 
 structureMetadata <-
   readr::read_delim(

@@ -1,5 +1,7 @@
 source("r/log_debug.R")
-log_debug("This script samples some entries to then manually check their validity.")
+log_debug(
+  "This script samples some entries to then manually check their validity."
+)
 
 start <- Sys.time()
 
@@ -27,8 +29,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "doi")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "doi")
+  ) >=
+    30
+) {
   sampleONPDB_doi <- openDbMinimal |>
     dplyr::filter(referenceType == "doi") |>
     dplyr::sample_n(30) |>
@@ -45,8 +52,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "original")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "original")
+  ) >=
+    30
+) {
   sampleONPDB_original <- openDbMinimal |>
     dplyr::filter(referenceType == "original") |>
     dplyr::sample_n(30) |>
@@ -63,8 +75,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "pubmed")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "pubmed")
+  ) >=
+    30
+) {
   sampleONPDB_pubmed <- openDbMinimal |>
     dplyr::filter(referenceType == "pubmed") |>
     dplyr::sample_n(30) |>
@@ -81,8 +98,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "split")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "split")
+  ) >=
+    30
+) {
   sampleONPDB_split <- openDbMinimal |>
     dplyr::filter(referenceType == "split") |>
     dplyr::sample_n(30) |>
@@ -99,8 +121,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "title")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "title")
+  ) >=
+    30
+) {
   sampleONPDB_title <- openDbMinimal |>
     dplyr::filter(referenceType == "title") |>
     dplyr::sample_n(30) |>
@@ -117,8 +144,13 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "publishingDetails")) >= 30) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "publishingDetails")
+  ) >=
+    30
+) {
   sampleONPDB_publishingDetails <- openDbMinimal |>
     dplyr::filter(referenceType == "publishingDetails") |>
     dplyr::sample_n(30) |>
@@ -175,14 +207,28 @@ set.seed(
   kind = "Mersenne-Twister",
   normal.kind = "Inversion"
 )
-if (nrow(openDbMinimal |>
-  dplyr::filter(referenceType == "title")) >= 85 &
-  nrow(openDbMinimal |>
-    dplyr::filter(referenceType == "publishingDetails")) >= 25 &
-  nrow(openDbMinimal |>
-    dplyr::filter(referenceType == "split")) >= 41 &
-  nrow(openDbMinimal |>
-    dplyr::filter(referenceType == "publishingDetails")) >= 58) {
+if (
+  nrow(
+    openDbMinimal |>
+      dplyr::filter(referenceType == "title")
+  ) >=
+    85 &
+    nrow(
+      openDbMinimal |>
+        dplyr::filter(referenceType == "publishingDetails")
+    ) >=
+      25 &
+    nrow(
+      openDbMinimal |>
+        dplyr::filter(referenceType == "split")
+    ) >=
+      41 &
+    nrow(
+      openDbMinimal |>
+        dplyr::filter(referenceType == "publishingDetails")
+    ) >=
+      58
+) {
   additionalSet <-
     dplyr::bind_rows(
       A <- openDbMinimal |>

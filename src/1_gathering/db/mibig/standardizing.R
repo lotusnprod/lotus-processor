@@ -22,7 +22,9 @@ fileInZip <-
     for (i in seq_along(fileList$Name)) {
       if (grepl(pattern = ".json", x = fileList[i, 1])) {
         oFa <-
-          jsonlite::fromJSON(txt = unz(description = inZip, filename = fileList[i, 1]))
+          jsonlite::fromJSON(
+            txt = unz(description = inZip, filename = fileList[i, 1])
+          )
         outFile[[i]] <- oFa
       }
     }
@@ -81,7 +83,8 @@ data <- dplyr::tibble(id, smiles, organism, reference) |>
   tidyr::unnest(reference) |>
   dplyr::distinct(id, .keep_all = TRUE) |>
   dplyr::filter(!is.na(smiles)) |>
-  dplyr::select(id,
+  dplyr::select(
+    id,
     structure_smiles = smiles,
     organism_clean = organism,
     reference

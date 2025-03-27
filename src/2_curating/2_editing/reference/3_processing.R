@@ -126,7 +126,8 @@ for (i in num) {
         "origin" = "referenceType"
       )
     ) |>
-    dplyr::distinct(referenceOriginal,
+    dplyr::distinct(
+      referenceOriginal,
       referenceTranslatedType,
       origin,
       level,
@@ -139,7 +140,8 @@ for (i in num) {
         "origin" = "referenceType"
       )
     ) |>
-    dplyr::distinct(referenceOriginal,
+    dplyr::distinct(
+      referenceOriginal,
       referenceTranslatedType,
       origin,
       level,
@@ -213,9 +215,11 @@ for (i in num) {
 
     # log_debug("splitting cases")
     dataTranslated_1 <- dataTranslated |>
-      dplyr::filter(referenceType == "doi" |
-        referenceType == "pubmed" |
-        referenceType == "title") |>
+      dplyr::filter(
+        referenceType == "doi" |
+          referenceType == "pubmed" |
+          referenceType == "title"
+      ) |>
       dplyr::left_join(
         dataCrossref_1,
         by = c(
@@ -270,13 +274,16 @@ for (i in num) {
         referenceType,
         referenceValue
       ) |>
-      dplyr::arrange(dplyr::desc(as.numeric(referenceTranslated_scoreCrossref))) |>
+      dplyr::arrange(dplyr::desc(as.numeric(
+        referenceTranslated_scoreCrossref
+      ))) |>
       dplyr::arrange(dplyr::desc(as.numeric(
         referenceTranslated_scoreTitleOrganism
       ))) |>
       dplyr::arrange(as.numeric(referenceTranslated_scoreDistance)) |>
       dplyr::ungroup() |>
-      dplyr::distinct(organismType,
+      dplyr::distinct(
+        organismType,
         organismValue,
         organismDetected,
         referenceValue,
@@ -297,7 +304,8 @@ for (i in num) {
           stringr::str_detect(
             string = tolower(referenceValue),
             pattern = fixed(tolower(word(
-              referenceTranslated_author, 1
+              referenceTranslated_author,
+              1
             )))
           ),
           yes = 1,
@@ -314,18 +322,20 @@ for (i in num) {
         referenceTranslated_title,
         referenceTranslated_date
       ) |>
-      dplyr::mutate(referenceTranslated_scoreComplement_date = ifelse(
-        stringr::str_detect(
-          string = referenceValue,
-          pattern = substr(
-            x = referenceTranslated_date,
-            start = 1,
-            stop = 4
-          )
-        ),
-        yes = 1,
-        no = 0
-      )) |>
+      dplyr::mutate(
+        referenceTranslated_scoreComplement_date = ifelse(
+          stringr::str_detect(
+            string = referenceValue,
+            pattern = substr(
+              x = referenceTranslated_date,
+              start = 1,
+              stop = 4
+            )
+          ),
+          yes = 1,
+          no = 0
+        )
+      ) |>
       dplyr::filter(referenceTranslated_scoreComplement_date == 1)
 
     dataCleanedJoinedWide_2_journal <- dataTranslated_2 |>
@@ -356,13 +366,12 @@ for (i in num) {
       dplyr::full_join(dataCleanedJoinedWide_2_journal) |>
       dplyr::rowwise() |>
       dplyr::mutate(
-        referenceTranslated_scoreComplement_total =
-          sum(
-            referenceTranslated_scoreComplement_date,
-            referenceTranslated_scoreComplement_author,
-            referenceTranslated_scoreComplement_journal,
-            na.rm = TRUE
-          )
+        referenceTranslated_scoreComplement_total = sum(
+          referenceTranslated_scoreComplement_date,
+          referenceTranslated_scoreComplement_author,
+          referenceTranslated_scoreComplement_journal,
+          na.rm = TRUE
+        )
       )
 
     dataTranslated_2_tmp <- dataTranslated_2 |>
@@ -387,7 +396,9 @@ for (i in num) {
         organismDetected,
         referenceValue
       ) |>
-      dplyr::arrange(dplyr::desc(as.numeric(referenceTranslated_scoreCrossref))) |>
+      dplyr::arrange(dplyr::desc(as.numeric(
+        referenceTranslated_scoreCrossref
+      ))) |>
       dplyr::arrange(dplyr::desc(as.numeric(
         referenceTranslated_scoreComplement_total
       ))) |>
@@ -395,7 +406,8 @@ for (i in num) {
         referenceTranslated_scoreTitleOrganism
       ))) |>
       dplyr::ungroup() |>
-      dplyr::distinct(organismType,
+      dplyr::distinct(
+        organismType,
         organismValue,
         organismDetected,
         referenceValue,
@@ -406,12 +418,15 @@ for (i in num) {
     dataTranslated_2_tmp_no_organism <- dataTranslated_2_tmp |>
       dplyr::filter(is.na(referenceTranslated_scoreTitleOrganism)) |>
       dplyr::left_join(dataCleanedJoinedWide_2_mixed) |>
-      dplyr::arrange(dplyr::desc(as.numeric(referenceTranslated_scoreCrossref))) |>
+      dplyr::arrange(dplyr::desc(as.numeric(
+        referenceTranslated_scoreCrossref
+      ))) |>
       dplyr::arrange(dplyr::desc(as.numeric(
         referenceTranslated_scoreComplement_total
       ))) |>
       dplyr::ungroup() |>
-      dplyr::distinct(organismType,
+      dplyr::distinct(
+        organismType,
         organismValue,
         organismDetected,
         referenceValue,
@@ -438,7 +453,9 @@ for (i in num) {
         referenceType,
         referenceValue
       ) |>
-      dplyr::arrange(dplyr::desc(as.numeric(referenceTranslated_scoreCrossref))) |>
+      dplyr::arrange(dplyr::desc(as.numeric(
+        referenceTranslated_scoreCrossref
+      ))) |>
       dplyr::arrange(dplyr::desc(as.numeric(
         referenceTranslated_scoreComplement_total
       ))) |>
@@ -446,7 +463,8 @@ for (i in num) {
         referenceTranslated_scoreTitleOrganism
       ))) |>
       dplyr::ungroup() |>
-      dplyr::distinct(organismType,
+      dplyr::distinct(
+        organismType,
         organismValue,
         organismDetected,
         referenceValue,
@@ -465,7 +483,8 @@ for (i in num) {
       dplyr::mutate_all(as.character)
 
     # log_debug("adding PMID and PMCID")
-    df_doi <- dplyr::left_join(subDataClean_doi,
+    df_doi <- dplyr::left_join(
+      subDataClean_doi,
       PMC_ids,
       by = c("referenceTranslated_doi" = "DOI")
     ) |>
@@ -476,21 +495,21 @@ for (i in num) {
         referenceTranslated_pmcid = PMCID
       )
 
-    df_pubmed <- dplyr::left_join(subDataClean_pmid,
+    df_pubmed <- dplyr::left_join(
+      subDataClean_pmid,
       PMC_ids,
       by = c("referenceValue" = "PMID")
     ) |>
       dplyr::filter(!is.na(referenceValue) | !is.na(PMCID)) |>
-      dplyr::select(referenceValue,
-        referenceTranslated_pmcid = PMCID
-      ) |>
+      dplyr::select(referenceValue, referenceTranslated_pmcid = PMCID) |>
       dplyr::mutate(referenceTranslated_pmid = referenceValue)
 
     tableJoined <-
       dplyr::left_join(dataCleanedJoinedWideScore, df_doi)
 
     referenceTable <-
-      dplyr::left_join(tableJoined,
+      dplyr::left_join(
+        tableJoined,
         df_pubmed,
         by = c("referenceValue" = "referenceValue")
       ) |>
@@ -552,9 +571,12 @@ data3 <- do.call(
     ),
     function(x) {
       readr::read_delim(
-        file = gzfile(description = file.path(
-          pathDataInterimTablesTranslatedReference, x
-        )),
+        file = gzfile(
+          description = file.path(
+            pathDataInterimTablesTranslatedReference,
+            x
+          )
+        ),
         delim = "\t",
         escape_double = TRUE,
         trim_ws = TRUE

@@ -125,7 +125,10 @@ dataSplit3 <- do.call(
     function(x) {
       readr::read_delim(
         file = gzfile(
-          description = file.path(pathDataInterimTablesTranslatedReferenceSplitFolder, x)
+          description = file.path(
+            pathDataInterimTablesTranslatedReferenceSplitFolder,
+            x
+          )
         ),
         delim = "\t",
         col_types = cols(.default = "c"),

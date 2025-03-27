@@ -31,7 +31,8 @@ data_selected <- data_pivoted |>
     biologicalsource = `Latin name`,
     reference_publishingDetails = References
   ) |>
-  splitstackshape::cSplit("reference_publishingDetails",
+  splitstackshape::cSplit(
+    "reference_publishingDetails",
     sep = ";",
     direction = "long"
   ) |>

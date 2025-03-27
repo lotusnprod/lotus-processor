@@ -10,10 +10,12 @@
 #'
 #' @examples TODO
 create_dir <- function(export) {
-  if (grepl(
-    pattern = "[[:alnum:]]\\.",
-    x = export,
-  )) {
+  if (
+    grepl(
+      pattern = "[[:alnum:]]\\.",
+      x = export,
+    )
+  ) {
     ifelse(
       test = !dir.exists(paths = dirname(path = export)),
       yes = dir.create(path = dirname(path = export), recursive = TRUE),

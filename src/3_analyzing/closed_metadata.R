@@ -28,8 +28,10 @@ closed_pairs <-
     col_types = cols(.default = "c"),
     locale = locales
   ) |>
-  dplyr::filter(!is.na(structureCleanedInchikey) &
-    !is.na(organismCleaned)) |>
+  dplyr::filter(
+    !is.na(structureCleanedInchikey) &
+      !is.na(organismCleaned)
+  ) |>
   dplyr::distinct(
     structure_inchikey = structureCleanedInchikey,
     organism_name = organismCleaned
@@ -52,10 +54,7 @@ data_organism <-
       "organismCleaned" = "names_pipe_separated"
     )
   ) |>
-  splitstackshape::cSplit("organismCleaned",
-    sep = "|",
-    direction = "long"
-  ) |>
+  splitstackshape::cSplit("organismCleaned", sep = "|", direction = "long") |>
   dplyr::distinct()
 
 data_structures <-
@@ -73,11 +72,13 @@ data_structures <-
     )
   ) |>
   dplyr::distinct() |>
-  dplyr::mutate(structureValue = if_else(
-    condition = !is.na(isomericSmiles),
-    true = isomericSmiles,
-    false = canonicalSmiles
-  ))
+  dplyr::mutate(
+    structureValue = if_else(
+      condition = !is.na(isomericSmiles),
+      true = isomericSmiles,
+      false = canonicalSmiles
+    )
+  )
 
 data_structures_translation <-
   readr::read_delim(
@@ -96,7 +97,8 @@ data_references <-
       "referenceCleanedTitle" = "title",
     )
   ) |>
-  splitstackshape::cSplit("referenceCleanedDoi",
+  splitstackshape::cSplit(
+    "referenceCleanedDoi",
     sep = "|",
     direction = "long"
   ) |>

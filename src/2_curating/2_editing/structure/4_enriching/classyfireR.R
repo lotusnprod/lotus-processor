@@ -17,7 +17,9 @@ library(readr)
 log_debug("opening cache...")
 create_dir(export = pathDataInterimDictionariesStructureDictionaryClassyfireDB)
 ClassyFireCache <-
-  classyfireR::open_cache(dbname = pathDataInterimDictionariesStructureDictionaryClassyfireDB)
+  classyfireR::open_cache(
+    dbname = pathDataInterimDictionariesStructureDictionaryClassyfireDB
+  )
 
 log_debug("loading files ...")
 log_debug("...  counted structures")
@@ -39,9 +41,11 @@ structureCounted <-
 #   ) |>
 #   dplyr::mutate(inchikeySanitized = structureCleanedInchikey)
 
-if (file.exists(
-  pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent
-)) {
+if (
+  file.exists(
+    pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent
+  )
+) {
   old <-
     readr::read_delim(
       file = pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent,
@@ -50,10 +54,11 @@ if (file.exists(
     ) |>
     dplyr::distinct(inchikey)
 
-
   structuresForClassification <- structureCounted |>
-    dplyr::anti_join(old |>
-      dplyr::select(inchikeySanitized = inchikey)) |>
+    dplyr::anti_join(
+      old |>
+        dplyr::select(inchikeySanitized = inchikey)
+    ) |>
     dplyr::filter(!is.na(inchikeySanitized)) |>
     dplyr::distinct(inchikeySanitized)
 } else {
@@ -117,7 +122,9 @@ get_alternative_parents <- function(xs) {
       alternative_parents <-
         dplyr::bind_cols(
           "inchikey" = clasification_list_inchikey[[xs]]@meta[["inchikey"]],
-          "chemontId" = clasification_list_inchikey[[xs]]@alternative_parents[["chemont_id"]]
+          "chemontId" = clasification_list_inchikey[[xs]]@alternative_parents[[
+            "chemont_id"
+          ]]
         )
       return(alternative_parents)
     },
@@ -149,7 +156,9 @@ get_direct_parent <- function(xs) {
       direct_parent <-
         dplyr::bind_cols(
           "inchikey" = clasification_list_inchikey[[xs]]@meta[["inchikey"]],
-          "directParent" = clasification_list_inchikey[[xs]]@direct_parent[["chemont_id"]]
+          "directParent" = clasification_list_inchikey[[xs]]@direct_parent[[
+            "chemont_id"
+          ]]
         )
       return(direct_parent)
     },
@@ -170,12 +179,14 @@ if (!is_empty(alternative_parents)) {
 
 if (nrow(alternative_parents != 0)) {
   alternative_parents <- alternative_parents |>
-    dplyr::mutate(inchikey = gsub(
-      pattern = "InChIKey=",
-      replacement = "",
-      x = inchikey,
-      fixed = TRUE
-    ))
+    dplyr::mutate(
+      inchikey = gsub(
+        pattern = "InChIKey=",
+        replacement = "",
+        x = inchikey,
+        fixed = TRUE
+      )
+    )
 }
 
 chebi <- lapply(X = xs, FUN = get_chebi)
@@ -188,12 +199,14 @@ if (!is_empty(chebi)) {
 
 if (nrow(chebi != 0)) {
   chebi <- chebi |>
-    dplyr::mutate(inchikey = gsub(
-      pattern = "InChIKey=",
-      replacement = "",
-      x = inchikey,
-      fixed = TRUE
-    ))
+    dplyr::mutate(
+      inchikey = gsub(
+        pattern = "InChIKey=",
+        replacement = "",
+        x = inchikey,
+        fixed = TRUE
+      )
+    )
 }
 
 direct_parent <- lapply(X = xs, FUN = get_direct_parent)
@@ -207,20 +220,24 @@ if (!is_empty(direct_parent)) {
 
 if (nrow(direct_parent != 0)) {
   direct_parent <- direct_parent |>
-    dplyr::mutate(inchikey = gsub(
-      pattern = "InChIKey=",
-      replacement = "",
-      x = inchikey,
-      fixed = TRUE
-    ))
+    dplyr::mutate(
+      inchikey = gsub(
+        pattern = "InChIKey=",
+        replacement = "",
+        x = inchikey,
+        fixed = TRUE
+      )
+    )
 }
 
 log_debug("exporting")
 create_dir(export = pathDataInterimDictionariesStructureDictionaryChebiFile)
 
-if (file.exists(
-  pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent
-)) {
+if (
+  file.exists(
+    pathDataInterimDictionariesStructureDictionaryClassyfireAlternativeParent
+  )
+) {
   readr::write_delim(
     x = alternative_parents,
     delim = "\t",
@@ -237,7 +254,11 @@ if (file.exists(
   )
 }
 
-if (file.exists(pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent)) {
+if (
+  file.exists(
+    pathDataInterimDictionariesStructureDictionaryClassyfireDirectParent
+  )
+) {
   readr::write_delim(
     x = direct_parent,
     delim = "\t",

@@ -20,24 +20,21 @@ data_original_1 <-
   ) |>
   dplyr::mutate_all(as.character)
 
-data_original_2 <- readxl::read_excel(database$sourceFiles$tsv,
-  sheet = 3
-) |>
+data_original_2 <- readxl::read_excel(database$sourceFiles$tsv, sheet = 3) |>
   dplyr::mutate_all(as.character)
 
 data_filled <- data_original_1 |>
-  dplyr::mutate(smiles = ifelse(
-    Stereo_SMILES == "NI",
-    Canonical_SMILES,
-    ifelse(
-      Stereo_SMILES == "NS",
+  dplyr::mutate(
+    smiles = ifelse(
+      Stereo_SMILES == "NI",
       Canonical_SMILES,
-      ifelse(Stereo_SMILES == "racemat",
+      ifelse(
+        Stereo_SMILES == "NS",
         Canonical_SMILES,
-        Stereo_SMILES
+        ifelse(Stereo_SMILES == "racemat", Canonical_SMILES, Stereo_SMILES)
       )
     )
-  ))
+  )
 
 # joining
 data_original <- dplyr::left_join(data_filled, data_original_2)

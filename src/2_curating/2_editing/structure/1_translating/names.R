@@ -111,17 +111,24 @@ if (nrow(dataForPubchem) == 0) {
 
 log_debug("translating structures with pubchem")
 dataTranslatedNominal_pubchem <- dataForPubchem |>
-  dplyr::mutate(smilesNominal_pubchem = name2smiles_pubchem(xs = seq_len(
-    nrow(dataForPubchem)
-  ))) |>
-  splitstackshape::cSplit("smilesNominal_pubchem",
+  dplyr::mutate(
+    smilesNominal_pubchem = name2smiles_pubchem(
+      xs = seq_len(
+        nrow(dataForPubchem)
+      )
+    )
+  ) |>
+  splitstackshape::cSplit(
+    "smilesNominal_pubchem",
     sep = "\n",
     direction = "long"
   ) |>
-  dplyr::mutate(smilesNominal_pubchem = y_as_na(
-    x = trimws(smilesNominal_pubchem),
-    y = "NA"
-  )) |>
+  dplyr::mutate(
+    smilesNominal_pubchem = y_as_na(
+      x = trimws(smilesNominal_pubchem),
+      y = "NA"
+    )
+  ) |>
   dplyr::mutate(
     smilesNominal_pubchem = gsub(
       pattern = "^http.*",
@@ -168,42 +175,56 @@ if (nrow(dataForCactus) == 0) {
 
 log_debug("... with cactus (fast)")
 dataTranslatedNominal_cactus <- dataForCactus |>
-  dplyr::mutate(smilesNominal_cactus = name2smiles_cactus(xs = seq_len(
-    nrow(dataForCactus)
-  ))) |>
+  dplyr::mutate(
+    smilesNominal_cactus = name2smiles_cactus(
+      xs = seq_len(
+        nrow(dataForCactus)
+      )
+    )
+  ) |>
   dplyr::mutate(smilesNominal_cactus = as.character(smilesNominal_cactus)) |>
-  dplyr::mutate(smilesNominal_cactus = y_as_na(
-    x = smilesNominal_cactus,
-    y = "character(0)"
-  )) |>
-  dplyr::mutate(smilesNominal_cactus = y_as_na(
-    x = smilesNominal_cactus,
-    y = "NA"
-  )) |>
-  dplyr::mutate(smilesNominal_cactus = gsub(
-    pattern = "^http.*",
-    replacement = NA,
-    x = smilesNominal_cactus
-  )) |>
-  dplyr::mutate(smilesNominal_cactus = gsub(
-    pattern = "^NCI.*",
-    replacement = NA,
-    x = smilesNominal_cactus
-  ))
+  dplyr::mutate(
+    smilesNominal_cactus = y_as_na(
+      x = smilesNominal_cactus,
+      y = "character(0)"
+    )
+  ) |>
+  dplyr::mutate(
+    smilesNominal_cactus = y_as_na(
+      x = smilesNominal_cactus,
+      y = "NA"
+    )
+  ) |>
+  dplyr::mutate(
+    smilesNominal_cactus = gsub(
+      pattern = "^http.*",
+      replacement = NA,
+      x = smilesNominal_cactus
+    )
+  ) |>
+  dplyr::mutate(
+    smilesNominal_cactus = gsub(
+      pattern = "^NCI.*",
+      replacement = NA,
+      x = smilesNominal_cactus
+    )
+  )
 
 dataTranslated <- dplyr::left_join(
   dataInterim_1,
   dataTranslatedNominal_cactus
 ) |>
-  dplyr::mutate(structureTranslated_nominal = ifelse(
-    test = !is.na(smilesNominal_opsin),
-    yes = smilesNominal_opsin,
-    no = ifelse(
-      test = !is.na(smilesNominal_pubchem),
-      yes = smilesNominal_pubchem,
-      no = smilesNominal_cactus
+  dplyr::mutate(
+    structureTranslated_nominal = ifelse(
+      test = !is.na(smilesNominal_opsin),
+      yes = smilesNominal_opsin,
+      no = ifelse(
+        test = !is.na(smilesNominal_pubchem),
+        yes = smilesNominal_pubchem,
+        no = smilesNominal_cactus
+      )
     )
-  )) |>
+  ) |>
   dplyr::distinct()
 
 log_debug("exporting ...")

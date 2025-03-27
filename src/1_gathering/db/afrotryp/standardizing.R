@@ -13,10 +13,12 @@ database <- databases$get("afrotryp")
 
 # files
 data_original <-
-  readr::read_delim(file = unz(
-    description = database$sourceFiles$tsv,
-    filename = "AFROTRYP.tsv"
-  )) |>
+  readr::read_delim(
+    file = unz(
+      description = database$sourceFiles$tsv,
+      filename = "AFROTRYP.tsv"
+    )
+  ) |>
   dplyr::mutate_all(as.character)
 
 # selecting

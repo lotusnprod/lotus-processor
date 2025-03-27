@@ -38,7 +38,8 @@ references <-
   dplyr::mutate_all(as.character)
 
 ## Compiling flavors
-compiled_flavors <- dplyr::full_join(compounds_flavors,
+compiled_flavors <- dplyr::full_join(
+  compounds_flavors,
   flavors,
   by = c("flavor_id" = "id"),
   match = "all"
@@ -55,20 +56,23 @@ clean_flavors <- compiled_flavors |>
 
 # Casting
 ## contents
-compounds_contents <- dplyr::left_join(compounds,
+compounds_contents <- dplyr::left_join(
+  compounds,
   contents,
   by = c("id" = "source_id"),
   match = "all"
 ) |>
   dplyr::group_by(id) |>
-  dplyr::distinct(orig_food_scientific_name,
+  dplyr::distinct(
+    orig_food_scientific_name,
     orig_food_part,
     .keep_all = TRUE
   ) |>
   dplyr::ungroup()
 
 ## flavors
-compounds_flavors <- dplyr::left_join(compounds,
+compounds_flavors <- dplyr::left_join(
+  compounds,
   clean_flavors,
   by = c("id" = "compound_id"),
   match = "all"
@@ -109,17 +113,17 @@ foodb <- compounds_contents_flavors |>
     ),
     reference_pubmed = ifelse(
       test = citation != "MANUAL" &
-        citation_type == "ARTICLE" | citation_type == "TEXTBOOK",
+        citation_type == "ARTICLE" |
+        citation_type == "TEXTBOOK",
       yes = stringr::str_extract(string = citation, pattern = "[0-9]{6,9}"),
       no = NA
     ),
     reference_original = ifelse(
-      test =
-        !grepl(pattern = "[0-9]{6,9}", x = citation) &
-          citation != "MANUAL" &
-          citation_type == "ARTICLE" |
-          citation_type == "TEXTBOOK" |
-          is.na(citation_type),
+      test = !grepl(pattern = "[0-9]{6,9}", x = citation) &
+        citation != "MANUAL" &
+        citation_type == "ARTICLE" |
+        citation_type == "TEXTBOOK" |
+        is.na(citation_type),
       yes = citation,
       no = NA
     )
@@ -140,13 +144,15 @@ foodb <- compounds_contents_flavors |>
     flavor_name,
     flavor_group
   ) |>
-  dplyr::mutate(reference_doi = stringr::str_extract(
-    pattern = "10.*",
-    string = str_extract(
-      pattern = "doi.*",
-      string = reference_original
+  dplyr::mutate(
+    reference_doi = stringr::str_extract(
+      pattern = "10.*",
+      string = str_extract(
+        pattern = "doi.*",
+        string = reference_original
+      )
     )
-  )) |>
+  ) |>
   data.frame()
 
 foodb$organism_clean <- trimws(foodb$organism_clean)

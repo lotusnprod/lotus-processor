@@ -39,7 +39,9 @@ num <- as.integer(seq(
 
 log_debug("ensuring directories exist")
 create_dir(export = pathDataInterimTablesTranslatedReference)
-create_dir_with_rm(export = pathDataInterimTablesTranslatedReferenceOriginalFolder)
+create_dir_with_rm(
+  export = pathDataInterimTablesTranslatedReferenceOriginalFolder
+)
 
 for (i in num) {
   inpath <-
@@ -129,7 +131,10 @@ dataOriginal3 <- do.call(
     function(x) {
       readr::read_delim(
         file = gzfile(
-          description = file.path(pathDataInterimTablesTranslatedReferenceOriginalFolder, x)
+          description = file.path(
+            pathDataInterimTablesTranslatedReferenceOriginalFolder,
+            x
+          )
         ),
         delim = "\t",
         col_types = cols(.default = "c"),

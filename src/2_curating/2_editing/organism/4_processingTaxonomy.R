@@ -84,7 +84,9 @@ if (.Platform$OS.type == "unix") {
 }
 
 verified <-
-  jsonlite::stream_in(con = file(pathDataInterimTablesProcessedOrganismVerifiedTable))
+  jsonlite::stream_in(
+    con = file(pathDataInterimTablesProcessedOrganismVerifiedTable)
+  )
 
 verified_predf <- verified |>
   data.frame() |>
@@ -93,9 +95,13 @@ verified_predf <- verified |>
 if ("results" %in% names(verified_predf)) {
   verified_df <- verified_predf |>
     tidyr::unnest(results, names_repair = "minimal") |>
-    dplyr::filter(dataSourceTitleShort != "IRMNG (old)" &
-      dataSourceTitleShort != "IPNI") |>
-    dplyr::filter(!matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified) |>
+    dplyr::filter(
+      dataSourceTitleShort != "IRMNG (old)" &
+        dataSourceTitleShort != "IPNI"
+    ) |>
+    dplyr::filter(
+      !matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified
+    ) |>
     dplyr::arrange(dplyr::desc(sortScore)) |>
     dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>
     dplyr::select(
@@ -123,7 +129,10 @@ if ("results" %in% names(verified_predf)) {
 verified_df$organismDbTaxo <-
   y_as_na(verified_df$organismDbTaxo, "")
 
-dataCleanedOrganismVerified <- dplyr::left_join(dataCleanedOrganism, verified_df) |>
+dataCleanedOrganismVerified <- dplyr::left_join(
+  dataCleanedOrganism,
+  verified_df
+) |>
   dplyr::select(
     organismType,
     organismValue,
@@ -157,7 +166,10 @@ if (nrow(indexFungorum != 0)) {
 log_debug("manipulating taxonomic levels ")
 if (nrow(dataCleanedOrganism) != 0) {
   dataCleanedOrganismManipulated <-
-    manipulating_taxo(dfsel = dataCleanedOrganismVerified, dic = taxaRanksDictionary)
+    manipulating_taxo(
+      dfsel = dataCleanedOrganismVerified,
+      dic = taxaRanksDictionary
+    )
 }
 
 if (nrow(dataCleanedOrganism) == 0) {
@@ -197,14 +209,17 @@ if (nrow(dataCleanedOrganism) == 0) {
 }
 
 dataCleanedOrganismManipulated <-
-  dataCleanedOrganismManipulated[order(match(
-    dataCleanedOrganismManipulated$organismCleanedRank,
-    rank_order
-  )), ]
+  dataCleanedOrganismManipulated[
+    order(match(
+      dataCleanedOrganismManipulated$organismCleanedRank,
+      rank_order
+    )),
+  ]
 
 dataCleanedOrganismManipulated_clean <-
   dataCleanedOrganismManipulated |>
-  dplyr::distinct(organismType,
+  dplyr::distinct(
+    organismType,
     organismValue,
     organismDetected,
     organismCleaned,
@@ -221,7 +236,12 @@ dataCleanedOrganismManipulated_clean <-
 ## Avoid generic homonyms
 dataCleanedOrganismManipulated_clean <-
   dataCleanedOrganismManipulated_clean |>
-  dplyr::mutate(n = stringr::str_count(string = organismDetected, pattern = stringr::fixed(" "))) |>
+  dplyr::mutate(
+    n = stringr::str_count(
+      string = organismDetected,
+      pattern = stringr::fixed(" ")
+    )
+  ) |>
   dplyr::filter(n != 0 | organismCleaned == organismDetected) |>
   dplyr::select(-n)
 
@@ -314,7 +334,10 @@ if (nrow(dataCuratedOrganismAuto) == 0) {
 dataCuratedOrganismAuto <- dataCuratedOrganismAuto |>
   dplyr::anti_join(
     wrongHomonymsDictionary |>
-      dplyr::distinct(organismCleaned, organismCleanedRank = organismCleaned_rank)
+      dplyr::distinct(
+        organismCleaned,
+        organismCleanedRank = organismCleaned_rank
+      )
   )
 
 log_debug("exporting ... ")

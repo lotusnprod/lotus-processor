@@ -28,31 +28,34 @@ data_selected <- data_original |>
     organism_clean = Organism,
     reference_original = Reference
   ) |>
-  dplyr::mutate(reference_split = ifelse(
-    test = grepl(
-      pattern = ".*et al",
-      x = reference_original
-    ),
-    yes =
-      trimws(x = sub(
-        pattern = "^ /",
-        replacement = "",
+  dplyr::mutate(
+    reference_split = ifelse(
+      test = grepl(
+        pattern = ".*et al",
+        x = reference_original
+      ),
+      yes = trimws(
         x = sub(
-          pattern = "^,",
+          pattern = "^ /",
           replacement = "",
           x = sub(
-            pattern = "^\\.",
+            pattern = "^,",
             replacement = "",
             x = sub(
-              pattern = ".*et al",
+              pattern = "^\\.",
               replacement = "",
-              x = reference_original
+              x = sub(
+                pattern = ".*et al",
+                replacement = "",
+                x = reference_original
+              )
             )
           )
         )
-      )),
-    no = NA
-  )) |>
+      ),
+      no = NA
+    )
+  ) |>
   data.frame()
 
 # standardizing

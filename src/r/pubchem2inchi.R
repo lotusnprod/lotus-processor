@@ -15,7 +15,11 @@ pubchem2inchi <- function(i) {
       cpd <-
         data_translated_pubchem[i, "structure_original_numerical_pubchem"]
       url <-
-        paste0("https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/", cpd, "/property/InChI/txt")
+        paste0(
+          "https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/",
+          cpd,
+          "/property/InChI/txt"
+        )
       url <- gsub(
         pattern = "\\s",
         replacement = "%20",

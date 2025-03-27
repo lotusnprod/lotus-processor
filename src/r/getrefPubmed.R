@@ -15,8 +15,11 @@ getrefPubmed <- function(X) {
       df <- entrez_summary(db = "pubmed", id = X)
 
       translatedDoi <-
-        ifelse(test = "doi" %in% df[["articleids"]][, 1],
-          yes = trimws(df[["articleids"]][["value"]][[which(df[["articleids"]] == "doi")]]),
+        ifelse(
+          test = "doi" %in% df[["articleids"]][, 1],
+          yes = trimws(df[["articleids"]][["value"]][[which(
+            df[["articleids"]] == "doi"
+          )]]),
           no = NA
         )
       translatedJournal <- df[["fulljournalname"]]

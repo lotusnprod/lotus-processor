@@ -23,16 +23,17 @@ get_jsd <- function(X) {
   #     p(sprintf("x=%g", as.numeric(x))) ## little hack
   table_real <- table_counted |>
     dplyr::filter(!is.na(!!as.name(chem_level))) %>%
-    dplyr::distinct(!!as.name(bio_level), !!as.name(chem_level), !!as.name(paste(chem_level, bio_level,
-      sep =
-        "_"
-    ))) %>%
+    dplyr::distinct(
+      !!as.name(bio_level),
+      !!as.name(chem_level),
+      !!as.name(paste(chem_level, bio_level, sep = "_"))
+    ) %>%
     dplyr::filter(!!as.name(chem_level) == Y[X]) %>%
     dplyr::right_join(table %>% dplyr::distinct(!!as.name(bio_level))) %>%
-    dplyr::distinct(!!as.name(bio_level), !!as.name(paste(chem_level, bio_level,
-      sep =
-        "_"
-    ))) %>%
+    dplyr::distinct(
+      !!as.name(bio_level),
+      !!as.name(paste(chem_level, bio_level, sep = "_"))
+    ) %>%
     dplyr::filter(!is.na(!!as.name(bio_level))) %>%
     dplyr::mutate_all(~ replace(., is.na(.), 0))
 

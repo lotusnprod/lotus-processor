@@ -13,10 +13,7 @@ library(tidyr)
 #'
 #' @examples
 getAllReferences <- function(data, referenceType, method = "osa") {
-  referenceColumnName <- paste("referenceOriginal",
-    referenceType,
-    sep = "_"
-  )
+  referenceColumnName <- paste("referenceOriginal", referenceType, sep = "_")
 
   tableIntial <- data %>%
     mutate(level = row.names(.))
@@ -44,18 +41,16 @@ getAllReferences <- function(data, referenceType, method = "osa") {
     tableInterim[i, "distScore"] <-
       ifelse(
         test = "title" %in% colnames(tableInterim),
-        yes =
-          stringdist(
-            a = as.character(tolower(tableInterim[i, 1])),
-            # method is case sensitive
-            b = as.character(tolower(tableInterim[i, "title"])),
-            # method is case sensitive
-            method = method
-          ),
+        yes = stringdist(
+          a = as.character(tolower(tableInterim[i, 1])),
+          # method is case sensitive
+          b = as.character(tolower(tableInterim[i, "title"])),
+          # method is case sensitive
+          method = method
+        ),
         no = NA
       )
   }
-
 
   if (!"title" %in% colnames(tableInterim)) {
     tableFinal <- tableInterim %>%
@@ -97,7 +92,8 @@ getAllReferences <- function(data, referenceType, method = "osa") {
         cols = referenceTranslatedAuthor,
         keep_empty = TRUE
       ) %>%
-      distinct_at(.,
+      distinct_at(
+        .,
         .vars = (c(
           1,
           4

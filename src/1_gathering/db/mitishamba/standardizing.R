@@ -25,22 +25,28 @@ data_selected <- data_original |>
     name = common_name,
     reference_original = authors
   ) |>
-  dplyr::mutate(reference_test = sub(
-    pattern = "\\([0-9]{4}\\)",
-    replacement = "§",
-    x = reference_original
-  )) |>
+  dplyr::mutate(
+    reference_test = sub(
+      pattern = "\\([0-9]{4}\\)",
+      replacement = "§",
+      x = reference_original
+    )
+  ) |>
   splitstackshape::cSplit("reference_test", sep = "§") |>
-  dplyr::mutate(reference_test_2 = sub(
-    pattern = "^\\.",
-    replacement = "",
-    x = reference_test_2
-  )) |>
-  dplyr::mutate(reference_test_2 = sub(
-    pattern = "^\\,",
-    replacement = "",
-    x = reference_test_2
-  )) |>
+  dplyr::mutate(
+    reference_test_2 = sub(
+      pattern = "^\\.",
+      replacement = "",
+      x = reference_test_2
+    )
+  ) |>
+  dplyr::mutate(
+    reference_test_2 = sub(
+      pattern = "^\\,",
+      replacement = "",
+      x = reference_test_2
+    )
+  ) |>
   dplyr::mutate(reference_test_2 = trimws(x = reference_test_2)) |>
   dplyr::select(
     structure_name = name,

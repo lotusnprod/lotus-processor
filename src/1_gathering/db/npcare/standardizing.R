@@ -20,7 +20,12 @@ data_original <- readr::read_delim(
 
 # selecting
 data_selected <- data_original |>
-  dplyr::mutate(reference_pubmed = stringr::str_extract(string = ref_link, pattern = "[0-9]{6,9}")) |>
+  dplyr::mutate(
+    reference_pubmed = stringr::str_extract(
+      string = ref_link,
+      pattern = "[0-9]{6,9}"
+    )
+  ) |>
   dplyr::select(
     originalid = id,
     structure_name = compounds,

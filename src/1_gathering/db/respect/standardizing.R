@@ -19,10 +19,7 @@ data_standard <- do.call(
   lapply(
     database$sourceFiles$tsv,
     function(x) {
-      dat <- read.csv(x,
-        header = TRUE,
-        sep = "\n"
-      )
+      dat <- read.csv(x, header = TRUE, sep = "\n")
       dat
     }
   )
@@ -117,7 +114,8 @@ data_manipulated <- data_selected |>
   splitstackshape::cSplit("reference_1", sep = ";") |>
   dplyr::mutate_all(as.character) |>
   dplyr::mutate(
-    reference_publishingDetails = paste(reference_1_2,
+    reference_publishingDetails = paste(
+      reference_1_2,
       reference_1_3,
       reference_1_4,
       sep = ";"

@@ -91,11 +91,13 @@ data_filtered_2 <- data_selected |>
   dplyr::select(-REFERENCE)
 
 data_filtered <- rbind(data_filtered_1, data_filtered_2) |>
-  dplyr::mutate(reference_external = ifelse(
-    test = is.na(reference_external),
-    yes = "DRDUKE",
-    no = reference_external
-  )) |>
+  dplyr::mutate(
+    reference_external = ifelse(
+      test = is.na(reference_external),
+      yes = "DRDUKE",
+      no = reference_external
+    )
+  ) |>
   dplyr::select(
     organism_clean = biologicalsource,
     structure_name = name,

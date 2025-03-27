@@ -26,14 +26,8 @@ data_manipulated <- data_original |>
   dplyr::mutate(
     name = IUPAC_name,
     biologicalsource = paste(
-      ifelse(is.na(Genus),
-        "",
-        Genus
-      ),
-      ifelse(is.na(Species),
-        "",
-        Species
-      ),
+      ifelse(is.na(Genus), "", Genus),
+      ifelse(is.na(Species), "", Species),
       sep = " "
     )
   )
@@ -53,18 +47,21 @@ data_selected <- data_manipulated |>
   ) |>
   tidyr::pivot_longer(5:7) |>
   dplyr::filter(!is.na(value)) |>
-  dplyr::select(structure_name,
+  dplyr::select(
+    structure_name,
     organism_clean,
     structure_inchi,
     structure_smiles,
     reference_doi = value
   ) |>
-  dplyr::mutate(organism_clean = gsub(
-    pattern = "n.a.",
-    replacement = "",
-    x = organism_clean,
-    fixed = TRUE
-  )) |>
+  dplyr::mutate(
+    organism_clean = gsub(
+      pattern = "n.a.",
+      replacement = "",
+      x = organism_clean,
+      fixed = TRUE
+    )
+  ) |>
   data.frame()
 
 # standardizing

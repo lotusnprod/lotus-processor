@@ -44,23 +44,27 @@ getphytohub <- function(xs) {
           )
           sample <- rvest::read_html(url_id)
           scrape1 <-
-            rvest::html_element(sample,
+            rvest::html_element(
+              sample,
               xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[2]"
             ) |>
             rvest::html_text()
           scrape2 <-
-            rvest::html_element(sample,
+            rvest::html_element(
+              sample,
               xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[11]/pre"
             ) |>
             rvest::html_text()
           scrape3 <-
-            rvest::html_element(sample,
+            rvest::html_element(
+              sample,
               xpath = "//*[@id=\"fs\"]/div/div/div/table"
             ) |>
             rvest::html_table()
           scrape4 <- scrape3[, 2]
           scrape5 <-
-            rvest::html_element(sample,
+            rvest::html_element(
+              sample,
               xpath = "/html/body/main/div[2]/section[1]/div/div[2]/dl/dd[12]/pre"
             ) |>
             rvest::html_text()
@@ -124,7 +128,10 @@ getphytohubref <- function(xs) {
             rvest::html_elements(sample, xpath = "/html/body/main/div/h1") %>%
             rvest::html_text()
           scrape2 <-
-            rvest::html_elements(sample, xpath = "/html/body/main/blockquote") %>%
+            rvest::html_elements(
+              sample,
+              xpath = "/html/body/main/blockquote"
+            ) %>%
             rvest::html_text()
 
           df <- cbind(scrape1, scrape2)
@@ -150,16 +157,20 @@ PHYTOHUB_6 <- dplyr::bind_rows(PHYTOHUB_5)
 colnames(PHYTOHUB_6) <- c("pair", "reference")
 
 PHYTOHUB_7 <- PHYTOHUB_6 |>
-  dplyr::mutate(joining_col = gsub(
-    pattern = "Publications for ",
-    replacement = "",
-    x = pair
-  )) |>
-  dplyr::mutate(joining_col = gsub(
-    pattern = "being present in ",
-    replacement = "",
-    x = joining_col
-  ))
+  dplyr::mutate(
+    joining_col = gsub(
+      pattern = "Publications for ",
+      replacement = "",
+      x = pair
+    )
+  ) |>
+  dplyr::mutate(
+    joining_col = gsub(
+      pattern = "being present in ",
+      replacement = "",
+      x = joining_col
+    )
+  )
 
 PHYTOHUB_8 <- PHYTOHUB_4 |>
   dplyr::mutate(joining_col = paste(name, biologicalsource, sep = " "))

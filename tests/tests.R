@@ -121,7 +121,9 @@ test_that(
   )
 )
 
-log_debug("... not testing unvalidated references since they vary because of Crossref")
+log_debug(
+  "... not testing unvalidated references since they vary because of Crossref"
+)
 # test_that(
 #   desc = "references",
 #   code = expect_equal(object = referenceTableFull,

@@ -128,7 +128,10 @@ dataTitle3 <- do.call(
     function(x) {
       readr::read_delim(
         file = gzfile(
-          description = file.path(pathDataInterimTablesTranslatedReferenceTitleFolder, x)
+          description = file.path(
+            pathDataInterimTablesTranslatedReferenceTitleFolder,
+            x
+          )
         ),
         delim = "\t",
         escape_double = TRUE,

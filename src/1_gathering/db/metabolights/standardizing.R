@@ -68,15 +68,19 @@ additional_fields_l <-
 X <- seq_len(nrow(entries))
 
 get_length_cross_references <- function(X) {
-  length <- length(cross_references_l[[X]] |>
-    as_list())
+  length <- length(
+    cross_references_l[[X]] |>
+      as_list()
+  )
 
   return(length)
 }
 
 get_length_additional_fields <- function(X) {
-  length <- length(additional_fields_l[[X]] |>
-    as_list())
+  length <- length(
+    additional_fields_l[[X]] |>
+      as_list()
+  )
 
   return(length)
 }
@@ -114,9 +118,7 @@ additional_fields_organism <- cbind(
   field_names
 ) |>
   dplyr::filter(field_name == "Organism") |>
-  dplyr::select(id,
-    organism = field
-  ) |>
+  dplyr::select(id, organism = field) |>
   dplyr::mutate_all(as.character)
 
 additional_fields_structure <- cbind(
@@ -125,9 +127,7 @@ additional_fields_structure <- cbind(
   field_names
 ) |>
   dplyr::filter(field_name == "inchi") |>
-  dplyr::select(id,
-    inchi = field
-  ) |>
+  dplyr::select(id, inchi = field) |>
   dplyr::mutate_all(as.character)
 
 global_df <- dplyr::left_join(entries, cross_references_full) |>
@@ -140,8 +140,11 @@ global_df <- dplyr::left_join(entries, cross_references_full) |>
     organism,
     inchi
   ) |>
-  dplyr::filter((!is.na(organism) &
-    !is.na(inchi)) | !is.na(as.integer(pubmed_ref)))
+  dplyr::filter(
+    (!is.na(organism) &
+      !is.na(inchi)) |
+      !is.na(as.integer(pubmed_ref))
+  )
 
 ref_df <- global_df |>
   dplyr::filter(!is.na(as.integer(pubmed_ref))) |>
@@ -152,94 +155,126 @@ organism_structure_df <- global_df |>
   dplyr::distinct(id_study, organism, inchi)
 
 final_df <- dplyr::left_join(ref_df, organism_structure_df) |>
-  dplyr::filter(!is.na(organism) &
-    !is.na(inchi) &
-    !is.na(pubmed_ref)) |>
-  dplyr::mutate(organism = gsub(
-    pattern = "NCBITAXON:",
-    replacement = "",
-    x = organism,
-    fixed = TRUE
-  )) |>
-  dplyr::mutate(organism = gsub(
-    pattern = "EFO:",
-    replacement = "",
-    x = organism,
-    fixed = TRUE
-  )) |>
+  dplyr::filter(
+    !is.na(organism) &
+      !is.na(inchi) &
+      !is.na(pubmed_ref)
+  ) |>
+  dplyr::mutate(
+    organism = gsub(
+      pattern = "NCBITAXON:",
+      replacement = "",
+      x = organism,
+      fixed = TRUE
+    )
+  ) |>
+  dplyr::mutate(
+    organism = gsub(
+      pattern = "EFO:",
+      replacement = "",
+      x = organism,
+      fixed = TRUE
+    )
+  ) |>
   dplyr::distinct() |>
   splitstackshape::cSplit("organism", sep = ";", direction = "long") |>
-  dplyr::filter(!grepl(
-    pattern = "blank",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "reference",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "standard",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "solvent",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "culture",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "buffer",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = " feed",
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "soil",
-    ## indicates two organisms
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "matrix",
-    ## indicates two organisms
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "control",
-    ## indicates two organisms
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::filter(!grepl(
-    pattern = "/",
-    ## indicates two organisms
-    x = organism,
-    ignore.case = TRUE
-  )) |>
-  dplyr::mutate(organism = gsub(
-    pattern = "[",
-    replacement = "",
-    x = organism,
-    fixed = TRUE
-  )) |>
-  dplyr::mutate(organism = gsub(
-    pattern = "]",
-    replacement = "",
-    x = organism,
-    fixed = TRUE
-  )) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "blank",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "reference",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "standard",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "solvent",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "culture",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "buffer",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = " feed",
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "soil",
+      ## indicates two organisms
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "matrix",
+      ## indicates two organisms
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "control",
+      ## indicates two organisms
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::filter(
+    !grepl(
+      pattern = "/",
+      ## indicates two organisms
+      x = organism,
+      ignore.case = TRUE
+    )
+  ) |>
+  dplyr::mutate(
+    organism = gsub(
+      pattern = "[",
+      replacement = "",
+      x = organism,
+      fixed = TRUE
+    )
+  ) |>
+  dplyr::mutate(
+    organism = gsub(
+      pattern = "]",
+      replacement = "",
+      x = organism,
+      fixed = TRUE
+    )
+  ) |>
   dplyr::mutate(organism = tolower(organism)) |>
   dplyr::mutate(organism = capitalize(organism)) |>
   dplyr::filter(pubmed_ref != "32331455") |>

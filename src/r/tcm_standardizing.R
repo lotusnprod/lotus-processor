@@ -684,10 +684,7 @@ tcm_standardizing <- function(x) {
     left_join(x_4, tcm_names_list, by = c("newnewbiologicalsource" = "latin"))
 
   x_4 <-
-    left_join(x_4,
-      tcm_names_list,
-      by = c("newnewbiologicalsource" = "common")
-    )
+    left_join(x_4, tcm_names_list, by = c("newnewbiologicalsource" = "common"))
 
   x_4$newnewnewbiologicalsource <-
     apply(x_4, 1, function(x) {

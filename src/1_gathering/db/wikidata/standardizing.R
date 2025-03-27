@@ -15,7 +15,8 @@ database <- databases$get("wikidata")
 ## files
 data_organism <-
   readr::read_delim(file = wikidataLotusExporterDataOutputTaxaPath) |>
-  splitstackshape::cSplit("names_pipe_separated",
+  splitstackshape::cSplit(
+    "names_pipe_separated",
     sep = "|",
     direction = "long"
   ) |>
@@ -29,14 +30,13 @@ data_structures_1 <- data_structures |>
 
 data_structures_2 <- data_structures |>
   dplyr::filter(grepl(pattern = "\\|", x = inchiKey)) |>
-  splitstackshape::cSplit(c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
+  splitstackshape::cSplit(
+    c("canonicalSmiles", "isomericSmiles", "inchi", "inchiKey"),
     sep = "|"
   ) |>
   tidyr::pivot_longer(cols = contains("_")) |>
   dplyr::filter(!is.na(value)) |>
-  splitstackshape::cSplit("name",
-    sep = "_"
-  ) |>
+  splitstackshape::cSplit("name", sep = "_") |>
   tidyr::pivot_wider(names_from = "name_1") |>
   dplyr::select(-name_2) |>
   dplyr::distinct()
@@ -46,7 +46,8 @@ data_structures <- data_structures_1 |>
 
 data_references <-
   readr::read_delim(file = wikidataLotusExporterDataOutputReferencesPath) |>
-  splitstackshape::cSplit("dois_pipe_separated",
+  splitstackshape::cSplit(
+    "dois_pipe_separated",
     sep = "|",
     direction = "long"
   ) |>
@@ -77,11 +78,13 @@ data_manipulated <- data_triples |>
   dplyr::inner_join(data_organism, by = c("taxon" = "wikidataId")) |>
   dplyr::inner_join(data_structures, by = c("compound" = "wikidataId")) |>
   dplyr::inner_join(data_references, by = c("reference" = "wikidataId")) |>
-  dplyr::mutate(structure_smiles = if_else(
-    condition = !is.na(isomericSmiles),
-    true = isomericSmiles,
-    false = canonicalSmiles
-  )) |>
+  dplyr::mutate(
+    structure_smiles = if_else(
+      condition = !is.na(isomericSmiles),
+      true = isomericSmiles,
+      false = canonicalSmiles
+    )
+  ) |>
   dplyr::select(
     structure_smiles,
     # structure_inchi = inchi,

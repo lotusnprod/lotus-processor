@@ -181,7 +181,9 @@ if (mode == "custom") {
       values_from = structureValue
     ) %>%
     tidyr::unnest(cols = c(inchi, smiles, nominal)) %>%
-    tidyr::pivot_longer(cols = colnames(.)[grepl(pattern = "inchi|smiles", x = colnames(.))]) %>%
+    tidyr::pivot_longer(
+      cols = colnames(.)[grepl(pattern = "inchi|smiles", x = colnames(.))]
+    ) %>%
     dplyr::distinct(
       structureType = name,
       structureValue = value,

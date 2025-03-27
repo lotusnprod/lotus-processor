@@ -55,7 +55,11 @@ data_pivoted <- c %>%
 
 # adding references
 data_referenced <-
-  dplyr::left_join(data_pivoted, publications, by = c("publicationids" = "id")) |>
+  dplyr::left_join(
+    data_pivoted,
+    publications,
+    by = c("publicationids" = "id")
+  ) |>
   dplyr::select(
     uniqueid = id.x,
     name,

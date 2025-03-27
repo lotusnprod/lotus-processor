@@ -102,10 +102,7 @@ manipulating_taxo <- function(dfsel, dic) {
       .keep_all = TRUE
     )
 
-  df2$rank <- ifelse(test = is.na(df2$rank),
-    yes = "NA",
-    no = df2$rank
-  )
+  df2$rank <- ifelse(test = is.na(df2$rank), yes = "NA", no = df2$rank)
 
   # df2$id <- sub(
   #   pattern = "urn:lsid:marinespecies.org:taxname:",
@@ -174,22 +171,14 @@ manipulating_taxo <- function(dfsel, dic) {
         values_to = "name",
         values_drop_na = TRUE
       ) %>%
-      distinct(organismCleaned,
-        organismDbTaxo,
-        taxonId,
-        rank,
-        .keep_all = TRUE
-      ) ## because of Open Tree of Life taxonomy
+      distinct(organismCleaned, organismDbTaxo, taxonId, rank, .keep_all = TRUE) ## because of Open Tree of Life taxonomy
   }
 
   # pivoting (wide)
   if (nrow(df3) != 0) {
     df5 <- df4 %>%
       group_by(organismCleaned, organismDbTaxo, taxonId) %>%
-      distinct(rank,
-        name,
-        .keep_all = TRUE
-      ) %>%
+      distinct(rank, name, .keep_all = TRUE) %>%
       pivot_wider(
         names_from = rank,
         values_from = name

@@ -208,8 +208,10 @@ database_source_old <- DBI::dbGetQuery(
   statement = sqlFromFile(file = "queries_db/extract_database_source.sql")
 )
 database_source <- database_source |>
-  dplyr::anti_join(database_source_old |>
-    dplyr::select(name)) |>
+  dplyr::anti_join(
+    database_source_old |>
+      dplyr::select(name)
+  ) |>
   dplyr::distinct()
 
 log_debug(
@@ -543,7 +545,8 @@ organism_detected <- organismOld |>
     organismCleaned
   ) |>
   dplyr::mutate(id = row_number()) |>
-  dplyr::select(id,
+  dplyr::select(
+    id,
     organism_detected = organismDetected,
     organism_cleaned = organismCleaned
   )
@@ -580,9 +583,7 @@ organism_cleaned <- DBI::dbGetQuery(
 )
 
 organism_synonym <- organism_detected |>
-  dplyr::left_join(organism_cleaned,
-    by = c("organism_cleaned" = "name")
-  ) |>
+  dplyr::left_join(organism_cleaned, by = c("organism_cleaned" = "name")) |>
   dplyr::select(
     id = id.x,
     name = organism_detected,
@@ -651,24 +652,20 @@ organism_database <- DBI::dbGetQuery(
 )
 
 organism_information <- organismOld |>
-  dplyr::left_join(organism_cleaned,
-    by = c("organismCleaned" = "name")
-  ) |>
+  dplyr::left_join(organism_cleaned, by = c("organismCleaned" = "name")) |>
   dplyr::select(
     organism_cleaned_id = id,
     dplyr::everything()
   ) |>
-  dplyr::left_join(organism_database,
+  dplyr::left_join(
+    organism_database,
     by = c("organismCleaned_dbTaxo" = "name")
   ) |>
   dplyr::select(
     organism_database_id = id,
     dplyr::everything()
   ) |>
-  dplyr::distinct(organism_cleaned_id,
-    organism_database_id,
-    .keep_all = TRUE
-  )
+  dplyr::distinct(organism_cleaned_id, organism_database_id, .keep_all = TRUE)
 
 organism_information_old <- DBI::dbGetQuery(
   conn = db,
@@ -765,7 +762,9 @@ structure_cleaned <- structureOld |>
   dplyr::distinct() |>
   dplyr::mutate(
     stereocentersTotal = as.integer(structureCleaned_stereocenters_total),
-    stereocentersUnspecified = as.integer(structureCleaned_stereocenters_unspecified),
+    stereocentersUnspecified = as.integer(
+      structureCleaned_stereocenters_unspecified
+    ),
     exactMass = as.numeric(structureCleaned_exactMass),
     xlogp = as.numeric(structureCleaned_xlogp)
   ) |>
@@ -838,9 +837,7 @@ inhouseDbMinimal_complemented <-
   dplyr::left_join(., automaticallyValidated) %>%
   tidyr::pivot_longer(cols = (ncol(.) - 3):ncol(.)) %>%
   dplyr::filter(!is.na(value)) %>%
-  dplyr::select(dplyr::everything(), -name,
-    curationTypeId = value
-  ) %>%
+  dplyr::select(dplyr::everything(), -name, curationTypeId = value) %>%
   dplyr::arrange(curationTypeId) %>%
   dplyr::distinct(
     database,
@@ -859,9 +856,7 @@ inhouseDbMinimal_complemented <-
   )
 
 data_cleaned_temp <- inhouseDbMinimal_complemented |>
-  dplyr::left_join(organism_cleaned,
-    by = c("organismCleaned" = "name")
-  ) |>
+  dplyr::left_join(organism_cleaned, by = c("organismCleaned" = "name")) |>
   dplyr::select(
     organismCleanedId = id,
     dplyr::everything()
@@ -884,7 +879,8 @@ data_cleaned_temp <- inhouseDbMinimal_complemented |>
     structureCleanedId = id,
     dplyr::everything()
   ) %>%
-  dplyr::left_join(reference_cleaned %>% distinct(id, title),
+  dplyr::left_join(
+    reference_cleaned %>% distinct(id, title),
     by = c("referenceCleanedTitle" = "title")
   ) |>
   dplyr::select(
@@ -955,22 +951,28 @@ rm(
 gc()
 
 data_source__data_cleaned <- data_cleaned_temp |>
-  dplyr::left_join(data_source |>
-    dplyr::select(
-      data_source_id = id,
-      dplyr::everything()
-    )) |>
-  dplyr::left_join(data_cleaned |>
-    dplyr::select(
-      data_cleaned_id = id,
-      dplyr::everything()
-    )) |>
+  dplyr::left_join(
+    data_source |>
+      dplyr::select(
+        data_source_id = id,
+        dplyr::everything()
+      )
+  ) |>
+  dplyr::left_join(
+    data_cleaned |>
+      dplyr::select(
+        data_cleaned_id = id,
+        dplyr::everything()
+      )
+  ) |>
   dplyr::filter(!is.na(data_cleaned_id)) |>
   dplyr::distinct(data_source_id, data_cleaned_id)
 
 data_source__data_cleaned_old <- DBI::dbGetQuery(
   conn = db,
-  statement = sqlFromFile(file = "queries_db/extract_data_source__data_cleaned.sql")
+  statement = sqlFromFile(
+    file = "queries_db/extract_data_source__data_cleaned.sql"
+  )
 )
 data_source__data_cleaned <- data_source__data_cleaned |>
   dplyr::anti_join(data_source__data_cleaned_old) |>

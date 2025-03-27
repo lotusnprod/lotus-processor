@@ -42,8 +42,10 @@ if (mode == "full") {
         latin = `Latin Name`,
         common = `English Name`
       ) |>
-      dplyr::filter(!is.na(common) &
-        !is.na(latin)) |>
+      dplyr::filter(
+        !is.na(common) &
+          !is.na(latin)
+      ) |>
       dplyr::mutate(biologicalsource = latin)
   }
 
@@ -60,8 +62,10 @@ if (mode == "full") {
     ) %>%
     dplyr::mutate(biologicalsource = latin) %>%
     dplyr::filter(row.names(.) != 1) %>%
-    dplyr::filter(common != "N/A" &
-      latin != "N/A")
+    dplyr::filter(
+      common != "N/A" &
+        latin != "N/A"
+    )
 
   # latin genitive dictionaries
   ## i
@@ -133,9 +137,7 @@ if (mode == "full") {
       fixed = TRUE,
       stripWhite = FALSE
     ) %>%
-    dplyr::select(common,
-      biologicalsource = biologicalsource_2
-    ) %>%
+    dplyr::select(common, biologicalsource = biologicalsource_2) %>%
     dplyr::filter(!is.na(biologicalsource)) %>%
     splitstackshape::cSplit(
       splitCols = "biologicalsource",
@@ -253,9 +255,7 @@ if (mode == "full") {
       splitCols = "biologicalsource",
       sep = " "
     ) |>
-    dplyr::select(common,
-      biologicalsource = biologicalsource_01
-    )
+    dplyr::select(common, biologicalsource = biologicalsource_01)
 
   # filtering empty entries
   tcmNamesDic <- tcmNamesDic |>
@@ -377,8 +377,10 @@ if (mode == "full") {
       newCanonicalName = newbiologicalsource
     ) |>
     dplyr::distinct() |>
-    dplyr::filter(vernacularName != canonicalName |
-      is.na(newCanonicalName))
+    dplyr::filter(
+      vernacularName != canonicalName |
+        is.na(newCanonicalName)
+    )
 
   tcmNamesDicCurated$vernacularName <-
     iconv(
