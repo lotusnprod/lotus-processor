@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:2.1.1
+FROM mambaorg/micromamba:2.2.0
 
 ARG USER_ID
 ARG GROUP_ID
