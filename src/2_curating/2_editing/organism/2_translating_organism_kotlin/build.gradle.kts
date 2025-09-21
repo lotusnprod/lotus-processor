@@ -1,14 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val univocityParserVersion = "2.9.1"
 val junitApiVersion = "5.13.4"
-val jvmVersion = "17"
+val jvmVersion = JvmTarget.JVM_17
 
 group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "2.1.21"
+    kotlin("jvm") version "2.2.0"
     application
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -34,47 +36,41 @@ dependencies {
 /**
  * We need to compile for the outdated conda java version
  */
-tasks.withType<KotlinCompile>() {
-    kotlinOptions.jvmTarget = jvmVersion
+tasks.withType<KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(jvmVersion)
+    }
 }
+
 tasks.withType<JavaCompile> {
-    sourceCompatibility = jvmVersion
-    targetCompatibility = jvmVersion
+    sourceCompatibility = "17"
+    targetCompatibility = "17"
     options.encoding = "UTF-8"
 }
 
-/**
- * We say what needs to be executed
- */
+/** Application main class */
 application {
     mainClass.set("MainKt")
 }
 
+/** Add Main-Class to Jar manifest */
 tasks.withType<Jar> {
     manifest {
         attributes(
-            mapOf(
-                "Main-Class" to application.mainClass
-            )
+            "Main-Class" to application.mainClass.get()
         )
     }
 }
 
-/**
- *  We want to make a small jar, with always the same name
- */
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+/** ShadowJar configuration */
+tasks.withType<ShadowJar> {
     minimize()
     archiveBaseName.set("shadow")
     archiveClassifier.set("")
     archiveVersion.set("")
-
 }
 
-/**
- * Configuration of test framework
- */
-
+/** Configure test framework */
 tasks.test {
     useJUnitPlatform()
 }
