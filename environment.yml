@@ -1,9 +1,6 @@
 name: lotus_env
 channels:
   - conda-forge
-  - bioconda
-  - defaults
-  - rdkit
 dependencies:
   - chembl_structure_pipeline >=1.2.0
   - conda-build >=2.1.5
@@ -24,7 +21,7 @@ dependencies:
   - r-gdata
   - r-httr
   - r-jsonlite
-  - r-philentropy
+  # - r-philentropy
   - r-plotly
   - r-progressr
   - r-purrr
@@ -34,8 +31,8 @@ dependencies:
   - r-readxl
   - r-remotes
   - r-rentrez
-  - r-rotl
-  - r-RPostgreSQL
+  # - r-rotl
+  # - r-RPostgreSQL
   - r-RSQLite
   - r-R.utils ## needed for new version of data.table to read .gz
   - r-rvest

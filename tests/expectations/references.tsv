@@ -4,12 +4,13 @@ dirty	Green bell pepper	Capsicum annuum	original	Aasen,Acta Chem. Scand. Ser. B,
 clean	Iris	Iris	split	; A comparative study of Anthraquinones in Rhizomes of Knifia species, Biochemical systematics and Ecology, vol16, No.2 pp 157-163	10.1016/0305-1978(88)90089-0	NA	NA	A comparative study of anthraquinones in rhizomes of Kniphofia species	Biochemical Systematics and Ecology	NA	NA	NA	NA	NA	NA	1	1
 clean	Iris pallida	Iris pallida	title	SWERTIAJAPONIN FROM IRIS LACTEA	10.1007/BF00598780	NA	NA	Swertiajaponin fromIris lactea	NA	NA	NA	1	NA	NA	NA	NA	NA
 clean	Iris florentina	Iris florentina	publishingDetails	(J Nat Prod) 43: 97-102	NA	NA	NA	New Tertiary Alkaloids of Strychnos decussata	NA	NA	NA	NA	NA	NA	NA	NA	NA
+clean	Iris florentina	Iris ×	publishingDetails	(J Nat Prod) 43: 97-102	NA	NA	NA	New Tertiary Alkaloids of Strychnos decussata	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Iris hybr	Iris hybr	title	TWO ISOFLAVONES FROM IRIS SONGARICA SCHRENK	10.1016/0031-9422(90)80076-S	NA	NA	Two isoflavones from Iris kashmiriana	NA	NA	NA	14	NA	NA	NA	NA	NA
-clean	Iris persiminima	Iris persiminima	title	(J Nat Prod) 43: 97-102	10.1021/NP50011A900	NA	NA	ads	NA	NA	NA	21	NA	NA	NA	NA	NA
+clean	Iris persiminima	NA	title	(J Nat Prod) 43: 97-102	10.1021/NP50010A700	NA	NA	Masthead	NA	NA	NA	21	NA	NA	NA	NA	NA
 clean	Rose	NA	publishingDetails	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Apple	NA	original	HelloWorld!	NA	NA	NA	HelloWorld (project)	NA	NA	NA	NA	NA	NA	NA	NA	NA
 clean	Ficus variegata	Ficus variegata	pubmed	1234	NA	NA	1234	Change in the kinetics of sulphacetamide tissue distribution in Walker tumor-bearing rats.	NA	NA	NA	0	NA	NA	NA	NA	NA
-clean	Ficus	Ficus	pubmed	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	NA	NA	NA	0	NA	NA	NA	NA	NA
+clean	Ficus	NA	pubmed	31708947	10.3389/FPLS.2019.01329	NA	31708947	Taxonomically Informed Scoring Enhances Confidence in Natural Products Annotation.	NA	NA	NA	0	NA	NA	NA	NA	NA
 clean	Kiwi canterberus	Kiwi canterberus	doi	10.1080/00071618200650061 .	10.1080/00071618200650061	NA	NA	The keto-carotenoids of two marine coccoid members of the Eustigmatophyceae	NA	NA	NA	0	NA	NA	NA	NA	NA
 clean	Rose apple	NA	doi	10.1002/(sici)1099-0690(199801)1998:1%3c73::aid-ejoc73%3e3.0.co;2-f	10.1002/(SICI)1099-0690(199801)1998:1<73::AID-EJOC73>3.0.CO;2-F	NA	NA	New Triquinane-Type Sesquiterpenoids fromMacrocystidia cucumis (Basidiomycetes)	NA	NA	NA	0	NA	NA	NA	NA	NA
 clean	Callichroma iris	Callichroma iris	split	Bar	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA	NA
