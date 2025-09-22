@@ -1,6 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val univocityParserVersion = "2.9.1"
 val junitApiVersion = "5.13.4"
@@ -10,9 +9,9 @@ group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "2.2.0"
+    kotlin("jvm") version "2.2.20"
     application
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "9.1.0"
 }
 
 repositories {
@@ -63,7 +62,7 @@ tasks.withType<Jar> {
 }
 
 /** ShadowJar configuration */
-tasks.withType<ShadowJar> {
+tasks.shadowJar {
     minimize()
     archiveBaseName.set("shadow")
     archiveClassifier.set("")
