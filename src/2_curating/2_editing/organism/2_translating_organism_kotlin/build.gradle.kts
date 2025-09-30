@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 val univocityParserVersion = "2.9.1"
-val junitApiVersion = "5.13.4"
+val junitApiVersion = "5.14.0"
 val jvmVersion = JvmTarget.JVM_17
 
 group = "net.nprod.onpdb"
