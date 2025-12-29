@@ -324,11 +324,14 @@ for (i in num) {
       ) |>
       dplyr::mutate(
         referenceTranslated_year = substr(referenceTranslated_date, 1, 4),
-        referenceTranslated_scoreComplement_date = dplyr::if_else(
-          !is.na(referenceTranslated_year) &
-            stringr::str_detect(referenceValue, referenceTranslated_year),
-          1L,
-          0L
+        referenceTranslated_year = dplyr::if_else(
+          is.na(referenceTranslated_year),
+          "",
+          referenceTranslated_year
+        ),
+        referenceTranslated_scoreComplement_date = as.integer(
+          referenceTranslated_year != "" &
+            stringr::str_detect(referenceValue, referenceTranslated_year)
         )
       ) |>
       dplyr::filter(referenceTranslated_scoreComplement_date == 1)
