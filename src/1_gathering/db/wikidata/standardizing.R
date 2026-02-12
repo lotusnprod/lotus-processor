@@ -3,11 +3,13 @@
 # loading paths
 source("paths.R")
 source("r/standardizing_original.R")
+source(
+  file = "https://raw.githubusercontent.com/adafede/cascade/main/R/query_wikidata.R"
+)
 
 library(dplyr)
 library(readr)
 library(splitstackshape)
-library(WikidataQueryServiceR)
 
 # get paths
 database <- databases$get("wikidata")
@@ -57,7 +59,7 @@ data_triples <-
   readr::read_delim(file = wikidataLotusExporterDataOutputTriplesPath)
 
 # step to discard ambiguous uninomials from wikidata
-names <- WikidataQueryServiceR::query_wikidata(
+names <- query_wikidata(
   sparql_query = "
 SELECT DISTINCT ?name (COUNT(DISTINCT ?id) AS ?count) WHERE {
   ?id wdt:P31 wd:Q16521;
