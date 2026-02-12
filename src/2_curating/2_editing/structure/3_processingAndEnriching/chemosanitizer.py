@@ -47,14 +47,10 @@ if __name__ == "__main__":
         print('your dataframe is not empty :)')
 
     df = df[df[smiles_column_header].notnull()]
-    df_chunks = np.array_split(df, cpus)
+    chunk_size = len(df) // cpus + 1
+    df_chunks = [df.iloc[i:i+chunk_size] for i in range(0, len(df), chunk_size)]
     f = CleaningFunc(smiles_column_header).f
-
-    # old multiprocessing version
-    # with multiprocessing.Pool(cpus) as pool:
-    #     processed_df = pd.concat(pool.map(f, df_chunks), ignore_index=True)
-
-    with concurrent.futures.ThreadPoolExecutor(max_workers=cpus) as executor:
+    with concurrent.futures.ProcessPoolExecutor(max_workers=cpus) as executor:
         processed_list = list(tqdm(executor.map(f, df_chunks), total=len(df_chunks)))
 
     processed_df = pd.concat(processed_list, ignore_index=True)
