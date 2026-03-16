@@ -23,18 +23,33 @@ export ZENODO_CUSTOM_DIC = 6487114
 
 export UNAME := $(shell uname)
 
-PLATFORM := unsupported
-ifeq ($(OS),Windows_NT)
-	PLATFORM := windows
+# get OS info
+UNAME_S := $(shell uname -s)
+UNAME_M := $(shell uname -m)
+
+# normalize OS
+ifeq ($(UNAME_S),Windows_NT)
+  OS := win
+else ifeq ($(UNAME_S),Linux)
+  OS := linux
+else ifeq ($(UNAME_S),Darwin)
+  OS := mac
 else
-	UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Linux)
-        PLATFORM := linux
-    endif
-    ifeq ($(UNAME_S),Darwin)
-        PLATFORM := mac
-    endif
+  OS := unsupported
 endif
+
+# normalize architecture
+ifeq ($(UNAME_M),x86_64)
+  ARCH := amd64
+else ifeq ($(UNAME_M),aarch64)
+  ARCH := arm64
+else ifeq ($(UNAME_M),arm64)
+  ARCH := arm64
+else
+  ARCH := unknown
+endif
+
+PLATFORM := $(OS)-$(ARCH)
 
 NPROCS := 1
 ifeq ($(UNAME_S),Linux)
@@ -43,3 +58,6 @@ endif
 ifeq ($(UNAME_S),Darwin)
   NPROCS := $(shell sysctl -n hw.ncpu)
 endif
+
+show-platform:
+	@echo $(PLATFORM)
