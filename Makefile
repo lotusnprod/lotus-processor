@@ -51,28 +51,38 @@ get-gnverifier: ${BIN_PATH}/gnverifier
 get-opsin: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 
 bin/gnfinder: ${BIN_PATH}/gnfinder
-${BIN_PATH}/gnfinder: config.mk
-	mkdir -p bin
-ifeq (${PLATFORM},$(filter ${PLATFORM},mac linux))
-	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnfinder > bin/gnfinder
-	chmod +x bin/gnfinder
+# Use tar.gz for non-Windows, zip for Windows
+ifeq ($(OS),win)
+	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-$(OS).zip > ${BIN_PATH}/gnfinder.zip
+	unzip -o ${BIN_PATH}/gnfinder.zip -d ${BIN_PATH}/
+	rm ${BIN_PATH}/gnfinder.zip
 else
-	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-win-64.zip > bin/gnfinder.zip
-	unzip -o bin/gnfinder.zip -d bin/
-	rm bin/gnfinder.zip
+	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-$(OS).tar.gz | tar xOz gnfinder > ${BIN_PATH}/gnfinder
+	chmod +x ${BIN_PATH}/gnfinder
 endif
 
 bin/gnverifier: ${BIN_PATH}/gnverifier
 ${BIN_PATH}/gnverifier: config.mk
-	mkdir -p bin
-ifeq (${PLATFORM},$(filter ${PLATFORM},mac linux))
-	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-${PLATFORM}.tar.gz | tar xOz gnverifier > bin/gnverifier
-	chmod +x bin/gnverifier
+	mkdir -p ${BIN_PATH}
+	rm -rf ${BIN_PATH}/tmp_extract
+	mkdir -p ${BIN_PATH}/tmp_extract
+
+ifeq ($(OS),win)
+	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-$(PLATFORM).zip -o ${BIN_PATH}/tmp.zip
+	unzip -o ${BIN_PATH}/tmp.zip -d ${BIN_PATH}/tmp_extract
+	EXE=$$(find ${BIN_PATH}/tmp_extract -type f -name "gnverifier.exe" | head -n1); \
+	mv $$EXE ${BIN_PATH}/gnverifier.exe
+	rm ${BIN_PATH}/tmp.zip
 else
-	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-win-64.zip > bin/gnverifier.zip
-	unzip -o bin/gnverifier.zip -d bin/
-	rm bin/gnverifier.zip
+	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-$(PLATFORM).tar.gz -o ${BIN_PATH}/tmp.tar.gz
+	tar -xzf ${BIN_PATH}/tmp.tar.gz -C ${BIN_PATH}/tmp_extract
+	EXE=$$(find ${BIN_PATH}/tmp_extract -type f -name "gnverifier" | head -n1); \
+	mv $$EXE ${BIN_PATH}/gnverifier
+	chmod +x ${BIN_PATH}/gnverifier
+	rm ${BIN_PATH}/tmp.tar.gz
 endif
+
+	rm -rf ${BIN_PATH}/tmp_extract
 
 bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
