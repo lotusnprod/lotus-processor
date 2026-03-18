@@ -50,8 +50,8 @@ get-gnfinder: ${BIN_PATH}/gnfinder
 get-gnverifier: ${BIN_PATH}/gnverifier
 get-opsin: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 
-bin/gnfinder: ${BIN_PATH}/gnfinder
-# Use tar.gz for non-Windows, zip for Windows
+${BIN_PATH}/gnfinder: config.mk
+	mkdir -p ${BIN_PATH}
 ifeq ($(OS),win)
 	curl -L https://github.com/gnames/gnfinder/releases/download/${GNFINDER_VERSION}/gnfinder-${GNFINDER_VERSION}-$(OS).zip > ${BIN_PATH}/gnfinder.zip
 	unzip -o ${BIN_PATH}/gnfinder.zip -d ${BIN_PATH}/
@@ -61,12 +61,10 @@ else
 	chmod +x ${BIN_PATH}/gnfinder
 endif
 
-bin/gnverifier: ${BIN_PATH}/gnverifier
 ${BIN_PATH}/gnverifier: config.mk
 	mkdir -p ${BIN_PATH}
 	rm -rf ${BIN_PATH}/tmp_extract
 	mkdir -p ${BIN_PATH}/tmp_extract
-
 ifeq ($(OS),win)
 	curl -L https://github.com/gnames/gnverifier/releases/download/${GNVERIFIER_VERSION}/gnverifier-${GNVERIFIER_VERSION}-$(PLATFORM).zip -o ${BIN_PATH}/tmp.zip
 	unzip -o ${BIN_PATH}/tmp.zip -d ${BIN_PATH}/tmp_extract
@@ -81,14 +79,12 @@ else
 	chmod +x ${BIN_PATH}/gnverifier
 	rm ${BIN_PATH}/tmp.tar.gz
 endif
-
 	rm -rf ${BIN_PATH}/tmp_extract
 
-bin/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar
 ${BIN_PATH}/opsin-${OPSIN_VERSION}-jar-with-dependencies.jar: config.mk
-	mkdir -p bin
-	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar > bin/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
-	chmod +x bin/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
+	mkdir -p ${BIN_PATH}
+	curl -L https://github.com/dan2097/opsin/releases/download/${OPSIN_VERSION}/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar > ${BIN_PATH}/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
+	chmod +x ${BIN_PATH}/opsin-cli-${OPSIN_VERSION}-jar-with-dependencies.jar
 
 gathering-quick: gathering-custom-dictionaries gathering-translation-quick gathering-taxonomy-quick
 
@@ -323,4 +319,4 @@ lotus-seeds: gathering-full curating analyzing visualizing
 lotus-roots: gathering-full-hard curating analyzing visualizing
 
 lotus-check:
-	cd src && Rscript ${TESTS_PATH}/tests.R 
+	cd src && Rscript ${TESTS_PATH}/tests.R
