@@ -10,9 +10,9 @@ export TESTS_PATH ?= ${PWD}/tests
 
 export GNFINDER_VERSION = v1.1.6
 export GNVERIFIER_VERSION = v1.3.1
-export OPSIN_VERSION = 2.8.0
+export OPSIN_VERSION = 2.9.0
 
-export OTT_VERSION = 3.7.2
+export OTT_VERSION = 3.7.3
 export GBIF_BACKBONE = 2023-08-28
 
 export NPCLASSIFIER_VERSION = 1.5
