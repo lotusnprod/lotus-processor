@@ -930,12 +930,12 @@ finalStats <- realValidationSetFilled |>
 finalStats_reworked <- finalStats %>%
   dplyr::mutate(
     `true positives` = dplyr::if_else(
-      condition = `validated == "Y"` == TRUE,
+      condition = `validated == "Y"`,
       true = n,
       false = 0
     ),
     `false positives` = dplyr::if_else(
-      condition = `validated == "Y"` == FALSE,
+      condition = !`validated == "Y"`,
       true = n,
       false = 0
     )

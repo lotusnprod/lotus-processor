@@ -32,7 +32,7 @@ dataCuratedOrganismAuto <-
     locale = locales
   )
 
-if (works_locally_only == FALSE) {
+if (!works_locally_only) {
   triplesPostWikidata <-
     readr::read_delim(
       file = wikidataLotusExporterDataOutputTriplesPath,
@@ -129,7 +129,7 @@ if ("taxa_names" %in% dbListTables(db)) {
 
 new_matched_names <- taxa_names$search_string
 
-if (is_empty(new_matched_names) == FALSE) {
+if (!is_empty(new_matched_names)) {
   new_matched_otl_exact <- rotl::tnrs_match_names(
     names = new_matched_names,
     do_approximate_matching = FALSE,
@@ -145,7 +145,7 @@ if (is_empty(new_matched_names) == FALSE) {
     dplyr::filter(!is.na(unique_name))
 
   ## very doubtful quality
-  if (length(taxa_approx != 0)) {
+  if (length(taxa_approx) != 0) {
     new_matched_otl_approx <- rotl::tnrs_match_names(
       names = taxa_approx$search_string,
       do_approximate_matching = TRUE,
@@ -208,7 +208,7 @@ if (is_empty(new_matched_names) == FALSE) {
 
           list_df <- list()
 
-          for (i in seq_along(1:length(taxon_lineage))) {
+          for (i in seq_along(seq_along(taxon_lineage))) {
             list_df[[i]] <- dplyr::bind_rows(
               data.frame(
                 id = ott_list[[x]][i],

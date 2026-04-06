@@ -95,7 +95,7 @@ get_length <- function(.function) {
   df3 <- data.frame(t(df2))
   df3$id <- rownames(df3)
 
-  df4 <- df3[rep(seq(nrow(df3)), df3$df1), ] %>%
+  df4 <- df3[rep(seq_len(nrow(df3)), df3$df1), ] %>%
     select(id)
   return(df4)
 }

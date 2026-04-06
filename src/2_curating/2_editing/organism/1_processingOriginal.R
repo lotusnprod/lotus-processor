@@ -81,7 +81,7 @@ verified_df <- verified |>
   dplyr::filter(
     !matchedName %in% wrongVerifiedDictionary$wrongOrganismsVerified
   ) |>
-  dplyr::filter(isSynonym == FALSE) |>
+  dplyr::filter(!isSynonym) |>
   dplyr::mutate(organismType = "clean") |>
   dplyr::arrange(dplyr::desc(sortScore)) |>
   dplyr::distinct(name, dataSourceTitleShort, .keep_all = TRUE) |>

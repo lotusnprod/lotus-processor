@@ -176,7 +176,7 @@ domain <-
     )
   )
 
-if (safety == TRUE) {
+if (safety) {
   log_debug(
     "Exporting to",
     "../docs/repartition.csv"

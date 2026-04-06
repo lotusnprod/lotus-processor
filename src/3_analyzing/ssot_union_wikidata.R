@@ -231,7 +231,7 @@ platinum_only <-
 
 platinum_u_wd_complete <- add_metadata(df = platinum_u_wd)
 
-if (safety == TRUE) {
+if (safety) {
   log_debug(
     "Exporting to",
     file.path(

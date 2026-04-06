@@ -176,7 +176,7 @@ log_debug("Adding useful metadata")
 closed_complete <- closed_only |>
   add_metadata()
 
-if (safety == TRUE) {
+if (safety) {
   log_debug(
     "Exporting to",
     file.path(
