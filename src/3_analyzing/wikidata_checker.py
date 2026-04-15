@@ -30,8 +30,7 @@ df_wd_inchi = pd.read_csv(
 # %%
 # We start by adding a sik column to the wd table
 
-df_wd_inchi["shortik"] = df_wd_inchi["inchikey"].str.split(
-    "-", n=1, expand=True)[0]
+df_wd_inchi["shortik"] = df_wd_inchi["inchikey"].str.split("-", n=1, expand=True)[0]
 df_wd_inchi.info()
 
 # %%
@@ -62,9 +61,9 @@ df_onpdb_table_wded.info()
 
 
 df = px.data.gapminder().query("year == 2007").query("continent == 'Europe'")
-df.loc[
-    df["pop"] < 2.0e6, "country"
-] = "Other countries"  # Represent only large countries
+df.loc[df["pop"] < 2.0e6, "country"] = (
+    "Other countries"  # Represent only large countries
+)
 fig = px.pie(
     df, values="pop", names="country", title="Population of European continent"
 )

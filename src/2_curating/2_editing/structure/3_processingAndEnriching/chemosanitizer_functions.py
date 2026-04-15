@@ -1,6 +1,7 @@
 # generic modules
 import concurrent.futures
 import time
+
 # import multiprocessing
 import pandas as pd
 import sys
@@ -55,7 +56,8 @@ def MolToEmass_fun(romol):
 
 def MolToFlatMol_fun(romol):
     Chem.RemoveStereochemistry(
-        romol)  # See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
+        romol
+    )  # See MOLVS examples (https://programtalk.com/python-examples/rdkit.Chem.RemoveStereochemistry/)
     return romol
 
 
@@ -149,7 +151,9 @@ def tautomerizor_fun(m):
     if ps.HasSubstructMatch(target14):
         nb14 = len(ps.GetSubstructMatches(target14))
         # print(nb14, "N-Formyl")
-        rxn11 = AllChem.ReactionFromSmarts('[CH1:1]([OH:2])=[N:3]>>[CH1:1](=[OH0D1:2])[NH:3]')
+        rxn11 = AllChem.ReactionFromSmarts(
+            "[CH1:1]([OH:2])=[N:3]>>[CH1:1](=[OH0D1:2])[NH:3]"
+        )
         ps = rxn11.RunReactants((ps,))
         ps = ps[0][0]
         if nb14 != 1:
@@ -163,7 +167,8 @@ def tautomerizor_fun(m):
         nb13 = len(ps.GetSubstructMatches(target13))
         # print(nb13, "primary carbamate")
         rxn11 = AllChem.ReactionFromSmarts(
-            '[O:2][CD3:3]([OH1:4])=[NH:5]>>[O:2][CD3:3](=[OH0D1:4])[NH2:5]')  # fixed, see https://github.com/nuzillard/KnapsackSearch/issues/1
+            "[O:2][CD3:3]([OH1:4])=[NH:5]>>[O:2][CD3:3](=[OH0D1:4])[NH2:5]"
+        )  # fixed, see https://github.com/nuzillard/KnapsackSearch/issues/1
         ps = rxn11.RunReactants((ps,))
         ps = ps[0][0]
         if nb13 != 1:
@@ -176,7 +181,9 @@ def tautomerizor_fun(m):
     if ps.HasSubstructMatch(target12):
         nb12 = len(ps.GetSubstructMatches(target12))
         # print(nb12, "secondary carbamate")
-        rxn11 = AllChem.ReactionFromSmarts('[O:4][CD3:1]([OH:2])=[NH0:3]>>[O:4][CD3:1](=[OH0D1:2])[NH:3]')
+        rxn11 = AllChem.ReactionFromSmarts(
+            "[O:4][CD3:1]([OH:2])=[NH0:3]>>[O:4][CD3:1](=[OH0D1:2])[NH:3]"
+        )
         ps = rxn11.RunReactants((ps,))
         ps = ps[0][0]
         if nb12 != 1:
@@ -189,7 +196,9 @@ def tautomerizor_fun(m):
     if ps.HasSubstructMatch(target11):
         nb11 = len(ps.GetSubstructMatches(target11))
         # print(nb11, "primary iminol")
-        rxn11 = AllChem.ReactionFromSmarts('[CD3:1]([OH:2])=[NH:3]>>[CD3:1](=[OH0D1:2])[NH2:3]')
+        rxn11 = AllChem.ReactionFromSmarts(
+            "[CD3:1]([OH:2])=[NH:3]>>[CD3:1](=[OH0D1:2])[NH2:3]"
+        )
         ps = rxn11.RunReactants((ps,))
         ps = ps[0][0]
         if nb11 != 1:
@@ -207,7 +216,9 @@ def tautomerizor_fun(m):
     if ps.HasSubstructMatch(target1) == True:
         nb1 = len(ps.GetSubstructMatches(target1))
         # print(nb1, "secondary iminol")
-        rxn1 = AllChem.ReactionFromSmarts('[C:1]([OH:2])=[NH0:3]>>[C:1](=[OH0:2])[NH:3]')
+        rxn1 = AllChem.ReactionFromSmarts(
+            "[C:1]([OH:2])=[NH0:3]>>[C:1](=[OH0:2])[NH:3]"
+        )
         ps = rxn1.RunReactants((ps,))
         ps = ps[0][0]
         if nb1 != 1:
@@ -225,7 +236,9 @@ def tautomerizor_fun(m):
     if ps.HasSubstructMatch(target2):
         nb2 = len(ps.GetSubstructMatches(target2))
         # print(nb2, "enol")
-        rxn2 = AllChem.ReactionFromSmarts('[!c&C:1]([OH:2])=[!c&C:3]>>[C:1](=[OH0:2])[CH:3]')
+        rxn2 = AllChem.ReactionFromSmarts(
+            "[!c&C:1]([OH:2])=[!c&C:3]>>[C:1](=[OH0:2])[CH:3]"
+        )
         ps = rxn2.RunReactants((ps,))
         ps = ps[0][0]
         if nb2 != 1:
@@ -234,11 +247,13 @@ def tautomerizor_fun(m):
                 ps = ps[0][0]
         Chem.SanitizeMol(ps)
         Chem.AssignStereochemistry(ps, force=True, cleanIt=True)
-    # enethiol  
+    # enethiol
     if ps.HasSubstructMatch(target3):
         nb3 = len(ps.GetSubstructMatches(target3))
         # print(nb3, "enethiol")
-        rxn3 = AllChem.ReactionFromSmarts('[!c&C:1]([SH:2])=[!c&C:3]>>[C:1](=[SH0:2])[CH:3]')
+        rxn3 = AllChem.ReactionFromSmarts(
+            "[!c&C:1]([SH:2])=[!c&C:3]>>[C:1](=[SH0:2])[CH:3]"
+        )
         ps = rxn3.RunReactants((ps,))
         ps = ps[0][0]
         if nb3 != 1:
@@ -253,22 +268,28 @@ def tautomerizor_fun(m):
 
 
 def long_cleaning_function(myslice, smiles_column_header):
-    myslice['ROMol'] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
-    myslice = myslice[~myslice['ROMol'].isnull()]
-    myslice['validatorLog'] = myslice['ROMol'].apply(validator_fun)
-    myslice['ROMolSanitized'] = myslice['ROMol'].apply(
-        GetParent_fun).apply(tautomerizor_fun).apply(standardizor_fun)
-    myslice['smilesSanitized'] = myslice['ROMolSanitized'].apply(MolToSmiles_fun)
-    myslice['inchiSanitized'] = myslice['ROMolSanitized'].apply(MolToInchi_fun)
-    myslice['inchikeySanitized'] = myslice['ROMolSanitized'].apply(MolToIK_fun)
-    myslice['flatROMol'] = myslice['ROMolSanitized'].apply(MolToFlatMol_fun)
-    myslice['smilesSanitizedFlat'] = myslice['flatROMol'].apply(MolToSmiles_fun)
-    myslice['inchiSanitizedFlat'] = myslice['flatROMol'].apply(MolToInchi_fun)
-    myslice['shortikSanitized'] = myslice['inchikeySanitized'].apply(sik_fun)
-    myslice['formulaSanitized'] = myslice['ROMolSanitized'].apply(MolToMF_fun)
-    myslice['exactmassSanitized'] = myslice['ROMolSanitized'].apply(MolToEmass_fun)
-    myslice['xlogpSanitized'] = myslice['ROMolSanitized'].apply(MolToLogP_fun)
-    myslice = myslice.drop(myslice.loc[:, ['ROMol', 'flatROMol', 'ROMolSanitized']], axis=1)
+    myslice["ROMol"] = myslice[smiles_column_header].apply(MolFromSmiles_fun)
+    myslice = myslice[~myslice["ROMol"].isnull()]
+    myslice["validatorLog"] = myslice["ROMol"].apply(validator_fun)
+    myslice["ROMolSanitized"] = (
+        myslice["ROMol"]
+        .apply(GetParent_fun)
+        .apply(tautomerizor_fun)
+        .apply(standardizor_fun)
+    )
+    myslice["smilesSanitized"] = myslice["ROMolSanitized"].apply(MolToSmiles_fun)
+    myslice["inchiSanitized"] = myslice["ROMolSanitized"].apply(MolToInchi_fun)
+    myslice["inchikeySanitized"] = myslice["ROMolSanitized"].apply(MolToIK_fun)
+    myslice["flatROMol"] = myslice["ROMolSanitized"].apply(MolToFlatMol_fun)
+    myslice["smilesSanitizedFlat"] = myslice["flatROMol"].apply(MolToSmiles_fun)
+    myslice["inchiSanitizedFlat"] = myslice["flatROMol"].apply(MolToInchi_fun)
+    myslice["shortikSanitized"] = myslice["inchikeySanitized"].apply(sik_fun)
+    myslice["formulaSanitized"] = myslice["ROMolSanitized"].apply(MolToMF_fun)
+    myslice["exactmassSanitized"] = myslice["ROMolSanitized"].apply(MolToEmass_fun)
+    myslice["xlogpSanitized"] = myslice["ROMolSanitized"].apply(MolToLogP_fun)
+    myslice = myslice.drop(
+        myslice.loc[:, ["ROMol", "flatROMol", "ROMolSanitized"]], axis=1
+    )
     return myslice
 
 
