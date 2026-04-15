@@ -34,7 +34,7 @@ def outstatus(message, color="red"):
 
 def treat_file(content):
     """We use the XML parser to read the string 'content' containing the xml
-        file content
+            file content
 
     Parameters
     ----------
@@ -57,7 +57,7 @@ def treat_file(content):
 
 def remove_tags(raw_html):
     """Remove some html from the xml string. This should be done differently, they
-        add a lot of meaning with bold, and stuff like that.
+            add a lot of meaning with bold, and stuff like that.
 
     Parameters
     ----------
@@ -74,8 +74,8 @@ def remove_tags(raw_html):
 
 def subsuck(data, element, parname=""):
     """The monster that suck the XML file and adds to the global variable data,
-        this is horribly dirty, we should use classes and so on. But using XSLT
-        would also make things easier, so I'm not rewriting that now.
+            this is horribly dirty, we should use classes and so on. But using XSLT
+            would also make things easier, so I'm not rewriting that now.
 
     Parameters
     ----------

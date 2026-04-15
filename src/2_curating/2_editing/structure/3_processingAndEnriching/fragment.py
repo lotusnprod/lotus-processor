@@ -177,10 +177,10 @@ class FragmentRemover(object):
     def __init__(self, fragments=REMOVE_FRAGMENTS, leave_last=LEAVE_LAST):
         """Initialize a FragmentRemover with an optional custom list of :class:`~molvs.fragment.FragmentPattern`.
 
-                Setting leave_last to True will ensure at least one fragment is left in the molecule, even if it is matched by a
-                :class:`~molvs.fragment.FragmentPattern`. Fragments are removed in the order specified in the list, so place
-                those you would prefer to be left towards the end of the list. If all the remaining fragments match the same
-                :class:`~molvs.fragment.FragmentPattern`, they will all be left.
+                        Setting leave_last to True will ensure at least one fragment is left in the molecule, even if it is matched by a
+                        :class:`~molvs.fragment.FragmentPattern`. Fragments are removed in the order specified in the list, so place
+                        those you would prefer to be left towards the end of the list. If all the remaining fragments match the same
+                        :class:`~molvs.fragment.FragmentPattern`, they will all be left.
 
         Parameters
         ----------
@@ -206,7 +206,7 @@ class FragmentRemover(object):
     def remove(self, mol):
         """Return the molecule with specified fragments removed.
 
-                :return: The molecule with fragments removed.
+                        :return: The molecule with fragments removed.
 
         Parameters
         ----------
@@ -237,7 +237,7 @@ class LargestFragmentChooser(object):
 
     def __init__(self, prefer_organic=PREFER_ORGANIC):
         """If prefer_organic is set to True, any organic fragment will be considered larger than any inorganic fragment. A
-                fragment is considered organic if it contains a carbon atom.
+                        fragment is considered organic if it contains a carbon atom.
 
         Parameters
         ----------
@@ -260,10 +260,10 @@ class LargestFragmentChooser(object):
     def choose(self, mol):
         """Return the largest covalent unit.
 
-                The largest fragment is determined by number of atoms (including hydrogens). Ties are broken by taking the
-                fragment with the higher molecular weight, and then by taking the first alphabetically by SMILES if needed.
+                        The largest fragment is determined by number of atoms (including hydrogens). Ties are broken by taking the
+                        fragment with the higher molecular weight, and then by taking the first alphabetically by SMILES if needed.
 
-                :return: The largest fragment.
+                        :return: The largest fragment.
 
         Parameters
         ----------
