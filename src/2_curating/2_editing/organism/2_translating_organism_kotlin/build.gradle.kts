@@ -11,7 +11,7 @@ version = "0.5-SNAPSHOT"
 plugins {
     kotlin("jvm") version "2.3.21"
     application
-    id("com.gradleup.shadow") version "9.4.1"
+    id("com.gradleup.shadow") version "9.4.2"
 }
 
 repositories {
