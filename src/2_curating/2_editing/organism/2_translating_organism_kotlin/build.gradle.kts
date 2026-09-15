@@ -9,7 +9,7 @@ group = "net.nprod.onpdb"
 version = "0.5-SNAPSHOT"
 
 plugins {
-    kotlin("jvm") version "2.4.10"
+    kotlin("jvm") version "2.4.20"
     application
     id("com.gradleup.shadow") version "9.6.1"
 }
