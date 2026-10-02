@@ -1,5 +1,9 @@
 # The LOTUS Initiative
 
+> [!IMPORTANT]
+> **This repository has moved.** Development continues at **[github.com/lotus-initiative](https://github.com/lotus-initiative)**.
+> This repo is archived and kept only for backward compatibility. Please head over there for the latest code, issues, and releases.
+
 *LOTUS* is a comprehensive collection of documented structure-organism pairs.
 Within the frame of current computational approaches in Natural Products research and related fields, 
 these documented structure-organism pairs should allow a more complete understanding of organisms and their chemistry.
